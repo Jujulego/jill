@@ -676,10 +676,12 @@ __metadata:
   resolution: "@jujulego/jill-core@workspace:packages/core"
   dependencies:
     "@types/jest": ^26.0.23
+    "@types/node": ^14.17.3
     "@typescript-eslint/eslint-plugin": ^4.26.1
     "@typescript-eslint/parser": ^4.26.1
     eslint: ^7.28.0
     jest: ^27.0.4
+    tiny-glob: ^0.2.9
     ts-jest: ^27.0.3
     typescript: ^4.3.2
   languageName: unknown
@@ -843,6 +845,13 @@ __metadata:
   version: 15.12.2
   resolution: "@types/node@npm:15.12.2"
   checksum: 26b9170eb825656751955e919dcea7963d1be4d1eba361c67e41b51a55436c51d69d63f49ee98aaf4fe2e0e5eb3c0038408a8f542316b7583e9badf4fdd10024
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:^14.17.3":
+  version: 14.17.3
+  resolution: "@types/node@npm:14.17.3"
+  checksum: 0d3e3c3dbb8250166d7c8c7c6221bde20a366d2c34b27c0072c3962a32c8a74c4ae4a168bfe53d6193e7b0bba8d8bc87608a6fd2af7918cd444a9aa699b4ce18
   languageName: node
   linkType: hard
 
@@ -2270,6 +2279,13 @@ fsevents@^2.3.2:
   languageName: node
   linkType: hard
 
+"globalyzer@npm:0.1.0":
+  version: 0.1.0
+  resolution: "globalyzer@npm:0.1.0"
+  checksum: 44d8bd60b2ad2b976e54352d40a3166c9c80a19f72be029e2873fdea19f5ad09e696e12f712aa8a1449a24c391712e0769f1a537c7744e78f597e695b0d3ca12
+  languageName: node
+  linkType: hard
+
 "globby@npm:^11.0.3":
   version: 11.0.3
   resolution: "globby@npm:11.0.3"
@@ -2281,6 +2297,13 @@ fsevents@^2.3.2:
     merge2: ^1.3.0
     slash: ^3.0.0
   checksum: f17da0f869918656ec8c16c15ad100f025fbd13e4c157286cf340811eb1355a7d06dde77be1685a7a051970ec6abeff96a9b2a1a97525f84bc94fbd518c1d1db
+  languageName: node
+  linkType: hard
+
+"globrex@npm:^0.1.2":
+  version: 0.1.2
+  resolution: "globrex@npm:0.1.2"
+  checksum: 78825a08abba1994cc3f79a3812a627cf22ac676b08e3b812a7c284af47d39d4dcddff6ac811cb994e817949df1ea53a17c13aa561d9c265b4d3fc34b7362990
   languageName: node
   linkType: hard
 
@@ -4428,6 +4451,16 @@ resolve@^1.20.0:
   version: 6.0.1
   resolution: "throat@npm:6.0.1"
   checksum: c984a40b4725bbd6e8c49d57b2bd36ab36c5534e8a1bed0d278d480171fdf908f16ba343d61c3e9c2e3ed4b327a59c28432cfa44594453b756ec219a772395a8
+  languageName: node
+  linkType: hard
+
+"tiny-glob@npm:^0.2.9":
+  version: 0.2.9
+  resolution: "tiny-glob@npm:0.2.9"
+  dependencies:
+    globalyzer: 0.1.0
+    globrex: ^0.1.2
+  checksum: 9b6fdbae5e2ebb12036aae2c7f1a7bcd0d020847d48d4793fcdf761d38f6bd955f948fa7febabb2c87c8f0bed92c5beb78d9474a0ddcf7c93a8eae70dd328662
   languageName: node
   linkType: hard
 
