@@ -1,0 +1,9 @@
+{
+  "name": "jill",
+  "private": true,
+  "license": "MIT",
+  "repository": "git@github.com:Jujulego/jill.git",
+  "workspaces": [
+    "packages/*"
+  ]
+}
