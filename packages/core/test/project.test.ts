@@ -54,6 +54,7 @@ describe('Project.workspaces', () => {
         value: expect.objectContaining({ name: 'mock-root' })
       });
 
+    // Then all others workspaces
     await expect(gen.next())
       .resolves.toEqual({
         done: false,
