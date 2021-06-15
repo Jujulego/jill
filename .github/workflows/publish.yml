@@ -67,7 +67,7 @@ jobs:
 
       - name: Load package.json
         id: info
-        run: 'echo ::set-output name=package::`cat ${{ matrix.package }}/package.json`'
+        run: 'echo ::set-output name=package::`cat ${{ matrix.workspace }}/package.json`'
 
       - name: Sonarcloud
         uses: sonarsource/sonarcloud-github-action@v1.6
