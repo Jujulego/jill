@@ -1,0 +1,9 @@
+{
+  "name": "mock-test-a",
+  "dependencies": {
+    "mock-test-b": "workspace:*"
+  },
+  "devDependencies": {
+    "mock-test-c": "workspace:*"
+  }
+}

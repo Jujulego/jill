@@ -1,0 +1,6 @@
+{
+  "name": "mock-root",
+  "workspaces": [
+    "workspaces/*"
+  ]
+}

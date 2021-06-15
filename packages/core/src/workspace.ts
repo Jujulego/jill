@@ -2,7 +2,6 @@ import path from 'path';
 
 import { Manifest } from './manifest';
 import { Project } from './project';
-// import { logger } from './logger';
 
 // Class
 export class Workspace {
@@ -36,10 +35,6 @@ export class Workspace {
         yield ws;
       }
     }
-  }
-
-  hasScript(name: string): boolean {
-    return !!(this.manifest.scripts && this.manifest.scripts[name]);
   }
 
   // Properties

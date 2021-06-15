@@ -1,3 +1,2 @@
-export function toto() {
-  return 1;
-}
+export { Project } from './project';
+export { Workspace } from './workspace';
