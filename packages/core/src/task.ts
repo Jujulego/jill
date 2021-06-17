@@ -37,7 +37,7 @@ export class Task extends EventEmitter {
   // Constructor
   constructor(
     readonly cmd: string,
-    readonly args: string[],
+    readonly args: string[] = [],
     readonly opts: TaskOptions = {}
   ) { super(); }
 
@@ -66,7 +66,7 @@ export class Task extends EventEmitter {
     }
   }
 
-  addDependency(task: Task) {
+  addDependency(task: Task): void {
     if (['waiting', 'ready'].includes(this._status)) {
       this._dependencies.push(task);
       this._recomputeStatus();
@@ -74,12 +74,16 @@ export class Task extends EventEmitter {
       task.on('done', () => {
         this._recomputeStatus();
       });
+
+      task.on('failed', () => {
+        this._recomputeStatus();
+      });
     } else {
       throw Error(`Cannot add a dependency to a ${this._status} task`);
     }
   }
 
-  start() {
+  start(): void {
     if (this._status !== 'ready') {
       throw Error(`Cannot start a ${this._status} task`);
     }
@@ -95,6 +99,8 @@ export class Task extends EventEmitter {
       }
     });
 
+    this._setStatus('running');
+
     this._process.on('close', (code) => {
       if (code) {
         this._setStatus('failed');
@@ -105,6 +111,10 @@ export class Task extends EventEmitter {
   }
 
   // Properties
+  get dependencies(): Task[] {
+    return this._dependencies;
+  }
+
   get cwd(): string {
     return this.opts.cwd ?? process.cwd();
   }
