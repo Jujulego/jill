@@ -72,7 +72,7 @@ export class Project {
     }
 
     // Try name index
-    const ws = name ? this._names.get(name) : this._workspaces.get(path.relative(this.root, process.cwd()));
+    const ws = this._names.get(name);
     if (ws) return ws;
 
     // Load workspaces
