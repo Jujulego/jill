@@ -59,7 +59,7 @@ describe('Workspace.devDependencies', () => {
   });
 });
 
-describe.only('Workspace.run', () => {
+describe('Workspace.run', () => {
   // Tests
   it('should return task with all build tree', async () => {
     const task = await workspace.run('test');
