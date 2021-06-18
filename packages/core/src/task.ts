@@ -124,4 +124,14 @@ export class Task extends EventEmitter {
   get exitCode(): number | null {
     return this._process?.exitCode || null;
   }
+
+  get complexity(): number {
+    let complexity = 0;
+
+    for (const dep of this.dependencies) {
+      complexity += dep.complexity + 1;
+    }
+
+    return complexity;
+  }
 }
