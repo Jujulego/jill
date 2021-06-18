@@ -58,3 +58,39 @@ describe('Workspace.devDependencies', () => {
     expect(project.workspace).toBeCalledWith('mock-test-c');
   });
 });
+
+describe.only('Workspace.run', () => {
+  // Tests
+  it('should return task with all build tree', async () => {
+    const task = await workspace.run('test');
+
+    // Check up tree
+    expect(task).toEqual(expect.objectContaining({
+      cmd: 'yarn',
+      args: ['test'],
+      cwd: path.join(root, 'workspaces/test-a'),
+      dependencies: [
+        expect.objectContaining({
+          cmd: 'yarn',
+          args: ['jill:build'],
+          cwd: path.join(root, 'workspaces/test-b'),
+          dependencies: [
+            expect.objectContaining({
+              cmd: 'yarn',
+              args: ['jill:build'],
+              cwd: path.join(root, 'workspaces/test-c')
+            })
+          ]
+        }),
+        expect.objectContaining({
+          cmd: 'yarn',
+          args: ['jill:build'],
+          cwd: path.join(root, 'workspaces/test-c')
+        })
+      ]
+    }));
+
+    // Both workspace 'mock-test-c' task should be the same
+    expect(task.dependencies[1]).toBe(task.dependencies[0].dependencies[0]);
+  });
+});
