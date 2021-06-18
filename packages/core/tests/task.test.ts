@@ -125,7 +125,7 @@ describe('Task.start', () => {
   });
 });
 
-describe.only('Task.complexity', () => {
+describe('Task.complexity', () => {
   // Setup
   const ta = new Task('task-a');
   const tb = new Task('task-b');

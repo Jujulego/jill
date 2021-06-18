@@ -64,6 +64,17 @@ export class Task extends EventEmitter {
     }
   }
 
+  private _computeComplexity(cache: Map<Task, number>): number {
+    let complexity = 0;
+
+    for (const dep of this.dependencies) {
+      complexity += (cache.get(dep) ?? dep._computeComplexity(cache)) + 1;
+    }
+
+    cache.set(this, complexity);
+    return complexity;
+  }
+
   addDependency(task: Task): void {
     if (['waiting', 'ready'].includes(this._status)) {
       this._dependencies.push(task);
@@ -126,12 +137,6 @@ export class Task extends EventEmitter {
   }
 
   get complexity(): number {
-    let complexity = 0;
-
-    for (const dep of this.dependencies) {
-      complexity += dep.complexity + 1;
-    }
-
-    return complexity;
+    return this._computeComplexity(new Map());
   }
 }
