@@ -33,8 +33,9 @@ describe('Workspace.dependencies', () => {
         done: true
       });
 
-    expect(project.workspace).toBeCalledTimes(1);
+    expect(project.workspace).toBeCalledTimes(2);
     expect(project.workspace).toBeCalledWith('mock-test-b');
+    expect(project.workspace).toBeCalledWith('not-a-workspace');
   });
 });
 
@@ -54,8 +55,9 @@ describe('Workspace.devDependencies', () => {
         done: true
       });
 
-    expect(project.workspace).toBeCalledTimes(1);
+    expect(project.workspace).toBeCalledTimes(2);
     expect(project.workspace).toBeCalledWith('mock-test-c');
+    expect(project.workspace).toBeCalledWith('not-a-workspace');
   });
 });
 

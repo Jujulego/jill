@@ -1,9 +1,11 @@
 {
   "name": "mock-test-a",
   "dependencies": {
-    "mock-test-b": "workspace:*"
+    "mock-test-b": "workspace:*",
+    "not-a-workspace": "1.0.0"
   },
   "devDependencies": {
-    "mock-test-c": "workspace:*"
+    "mock-test-c": "workspace:*",
+    "not-a-workspace": "1.0.0"
   }
 }
