@@ -137,15 +137,15 @@ describe('Task.complexity', () => {
 
   // Tests
   test('task A should have complexity 3', () => {
-    expect(ta.complexity).toBe(3);
+    expect(ta.complexity()).toBe(3);
   });
 
   test('task B should have complexity 1', () => {
-    expect(tb.complexity).toBe(1);
+    expect(tb.complexity()).toBe(1);
   });
 
   test('task C should have complexity 0', () => {
-    expect(tc.complexity).toBe(0);
+    expect(tc.complexity()).toBe(0);
   });
 });
 

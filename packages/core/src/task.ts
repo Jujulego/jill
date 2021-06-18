@@ -64,14 +64,19 @@ export class Task extends EventEmitter {
     }
   }
 
-  private _computeComplexity(cache: Map<Task, number>): number {
-    let complexity = 0;
+  complexity(cache: Map<Task, number> = new Map()): number {
+    let complexity = cache.get(this);
 
-    for (const dep of this.dependencies) {
-      complexity += (cache.get(dep) ?? dep._computeComplexity(cache)) + 1;
+    if (complexity === undefined) {
+      complexity = 0;
+
+      for (const dep of this.dependencies) {
+        complexity += (cache.get(dep) ?? dep.complexity(cache)) + 1;
+      }
+
+      cache.set(this, complexity);
     }
 
-    cache.set(this, complexity);
     return complexity;
   }
 
@@ -134,9 +139,5 @@ export class Task extends EventEmitter {
 
   get exitCode(): number | null {
     return this._process?.exitCode || null;
-  }
-
-  get complexity(): number {
-    return this._computeComplexity(new Map());
   }
 }
