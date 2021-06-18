@@ -52,13 +52,11 @@ export class Task extends EventEmitter {
 
   private _recomputeStatus() {
     if (['waiting', 'ready'].includes(this._status)) {
-      // Check if one dependency is failed
       if (this._dependencies.some(dep => dep.status === 'failed')) {
+        // Check if one dependency is failed
         this._setStatus('failed');
-      }
-
-      // Check if all dependencies are done
-      if (this._dependencies.every(dep => dep.status === 'done')) {
+      } else if (this._dependencies.every(dep => dep.status === 'done')) {
+        // Check if all dependencies are done
         this._setStatus('ready');
       } else {
         this._setStatus('waiting');

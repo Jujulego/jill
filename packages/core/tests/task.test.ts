@@ -68,7 +68,7 @@ describe('Task.start', () => {
       shell: true,
       stdio: 'inherit',
       env: expect.objectContaining({
-        FORCE_COLOR: '1'
+        FORCE_COLOR: process.env.FORCE_COLOR || '1'
       })
     });
 
@@ -80,6 +80,9 @@ describe('Task.start', () => {
 
     expect(task.status).toBe('done');
     expect(spyDone).toHaveBeenCalledTimes(1);
+
+    // Cannot start again
+    expect(() => task.start()).toThrow(expect.any(Error));
   });
 
   it('should set task status to failed when process failed', () => {
@@ -104,7 +107,7 @@ describe('Task.start', () => {
       shell: true,
       stdio: 'inherit',
       env: expect.objectContaining({
-        FORCE_COLOR: '1'
+        FORCE_COLOR: process.env.FORCE_COLOR || '1'
       })
     });
 
@@ -116,5 +119,118 @@ describe('Task.start', () => {
 
     expect(task.status).toBe('failed');
     expect(spyFailed).toHaveBeenCalledTimes(1);
+
+    // Cannot start again
+    expect(() => task.start()).toThrow(expect.any(Error));
   });
+});
+
+// Independent tests
+test('Success dependency should set task as ready', async () => {
+  // Setup
+  const taskA = new Task('test-a');
+  const taskB = new Task('test-b');
+  taskA.addDependency(taskB);
+
+  const spyA = jest.fn();
+  taskA.on('ready', spyA);
+
+  const spyB = jest.fn();
+  taskB.on('done', spyB);
+
+  // Complete task B
+  const proc = new EventEmitter();
+
+  jest.spyOn(cp, 'spawn')
+    .mockReturnValue(proc as cp.ChildProcess);
+
+  taskB.start();
+  proc.emit('close', 0);
+
+  // Checks
+  expect(taskB.status).toBe('done');
+  expect(spyB).toHaveBeenCalledTimes(1);
+
+  expect(taskA.status).toBe('ready');
+  expect(spyA).toHaveBeenCalledTimes(1);
+});
+
+test('Failed dependency should also set task as failed', async () => {
+  // Setup
+  const taskA = new Task('test-a');
+  const taskB = new Task('test-b');
+  taskA.addDependency(taskB);
+
+  const spyA = jest.fn();
+  taskA.on('failed', spyA);
+
+  const spyB = jest.fn();
+  taskB.on('failed', spyB);
+
+  // Fail task B
+  const proc = new EventEmitter();
+
+  jest.spyOn(cp, 'spawn')
+    .mockReturnValue(proc as cp.ChildProcess);
+
+  taskB.start();
+  proc.emit('close', 1);
+
+  // Checks
+  expect(taskB.status).toBe('failed');
+  expect(spyB).toHaveBeenCalledTimes(1);
+
+  expect(taskA.status).toBe('failed');
+  expect(spyA).toHaveBeenCalledTimes(1);
+});
+
+test('Cannot start a waiting task', async () => {
+  // Setup
+  const taskA = new Task('test-a');
+  const taskB = new Task('test-b');
+  taskA.addDependency(taskB);
+
+  const spyA = jest.fn();
+  taskA.on('failed', spyA);
+
+  const spyB = jest.fn();
+  taskB.on('failed', spyB);
+
+  // Cannot start again
+  expect(() => taskB.start()).toThrow(expect.any(Error));
+});
+
+test('Cannot add a dependency to a running/completed task', async () => {
+  // Setup
+  const taskA = new Task('test-a');
+  const taskB = new Task('test-b');
+
+  // Complete task B
+  const proc = new EventEmitter();
+
+  jest.spyOn(cp, 'spawn')
+    .mockReturnValue(proc as cp.ChildProcess);
+
+  taskA.start();
+  expect(() => taskA.addDependency(taskB)).toThrow(expect.any(Error));
+
+  proc.emit('close', 0);
+  expect(() => taskA.addDependency(taskB)).toThrow(expect.any(Error));
+});
+
+test('Cannot add a dependency to a failed task', async () => {
+  // Setup
+  const taskA = new Task('test-a');
+  const taskB = new Task('test-b');
+
+  // Complete task B
+  const proc = new EventEmitter();
+
+  jest.spyOn(cp, 'spawn')
+    .mockReturnValue(proc as cp.ChildProcess);
+
+  taskA.start();
+  proc.emit('close', 1);
+
+  expect(() => taskA.addDependency(taskB)).toThrow(expect.any(Error));
 });
