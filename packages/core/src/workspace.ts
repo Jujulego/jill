@@ -2,9 +2,19 @@ import path from 'path';
 
 import { Manifest } from './manifest';
 import { Project } from './project';
+import { Task, TaskOptions } from './task';
+import { combine } from './utils';
+
+// Types
+export interface WorkspaceRunOptions extends Omit<TaskOptions, 'cwd'> {
+  buildDeps?: 'all' | 'prod' | 'none';
+}
 
 // Class
 export class Workspace {
+  // Attributes
+  private _lastBuild?: Task;
+
   // Constructor
   constructor(
     private readonly _cwd: string,
@@ -13,6 +23,12 @@ export class Workspace {
   ) {}
 
   // Methods
+  private async _buildDependencies(task: Task) {
+    for await (const dep of combine(this.dependencies(), this.devDependencies())) {
+      task.addDependency(await dep.build());
+    }
+  }
+
   async* dependencies(): AsyncGenerator<Workspace, void, unknown> {
     if (!this.manifest.dependencies) return;
 
@@ -35,6 +51,21 @@ export class Workspace {
         yield ws;
       }
     }
+  }
+
+  async run(script: string, args: string[] = [], opts: WorkspaceRunOptions = {}): Promise<Task> {
+    const task = new Task('yarn', [script, ...args], { ...opts, cwd: this.cwd });
+    await this._buildDependencies(task);
+
+    return task;
+  }
+
+  async build(): Promise<Task> {
+    if (!this._lastBuild) {
+      this._lastBuild = await this.run('jill:build');
+    }
+
+    return this._lastBuild;
   }
 
   // Properties

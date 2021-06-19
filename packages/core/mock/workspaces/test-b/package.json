@@ -1,3 +1,6 @@
 {
-  "name": "mock-test-b"
+  "name": "mock-test-b",
+  "devDependencies": {
+    "mock-test-c": "workspace:*"
+  }
 }
