@@ -11,6 +11,7 @@ jobs:
     strategy:
       matrix:
         package:
+          - '@jujulego/jill'
           - '@jujulego/jill-core'
 
     steps:
@@ -40,6 +41,9 @@ jobs:
     strategy:
       matrix:
         include:
+          - workspace: 'packages/cli'
+            package: '@jujulego/jill'
+
           - workspace: 'packages/core'
             package: '@jujulego/jill-core'
 
