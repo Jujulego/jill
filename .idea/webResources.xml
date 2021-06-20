@@ -6,6 +6,7 @@
         <entryData>
           <resourceRoots>
             <path value="file://$PROJECT_DIR$/packages/core" />
+            <path value="file://$PROJECT_DIR$/packages/cli" />
           </resourceRoots>
         </entryData>
       </entry>
