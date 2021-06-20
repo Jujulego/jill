@@ -1,31 +1,17 @@
 import { spawn, ChildProcess } from 'child_process';
 import { EventEmitter } from 'events';
 
+import { Workspace } from './workspace';
+
 // Types
 export interface TaskOptions {
   cwd?: string;
   env?: Partial<Record<string, string>>
+  workspace?: Workspace;
 }
 
 export type TaskStatus = 'waiting' | 'ready' | 'running' | 'done' | 'failed';
 export type TaskStatusListener = () => void;
-
-// Enforce EventEmitter types
-export declare interface Task {
-  addListener(event: TaskStatus, listener: TaskStatusListener): this;
-  removeListener(event: TaskStatus, listener: TaskStatusListener): this;
-  removeAllListeners(event?: TaskStatus): this;
-  on(event: TaskStatus, listener: TaskStatusListener): this;
-  once(event: TaskStatus, listener: TaskStatusListener): this;
-  off(event: TaskStatus, listener: TaskStatusListener): this;
-  listenerCount(event: TaskStatus): number;
-  listeners(event: TaskStatus): TaskStatusListener[];
-  rawListeners(event: TaskStatus): TaskStatusListener[];
-  emit(event: TaskStatus): boolean;
-  prependListener(event: TaskStatus, listener: TaskStatusListener): this;
-  prependOnceListener(event: TaskStatus, listener: TaskStatusListener): this;
-  eventNames(): TaskStatus[];
-}
 
 // Class
 export class Task extends EventEmitter {
@@ -140,4 +126,25 @@ export class Task extends EventEmitter {
   get exitCode(): number | null {
     return this._process?.exitCode || null;
   }
+
+  get workspace(): Workspace | null {
+    return this.opts.workspace || null;
+  }
+}
+
+// Enforce EventEmitter types
+export declare interface Task {
+  addListener(event: TaskStatus, listener: TaskStatusListener): this;
+  removeListener(event: TaskStatus, listener: TaskStatusListener): this;
+  removeAllListeners(event?: TaskStatus): this;
+  on(event: TaskStatus, listener: TaskStatusListener): this;
+  once(event: TaskStatus, listener: TaskStatusListener): this;
+  off(event: TaskStatus, listener: TaskStatusListener): this;
+  listenerCount(event: TaskStatus): number;
+  listeners(event: TaskStatus): TaskStatusListener[];
+  rawListeners(event: TaskStatus): TaskStatusListener[];
+  emit(event: TaskStatus): boolean;
+  prependListener(event: TaskStatus, listener: TaskStatusListener): this;
+  prependOnceListener(event: TaskStatus, listener: TaskStatusListener): this;
+  eventNames(): TaskStatus[];
 }

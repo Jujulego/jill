@@ -48,6 +48,12 @@ describe('TaskManager.start', () => {
     jest.spyOn(cp, 'spawn')
       .mockReturnValue(proc as cp.ChildProcess);
 
+    const spyStarted = jest.fn<void, [Task]>();
+    manager.on('started', spyStarted);
+
+    const spyCompleted = jest.fn<void, [Task]>();
+    manager.on('completed', spyCompleted);
+
     // Start !
     manager.add(ta);
     manager.start();
@@ -57,15 +63,28 @@ describe('TaskManager.start', () => {
     expect(tb.start).not.toBeCalled();
     expect(tc.start).toBeCalled();
 
+    expect(spyStarted).toHaveBeenCalledWith(tc);
+
     // When c completes b should start
     proc.emit('close', 0);
 
     expect(ta.start).not.toBeCalled();
     expect(tb.start).toBeCalled();
 
+    expect(spyCompleted).toHaveBeenCalledWith(tc);
+    expect(spyStarted).toHaveBeenCalledWith(tb);
+
     // When b completes a should start
     proc.emit('close', 0);
 
     expect(ta.start).toBeCalled();
+
+    expect(spyCompleted).toHaveBeenCalledWith(tb);
+    expect(spyStarted).toHaveBeenCalledWith(ta);
+
+    // When b completes a should start
+    proc.emit('close', 0);
+
+    expect(spyCompleted).toHaveBeenCalledWith(ta);
   });
 });

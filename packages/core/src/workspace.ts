@@ -54,7 +54,7 @@ export class Workspace {
   }
 
   async run(script: string, args: string[] = [], opts: WorkspaceRunOptions = {}): Promise<Task> {
-    const task = new Task('yarn', [script, ...args], { ...opts, cwd: this.cwd });
+    const task = new Task('yarn', [script, ...args], { ...opts, cwd: this.cwd, workspace: this });
     await this._buildDependencies(task);
 
     return task;
