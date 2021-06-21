@@ -2,6 +2,10 @@
   "name": "@jujulego/jill",
   "version": "1.0.0-alpha.0",
   "license": "MIT",
+  "bin": "./bin/jill.js",
+  "main": "./dist/main.js",
+  "types": "./dist/main.d.ts",
+  "repository": "git@github.com:Jujulego/jill.git",
   "scripts": {
     "lint": "eslint src/**/*",
     "build": "tsc -p tsconfig.build.json",
