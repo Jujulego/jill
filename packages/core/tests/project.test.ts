@@ -75,6 +75,12 @@ describe('Project.workspaces', () => {
 
     await expect(gen.next())
       .resolves.toEqual({
+        done: false,
+        value: expect.objectContaining({ name: 'mock-test-d' })
+      });
+
+    await expect(gen.next())
+      .resolves.toEqual({
         done: true
       });
   });
