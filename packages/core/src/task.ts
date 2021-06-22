@@ -1,13 +1,14 @@
 import { spawn, ChildProcess } from 'child_process';
 import { EventEmitter } from 'events';
+import { Logger } from 'winston';
 
-import { Workspace } from './workspace';
+import { logger } from './logger';
 
 // Types
 export interface TaskOptions {
   cwd?: string;
   env?: Partial<Record<string, string>>
-  workspace?: Workspace;
+  logger?: Logger;
 }
 
 export type TaskStatus = 'waiting' | 'ready' | 'running' | 'done' | 'failed';
@@ -19,13 +20,17 @@ export class Task extends EventEmitter {
   private _status: TaskStatus = 'ready';
   private _dependencies: Task[] = [];
   private _process?: ChildProcess;
+  private readonly _logger: Logger;
 
   // Constructor
   constructor(
     readonly cmd: string,
     readonly args: string[] = [],
     readonly opts: TaskOptions = {}
-  ) { super(); }
+  ) {
+    super();
+    this._logger = opts.logger || logger;
+  }
 
   // Methods
   private _setStatus(status: TaskStatus) {
@@ -33,6 +38,7 @@ export class Task extends EventEmitter {
 
     // Update and emit
     this._status = status;
+    this._logger.debug(`${[this.cmd, ...this.args].join(' ')} is now ${status}`);
     this.emit(status);
   }
 
@@ -88,6 +94,7 @@ export class Task extends EventEmitter {
       throw Error(`Cannot start a ${this._status} task`);
     }
 
+    this._logger.verbose(`Running ${[this.cmd, ...this.args].join(' ')} (in ${this.cwd})`);
     this._process = spawn(this.cmd, this.args, {
       cwd: this.cwd,
       shell: true,
@@ -125,10 +132,6 @@ export class Task extends EventEmitter {
 
   get exitCode(): number | null {
     return this._process?.exitCode || null;
-  }
-
-  get workspace(): Workspace | null {
-    return this.opts.workspace || null;
   }
 }
 

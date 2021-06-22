@@ -1,5 +1,7 @@
 import path from 'path';
+import { Logger } from 'winston';
 
+import { logger } from './logger';
 import { Manifest } from './manifest';
 import { Project } from './project';
 import { Task, TaskOptions } from './task';
@@ -14,13 +16,16 @@ export interface WorkspaceRunOptions extends Omit<TaskOptions, 'cwd'> {
 export class Workspace {
   // Attributes
   private _lastBuild?: Task;
+  private readonly _logger: Logger;
 
   // Constructor
   constructor(
     private readonly _cwd: string,
     readonly manifest: Manifest,
     readonly project: Project
-  ) {}
+  ) {
+    this._logger = logger.child({ label: manifest.name });
+  }
 
   // Methods
   private async _buildDependencies(task: Task) {
@@ -54,7 +59,7 @@ export class Workspace {
   }
 
   async run(script: string, args: string[] = [], opts: WorkspaceRunOptions = {}): Promise<Task> {
-    const task = new Task('yarn', [script, ...args], { ...opts, cwd: this.cwd, workspace: this });
+    const task = new Task('yarn', [script, ...args], { ...opts, cwd: this.cwd, logger: this._logger });
     await this._buildDependencies(task);
 
     return task;

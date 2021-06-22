@@ -3,7 +3,7 @@ import path from 'path';
 import glob from 'tiny-glob';
 
 import { Manifest } from './manifest';
-// import { logger } from './logger';
+import { logger } from './logger';
 import { Workspace } from './workspace';
 
 // Class
@@ -19,7 +19,7 @@ export class Project {
   // Methods
   private async _loadManifest(dir: string): Promise<Manifest> {
     const file = path.resolve(this.root, dir, 'package.json');
-    // logger.debug(`Loading ${file} ...`);
+    logger.verbose(`Loading ${file} ...`);
 
     const data = await fs.readFile(file, 'utf-8');
     return JSON.parse(data) as Manifest;

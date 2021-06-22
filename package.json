@@ -7,7 +7,7 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "yarn workspaces foreach -p run build"
+    "build": "yarn workspaces foreach -ptv run build"
   },
   "devDependencies": {
     "@jujulego/jill": "1.0.0-alpha.0",
