@@ -3,7 +3,7 @@ import path from 'path';
 import { Project, Workspace } from '../src';
 
 // Setup
-const root = path.resolve(__dirname, '../mock');
+const root = path.resolve(__dirname, '../../../mock');
 let project: Project;
 let workspace: Workspace;
 
@@ -33,9 +33,8 @@ describe('Workspace.dependencies', () => {
         done: true
       });
 
-    expect(project.workspace).toBeCalledTimes(2);
+    expect(project.workspace).toBeCalledTimes(1);
     expect(project.workspace).toBeCalledWith('mock-test-b');
-    expect(project.workspace).toBeCalledWith('not-a-workspace');
   });
 });
 
@@ -55,9 +54,8 @@ describe('Workspace.devDependencies', () => {
         done: true
       });
 
-    expect(project.workspace).toBeCalledTimes(2);
+    expect(project.workspace).toBeCalledTimes(1);
     expect(project.workspace).toBeCalledWith('mock-test-c');
-    expect(project.workspace).toBeCalledWith('not-a-workspace');
   });
 });
 
@@ -81,6 +79,11 @@ describe('Workspace.run', () => {
               cmd: 'yarn',
               args: ['jill:build'],
               cwd: path.join(root, 'workspaces/test-c')
+            }),
+            expect.objectContaining({
+              cmd: 'yarn',
+              args: ['jill:build'],
+              cwd: path.join(root, 'workspaces/test-d')
             })
           ]
         }),

@@ -3,12 +3,14 @@ import { EventEmitter } from 'events';
 import { Logger } from 'winston';
 
 import { logger } from './logger';
+import { Workspace } from './workspace';
 
 // Types
 export interface TaskOptions {
   cwd?: string;
   env?: Partial<Record<string, string>>
   logger?: Logger;
+  workspace?: Workspace,
 }
 
 export type TaskStatus = 'waiting' | 'ready' | 'running' | 'done' | 'failed';
@@ -135,6 +137,10 @@ export class Task extends EventEmitter {
 
   get exitCode(): number | null {
     return this._process?.exitCode || null;
+  }
+
+  get workspace(): Workspace | null {
+    return this.opts.workspace || null;
   }
 }
 

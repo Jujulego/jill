@@ -8,7 +8,7 @@ import { Project, Workspace } from '../src';
 jest.mock('tiny-glob');
 
 // Setup
-const root = path.resolve(__dirname, '../mock');
+const root = path.resolve(__dirname, '../../../mock');
 let project: Project;
 
 beforeEach(() => {

@@ -1,16 +1,8 @@
-import { logger, Project, TaskManager } from '@jujulego/jill-core';
-import { format, transports } from 'winston';
+import { Project, TaskManager } from '@jujulego/jill-core';
 import { hideBin } from 'yargs/helpers';
 import yargs from 'yargs';
 
-// Setup logger
-logger.level = 'debug';
-logger.add(new transports.Console({
-  format: format.combine(
-    format.colorize({ message: true, colors: { debug: 'grey', verbose: 'blue', info: 'white', error: 'red' } }),
-    format.printf(({ label, message }) => [label && `[${label}]`, message].filter(p => p).join(' ')),
-  )
-}));
+import { logger } from './logger';
 
 // Bootstrap
 (async () => {
@@ -26,11 +18,13 @@ logger.add(new transports.Console({
 
   // Run !
   const prj = new Project(argv.project);
-  const wks = await prj.workspace('@jujulego/jill');
+  const wks = await prj.workspace('mock-test-a');
 
   if (wks) {
     const manager = new TaskManager();
     manager.add(await wks.build());
+
+    manager.on('started', (task) => logger.info(`Building ${task.workspace?.name || task.cwd}`));
 
     manager.start();
   }
