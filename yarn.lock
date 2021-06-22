@@ -714,6 +714,7 @@ __metadata:
     ts-jest: ^27.0.3
     ts-node: ^10.0.0
     typescript: ^4.3.2
+    winston: ^3.3.3
     yargs: ^17.0.1
   bin:
     jill: ./bin/jill.js

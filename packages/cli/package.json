@@ -10,13 +10,15 @@
     "lint": "eslint src/**/*",
     "build": "tsc -p tsconfig.build.json",
     "start": "ts-node src/main.ts",
-    "test": "jest"
+    "test": "jest",
+    "jill:build": "tsc -p tsconfig.build.json --pretty"
   },
   "engines": {
     "node": "^14"
   },
   "dependencies": {
     "@jujulego/jill-core": "1.0.0-alpha.0",
+    "winston": "^3.3.3",
     "yargs": "^17.0.1"
   },
   "devDependencies": {

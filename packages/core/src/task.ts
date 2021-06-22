@@ -98,7 +98,7 @@ export class Task extends EventEmitter {
     this._process = spawn(this.cmd, this.args, {
       cwd: this.cwd,
       shell: true,
-      stdio: 'inherit',
+      stdio: 'pipe',
       env: {
         FORCE_COLOR: '1',
         ...process.env,
@@ -107,6 +107,9 @@ export class Task extends EventEmitter {
     });
 
     this._setStatus('running');
+
+    this._process.stdout?.on('data', (msg: Buffer) => this._logger.info(msg.toString('utf-8')));
+    this._process.stderr?.on('data', (msg: Buffer) => this._logger.error(msg.toString('utf-8')));
 
     this._process.on('close', (code) => {
       if (code) {
