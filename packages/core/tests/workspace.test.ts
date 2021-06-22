@@ -1,6 +1,7 @@
 import path from 'path';
 
 import { Project, Workspace } from '../src';
+import './logger';
 
 // Setup
 const root = path.resolve(__dirname, '../../../mock');

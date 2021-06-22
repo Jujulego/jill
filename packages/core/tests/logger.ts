@@ -1,6 +1,6 @@
 import Transport from 'winston-transport';
 
-import { logger } from './src';
+import { logger } from '../src';
 
 class NoopTransport extends Transport {
   // Methods

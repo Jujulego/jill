@@ -1,6 +1,8 @@
-import { Task, TaskManager } from '../src';
 import { EventEmitter } from 'events';
 import cp from 'child_process';
+
+import { Task, TaskManager } from '../src';
+import './logger';
 
 // Setup
 let manager: TaskManager;

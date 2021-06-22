@@ -2,6 +2,7 @@ import cp from 'child_process';
 import { EventEmitter } from 'events';
 
 import { Task } from '../src';
+import './logger';
 
 beforeEach(() => {
   jest.resetAllMocks();
