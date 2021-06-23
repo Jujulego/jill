@@ -1,5 +1,5 @@
 import { logger as coreLogger } from '@jujulego/jill-core';
-import { format } from 'winston';
+import { format, Logger } from 'winston';
 import Transport from 'winston-transport';
 import ora from 'ora';
 
@@ -66,6 +66,49 @@ export class OraTransport extends Transport {
   }
 }
 
+// Logger
+class OraLogger {
+  // Logger
+  constructor(
+    private readonly logger: Logger,
+    private readonly transport: OraTransport
+  ) {}
+
+  // Methods
+  // - logger
+  debug = this.logger.debug;
+  verbose = this.logger.verbose;
+  info = this.logger.info;
+  warn = this.logger.warn;
+  error = this.logger.error;
+
+  // - ora
+  spin(msg: string): void {
+    this.transport.spin(msg);
+  }
+
+  succeed(msg: string): void {
+    this.transport.succeed(msg);
+  }
+
+  fail(msg: string): void {
+    this.transport.fail(msg);
+  }
+
+  stop(): void {
+    this.transport.stop();
+  }
+
+  // Properties
+  get level(): string {
+    return this.logger.level;
+  }
+
+  set level(level: string) {
+    this.logger.level = level;
+  }
+}
+
 // Setup
 const transport = new OraTransport({
   format: format.combine(
@@ -76,19 +119,4 @@ const transport = new OraTransport({
 
 coreLogger.add(transport);
 
-export const logger = {
-  // Logger
-  debug: coreLogger.debug,
-  verbose: coreLogger.verbose,
-  info: coreLogger.info,
-  warn: coreLogger.warn,
-  error: coreLogger.error,
-
-  setLevel(level: string) { coreLogger.level = level; },
-
-  // Ora
-  spin: transport.spin.bind(transport),
-  succeed: transport.succeed.bind(transport),
-  fail: transport.fail.bind(transport),
-  stop: transport.stop.bind(transport)
-};
+export const logger = new OraLogger(coreLogger, transport);

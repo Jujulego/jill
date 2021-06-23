@@ -19,7 +19,7 @@ export class Project {
   // Methods
   private async _loadManifest(dir: string): Promise<Manifest> {
     const file = path.resolve(this.root, dir, 'package.json');
-    logger.verbose(`Loading ${file} ...`);
+    logger.verbose(`Loading ${path.relative(process.cwd(), file)} ...`);
 
     const data = await fs.readFile(file, 'utf-8');
     return JSON.parse(data) as Manifest;

@@ -4,6 +4,7 @@ import { Logger } from 'winston';
 
 import { logger } from './logger';
 import { Workspace } from './workspace';
+import * as path from 'path';
 
 // Types
 export interface TaskOptions {
@@ -96,7 +97,7 @@ export class Task extends EventEmitter {
       throw Error(`Cannot start a ${this._status} task`);
     }
 
-    this._logger.verbose(`Running ${[this.cmd, ...this.args].join(' ')} (in ${this.cwd})`);
+    this._logger.verbose(`Running ${[this.cmd, ...this.args].join(' ')} (in ${path.relative(process.cwd(), this.cwd)})`);
     this._process = spawn(this.cmd, this.args, {
       cwd: this.cwd,
       shell: true,

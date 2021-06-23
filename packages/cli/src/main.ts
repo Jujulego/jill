@@ -23,9 +23,9 @@ import { logger } from './logger';
 
   // Setup
   if (argv.verbose === 1) {
-    logger.setLevel('verbose');
+    logger.level = 'verbose';
   } else if (argv.verbose >= 2) {
-    logger.setLevel('debug');
+    logger.level = 'debug';
   }
 
   // Run !
