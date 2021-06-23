@@ -1,4 +1,4 @@
-import { Project, TaskManager } from '@jujulego/jill-core';
+import { Project, Task, TaskManager } from '@jujulego/jill-core';
 import { hideBin } from 'yargs/helpers';
 import yargs from 'yargs';
 
@@ -24,7 +24,32 @@ import { logger } from './logger';
     const manager = new TaskManager();
     manager.add(await wks.build());
 
-    manager.on('started', (task) => logger.info(`Building ${task.workspace?.name || task.cwd}`));
+    const running = new Set<Task>();
+    manager.on('started', (task) => {
+      running.add(task);
+
+      if (running.size > 1) {
+        logger.spin(`Building ${running.size} packages ...`);
+      } else {
+        logger.spin(`Building ${task.workspace?.name || task.cwd} ...`);
+      }
+    });
+
+    manager.on('completed', (task) => {
+      running.delete(task);
+
+      if (task.status === 'failed') {
+        logger.fail(`Failed to build ${task.workspace?.name || task.cwd}`);
+      } else {
+        logger.succeed(`${task.workspace?.name || task.cwd} built`);
+      }
+
+      if (running.size > 1) {
+        logger.spin(`Building ${running.size} packages ...`);
+      } else if (running.size > 0) {
+        logger.spin(`Building ${task.workspace?.name || task.cwd} ...`);
+      }
+    });
 
     manager.start();
   }
