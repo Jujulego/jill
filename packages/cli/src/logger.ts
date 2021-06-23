@@ -74,7 +74,6 @@ const transport = new OraTransport({
   )
 });
 
-coreLogger.level = 'debug';
 coreLogger.add(transport);
 
 export const logger = {
@@ -85,6 +84,9 @@ export const logger = {
   warn: coreLogger.warn,
   error: coreLogger.error,
 
+  setLevel(level: string) { coreLogger.level = level; },
+
+  // Ora
   spin: transport.spin.bind(transport),
   succeed: transport.succeed.bind(transport),
   fail: transport.fail.bind(transport),

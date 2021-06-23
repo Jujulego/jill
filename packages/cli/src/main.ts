@@ -14,7 +14,19 @@ import { logger } from './logger';
       description: 'Project root directory',
       default: '.'
     })
+    .option('verbose', {
+      alias: 'v',
+      type: 'count',
+      description: 'Set verbosity level (1 for verbose, 2 for debug)',
+    })
     .argv;
+
+  // Setup
+  if (argv.verbose === 1) {
+    logger.setLevel('verbose');
+  } else if (argv.verbose >= 2) {
+    logger.setLevel('debug');
+  }
 
   // Run !
   const prj = new Project(argv.project);
