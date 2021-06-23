@@ -30,7 +30,7 @@ jobs:
 
       - uses: actions/upload-artifact@v2
         with:
-          name: built-code
+          name: build-artifacts
           path: packages/*/dist/*
 
   lint:
@@ -96,7 +96,7 @@ jobs:
 
       - uses: actions/download-artifact@v2
         with:
-          name: built-code
+          name: build-artifacts
           path: packages
 
       - name: Test
