@@ -1,18 +1,10 @@
 import { logger as coreLogger } from '@jujulego/jill-core';
 import { format } from 'winston';
 import Transport from 'winston-transport';
-import logSymbols from 'log-symbols';
 import ora from 'ora';
 
 // Constants
-const LEVEL = Symbol.for('level');
 const MESSAGE = Symbol.for('message');
-
-const SYMBOLS: Partial<Record<string, string>> = {
-  info: logSymbols.info,
-  warn: logSymbols.warning,
-  error: logSymbols.error
-};
 
 // Transport
 export class OraTransport extends Transport {
@@ -47,11 +39,12 @@ export class OraTransport extends Transport {
 
     // Print message
     const msg = info[MESSAGE] as string;
-    const lvl = info[LEVEL] as string;
 
     this.keepSpinner(() => {
+      this._spinner.stop();
+
       for (const line of msg.split('\n')) {
-        this._spinner.stopAndPersist({ text: line, symbol: SYMBOLS[lvl] || ' ' });
+        console.log(line);
       }
     });
   }

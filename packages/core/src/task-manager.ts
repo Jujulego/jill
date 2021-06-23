@@ -20,7 +20,7 @@ export class TaskManager extends EventEmitter {
     readonly jobs: number = os.cpus().length
   ) {
     super();
-    logger.debug(`Run up to ${jobs} tasks at the same time`);
+    logger.verbose(`Run up to ${jobs} tasks at the same time`);
   }
 
   // Methods

@@ -712,7 +712,6 @@ __metadata:
     "@typescript-eslint/parser": ^4.26.1
     eslint: ^7.28.0
     jest: ^27.0.4
-    log-symbols: ^4.1.0
     ora: ^5.4.1
     ts-jest: ^27.0.3
     ts-node: ^10.0.0
