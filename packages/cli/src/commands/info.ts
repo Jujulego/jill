@@ -1,9 +1,9 @@
+import { Workspace } from '@jujulego/jill-core';
+import chalk from 'chalk';
 import path from 'path';
 
 import { commandHandler, CommonArgs } from '../wrapper';
 import { logger } from '../logger';
-import chalk from 'chalk';
-import * as process from 'process';
 
 // Types
 export interface InfoArgs extends CommonArgs {
@@ -26,23 +26,40 @@ export const handler = commandHandler<InfoArgs>(async (prj, argv) => {
 
     return;
   }
+
+  // Get data
+  const deps: Workspace[] = [];
+  const devDeps: Workspace[] = [];
+
+  for await (const dep of wks.dependencies()) {
+    deps.push(dep);
+  }
+
+  for await (const dep of wks.devDependencies()) {
+    devDeps.push(dep);
+  }
+
   logger.stop();
 
   // Print data
-  console.log(chalk`{bold Name:}      ${wks.name}`);
+  console.log(chalk`Workspace {bold ${wks.name}}:`);
   console.log(chalk`{bold Version:}   ${wks.manifest.version}`);
   console.log(chalk`{bold Directory:} ${path.relative(process.cwd(), wks.cwd)}`);
 
-  console.log();
-  console.log(chalk`{bold Dependencies:}`);
-  for await (const dep of wks.dependencies()) {
-    console.log(`- ${dep.name}`);
+  if (deps.length > 0) {
+    console.log();
+    console.log(chalk`{bold Dependencies:}`);
+    for (const dep of deps) {
+      console.log(`- ${dep.name}`);
+    }
   }
 
-  console.log();
-  console.log(chalk`{bold Dev Dependencies:}`);
-  for await (const dep of wks.devDependencies()) {
-    console.log(`- ${dep.name}`);
+  if (devDeps.length > 0) {
+    console.log();
+    console.log(chalk`{bold Dev-Dependencies:}`);
+    for (const dep of devDeps) {
+      console.log(`- ${dep.name}`);
+    }
   }
 
   process.exit(0);
