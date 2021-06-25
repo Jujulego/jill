@@ -32,7 +32,7 @@ export class OraTransport extends Transport {
     }
   }
 
-  log(info: any, next?: () => void): void {
+  log(info: any, next: () => void): void {
     // Print message
     const msg = info[MESSAGE] as string;
 
@@ -44,9 +44,7 @@ export class OraTransport extends Transport {
       }
     });
 
-    if (next) {
-      next();
-    }
+    next();
   }
 
   spin(message: string): void {
