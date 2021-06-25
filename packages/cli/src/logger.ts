@@ -2,6 +2,7 @@ import { logger as coreLogger } from '@jujulego/jill-core';
 import { format, Logger } from 'winston';
 import Transport from 'winston-transport';
 import ora from 'ora';
+import * as process from 'process';
 
 // Constants
 const MESSAGE = Symbol.for('message');
@@ -44,7 +45,7 @@ export class OraTransport extends Transport {
       this._spinner.stop();
 
       for (const line of msg.split('\n')) {
-        console.log(line);
+        process.stderr.write(line + '\n');
       }
     });
   }
