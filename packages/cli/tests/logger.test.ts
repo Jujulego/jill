@@ -4,6 +4,7 @@ import { mockedOra } from '../mocks/ora';
 import { logger, OraTransport } from '../src/logger';
 
 // Setup
+chalk.level = 1;
 const defaultLevel = logger.level;
 
 beforeEach(() => {
