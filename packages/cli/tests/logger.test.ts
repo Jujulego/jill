@@ -1,31 +1,72 @@
-import { logger as coreLogger } from '@jujulego/jill-core';
+import chalk from 'chalk';
 
 import { mockedOra } from '../mocks/ora';
-import { logger } from '../src/logger';
+import { logger, OraTransport } from '../src/logger';
 
 // Setup
-jest.mock('@jujulego/jill-core');
+const defaultLevel = logger.level;
 
 beforeEach(() => {
   jest.resetAllMocks();
+  jest.restoreAllMocks();
+
+  // Mocks
+  jest.spyOn(process.stderr, 'write')
+    .mockImplementation(() => true);
+
+  jest.spyOn(OraTransport.prototype, 'log');
+
+  logger.level = defaultLevel;
 });
 
 // Test suites
 describe('logger.debug', () => {
   // Tests
-  it('should call coreLogger.debug', () => {
+  it('should not call OraTransport.log (by default)', () => {
     logger.debug('test');
 
-    expect(coreLogger.debug).toBeCalledWith('test');
+    // Checks
+    expect(OraTransport.prototype.log).not.toBeCalled();
+  });
+
+  it('should call OraTransport.log', () => {
+    logger.level = 'debug';
+    logger.debug('test');
+
+    // Checks
+    expect(OraTransport.prototype.log).toBeCalledWith(
+      expect.objectContaining({
+        level: 'debug',
+        message: chalk`{grey test}`
+      }),
+      expect.anything()
+    );
+    expect(process.stderr.write).toBeCalledWith(chalk`{grey test}\n`);
   });
 });
 
 describe('logger.verbose', () => {
   // Tests
-  it('should call coreLogger.verbose', () => {
+  it('should not call OraTransport.log (by default)', () => {
     logger.verbose('test');
 
-    expect(coreLogger.verbose).toBeCalledWith('test');
+    // Checks
+    expect(OraTransport.prototype.log).not.toBeCalled();
+  });
+
+  it('should call OraTransport.log', () => {
+    logger.level = 'verbose';
+    logger.verbose('test');
+
+    // Checks
+    expect(OraTransport.prototype.log).toBeCalledWith(
+      expect.objectContaining({
+        level: 'verbose',
+        message: chalk`{blue test}`
+      }),
+      expect.anything()
+    );
+    expect(process.stderr.write).toBeCalledWith(chalk`{blue test}\n`);
   });
 });
 
@@ -34,7 +75,15 @@ describe('logger.info', () => {
   it('should call coreLogger.info', () => {
     logger.info('test');
 
-    expect(coreLogger.info).toBeCalledWith('test');
+    // Checks
+    expect(OraTransport.prototype.log).toBeCalledWith(
+      expect.objectContaining({
+        level: 'info',
+        message: chalk`{white test}`
+      }),
+      expect.anything()
+    );
+    expect(process.stderr.write).toBeCalledWith(chalk`{white test}\n`);
   });
 });
 
@@ -43,7 +92,15 @@ describe('logger.warn', () => {
   it('should call coreLogger.warn', () => {
     logger.warn('test');
 
-    expect(coreLogger.warn).toBeCalledWith('test');
+    // Checks
+    expect(OraTransport.prototype.log).toBeCalledWith(
+      expect.objectContaining({
+        level: 'warn',
+        message: chalk`{yellow test}`
+      }),
+      expect.anything()
+    );
+    expect(process.stderr.write).toBeCalledWith(chalk`{yellow test}\n`);
   });
 });
 
@@ -52,7 +109,15 @@ describe('logger.error', () => {
   it('should call coreLogger.error', () => {
     logger.error('test');
 
-    expect(coreLogger.error).toBeCalledWith('test');
+    // Checks
+    expect(OraTransport.prototype.log).toBeCalledWith(
+      expect.objectContaining({
+        level: 'error',
+        message: chalk`{red test}`
+      }),
+      expect.anything()
+    );
+    expect(process.stderr.write).toBeCalledWith(chalk`{red test}\n`);
   });
 });
 

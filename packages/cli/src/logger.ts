@@ -2,7 +2,6 @@ import { logger as coreLogger } from '@jujulego/jill-core';
 import { format, Logger } from 'winston';
 import Transport from 'winston-transport';
 import ora from 'ora';
-import * as process from 'process';
 
 // Constants
 const MESSAGE = Symbol.for('message');
@@ -34,10 +33,6 @@ export class OraTransport extends Transport {
   }
 
   log(info: any, next?: () => void): void {
-    if (next) {
-      setImmediate(next);
-    }
-
     // Print message
     const msg = info[MESSAGE] as string;
 
@@ -48,6 +43,10 @@ export class OraTransport extends Transport {
         process.stderr.write(line + '\n');
       }
     });
+
+    if (next) {
+      next();
+    }
   }
 
   spin(message: string): void {
@@ -77,11 +76,25 @@ class OraLogger {
 
   // Methods
   // - logger
-  debug = this.logger.debug;
-  verbose = this.logger.verbose;
-  info = this.logger.info;
-  warn = this.logger.warn;
-  error = this.logger.error;
+  debug(message: string): void {
+    this.logger.debug({ message });
+  }
+
+  verbose(message: string): void {
+    this.logger.verbose({ message });
+  }
+
+  info(message: string): void {
+    this.logger.info({ message });
+  }
+
+  warn(message: string): void {
+    this.logger.warn({ message });
+  }
+
+  error(message: string): void {
+    this.logger.error({ message });
+  }
 
   // - ora
   spin(msg: string): void {
@@ -111,7 +124,7 @@ class OraLogger {
 }
 
 // Setup
-const transport = new OraTransport({
+export const transport = new OraTransport({
   format: format.combine(
     format.colorize({ message: true, colors: { debug: 'grey', verbose: 'blue', info: 'white', error: 'red' } }),
     format.printf(({ label, message }) => message.split('\n').map(line => [label && `[${label}]`, line].filter(p => p).join(' ')).join('\n')),
