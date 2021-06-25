@@ -9,10 +9,10 @@ const MESSAGE = Symbol.for('message');
 // Transport
 export class OraTransport extends Transport {
   // Attributes
-  private readonly _spinner = ora();
+  readonly _spinner = ora();
 
   // Methods
-  keepSpinner<T>(fun: () => T): T {
+  private _keepSpinner<T>(fun: () => T): T {
     // Save state
     let spinning = false;
     let text = '';
@@ -36,7 +36,7 @@ export class OraTransport extends Transport {
     // Print message
     const msg = info[MESSAGE] as string;
 
-    this.keepSpinner(() => {
+    this._keepSpinner(() => {
       this._spinner.stop();
 
       for (const line of msg.split('\n')) {
