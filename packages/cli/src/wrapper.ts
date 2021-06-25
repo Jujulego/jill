@@ -10,7 +10,7 @@ export interface CommonArgs extends Arguments {
 }
 
 // Wrapper
-export function commandHandler<A extends CommonArgs>(handler: (project: Project, argv: A) => Promise<void>) {
+export function commandHandler<A extends CommonArgs = CommonArgs>(handler: (project: Project, argv: A) => Promise<void>) {
   return async function (argv: A): Promise<void> {
     // Setup
     const prj = new Project(argv.project);
