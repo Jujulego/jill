@@ -4,10 +4,13 @@ import { logger } from '../../src/logger';
 import { commandHandler } from '../../src/wrapper';
 
 import { defaultOptions } from './defaults';
+import chalk from 'chalk';
 
 // Setup
 jest.mock('../../src/logger');
 jest.mock('../../src/wrapper');
+
+chalk.level = 1;
 
 let project: Project;
 let screen: string;
