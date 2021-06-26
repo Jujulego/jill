@@ -3,12 +3,13 @@ import path from 'path';
 import glob from 'tiny-glob';
 
 import { Project, Workspace } from '../src';
+import './logger';
 
 // Mock
 jest.mock('tiny-glob');
 
 // Setup
-const root = path.resolve(__dirname, '../mock');
+const root = path.resolve(__dirname, '../../../mock');
 let project: Project;
 
 beforeEach(() => {
@@ -19,7 +20,7 @@ beforeEach(() => {
   jest.spyOn(fs, 'readFile');
 
   (glob as jest.MockedFunction<typeof glob>)
-    .mockResolvedValue(['workspaces/test-a', 'workspaces/test-b', 'workspaces/test-c']);
+    .mockResolvedValue(['workspaces/test-a', 'workspaces/test-b', 'workspaces/test-c', 'workspaces/test-d']);
 });
 
 // Test suite
@@ -75,6 +76,12 @@ describe('Project.workspaces', () => {
 
     await expect(gen.next())
       .resolves.toEqual({
+        done: false,
+        value: expect.objectContaining({ name: 'mock-test-d' })
+      });
+
+    await expect(gen.next())
+      .resolves.toEqual({
         done: true
       });
   });
@@ -110,16 +117,17 @@ describe('Project.workspace', () => {
     expect(fs.readFile).toBeCalledWith(path.join(root, 'workspaces/test-a/package.json'), 'utf-8');
   });
 
-  it('should return named workspace', async () => {
+  it('should fail to return unknown workspace', async () => {
     await expect(project.workspace('does-not-exists'))
       .resolves.toBeNull();
 
     // Checks
     expect(glob).toBeCalledWith('workspaces/*', { cwd: root });
-    expect(fs.readFile).toBeCalledTimes(4);
+    expect(fs.readFile).toBeCalledTimes(5);
     expect(fs.readFile).toBeCalledWith(path.join(root, 'package.json'), 'utf-8');
     expect(fs.readFile).toBeCalledWith(path.join(root, 'workspaces/test-a/package.json'), 'utf-8');
     expect(fs.readFile).toBeCalledWith(path.join(root, 'workspaces/test-b/package.json'), 'utf-8');
     expect(fs.readFile).toBeCalledWith(path.join(root, 'workspaces/test-c/package.json'), 'utf-8');
+    expect(fs.readFile).toBeCalledWith(path.join(root, 'workspaces/test-d/package.json'), 'utf-8');
   });
 });

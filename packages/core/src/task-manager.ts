@@ -2,6 +2,7 @@ import { EventEmitter } from 'events';
 import os from 'os';
 
 import { Task } from './task';
+import { logger } from './logger';
 
 // Types
 export type TaskEvent = 'started' | 'completed';
@@ -17,7 +18,10 @@ export class TaskManager extends EventEmitter {
   // Constructor
   constructor(
     readonly jobs: number = os.cpus().length
-  ) { super(); }
+  ) {
+    super();
+    logger.verbose(`Run up to ${jobs} tasks at the same time`);
+  }
 
   // Methods
   private _sortByComplexity() {

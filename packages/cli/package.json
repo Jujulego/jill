@@ -1,32 +1,39 @@
 {
-  "name": "@jujulego/jill-core",
+  "name": "@jujulego/jill",
   "version": "1.0.0-alpha.0",
   "license": "MIT",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "bin": "./bin/jill.js",
+  "main": "./dist/main.js",
+  "types": "./dist/main.d.ts",
   "repository": "git@github.com:Jujulego/jill.git",
   "scripts": {
     "lint": "eslint src/**/*",
     "build": "tsc -p tsconfig.build.json",
+    "start": "ts-node src/main.ts",
     "test": "jest",
-    "jill:build": "tsc -p tsconfig.build.json"
+    "jill:build": "tsc -p tsconfig.build.json --pretty"
   },
   "engines": {
     "node": "^14"
   },
   "dependencies": {
-    "tiny-glob": "^0.2.9",
-    "winston": "^3.3.3"
+    "@jujulego/jill-core": "1.0.0-alpha.0",
+    "chalk": "^4.1.1",
+    "ora": "^5.4.1",
+    "winston": "^3.3.3",
+    "winston-transport": "^4.4.0",
+    "yargs": "^17.0.1"
   },
   "devDependencies": {
     "@types/jest": "^26.0.23",
     "@types/node": "^14.17.3",
+    "@types/yargs": "^17.0.0",
     "@typescript-eslint/eslint-plugin": "^4.26.1",
     "@typescript-eslint/parser": "^4.26.1",
     "eslint": "^7.28.0",
     "jest": "^27.0.4",
     "ts-jest": "^27.0.3",
-    "typescript": "^4.3.2",
-    "winston-transport": "^4.4.0"
+    "ts-node": "^10.0.0",
+    "typescript": "^4.3.2"
   }
 }

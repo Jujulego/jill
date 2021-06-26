@@ -1,0 +1,30 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`jill info should print workspace basic info 1`] = `
+"Workspace [1mwks[22m:
+[1mVersion:[22m   1.0.0
+[1mDirectory:[22m wks
+"
+`;
+
+exports[`jill info should print workspace basic info with dependencies 1`] = `
+"Workspace [1mwks[22m:
+[1mVersion:[22m   1.0.0
+[1mDirectory:[22m wks
+undefined
+[1mDependencies:[22m
+- depA
+- depB
+"
+`;
+
+exports[`jill info should print workspace basic info with dev-dependencies 1`] = `
+"Workspace [1mwks[22m:
+[1mVersion:[22m   1.0.0
+[1mDirectory:[22m wks
+undefined
+[1mDev-Dependencies:[22m
+- depA
+- depB
+"
+`;

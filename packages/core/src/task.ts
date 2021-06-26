@@ -1,13 +1,17 @@
 import { spawn, ChildProcess } from 'child_process';
 import { EventEmitter } from 'events';
+import { Logger } from 'winston';
 
+import { logger } from './logger';
 import { Workspace } from './workspace';
+import * as path from 'path';
 
 // Types
 export interface TaskOptions {
   cwd?: string;
   env?: Partial<Record<string, string>>
-  workspace?: Workspace;
+  logger?: Logger;
+  workspace?: Workspace,
 }
 
 export type TaskStatus = 'waiting' | 'ready' | 'running' | 'done' | 'failed';
@@ -19,20 +23,25 @@ export class Task extends EventEmitter {
   private _status: TaskStatus = 'ready';
   private _dependencies: Task[] = [];
   private _process?: ChildProcess;
+  private readonly _logger: Logger;
 
   // Constructor
   constructor(
     readonly cmd: string,
     readonly args: string[] = [],
     readonly opts: TaskOptions = {}
-  ) { super(); }
+  ) {
+    super();
+    this._logger = opts.logger || logger;
+  }
 
   // Methods
-  private _setStatus(status: TaskStatus) {
+  protected _setStatus(status: TaskStatus): void {
     if (this._status === status) return;
 
     // Update and emit
     this._status = status;
+    this._logger.debug(`${[this.cmd, ...this.args].join(' ')} is now ${status}`);
     this.emit(status);
   }
 
@@ -88,10 +97,11 @@ export class Task extends EventEmitter {
       throw Error(`Cannot start a ${this._status} task`);
     }
 
+    this._logger.verbose(`Running ${[this.cmd, ...this.args].join(' ')} (in ${path.relative(process.cwd(), this.cwd)})`);
     this._process = spawn(this.cmd, this.args, {
       cwd: this.cwd,
       shell: true,
-      stdio: 'inherit',
+      stdio: 'pipe',
       env: {
         FORCE_COLOR: '1',
         ...process.env,
@@ -100,6 +110,9 @@ export class Task extends EventEmitter {
     });
 
     this._setStatus('running');
+
+    this._process.stdout?.on('data', (msg: Buffer) => this._logger.info(msg.toString('utf-8')));
+    this._process.stderr?.on('data', (msg: Buffer) => this._logger.error(msg.toString('utf-8')));
 
     this._process.on('close', (code) => {
       if (code) {

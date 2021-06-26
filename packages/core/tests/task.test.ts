@@ -2,6 +2,7 @@ import cp from 'child_process';
 import { EventEmitter } from 'events';
 
 import { Task } from '../src';
+import './logger';
 
 beforeEach(() => {
   jest.resetAllMocks();
@@ -66,7 +67,7 @@ describe('Task.start', () => {
     expect(cp.spawn).toHaveBeenCalledWith('test', ['arg1', 'arg2'], {
       cwd: '/test',
       shell: true,
-      stdio: 'inherit',
+      stdio: 'pipe',
       env: expect.objectContaining({
         FORCE_COLOR: process.env.FORCE_COLOR || '1'
       })
@@ -105,7 +106,7 @@ describe('Task.start', () => {
     expect(cp.spawn).toHaveBeenCalledWith('test', ['arg1', 'arg2'], {
       cwd: '/test',
       shell: true,
-      stdio: 'inherit',
+      stdio: 'pipe',
       env: expect.objectContaining({
         FORCE_COLOR: process.env.FORCE_COLOR || '1'
       })
