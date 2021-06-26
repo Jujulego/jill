@@ -65,7 +65,7 @@ export class OraTransport extends Transport {
 }
 
 // Logger
-class OraLogger {
+export class OraLogger {
   // Logger
   constructor(
     private readonly logger: Logger,

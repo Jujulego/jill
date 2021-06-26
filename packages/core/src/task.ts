@@ -36,7 +36,7 @@ export class Task extends EventEmitter {
   }
 
   // Methods
-  private _setStatus(status: TaskStatus) {
+  protected _setStatus(status: TaskStatus): void {
     if (this._status === status) return;
 
     // Update and emit
