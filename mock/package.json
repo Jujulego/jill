@@ -1,5 +1,6 @@
 {
   "name": "mock-root",
+  "private": true,
   "workspaces": [
     "workspaces/*"
   ]

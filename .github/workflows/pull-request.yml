@@ -37,6 +37,8 @@ jobs:
     runs-on: ubuntu-latest
 
     strategy:
+      fail-fast: false
+
       matrix:
         package:
           - '@jujulego/jill'
@@ -67,6 +69,8 @@ jobs:
     needs: [ build ]
 
     strategy:
+      fail-fast: false
+
       matrix:
         include:
           - workspace: 'packages/cli'
@@ -109,3 +113,15 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  version:
+    runs-on: ubuntu-latest
+    needs: [ lint, tests ]
+
+    steps:
+      - uses: actions/checkout@v2.3.4
+        with:
+          fetch-depth: 0
+
+      - name: Version check
+        run: yarn version check

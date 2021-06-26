@@ -115,3 +115,54 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  publish:
+    runs-on: ubuntu-latest
+    environment: npm
+    needs: [ lint, tests ]
+
+    steps:
+      - uses: actions/checkout@v2.3.4
+
+      - name: Use Node.js 14.x
+        uses: actions/setup-node@v2.1.5
+        with:
+          node-version: 14.x
+          registry-url: https://registry.npmjs.org
+
+      - uses: actions/cache@v2.1.6
+        with:
+          path: .yarn/cache
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: ${{ runner.os }}-yarn-
+
+      - name: Install
+        run: yarn install --immutable
+
+      - uses: actions/download-artifact@v2
+        with:
+          name: build-artifacts
+          path: packages
+
+      - name: Apply version update
+        run: yarn version apply --all
+
+      - name: Commit
+        run: |
+          git config --global user.name 'Boobrie'
+          git config --global user.email 'boobrie@users.noreply.github.com'
+
+          if `git diff --quiet --exit-code`
+          then
+            echo "::warning::Nothing changed !"
+          else
+            git commit -am "update(workspace): update version numbers"
+          fi
+
+      - name: Publish
+        run: yarn workspaces foreach --no-private npm publish --access public --tolerate-republish
+        env:
+          YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Push
+        run: git push
