@@ -111,8 +111,12 @@ export class Task extends EventEmitter {
 
     this._setStatus('running');
 
-    this._process.stdout?.on('data', (msg: Buffer) => this._logger.info(msg.toString('utf-8')));
-    this._process.stderr?.on('data', (msg: Buffer) => this._logger.error(msg.toString('utf-8')));
+    this._process.stdout?.on('data', (msg: Buffer) => {
+      this._logger.info(msg.toString('utf-8').replace(/\n$/, ''))
+    });
+    this._process.stderr?.on('data', (msg: Buffer) => {
+      this._logger.error(msg.toString('utf-8').replace(/\n$/, ''))
+    });
 
     this._process.on('close', (code) => {
       if (code) {

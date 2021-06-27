@@ -19,6 +19,7 @@ import yargs from 'yargs';
     })
     .command(require('./commands/info')) // eslint-disable-line @typescript-eslint/no-var-requires
     .command(require('./commands/build')) // eslint-disable-line @typescript-eslint/no-var-requires
+    .command(require('./commands/run')) // eslint-disable-line @typescript-eslint/no-var-requires
     .demandCommand(1)
     .help()
     .parse();
