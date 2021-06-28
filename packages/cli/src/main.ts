@@ -22,5 +22,8 @@ import yargs from 'yargs';
     .command(require('./commands/run')) // eslint-disable-line @typescript-eslint/no-var-requires
     .demandCommand(1)
     .help()
+    .parserConfiguration({
+      'populate--': true,
+    })
     .parse();
 })();

@@ -2,6 +2,6 @@
   "name": "mock-test-c",
   "private": true,
   "scripts": {
-    "jill:build": "node -e \"setTimeout(() => process.exit(0), 3000)\""
+    "jill:build": "node -e \"setTimeout(() => process.exit(0), 3000)\" --"
   }
 }

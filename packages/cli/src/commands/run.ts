@@ -28,7 +28,7 @@ export const handler = commandHandler<RunArgs>(async (prj, argv) => {
 
   // Run build task
   const manager = new TaskManager();
-  const task = await wks.run(argv.script);
+  const task = await wks.run(argv.script, argv['--'].map(arg => arg.toString()));
   manager.add(task);
 
   const running = new Set<Task>();
