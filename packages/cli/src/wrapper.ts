@@ -7,6 +7,7 @@ import { logger } from './logger';
 export interface CommonArgs extends Arguments {
   project: string;
   verbose: number;
+  '--'?: (string | number)[];
 }
 
 // Wrapper

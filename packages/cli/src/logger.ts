@@ -55,8 +55,12 @@ export class OraTransport extends Transport {
     this._spinner.succeed(log);
   }
 
-  fail(log: string): void {
-    this._spinner.fail(log);
+  fail(log: Error | string): void {
+    if (typeof log === 'string') {
+      this._spinner.fail(log);
+    } else {
+      this._spinner.fail(log.stack || log.toString());
+    }
   }
 
   stop(): void {

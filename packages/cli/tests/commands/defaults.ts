@@ -5,5 +5,6 @@ export const defaultOptions: CommonArgs = {
   project: '.',
   verbose: 0,
   '$0': 'jill',
-  _: []
+  _: [],
+  '--': []
 };

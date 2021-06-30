@@ -33,6 +33,7 @@ export class Task extends EventEmitter {
   ) {
     super();
     this._logger = opts.logger || logger;
+    this._logger.debug(`${[this.cmd, ...this.args].join(' ')} is ${this._status}`);
   }
 
   // Methods
@@ -41,7 +42,7 @@ export class Task extends EventEmitter {
 
     // Update and emit
     this._status = status;
-    this._logger.debug(`${[this.cmd, ...this.args].join(' ')} is now ${status}`);
+    this._logger.debug(`${[this.cmd, ...this.args].join(' ')} is ${status}`);
     this.emit(status);
   }
 
@@ -111,8 +112,12 @@ export class Task extends EventEmitter {
 
     this._setStatus('running');
 
-    this._process.stdout?.on('data', (msg: Buffer) => this._logger.info(msg.toString('utf-8')));
-    this._process.stderr?.on('data', (msg: Buffer) => this._logger.error(msg.toString('utf-8')));
+    this._process.stdout?.on('data', (msg: Buffer) => {
+      this._logger.info(msg.toString('utf-8').replace(/\n$/, ''));
+    });
+    this._process.stderr?.on('data', (msg: Buffer) => {
+      this._logger.error(msg.toString('utf-8').replace(/\n$/, ''));
+    });
 
     this._process.on('close', (code) => {
       if (code) {
