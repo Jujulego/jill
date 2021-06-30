@@ -35,7 +35,7 @@ export const handler = commandHandler<RunArgs>(async (prj, argv) => {
   const tlogger = new TaskLogger();
   tlogger.on('spin-simple', (tsk) => tsk === task ? `Running ${argv.script} in ${argv.workspace} ...` : `Building ${tsk.workspace?.name || tsk.cwd} ...`);
   tlogger.on('fail', (tsk) => tsk === task ? `${argv.script} failed` : `Failed to build ${tsk.workspace?.name || tsk.cwd}`);
-  tlogger.on('succeed', (tsk) => tsk === task ? `${argv.script} done` : `${tsk.workspace?.name || tsk.cwd} built`);
+  tlogger.on('succeed', (tsk) => tsk === task ? `${argv.workspace} ${argv.script} done` : `${tsk.workspace?.name || tsk.cwd} built`);
   tlogger.connect(manager);
 
   manager.start();

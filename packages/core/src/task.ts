@@ -33,6 +33,7 @@ export class Task extends EventEmitter {
   ) {
     super();
     this._logger = opts.logger || logger;
+    this._logger.debug(`${[this.cmd, ...this.args].join(' ')} is ${this._status}`);
   }
 
   // Methods
@@ -41,7 +42,7 @@ export class Task extends EventEmitter {
 
     // Update and emit
     this._status = status;
-    this._logger.debug(`${[this.cmd, ...this.args].join(' ')} is now ${status}`);
+    this._logger.debug(`${[this.cmd, ...this.args].join(' ')} is ${status}`);
     this.emit(status);
   }
 
