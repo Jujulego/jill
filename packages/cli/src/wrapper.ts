@@ -26,7 +26,7 @@ export function commandHandler<A extends CommonArgs = CommonArgs>(handler: (proj
     try {
       await handler(prj, argv);
     } catch (error) {
-      logger.fail(error.stack || error.toString());
+      logger.fail(error);
       process.exit(1);
     }
   };
