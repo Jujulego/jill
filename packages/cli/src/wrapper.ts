@@ -7,7 +7,7 @@ import { logger } from './logger';
 export interface CommonArgs extends Arguments {
   project: string;
   verbose: number;
-  '--': (string | number)[];
+  '--'?: (string | number)[];
 }
 
 // Wrapper
@@ -26,7 +26,7 @@ export function commandHandler<A extends CommonArgs = CommonArgs>(handler: (proj
     try {
       await handler(prj, argv);
     } catch (error) {
-      logger.fail(error);
+      logger.fail(error.stack || error.toString());
       process.exit(1);
     }
   };

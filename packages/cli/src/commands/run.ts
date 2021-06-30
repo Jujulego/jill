@@ -1,7 +1,8 @@
-import { Task, TaskManager } from '@jujulego/jill-core';
+import { TaskManager } from '@jujulego/jill-core';
 
 import { commandHandler, CommonArgs } from '../wrapper';
 import { logger } from '../logger';
+import { TaskLogger } from '../task-logger';
 
 // Types
 export interface RunArgs extends CommonArgs {
@@ -28,49 +29,14 @@ export const handler = commandHandler<RunArgs>(async (prj, argv) => {
 
   // Run build task
   const manager = new TaskManager();
-  const task = await wks.run(argv.script, argv['--'].map(arg => arg.toString()));
+  const task = await wks.run(argv.script, argv['--']?.map(arg => arg.toString()));
   manager.add(task);
 
-  const running = new Set<Task>();
-  manager.on('started', (tsk) => {
-    running.add(tsk);
-
-    if (running.size > 1) {
-      logger.spin(`Building ${running.size} packages ...`);
-    } else if (tsk === task) {
-      logger.spin(`Running ${argv.script} in ${argv.workspace} ...`);
-    } else if (running.size > 0) {
-      logger.spin(`Building ${tsk.workspace?.name || tsk.cwd} ...`);
-    }
-  });
-
-  manager.on('completed', (tsk) => {
-    running.delete(tsk);
-
-    if (tsk.status === 'failed') {
-      if (tsk === task) {
-        logger.fail(`${argv.script} failed`);
-      } else {
-        logger.fail(`Failed to build ${tsk.workspace?.name || tsk.cwd}`);
-      }
-    } else {
-      if (tsk === task) {
-        logger.stop();
-      } else {
-        logger.succeed(`${tsk.workspace?.name || tsk.cwd} built`);
-      }
-    }
-
-    if (running.size > 1) {
-      logger.spin(`Building ${running.size} packages ...`);
-    } else if (running.size > 0) {
-      if (tsk !== task) {
-        logger.spin(`Running ${argv.script} in ${argv.workspace} ...`);
-      } else {
-        logger.spin(`Building ${tsk.workspace?.name || tsk.cwd} ...`);
-      }
-    }
-  });
+  const tlogger = new TaskLogger();
+  tlogger.on('spin-simple', (tsk) => tsk === task ? `Running ${argv.script} in ${argv.workspace} ...` : `Building ${tsk.workspace?.name || tsk.cwd} ...`);
+  tlogger.on('fail', (tsk) => tsk === task ? `${argv.script} failed` : `Failed to build ${tsk.workspace?.name || tsk.cwd}`);
+  tlogger.on('succeed', (tsk) => tsk === task ? `${argv.script} done` : `${tsk.workspace?.name || tsk.cwd} built`);
+  tlogger.connect(manager);
 
   manager.start();
 });

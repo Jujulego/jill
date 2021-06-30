@@ -2,6 +2,7 @@ import { Task, TaskManager } from '@jujulego/jill-core';
 
 import { commandHandler, CommonArgs } from '../wrapper';
 import { logger } from '../logger';
+import { TaskLogger } from '../task-logger';
 
 // Types
 export interface BuildArgs extends CommonArgs {
@@ -29,32 +30,8 @@ export const handler = commandHandler<BuildArgs>(async (prj, argv) => {
   const manager = new TaskManager();
   manager.add(await wks.build());
 
-  const running = new Set<Task>();
-  manager.on('started', (task) => {
-    running.add(task);
-
-    if (running.size > 1) {
-      logger.spin(`Building ${running.size} packages ...`);
-    } else {
-      logger.spin(`Building ${task.workspace?.name || task.cwd} ...`);
-    }
-  });
-
-  manager.on('completed', (task) => {
-    running.delete(task);
-
-    if (task.status === 'failed') {
-      logger.fail(`Failed to build ${task.workspace?.name || task.cwd}`);
-    } else {
-      logger.succeed(`${task.workspace?.name || task.cwd} built`);
-    }
-
-    if (running.size > 1) {
-      logger.spin(`Building ${running.size} packages ...`);
-    } else if (running.size > 0) {
-      logger.spin(`Building ${task.workspace?.name || task.cwd} ...`);
-    }
-  });
+  const tlogger = new TaskLogger();
+  tlogger.connect(manager);
 
   manager.start();
 });
