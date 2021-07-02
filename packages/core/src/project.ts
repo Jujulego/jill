@@ -5,7 +5,6 @@ import glob from 'tiny-glob';
 import { Manifest } from './manifest';
 import { logger } from './logger';
 import { Workspace } from './workspace';
-import * as zlib from 'zlib';
 
 // Types
 export type PackageManager = 'npm' | 'yarn';
@@ -31,6 +30,29 @@ export class Project {
       logger.debug(`Forced use of ${opts.packageManager} in ${path.relative(process.cwd(), this.root)}`);
       this._packageManager = opts.packageManager;
     }
+  }
+
+  // Statics
+  static async searchProjectRoot(dir: string): Promise<string | null> {
+    // Will process directories from dir to root
+    let last: string | null = null;
+    dir = path.resolve(dir);
+
+    do {
+      const files = await fs.readdir(dir);
+
+      if (files.includes('package.json')) {
+        last = dir;
+      }
+
+      if (['package-lock.json', 'yarn.lock'].some(lock => files.includes(lock))) {
+        return dir;
+      }
+
+      dir = path.dirname(dir);
+    } while (dir !== path.dirname(dir));
+
+    return last;
   }
 
   // Methods

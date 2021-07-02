@@ -24,6 +24,18 @@ beforeEach(() => {
 });
 
 // Test suite
+describe('Project.searchProjectRoot', () => {
+  it('should return mock root', async () => {
+    await expect(Project.searchProjectRoot(root))
+      .resolves.toEqual(root);
+  });
+
+  it('should return mock root from workspace', async () => {
+    await expect(Project.searchProjectRoot(path.join(root, 'workspaces/test-a')))
+      .resolves.toEqual(root);
+  });
+});
+
 describe('Project.mainWorkspace', () => {
   // Tests
   it('should return root workspace', async () => {
