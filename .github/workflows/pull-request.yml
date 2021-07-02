@@ -92,7 +92,7 @@ jobs:
         run: yarn workspace ${{ matrix.package }} test
 
       - name: Sonarcloud
-        if: ${{ secrets.SONAR_TOKEN }}
+        if: ${{ !startsWith(github.ref, 'refs/heads/dependabot') }}
         uses: sonarsource/sonarcloud-github-action@v1.6
         with:
           projectBaseDir: ${{ matrix.workspace }}
