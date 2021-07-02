@@ -1,5 +1,10 @@
 {
   "extends": [
     "config:base"
-  ]
+  ],
+  "postUpgradeTasks": {
+    "commands": ["yarn version decline --deferred"],
+    "fileFilters": ["packages/*/package.json"],
+    "executionMode": "branch"
+  }
 }
