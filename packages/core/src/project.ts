@@ -33,9 +33,10 @@ export class Project {
   }
 
   // Statics
-  static async searchProjectRoot(dir: string): Promise<string | null> {
+  static async searchProjectRoot(dir: string): Promise<string> {
     // Will process directories from dir to root
-    let last: string | null = null;
+    let found = false;
+    let last = dir;
     dir = path.resolve(dir);
 
     do {
@@ -43,14 +44,22 @@ export class Project {
 
       if (files.includes('package.json')) {
         last = dir;
+        found = true;
       }
 
       if (['package-lock.json', 'yarn.lock'].some(lock => files.includes(lock))) {
+        logger.debug(`Project root found at ${path.relative(process.cwd(), dir) || '.'}`);
         return dir;
       }
 
       dir = path.dirname(dir);
     } while (dir !== path.dirname(dir));
+
+    if (found) {
+      logger.debug(`Project root found at ${path.relative(process.cwd(), last) || '.'}`);
+    } else {
+      logger.debug(`Project root not found, keeping ${path.relative(process.cwd(), last) || '.'}`);
+    }
 
     return last;
   }

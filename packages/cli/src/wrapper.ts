@@ -14,13 +14,17 @@ export interface CommonArgs extends Arguments {
 export function commandHandler<A extends CommonArgs = CommonArgs>(handler: (project: Project, argv: A) => Promise<void>) {
   return async function (argv: A): Promise<void> {
     // Setup
-    const prj = new Project(argv.project);
-
     if (argv.verbose === 1) {
       logger.level = 'verbose';
     } else if (argv.verbose >= 2) {
       logger.level = 'debug';
     }
+
+    if (!argv.project) {
+      argv.project = await Project.searchProjectRoot(process.cwd());
+    }
+
+    const prj = new Project(argv.project);
 
     // Run command
     try {
