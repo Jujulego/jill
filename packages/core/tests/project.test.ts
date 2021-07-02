@@ -23,7 +23,20 @@ beforeEach(() => {
     .mockResolvedValue(['workspaces/test-a', 'workspaces/test-b', 'workspaces/test-c', 'workspaces/test-d']);
 });
 
-// Test suite
+// Test suites
+describe('Project.searchProjectRoot', () => {
+  // Test
+  it('should return mock root', async () => {
+    await expect(Project.searchProjectRoot(root))
+      .resolves.toEqual(root);
+  });
+
+  it('should return mock root from workspace', async () => {
+    await expect(Project.searchProjectRoot(path.join(root, 'workspaces/test-a')))
+      .resolves.toEqual(root);
+  });
+});
+
 describe('Project.mainWorkspace', () => {
   // Tests
   it('should return root workspace', async () => {
@@ -129,5 +142,55 @@ describe('Project.workspace', () => {
     expect(fs.readFile).toBeCalledWith(path.join(root, 'workspaces/test-b/package.json'), 'utf-8');
     expect(fs.readFile).toBeCalledWith(path.join(root, 'workspaces/test-c/package.json'), 'utf-8');
     expect(fs.readFile).toBeCalledWith(path.join(root, 'workspaces/test-d/package.json'), 'utf-8');
+  });
+});
+
+describe('Project.packageManager', () => {
+  beforeEach(() => {
+    jest.spyOn(fs, 'readdir');
+  });
+
+  // Test
+  it('should return \'yarn\'', async () => {
+    (fs.readdir as jest.MockedFunction<any>)
+      .mockResolvedValue(['yarn.lock']);
+
+    // Test
+    await expect(project.packageManager())
+      .resolves.toBe('yarn');
+
+    expect(fs.readdir).toBeCalledWith(root);
+  });
+
+  it('should return \'npm\'', async () => {
+    (fs.readdir as jest.MockedFunction<any>)
+      .mockResolvedValue(['package-lock.json']);
+
+    // Test
+    await expect(project.packageManager())
+      .resolves.toBe('npm');
+
+    expect(fs.readdir).toBeCalledWith(root);
+  });
+
+  it('should return \'npm\' (nothing recognized)', async () => {
+    (fs.readdir as jest.MockedFunction<any>)
+      .mockResolvedValue([]);
+
+    // Test
+    await expect(project.packageManager())
+      .resolves.toBe('npm');
+
+    expect(fs.readdir).toBeCalledWith(root);
+  });
+
+  it('should return packageManager from options', async () => {
+    const prj = new Project(root, { packageManager: 'yarn' });
+
+    // Test
+    await expect(prj.packageManager())
+      .resolves.toBe('yarn');
+
+    expect(fs.readdir).not.toBeCalled();
   });
 });

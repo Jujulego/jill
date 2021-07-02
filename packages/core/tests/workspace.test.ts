@@ -15,6 +15,7 @@ beforeEach(async () => {
   // Mocks
   jest.restoreAllMocks();
   jest.spyOn(project, 'workspace');
+  jest.spyOn(project, 'packageManager');
 });
 
 // Test suites
@@ -63,34 +64,37 @@ describe('Workspace.devDependencies', () => {
 describe('Workspace.run', () => {
   // Tests
   it('should return task with all build tree', async () => {
+    (project.packageManager as jest.MockedFunction<typeof project.packageManager>)
+      .mockResolvedValue('yarn');
+
     const task = await workspace.run('test');
 
     // Check up tree
     expect(task).toEqual(expect.objectContaining({
       cmd: 'yarn',
-      args: ['test'],
+      args: ['run', 'test'],
       cwd: path.join(root, 'workspaces/test-a'),
       dependencies: [
         expect.objectContaining({
           cmd: 'yarn',
-          args: ['jill:build'],
+          args: ['run', 'jill:build'],
           cwd: path.join(root, 'workspaces/test-b'),
           dependencies: [
             expect.objectContaining({
               cmd: 'yarn',
-              args: ['jill:build'],
+              args: ['run', 'jill:build'],
               cwd: path.join(root, 'workspaces/test-c')
             }),
             expect.objectContaining({
               cmd: 'yarn',
-              args: ['jill:build'],
+              args: ['run', 'jill:build'],
               cwd: path.join(root, 'workspaces/test-d')
             })
           ]
         }),
         expect.objectContaining({
           cmd: 'yarn',
-          args: ['jill:build'],
+          args: ['run', 'jill:build'],
           cwd: path.join(root, 'workspaces/test-c')
         })
       ]
@@ -98,5 +102,6 @@ describe('Workspace.run', () => {
 
     // Both workspace 'mock-test-c' task should be the same
     expect(task.dependencies[1]).toBe(task.dependencies[0].dependencies[0]);
+    expect(project.packageManager).toBeCalled();
   });
 });

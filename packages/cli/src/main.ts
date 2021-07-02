@@ -9,8 +9,7 @@ import yargs from 'yargs';
     .option('project', {
       alias: 'p',
       type: 'string',
-      description: 'Project root directory',
-      default: '.'
+      description: 'Project root directory'
     })
     .option('verbose', {
       alias: 'v',
