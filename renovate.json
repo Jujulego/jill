@@ -4,7 +4,7 @@
   ],
   "postUpgradeTasks": {
     "commands": ["yarn version decline --deferred"],
-    "fileFilters": ["packages/*/package.json"],
+    "fileFilters": [".yarn/versions/*.yml"],
     "executionMode": "branch"
   }
 }
