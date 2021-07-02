@@ -5,6 +5,13 @@ import glob from 'tiny-glob';
 import { Manifest } from './manifest';
 import { logger } from './logger';
 import { Workspace } from './workspace';
+import * as zlib from 'zlib';
+
+// Types
+export type PackageManager = 'npm' | 'yarn';
+export interface ProjectOptions {
+  packageManager?: PackageManager;
+}
 
 // Class
 export class Project {
@@ -13,8 +20,18 @@ export class Project {
   private readonly _names = new Map<string, Workspace>();
   private readonly _workspaces = new Map<string, Workspace>();
 
+  private _packageManager?: PackageManager;
+
   // Constructor
-  constructor(private readonly _root: string) {}
+  constructor(
+    private readonly _root: string,
+    opts: ProjectOptions = {}
+  ) {
+    if (opts.packageManager) {
+      logger.debug(`Forced use of ${opts.packageManager} in ${path.relative(process.cwd(), this.root)}`);
+      this._packageManager = opts.packageManager;
+    }
+  }
 
   // Methods
   private async _loadManifest(dir: string): Promise<Manifest> {
@@ -37,6 +54,25 @@ export class Project {
     }
 
     return ws;
+  }
+
+  async packageManager(): Promise<PackageManager> {
+    if (!this._packageManager) {
+      const files = await fs.readdir(this.root);
+
+      if (files.includes('yarn.lock')) {
+        logger.debug(`Detected yarn in ${path.relative(process.cwd(), this.root)}`);
+        this._packageManager = 'yarn';
+      } else if (files.includes('package-lock.json')) {
+        logger.debug(`Detected npm in ${path.relative(process.cwd(), this.root)}`);
+        this._packageManager = 'npm';
+      } else {
+        logger.debug(`No package manager recognized in ${path.relative(process.cwd(), this.root)}, defaults to npm`);
+        this._packageManager = 'npm';
+      }
+    }
+
+    return this._packageManager;
   }
 
   async mainWorkspace(): Promise<Workspace> {
