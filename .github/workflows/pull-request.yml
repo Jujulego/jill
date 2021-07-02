@@ -100,14 +100,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-  cool:
-    runs-on: ubuntu-latest
-
-    steps:
-      - run: echo ${{ github.head_ref }}
-      - run: echo ${{ startsWith(github.head_ref, 'dependabot/') }}
-      - run: echo ${{ !startsWith(github.head_ref, 'dependabot/') }}
-
   version:
     runs-on: ubuntu-latest
     needs: [ lint, tests ]
