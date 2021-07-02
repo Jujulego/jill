@@ -92,7 +92,7 @@ jobs:
         run: yarn workspace ${{ matrix.package }} test
 
       - name: Sonarcloud
-        if: ${{ !startsWith(github.ref, 'refs/heads/dependabot') }}
+        if: ${{ !startsWith(github.head_ref, 'refs/heads/dependabot') }}
         uses: sonarsource/sonarcloud-github-action@v1.6
         with:
           projectBaseDir: ${{ matrix.workspace }}
@@ -104,9 +104,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - run: echo ${{ github.ref }}
-      - run: echo ${{ startsWith(github.ref, 'refs/heads/dependabot') }}
-      - run: echo ${{ !startsWith(github.ref, 'refs/heads/dependabot') }}
+      - run: echo ${{ github.head_ref }}
+      - run: echo ${{ startsWith(github.head_ref, 'refs/heads/dependabot') }}
+      - run: echo ${{ !startsWith(github.head_ref, 'refs/heads/dependabot') }}
 
   version:
     runs-on: ubuntu-latest
