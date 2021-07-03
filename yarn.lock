@@ -686,17 +686,17 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@jujulego/jill-core@workspace:packages/core"
   dependencies:
-    "@types/jest": ^26.0.23
-    "@types/node": ^14.17.3
-    "@typescript-eslint/eslint-plugin": ^4.26.1
-    "@typescript-eslint/parser": ^4.26.1
-    eslint: ^7.28.0
-    jest: ^27.0.4
+    "@types/jest": 26.0.23
+    "@types/node": 14.17.3
+    "@typescript-eslint/eslint-plugin": 4.26.1
+    "@typescript-eslint/parser": 4.26.1
+    eslint: 7.28.0
+    jest: 27.0.4
     tiny-glob: ^0.2.9
-    ts-jest: ^27.0.3
-    typescript: ^4.3.2
+    ts-jest: 27.0.3
+    typescript: 4.3.2
     winston: ^3.3.3
-    winston-transport: ^4.4.0
+    winston-transport: 4.4.0
   languageName: unknown
   linkType: soft
 
@@ -705,18 +705,18 @@ __metadata:
   resolution: "@jujulego/jill@workspace:packages/cli"
   dependencies:
     "@jujulego/jill-core": 1.0.0-alpha.2
-    "@types/jest": ^26.0.23
-    "@types/node": ^14.17.3
-    "@types/yargs": ^17.0.0
-    "@typescript-eslint/eslint-plugin": ^4.26.1
-    "@typescript-eslint/parser": ^4.26.1
+    "@types/jest": 26.0.23
+    "@types/node": 14.17.3
+    "@types/yargs": 17.0.0
+    "@typescript-eslint/eslint-plugin": 4.26.1
+    "@typescript-eslint/parser": 4.26.1
     chalk: ^4.1.1
-    eslint: ^7.28.0
-    jest: ^27.0.4
+    eslint: 7.28.0
+    jest: 27.0.4
     ora: ^5.4.1
-    ts-jest: ^27.0.3
-    ts-node: ^10.0.0
-    typescript: ^4.3.2
+    ts-jest: 27.0.3
+    ts-node: 10.0.0
+    typescript: 4.3.2
     winston: ^3.3.3
     winston-transport: ^4.4.0
     yargs: ^17.0.1
@@ -890,7 +890,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/jest@npm:^26.0.23":
+"@types/jest@npm:26.0.23":
   version: 26.0.23
   resolution: "@types/jest@npm:26.0.23"
   dependencies:
@@ -914,7 +914,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^14.17.3":
+"@types/node@npm:14.17.3":
   version: 14.17.3
   resolution: "@types/node@npm:14.17.3"
   checksum: 0d3e3c3dbb8250166d7c8c7c6221bde20a366d2c34b27c0072c3962a32c8a74c4ae4a168bfe53d6193e7b0bba8d8bc87608a6fd2af7918cd444a9aa699b4ce18
@@ -942,6 +942,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/yargs@npm:17.0.0":
+  version: 17.0.0
+  resolution: "@types/yargs@npm:17.0.0"
+  dependencies:
+    "@types/yargs-parser": "*"
+  checksum: 92ea97fa209768b993d1a06b9f2453161fc7fc3b25211d1235d112bc960e57b180c0b8616eb10c3e89b5d1bc6add255b0b10e550165ee318560bc0531dfe13b3
+  languageName: node
+  linkType: hard
+
 "@types/yargs@npm:^15.0.0":
   version: 15.0.13
   resolution: "@types/yargs@npm:15.0.13"
@@ -960,16 +969,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/yargs@npm:^17.0.0":
-  version: 17.0.0
-  resolution: "@types/yargs@npm:17.0.0"
-  dependencies:
-    "@types/yargs-parser": "*"
-  checksum: 92ea97fa209768b993d1a06b9f2453161fc7fc3b25211d1235d112bc960e57b180c0b8616eb10c3e89b5d1bc6add255b0b10e550165ee318560bc0531dfe13b3
-  languageName: node
-  linkType: hard
-
-"@typescript-eslint/eslint-plugin@npm:^4.26.1":
+"@typescript-eslint/eslint-plugin@npm:4.26.1":
   version: 4.26.1
   resolution: "@typescript-eslint/eslint-plugin@npm:4.26.1"
   dependencies:
@@ -1007,7 +1007,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/parser@npm:^4.26.1":
+"@typescript-eslint/parser@npm:4.26.1":
   version: 4.26.1
   resolution: "@typescript-eslint/parser@npm:4.26.1"
   dependencies:
@@ -2099,7 +2099,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint@npm:^7.28.0":
+"eslint@npm:7.28.0":
   version: 7.28.0
   resolution: "eslint@npm:7.28.0"
   dependencies:
@@ -3419,7 +3419,7 @@ fsevents@^2.3.2:
   languageName: node
   linkType: hard
 
-"jest@npm:^27.0.4":
+"jest@npm:27.0.4":
   version: 27.0.4
   resolution: "jest@npm:27.0.4"
   dependencies:
@@ -3442,9 +3442,9 @@ fsevents@^2.3.2:
   resolution: "jill@workspace:."
   dependencies:
     "@jujulego/jill": 1.0.0-alpha.2
-    "@typescript-eslint/parser": ^4.26.1
-    eslint: ^7.28.0
-    typescript: ^4.3.2
+    "@typescript-eslint/parser": 4.26.1
+    eslint: 7.28.0
+    typescript: 4.3.2
   languageName: unknown
   linkType: soft
 
@@ -4887,7 +4887,7 @@ resolve@^1.20.0:
   languageName: node
   linkType: hard
 
-"ts-jest@npm:^27.0.3":
+"ts-jest@npm:27.0.3":
   version: 27.0.3
   resolution: "ts-jest@npm:27.0.3"
   dependencies:
@@ -4910,7 +4910,7 @@ resolve@^1.20.0:
   languageName: node
   linkType: hard
 
-"ts-node@npm:^10.0.0":
+"ts-node@npm:10.0.0":
   version: 10.0.0
   resolution: "ts-node@npm:10.0.0"
   dependencies:
@@ -5010,7 +5010,7 @@ resolve@^1.20.0:
   languageName: node
   linkType: hard
 
-typescript@^4.3.2:
+typescript@4.3.2:
   version: 4.3.2
   resolution: "typescript@npm:4.3.2"
   bin:
@@ -5020,7 +5020,7 @@ typescript@^4.3.2:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@^4.3.2#builtin<compat/typescript>":
+"typescript@patch:typescript@4.3.2#builtin<compat/typescript>":
   version: 4.3.2
   resolution: "typescript@patch:typescript@npm%3A4.3.2#builtin<compat/typescript>::version=4.3.2&hash=ddfc1b"
   bin:
@@ -5186,7 +5186,7 @@ typescript@^4.3.2:
   languageName: node
   linkType: hard
 
-"winston-transport@npm:^4.4.0":
+"winston-transport@npm:4.4.0, winston-transport@npm:^4.4.0":
   version: 4.4.0
   resolution: "winston-transport@npm:4.4.0"
   dependencies:
