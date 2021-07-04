@@ -16,6 +16,7 @@ import yargs from 'yargs';
       type: 'count',
       description: 'Set verbosity level (1 for verbose, 2 for debug)',
     })
+    .command(require('./commands/list')) // eslint-disable-line @typescript-eslint/no-var-requires
     .command(require('./commands/info')) // eslint-disable-line @typescript-eslint/no-var-requires
     .command(require('./commands/build')) // eslint-disable-line @typescript-eslint/no-var-requires
     .command(require('./commands/run')) // eslint-disable-line @typescript-eslint/no-var-requires
