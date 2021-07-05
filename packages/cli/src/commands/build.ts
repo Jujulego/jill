@@ -1,11 +1,11 @@
-import { Task, TaskManager } from '@jujulego/jill-core';
+import { TaskManager } from '@jujulego/jill-core';
 
-import { commandHandler, CommonArgs } from '../wrapper';
+import { commandHandler } from '../wrapper';
 import { logger } from '../logger';
 import { TaskLogger } from '../task-logger';
 
 // Types
-export interface BuildArgs extends CommonArgs {
+export interface BuildArgs {
   workspace: string;
 }
 

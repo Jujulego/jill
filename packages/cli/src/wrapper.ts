@@ -4,15 +4,15 @@ import { Arguments } from 'yargs';
 import { logger } from './logger';
 
 // Types
-export interface CommonArgs extends Arguments {
+export interface CommonArgs {
   project: string;
   verbose: number;
   '--'?: (string | number)[];
 }
 
 // Wrapper
-export function commandHandler<A extends CommonArgs = CommonArgs>(handler: (project: Project, argv: A) => Promise<void>) {
-  return async function (argv: A): Promise<void> {
+export function commandHandler<A = Record<string, never>>(handler: (project: Project, argv: Arguments<A & CommonArgs>) => Promise<void>) {
+  return async function (argv: Arguments<A & CommonArgs>): Promise<void> {
     // Setup
     if (argv.verbose === 1) {
       logger.level = 'verbose';

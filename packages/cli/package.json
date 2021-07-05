@@ -20,6 +20,7 @@
     "@jujulego/jill-core": "1.0.0-alpha.2",
     "chalk": "^4.1.1",
     "ora": "^5.4.1",
+    "string-width": "^5.0.0",
     "winston": "^3.3.3",
     "winston-transport": "^4.4.0",
     "yargs": "^17.0.1"

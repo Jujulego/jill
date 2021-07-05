@@ -2,11 +2,11 @@ import { Workspace } from '@jujulego/jill-core';
 import chalk from 'chalk';
 import path from 'path';
 
-import { commandHandler, CommonArgs } from '../wrapper';
+import { commandHandler } from '../wrapper';
 import { logger } from '../logger';
 
 // Types
-export interface InfoArgs extends CommonArgs {
+export interface InfoArgs {
   workspace: string;
 }
 

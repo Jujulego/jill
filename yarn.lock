@@ -745,6 +745,7 @@ __metadata:
     eslint: 7.30.0
     jest: 27.0.6
     ora: ^5.4.1
+    string-width: ^5.0.0
     ts-jest: 27.0.3
     ts-node: 10.0.0
     typescript: 4.3.5
@@ -1245,6 +1246,13 @@ __metadata:
   version: 5.0.0
   resolution: "ansi-regex@npm:5.0.0"
   checksum: cbd9b5c9dbbb4a949c2a6e93f1c6cc19f0683d8a4724d08d2158627be6d373f0f3ba1f4ada01dce7ee141f2ba2628fbbd29932c7d49926e3b630c7f329f3178b
+  languageName: node
+  linkType: hard
+
+"ansi-regex@npm:^6.0.0":
+  version: 6.0.0
+  resolution: "ansi-regex@npm:6.0.0"
+  checksum: 69b395ba2c6b38957a0540561c5db0dc1a7f55d9432752628a59942645c0f145dabe2963bc4e57a1c921cd15a90722a46be2cea0b556ae74e16e09548c3f7ffc
   languageName: node
   linkType: hard
 
@@ -1996,6 +2004,13 @@ __metadata:
   version: 8.0.0
   resolution: "emoji-regex@npm:8.0.0"
   checksum: 87cf3f89efb8ba028075b3dc1713e2c5609af94cbc129b1f00c3113d01dbe4bf85c9d971e75a98bf8a8508131727682ce929e4bd70e9022af4fd47d75e9507de
+  languageName: node
+  linkType: hard
+
+"emoji-regex@npm:^9.2.2":
+  version: 9.2.2
+  resolution: "emoji-regex@npm:9.2.2"
+  checksum: f3029ec432745ecb7cf5dcea1bc9ad3d70714ef20fcae1dc87a422d3be68913c42ed3adbb86765e7aa6c723c3bcd5833b5f4e22ed06d5e5cb74e0f628d4fc95b
   languageName: node
   linkType: hard
 
@@ -2823,6 +2838,13 @@ fsevents@^2.3.2:
   version: 3.0.0
   resolution: "is-fullwidth-code-point@npm:3.0.0"
   checksum: a01a19ecac34386ae3a4e801c5639d6e31082d1ddc418e7cd96317fef3c8b24ec8531558e9d3d35b33551ab9c5cf20bf2cdefa583927b7ff60c27c8d7c216063
+  languageName: node
+  linkType: hard
+
+"is-fullwidth-code-point@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "is-fullwidth-code-point@npm:4.0.0"
+  checksum: 5c55b1bf131feadb19d111f63aa9816fb6ef049ce23c7a920f3045a040d09725469f562a8fa7f16a1db2084724ed14ea7d82e6d18492ff8ef063551cd69ead25
   languageName: node
   linkType: hard
 
@@ -4692,6 +4714,17 @@ resolve@^1.20.0:
   languageName: node
   linkType: hard
 
+"string-width@npm:^5.0.0":
+  version: 5.0.0
+  resolution: "string-width@npm:5.0.0"
+  dependencies:
+    emoji-regex: ^9.2.2
+    is-fullwidth-code-point: ^4.0.0
+    strip-ansi: ^7.0.0
+  checksum: e61fbfa4c2417bc449ec72d76b43d72e4a9eee3b8d03c12098d15647600a5b20369b92a09510c2e0d49e9a85a8e44db330ab97d2600d65e11958bc81f3f7547f
+  languageName: node
+  linkType: hard
+
 "string_decoder@npm:^1.1.1":
   version: 1.3.0
   resolution: "string_decoder@npm:1.3.0"
@@ -4734,6 +4767,15 @@ resolve@^1.20.0:
   dependencies:
     ansi-regex: ^5.0.0
   checksum: 10568c91cadbef182a807c38dfa718dce15a35b12fcc97b96b6b2029d0508ef66ca93fabddeb49482d9b027495d1e18591858e80f27ad26861c4967c60fd207f
+  languageName: node
+  linkType: hard
+
+"strip-ansi@npm:^7.0.0":
+  version: 7.0.0
+  resolution: "strip-ansi@npm:7.0.0"
+  dependencies:
+    ansi-regex: ^6.0.0
+  checksum: f6f5f89d5f8e80e0b24c7f3e8775bf6c98a7111fbd22dc35d051903de4bcf66b6e4e222b60962383d66542fdd37b4a9a9d18f65689cd7d7fa7e5a89459e9135b
   languageName: node
   linkType: hard
 
