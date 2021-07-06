@@ -10,6 +10,7 @@ import { commandHandler } from '../wrapper';
 export interface ListArgs {
   json: boolean;
   long: boolean;
+  private?: boolean;
 }
 
 // Command
@@ -26,6 +27,9 @@ export const builder: CommandBuilder = {
   json: {
     type: 'boolean',
     default: false
+  },
+  private: {
+    type: 'boolean'
   }
 };
 
@@ -35,6 +39,11 @@ export const handler = commandHandler<ListArgs>(async (prj, argv) => {
   const workspaces: Workspace[] = [];
 
   for await (const wks of prj.workspaces()) {
+    // Filter
+    if (argv.private !== undefined) {
+      if ((wks.manifest.private ?? false) !== argv.private) continue;
+    }
+
     workspaces.push(wks);
   }
 

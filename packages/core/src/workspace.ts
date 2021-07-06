@@ -2,7 +2,7 @@ import path from 'path';
 import { Logger } from 'winston';
 
 import { logger } from './logger';
-import { Manifest } from './manifest';
+import type { Manifest } from './manifest';
 import { Project } from './project';
 import { Task, TaskOptions } from './task';
 import { combine } from './utils';

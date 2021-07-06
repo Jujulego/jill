@@ -2,7 +2,7 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import glob from 'tiny-glob';
 
-import { Manifest } from './manifest';
+import type { Manifest } from './manifest';
 import { logger } from './logger';
 import { Workspace } from './workspace';
 
