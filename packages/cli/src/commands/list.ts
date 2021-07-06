@@ -1,5 +1,6 @@
-import path from 'path';
+import { Workspace } from '@jujulego/jill-core';
 import { CommandBuilder } from 'yargs';
+import path from 'path';
 
 import { logger } from '../logger';
 import { CliList } from '../utils/cli-list';
@@ -7,6 +8,7 @@ import { commandHandler } from '../wrapper';
 
 // Types
 export interface ListArgs {
+  json: boolean;
   long: boolean;
 }
 
@@ -20,27 +22,48 @@ export const builder: CommandBuilder = {
     alias: 'l',
     type: 'boolean',
     default: false
+  },
+  json: {
+    type: 'boolean',
+    default: false
   }
 };
 
 export const handler = commandHandler<ListArgs>(async (prj, argv) => {
   // Get data
   logger.spin('Loading project');
-  const list = new CliList();
+  const workspaces: Workspace[] = [];
 
   for await (const wks of prj.workspaces()) {
-    if (argv.long) {
-      list.add([wks.name, wks.manifest.version || '', path.relative(process.cwd(), wks.cwd) || '.']);
-    } else {
-      list.add([wks.name]);
-    }
+    workspaces.push(wks);
   }
 
   logger.stop();
 
   // Print data
-  for (const d of list.lines()) {
-    console.log(d);
+  if (argv.json) {
+    console.log(JSON.stringify(
+      workspaces.map(wks => ({
+        name: wks.name,
+        version: wks.manifest.version || '',
+        root: wks.cwd
+      })),
+      null, 2
+    ));
+  } else {
+    const list = new CliList();
+
+    for (const wks of workspaces) {
+      if (argv.long) {
+        list.add([wks.name, wks.manifest.version || '', path.relative(process.cwd(), wks.cwd) || '.']);
+      } else {
+        list.add([wks.name]);
+      }
+    }
+
+    for (const d of list.lines()) {
+      console.log(d);
+    }
   }
 
   process.exit(0);
