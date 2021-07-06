@@ -25,4 +25,13 @@ export class CliList {
         .join('  ');
     }
   }
+
+  // Properties
+  get columns(): number[] {
+    return this._columns;
+  }
+
+  get data(): string[][] {
+    return this._data;
+  }
 }
