@@ -1,2 +1,2 @@
-jill-cli: packages/cli/**/*
-jill-core: packages/core/**/*
+cli: packages/cli/**/*
+core: packages/core/**/*
