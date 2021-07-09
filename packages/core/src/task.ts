@@ -1,10 +1,10 @@
 import { spawn, ChildProcess } from 'child_process';
 import { EventEmitter } from 'events';
 import { Logger } from 'winston';
+import * as path from 'path';
 
 import { logger } from './logger';
 import { Workspace } from './workspace';
-import * as path from 'path';
 
 // Types
 export interface TaskOptions {
