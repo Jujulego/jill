@@ -1,10 +1,10 @@
 import { Project, Workspace } from '@jujulego/jill-core';
+import chalk from 'chalk';
 
 import { logger } from '../../src/logger';
 import { commandHandler } from '../../src/wrapper';
 
 import { defaultOptions } from './defaults';
-import chalk from 'chalk';
 
 // Setup
 jest.mock('../../src/logger');
@@ -66,7 +66,7 @@ describe('jill info', () => {
 
   it('should print workspace basic info with dependencies', async () => {
     jest.spyOn(project, 'workspace')
-      .mockImplementation(async (name) => new Workspace('./wks', { name, version: '1.0.0', dependencies: { depA: '1.0.0', depB: '1.0.0' } }, project));
+      .mockImplementation(async (name = 'wks') => new Workspace('./wks', { name, version: '1.0.0', dependencies: { depA: '1.0.0', depB: '1.0.0' } }, project));
 
     // Call
     const { handler } = await import('../../src/commands/info');
@@ -83,7 +83,7 @@ describe('jill info', () => {
 
   it('should print workspace basic info with dev-dependencies', async () => {
     jest.spyOn(project, 'workspace')
-      .mockImplementation(async (name) => new Workspace('./wks', { name, version: '1.0.0', devDependencies: { depA: '1.0.0', depB: '1.0.0' } }, project));
+      .mockImplementation(async (name = 'wks') => new Workspace('./wks', { name, version: '1.0.0', devDependencies: { depA: '1.0.0', depB: '1.0.0' } }, project));
 
     // Call
     const { handler } = await import('../../src/commands/info');

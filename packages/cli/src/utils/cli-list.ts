@@ -51,6 +51,10 @@ export class CliList {
     return this._columns;
   }
 
+  get headers(): string[] {
+    return this._headers || [];
+  }
+
   get data(): string[][] {
     return this._data;
   }

@@ -117,7 +117,7 @@ export class Project {
     return this._mainWorkspace;
   }
 
-  async* workspaces(): AsyncGenerator<Workspace, void, unknown> {
+  async* workspaces(): AsyncGenerator<Workspace, void> {
     const main = await this.mainWorkspace();
     yield main;
 
