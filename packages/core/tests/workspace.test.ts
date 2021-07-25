@@ -1,5 +1,6 @@
 import path from 'path';
 
+import * as utils from '../src/utils';
 import { Project, Workspace } from '../src';
 import './logger';
 
@@ -103,5 +104,32 @@ describe('Workspace.run', () => {
     // Both workspace 'mock-test-c' task should be the same
     expect(task.dependencies[1]).toBe(task.dependencies[0].dependencies[0]);
     expect(project.packageManager).toHaveBeenCalled();
+  });
+});
+
+describe('Workspace.isAffected', () => {
+  it('should return true', async () => {
+    jest.spyOn(utils, 'spawn').mockResolvedValue({ stdout: ['test.ts'], stderr: [] });
+
+    await expect(workspace.isAffected('test'))
+        .resolves.toBe(true);
+
+    // Checks
+    expect(utils.spawn).toHaveBeenCalledTimes(1);
+    expect(utils.spawn).toHaveBeenCalledWith('git', ['diff', '--name-only', 'test', '--',  path.join(root, 'workspaces/test-c')], { cwd: root });
+  });
+
+  it('should return false', async () => {
+    jest.spyOn(utils, 'spawn').mockResolvedValue({ stdout: [], stderr: [] });
+
+    await expect(workspace.isAffected('test'))
+        .resolves.toBe(false);
+
+    // Checks
+    expect(utils.spawn).toHaveBeenCalledTimes(4);
+    expect(utils.spawn).toHaveBeenCalledWith('git', ['diff', '--name-only', 'test', '--',  path.join(root, 'workspaces/test-a')], { cwd: root });
+    expect(utils.spawn).toHaveBeenCalledWith('git', ['diff', '--name-only', 'test', '--',  path.join(root, 'workspaces/test-b')], { cwd: root });
+    expect(utils.spawn).toHaveBeenCalledWith('git', ['diff', '--name-only', 'test', '--',  path.join(root, 'workspaces/test-c')], { cwd: root });
+    expect(utils.spawn).toHaveBeenCalledWith('git', ['diff', '--name-only', 'test', '--',  path.join(root, 'workspaces/test-d')], { cwd: root });
   });
 });

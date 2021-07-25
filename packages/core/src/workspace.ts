@@ -48,7 +48,7 @@ export class Workspace {
 
       if (!this._isAffected) {
         const { stdout } = await spawn('git', ['diff', '--name-only', base, '--', this.cwd], {
-            cwd: this.project.root,
+          cwd: this.project.root,
         });
 
         this._isAffected = stdout.length > 0;
