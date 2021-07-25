@@ -127,6 +127,10 @@ describe('jill list', () => {
   });
 
   it('should print json array of all workspaces (--json)', async () => {
+    for (const wks of workspaces) {
+      jest.spyOn(wks, 'cwd', 'get').mockReturnValue(`/full/path/to/${wks.name}`);
+    }
+
     // Call
     const { handler } = await import('../../src/commands/list');
     await expect(handler({ long: false, json: true, ...defaultOptions }))
