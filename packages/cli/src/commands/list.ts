@@ -13,8 +13,9 @@ export interface ListArgs {
   private?: boolean;
 
   // Formats
-  json: boolean;
+  headers?: boolean;
   long: boolean;
+  json: boolean;
 }
 
 // Command
@@ -26,22 +27,32 @@ export const builder: CommandBuilder = {
   affected: {
     alias: 'a',
     type: 'string',
-    group: 'Filters:'
+    coerce: (rev: string) => rev || 'master',
+    group: 'Filters:',
+    desc: 'Print only affected workspaces towards given git revision. If no revision is given test against master',
   },
   private: {
     type: 'boolean',
-    group: 'Filters:'
+    group: 'Filters:',
+    desc: 'Print only private workspaces',
+  },
+  headers: {
+    type: 'boolean',
+    group: 'Format:',
+    desc: 'Prints columns headers (defaults to true if long is set)'
   },
   long: {
     alias: 'l',
     type: 'boolean',
     default: false,
-    group: 'Format:'
+    group: 'Format:',
+    desc: 'Prints more data on workspaces',
   },
   json: {
     type: 'boolean',
     default: false,
-    group: 'Format:'
+    group: 'Format:',
+    desc: 'Prints data as a JSON array',
   }
 };
 
@@ -57,7 +68,7 @@ export const handler = commandHandler<ListArgs>(async (prj, argv) => {
     }
 
     if (argv.affected !== undefined) {
-      if (!await wks.isAffected(argv.affected || 'master')) continue;
+      if (!await wks.isAffected(argv.affected)) continue;
     }
 
     workspaces.push(wks);
@@ -77,6 +88,14 @@ export const handler = commandHandler<ListArgs>(async (prj, argv) => {
     ));
   } else {
     const list = new CliList();
+
+    if (argv.headers ?? argv.long) {
+      if (argv.long) {
+        list.setHeaders('Name', 'Version', 'Root');
+      } else {
+        list.setHeaders('Name');
+      }
+    }
 
     for (const wks of workspaces) {
       if (argv.long) {
