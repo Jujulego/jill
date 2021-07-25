@@ -35,8 +35,8 @@ describe('Workspace.dependencies', () => {
         done: true
       });
 
-    expect(project.workspace).toBeCalledTimes(1);
-    expect(project.workspace).toBeCalledWith('mock-test-b');
+    expect(project.workspace).toHaveBeenCalledTimes(1);
+    expect(project.workspace).toHaveBeenCalledWith('mock-test-b');
   });
 });
 
@@ -56,8 +56,8 @@ describe('Workspace.devDependencies', () => {
         done: true
       });
 
-    expect(project.workspace).toBeCalledTimes(1);
-    expect(project.workspace).toBeCalledWith('mock-test-c');
+    expect(project.workspace).toHaveBeenCalledTimes(1);
+    expect(project.workspace).toHaveBeenCalledWith('mock-test-c');
   });
 });
 
@@ -102,6 +102,6 @@ describe('Workspace.run', () => {
 
     // Both workspace 'mock-test-c' task should be the same
     expect(task.dependencies[1]).toBe(task.dependencies[0].dependencies[0]);
-    expect(project.packageManager).toBeCalled();
+    expect(project.packageManager).toHaveBeenCalled();
   });
 });

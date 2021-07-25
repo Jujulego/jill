@@ -40,10 +40,10 @@ describe('jill info', () => {
       .resolves.toBeUndefined();
 
     // Checks
-    expect(logger.spin).toBeCalledWith('Loading project');
-    expect(project.workspace).toBeCalledWith('does-not-exists');
-    expect(logger.fail).toBeCalledWith('Workspace does-not-exists not found');
-    expect(process.exit).toBeCalledWith(1);
+    expect(logger.spin).toHaveBeenCalledWith('Loading project');
+    expect(project.workspace).toHaveBeenCalledWith('does-not-exists');
+    expect(logger.fail).toHaveBeenCalledWith('Workspace does-not-exists not found');
+    expect(process.exit).toHaveBeenCalledWith(1);
   });
 
   it('should print workspace basic info', async () => {
@@ -57,11 +57,11 @@ describe('jill info', () => {
       .resolves.toBeUndefined();
 
     // Checks
-    expect(logger.spin).toBeCalledWith('Loading project');
-    expect(project.workspace).toBeCalledWith('wks');
-    expect(logger.stop).toBeCalled();
+    expect(logger.spin).toHaveBeenCalledWith('Loading project');
+    expect(project.workspace).toHaveBeenCalledWith('wks');
+    expect(logger.stop).toHaveBeenCalled();
     expect(screen).toMatchSnapshot();
-    expect(process.exit).toBeCalledWith(0);
+    expect(process.exit).toHaveBeenCalledWith(0);
   });
 
   it('should print workspace basic info with dependencies', async () => {
@@ -74,11 +74,11 @@ describe('jill info', () => {
       .resolves.toBeUndefined();
 
     // Checks
-    expect(logger.spin).toBeCalledWith('Loading project');
-    expect(project.workspace).toBeCalledWith('wks');
-    expect(logger.stop).toBeCalled();
+    expect(logger.spin).toHaveBeenCalledWith('Loading project');
+    expect(project.workspace).toHaveBeenCalledWith('wks');
+    expect(logger.stop).toHaveBeenCalled();
     expect(screen).toMatchSnapshot();
-    expect(process.exit).toBeCalledWith(0);
+    expect(process.exit).toHaveBeenCalledWith(0);
   });
 
   it('should print workspace basic info with dev-dependencies', async () => {
@@ -91,10 +91,10 @@ describe('jill info', () => {
       .resolves.toBeUndefined();
 
     // Checks
-    expect(logger.spin).toBeCalledWith('Loading project');
-    expect(project.workspace).toBeCalledWith('wks');
-    expect(logger.stop).toBeCalled();
+    expect(logger.spin).toHaveBeenCalledWith('Loading project');
+    expect(project.workspace).toHaveBeenCalledWith('wks');
+    expect(logger.stop).toHaveBeenCalled();
     expect(screen).toMatchSnapshot();
-    expect(process.exit).toBeCalledWith(0);
+    expect(process.exit).toHaveBeenCalledWith(0);
   });
 });

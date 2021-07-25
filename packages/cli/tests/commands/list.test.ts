@@ -58,11 +58,11 @@ describe('jill list', () => {
       .resolves.toBeUndefined();
 
     // Checks
-    expect(logger.spin).toBeCalledWith('Loading project');
-    expect(project.workspaces).toBeCalled();
-    expect(logger.stop).toBeCalled();
+    expect(logger.spin).toHaveBeenCalledWith('Loading project');
+    expect(project.workspaces).toHaveBeenCalled();
+    expect(logger.stop).toHaveBeenCalled();
     expect(screen).toEqual('wks-1\nwks-2\nwks-3\n');
-    expect(process.exit).toBeCalledWith(0);
+    expect(process.exit).toHaveBeenCalledWith(0);
   });
 
   // Filters
@@ -74,7 +74,7 @@ describe('jill list', () => {
 
     // Checks
     expect(screen).toEqual('wks-1\n');
-    expect(process.exit).toBeCalledWith(0);
+    expect(process.exit).toHaveBeenCalledWith(0);
   });
 
   it('should print only public workspaces (--no-private)', async () => {
@@ -85,7 +85,7 @@ describe('jill list', () => {
 
     // Checks
     expect(screen).toEqual('wks-2\nwks-3\n');
-    expect(process.exit).toBeCalledWith(0);
+    expect(process.exit).toHaveBeenCalledWith(0);
   });
 
   it('should print only affected workspaces (--affected test)', async () => {
@@ -96,11 +96,11 @@ describe('jill list', () => {
 
     // Checks
     for (const wks of workspaces) {
-      expect(wks.isAffected).toBeCalledWith('test');
+      expect(wks.isAffected).toHaveBeenCalledWith('test');
     }
 
     expect(screen).toEqual('wks-2\n');
-    expect(process.exit).toBeCalledWith(0);
+    expect(process.exit).toHaveBeenCalledWith(0);
   });
 
   // Formats
@@ -112,7 +112,7 @@ describe('jill list', () => {
 
     // Checks
     expect(screen).toMatchSnapshot();
-    expect(process.exit).toBeCalledWith(0);
+    expect(process.exit).toHaveBeenCalledWith(0);
   });
 
   it('should print long list of all workspaces (--long)', async () => {
@@ -123,7 +123,7 @@ describe('jill list', () => {
 
     // Checks
     expect(screen).toMatchSnapshot();
-    expect(process.exit).toBeCalledWith(0);
+    expect(process.exit).toHaveBeenCalledWith(0);
   });
 
   it('should print json array of all workspaces (--json)', async () => {
@@ -138,6 +138,6 @@ describe('jill list', () => {
 
     // Checks
     expect(screen).toMatchSnapshot();
-    expect(process.exit).toBeCalledWith(0);
+    expect(process.exit).toHaveBeenCalledWith(0);
   });
 });
