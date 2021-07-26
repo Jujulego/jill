@@ -60,7 +60,7 @@ export const handler = commandHandler<EachArgs>(async (prj, argv) => {
   logger.stop();
 
   if (workspaces.length === 0) {
-    logger.warn('No workspace found !');
+    logger.fail('No workspace found !');
     process.exit(1);
 
     return;
