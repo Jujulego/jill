@@ -27,7 +27,7 @@ export class Project {
     opts: ProjectOptions = {}
   ) {
     if (opts.packageManager) {
-      logger.debug(`Forced use of ${opts.packageManager} in ${path.relative(process.cwd(), this.root)}`);
+      logger.debug(`Forced use of ${opts.packageManager} in ${path.relative(process.cwd(), this.root) || '.'}`);
       this._packageManager = opts.packageManager;
     }
   }
@@ -92,13 +92,13 @@ export class Project {
       const files = await fs.readdir(this.root);
 
       if (files.includes('yarn.lock')) {
-        logger.debug(`Detected yarn in ${path.relative(process.cwd(), this.root)}`);
+        logger.debug(`Detected yarn in ${path.relative(process.cwd(), this.root) || '.'}`);
         this._packageManager = 'yarn';
       } else if (files.includes('package-lock.json')) {
-        logger.debug(`Detected npm in ${path.relative(process.cwd(), this.root)}`);
+        logger.debug(`Detected npm in ${path.relative(process.cwd(), this.root) || '.'}`);
         this._packageManager = 'npm';
       } else {
-        logger.debug(`No package manager recognized in ${path.relative(process.cwd(), this.root)}, defaults to npm`);
+        logger.debug(`No package manager recognized in ${path.relative(process.cwd(), this.root) || '.'}, defaults to npm`);
         this._packageManager = 'npm';
       }
     }
