@@ -44,7 +44,7 @@ export const handler = commandHandler<InfoArgs>(async (prj, argv) => {
   // Print data
   console.log(chalk`Workspace {bold ${wks.name}}:`);
   console.log(chalk`{bold Version:}   ${wks.manifest.version}`);
-  console.log(chalk`{bold Directory:} ${path.relative(process.cwd(), wks.cwd)}`);
+  console.log(chalk`{bold Directory:} ${path.relative(process.cwd(), wks.cwd) || '.'}`);
 
   if (deps.length > 0) {
     console.log();

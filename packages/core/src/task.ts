@@ -98,7 +98,7 @@ export class Task extends EventEmitter {
       throw Error(`Cannot start a ${this._status} task`);
     }
 
-    this._logger.verbose(`Running ${[this.cmd, ...this.args].join(' ')} (in ${path.relative(process.cwd(), this.cwd)})`);
+    this._logger.verbose(`Running ${[this.cmd, ...this.args].join(' ')} (in ${path.relative(process.cwd(), this.cwd) || '.'})`);
     this._process = spawn(this.cmd, this.args, {
       cwd: this.cwd,
       shell: true,
@@ -116,7 +116,7 @@ export class Task extends EventEmitter {
       this._logger.info(msg.toString('utf-8').replace(/\n$/, ''));
     });
     this._process.stderr?.on('data', (msg: Buffer) => {
-      this._logger.error(msg.toString('utf-8').replace(/\n$/, ''));
+      this._logger.info(msg.toString('utf-8').replace(/\n$/, ''));
     });
 
     this._process.on('close', (code) => {
