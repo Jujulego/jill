@@ -2,10 +2,10 @@ import path from 'path';
 import { Logger } from 'winston';
 
 import { logger } from './logger';
-import { Manifest } from './manifest';
+import type { Manifest } from './manifest';
 import { Project } from './project';
 import { Task, TaskOptions } from './task';
-import { combine } from './utils';
+import { combine, spawn } from './utils';
 
 // Types
 export interface WorkspaceRunOptions extends Omit<TaskOptions, 'cwd'> {
@@ -16,6 +16,7 @@ export interface WorkspaceRunOptions extends Omit<TaskOptions, 'cwd'> {
 export class Workspace {
   // Attributes
   private _lastBuild?: Task;
+  private _isAffected?: boolean;
   private readonly _logger: Logger;
 
   // Constructor
@@ -34,7 +35,30 @@ export class Workspace {
     }
   }
 
-  async* dependencies(): AsyncGenerator<Workspace, void, unknown> {
+  async isAffected(base: string): Promise<boolean> {
+    if (this._isAffected === undefined) {
+      this._isAffected = false;
+
+      for await (const dep of combine(this.dependencies(), this.devDependencies())) {
+        if (await dep.isAffected(base)) {
+          this._isAffected = true;
+          break;
+        }
+      }
+
+      if (!this._isAffected) {
+        const { stdout } = await spawn('git', ['diff', '--name-only', base, '--', this.cwd], {
+          cwd: this.project.root,
+        });
+
+        this._isAffected = stdout.length > 0;
+      }
+    }
+
+    return this._isAffected;
+  }
+
+  async* dependencies(): AsyncGenerator<Workspace, void> {
     if (!this.manifest.dependencies) return;
 
     for (const dep of Object.keys(this.manifest.dependencies)) {
@@ -46,7 +70,7 @@ export class Workspace {
     }
   }
 
-  async* devDependencies(): AsyncGenerator<Workspace, void, unknown> {
+  async* devDependencies(): AsyncGenerator<Workspace, void> {
     if (!this.manifest.devDependencies) return;
 
     for (const dep of Object.keys(this.manifest.devDependencies)) {

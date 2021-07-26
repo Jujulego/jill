@@ -31,7 +31,7 @@ describe('logger', () => {
       logger.debug('test');
 
       // Checks
-      expect(OraTransport.prototype.log).not.toBeCalled();
+      expect(OraTransport.prototype.log).not.toHaveBeenCalled();
     });
 
     it('should call OraTransport.log', () => {
@@ -39,7 +39,7 @@ describe('logger', () => {
       logger.debug('test');
 
       // Checks
-      expect(OraTransport.prototype.log).toBeCalledWith(
+      expect(OraTransport.prototype.log).toHaveBeenCalledWith(
         expect.objectContaining({
           level: 'debug',
           message: chalk`{grey test}`
@@ -55,7 +55,7 @@ describe('logger', () => {
       logger.verbose('test');
 
       // Checks
-      expect(OraTransport.prototype.log).not.toBeCalled();
+      expect(OraTransport.prototype.log).not.toHaveBeenCalled();
     });
 
     it('should call OraTransport.log', () => {
@@ -63,7 +63,7 @@ describe('logger', () => {
       logger.verbose('test');
 
       // Checks
-      expect(OraTransport.prototype.log).toBeCalledWith(
+      expect(OraTransport.prototype.log).toHaveBeenCalledWith(
         expect.objectContaining({
           level: 'verbose',
           message: chalk`{blue test}`
@@ -79,7 +79,7 @@ describe('logger', () => {
       logger.info('test');
 
       // Checks
-      expect(OraTransport.prototype.log).toBeCalledWith(
+      expect(OraTransport.prototype.log).toHaveBeenCalledWith(
         expect.objectContaining({
           level: 'info',
           message: chalk`{white test}`
@@ -95,7 +95,7 @@ describe('logger', () => {
       logger.warn('test');
 
       // Checks
-      expect(OraTransport.prototype.log).toBeCalledWith(
+      expect(OraTransport.prototype.log).toHaveBeenCalledWith(
         expect.objectContaining({
           level: 'warn',
           message: chalk`{yellow test}`
@@ -111,7 +111,7 @@ describe('logger', () => {
       logger.error('test');
 
       // Checks
-      expect(OraTransport.prototype.log).toBeCalledWith(
+      expect(OraTransport.prototype.log).toHaveBeenCalledWith(
         expect.objectContaining({
           level: 'error',
           message: chalk`{red test}`
@@ -128,7 +128,7 @@ describe('logger', () => {
 
       logger.spin('test');
 
-      expect(mockedOra.start).toBeCalledWith('test');
+      expect(mockedOra.start).toHaveBeenCalledWith('test');
     });
   });
 
@@ -139,7 +139,7 @@ describe('logger', () => {
 
       logger.succeed('test');
 
-      expect(mockedOra.succeed).toBeCalledWith('test');
+      expect(mockedOra.succeed).toHaveBeenCalledWith('test');
     });
   });
 
@@ -150,7 +150,7 @@ describe('logger', () => {
 
       logger.fail('test');
 
-      expect(mockedOra.fail).toBeCalledWith('test');
+      expect(mockedOra.fail).toHaveBeenCalledWith('test');
     });
   });
 
@@ -161,7 +161,7 @@ describe('logger', () => {
 
       logger.stop();
 
-      expect(mockedOra.stop).toBeCalledWith();
+      expect(mockedOra.stop).toHaveBeenCalledWith();
     });
   });
 });
@@ -179,7 +179,7 @@ describe('OraTransport', () => {
       transport.log({ [MESSAGE]: 'test' }, () => undefined);
 
       // Checks
-      expect(process.stderr.write).toBeCalledWith('test\n');
+      expect(process.stderr.write).toHaveBeenCalledWith('test\n');
     });
 
     it('should keep ora spinning', () => {
@@ -190,11 +190,11 @@ describe('OraTransport', () => {
       transport.log({ [MESSAGE]: 'test' }, () => undefined);
 
       // Checks
-      expect(process.stderr.write).toBeCalledWith('test\n');
+      expect(process.stderr.write).toHaveBeenCalledWith('test\n');
 
       expect(mockedOra.isSpinning).toBe(true);
       expect(mockedOra.text).toBe('testing ...');
-      expect(mockedOra.start).toBeCalledWith('testing ...');
+      expect(mockedOra.start).toHaveBeenCalledWith('testing ...');
     });
   });
 });

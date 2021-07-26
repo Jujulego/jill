@@ -51,8 +51,8 @@ describe('Project.mainWorkspace', () => {
       }));
 
     // Checks
-    expect(fs.readFile).toBeCalledTimes(1);
-    expect(fs.readFile).toBeCalledWith(path.join(root, 'package.json'), 'utf-8');
+    expect(fs.readFile).toHaveBeenCalledTimes(1);
+    expect(fs.readFile).toHaveBeenCalledWith(path.join(root, 'package.json'), 'utf-8');
   });
 });
 
@@ -112,8 +112,8 @@ describe('Project.workspace', () => {
       }));
 
     // Checks
-    expect(fs.readFile).toBeCalledTimes(1);
-    expect(fs.readFile).toBeCalledWith(path.join(root, 'workspaces/test-a/package.json'), 'utf-8');
+    expect(fs.readFile).toHaveBeenCalledTimes(1);
+    expect(fs.readFile).toHaveBeenCalledWith(path.join(root, 'workspaces/test-a/package.json'), 'utf-8');
   });
 
   it('should return named workspace', async () => {
@@ -124,10 +124,10 @@ describe('Project.workspace', () => {
       .resolves.toEqual(expect.objectContaining({ name: 'mock-test-a' }));
 
     // Checks
-    expect(glob).toBeCalledWith('workspaces/*', { cwd: root });
-    expect(fs.readFile).toBeCalledTimes(2);
-    expect(fs.readFile).toBeCalledWith(path.join(root, 'package.json'), 'utf-8');
-    expect(fs.readFile).toBeCalledWith(path.join(root, 'workspaces/test-a/package.json'), 'utf-8');
+    expect(glob).toHaveBeenCalledWith('workspaces/*', { cwd: root });
+    expect(fs.readFile).toHaveBeenCalledTimes(2);
+    expect(fs.readFile).toHaveBeenCalledWith(path.join(root, 'package.json'), 'utf-8');
+    expect(fs.readFile).toHaveBeenCalledWith(path.join(root, 'workspaces/test-a/package.json'), 'utf-8');
   });
 
   it('should fail to return unknown workspace', async () => {
@@ -135,13 +135,13 @@ describe('Project.workspace', () => {
       .resolves.toBeNull();
 
     // Checks
-    expect(glob).toBeCalledWith('workspaces/*', { cwd: root });
-    expect(fs.readFile).toBeCalledTimes(5);
-    expect(fs.readFile).toBeCalledWith(path.join(root, 'package.json'), 'utf-8');
-    expect(fs.readFile).toBeCalledWith(path.join(root, 'workspaces/test-a/package.json'), 'utf-8');
-    expect(fs.readFile).toBeCalledWith(path.join(root, 'workspaces/test-b/package.json'), 'utf-8');
-    expect(fs.readFile).toBeCalledWith(path.join(root, 'workspaces/test-c/package.json'), 'utf-8');
-    expect(fs.readFile).toBeCalledWith(path.join(root, 'workspaces/test-d/package.json'), 'utf-8');
+    expect(glob).toHaveBeenCalledWith('workspaces/*', { cwd: root });
+    expect(fs.readFile).toHaveBeenCalledTimes(5);
+    expect(fs.readFile).toHaveBeenCalledWith(path.join(root, 'package.json'), 'utf-8');
+    expect(fs.readFile).toHaveBeenCalledWith(path.join(root, 'workspaces/test-a/package.json'), 'utf-8');
+    expect(fs.readFile).toHaveBeenCalledWith(path.join(root, 'workspaces/test-b/package.json'), 'utf-8');
+    expect(fs.readFile).toHaveBeenCalledWith(path.join(root, 'workspaces/test-c/package.json'), 'utf-8');
+    expect(fs.readFile).toHaveBeenCalledWith(path.join(root, 'workspaces/test-d/package.json'), 'utf-8');
   });
 });
 
@@ -159,7 +159,7 @@ describe('Project.packageManager', () => {
     await expect(project.packageManager())
       .resolves.toBe('yarn');
 
-    expect(fs.readdir).toBeCalledWith(root);
+    expect(fs.readdir).toHaveBeenCalledWith(root);
   });
 
   it('should return \'npm\'', async () => {
@@ -170,7 +170,7 @@ describe('Project.packageManager', () => {
     await expect(project.packageManager())
       .resolves.toBe('npm');
 
-    expect(fs.readdir).toBeCalledWith(root);
+    expect(fs.readdir).toHaveBeenCalledWith(root);
   });
 
   it('should return \'npm\' (nothing recognized)', async () => {
@@ -181,7 +181,7 @@ describe('Project.packageManager', () => {
     await expect(project.packageManager())
       .resolves.toBe('npm');
 
-    expect(fs.readdir).toBeCalledWith(root);
+    expect(fs.readdir).toHaveBeenCalledWith(root);
   });
 
   it('should return packageManager from options', async () => {
@@ -191,6 +191,6 @@ describe('Project.packageManager', () => {
     await expect(prj.packageManager())
       .resolves.toBe('yarn');
 
-    expect(fs.readdir).not.toBeCalled();
+    expect(fs.readdir).not.toHaveBeenCalled();
   });
 });

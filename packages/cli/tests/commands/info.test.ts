@@ -1,10 +1,10 @@
 import { Project, Workspace } from '@jujulego/jill-core';
+import chalk from 'chalk';
 
 import { logger } from '../../src/logger';
 import { commandHandler } from '../../src/wrapper';
 
 import { defaultOptions } from './defaults';
-import chalk from 'chalk';
 
 // Setup
 jest.mock('../../src/logger');
@@ -40,10 +40,10 @@ describe('jill info', () => {
       .resolves.toBeUndefined();
 
     // Checks
-    expect(logger.spin).toBeCalledWith('Loading project');
-    expect(project.workspace).toBeCalledWith('does-not-exists');
-    expect(logger.fail).toBeCalledWith('Workspace does-not-exists not found');
-    expect(process.exit).toBeCalledWith(1);
+    expect(logger.spin).toHaveBeenCalledWith('Loading project');
+    expect(project.workspace).toHaveBeenCalledWith('does-not-exists');
+    expect(logger.fail).toHaveBeenCalledWith('Workspace does-not-exists not found');
+    expect(process.exit).toHaveBeenCalledWith(1);
   });
 
   it('should print workspace basic info', async () => {
@@ -57,16 +57,16 @@ describe('jill info', () => {
       .resolves.toBeUndefined();
 
     // Checks
-    expect(logger.spin).toBeCalledWith('Loading project');
-    expect(project.workspace).toBeCalledWith('wks');
-    expect(logger.stop).toBeCalled();
+    expect(logger.spin).toHaveBeenCalledWith('Loading project');
+    expect(project.workspace).toHaveBeenCalledWith('wks');
+    expect(logger.stop).toHaveBeenCalled();
     expect(screen).toMatchSnapshot();
-    expect(process.exit).toBeCalledWith(0);
+    expect(process.exit).toHaveBeenCalledWith(0);
   });
 
   it('should print workspace basic info with dependencies', async () => {
     jest.spyOn(project, 'workspace')
-      .mockImplementation(async (name) => new Workspace('./wks', { name, version: '1.0.0', dependencies: { depA: '1.0.0', depB: '1.0.0' } }, project));
+      .mockImplementation(async (name = 'wks') => new Workspace('./wks', { name, version: '1.0.0', dependencies: { depA: '1.0.0', depB: '1.0.0' } }, project));
 
     // Call
     const { handler } = await import('../../src/commands/info');
@@ -74,16 +74,16 @@ describe('jill info', () => {
       .resolves.toBeUndefined();
 
     // Checks
-    expect(logger.spin).toBeCalledWith('Loading project');
-    expect(project.workspace).toBeCalledWith('wks');
-    expect(logger.stop).toBeCalled();
+    expect(logger.spin).toHaveBeenCalledWith('Loading project');
+    expect(project.workspace).toHaveBeenCalledWith('wks');
+    expect(logger.stop).toHaveBeenCalled();
     expect(screen).toMatchSnapshot();
-    expect(process.exit).toBeCalledWith(0);
+    expect(process.exit).toHaveBeenCalledWith(0);
   });
 
   it('should print workspace basic info with dev-dependencies', async () => {
     jest.spyOn(project, 'workspace')
-      .mockImplementation(async (name) => new Workspace('./wks', { name, version: '1.0.0', devDependencies: { depA: '1.0.0', depB: '1.0.0' } }, project));
+      .mockImplementation(async (name = 'wks') => new Workspace('./wks', { name, version: '1.0.0', devDependencies: { depA: '1.0.0', depB: '1.0.0' } }, project));
 
     // Call
     const { handler } = await import('../../src/commands/info');
@@ -91,10 +91,10 @@ describe('jill info', () => {
       .resolves.toBeUndefined();
 
     // Checks
-    expect(logger.spin).toBeCalledWith('Loading project');
-    expect(project.workspace).toBeCalledWith('wks');
-    expect(logger.stop).toBeCalled();
+    expect(logger.spin).toHaveBeenCalledWith('Loading project');
+    expect(project.workspace).toHaveBeenCalledWith('wks');
+    expect(logger.stop).toHaveBeenCalled();
     expect(screen).toMatchSnapshot();
-    expect(process.exit).toBeCalledWith(0);
+    expect(process.exit).toHaveBeenCalledWith(0);
   });
 });

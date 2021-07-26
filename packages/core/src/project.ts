@@ -2,7 +2,7 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import glob from 'tiny-glob';
 
-import { Manifest } from './manifest';
+import type { Manifest } from './manifest';
 import { logger } from './logger';
 import { Workspace } from './workspace';
 
@@ -117,7 +117,7 @@ export class Project {
     return this._mainWorkspace;
   }
 
-  async* workspaces(): AsyncGenerator<Workspace, void, unknown> {
+  async* workspaces(): AsyncGenerator<Workspace, void> {
     const main = await this.mainWorkspace();
     yield main;
 

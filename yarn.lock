@@ -722,6 +722,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": 4.28.4
     "@typescript-eslint/parser": 4.28.4
     eslint: 7.31.0
+    eslint-plugin-jest: ^24.4.0
     jest: 27.0.6
     tiny-glob: ^0.2.9
     ts-jest: 27.0.4
@@ -743,6 +744,7 @@ __metadata:
     "@typescript-eslint/parser": 4.28.4
     chalk: ^4.1.1
     eslint: 7.31.0
+    eslint-plugin-jest: ^24.4.0
     jest: 27.0.6
     ora: ^5.4.1
     ts-jest: 27.0.4
@@ -1021,7 +1023,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/experimental-utils@npm:4.28.4":
+"@typescript-eslint/experimental-utils@npm:4.28.4, @typescript-eslint/experimental-utils@npm:^4.0.1":
   version: 4.28.4
   resolution: "@typescript-eslint/experimental-utils@npm:4.28.4"
   dependencies:
@@ -2082,6 +2084,21 @@ __metadata:
     escodegen: bin/escodegen.js
     esgenerate: bin/esgenerate.js
   checksum: c49da32cd173570f2076f0d52b80761b2a876dfea2046bfc8c5dc84f76b70105e35b2fed10fe0a8487df14674d46bc30245f3a27e8838601c3c85e68f693f363
+  languageName: node
+  linkType: hard
+
+"eslint-plugin-jest@npm:^24.4.0":
+  version: 24.4.0
+  resolution: "eslint-plugin-jest@npm:24.4.0"
+  dependencies:
+    "@typescript-eslint/experimental-utils": ^4.0.1
+  peerDependencies:
+    "@typescript-eslint/eslint-plugin": ">= 4"
+    eslint: ">=5"
+  peerDependenciesMeta:
+    "@typescript-eslint/eslint-plugin":
+      optional: true
+  checksum: 189a78413943822ad3b58e13906960815dca790035ed00eab796fe465b6f48855b7e2f40a1d30c5fa34bf205d9baa27fdf47cc58c9f402f7d7c358cd3dea8698
   languageName: node
   linkType: hard
 
@@ -3489,6 +3506,7 @@ fsevents@^2.3.2:
     "@jujulego/jill": 1.0.0-alpha.2
     "@typescript-eslint/parser": 4.28.4
     eslint: 7.31.0
+    eslint-plugin-jest: ^24.4.0
     typescript: 4.3.5
   languageName: unknown
   linkType: soft

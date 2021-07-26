@@ -6,7 +6,7 @@
   "types": "./dist/index.d.ts",
   "repository": "git@github.com:Jujulego/jill.git",
   "scripts": {
-    "lint": "eslint src/**/*",
+    "lint": "eslint {src,tests}/**/*.*",
     "build": "tsc -p tsconfig.build.json",
     "test": "jest",
     "jill:build": "tsc -p tsconfig.build.json"
@@ -24,6 +24,7 @@
     "@typescript-eslint/eslint-plugin": "4.28.4",
     "@typescript-eslint/parser": "4.28.4",
     "eslint": "7.31.0",
+    "eslint-plugin-jest": "^24.4.0",
     "jest": "27.0.6",
     "ts-jest": "27.0.4",
     "typescript": "4.3.5",

@@ -39,10 +39,10 @@ describe('jill run', () => {
       .resolves.toBeUndefined();
 
     // Checks
-    expect(logger.spin).toBeCalledWith('Loading project');
-    expect(project.workspace).toBeCalledWith('does-not-exists');
-    expect(logger.fail).toBeCalledWith('Workspace does-not-exists not found');
-    expect(process.exit).toBeCalledWith(1);
+    expect(logger.spin).toHaveBeenCalledWith('Loading project');
+    expect(project.workspace).toHaveBeenCalledWith('does-not-exists');
+    expect(logger.fail).toHaveBeenCalledWith('Workspace does-not-exists not found');
+    expect(process.exit).toHaveBeenCalledWith(1);
   });
 
   it('should print tasks status', async () => {
@@ -69,27 +69,27 @@ describe('jill run', () => {
       .resolves.toBeUndefined();
 
     // Checks
-    expect(logger.spin).toBeCalledWith('Loading project');
-    expect(project.workspace).toBeCalledWith('wks');
-    expect(wks.run).toBeCalledWith('test', ['--arg', '1']);
-    expect(TaskManager.prototype.add).toBeCalledWith(tsk1);
-    expect(TaskManager.prototype.start).toBeCalled();
-    expect(TaskManager.prototype.on).toBeCalledWith('started', expect.any(Function));
-    expect(TaskManager.prototype.on).toBeCalledWith('completed', expect.any(Function));
+    expect(logger.spin).toHaveBeenCalledWith('Loading project');
+    expect(project.workspace).toHaveBeenCalledWith('wks');
+    expect(wks.run).toHaveBeenCalledWith('test', ['--arg', '1']);
+    expect(TaskManager.prototype.add).toHaveBeenCalledWith(tsk1);
+    expect(TaskManager.prototype.start).toHaveBeenCalled();
+    expect(TaskManager.prototype.on).toHaveBeenCalledWith('started', expect.any(Function));
+    expect(TaskManager.prototype.on).toHaveBeenCalledWith('completed', expect.any(Function));
 
     // Activate task 1
     (logger.spin as jest.MockedFunction<typeof OraLogger.prototype.spin>).mockClear();
 
     handlers.started!(tsk1);
-    expect(logger.spin).toBeCalledWith('Running test in wks ...');
+    expect(logger.spin).toHaveBeenCalledWith('Running test in wks ...');
 
     // Activate task 2 & 3
     (logger.spin as jest.MockedFunction<typeof OraLogger.prototype.spin>).mockClear();
 
     handlers.started!(tsk2);
     handlers.started!(tsk3);
-    expect(logger.spin).toBeCalledWith('Building 2 packages ...');
-    expect(logger.spin).toBeCalledWith('Building 3 packages ...');
+    expect(logger.spin).toHaveBeenCalledWith('Building 2 packages ...');
+    expect(logger.spin).toHaveBeenCalledWith('Building 3 packages ...');
 
     // Complete task 3
     (logger.spin as jest.MockedFunction<typeof OraLogger.prototype.spin>).mockClear();
@@ -97,14 +97,14 @@ describe('jill run', () => {
     (logger.fail as jest.MockedFunction<typeof OraLogger.prototype.succeed>).mockClear();
 
     handlers.completed!(tsk2.setStatus('failed'));
-    expect(logger.fail).toBeCalledWith('Failed to build wks');
-    expect(logger.spin).toBeCalledWith('Building 2 packages ...');
+    expect(logger.fail).toHaveBeenCalledWith('Failed to build wks');
+    expect(logger.spin).toHaveBeenCalledWith('Building 2 packages ...');
 
     // Complete task 1 & 2
     (logger.succeed as jest.MockedFunction<typeof OraLogger.prototype.succeed>).mockClear();
 
     handlers.completed!(tsk2.setStatus('done'));
     handlers.completed!(tsk1.setStatus('done'));
-    expect(logger.succeed).toBeCalledWith('wks built');
+    expect(logger.succeed).toHaveBeenCalledWith('wks built');
   });
 });

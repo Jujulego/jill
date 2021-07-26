@@ -61,17 +61,17 @@ describe('TaskManager.start', () => {
     manager.start();
 
     // First task c should start
-    expect(ta.start).not.toBeCalled();
-    expect(tb.start).not.toBeCalled();
-    expect(tc.start).toBeCalled();
+    expect(ta.start).not.toHaveBeenCalled();
+    expect(tb.start).not.toHaveBeenCalled();
+    expect(tc.start).toHaveBeenCalled();
 
     expect(spyStarted).toHaveBeenCalledWith(tc);
 
     // When c completes b should start
     proc.emit('close', 0);
 
-    expect(ta.start).not.toBeCalled();
-    expect(tb.start).toBeCalled();
+    expect(ta.start).not.toHaveBeenCalled();
+    expect(tb.start).toHaveBeenCalled();
 
     expect(spyCompleted).toHaveBeenCalledWith(tc);
     expect(spyStarted).toHaveBeenCalledWith(tb);
@@ -79,7 +79,7 @@ describe('TaskManager.start', () => {
     // When b completes a should start
     proc.emit('close', 0);
 
-    expect(ta.start).toBeCalled();
+    expect(ta.start).toHaveBeenCalled();
 
     expect(spyCompleted).toHaveBeenCalledWith(tb);
     expect(spyStarted).toHaveBeenCalledWith(ta);

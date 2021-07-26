@@ -23,8 +23,8 @@ describe('commandHandler', () => {
       .resolves.toBeUndefined();
 
     // Checks
-    expect(Project).toBeCalledWith('/test');
-    expect(handler).toBeCalledWith(expect.any(Project), { project: '/test' });
+    expect(Project).toHaveBeenCalledWith('/test');
+    expect(handler).toHaveBeenCalledWith(expect.any(Project), { project: '/test' });
   });
 
   it('should set verbosity level to "verbose"', async () => {
@@ -35,7 +35,7 @@ describe('commandHandler', () => {
 
     // Checks
     expect(logger.level).toBe('verbose');
-    expect(handler).toBeCalledWith(expect.any(Project), { project: '.', verbose: 1 });
+    expect(handler).toHaveBeenCalledWith(expect.any(Project), { project: '.', verbose: 1 });
   });
 
   it('should set verbosity level to "debug"', async () => {
@@ -46,7 +46,7 @@ describe('commandHandler', () => {
 
     // Checks
     expect(logger.level).toBe('debug');
-    expect(handler).toBeCalledWith(expect.any(Project), { project: '.', verbose: 2 });
+    expect(handler).toHaveBeenCalledWith(expect.any(Project), { project: '.', verbose: 2 });
   });
 
   it('should log failure', async () => {
@@ -61,8 +61,8 @@ describe('commandHandler', () => {
       .resolves.toBeUndefined();
 
     // Checks
-    expect(handler).toBeCalledWith(expect.any(Project), { project: '.' });
-    expect(logger.fail).toBeCalledWith(error);
-    expect(process.exit).toBeCalledWith(1);
+    expect(handler).toHaveBeenCalledWith(expect.any(Project), { project: '.' });
+    expect(logger.fail).toHaveBeenCalledWith(error);
+    expect(process.exit).toHaveBeenCalledWith(1);
   });
 });
