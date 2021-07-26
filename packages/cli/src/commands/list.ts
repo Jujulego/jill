@@ -1,5 +1,6 @@
 import { Workspace } from '@jujulego/jill-core';
 import { CommandBuilder } from 'yargs';
+import chalk from 'chalk';
 import path from 'path';
 
 import { logger } from '../logger';
@@ -7,12 +8,17 @@ import { CliList } from '../utils/cli-list';
 import { commandHandler } from '../wrapper';
 
 // Types
+export type Attribute = 'name' | 'version' | 'root';
+
+export type Data = Partial<Record<Attribute, string>>;
+
 export interface ListArgs {
   // Filters
   affected?: string;
   private?: boolean;
 
   // Formats
+  attrs?: Attribute[];
   headers?: boolean;
   long: boolean;
   json: boolean;
@@ -36,26 +42,53 @@ export const builder: CommandBuilder = {
     group: 'Filters:',
     desc: 'Print only private workspaces',
   },
+  attrs: {
+    type: 'array',
+    choices: ['name', 'version', 'root'],
+    group: 'Format:',
+    desc: 'Select printed attributes'
+  },
   headers: {
     type: 'boolean',
     group: 'Format:',
-    desc: 'Prints columns headers (defaults to true if long is set)'
+    desc: 'Prints columns headers'
   },
   long: {
     alias: 'l',
     type: 'boolean',
-    default: false,
+    conflicts: 'attrs',
     group: 'Format:',
-    desc: 'Prints more data on workspaces',
+    desc: 'Prints name, version and root of all workspaces',
   },
   json: {
     type: 'boolean',
-    default: false,
     group: 'Format:',
     desc: 'Prints data as a JSON array',
   }
 };
 
+// Utils
+type Extractor<T> = (wks: Workspace) => T;
+
+const extractors: Record<Attribute, Extractor<string>> = {
+  name: wks => wks.name,
+  version: wks => wks.manifest.version || chalk.grey('unset'),
+  root: wks => wks.cwd
+};
+
+function buildExtractor(attrs: Attribute[]): Extractor<Data> {
+  return (wks) => {
+    const data: Data = {};
+
+    for (const attr of attrs) {
+      data[attr] = extractors[attr](wks);
+    }
+
+    return data;
+  };
+}
+
+// Handler
 export const handler = commandHandler<ListArgs>(async (prj, argv) => {
   // Get data
   logger.spin('Loading project');
@@ -76,33 +109,26 @@ export const handler = commandHandler<ListArgs>(async (prj, argv) => {
 
   logger.stop();
 
+  // Build data
+  const attrs = argv.attrs || (argv.long || argv.json ? ['name', 'version', 'root'] : ['name']);
+  const data = workspaces.map(buildExtractor(attrs));
+
   // Print data
   if (argv.json) {
-    console.log(JSON.stringify(
-      workspaces.map(wks => ({
-        name: wks.name,
-        version: wks.manifest.version || '',
-        root: wks.cwd
-      })),
-      null, 2
-    ));
+    console.log(JSON.stringify(data, null, 2));
   } else {
     const list = new CliList();
 
-    if (argv.headers ?? argv.long) {
-      if (argv.long) {
-        list.setHeaders('Name', 'Version', 'Root');
-      } else {
-        list.setHeaders('Name');
-      }
+    if (argv.headers ?? (attrs.length > 1)) {
+      list.setHeaders(attrs);
     }
 
-    for (const wks of workspaces) {
-      if (argv.long) {
-        list.add([wks.name, wks.manifest.version || '', path.relative(process.cwd(), wks.cwd) || '.']);
-      } else {
-        list.add([wks.name]);
+    for (const d of data) {
+      if (d.root) {
+        d.root = path.relative(process.cwd(), d.root) || '.';
       }
+
+      list.add(attrs.map(attr => d[attr] || ''));
     }
 
     for (const d of list.lines()) {

@@ -14,11 +14,11 @@ beforeEach(() => {
 // Test suites
 describe('CliList.headers', () => {
   it('should set headers and update columns', () => {
-    list.setHeaders('head1', 'head2', 'head3');
+    list.setHeaders(['head1', 'head2', 'head3']);
 
     // Checks
     expect(list.columns).toEqual([5, 5, 5]);
-    expect(list.headers).toEqual(['head1', 'head2', 'head3']);
+    expect(list.headers).toEqual(['Head1', 'Head2', 'Head3']);
   });
 
   it('should be empty by default', () => {
@@ -62,12 +62,12 @@ describe('CliList.lines', () => {
 
   it('should print headers first', () => {
     list.add(['arg1', 'arg2', 'arg3']);
-    list.setHeaders('head1', 'head2', 'head3');
+    list.setHeaders(['head1', 'head2', 'head3']);
 
     // Checks
     const gen = list.lines();
 
-    expect(gen.next()).toEqual({ done: false, value: chalk`{bold head1}  {bold head2}  {bold head3}` });
+    expect(gen.next()).toEqual({ done: false, value: chalk`{bold Head1}  {bold Head2}  {bold Head3}` });
     expect(gen.next()).toEqual({ done: false, value: 'arg1   arg2   arg3 ' });
     expect(gen.next()).toEqual({ done: true });
   });

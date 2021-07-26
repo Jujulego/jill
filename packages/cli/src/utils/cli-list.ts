@@ -8,6 +8,14 @@ export class CliList {
   private readonly _columns: number[] = [];
 
   // Methods
+  private static _capitalize(txt: string): string {
+    return txt.charAt(0).toUpperCase() + txt.substring(1).toLowerCase();
+  }
+
+  private static _length(txt: string): number {
+    return txt.replace(/\033\[[^m]*m/g, '').length;
+  }
+
   private _updateColumns(data: string[]): void {
     // Add missing columns
     while (data.length > this._columns.length) {
@@ -16,17 +24,17 @@ export class CliList {
 
     // Update columns
     for (let i = 0; i < data.length; ++i) {
-      this._columns[i] = Math.max(this._columns[i], data[i].length);
+      this._columns[i] = Math.max(this._columns[i], CliList._length(data[i]));
     }
   }
 
   private _formatValue(value: string, idx: number): string {
-    return value + ' '.repeat(this._columns[idx] - value.length);
+    return value + ' '.repeat(this._columns[idx] - CliList._length(value));
   }
   
-  setHeaders(...headers: string[]): void {
+  setHeaders(headers: string[]): void {
     this._updateColumns(headers);
-    this._headers = headers;
+    this._headers = headers.map(CliList._capitalize);
   }
   
   add(data: string[]): void {
