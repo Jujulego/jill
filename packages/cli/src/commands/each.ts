@@ -50,10 +50,23 @@ export const handler = commandHandler<EachArgs>(async (prj, argv) => {
       if (!await wks.isAffected(argv.affected)) continue;
     }
 
-    workspaces.push(wks);
+    if (argv.script in (wks.manifest.scripts || {})) {
+      workspaces.push(wks);
+    } else {
+      logger.warn(`Workspace ${wks.name} ignored as it doesn't have the ${argv.script} script`);
+    }
   }
 
   logger.stop();
+
+  if (workspaces.length === 0) {
+    logger.warn('No workspace found !');
+    process.exit(1);
+
+    return;
+  }
+
+  logger.verbose(`Will run ${argv.script} in ${workspaces.map(wks => wks.name).join(', ')}`);
 
   // Run tasks
   const manager = new TaskManager();

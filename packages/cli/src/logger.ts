@@ -2,6 +2,7 @@ import { logger as coreLogger } from '@jujulego/jill-core';
 import { format, Logger } from 'winston';
 import Transport from 'winston-transport';
 import ora from 'ora';
+import chalk from 'chalk';
 
 // Constants
 const MESSAGE = Symbol.for('message');
@@ -129,7 +130,7 @@ export class OraLogger {
 export const transport = new OraTransport({
   format: format.combine(
     format.colorize({ message: true, colors: { debug: 'grey', verbose: 'blue', info: 'white', error: 'red' } }),
-    format.printf(({ label, message }) => message.split('\n').map(line => [label && `[${label}]`, line].filter(p => p).join(' ')).join('\n')),
+    format.printf(({ label, message }) => message.split('\n').map(line => [label && chalk.grey(`[${label}]`), line].filter(p => p).join(' ')).join('\n')),
   )
 });
 
