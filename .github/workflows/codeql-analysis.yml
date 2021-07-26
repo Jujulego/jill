@@ -25,6 +25,9 @@ jobs:
     name: Analyze
     runs-on: ubuntu-latest
 
+    permissions:
+      statuses: write
+
     strategy:
       fail-fast: false
       matrix:
