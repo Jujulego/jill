@@ -145,7 +145,7 @@ jobs:
           then
             echo "::warning::Nothing changed !"
           else
-            git commit -am "update(workspace): update version numbers"
+            git commit -am "chore: update version numbers"
           fi
 
       - name: Publish
