@@ -1,8 +1,0 @@
-/* eslint-disable */
-module.exports = {
-name: "@yarnpkg/plugin-jill",
-factory: function (require) {
-var plugin;(()=>{"use strict";var e={d:(t,o)=>{for(var n in o)e.o(o,n)&&!e.o(t,n)&&Object.defineProperty(t,n,{enumerable:!0,get:o[n]})},o:(e,t)=>Object.prototype.hasOwnProperty.call(e,t),r:e=>{"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})}},t={};e.r(t),e.d(t,{default:()=>l});const o=require("clipanion");var n=function(e,t,o,n){var r,a=arguments.length,l=a<3?t:null===n?n=Object.getOwnPropertyDescriptor(t,o):n;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)l=Reflect.decorate(e,t,o,n);else for(var c=e.length-1;c>=0;c--)(r=e[c])&&(l=(a<3?r(l):a>3?r(t,o,l):r(t,o))||l);return a>3&&l&&Object.defineProperty(t,o,l),l},r=function(e,t){if("object"==typeof Reflect&&"function"==typeof Reflect.metadata)return Reflect.metadata(e,t)};class a extends o.Command{constructor(){super(...arguments),this.name="John Doe"}async execute(){console.log(`Hello ${this.name}!`)}}n([o.Command.String("--name"),r("design:type",String)],a.prototype,"name",void 0),n([o.Command.Path("hello","world"),r("design:type",Function),r("design:paramtypes",[]),r("design:returntype",Promise)],a.prototype,"execute",null);const l={hooks:{afterAllInstalled:()=>{console.log("What a great install, am I right?")}},commands:[a]};plugin=t})();
-return plugin;
-}
-};
