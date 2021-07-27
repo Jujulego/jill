@@ -7,6 +7,8 @@
           <resourceRoots>
             <path value="file://$PROJECT_DIR$/packages/core" />
             <path value="file://$PROJECT_DIR$/packages/cli" />
+            <path value="file://$PROJECT_DIR$/packages/yarn-plugin" />
+            <path value="file://$PROJECT_DIR$/packages/yarn" />
           </resourceRoots>
         </entryData>
       </entry>
