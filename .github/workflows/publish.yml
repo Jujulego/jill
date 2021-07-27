@@ -36,6 +36,7 @@ jobs:
         package:
           - '@jujulego/jill'
           - '@jujulego/jill-core'
+          - 'yarn-plugin-jill'
 
     steps:
       - uses: actions/checkout@v2.3.4
@@ -64,6 +65,9 @@ jobs:
 
           - workspace: 'packages/core'
             package: '@jujulego/jill-core'
+
+          - workspace: 'packages/yarn'
+            package: 'yarn-plugin-jill'
 
     steps:
       - uses: actions/checkout@v2.3.4
