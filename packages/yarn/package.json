@@ -6,7 +6,8 @@
   "repository": "git@github.com:Jujulego/jill.git",
   "scripts": {
     "lint": "eslint {sources,tests}/**/*.*",
-    "build": "builder build plugin"
+    "build": "builder build plugin",
+    "test": "echo 'No tests yet !'"
   },
   "dependencies": {
     "@yarnpkg/core": "^2.4.0",
