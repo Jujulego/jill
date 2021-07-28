@@ -1,24 +1,11 @@
-import { CommandContext, Plugin } from '@yarnpkg/core';
-import { Command } from 'clipanion';
+import type { Plugin } from '@yarnpkg/core';
 
-class HelloWorldCommand extends Command<CommandContext> {
-  @Command.String('--name')
-  name = 'John Doe';
+import { InfoCommand } from './commands/info';
 
-  @Command.Path('hello', 'world')
-  async execute(): Promise<void> {
-    console.log(`Hello ${this.name}!`);
-  }
-}
-
+// Plugin
 const plugin: Plugin = {
-  hooks: {
-    afterAllInstalled: () => {
-      console.log('What a great install, am I right?');
-    },
-  },
   commands: [
-    HelloWorldCommand,
+    InfoCommand,
   ],
 };
 

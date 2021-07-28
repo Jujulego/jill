@@ -10,7 +10,11 @@
     "test": "echo 'No tests yet !'"
   },
   "dependencies": {
+    "@jujulego/jill": "^1.0.0-alpha.4",
+    "@jujulego/jill-core": "^1.0.0-alpha.4",
     "@yarnpkg/core": "^2.4.0",
+    "@yarnpkg/fslib": "^2.5.0",
+    "chalk": "^4.1.1",
     "clipanion": "^2.6.2"
   },
   "devDependencies": {
