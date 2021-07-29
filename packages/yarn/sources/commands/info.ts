@@ -16,7 +16,7 @@ export class InfoCommand extends JillCommand {
     const { workspace: wks } = await this.jillProject();
 
     if (!wks) {
-      logger.fail(`No workspace found`);
+      logger.fail('No workspace found');
       return 1;
     }
 
