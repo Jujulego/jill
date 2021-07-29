@@ -1,30 +1,22 @@
 import { logger } from '@jujulego/jill';
-import { Project as JProject, Workspace } from '@jujulego/jill-core';
-import { CommandContext, Configuration, Project as YProject } from '@yarnpkg/core';
-import { npath } from '@yarnpkg/fslib';
+import { Workspace } from '@jujulego/jill-core';
 import { Command } from 'clipanion';
-import path from 'path';
 import chalk from 'chalk';
+import path from 'path';
+import { JillCommand } from './base';
 
 // Command
-export class InfoCommand extends Command<CommandContext> {
+export class InfoCommand extends JillCommand {
   // Methods
   @Command.Path('jill', 'info')
   async execute(): Promise<number> {
     logger.spin('Loading project');
 
-    // Load yarn project
-    const config = await Configuration.find(this.context.cwd, this.context.plugins);
-    const { project, workspace } = await YProject.find(config, this.context.cwd);
-
     // Load jill project
-    const prj = new JProject(npath.fromPortablePath(project.cwd));
-    const wks = await prj.workspace((workspace || project.topLevelWorkspace).manifest.name!.name);
+    const { workspace: wks } = await this.jillProject();
 
     if (!wks) {
       logger.fail(`No workspace found`);
-      process.exit(1);
-
       return 1;
     }
 
