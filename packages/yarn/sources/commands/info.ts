@@ -13,7 +13,7 @@ export class InfoCommand extends JillCommand {
     logger.spin('Loading project');
 
     // Load jill project
-    const { workspace: wks } = await this.jillProject();
+    const wks = await this.jillWks();
 
     if (!wks) {
       logger.fail('No workspace found');
