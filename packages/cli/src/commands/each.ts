@@ -8,6 +8,7 @@ import { TaskLogger } from '../task-logger';
 // Types
 export interface EachArgs {
   script: string;
+  '--'?: (string | number)[];
 
   // Filters
   affected?: string;

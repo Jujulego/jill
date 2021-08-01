@@ -1,6 +1,9 @@
 import { hideBin } from 'yargs/helpers';
 import yargs from 'yargs';
 
+import { infoCommand } from './commands/info';
+import { commandHandler } from './wrapper';
+
 // Bootstrap
 (async () => {
   // Options
@@ -20,7 +23,11 @@ import yargs from 'yargs';
           'populate--': true,
       })
     .command(require('./commands/list')) // eslint-disable-line @typescript-eslint/no-var-requires
-    .command(require('./commands/info')) // eslint-disable-line @typescript-eslint/no-var-requires
+    // .command(require('./commands/info')) // eslint-disable-line @typescript-eslint/no-var-requires
+    .command('info', 'Print workspace data',
+      yargs => yargs.positional('workspace', { type: 'string' }),
+      commandHandler(infoCommand)
+    )
     .command(require('./commands/build')) // eslint-disable-line @typescript-eslint/no-var-requires
     .command(require('./commands/run')) // eslint-disable-line @typescript-eslint/no-var-requires
     .command(require('./commands/each')) // eslint-disable-line @typescript-eslint/no-var-requires

@@ -8,6 +8,7 @@ import { TaskLogger } from '../task-logger';
 export interface RunArgs {
   workspace: string;
   script: string;
+  '--'?: (string | number)[];
 }
 
 // Command
