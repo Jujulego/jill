@@ -1,8 +1,8 @@
 import { TaskManager } from '@jujulego/jill-core';
 
-import { commandHandler } from '../wrapper';
 import { logger } from '../logger';
 import { TaskLogger } from '../task-logger';
+import { CommandHandler } from '../wrapper';
 
 // Types
 export interface BuildArgs {
@@ -10,20 +10,14 @@ export interface BuildArgs {
 }
 
 // Command
-export const command = 'build <workspace>';
-export const aliases = [];
-export const describe = 'Build workspace';
-
-export const handler = commandHandler<BuildArgs>(async (prj, argv) => {
+export const buildCommand: CommandHandler<BuildArgs> = async (prj, argv) => {
   // Get workspace
   logger.spin('Loading project');
   const wks = await prj.workspace(argv.workspace);
 
   if (!wks) {
     logger.fail(`Workspace ${argv.workspace} not found`);
-    process.exit(1);
-
-    return;
+    return 1;
   }
 
   // Run build task
@@ -34,4 +28,4 @@ export const handler = commandHandler<BuildArgs>(async (prj, argv) => {
   tlogger.connect(manager);
 
   manager.start();
-});
+}

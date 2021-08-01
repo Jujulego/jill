@@ -3,6 +3,7 @@ import yargs from 'yargs';
 
 import { infoCommand } from './commands/info';
 import { commandHandler } from './wrapper';
+import { buildCommand } from './commands/build';
 
 // Bootstrap
 (async () => {
@@ -23,12 +24,14 @@ import { commandHandler } from './wrapper';
           'populate--': true,
       })
     .command(require('./commands/list')) // eslint-disable-line @typescript-eslint/no-var-requires
-    // .command(require('./commands/info')) // eslint-disable-line @typescript-eslint/no-var-requires
     .command('info', 'Print workspace data',
       yargs => yargs.positional('workspace', { type: 'string' }),
       commandHandler(infoCommand)
     )
-    .command(require('./commands/build')) // eslint-disable-line @typescript-eslint/no-var-requires
+    .command('build', 'Build workspace',
+      yargs => yargs.positional('workspace', { type: 'string' }),
+      commandHandler(buildCommand)
+    )
     .command(require('./commands/run')) // eslint-disable-line @typescript-eslint/no-var-requires
     .command(require('./commands/each')) // eslint-disable-line @typescript-eslint/no-var-requires
     .demandCommand(1)
