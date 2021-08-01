@@ -9,7 +9,7 @@ export interface CommonArgs {
   verbose: number;
 }
 
-export type CommandHandler<A = Record<string, never>> = (project: Project, argv: A) => Promise<number |void>
+export type CommandHandler<A = Record<string, never>> = (project: Project, argv: A) => Promise<number | void>
 
 // Wrapper
 export function commandHandler<A = Record<string, never>>(handler: CommandHandler<A>) {

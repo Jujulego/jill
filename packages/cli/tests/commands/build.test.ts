@@ -23,7 +23,7 @@ beforeEach(() => {
   jest.restoreAllMocks();
 
   (commandHandler as jest.MockedFunction<typeof commandHandler>)
-    .mockImplementation((handler) => (args) => handler(project, args));
+    .mockImplementation((handler) => async (args) => { await handler(project, args); });
 
   jest.spyOn(process, 'exit').mockImplementation();
 });

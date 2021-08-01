@@ -1,7 +1,7 @@
 import { Project, Workspace } from '@jujulego/jill-core';
 import chalk from 'chalk';
 
-import { logger } from '../../src/logger';
+import { logger } from '../../src';
 import { commandHandler } from '../../src/wrapper';
 
 import { defaultOptions } from './defaults';
@@ -23,7 +23,7 @@ beforeEach(() => {
   jest.restoreAllMocks();
 
   (commandHandler as jest.MockedFunction<typeof commandHandler>)
-    .mockImplementation((handler) => (args) => handler(project, args));
+    .mockImplementation((handler) => async (args) => { await handler(project, args); });
 
   jest.spyOn(process, 'exit').mockImplementation();
   jest.spyOn(console, 'log').mockImplementation((message) => screen += message + '\n');
