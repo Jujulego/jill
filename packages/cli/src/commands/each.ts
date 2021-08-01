@@ -1,8 +1,7 @@
 import { Task, TaskManager, Workspace } from '@jujulego/jill-core';
-import { CommandBuilder } from 'yargs';
 
 import { logger } from '../logger';
-import { commandHandler } from '../wrapper';
+import { CommandHandler } from '../wrapper';
 import { TaskLogger } from '../task-logger';
 
 // Types
@@ -11,32 +10,12 @@ export interface EachArgs {
   '--'?: (string | number)[];
 
   // Filters
-  affected?: string;
-  private?: boolean;
+  affected: string | undefined;
+  private: boolean | undefined;
 }
 
-// Command
-export const command = 'each <script>';
-export const aliases = [];
-export const describe = 'Run script on selected workspaces';
-
-export const builder: CommandBuilder = {
-  affected: {
-    alias: 'a',
-    type: 'string',
-    coerce: (rev: string) => rev === '' ? 'master' : rev,
-    group: 'Filters:',
-    desc: 'Print only affected workspaces towards given git revision. If no revision is given test against master',
-  },
-  private: {
-    type: 'boolean',
-    group: 'Filters:',
-    desc: 'Print only private workspaces',
-  }
-};
-
 // Handler
-export const handler = commandHandler<EachArgs>(async (prj, argv) => {
+export const eachCommand: CommandHandler<EachArgs> = async (prj, argv) => {
   // Get data
   logger.spin('Loading project');
   const workspaces: Workspace[] = [];
@@ -62,9 +41,8 @@ export const handler = commandHandler<EachArgs>(async (prj, argv) => {
 
   if (workspaces.length === 0) {
     logger.fail('No workspace found !');
-    process.exit(1);
 
-    return;
+    return 1;
   }
 
   logger.verbose(`Will run ${argv.script} in ${workspaces.map(wks => wks.name).join(', ')}`);
@@ -88,4 +66,4 @@ export const handler = commandHandler<EachArgs>(async (prj, argv) => {
   tlogger.connect(manager);
 
   manager.start();
-});
+};
