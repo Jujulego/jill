@@ -7,4 +7,4 @@ export { logger, OraLogger } from './logger';
 export type { BuildArgs } from './commands/build';
 export type { EachArgs } from './commands/each';
 export type { InfoArgs } from './commands/info';
-export type { ListArgs } from './commands/list';
+export type { Attribute, ListArgs } from './commands/list';

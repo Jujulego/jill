@@ -1,15 +1,17 @@
 import type { Plugin } from '@yarnpkg/core';
 
-import { InfoCommand } from './commands/info';
 import { BuildCommand } from './commands/build';
 import { EachCommand } from './commands/each';
+import { InfoCommand } from './commands/info';
+import { ListCommand } from './commands/list';
 
 // Plugin
 const plugin: Plugin = {
   commands: [
     InfoCommand,
     BuildCommand,
-    EachCommand
+    EachCommand,
+    ListCommand
   ],
 };
 
