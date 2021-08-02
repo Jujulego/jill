@@ -37,7 +37,7 @@ describe('jill list', () => {
   beforeEach(() => {
     workspaces = [
       new Workspace('./wks-1', { name: 'wks-1', private: true, version: '1.0.0' }, project),
-      new Workspace('./wks-2', { name: 'wks-2', version: '1.0.0' }, project),
+      new Workspace('./wks-2', { name: 'wks-2', version: '1.0.0', scripts: { test: 'test' } }, project),
       new Workspace('./wks-3', { name: 'wks-3', version: '1.0.0' }, project),
     ];
 
@@ -99,6 +99,17 @@ describe('jill list', () => {
       expect(wks.isAffected).toHaveBeenCalledWith('test');
     }
 
+    expect(screen).toEqual('wks-2\n');
+    expect(process.exit).toHaveBeenCalledWith(0);
+  });
+
+  it('should print only workspaces with \'test\' script (--with-script test)', async () => {
+    // Call
+    const { handler } = await import('../../src/commands/list');
+    await expect(handler({ long: false, json: false, 'with-script': 'test', ...defaultOptions }))
+      .resolves.toBeUndefined();
+
+    // Checks
     expect(screen).toEqual('wks-2\n');
     expect(process.exit).toHaveBeenCalledWith(0);
   });

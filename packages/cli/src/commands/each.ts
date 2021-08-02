@@ -25,7 +25,7 @@ export const builder: CommandBuilder = {
     type: 'string',
     coerce: (rev: string) => rev === '' ? 'master' : rev,
     group: 'Filters:',
-    desc: 'Print only affected workspaces towards given git revision. If no revision is given test against master',
+    desc: 'Print only affected workspaces towards given git revision. If no revision is given, it will check towards master',
   },
   private: {
     type: 'boolean',

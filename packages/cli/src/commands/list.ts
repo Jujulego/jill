@@ -16,6 +16,7 @@ export interface ListArgs {
   // Filters
   affected?: string;
   private?: boolean;
+  'with-script'?: string;
 
   // Formats
   attrs?: Attribute[];
@@ -35,12 +36,18 @@ export const builder: CommandBuilder = {
     type: 'string',
     coerce: (rev: string) => rev === '' ? 'master' : rev,
     group: 'Filters:',
-    desc: 'Print only affected workspaces towards given git revision. If no revision is given test against master',
+    desc: 'Print only affected workspaces towards given git revision. If no revision is given, it will check towards master',
   },
   private: {
     type: 'boolean',
     group: 'Filters:',
     desc: 'Print only private workspaces',
+  },
+  'with-script': {
+    type: 'string',
+    nargs: 1,
+    group: 'Filters:',
+    desc: 'Print only workspaces having the given script',
   },
   attrs: {
     type: 'array',
@@ -102,6 +109,10 @@ export const handler = commandHandler<ListArgs>(async (prj, argv) => {
 
     if (argv.affected !== undefined) {
       if (!await wks.isAffected(argv.affected)) continue;
+    }
+
+    if (argv['with-script'] !== undefined) {
+      if (!(argv['with-script'] in (wks.manifest.scripts || {}))) continue;
     }
 
     workspaces.push(wks);
