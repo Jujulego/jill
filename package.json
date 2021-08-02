@@ -11,7 +11,7 @@
     "build": "yarn workspaces foreach -ptv run build"
   },
   "devDependencies": {
-    "@jujulego/jill": "1.0.0-alpha.4",
+    "@jujulego/jill": "1.0.0-alpha.5",
     "@typescript-eslint/parser": "4.28.5",
     "eslint": "7.32.0",
     "eslint-plugin-jest": "24.4.0",
