@@ -70,27 +70,25 @@ describe('jill list', () => {
   it('should print only private workspaces (--private)', async () => {
     // Call
     await expect(listCommand(project, { ...defaults, long: false, json: false, private: true }))
-      .resolves.toBeUndefined();
+      .resolves.toBe(0);
 
     // Checks
     expect(screen).toEqual('wks-1\n');
-    expect(process.exit).toHaveBeenCalledWith(0);
   });
 
   it('should print only public workspaces (--no-private)', async () => {
     // Call
     await expect(listCommand(project, { ...defaults, long: false, json: false, private: false }))
-      .resolves.toBeUndefined();
+      .resolves.toBe(0);
 
     // Checks
     expect(screen).toEqual('wks-2\nwks-3\n');
-    expect(process.exit).toHaveBeenCalledWith(0);
   });
 
   it('should print only affected workspaces (--affected test)', async () => {
     // Call
     await expect(listCommand(project, { ...defaults, long: false, json: false, affected: 'test' }))
-      .resolves.toBeUndefined();
+      .resolves.toBe(0);
 
     // Checks
     for (const wks of workspaces) {
@@ -98,38 +96,34 @@ describe('jill list', () => {
     }
 
     expect(screen).toEqual('wks-2\n');
-    expect(process.exit).toHaveBeenCalledWith(0);
   });
 
   it('should print only workspaces with \'test\' script (--with-script test)', async () => {
     // Call
     await expect(listCommand(project, { ...defaults, long: false, json: false, 'with-script': 'test' }))
-      .resolves.toBeUndefined();
+      .resolves.toBe(0);
 
     // Checks
     expect(screen).toEqual('wks-2\n');
-    expect(process.exit).toHaveBeenCalledWith(0);
   });
 
   // Formats
   it('should print list with headers (--headers)', async () => {
     // Call
     await expect(listCommand(project, { ...defaults, long: false, json: false, headers: true }))
-      .resolves.toBeUndefined();
+      .resolves.toBe(0);
 
     // Checks
     expect(screen).toMatchSnapshot();
-    expect(process.exit).toHaveBeenCalledWith(0);
   });
 
   it('should print long list of all workspaces (--long)', async () => {
     // Call
     await expect(listCommand(project, { ...defaults, long: true, json: false }))
-      .resolves.toBeUndefined();
+      .resolves.toBe(0);
 
     // Checks
     expect(screen).toMatchSnapshot();
-    expect(process.exit).toHaveBeenCalledWith(0);
   });
 
   it('should print json array of all workspaces (--json)', async () => {
@@ -139,10 +133,9 @@ describe('jill list', () => {
 
     // Call
     await expect(listCommand(project, { ...defaults, long: false, json: true }))
-      .resolves.toBeUndefined();
+      .resolves.toBe(0);
 
     // Checks
     expect(screen).toMatchSnapshot();
-    expect(process.exit).toHaveBeenCalledWith(0);
   });
 });
