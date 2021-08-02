@@ -1,6 +1,6 @@
 {
   "name": "@jujulego/jill",
-  "version": "1.0.0-alpha.4",
+  "version": "1.0.0-alpha.5",
   "license": "MIT",
   "bin": "./bin/jill.js",
   "main": "./dist/index.js",
@@ -28,8 +28,8 @@
     "@types/jest": "26.0.24",
     "@types/node": "14.17.7",
     "@types/yargs": "17.0.2",
-    "@typescript-eslint/eslint-plugin": "4.28.5",
-    "@typescript-eslint/parser": "4.28.5",
+    "@typescript-eslint/eslint-plugin": "4.29.0",
+    "@typescript-eslint/parser": "4.29.0",
     "eslint": "7.32.0",
     "eslint-plugin-jest": "24.4.0",
     "jest": "27.0.6",
