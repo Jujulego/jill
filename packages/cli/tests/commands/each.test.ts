@@ -1,16 +1,13 @@
 import { Project, TaskEvent, TaskEventListener, TaskManager, Workspace } from '@jujulego/jill-core';
 import chalk from 'chalk';
 
-import { logger, OraLogger } from '../../src/logger';
-import { commandHandler } from '../../src/wrapper';
+import { eachCommand, logger, OraLogger } from '../../src';
 
 import { MockTask } from '../../mocks/task';
-import { defaultOptions } from './defaults';
 import '../logger';
 
 // Setup
 jest.mock('../../src/logger');
-jest.mock('../../src/wrapper');
 
 chalk.level = 1;
 
@@ -21,11 +18,6 @@ beforeEach(() => {
 
   // Mocks
   jest.restoreAllMocks();
-
-  (commandHandler as jest.MockedFunction<typeof commandHandler>)
-    .mockImplementation((handler) => (args) => handler(project, args));
-
-  jest.spyOn(process, 'exit').mockImplementation();
 });
 
 // Tests
@@ -35,15 +27,13 @@ describe('jill each', () => {
       .mockImplementation(async function* (): AsyncGenerator<Workspace> {}); // eslint-disable-line @typescript-eslint/no-empty-function
 
     // Call
-    const { handler } = await import('../../src/commands/each');
-    await expect(handler({ script: 'test', ...defaultOptions }))
-      .resolves.toBeUndefined();
+    await expect(eachCommand(project, { script: 'test', affected: undefined, private: undefined }))
+      .resolves.toBe(1);
 
     // Checks
     expect(logger.spin).toHaveBeenCalledWith('Loading project');
     expect(project.workspaces).toHaveBeenCalled();
     expect(logger.fail).toHaveBeenCalledWith('No workspace found !');
-    expect(process.exit).toHaveBeenCalledWith(1);
   });
 
   it('should print tasks status', async () => {
@@ -65,8 +55,7 @@ describe('jill each', () => {
       });
 
     // Call
-    const { handler } = await import('../../src/commands/each');
-    await expect(handler({ ...defaultOptions, script: 'test', '--': ['--arg', 1] }))
+    await expect(eachCommand(project, { script: 'test', affected: undefined, private: undefined, '--': ['--arg', 1] }))
       .resolves.toBeUndefined();
 
     // Checks
@@ -125,8 +114,7 @@ describe('jill each', () => {
     jest.spyOn(TaskManager.prototype, 'on').mockReturnThis();
 
     // Call
-    const { handler } = await import('../../src/commands/each');
-    await expect(handler({ ...defaultOptions, script: 'test' }))
+    await expect(eachCommand(project, { script: 'test', affected: undefined, private: undefined }))
       .resolves.toBeUndefined();
 
     // Checks
@@ -150,8 +138,7 @@ describe('jill each', () => {
     jest.spyOn(TaskManager.prototype, 'on').mockReturnThis();
 
     // Call
-    const { handler } = await import('../../src/commands/each');
-    await expect(handler({ ...defaultOptions, script: 'test', private: true }))
+    await expect(eachCommand(project, { script: 'test', affected: undefined, private: true }))
       .resolves.toBeUndefined();
 
     // Checks
@@ -176,8 +163,7 @@ describe('jill each', () => {
     jest.spyOn(TaskManager.prototype, 'on').mockReturnThis();
 
     // Call
-    const { handler } = await import('../../src/commands/each');
-    await expect(handler({ ...defaultOptions, script: 'test', affected: 'test' }))
+    await expect(eachCommand(project, { script: 'test', affected: 'test', private: undefined }))
       .resolves.toBeUndefined();
 
     // Checks

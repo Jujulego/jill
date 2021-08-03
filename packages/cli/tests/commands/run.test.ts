@@ -1,11 +1,9 @@
 import { Project, TaskEvent, TaskEventListener, TaskManager, Workspace } from '@jujulego/jill-core';
 import chalk from 'chalk';
 
-import { logger, OraLogger } from '../../src/logger';
-import { commandHandler } from '../../src/wrapper';
+import { logger, OraLogger, runCommand } from '../../src';
 
 import { MockTask } from '../../mocks/task';
-import { defaultOptions } from './defaults';
 import '../logger';
 
 // Setup
@@ -21,11 +19,6 @@ beforeEach(() => {
 
   // Mocks
   jest.restoreAllMocks();
-
-  (commandHandler as jest.MockedFunction<typeof commandHandler>)
-    .mockImplementation((handler) => (args) => handler(project, args));
-
-  jest.spyOn(process, 'exit').mockImplementation();
 });
 
 // Tests
@@ -34,15 +27,13 @@ describe('jill run', () => {
     jest.spyOn(project, 'workspace').mockResolvedValue(null);
 
     // Call
-    const { handler } = await import('../../src/commands/run');
-    await expect(handler({ workspace: 'does-not-exists', script: 'test', ...defaultOptions }))
-      .resolves.toBeUndefined();
+    await expect(runCommand(project, { workspace: 'does-not-exists', script: 'test' }))
+      .resolves.toBe(1);
 
     // Checks
     expect(logger.spin).toHaveBeenCalledWith('Loading project');
     expect(project.workspace).toHaveBeenCalledWith('does-not-exists');
     expect(logger.fail).toHaveBeenCalledWith('Workspace does-not-exists not found');
-    expect(process.exit).toHaveBeenCalledWith(1);
   });
 
   it('should print tasks status', async () => {
@@ -64,8 +55,7 @@ describe('jill run', () => {
       });
 
     // Call
-    const { handler } = await import('../../src/commands/run');
-    await expect(handler({ ...defaultOptions, workspace: 'wks', script: 'test', '--': ['--arg', 1] }))
+    await expect(runCommand(project, { workspace: 'wks', script: 'test', '--': ['--arg', 1] }))
       .resolves.toBeUndefined();
 
     // Checks

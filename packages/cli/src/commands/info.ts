@@ -2,29 +2,23 @@ import { Workspace } from '@jujulego/jill-core';
 import chalk from 'chalk';
 import path from 'path';
 
-import { commandHandler } from '../wrapper';
 import { logger } from '../logger';
+import { CommandHandler } from '../wrapper';
 
 // Types
 export interface InfoArgs {
   workspace: string;
 }
 
-// Command
-export const command = 'info <workspace>';
-export const aliases = [];
-export const describe = 'Print workspace data';
-
-export const handler = commandHandler<InfoArgs>(async (prj, argv) => {
+// Handler
+export const infoCommand: CommandHandler<InfoArgs> = async (prj, argv) => {
   // Get workspace
   logger.spin('Loading project');
   const wks = await prj.workspace(argv.workspace);
 
   if (!wks) {
     logger.fail(`Workspace ${argv.workspace} not found`);
-    process.exit(1);
-
-    return;
+    return 1;
   }
 
   // Get data
@@ -62,5 +56,5 @@ export const handler = commandHandler<InfoArgs>(async (prj, argv) => {
     }
   }
 
-  process.exit(0);
-});
+  return 0;
+};

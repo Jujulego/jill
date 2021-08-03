@@ -1,5 +1,5 @@
 import { Project } from '@jujulego/jill-core';
-import { Arguments } from 'yargs';
+import type { Arguments } from 'yargs';
 
 import { logger } from './logger';
 
@@ -7,11 +7,12 @@ import { logger } from './logger';
 export interface CommonArgs {
   project: string;
   verbose: number;
-  '--'?: (string | number)[];
 }
 
+export type CommandHandler<A = Record<string, never>> = (project: Project, argv: A) => Promise<number | void>
+
 // Wrapper
-export function commandHandler<A = Record<string, never>>(handler: (project: Project, argv: Arguments<A & CommonArgs>) => Promise<void>) {
+export function commandHandler<A = Record<string, never>>(handler: CommandHandler<A>) {
   return async function (argv: Arguments<A & CommonArgs>): Promise<void> {
     // Setup
     if (argv.verbose === 1) {
@@ -28,7 +29,7 @@ export function commandHandler<A = Record<string, never>>(handler: (project: Pro
 
     // Run command
     try {
-      await handler(prj, argv);
+      process.exit(await handler(prj, argv) || 0);
     } catch (error) {
       logger.fail(error);
       process.exit(1);

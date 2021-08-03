@@ -1,0 +1,5 @@
+releases:
+  "@jujulego/jill": prerelease
+
+declined:
+  - "@jujulego/jill-core"

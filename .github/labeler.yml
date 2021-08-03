@@ -1,2 +1,3 @@
 cli: packages/cli/**/*
 core: packages/core/**/*
+yarn-plugin: packages/yarn-plugin/**/*

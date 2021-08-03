@@ -26,7 +26,9 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: build-artifacts
-          path: packages/*/dist/*
+          path: |
+            packages/*/dist/*
+            packages/*/bundles/*
 
   lint:
     runs-on: ubuntu-latest
@@ -36,6 +38,7 @@ jobs:
         package:
           - '@jujulego/jill'
           - '@jujulego/jill-core'
+          - '@jujulego/yarn-plugin-jill'
 
     steps:
       - uses: actions/checkout@v2.3.4
@@ -64,6 +67,9 @@ jobs:
 
           - workspace: 'packages/core'
             package: '@jujulego/jill-core'
+
+          - workspace: 'packages/yarn-plugin'
+            package: '@jujulego/yarn-plugin-jill'
 
     steps:
       - uses: actions/checkout@v2.3.4
@@ -146,7 +152,7 @@ jobs:
           then
             echo "::warning::Nothing changed !"
           else
-            git commit -am "chore: update version numbers"
+            git commit -am "chore: update bundles & version numbers"
           fi
 
       - name: Publish

@@ -1,16 +1,23 @@
 import { Project, Workspace } from '@jujulego/jill-core';
 import chalk from 'chalk';
 
-import { logger } from '../../src/logger';
-import { commandHandler } from '../../src/wrapper';
-
-import { defaultOptions } from './defaults';
+import { ListArgs, listCommand, logger } from '../../src';
 
 // Setup
 jest.mock('../../src/logger');
-jest.mock('../../src/wrapper');
 
 chalk.level = 1;
+
+const defaults: ListArgs = {
+  affected: undefined,
+  private: undefined,
+  'with-script': undefined,
+
+  attrs: undefined,
+  headers: undefined,
+  long: false,
+  json: false,
+};
 
 let project: Project;
 let screen: string;
@@ -22,10 +29,6 @@ beforeEach(() => {
   // Mocks
   jest.restoreAllMocks();
 
-  (commandHandler as jest.MockedFunction<typeof commandHandler>)
-    .mockImplementation((handler) => (args) => handler(project, args));
-
-  jest.spyOn(process, 'exit').mockImplementation();
   jest.spyOn(console, 'log').mockImplementation((message) => screen += message + '\n');
 });
 
@@ -53,46 +56,39 @@ describe('jill list', () => {
   // Defaults
   it('should print list of all workspaces', async () => {
     // Call
-    const { handler } = await import('../../src/commands/list');
-    await expect(handler({ long: false, json: false, ...defaultOptions }))
-      .resolves.toBeUndefined();
+    await expect(listCommand(project, { ...defaults, long: false, json: false }))
+      .resolves.toBe(0);
 
     // Checks
     expect(logger.spin).toHaveBeenCalledWith('Loading project');
     expect(project.workspaces).toHaveBeenCalled();
     expect(logger.stop).toHaveBeenCalled();
     expect(screen).toEqual('wks-1\nwks-2\nwks-3\n');
-    expect(process.exit).toHaveBeenCalledWith(0);
   });
 
   // Filters
   it('should print only private workspaces (--private)', async () => {
     // Call
-    const { handler } = await import('../../src/commands/list');
-    await expect(handler({ long: false, json: false, private: true, ...defaultOptions }))
-      .resolves.toBeUndefined();
+    await expect(listCommand(project, { ...defaults, long: false, json: false, private: true }))
+      .resolves.toBe(0);
 
     // Checks
     expect(screen).toEqual('wks-1\n');
-    expect(process.exit).toHaveBeenCalledWith(0);
   });
 
   it('should print only public workspaces (--no-private)', async () => {
     // Call
-    const { handler } = await import('../../src/commands/list');
-    await expect(handler({ long: false, json: false, private: false, ...defaultOptions }))
-      .resolves.toBeUndefined();
+    await expect(listCommand(project, { ...defaults, long: false, json: false, private: false }))
+      .resolves.toBe(0);
 
     // Checks
     expect(screen).toEqual('wks-2\nwks-3\n');
-    expect(process.exit).toHaveBeenCalledWith(0);
   });
 
   it('should print only affected workspaces (--affected test)', async () => {
     // Call
-    const { handler } = await import('../../src/commands/list');
-    await expect(handler({ long: false, json: false, affected: 'test', ...defaultOptions }))
-      .resolves.toBeUndefined();
+    await expect(listCommand(project, { ...defaults, long: false, json: false, affected: 'test' }))
+      .resolves.toBe(0);
 
     // Checks
     for (const wks of workspaces) {
@@ -100,41 +96,34 @@ describe('jill list', () => {
     }
 
     expect(screen).toEqual('wks-2\n');
-    expect(process.exit).toHaveBeenCalledWith(0);
   });
 
   it('should print only workspaces with \'test\' script (--with-script test)', async () => {
     // Call
-    const { handler } = await import('../../src/commands/list');
-    await expect(handler({ long: false, json: false, 'with-script': 'test', ...defaultOptions }))
-      .resolves.toBeUndefined();
+    await expect(listCommand(project, { ...defaults, long: false, json: false, 'with-script': 'test' }))
+      .resolves.toBe(0);
 
     // Checks
     expect(screen).toEqual('wks-2\n');
-    expect(process.exit).toHaveBeenCalledWith(0);
   });
 
   // Formats
   it('should print list with headers (--headers)', async () => {
     // Call
-    const { handler } = await import('../../src/commands/list');
-    await expect(handler({ long: false, json: false, headers: true, ...defaultOptions }))
-      .resolves.toBeUndefined();
+    await expect(listCommand(project, { ...defaults, long: false, json: false, headers: true }))
+      .resolves.toBe(0);
 
     // Checks
     expect(screen).toMatchSnapshot();
-    expect(process.exit).toHaveBeenCalledWith(0);
   });
 
   it('should print long list of all workspaces (--long)', async () => {
     // Call
-    const { handler } = await import('../../src/commands/list');
-    await expect(handler({ long: true, json: false, ...defaultOptions }))
-      .resolves.toBeUndefined();
+    await expect(listCommand(project, { ...defaults, long: true, json: false }))
+      .resolves.toBe(0);
 
     // Checks
     expect(screen).toMatchSnapshot();
-    expect(process.exit).toHaveBeenCalledWith(0);
   });
 
   it('should print json array of all workspaces (--json)', async () => {
@@ -143,12 +132,10 @@ describe('jill list', () => {
     }
 
     // Call
-    const { handler } = await import('../../src/commands/list');
-    await expect(handler({ long: false, json: true, ...defaultOptions }))
-      .resolves.toBeUndefined();
+    await expect(listCommand(project, { ...defaults, long: false, json: true }))
+      .resolves.toBe(0);
 
     // Checks
     expect(screen).toMatchSnapshot();
-    expect(process.exit).toHaveBeenCalledWith(0);
   });
 });

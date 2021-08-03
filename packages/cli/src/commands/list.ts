@@ -1,11 +1,10 @@
 import { Workspace } from '@jujulego/jill-core';
-import { CommandBuilder } from 'yargs';
 import chalk from 'chalk';
 import path from 'path';
 
 import { logger } from '../logger';
 import { CliList } from '../utils/cli-list';
-import { commandHandler } from '../wrapper';
+import { CommandHandler } from '../wrapper';
 
 // Types
 export type Attribute = 'name' | 'version' | 'root';
@@ -14,65 +13,16 @@ export type Data = Partial<Record<Attribute, string>>;
 
 export interface ListArgs {
   // Filters
-  affected?: string;
-  private?: boolean;
-  'with-script'?: string;
+  affected: string | undefined;
+  private: boolean | undefined;
+  'with-script': string | undefined;
 
   // Formats
-  attrs?: Attribute[];
-  headers?: boolean;
+  attrs: Attribute[] | undefined;
+  headers: boolean | undefined;
   long: boolean;
   json: boolean;
 }
-
-// Command
-export const command = 'list';
-export const aliases = ['ls'];
-export const describe = 'List workspaces';
-
-export const builder: CommandBuilder = {
-  affected: {
-    alias: 'a',
-    type: 'string',
-    coerce: (rev: string) => rev === '' ? 'master' : rev,
-    group: 'Filters:',
-    desc: 'Print only affected workspaces towards given git revision. If no revision is given, it will check towards master',
-  },
-  private: {
-    type: 'boolean',
-    group: 'Filters:',
-    desc: 'Print only private workspaces',
-  },
-  'with-script': {
-    type: 'string',
-    nargs: 1,
-    group: 'Filters:',
-    desc: 'Print only workspaces having the given script',
-  },
-  attrs: {
-    type: 'array',
-    choices: ['name', 'version', 'root'],
-    group: 'Format:',
-    desc: 'Select printed attributes'
-  },
-  headers: {
-    type: 'boolean',
-    group: 'Format:',
-    desc: 'Prints columns headers'
-  },
-  long: {
-    alias: 'l',
-    type: 'boolean',
-    conflicts: 'attrs',
-    group: 'Format:',
-    desc: 'Prints name, version and root of all workspaces',
-  },
-  json: {
-    type: 'boolean',
-    group: 'Format:',
-    desc: 'Prints data as a JSON array',
-  }
-};
 
 // Utils
 type Extractor<T> = (wks: Workspace) => T;
@@ -96,7 +46,7 @@ function buildExtractor(attrs: Attribute[]): Extractor<Data> {
 }
 
 // Handler
-export const handler = commandHandler<ListArgs>(async (prj, argv) => {
+export const listCommand: CommandHandler<ListArgs> = async (prj, argv) => {
   // Get data
   logger.spin('Loading project');
   const workspaces: Workspace[] = [];
@@ -147,5 +97,5 @@ export const handler = commandHandler<ListArgs>(async (prj, argv) => {
     }
   }
 
-  process.exit(0);
-});
+  return 0;
+};
