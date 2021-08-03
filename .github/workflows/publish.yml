@@ -68,7 +68,7 @@ jobs:
           - workspace: 'packages/core'
             package: '@jujulego/jill-core'
 
-          - workspace: 'packages/yarn'
+          - workspace: 'packages/yarn-plugin'
             package: '@jujulego/yarn-plugin-jill'
 
     steps:

@@ -889,9 +889,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jujulego/yarn-plugin-jill@workspace:packages/yarn":
+"@jujulego/yarn-plugin-jill@workspace:packages/yarn-plugin":
   version: 0.0.0-use.local
-  resolution: "@jujulego/yarn-plugin-jill@workspace:packages/yarn"
+  resolution: "@jujulego/yarn-plugin-jill@workspace:packages/yarn-plugin"
   dependencies:
     "@jujulego/jill": ^1.0.0-alpha.4
     "@jujulego/jill-core": ^1.0.0-alpha.4
