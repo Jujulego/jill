@@ -36,7 +36,7 @@ jobs:
         package:
           - '@jujulego/jill'
           - '@jujulego/jill-core'
-          - 'yarn-plugin-jill'
+          - '@jujulego/yarn-plugin-jill'
 
     steps:
       - uses: actions/checkout@v2.3.4
@@ -67,7 +67,7 @@ jobs:
             package: '@jujulego/jill-core'
 
           - workspace: 'packages/yarn'
-            package: 'yarn-plugin-jill'
+            package: '@jujulego/yarn-plugin-jill'
 
     steps:
       - uses: actions/checkout@v2.3.4
@@ -150,7 +150,7 @@ jobs:
           then
             echo "::warning::Nothing changed !"
           else
-            git commit -am "chore: update version numbers"
+            git commit -am "chore: update bundles & version numbers"
           fi
 
       - name: Publish

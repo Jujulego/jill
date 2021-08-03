@@ -1,6 +1,6 @@
 {
   "name": "@jujulego/yarn-plugin-jill",
-  "version": "1.0.0-alpha.0",
+  "private": true,
   "license": "MIT",
   "main": "./sources/index.ts",
   "repository": "git@github.com:Jujulego/jill.git",
