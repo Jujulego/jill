@@ -1,5 +1,5 @@
 {
-  "name": "yarn-plugin-jill",
+  "name": "@jujulego/yarn-plugin-jill",
   "version": "1.0.0-alpha.0",
   "license": "MIT",
   "main": "./sources/index.ts",
