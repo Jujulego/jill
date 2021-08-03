@@ -5,6 +5,7 @@ import { buildCommand } from './commands/build';
 import { eachCommand } from './commands/each';
 import { infoCommand } from './commands/info';
 import { listCommand } from './commands/list';
+import { runCommand } from './commands/run';
 import { commandHandler } from './wrapper';
 
 // Bootstrap
@@ -70,7 +71,7 @@ import { commandHandler } from './wrapper';
     }, commandHandler(listCommand))
     .command('info <workspace>', 'Print workspace data', {}, commandHandler(infoCommand))
     .command('build <workspace>', 'Build workspace', {}, commandHandler(buildCommand))
-    .command(require('./commands/run')) // eslint-disable-line @typescript-eslint/no-var-requires
+    .command('run <workspace> <script>', 'Run script inside workspace', {}, commandHandler(runCommand))
     .command('each <script>', 'Run script on selected workspaces', {
       affected: {
         alias: 'a',
