@@ -1,5 +1,4 @@
 import chalk from 'chalk';
-import stringWidth from 'string-width';
 
 // Class
 export class CliList {
@@ -14,7 +13,7 @@ export class CliList {
   }
 
   private static _length(txt: string): number {
-    return stringWidth(txt);
+    return txt.replace(/\033\[[^m]*m/g, '').length;
   }
 
   private _updateColumns(data: string[]): void {
