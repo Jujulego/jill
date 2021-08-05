@@ -17,9 +17,9 @@ class NoopTransport extends Transport {
 
 logger.add(new NoopTransport());
 
-
-jest.spyOn(OraTransport.prototype, 'log')
-jest.spyOn(OraTransport.prototype, 'spin')
-jest.spyOn(OraTransport.prototype, 'succeed')
-jest.spyOn(OraTransport.prototype, 'fail')
-jest.spyOn(OraTransport.prototype, 'stop')
+// Mocks
+jest.spyOn(OraTransport.prototype, 'log');
+jest.spyOn(OraTransport.prototype, 'spin');
+jest.spyOn(OraTransport.prototype, 'succeed');
+jest.spyOn(OraTransport.prototype, 'fail');
+jest.spyOn(OraTransport.prototype, 'stop');
