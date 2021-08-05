@@ -18,6 +18,11 @@ import { commandHandler } from './wrapper';
       type: 'string',
       description: 'Project root directory'
     })
+    .option('package-manager', {
+      choices: ['yarn', 'npm'],
+      type: 'string',
+      description: 'Force package manager'
+    })
     .option('verbose', {
       alias: 'v',
       type: 'count',

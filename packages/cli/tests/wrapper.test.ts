@@ -1,16 +1,21 @@
 import { Project } from '@jujulego/jill-core';
 
-import { logger } from '../src/logger';
+import { logger } from '../src';
 import { commandHandler } from '../src/wrapper';
+
+import './logger';
 
 // Setup
 jest.mock('@jujulego/jill-core');
 
 beforeEach(() => {
-  jest.restoreAllMocks();
+  jest.resetAllMocks();
 
   jest.spyOn(process, 'exit')
     .mockImplementation();
+
+  jest.spyOn(Project, 'searchProjectRoot')
+    .mockResolvedValue('/detected')
 });
 
 // Test suite
@@ -23,8 +28,30 @@ describe('commandHandler', () => {
       .resolves.toBeUndefined();
 
     // Checks
-    expect(Project).toHaveBeenCalledWith('/test');
+    expect(Project).toHaveBeenCalledWith('/test', {});
     expect(handler).toHaveBeenCalledWith(expect.any(Project), { project: '/test' });
+  });
+
+  it('should call handler with detected project', async () => {
+    const handler = jest.fn();
+
+    await expect(commandHandler(handler)({}))
+      .resolves.toBeUndefined();
+
+    // Checks
+    expect(Project).toHaveBeenCalledWith('/detected', {});
+    expect(handler).toHaveBeenCalledWith(expect.any(Project), { project: '/detected' });
+  });
+
+  it('should call handler with given package manager', async () => {
+    const handler = jest.fn();
+
+    await expect(commandHandler(handler)({ project: '.', 'package-manager': 'npm' }))
+      .resolves.toBeUndefined();
+
+    // Checks
+    expect(Project).toHaveBeenCalledWith('.', { packageManager: 'npm' });
+    expect(handler).toHaveBeenCalledWith(expect.any(Project), { project: '.', 'package-manager': 'npm' });
   });
 
   it('should set verbosity level to "verbose"', async () => {
