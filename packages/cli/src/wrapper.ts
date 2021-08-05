@@ -1,4 +1,4 @@
-import { Project } from '@jujulego/jill-core';
+import { PackageManager, Project } from '@jujulego/jill-core';
 import type { Arguments } from 'yargs';
 
 import { logger } from './logger';
@@ -6,6 +6,7 @@ import { logger } from './logger';
 // Types
 export interface CommonArgs {
   project: string;
+  'package-manager'?: PackageManager;
   verbose: number;
 }
 
@@ -25,7 +26,7 @@ export function commandHandler<A = Record<string, never>>(handler: CommandHandle
       argv.project = await Project.searchProjectRoot(process.cwd());
     }
 
-    const prj = new Project(argv.project);
+    const prj = new Project(argv.project, { packageManager: argv['package-manager'] });
 
     // Run command
     try {
