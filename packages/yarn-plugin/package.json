@@ -10,7 +10,7 @@
     "test": "echo 'No tests yet !'"
   },
   "dependencies": {
-    "@jujulego/jill": "^1.0.0-alpha.6",
+    "@jujulego/jill": "^1.0.0-alpha.7",
     "@jujulego/jill-core": "^1.0.0-alpha.4",
     "@yarnpkg/core": "2.4.0",
     "@yarnpkg/fslib": "2.5.0",
