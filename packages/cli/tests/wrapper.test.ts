@@ -15,7 +15,7 @@ beforeEach(() => {
     .mockImplementation();
 
   jest.spyOn(Project, 'searchProjectRoot')
-    .mockResolvedValue('/detected')
+    .mockResolvedValue('/detected');
 });
 
 // Test suite
