@@ -16,6 +16,6 @@ export class InfoCommand extends JillCommand {
     const prj = await this.jillPrj();
     const wks = await this.yarnWks();
 
-    return await infoCommand(prj, { workspace: wks.manifest.name?.name || '' }) || 0;
+    return await infoCommand(prj, { workspace: wks.manifest.name?.name }) || 0;
   }
 }

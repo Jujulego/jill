@@ -74,9 +74,27 @@ import { commandHandler } from './wrapper';
         desc: 'Prints data as a JSON array',
       }
     }, commandHandler(listCommand))
-    .command('info <workspace>', 'Print workspace data', {}, commandHandler(infoCommand))
-    .command('build <workspace>', 'Build workspace', {}, commandHandler(buildCommand))
-    .command('run <workspace> <script>', 'Run script inside workspace', {}, commandHandler(runCommand))
+    .command('info', 'Print workspace data', {
+      workspace: {
+        alias: 'w',
+        type: 'string',
+        desc: 'Workspace to use'
+      }
+    }, commandHandler(infoCommand))
+    .command('build', 'Build workspace', {
+      workspace: {
+        alias: 'w',
+        type: 'string',
+        desc: 'Workspace to use'
+      }
+    }, commandHandler(buildCommand))
+    .command('run <script>', 'Run script inside workspace', {
+      workspace: {
+        alias: 'w',
+        type: 'string',
+        desc: 'Workspace to use'
+      }
+    }, commandHandler(runCommand))
     .command('each <script>', 'Run script on selected workspaces', {
       affected: {
         alias: 'a',

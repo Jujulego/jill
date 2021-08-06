@@ -23,7 +23,7 @@ export class RunCommand extends JillCommand {
     const prj = await this.jillPrj();
     const wks = await this.yarnWks();
 
-    if (await runCommand(prj, { workspace: wks.manifest.name?.name || '', script: this.script, '--': this.options })) {
+    if (await runCommand(prj, { workspace: wks.manifest.name?.name, script: this.script, '--': this.options })) {
       return 1;
     }
   }
