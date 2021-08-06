@@ -56,6 +56,27 @@ describe('Project.mainWorkspace', () => {
   });
 });
 
+describe('Project.currentWorkspace', () => {
+  it('should return mock-test-a', async () => {
+    await expect(project.currentWorkspace(path.join(root, 'workspaces/test-a/src')))
+      .resolves.toEqual(expect.objectContaining({
+        name: 'mock-test-a'
+      }));
+  });
+
+  it('should return main workspace', async () => {
+    await expect(project.currentWorkspace(path.join(root, 'workspaces')))
+      .resolves.toEqual(expect.objectContaining({
+        name: 'mock-root'
+      }));
+  });
+
+  it('should return null', async () => {
+    await expect(project.currentWorkspace(path.dirname(root)))
+      .resolves.toBeNull();
+  });
+});
+
 describe('Project.workspaces', () => {
   // Tests
   it('should return all workspaces', async () => {
