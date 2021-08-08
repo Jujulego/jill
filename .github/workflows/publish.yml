@@ -143,7 +143,7 @@ jobs:
       - name: Apply version update
         run: yarn version apply --all
 
-      - name: Commit
+      - name: Commit & Push
         run: |
           git config --global user.name 'Boobrie'
           git config --global user.email 'boobrie@users.noreply.github.com'
@@ -153,12 +153,10 @@ jobs:
             echo "::warning::Nothing changed !"
           else
             git commit -am "chore: update bundles & version numbers"
+            git push
           fi
 
       - name: Publish
         run: yarn workspaces foreach --no-private npm publish --access public --tolerate-republish
         env:
           YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Push
-        run: git push

@@ -16,6 +16,6 @@ export class BuildCommand extends JillCommand {
     const prj = await this.jillPrj();
     const wks = await this.yarnWks();
 
-    return await buildCommand(prj, { workspace: wks.manifest.name?.name || '' }) || 0;
+    return await buildCommand(prj, { workspace: wks.manifest.name?.name }) || 0;
   }
 }

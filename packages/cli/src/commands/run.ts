@@ -6,8 +6,8 @@ import { TaskLogger } from '../task-logger';
 
 // Types
 export interface RunArgs {
-  workspace: string;
   script: string;
+  workspace: string | undefined;
   '--'?: (string | number)[];
 }
 
@@ -15,10 +15,10 @@ export interface RunArgs {
 export const runCommand: CommandHandler<RunArgs> = async (prj, argv) => {
   // Get workspace
   logger.spin('Loading project');
-  const wks = await prj.workspace(argv.workspace);
+  const wks = await (argv.workspace ? prj.workspace(argv.workspace) : prj.currentWorkspace());
 
   if (!wks) {
-    logger.fail(`Workspace ${argv.workspace} not found`);
+    logger.fail(`Workspace ${argv.workspace || '.'} not found`);
     return 1;
   }
 
@@ -28,9 +28,9 @@ export const runCommand: CommandHandler<RunArgs> = async (prj, argv) => {
   manager.add(task);
 
   const tlogger = new TaskLogger();
-  tlogger.on('spin-simple', (tsk) => tsk === task ? `Running ${argv.script} in ${argv.workspace} ...` : `Building ${tsk.workspace?.name || tsk.cwd} ...`);
+  tlogger.on('spin-simple', (tsk) => tsk === task ? `Running ${argv.script} in ${wks.name} ...` : `Building ${tsk.workspace?.name || tsk.cwd} ...`);
   tlogger.on('fail', (tsk) => tsk === task ? `${argv.script} failed` : `Failed to build ${tsk.workspace?.name || tsk.cwd}`);
-  tlogger.on('succeed', (tsk) => tsk === task ? `${argv.workspace} ${argv.script} done` : `${tsk.workspace?.name || tsk.cwd} built`);
+  tlogger.on('succeed', (tsk) => tsk === task ? `${wks.name} ${argv.script} done` : `${tsk.workspace?.name || tsk.cwd} built`);
   tlogger.connect(manager);
 
   manager.start();

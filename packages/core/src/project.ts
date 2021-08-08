@@ -117,6 +117,21 @@ export class Project {
     return this._mainWorkspace;
   }
 
+  async currentWorkspace(cwd = process.cwd()): Promise<Workspace | null> {
+    let workspace: Workspace | null = null;
+    cwd = path.normalize(cwd);
+
+    for await (const wks of this.workspaces()) {
+      if (cwd.startsWith(path.normalize(wks.cwd))) {
+        workspace = wks;
+
+        if (wks.cwd !== this.root) return wks;
+      }
+    }
+
+    return workspace;
+  }
+
   async* workspaces(): AsyncGenerator<Workspace, void> {
     const main = await this.mainWorkspace();
     yield main;
