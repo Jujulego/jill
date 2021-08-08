@@ -1,0 +1,3 @@
+releases:
+  "@jujulego/jill": prerelease
+  "@jujulego/jill-core": prerelease
