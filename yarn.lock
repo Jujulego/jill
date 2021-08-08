@@ -844,7 +844,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jujulego/jill-core@^1.0.0-alpha.4, @jujulego/jill-core@workspace:packages/core":
+"@jujulego/jill-core@^1.0.0-alpha.5, @jujulego/jill-core@workspace:packages/core":
   version: 0.0.0-use.local
   resolution: "@jujulego/jill-core@workspace:packages/core"
   dependencies:
@@ -867,7 +867,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@jujulego/jill@workspace:packages/cli"
   dependencies:
-    "@jujulego/jill-core": ^1.0.0-alpha.4
+    "@jujulego/jill-core": ^1.0.0-alpha.5
     "@types/jest": 26.0.24
     "@types/node": 14.17.9
     "@types/yargs": 17.0.2
@@ -894,7 +894,7 @@ __metadata:
   resolution: "@jujulego/yarn-plugin-jill@workspace:packages/yarn-plugin"
   dependencies:
     "@jujulego/jill": ^1.0.0-alpha.7
-    "@jujulego/jill-core": ^1.0.0-alpha.4
+    "@jujulego/jill-core": ^1.0.0-alpha.5
     "@types/node": 14.17.9
     "@typescript-eslint/eslint-plugin": 4.28.5
     "@typescript-eslint/parser": 4.28.5
