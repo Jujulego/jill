@@ -1,6 +1,7 @@
 # Sources
 /src
 /tests
+/e2e
 /node_modules
 
 # Logs

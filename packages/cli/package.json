@@ -1,6 +1,7 @@
 {
   "name": "@jujulego/jill",
   "version": "1.0.0-alpha.7",
+  "stableVersion": "1.0.0-alpha.6",
   "license": "MIT",
   "bin": "./bin/jill.js",
   "main": "./dist/index.js",
@@ -11,6 +12,7 @@
     "build": "tsc -p tsconfig.build.json",
     "start": "ts-node src/main.ts",
     "test": "jest",
+    "e2e": "jest -c e2e/jest.config.js",
     "jill:build": "tsc -p tsconfig.build.json --pretty"
   },
   "engines": {
@@ -36,6 +38,5 @@
     "ts-jest": "27.0.4",
     "ts-node": "10.1.0",
     "typescript": "4.3.5"
-  },
-  "stableVersion": "1.0.0-alpha.6"
+  }
 }
