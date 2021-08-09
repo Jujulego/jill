@@ -5,6 +5,7 @@ import { logger } from './logger';
 import type { Manifest } from './manifest';
 import { Project } from './project';
 import { Task, TaskOptions } from './task';
+import { GitDiffTask } from './tasks/git-diff.task';
 import { combine, spawn } from './utils';
 
 // Types
@@ -16,6 +17,8 @@ export interface WorkspaceRunOptions extends Omit<TaskOptions, 'cwd'> {
 export class Workspace {
   // Attributes
   private _lastBuild?: Task;
+  private _lastDiff?: GitDiffTask;
+
   private _isAffected?: boolean;
   private readonly _logger: Logger;
 
@@ -33,6 +36,20 @@ export class Workspace {
     for await (const dep of combine(this.dependencies(), this.devDependencies())) {
       task.addDependency(await dep.build());
     }
+  }
+
+  private async _diffDependencies(base: string): Promise<GitDiffTask> {
+    if (!this._lastDiff) {
+      this._lastDiff = new GitDiffTask(['--name-only', base, '--', this.cwd], {
+        cwd: this.project.root,
+      });
+
+      for await (const dep of combine(this.dependencies(), this.devDependencies())) {
+        this._lastDiff.addDependency(await dep._diffDependencies(base));
+      }
+    }
+
+    return this._lastDiff;
   }
 
   async isAffected(base: string): Promise<boolean> {

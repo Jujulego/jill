@@ -86,7 +86,7 @@ export class Task extends EventEmitter<TaskEventMap> {
       complexity = 0;
 
       for (const dep of this.dependencies) {
-        complexity += (cache.get(dep) ?? dep.complexity(cache)) + 1;
+        complexity += dep.complexity(cache) + 1;
       }
 
       cache.set(this, complexity);

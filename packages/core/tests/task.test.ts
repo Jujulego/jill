@@ -68,6 +68,7 @@ describe('Task.start', () => {
       cwd: '/test',
       shell: true,
       stdio: 'pipe',
+      windowsHide: true,
       env: expect.objectContaining({
         FORCE_COLOR: process.env.FORCE_COLOR || '1'
       })
@@ -107,6 +108,7 @@ describe('Task.start', () => {
       cwd: '/test',
       shell: true,
       stdio: 'pipe',
+      windowsHide: true,
       env: expect.objectContaining({
         FORCE_COLOR: process.env.FORCE_COLOR || '1'
       })
