@@ -9,15 +9,21 @@ import { Workspace } from './workspace';
 // Types
 export interface TaskOptions {
   cwd?: string;
-  env?: Partial<Record<string, string>>
+  env?: Partial<Record<string, string>>;
+  workspace?: Workspace;
+
   logger?: Logger;
-  workspace?: Workspace,
+  streamLogLevel?: string | { stdout?: string, stderr?: string };
 }
 
 export type TaskStatus = 'waiting' | 'ready' | 'running' | 'done' | 'failed';
 
+export type TaskEventMap = Record<TaskStatus, []> & {
+  data: ['stdout' | 'stderr', string]
+};
+
 // Class
-export class Task extends EventEmitter<Record<TaskStatus, []>> {
+export class Task extends EventEmitter<TaskEventMap> {
   // Attributes
   private _status: TaskStatus = 'ready';
   private _dependencies: Task[] = [];
@@ -43,6 +49,20 @@ export class Task extends EventEmitter<Record<TaskStatus, []>> {
     this._status = status;
     this._logger.debug(`${[this.cmd, ...this.args].join(' ')} is ${status}`);
     this.emit(status);
+  }
+
+  protected _logStream(stream: 'stdout' | 'stderr', msg: string): void {
+    // Get log level
+    let level = 'info';
+
+    if (typeof this.opts.streamLogLevel === 'string') {
+      level = this.opts.streamLogLevel
+    } else if (typeof this.opts.streamLogLevel === 'object') {
+      level = this.opts.streamLogLevel[stream] || level;
+    }
+
+    // Log message
+    this._logger.log(level, msg.replace(/\n$/, ''))
   }
 
   private _recomputeStatus() {
@@ -102,6 +122,7 @@ export class Task extends EventEmitter<Record<TaskStatus, []>> {
       cwd: this.cwd,
       shell: true,
       stdio: 'pipe',
+      windowsHide: true,
       env: {
         FORCE_COLOR: '1',
         ...process.env,
@@ -111,11 +132,17 @@ export class Task extends EventEmitter<Record<TaskStatus, []>> {
 
     this._setStatus('running');
 
-    this._process.stdout?.on('data', (msg: Buffer) => {
-      this._logger.info(msg.toString('utf-8').replace(/\n$/, ''));
+    this._process.stdout?.on('data', (buf: Buffer) => {
+      const msg = buf.toString('utf-8');
+
+      this._logStream('stdout', msg);
+      this.emit('data', 'stdout', msg)
     });
-    this._process.stderr?.on('data', (msg: Buffer) => {
-      this._logger.info(msg.toString('utf-8').replace(/\n$/, ''));
+    this._process.stderr?.on('data', (buf: Buffer) => {
+      const msg = buf.toString('utf-8');
+
+      this._logStream('stderr', msg);
+      this.emit('data', 'stderr', msg)
     });
 
     this._process.on('close', (code) => {
