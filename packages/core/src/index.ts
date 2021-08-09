@@ -1,3 +1,4 @@
+export * from './event-emitter';
 export * from './logger';
 export type { Manifest } from './manifest';
 export * from './project';
