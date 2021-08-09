@@ -126,6 +126,65 @@ describe('Task.start', () => {
   });
 });
 
+describe('Task.stop', () => {
+  it('should stop task and resolve when it\'s done', async () => {
+    // Start a task
+    const task = new Task('test', [], { cwd: '/test' });
+    const proc = (new EventEmitter()) as cp.ChildProcess;
+    proc.kill = () => true;
+
+    jest.spyOn(cp, 'spawn').mockReturnValue(proc);
+    jest.spyOn(proc, 'kill').mockImplementation();
+
+    task.start();
+
+    // Stop it
+    const prom = task.stop();
+
+    expect(proc.kill).toHaveBeenCalledTimes(1);
+    proc.emit('close', 0);
+
+    await expect(prom).resolves.toBeUndefined();
+  });
+
+  it('should stop task and resolve when it\'s failed', async () => {
+    // Start a task
+    const task = new Task('test', [], { cwd: '/test' });
+    const proc = (new EventEmitter()) as cp.ChildProcess;
+    proc.kill = () => true;
+
+    jest.spyOn(cp, 'spawn').mockReturnValue(proc);
+    jest.spyOn(proc, 'kill').mockImplementation();
+
+    task.start();
+
+    // Stop it
+    const prom = task.stop();
+
+    expect(proc.kill).toHaveBeenCalledTimes(1);
+    proc.emit('close', 1);
+
+    await expect(prom).resolves.toBeUndefined();
+  });
+
+  it('should do nothing if not running', async () => {
+    // Start a task
+    const task = new Task('test', [], { cwd: '/test' });
+    const proc = (new EventEmitter()) as cp.ChildProcess;
+    proc.kill = () => true;
+
+    jest.spyOn(cp, 'spawn').mockReturnValue(proc);
+    jest.spyOn(proc, 'kill').mockImplementation();
+
+    // Stop it
+    const prom = task.stop();
+
+    expect(proc.kill).not.toHaveBeenCalled();
+
+    await expect(prom).resolves.toBeUndefined();
+  });
+});
+
 describe('Task.complexity', () => {
   // Setup
   const ta = new Task('task-a');

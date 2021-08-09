@@ -127,6 +127,18 @@ export class Task extends EventEmitter<Record<TaskStatus, []>> {
     });
   }
 
+  async stop(): Promise<void> {
+    if (!this._process || this._status !== 'running') {
+      return;
+    }
+
+    // Kill process
+    this._process.kill();
+
+    // Wait for task to end
+    await this.waitFor('done', 'failed');
+  }
+
   // Properties
   get dependencies(): Task[] {
     return this._dependencies;
