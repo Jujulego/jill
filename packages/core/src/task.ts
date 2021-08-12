@@ -7,10 +7,14 @@ import { logger } from './logger';
 import { Workspace } from './workspace';
 
 // Types
+export interface TaskContext {
+  workspace?: Workspace;
+}
+
 export interface TaskOptions {
   cwd?: string;
   env?: Partial<Record<string, string>>;
-  workspace?: Workspace;
+  context?: TaskContext;
 
   logger?: Logger;
   streamLogLevel?: string | { stdout?: string, stderr?: string };
@@ -30,6 +34,8 @@ export class Task extends EventEmitter<TaskEventMap> {
   private _process?: ChildProcess;
   private readonly _logger: Logger;
 
+  private readonly _context: TaskContext;
+
   // Constructor
   constructor(
     readonly cmd: string,
@@ -39,6 +45,8 @@ export class Task extends EventEmitter<TaskEventMap> {
     super();
     this._logger = opts.logger || logger;
     this._logger.debug(`${[this.cmd, ...this.args].join(' ')} is ${this._status}`);
+
+    this._context = opts.context || {};
   }
 
   // Methods
@@ -183,7 +191,7 @@ export class Task extends EventEmitter<TaskEventMap> {
     return this._process?.exitCode || null;
   }
 
-  get workspace(): Workspace | null {
-    return this.opts.workspace || null;
+  get context(): TaskContext {
+    return this._context;
   }
 }

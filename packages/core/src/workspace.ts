@@ -106,7 +106,7 @@ export class Workspace {
       ...opts,
       cwd: this.cwd,
       logger: this._logger,
-      workspace: this
+      context: { workspace: this }
     });
     await this._buildDependencies(task);
 

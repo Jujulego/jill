@@ -28,9 +28,9 @@ export const runCommand: CommandHandler<RunArgs> = async (prj, argv) => {
   manager.add(task);
 
   const tlogger = new TaskLogger();
-  tlogger.on('spin-simple', (tsk) => tsk === task ? `Running ${argv.script} in ${wks.name} ...` : `Building ${tsk.workspace?.name || tsk.cwd} ...`);
-  tlogger.on('fail', (tsk) => tsk === task ? `${argv.script} failed` : `Failed to build ${tsk.workspace?.name || tsk.cwd}`);
-  tlogger.on('succeed', (tsk) => tsk === task ? `${wks.name} ${argv.script} done` : `${tsk.workspace?.name || tsk.cwd} built`);
+  tlogger.on('spin-simple', (tsk) => tsk === task ? `Running ${argv.script} in ${wks.name} ...` : `Building ${tsk.context.workspace?.name || tsk.cwd} ...`);
+  tlogger.on('fail', (tsk) => tsk === task ? `${argv.script} failed` : `Failed to build ${tsk.context.workspace?.name || tsk.cwd}`);
+  tlogger.on('succeed', (tsk) => tsk === task ? `${wks.name} ${argv.script} done` : `${tsk.context.workspace?.name || tsk.cwd} built`);
   tlogger.connect(manager);
 
   manager.start();

@@ -60,9 +60,9 @@ export const eachCommand: CommandHandler<EachArgs> = async (prj, argv) => {
 
   const tlogger = new TaskLogger();
   tlogger.on('spin-multiple', (count) => `Working in ${count} packages ...`);
-  tlogger.on('spin-simple', (tsk) => tasks.includes(tsk) ? `Running ${argv.script} in ${tsk.workspace?.name || tsk.cwd} ...` : `Building ${tsk.workspace?.name || tsk.cwd} ...`);
-  tlogger.on('fail', (tsk) => tasks.includes(tsk) ? `${tsk.workspace?.name || tsk.cwd} ${argv.script} failed` : `Failed to build ${tsk.workspace?.name || tsk.cwd}`);
-  tlogger.on('succeed', (tsk) => tasks.includes(tsk) ? `${tsk.workspace?.name || tsk.cwd} ${argv.script} done` : `${tsk.workspace?.name || tsk.cwd} built`);
+  tlogger.on('spin-simple', (tsk) => tasks.includes(tsk) ? `Running ${argv.script} in ${tsk.context.workspace?.name || tsk.cwd} ...` : `Building ${tsk.context.workspace?.name || tsk.cwd} ...`);
+  tlogger.on('fail', (tsk) => tasks.includes(tsk) ? `${tsk.context.workspace?.name || tsk.cwd} ${argv.script} failed` : `Failed to build ${tsk.context.workspace?.name || tsk.cwd}`);
+  tlogger.on('succeed', (tsk) => tasks.includes(tsk) ? `${tsk.context.workspace?.name || tsk.cwd} ${argv.script} done` : `${tsk.context.workspace?.name || tsk.cwd} built`);
   tlogger.connect(manager);
 
   manager.start();
