@@ -64,13 +64,13 @@ export class Task extends EventEmitter<TaskEventMap> {
     let level = 'info';
 
     if (typeof this.opts.streamLogLevel === 'string') {
-      level = this.opts.streamLogLevel
+      level = this.opts.streamLogLevel;
     } else if (typeof this.opts.streamLogLevel === 'object') {
       level = this.opts.streamLogLevel[stream] || level;
     }
 
     // Log message
-    this._logger.log(level, msg.replace(/\n$/, ''))
+    this._logger.log(level, msg.replace(/\n$/, ''));
   }
 
   private _recomputeStatus() {
@@ -144,13 +144,14 @@ export class Task extends EventEmitter<TaskEventMap> {
       const msg = buf.toString('utf-8');
 
       this._logStream('stdout', msg);
-      this.emit('data', 'stdout', msg)
+      this.emit('data', 'stdout', msg);
     });
+
     this._process.stderr?.on('data', (buf: Buffer) => {
       const msg = buf.toString('utf-8');
 
       this._logStream('stderr', msg);
-      this.emit('data', 'stderr', msg)
+      this.emit('data', 'stderr', msg);
     });
 
     this._process.on('close', (code) => {

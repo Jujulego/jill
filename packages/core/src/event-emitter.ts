@@ -10,7 +10,7 @@ export class EventEmitter<M extends EventMap> extends events.EventEmitter {
   // Methods
   async waitFor<E extends keyof M>(...events: E[]): Promise<M[E]> {
     return new Promise<M[E]>(resolve => {
-      const listener = (...args: M[E]) => {
+      function listener(...args: M[E]) {
         // Prevent from being triggered twice
         for (const event of events) {
           this.off(event, listener);
