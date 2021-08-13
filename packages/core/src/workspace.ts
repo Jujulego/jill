@@ -5,7 +5,6 @@ import { logger } from './logger';
 import type { Manifest } from './manifest';
 import { Project } from './project';
 import { Task, TaskOptions } from './task';
-import { GitDiffTask } from './tasks/git-diff.task';
 import { combine, spawn } from './utils';
 
 // Types
@@ -17,7 +16,6 @@ export interface WorkspaceRunOptions extends Omit<TaskOptions, 'cwd'> {
 export class Workspace {
   // Attributes
   private _lastBuild?: Task;
-  private _lastDiff?: GitDiffTask;
 
   private _isAffected?: boolean;
   private readonly _logger: Logger;
@@ -38,37 +36,23 @@ export class Workspace {
     }
   }
 
-  private async _diffDependencies(base: string): Promise<GitDiffTask> {
-    if (!this._lastDiff) {
-      this._lastDiff = new GitDiffTask(['--name-only', base, '--', this.cwd], {
+  async isAffected(base: string): Promise<boolean> {
+    if (this._isAffected === undefined) {
+      // Test workspace
+      const { stdout } = await spawn('git', ['diff', '--name-only', base, '--', this.cwd], {
         cwd: this.project.root,
       });
 
-      for await (const dep of combine(this.dependencies(), this.devDependencies())) {
-        this._lastDiff.addDependency(await dep._diffDependencies(base));
-      }
-    }
-
-    return this._lastDiff;
-  }
-
-  async isAffected(base: string): Promise<boolean> {
-    if (this._isAffected === undefined) {
-      this._isAffected = false;
-
-      for await (const dep of combine(this.dependencies(), this.devDependencies())) {
-        if (await dep.isAffected(base)) {
-          this._isAffected = true;
-          break;
-        }
-      }
+      this._isAffected = stdout.length > 0;
 
       if (!this._isAffected) {
-        const { stdout } = await spawn('git', ['diff', '--name-only', base, '--', this.cwd], {
-          cwd: this.project.root,
-        });
-
-        this._isAffected = stdout.length > 0;
+        // Test it's dependencies
+        for await (const dep of combine(this.dependencies(), this.devDependencies())) {
+          if (await dep.isAffected(base)) {
+            this._isAffected = true;
+            break;
+          }
+        }
       }
     }
 
