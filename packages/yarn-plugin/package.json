@@ -13,14 +13,14 @@
     "@jujulego/jill": "^1.0.0-alpha.7",
     "@jujulego/jill-core": "^1.0.0-alpha.5",
     "@yarnpkg/core": "2.4.0",
-    "@yarnpkg/fslib": "2.5.0",
+    "@yarnpkg/fslib": "2.5.1",
     "chalk": "4.1.2",
     "clipanion": "2.6.2"
   },
   "devDependencies": {
     "@types/node": "14.17.9",
-    "@typescript-eslint/eslint-plugin": "4.28.5",
-    "@typescript-eslint/parser": "4.28.5",
+    "@typescript-eslint/eslint-plugin": "4.29.1",
+    "@typescript-eslint/parser": "4.29.1",
     "@yarnpkg/builder": "2.1.3",
     "eslint": "7.31.0",
     "eslint-plugin-jest": "24.4.0",
