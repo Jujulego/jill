@@ -1,4 +1,8 @@
 import { jill, MOCK } from '../utils';
+import chalk from 'chalk';
+
+// Setup
+chalk.level = 1;
 
 // Tests suites
 describe('jill info', () => {

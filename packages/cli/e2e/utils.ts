@@ -34,11 +34,11 @@ export function jill(args: ReadonlyArray<string>, opts: SpawnOptions = {}): Prom
     };
 
     proc.stdout.on('data', (msg: Buffer) => {
-      res.stdout.push(msg.toString('utf-8'));
+      res.stdout.push(...msg.toString('utf-8').replace(/\n$/, '').split('\n'));
     });
 
     proc.stderr.on('data', (msg: Buffer) => {
-      res.stderr.push(msg.toString('utf-8'));
+      res.stderr.push(...msg.toString('utf-8').replace(/\n$/, '').split('\n'));
     });
 
     // Emit result
