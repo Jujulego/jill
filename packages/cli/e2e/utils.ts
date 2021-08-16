@@ -23,7 +23,11 @@ export function jill(args: ReadonlyArray<string>, opts: SpawnOptions = {}): Prom
     const proc = cp.spawn('node', [MAIN, ...args], {
       cwd: opts.cwd,
       shell: true,
-      stdio: 'pipe'
+      stdio: 'pipe',
+      env: {
+        ...process.env,
+        FORCE_COLOR: '1'
+      }
     });
 
     // Gather result
