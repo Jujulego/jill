@@ -142,6 +142,8 @@ jobs:
 
       - name: Test
         run: yarn workspace ${{ matrix.package }} e2e
+        env:
+          FORCE_COLOR: 1
 
   version:
     if: ${{ !startsWith(github.head_ref, 'renovate/') }}
