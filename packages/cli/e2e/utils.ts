@@ -19,15 +19,12 @@ export interface SpawnOptions {
 
 // Utils
 export function jill(args: ReadonlyArray<string>, opts: SpawnOptions = {}): Promise<SpawnResult> {
-  return new Promise<SpawnResult>((resolve, reject) => {
+  return new Promise<SpawnResult>((resolve) => {
     const proc = cp.spawn('node', [MAIN, ...args], {
       cwd: opts.cwd,
       shell: true,
       stdio: 'pipe',
-      env: {
-        ...process.env,
-        FORCE_COLOR: '1'
-      }
+      env: process.env
     });
 
     // Gather result

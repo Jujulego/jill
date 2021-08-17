@@ -3,9 +3,6 @@ import path from 'path';
 
 import { jill, MOCK } from '../utils';
 
-// Setup
-chalk.level = 1;
-
 // Tests suites
 describe('jill info', () => {
   it('should print main workspace data', async () => {
