@@ -16,6 +16,7 @@
       <excludeFolder url="file://$MODULE_DIR$/packages/cli/coverage" />
       <excludeFolder url="file://$MODULE_DIR$/packages/yarn-plugin/bundles" />
       <excludeFolder url="file://$MODULE_DIR$/packages/cli/e2e/coverage" />
+      <excludeFolder url="file://$MODULE_DIR$/coverage" />
     </content>
     <content url="file://$MODULE_DIR$/.yarn" />
     <orderEntry type="inheritedJdk" />

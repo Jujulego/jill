@@ -27,7 +27,7 @@ export interface ListArgs {
 // Utils
 type Extractor<T> = (wks: Workspace, argv: ListArgs) => T;
 
-const extractors: Record<Attribute, Extractor<string>> = {
+const extractors: Record<Attribute, Extractor<string | undefined>> = {
   name: wks => wks.name,
   version: (wks, argv) => wks.manifest.version || (argv.json ? undefined : chalk.grey('unset')),
   root: wks => wks.cwd
