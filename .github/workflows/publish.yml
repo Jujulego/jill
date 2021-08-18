@@ -60,21 +60,24 @@ jobs:
     needs: [ build ]
 
     strategy:
+      fail-fast: false
+
       matrix:
         include:
-          - workspace: 'packages/cli'
+          - name: 'jill'
             package: '@jujulego/jill'
+            workspace: 'packages/cli'
 
-          - workspace: 'packages/core'
+          - name: 'jill-core'
             package: '@jujulego/jill-core'
+            workspace: 'packages/core'
 
-          - workspace: 'packages/yarn-plugin'
+          - name: 'yarn-plugin-jill'
             package: '@jujulego/yarn-plugin-jill'
+            workspace: 'packages/yarn-plugin'
 
     steps:
       - uses: actions/checkout@v2.3.4
-        with:
-          fetch-depth: 0
 
       - name: Use Node.js 14.x
         uses: actions/setup-node@v2.4.0
@@ -93,19 +96,10 @@ jobs:
       - name: Test
         run: yarn workspace ${{ matrix.package }} test
 
-      - name: Load package.json
-        id: info
-        run: 'echo ::set-output name=package::`cat ${{ matrix.workspace }}/package.json`'
-
-      - name: Sonarcloud
-        uses: sonarsource/sonarcloud-github-action@v1.6
+      - uses: actions/upload-artifact@v2
         with:
-          projectBaseDir: ${{ matrix.workspace }}
-          args: >
-            -Dsonar.projectVersion=${{ fromJSON(steps.info.outputs.package).version }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          name: ${{ matrix.name }}-coverage
+          path: ${{ matrix.workspace }}/coverage
 
   e2e-tests:
     runs-on: ${{ matrix.os }}
@@ -142,6 +136,12 @@ jobs:
         run: yarn e2e
         env:
           FORCE_COLOR: 1
+
+      - uses: actions/upload-artifact@v2
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        with:
+          name: e2e-coverage
+          path: coverage
 
   publish:
     runs-on: ubuntu-latest
@@ -196,3 +196,52 @@ jobs:
         run: yarn workspaces foreach --no-private npm publish --access public --tolerate-republish
         env:
           YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  sonarcloud:
+    if: ${{ !startsWith(github.head_ref, 'renovate/') }}
+    runs-on: ubuntu-latest
+    needs: [ tests, e2e-tests ]
+
+    strategy:
+      fail-fast: false
+
+      matrix:
+        include:
+          - name: 'jill'
+            package: '@jujulego/jill'
+            workspace: 'packages/cli'
+
+          - name: 'jill-core'
+            package: '@jujulego/jill-core'
+            workspace: 'packages/core'
+
+          - name: 'yarn-plugin-jill'
+            package: '@jujulego/yarn-plugin-jill'
+            workspace: 'packages/yarn-plugin'
+
+    steps:
+      - uses: actions/checkout@v2.3.4
+        with:
+          fetch-depth: 0
+
+      - name: Download test coverage
+        uses: actions/download-artifact@v2
+        continue-on-error: true
+        with:
+          name: ${{ matrix.name }}-coverage
+          path: ${{ matrix.workspace }}/coverage
+
+      - name: Download E2E coverage
+        uses: actions/download-artifact@v2
+        continue-on-error: true
+        with:
+          name: e2e-coverage
+          path: ${{ matrix.workspace }}/e2e-coverage
+
+      - name: Sonarcloud
+        uses: sonarsource/sonarcloud-github-action@v1.6
+        with:
+          projectBaseDir: ${{ matrix.workspace }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
