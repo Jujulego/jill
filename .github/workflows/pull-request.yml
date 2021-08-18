@@ -77,8 +77,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2.3.4
-        with:
-          fetch-depth: 0
 
       - name: Use Node.js 14.x
         uses: actions/setup-node@v2.4.0
@@ -97,14 +95,10 @@ jobs:
       - name: Test
         run: yarn workspace ${{ matrix.package }} test
 
-      - name: Sonarcloud
-        if: ${{ !startsWith(github.head_ref, 'dependabot/') }}
-        uses: sonarsource/sonarcloud-github-action@v1.6
+      - uses: actions/upload-artifact@v2
         with:
-          projectBaseDir: ${{ matrix.workspace }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          name: ${{ matrix.package }}-coverage
+          path: ${{ matrix.workspace }}/coverage
 
   e2e-tests:
     runs-on: ${{ matrix.os }}
@@ -142,6 +136,12 @@ jobs:
         env:
           FORCE_COLOR: 1
 
+      - uses: actions/upload-artifact@v2
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        with:
+          name: e2e-coverage
+          path: coverage
+
   version:
     if: ${{ !startsWith(github.head_ref, 'renovate/') }}
     runs-on: ubuntu-latest
@@ -154,3 +154,47 @@ jobs:
 
       - name: Version check
         run: yarn version check
+
+  sonarcloud:
+    if: ${{ !startsWith(github.head_ref, 'renovate/') }}
+    runs-on: ubuntu-latest
+    needs: [ tests, e2e-tests ]
+
+    strategy:
+      fail-fast: false
+
+      matrix:
+        include:
+          - workspace: 'packages/cli'
+            package: '@jujulego/jill'
+
+          - workspace: 'packages/core'
+            package: '@jujulego/jill-core'
+
+          - workspace: 'packages/yarn-plugin'
+            package: '@jujulego/yarn-plugin-jill'
+
+    steps:
+      - uses: actions/checkout@v2.3.4
+        with:
+          fetch-depth: 0
+
+      - name: Download test coverage
+        uses: actions/download-artifact@v2
+        with:
+          name: ${{ matrix.package }}-coverage
+          path: ${{ matrix.workspace }}/coverage
+
+      - name: Download E2E coverage
+        uses: actions/download-artifact@v2
+        with:
+          name: e2e-coverage
+          path: coverage
+
+      - name: Sonarcloud
+        uses: sonarsource/sonarcloud-github-action@v1.6
+        with:
+          projectBaseDir: ${{ matrix.workspace }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
