@@ -9,8 +9,8 @@ const C8_ARGS = [
   '--reporter', 'lcov',
   '--reporter', 'text',
   '--reports-dir', REPORTS_DIR,
-  '--include', '**/packages/**',
-  '--relative', ROOT
+  '--include', '**/packages/cli/**',
+  '--relative', path.join(ROOT, 'packages/cli')
 ];
 
 module.exports = async function () {
