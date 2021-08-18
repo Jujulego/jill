@@ -12,7 +12,6 @@
     "build": "tsc -p tsconfig.build.json",
     "start": "ts-node src/main.ts",
     "test": "jest",
-    "e2e": "jest -c e2e/jest.config.js",
     "jill:build": "tsc -p tsconfig.build.json --pretty"
   },
   "engines": {
@@ -33,11 +32,9 @@
     "@types/yargs": "17.0.2",
     "@typescript-eslint/eslint-plugin": "4.29.2",
     "@typescript-eslint/parser": "4.29.2",
-    "c8": "7.8.0",
     "eslint": "7.32.0",
     "eslint-plugin-jest": "24.4.0",
     "jest": "27.0.6",
-    "rimraf": "3.0.2",
     "ts-jest": "27.0.5",
     "ts-node": "10.2.0",
     "typescript": "4.3.5"

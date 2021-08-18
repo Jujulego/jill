@@ -2,9 +2,9 @@ import * as cp from 'child_process';
 import * as path from 'path';
 
 // Constants
-export const MAIN = path.join(__filename, '../../bin/jill.js');
-export const MOCK = path.join(__filename, '../../../../mock');
-export const ROOT = path.join(__filename, '../../../..');
+export const MAIN = path.join(__filename, '../../packages/cli/bin/jill.js');
+export const MOCK = path.join(__filename, '../../mock');
+export const ROOT = path.join(__filename, '../../');
 export const REPORTS_DIR = path.join(ROOT, 'coverage');
 
 const C8_ARGS = [

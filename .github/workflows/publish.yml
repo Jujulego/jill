@@ -119,9 +119,6 @@ jobs:
           - 'ubuntu-latest'
           - 'windows-latest'
 
-        package:
-          - '@jujulego/jill'
-
     steps:
       - uses: actions/checkout@v2.3.4
         with:
@@ -142,7 +139,7 @@ jobs:
           path: packages
 
       - name: Test
-        run: yarn workspace ${{ matrix.package }} e2e
+        run: yarn e2e
         env:
           FORCE_COLOR: 1
 

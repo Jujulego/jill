@@ -877,13 +877,11 @@ __metadata:
     "@types/yargs": 17.0.2
     "@typescript-eslint/eslint-plugin": 4.29.2
     "@typescript-eslint/parser": 4.29.2
-    c8: 7.8.0
     chalk: ^4.1.1
     eslint: 7.32.0
     eslint-plugin-jest: 24.4.0
     jest: 27.0.6
     ora: ^5.4.1
-    rimraf: 3.0.2
     ts-jest: 27.0.5
     ts-node: 10.2.0
     typescript: 4.3.5
@@ -2696,6 +2694,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"chalk@npm:4.1.1, chalk@npm:^4.0.0, chalk@npm:^4.1.0, chalk@npm:^4.1.1":
+  version: 4.1.1
+  resolution: "chalk@npm:4.1.1"
+  dependencies:
+    ansi-styles: ^4.1.0
+    supports-color: ^7.1.0
+  checksum: 036e973e665ba1a32c975e291d5f3d549bceeb7b1b983320d4598fb75d70fe20c5db5d62971ec0fe76cdbce83985a00ee42372416abfc3a5584465005a7855ed
+  languageName: node
+  linkType: hard
+
 "chalk@npm:4.1.2":
   version: 4.1.2
   resolution: "chalk@npm:4.1.2"
@@ -2724,16 +2732,6 @@ __metadata:
     ansi-styles: ^4.1.0
     supports-color: ^7.1.0
   checksum: 8e3ddf3981c4da405ddbd7d9c8d91944ddf6e33d6837756979f7840a29272a69a5189ecae0ff84006750d6d1e92368d413335eab4db5476db6e6703a1d1e0505
-  languageName: node
-  linkType: hard
-
-"chalk@npm:^4.0.0, chalk@npm:^4.1.0, chalk@npm:^4.1.1":
-  version: 4.1.1
-  resolution: "chalk@npm:4.1.1"
-  dependencies:
-    ansi-styles: ^4.1.0
-    supports-color: ^7.1.0
-  checksum: 036e973e665ba1a32c975e291d5f3d549bceeb7b1b983320d4598fb75d70fe20c5db5d62971ec0fe76cdbce83985a00ee42372416abfc3a5584465005a7855ed
   languageName: node
   linkType: hard
 
@@ -5125,15 +5123,38 @@ fsevents@^2.3.2:
   languageName: node
   linkType: hard
 
+"jill-e2e@workspace:e2e":
+  version: 0.0.0-use.local
+  resolution: "jill-e2e@workspace:e2e"
+  dependencies:
+    "@jujulego/jill": 1.0.0-alpha.7
+    "@types/jest": 27.0.1
+    "@types/node": 14.17.9
+    "@types/rimraf": 3.0.1
+    "@typescript-eslint/eslint-plugin": 4.29.2
+    "@typescript-eslint/parser": 4.29.2
+    c8: 7.8.0
+    chalk: 4.1.1
+    eslint: 7.32.0
+    eslint-plugin-jest: 24.4.0
+    jest: 27.0.6
+    rimraf: 3.0.2
+    ts-jest: 27.0.5
+    typescript: 4.3.5
+  languageName: unknown
+  linkType: soft
+
 "jill@workspace:.":
   version: 0.0.0-use.local
   resolution: "jill@workspace:."
   dependencies:
     "@jujulego/jill": 1.0.0-alpha.7
+    "@typescript-eslint/eslint-plugin": 4.29.2
     "@typescript-eslint/parser": 4.29.2
     "@yarnpkg/builder": 2.1.3
     eslint: 7.32.0
     eslint-plugin-jest: 24.4.0
+    jest: 27.0.6
     typescript: 4.3.5
   languageName: unknown
   linkType: soft
