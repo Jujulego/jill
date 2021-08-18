@@ -187,12 +187,14 @@ jobs:
 
       - name: Download test coverage
         uses: actions/download-artifact@v2
+        continue-on-error: true
         with:
           name: ${{ matrix.name }}-coverage
           path: ${{ matrix.workspace }}/coverage
 
       - name: Download E2E coverage
         uses: actions/download-artifact@v2
+        continue-on-error: true
         with:
           name: e2e-coverage
           path: coverage
