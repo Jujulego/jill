@@ -116,7 +116,7 @@ describe('Workspace.isAffected', () => {
 
     // Checks
     expect(utils.spawn).toHaveBeenCalledTimes(1);
-    expect(utils.spawn).toHaveBeenCalledWith('git', ['diff', '--name-only', 'test', '--',  path.join(root, 'workspaces/test-c')], { cwd: root });
+    expect(utils.spawn).toHaveBeenCalledWith('git', ['diff', '--name-only', 'test', '--',  path.join(root, 'workspaces/test-a')], { cwd: root });
   });
 
   it('should return false', async () => {

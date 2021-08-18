@@ -16,6 +16,7 @@ export interface WorkspaceRunOptions extends Omit<TaskOptions, 'cwd'> {
 export class Workspace {
   // Attributes
   private _lastBuild?: Task;
+
   private _isAffected?: boolean;
   private readonly _logger: Logger;
 
@@ -37,21 +38,21 @@ export class Workspace {
 
   async isAffected(base: string): Promise<boolean> {
     if (this._isAffected === undefined) {
-      this._isAffected = false;
+      // Test workspace
+      const { stdout } = await spawn('git', ['diff', '--name-only', base, '--', this.cwd], {
+        cwd: this.project.root,
+      });
 
-      for await (const dep of combine(this.dependencies(), this.devDependencies())) {
-        if (await dep.isAffected(base)) {
-          this._isAffected = true;
-          break;
-        }
-      }
+      this._isAffected = stdout.length > 0;
 
       if (!this._isAffected) {
-        const { stdout } = await spawn('git', ['diff', '--name-only', base, '--', this.cwd], {
-          cwd: this.project.root,
-        });
-
-        this._isAffected = stdout.length > 0;
+        // Test it's dependencies
+        for await (const dep of combine(this.dependencies(), this.devDependencies())) {
+          if (await dep.isAffected(base)) {
+            this._isAffected = true;
+            break;
+          }
+        }
       }
     }
 
@@ -89,7 +90,7 @@ export class Workspace {
       ...opts,
       cwd: this.cwd,
       logger: this._logger,
-      workspace: this
+      context: { workspace: this }
     });
     await this._buildDependencies(task);
 

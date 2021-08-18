@@ -1,15 +1,14 @@
-import { EventEmitter } from 'events';
 import os from 'os';
 
-import { Task } from './task';
+import { EventEmitter } from './event-emitter';
 import { logger } from './logger';
+import { Task } from './task';
 
 // Types
 export type TaskEvent = 'started' | 'completed';
-export type TaskEventListener = (task: Task) => void;
 
 // Class
-export class TaskManager extends EventEmitter {
+export class TaskManager extends EventEmitter<Record<TaskEvent, [Task]>> {
   // Attributes
   private readonly _tasks: Task[] = [];
   private readonly _index = new Set<Task>();
@@ -77,21 +76,4 @@ export class TaskManager extends EventEmitter {
   get tasks(): Task[] {
     return this._tasks;
   }
-}
-
-// Enforce EventEmitter types
-export declare interface TaskManager {
-  addListener(event: TaskEvent, listener: TaskEventListener): this;
-  removeListener(event: TaskEvent, listener: TaskEventListener): this;
-  removeAllListeners(event?: TaskEvent): this;
-  on(event: TaskEvent, listener: TaskEventListener): this;
-  once(event: TaskEvent, listener: TaskEventListener): this;
-  off(event: TaskEvent, listener: TaskEventListener): this;
-  listenerCount(event: TaskEvent): number;
-  listeners(event: TaskEvent): TaskEventListener[];
-  rawListeners(event: TaskEvent): TaskEventListener[];
-  emit(event: TaskEvent, ...args: Parameters<TaskEventListener>): boolean;
-  prependListener(event: TaskEvent, listener: TaskEventListener): this;
-  prependOnceListener(event: TaskEvent, listener: TaskEventListener): this;
-  eventNames(): TaskEvent[];
 }

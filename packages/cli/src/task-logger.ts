@@ -11,9 +11,9 @@ export class TaskLogger {
   private readonly _running = new Set<Task>();
   private readonly _formats = {
     'spin-multiple': (count: number) => `Building ${count} packages ...`,
-    'spin-simple': (tsk: Task) => `Building ${tsk.workspace?.name || tsk.cwd} ...`,
-    'fail': (tsk: Task) => `Failed to build ${tsk.workspace?.name || tsk.cwd}`,
-    'succeed': (tsk: Task) => `${tsk.workspace?.name || tsk.cwd} built`,
+    'spin-simple': (tsk: Task) => `Building ${tsk.context.workspace?.name || tsk.cwd} ...`,
+    'fail': (tsk: Task) => `Failed to build ${tsk.context.workspace?.name || tsk.cwd}`,
+    'succeed': (tsk: Task) => `${tsk.context.workspace?.name || tsk.cwd} built`,
   }
 
   // Methods

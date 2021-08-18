@@ -1,4 +1,4 @@
-import { Project, TaskEvent, TaskEventListener, TaskManager, Workspace } from '@jujulego/jill-core';
+import { Project, Task, TaskEvent, TaskManager, Workspace } from '@jujulego/jill-core';
 import chalk from 'chalk';
 
 import { logger, OraLogger, runCommand } from '../../src';
@@ -53,10 +53,10 @@ describe('jill run', () => {
 
   it('should print tasks status', async () => {
     const wks = new Workspace('./wks', { name: 'wks', version: '1.0.0' }, project);
-    const tsk1 = new MockTask('test', ['1'], { workspace: wks });
-    const tsk2 = new MockTask('test', ['2'], { workspace: wks });
-    const tsk3 = new MockTask('test', ['3'], { workspace: wks });
-    const handlers: Partial<Record<TaskEvent, TaskEventListener>> = {};
+    const tsk1 = new MockTask('test', ['1'], { context: { workspace: wks }});
+    const tsk2 = new MockTask('test', ['2'], { context: { workspace: wks }});
+    const tsk3 = new MockTask('test', ['3'], { context: { workspace: wks }});
+    const handlers: Partial<Record<TaskEvent, (task: Task) => void>> = {};
 
     jest.spyOn(project, 'workspace').mockResolvedValue(wks);
     jest.spyOn(wks, 'run').mockResolvedValue(tsk1);
@@ -115,7 +115,7 @@ describe('jill run', () => {
 
   it('should use current workspace', async () => {
     const wks = new Workspace('./wks', { name: 'wks', version: '1.0.0' }, project);
-    const tsk = new MockTask('test', [], { workspace: wks });
+    const tsk = new MockTask('test', [], { context: { workspace: wks }});
 
     jest.spyOn(project, 'workspace');
     jest.spyOn(project, 'currentWorkspace').mockResolvedValue(wks);
