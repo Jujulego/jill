@@ -66,14 +66,17 @@ jobs:
 
       matrix:
         include:
-          - workspace: 'packages/cli'
+          - name: 'jill'
             package: '@jujulego/jill'
+            workspace: 'packages/cli'
 
-          - workspace: 'packages/core'
+          - name: 'jill-core'
             package: '@jujulego/jill-core'
+            workspace: 'packages/core'
 
-          - workspace: 'packages/yarn-plugin'
+          - name: 'yarn-plugin-jill'
             package: '@jujulego/yarn-plugin-jill'
+            workspace: 'packages/yarn-plugin'
 
     steps:
       - uses: actions/checkout@v2.3.4
@@ -97,7 +100,7 @@ jobs:
 
       - uses: actions/upload-artifact@v2
         with:
-          name: ${{ matrix.package }}-coverage
+          name: ${{ matrix.name }}-coverage
           path: ${{ matrix.workspace }}/coverage
 
   e2e-tests:
@@ -165,14 +168,17 @@ jobs:
 
       matrix:
         include:
-          - workspace: 'packages/cli'
+          - name: 'jill'
             package: '@jujulego/jill'
+            workspace: 'packages/cli'
 
-          - workspace: 'packages/core'
+          - name: 'jill-core'
             package: '@jujulego/jill-core'
+            workspace: 'packages/core'
 
-          - workspace: 'packages/yarn-plugin'
+          - name: 'yarn-plugin-jill'
             package: '@jujulego/yarn-plugin-jill'
+            workspace: 'packages/yarn-plugin'
 
     steps:
       - uses: actions/checkout@v2.3.4
@@ -182,7 +188,7 @@ jobs:
       - name: Download test coverage
         uses: actions/download-artifact@v2
         with:
-          name: ${{ matrix.package }}-coverage
+          name: ${{ matrix.name }}-coverage
           path: ${{ matrix.workspace }}/coverage
 
       - name: Download E2E coverage
