@@ -139,12 +139,6 @@ jobs:
         env:
           FORCE_COLOR: 1
 
-      - uses: actions/upload-artifact@v2
-        if: ${{ matrix.os == 'ubuntu-latest' }}
-        with:
-          name: e2e-coverage
-          path: coverage
-
   version:
     if: ${{ !startsWith(github.head_ref, 'renovate/') }}
     runs-on: ubuntu-latest
@@ -161,7 +155,7 @@ jobs:
   sonarcloud:
     if: ${{ !startsWith(github.head_ref, 'renovate/') }}
     runs-on: ubuntu-latest
-    needs: [ tests, e2e-tests ]
+    needs: [ tests ]
 
     strategy:
       fail-fast: false
@@ -191,13 +185,6 @@ jobs:
         with:
           name: ${{ matrix.name }}-coverage
           path: ${{ matrix.workspace }}/coverage
-
-      - name: Download E2E coverage
-        uses: actions/download-artifact@v2
-        continue-on-error: true
-        with:
-          name: e2e-coverage
-          path: ${{ matrix.workspace }}/e2e-coverage
 
       - name: Sonarcloud
         uses: sonarsource/sonarcloud-github-action@v1.6

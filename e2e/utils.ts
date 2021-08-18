@@ -5,16 +5,6 @@ import * as path from 'path';
 export const MAIN = path.join(__filename, '../../packages/cli/bin/jill.js');
 export const MOCK = path.join(__filename, '../../mock');
 export const ROOT = path.join(__filename, '../../');
-export const REPORTS_DIR = path.join(ROOT, 'coverage');
-
-const C8_ARGS = [
-  '--allow-external',
-  '--no-clean',
-  '--relative', ROOT,
-  '--reports-dir', REPORTS_DIR,
-  '--reporter', 'none',
-  '--include', '**/packages/**'
-];
 
 // Type
 export interface SpawnResult {
@@ -31,7 +21,7 @@ export interface SpawnOptions {
 // Utils
 export function jill(args: ReadonlyArray<string>, opts: SpawnOptions = {}): Promise<SpawnResult> {
   return new Promise<SpawnResult>((resolve) => {
-    const proc = cp.spawn('c8', [...C8_ARGS, 'node', MAIN, ...args], {
+    const proc = cp.spawn('node', [MAIN, ...args], {
       cwd: opts.cwd,
       shell: true,
       stdio: 'pipe',
