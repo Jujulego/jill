@@ -3,5 +3,5 @@
   "compilerOptions": {
     "rootDir": "./src"
   },
-  "exclude": ["node_modules", "tests", "dist", "mocks"]
+  "exclude": ["node_modules", "e2e", "tests", "dist", "mocks"]
 }

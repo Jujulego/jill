@@ -25,20 +25,20 @@ export interface ListArgs {
 }
 
 // Utils
-type Extractor<T> = (wks: Workspace) => T;
+type Extractor<T> = (wks: Workspace, argv: ListArgs) => T;
 
-const extractors: Record<Attribute, Extractor<string>> = {
+const extractors: Record<Attribute, Extractor<string | undefined>> = {
   name: wks => wks.name,
-  version: wks => wks.manifest.version || chalk.grey('unset'),
+  version: (wks, argv) => wks.manifest.version || (argv.json ? undefined : chalk.grey('unset')),
   root: wks => wks.cwd
 };
 
 function buildExtractor(attrs: Attribute[]): Extractor<Data> {
-  return (wks) => {
+  return (wks, argv: ListArgs) => {
     const data: Data = {};
 
     for (const attr of attrs) {
-      data[attr] = extractors[attr](wks);
+      data[attr] = extractors[attr](wks, argv);
     }
 
     return data;
@@ -72,7 +72,7 @@ export const listCommand: CommandHandler<ListArgs> = async (prj, argv) => {
 
   // Build data
   const attrs = argv.attrs || (argv.long || argv.json ? ['name', 'version', 'root'] : ['name']);
-  const data = workspaces.map(buildExtractor(attrs));
+  const data = workspaces.map(wks => buildExtractor(attrs)(wks, argv));
 
   // Print data
   if (argv.json) {

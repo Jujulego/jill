@@ -107,10 +107,46 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
+  e2e-tests:
+    runs-on: ${{ matrix.os }}
+    needs: [ build ]
+
+    strategy:
+      fail-fast: false
+
+      matrix:
+        os:
+          - 'ubuntu-latest'
+          - 'windows-latest'
+
+    steps:
+      - uses: actions/checkout@v2.3.4
+        with:
+          fetch-depth: 0
+
+      - name: Use Node.js 14.x
+        uses: actions/setup-node@v2.4.0
+        with:
+          node-version: 14
+          cache: yarn
+
+      - name: Install
+        run: yarn install --immutable
+
+      - uses: actions/download-artifact@v2
+        with:
+          name: build-artifacts
+          path: packages
+
+      - name: Test
+        run: yarn e2e
+        env:
+          FORCE_COLOR: 1
+
   publish:
     runs-on: ubuntu-latest
     environment: npm
-    needs: [ lint, tests ]
+    needs: [ lint, tests, e2e-tests ]
 
     permissions:
       actions: write

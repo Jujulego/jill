@@ -4,18 +4,22 @@
   "license": "MIT",
   "repository": "git@github.com:Jujulego/jill.git",
   "workspaces": [
+    "e2e",
     "packages/*"
   ],
   "scripts": {
     "lint": "yarn workspaces foreach -pv run lint",
-    "build": "yarn workspaces foreach -ptv run build"
+    "build": "yarn workspaces foreach -ptv run build",
+    "e2e": "yarn workspace jill-e2e run start"
   },
   "devDependencies": {
     "@jujulego/jill": "1.0.0-alpha.7",
+    "@typescript-eslint/eslint-plugin": "4.29.2",
     "@typescript-eslint/parser": "4.29.2",
     "@yarnpkg/builder": "2.1.3",
     "eslint": "7.32.0",
     "eslint-plugin-jest": "24.4.0",
+    "jest": "27.0.6",
     "typescript": "4.3.5"
   },
   "packageManager": "yarn@3.0.0"

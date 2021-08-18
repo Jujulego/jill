@@ -1,6 +1,7 @@
 {
   "name": "@jujulego/jill",
   "version": "1.0.0-alpha.7",
+  "stableVersion": "1.0.0-alpha.6",
   "license": "MIT",
   "bin": "./bin/jill.js",
   "main": "./dist/index.js",
@@ -27,6 +28,7 @@
   "devDependencies": {
     "@types/jest": "27.0.1",
     "@types/node": "14.17.9",
+    "@types/rimraf": "3.0.1",
     "@types/yargs": "17.0.2",
     "@typescript-eslint/eslint-plugin": "4.29.2",
     "@typescript-eslint/parser": "4.29.2",
@@ -36,6 +38,5 @@
     "ts-jest": "27.0.5",
     "ts-node": "10.2.1",
     "typescript": "4.3.5"
-  },
-  "stableVersion": "1.0.0-alpha.6"
+  }
 }

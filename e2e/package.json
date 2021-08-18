@@ -1,34 +1,29 @@
 {
-  "name": "@jujulego/jill-core",
-  "version": "1.0.0-alpha.5",
-  "stableVersion": "1.0.0-alpha.4",
+  "name": "jill-e2e",
+  "private": true,
   "license": "MIT",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
   "repository": "git@github.com:Jujulego/jill.git",
   "scripts": {
     "lint": "eslint {src,tests}/**/*.*",
-    "build": "tsc -p tsconfig.build.json",
-    "test": "jest",
-    "jill:build": "tsc -p tsconfig.build.json"
+    "start": "jest"
   },
   "engines": {
     "node": "^14"
   },
-  "dependencies": {
-    "tiny-glob": "^0.2.9",
-    "winston": "^3.3.3"
-  },
   "devDependencies": {
+    "@jujulego/jill": "1.0.0-alpha.7",
     "@types/jest": "27.0.1",
     "@types/node": "14.17.9",
+    "@types/rimraf": "3.0.1",
     "@typescript-eslint/eslint-plugin": "4.29.2",
     "@typescript-eslint/parser": "4.29.2",
+    "c8": "7.8.0",
+    "chalk": "4.1.1",
     "eslint": "7.32.0",
     "eslint-plugin-jest": "24.4.0",
     "jest": "27.0.6",
+    "rimraf": "3.0.2",
     "ts-jest": "27.0.5",
-    "typescript": "4.3.5",
-    "winston-transport": "4.4.0"
+    "typescript": "4.3.5"
   }
 }
