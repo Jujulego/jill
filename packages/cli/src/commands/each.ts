@@ -66,4 +66,6 @@ export const eachCommand: CommandHandler<EachArgs> = async (prj, argv) => {
   tlogger.connect(manager);
 
   manager.start();
+  await manager.waitFor('finished');
+  return 0;
 };
