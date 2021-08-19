@@ -175,11 +175,14 @@ jobs:
           name: build-artifacts
           path: packages
 
-      - name: Apply version update
-        if: ${{ github.event_name == 'push' }}
+      - name: Git setup
         run: |
           git config --global user.name 'Boobrie'
           git config --global user.email 'boobrie@users.noreply.github.com'
+
+      - name: Apply version update
+        if: ${{ github.event_name == 'push' }}
+        run: |
           yarn version apply --all
 
           if `git diff --quiet --exit-code`
@@ -189,23 +192,21 @@ jobs:
             git commit -am "chore: update bundles & version numbers"
           fi
 
-      - name: Apply version update
+      - name: Apply milestone version
         if: ${{ github.event_name == 'milestone' }}
         run: |
-          git config --global user.name 'Boobrie'
-          git config --global user.email 'boobrie@users.noreply.github.com'
-          yarn workspace @jujulego/jill version -i ${{ github.event.title }}
-          yarn workspace @jujulego/jill-core version -i ${{ github.event.title }}
+          yarn workspace @jujulego/jill version -i ${{ github.event.milestone.title }}
+          yarn workspace @jujulego/jill-core version -i ${{ github.event.milestone.title }}
 
           if `git diff --quiet --exit-code`
           then
             echo "::warning::Nothing changed !"
           else
             git commit -am "chore: update bundles & version numbers"
-            git tag ${{ github.event.title }}
+            git tag ${{ github.event.milestone.title }}
           fi
 
-      - name: Commit & Push
+      - name: Push
         run: |
           git push
           git push --tags
