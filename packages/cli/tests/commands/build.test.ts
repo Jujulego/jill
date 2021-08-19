@@ -1,4 +1,4 @@
-import { Project, Task, TaskEvent, TaskManager, Workspace } from '@jujulego/jill-core';
+import { EventListener, Project, TaskManager, TaskManagerEventMap, Workspace } from '@jujulego/jill-core';
 import chalk from 'chalk';
 
 import { buildCommand, logger, OraLogger } from '../../src';
@@ -55,7 +55,7 @@ describe('jill build', () => {
     const tsk1 = new MockTask('test', ['1'], { context: { workspace: wks }});
     const tsk2 = new MockTask('test', ['2'], { context: { workspace: wks }});
     const tsk3 = new MockTask('test', ['3'], { context: { workspace: wks }});
-    const handlers: Partial<Record<TaskEvent, (task: Task) => void>> = {};
+    const handlers: { [K in keyof TaskManagerEventMap]?: EventListener<TaskManagerEventMap, K> } = {};
 
     jest.spyOn(project, 'workspace').mockResolvedValue(wks);
     jest.spyOn(wks, 'build').mockResolvedValue(tsk1);
