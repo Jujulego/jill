@@ -56,6 +56,9 @@ describe('TaskManager.start', () => {
     const spyCompleted = jest.fn<void, [Task]>();
     manager.on('completed', spyCompleted);
 
+    const spyFinished = jest.fn<void, []>();
+    manager.on('finished', spyFinished);
+
     // Start !
     manager.add(ta);
     manager.start();
@@ -83,10 +86,12 @@ describe('TaskManager.start', () => {
 
     expect(spyCompleted).toHaveBeenCalledWith(tb);
     expect(spyStarted).toHaveBeenCalledWith(ta);
+    expect(spyFinished).not.toHaveBeenCalled();
 
     // When b completes a should start
     proc.emit('close', 0);
 
     expect(spyCompleted).toHaveBeenCalledWith(ta);
+    expect(spyFinished).toHaveBeenCalled();
   });
 });
