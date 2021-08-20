@@ -5,10 +5,14 @@ import { logger } from './logger';
 import { Task } from './task';
 
 // Types
-export type TaskEvent = 'started' | 'completed';
+export type TaskManagerEventMap = {
+  started: [Task];
+  completed: [Task];
+  finished: [];
+}
 
 // Class
-export class TaskManager extends EventEmitter<Record<TaskEvent, [Task]>> {
+export class TaskManager extends EventEmitter<TaskManagerEventMap> {
   // Attributes
   private readonly _tasks: Task[] = [];
   private readonly _index = new Set<Task>();
@@ -41,11 +45,13 @@ export class TaskManager extends EventEmitter<Record<TaskEvent, [Task]>> {
   }
 
   private _startNext(previous?: Task) {
+    // Emit completed for previous task
     if (previous) {
       this._running.delete(previous);
       this.emit('completed', previous);
     }
 
+    // Start other tasks
     for (const t of this._tasks) {
       if (this._running.size >= this.jobs) {
         break;
@@ -60,6 +66,11 @@ export class TaskManager extends EventEmitter<Record<TaskEvent, [Task]>> {
         t.start();
         this.emit('started', t);
       }
+    }
+
+    // Emit finished task if all tasks are done of failed
+    if (this._tasks.every(tsk => tsk.completed)) {
+      this.emit('finished');
     }
   }
 

@@ -1,15 +1,12 @@
-import { Project, Task, TaskEvent, TaskManager, Workspace } from '@jujulego/jill-core';
-import chalk from 'chalk';
+import { Project, TaskManager, Workspace } from '@jujulego/jill-core';
 
-import { eachCommand, logger, OraLogger } from '../../src';
+import { eachCommand, logger } from '../../src';
 
 import { MockTask } from '../../mocks/task';
 import '../logger';
 
 // Setup
 jest.mock('../../src/logger');
-
-chalk.level = 1;
 
 let project: Project;
 
@@ -36,67 +33,32 @@ describe('jill each', () => {
     expect(logger.fail).toHaveBeenCalledWith('No workspace found !');
   });
 
-  it('should print tasks status', async () => {
+  it('should exit 0 when manager is finished', async () => {
     const wks = new Workspace('./wks', { name: 'wks', version: '1.0.0', scripts: { test: 'test' } }, project);
-    const tsk1 = new MockTask('test', ['1'], { context: { workspace: wks }});
-    const tsk2 = new MockTask('test', ['2'], { context: { workspace: wks }});
-    const tsk3 = new MockTask('test', ['3'], { context: { workspace: wks }});
-    const handlers: Partial<Record<TaskEvent, (task: Task) => void>> = {};
+    const tsk = new MockTask('test', [], { context: { workspace: wks }});
 
     jest.spyOn(project, 'workspaces').mockImplementation(async function* () { yield wks; });
-    jest.spyOn(wks, 'run').mockResolvedValue(tsk1);
+    jest.spyOn(wks, 'run').mockResolvedValue(tsk);
 
     jest.spyOn(TaskManager.prototype, 'add').mockImplementation();
+    jest.spyOn(TaskManager.prototype, 'on').mockImplementation();
     jest.spyOn(TaskManager.prototype, 'start').mockImplementation();
-    jest.spyOn(TaskManager.prototype, 'on')
-      .mockImplementation(function (event, handler) {
-        handlers[event] = handler;
-        return this;
-      });
+    jest.spyOn(TaskManager.prototype, 'waitFor').mockResolvedValue([]);
 
     // Call
     await expect(eachCommand(project, { script: 'test', affected: undefined, private: undefined, '--': ['--arg', 1] }))
-      .resolves.toBeUndefined();
+      .resolves.toBe(0);
 
     // Checks
     expect(logger.spin).toHaveBeenCalledWith('Loading project');
     expect(project.workspaces).toHaveBeenCalled();
     expect(logger.verbose).toHaveBeenCalledWith('Will run test in wks');
     expect(wks.run).toHaveBeenCalledWith('test', ['--arg', '1']);
-    expect(TaskManager.prototype.add).toHaveBeenCalledWith(tsk1);
+    expect(TaskManager.prototype.add).toHaveBeenCalledWith(tsk);
     expect(TaskManager.prototype.start).toHaveBeenCalled();
     expect(TaskManager.prototype.on).toHaveBeenCalledWith('started', expect.any(Function));
     expect(TaskManager.prototype.on).toHaveBeenCalledWith('completed', expect.any(Function));
-
-    // Activate task 1
-    (logger.spin as jest.MockedFunction<typeof OraLogger.prototype.spin>).mockClear();
-
-    handlers.started!(tsk1);
-    expect(logger.spin).toHaveBeenCalledWith('Running test in wks ...');
-
-    // Activate task 2 & 3
-    (logger.spin as jest.MockedFunction<typeof OraLogger.prototype.spin>).mockClear();
-
-    handlers.started!(tsk2);
-    handlers.started!(tsk3);
-    expect(logger.spin).toHaveBeenCalledWith('Working in 2 packages ...');
-    expect(logger.spin).toHaveBeenCalledWith('Working in 3 packages ...');
-
-    // Complete task 3
-    (logger.spin as jest.MockedFunction<typeof OraLogger.prototype.spin>).mockClear();
-    (logger.succeed as jest.MockedFunction<typeof OraLogger.prototype.succeed>).mockClear();
-    (logger.fail as jest.MockedFunction<typeof OraLogger.prototype.succeed>).mockClear();
-
-    handlers.completed!(tsk2.setStatus('failed'));
-    expect(logger.fail).toHaveBeenCalledWith('Failed to build wks');
-    expect(logger.spin).toHaveBeenCalledWith('Working in 2 packages ...');
-
-    // Complete task 1 & 2
-    (logger.succeed as jest.MockedFunction<typeof OraLogger.prototype.succeed>).mockClear();
-
-    handlers.completed!(tsk2.setStatus('done'));
-    handlers.completed!(tsk1.setStatus('done'));
-    expect(logger.succeed).toHaveBeenCalledWith('wks built');
+    expect(TaskManager.prototype.waitFor).toHaveBeenCalledWith('finished');
   });
 
   it('should filter workspaces without script', async () => {
@@ -110,12 +72,13 @@ describe('jill each', () => {
     jest.spyOn(wks2, 'run').mockResolvedValue(tsk2);
 
     jest.spyOn(TaskManager.prototype, 'add').mockImplementation();
-    jest.spyOn(TaskManager.prototype, 'start').mockImplementation();
     jest.spyOn(TaskManager.prototype, 'on').mockReturnThis();
+    jest.spyOn(TaskManager.prototype, 'start').mockImplementation();
+    jest.spyOn(TaskManager.prototype, 'waitFor').mockResolvedValue([]);
 
     // Call
     await expect(eachCommand(project, { script: 'test', affected: undefined, private: undefined }))
-      .resolves.toBeUndefined();
+      .resolves.toBe(0);
 
     // Checks
     expect(project.workspaces).toHaveBeenCalled();
@@ -134,12 +97,13 @@ describe('jill each', () => {
     jest.spyOn(wks2, 'run').mockResolvedValue(tsk2);
 
     jest.spyOn(TaskManager.prototype, 'add').mockImplementation();
-    jest.spyOn(TaskManager.prototype, 'start').mockImplementation();
     jest.spyOn(TaskManager.prototype, 'on').mockReturnThis();
+    jest.spyOn(TaskManager.prototype, 'start').mockImplementation();
+    jest.spyOn(TaskManager.prototype, 'waitFor').mockResolvedValue([]);
 
     // Call
     await expect(eachCommand(project, { script: 'test', affected: undefined, private: true }))
-      .resolves.toBeUndefined();
+      .resolves.toBe(0);
 
     // Checks
     expect(project.workspaces).toHaveBeenCalled();
@@ -159,12 +123,13 @@ describe('jill each', () => {
     jest.spyOn(wks2, 'isAffected').mockResolvedValue(false);
 
     jest.spyOn(TaskManager.prototype, 'add').mockImplementation();
-    jest.spyOn(TaskManager.prototype, 'start').mockImplementation();
     jest.spyOn(TaskManager.prototype, 'on').mockReturnThis();
+    jest.spyOn(TaskManager.prototype, 'start').mockImplementation();
+    jest.spyOn(TaskManager.prototype, 'waitFor').mockResolvedValue([]);
 
     // Call
     await expect(eachCommand(project, { script: 'test', affected: 'test', private: undefined }))
-      .resolves.toBeUndefined();
+      .resolves.toBe(0);
 
     // Checks
     expect(project.workspaces).toHaveBeenCalled();

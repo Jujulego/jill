@@ -188,6 +188,10 @@ export class Task extends EventEmitter<TaskEventMap> {
     return this._status;
   }
 
+  get completed(): boolean {
+    return ['done', 'failed'].includes(this.status);
+  }
+
   get exitCode(): number | null {
     return this._process?.exitCode || null;
   }

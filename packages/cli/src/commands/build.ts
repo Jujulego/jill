@@ -28,4 +28,6 @@ export const buildCommand: CommandHandler<BuildArgs> = async (prj, argv) => {
   tlogger.connect(manager);
 
   manager.start();
+  await manager.waitFor('finished');
+  return 0;
 };
