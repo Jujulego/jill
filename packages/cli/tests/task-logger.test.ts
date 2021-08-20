@@ -37,16 +37,16 @@ it('should call given format functions', () => {
   log.connect(mng);
 
   // Spy formats
-  const spySpinMultiple = jest.fn(() => "");
+  const spySpinMultiple = jest.fn(() => '');
   log.on('spin-multiple', spySpinMultiple);
 
-  const spySpinSimple = jest.fn(() => "");
+  const spySpinSimple = jest.fn(() => '');
   log.on('spin-simple', spySpinSimple);
 
-  const spySucceed = jest.fn(() => "");
+  const spySucceed = jest.fn(() => '');
   log.on('succeed', spySucceed);
 
-  const spyFail = jest.fn(() => "");
+  const spyFail = jest.fn(() => '');
   log.on('fail', spyFail);
 
   // 1 task started
