@@ -31,6 +31,8 @@ __metadata:
 "mock-test-c@workspace:*, mock-test-c@workspace:workspaces/test-c":
   version: 0.0.0-use.local
   resolution: "mock-test-c@workspace:workspaces/test-c"
+  dependencies:
+    mock-test-d: "workspace:*"
   languageName: unknown
   linkType: soft
 
