@@ -1,6 +1,6 @@
 {
   "name": "@jujulego/jill",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "license": "MIT",
   "bin": "./bin/jill.js",
   "main": "./dist/index.js",
