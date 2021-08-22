@@ -16,6 +16,9 @@ describe('jill info', () => {
           chalk`Workspace {bold mock-root}:`,
           chalk`{bold Version:}   undefined`,
           chalk`{bold Directory:} .`,
+          chalk``,
+          chalk`{bold Dependencies:}`,
+          chalk`{grey    No dependencies for mock-root}`,
         ]
       });
   });
@@ -33,10 +36,11 @@ describe('jill info', () => {
           chalk`{bold Directory:} workspaces${path.sep}test-a`,
           chalk``,
           chalk`{bold Dependencies:}`,
-          chalk`- mock-test-b`,
-          chalk``,
-          chalk`{bold Dev-Dependencies:}`,
-          chalk`- mock-test-c`,
+          chalk`├─ mock-test-b`,
+          chalk`│  ├─ {grey mock-test-c (dev)}`,
+          chalk`│  │  {grey └─ }{grey mock-test-d (dev)}`,
+          chalk`│  └─ {italic.grey mock-test-d (dev)}`,
+          chalk`└─ {italic.grey mock-test-c (dev)}`,
         ]
       });
   });
@@ -54,10 +58,11 @@ describe('jill info', () => {
           chalk`{bold Directory:} .`,
           chalk``,
           chalk`{bold Dependencies:}`,
-          chalk`- mock-test-b`,
-          chalk``,
-          chalk`{bold Dev-Dependencies:}`,
-          chalk`- mock-test-c`,
+          chalk`├─ mock-test-b`,
+          chalk`│  ├─ {grey mock-test-c (dev)}`,
+          chalk`│  │  {grey └─ }{grey mock-test-d (dev)}`,
+          chalk`│  └─ {italic.grey mock-test-d (dev)}`,
+          chalk`└─ {italic.grey mock-test-c (dev)}`,
         ]
       });
   });

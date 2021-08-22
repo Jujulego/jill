@@ -2,5 +2,8 @@
   "name": "mock-test-c",
   "scripts": {
     "jill:build": "node -e \"setTimeout(() => process.exit(0), 3000)\" --"
+  },
+  "devDependencies": {
+    "mock-test-d": "workspace:*"
   }
 }

@@ -38,5 +38,11 @@ async function printTree(wks: Workspace, level: string, dev: boolean, printed: S
 
 export async function printDepsTree(wks: Workspace) {
   console.log(chalk`{bold Dependencies:}`);
-  await printTree(wks, '', false, new Set([wks.name]));
+  const printed = new Set([wks.name]);
+
+  await printTree(wks, '', false, printed);
+
+  if (printed.size === 1) {
+    console.log(chalk.grey(`   No dependencies for ${wks.name}`));
+  }
 }
