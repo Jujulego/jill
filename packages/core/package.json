@@ -15,7 +15,6 @@
     "node": "^14"
   },
   "dependencies": {
-    "simple-git": "^2.44.0",
     "tiny-glob": "^0.2.9",
     "winston": "^3.3.3"
   },

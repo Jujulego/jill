@@ -37,23 +37,13 @@ export class Workspace {
   }
 
   async isAffected(base: string): Promise<boolean> {
-    let t = Date.now();
-    let o = t;
-
     if (this._isAffected === undefined) {
       // Test workspace
-      this._logger.debug(`git diff --name-only ${base} -- ${this.cwd}`);
-      const res = await this.project.git.diff(['--name-only', base, '--', this.cwd]);
+      const { stdout } = await spawn('git', ['diff', '--name-only', base, '--', this.cwd], {
+        cwd: this.project.root,
+      });
 
-      t = Date.now();
-      this._logger.info(`affected git diff complete (${t-o}ms)`);
-      o = t;
-
-      this._isAffected = res.split('\n').some(f => f);
-
-      t = Date.now();
-      this._logger.info(`affected parse complete (${t-o}ms)`);
-      o = t;
+      this._isAffected = stdout.length > 0;
 
       if (!this._isAffected) {
         // Test it's dependencies
@@ -64,16 +54,8 @@ export class Workspace {
         }
 
         this._isAffected = (await Promise.all(proms)).some(aff => aff);
-
-        t = Date.now();
-        this._logger.info(`affected children complete (${t-o}ms)`);
-        o = t;
       }
     }
-
-    t = Date.now();
-    this._logger.info(`affected test complete (${t-o}ms)`);
-    o = t;
 
     return this._isAffected;
   }
