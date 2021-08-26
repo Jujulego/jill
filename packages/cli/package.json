@@ -1,6 +1,6 @@
 {
   "name": "@jujulego/jill",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "license": "MIT",
   "bin": "./bin/jill.js",
   "main": "./dist/index.js",
@@ -17,7 +17,7 @@
     "node": "^14"
   },
   "dependencies": {
-    "@jujulego/jill-core": "^1.0.1",
+    "@jujulego/jill-core": "^1.0.2",
     "chalk": "^4.1.1",
     "ora": "^5.4.1",
     "winston": "^3.3.3",
