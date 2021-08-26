@@ -21,6 +21,7 @@ export class Project {
   private readonly _workspaces = new Map<string, Workspace>();
 
   private _packageManager?: PackageManager;
+  private _isFullyLoaded = false;
 
   readonly git: SimpleGit = simpleGit(this._root);
 
@@ -139,13 +140,21 @@ export class Project {
     const main = await this.mainWorkspace();
     yield main;
 
-    // Load child workspaces
-    const { workspaces = [] } = main.manifest;
-
-    for (const pattern of workspaces) {
-      for (const dir of await glob(pattern, { cwd: this.root })) {
-        yield this._loadWorkspace(dir);
+    if (this._isFullyLoaded) {
+      for (const wks of this._names.values()) {
+        if (wks.name !== main.name) yield wks;
       }
+    } else {
+      // Load child workspaces
+      const { workspaces = [] } = main.manifest;
+
+      for (const pattern of workspaces) {
+        for (const dir of await glob(pattern, { cwd: this.root })) {
+          yield this._loadWorkspace(dir);
+        }
+      }
+
+      this._isFullyLoaded = true;
     }
   }
 
@@ -164,6 +173,11 @@ export class Project {
       return ws;
     }
 
+    if (this._isFullyLoaded) {
+      logger.info(`not a workspace ${name}`);
+      return null;
+    }
+
     // Load workspaces
     for await (const ws of this.workspaces()) {
       if (ws.name === name) {
@@ -173,6 +187,7 @@ export class Project {
     }
 
     logger.info(`failed to load ${name}`);
+    this._isFullyLoaded = true;
     return null;
   }
 
