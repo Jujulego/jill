@@ -47,13 +47,12 @@ export class Workspace {
 
       if (!this._isAffected) {
         // Test it's dependencies
-        const proms: Promise<boolean>[] = [];
-
         for await (const dep of combine(this.dependencies(), this.devDependencies())) {
-          proms.push(dep.isAffected(base));
+          if (await dep.isAffected(base)) {
+            this._isAffected = true;
+            break;
+          }
         }
-
-        this._isAffected = (await Promise.all(proms)).some(aff => aff);
       }
     }
 
