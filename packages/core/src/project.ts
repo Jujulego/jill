@@ -5,6 +5,7 @@ import glob from 'tiny-glob';
 import type { Manifest } from './manifest';
 import { logger } from './logger';
 import { Workspace } from './workspace';
+import simpleGit, { SimpleGit } from 'simple-git/promise';
 
 // Types
 export type PackageManager = 'npm' | 'yarn';
@@ -20,6 +21,8 @@ export class Project {
   private readonly _workspaces = new Map<string, Workspace>();
 
   private _packageManager?: PackageManager;
+
+  readonly git: SimpleGit = simpleGit(this._root);
 
   // Constructor
   constructor(
@@ -149,21 +152,27 @@ export class Project {
   async workspace(name?: string): Promise<Workspace | null> {
     // With current directory
     if (!name) {
+      logger.info(`loaded ${name} from current dir`);
       const dir = path.relative(this.root, process.cwd());
       return this._loadWorkspace(dir);
     }
 
     // Try name index
     const ws = this._names.get(name);
-    if (ws) return ws;
+    if (ws) {
+      logger.info(`got ${name} from name index`);
+      return ws;
+    }
 
     // Load workspaces
     for await (const ws of this.workspaces()) {
       if (ws.name === name) {
+        logger.info(`loaded ${name}`);
         return ws;
       }
     }
 
+    logger.info(`failed to load ${name}`);
     return null;
   }
 
