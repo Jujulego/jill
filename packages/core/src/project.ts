@@ -20,6 +20,7 @@ export class Project {
   private readonly _workspaces = new Map<string, Workspace>();
 
   private _packageManager?: PackageManager;
+  private _isFullyLoaded = false;
 
   // Constructor
   constructor(
@@ -136,13 +137,21 @@ export class Project {
     const main = await this.mainWorkspace();
     yield main;
 
-    // Load child workspaces
-    const { workspaces = [] } = main.manifest;
-
-    for (const pattern of workspaces) {
-      for (const dir of await glob(pattern, { cwd: this.root })) {
-        yield this._loadWorkspace(dir);
+    if (this._isFullyLoaded) {
+      for (const wks of this._names.values()) {
+        if (wks.name !== main.name) yield wks;
       }
+    } else {
+      // Load child workspaces
+      const { workspaces = [] } = main.manifest;
+
+      for (const pattern of workspaces) {
+        for (const dir of await glob(pattern, { cwd: this.root })) {
+          yield this._loadWorkspace(dir);
+        }
+      }
+
+      this._isFullyLoaded = true;
     }
   }
 
@@ -155,7 +164,13 @@ export class Project {
 
     // Try name index
     const ws = this._names.get(name);
-    if (ws) return ws;
+    if (ws) {
+      return ws;
+    }
+
+    if (this._isFullyLoaded) {
+      return null;
+    }
 
     // Load workspaces
     for await (const ws of this.workspaces()) {
@@ -164,6 +179,7 @@ export class Project {
       }
     }
 
+    this._isFullyLoaded = true;
     return null;
   }
 
