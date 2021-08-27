@@ -59,7 +59,7 @@ export const listCommand: CommandHandler<ListArgs> = async (prj, argv) => {
 
     if (argv['with-script'] !== undefined) {
       const scripts = Object.keys(wks.manifest.scripts || {});
-      if (argv['with-script'].every(scr => !scripts.includes(scr))) continue;
+      if (!argv['with-script'].some(scr => scripts.includes(scr))) continue;
     }
 
     if (argv.affected !== undefined) {

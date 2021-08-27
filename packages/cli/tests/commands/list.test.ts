@@ -41,7 +41,7 @@ describe('jill list', () => {
     workspaces = [
       new Workspace('./wks-1', { name: 'wks-1', private: true, version: '1.0.0' }, project),
       new Workspace('./wks-2', { name: 'wks-2', version: '1.0.0', scripts: { test: 'test' } }, project),
-      new Workspace('./wks-3', { name: 'wks-3', version: '1.0.0' }, project),
+      new Workspace('./wks-3', { name: 'wks-3', version: '1.0.0', scripts: { lint: 'lint' } }, project),
     ];
 
     jest.spyOn(project, 'workspaces').mockImplementation(async function* () {
@@ -100,11 +100,20 @@ describe('jill list', () => {
 
   it('should print only workspaces with \'test\' script (--with-script test)', async () => {
     // Call
-    await expect(listCommand(project, { ...defaults, long: false, json: false, 'with-script': 'test' }))
+    await expect(listCommand(project, { ...defaults, long: false, json: false, 'with-script': ['test'] }))
       .resolves.toBe(0);
 
     // Checks
     expect(screen).toEqual('wks-2\n');
+  });
+
+  it('should print only workspaces with \'test\' or \'lint\' scripts (--with-script test lint)', async () => {
+    // Call
+    await expect(listCommand(project, { ...defaults, long: false, json: false, 'with-script': ['test', 'lint'] }))
+      .resolves.toBe(0);
+
+    // Checks
+    expect(screen).toEqual('wks-2\nwks-3\n');
   });
 
   // Formats
