@@ -45,8 +45,7 @@ import { commandHandler } from './wrapper';
         desc: 'Print only private workspaces',
       },
       'with-script': {
-        type: 'string',
-        nargs: 1,
+        type: 'array',
         group: 'Filters:',
         desc: 'Print only workspaces having the given script',
       },
