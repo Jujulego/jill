@@ -541,7 +541,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jest/core@npm:^27.0.6, @jest/core@npm:^27.1.0":
+"@jest/core@npm:^27.1.0":
   version: 27.1.0
   resolution: "@jest/core@npm:27.1.0"
   dependencies:
@@ -738,7 +738,7 @@ __metadata:
     "@typescript-eslint/parser": 4.29.3
     eslint: 7.32.0
     eslint-plugin-jest: 24.4.0
-    jest: 27.0.6
+    jest: 27.1.0
     tiny-glob: ^0.2.9
     ts-jest: 27.0.5
     typescript: 4.3.5
@@ -760,7 +760,7 @@ __metadata:
     chalk: ^4.1.1
     eslint: 7.32.0
     eslint-plugin-jest: 24.4.0
-    jest: 27.0.6
+    jest: 27.1.0
     ora: ^5.4.1
     ts-jest: 27.0.5
     ts-node: 10.2.1
@@ -789,7 +789,7 @@ __metadata:
     clipanion: 2.6.2
     eslint: 7.31.0
     eslint-plugin-jest: 24.4.0
-    jest: 27.0.6
+    jest: 27.1.0
     typescript: 4.3.5
   languageName: unknown
   linkType: soft
@@ -4349,7 +4349,7 @@ fsevents@^2.3.2:
   languageName: node
   linkType: hard
 
-"jest-cli@npm:^27.0.6":
+"jest-cli@npm:^27.1.0":
   version: 27.1.0
   resolution: "jest-cli@npm:27.1.0"
   dependencies:
@@ -4799,13 +4799,13 @@ fsevents@^2.3.2:
   languageName: node
   linkType: hard
 
-"jest@npm:27.0.6":
-  version: 27.0.6
-  resolution: "jest@npm:27.0.6"
+"jest@npm:27.1.0":
+  version: 27.1.0
+  resolution: "jest@npm:27.1.0"
   dependencies:
-    "@jest/core": ^27.0.6
+    "@jest/core": ^27.1.0
     import-local: ^3.0.2
-    jest-cli: ^27.0.6
+    jest-cli: ^27.1.0
   peerDependencies:
     node-notifier: ^8.0.1 || ^9.0.0 || ^10.0.0
   peerDependenciesMeta:
@@ -4813,7 +4813,7 @@ fsevents@^2.3.2:
       optional: true
   bin:
     jest: bin/jest.js
-  checksum: 60de979335cf28c03f8fdf8ba7aee240d72e11d2b918e50ed31a835b08debf593bca6ad058d3c323ffb670dcd8d5c060c22e0ec9a716fdb40ffa2134db7d6aca
+  checksum: e9cc602bb860b805461d3ed8a7029b3353bfdf8fc4c8dc8da79490e49d00b3a98fec1efa1aa0099873636406d813e1f0dd28fa616b045fb8288cd06f2c4e2bf5
   languageName: node
   linkType: hard
 
@@ -4829,7 +4829,7 @@ fsevents@^2.3.2:
     chalk: 4.1.2
     eslint: 7.32.0
     eslint-plugin-jest: 24.4.0
-    jest: 27.0.6
+    jest: 27.1.0
     ts-jest: 27.0.5
     typescript: 4.3.5
   languageName: unknown
@@ -4845,7 +4845,7 @@ fsevents@^2.3.2:
     "@yarnpkg/builder": 2.1.3
     eslint: 7.32.0
     eslint-plugin-jest: 24.4.0
-    jest: 27.0.6
+    jest: 27.1.0
     typescript: 4.3.5
   languageName: unknown
   linkType: soft
