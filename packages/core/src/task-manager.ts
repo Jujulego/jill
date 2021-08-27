@@ -2,7 +2,7 @@ import os from 'os';
 
 import { EventEmitter } from './event-emitter';
 import { logger } from './logger';
-import { Task } from './task';
+import { Task } from './tasks';
 
 // Types
 export type TaskManagerEventMap = {

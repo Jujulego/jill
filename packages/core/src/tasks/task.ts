@@ -18,7 +18,7 @@ export type TaskStatus = 'waiting' | 'ready' | 'running' | 'done' | 'failed';
 export type TaskEventMap = Record<TaskStatus, []>;
 
 // Class
-export abstract class Task extends EventEmitter<TaskEventMap> {
+export abstract class Task<M extends TaskEventMap = TaskEventMap> extends EventEmitter<M> {
   // Attributes
   private _status: TaskStatus = 'ready';
   private _dependencies: Task[] = [];
@@ -38,14 +38,14 @@ export abstract class Task extends EventEmitter<TaskEventMap> {
   protected abstract _start(): void;
   protected abstract _stop(): void;
 
-  protected _complexity(cache: Map<Task, number> = new Map()): number {
+  complexity(cache: Map<Task, number> = new Map()): number {
     let complexity = cache.get(this);
 
     if (complexity === undefined) {
       complexity = 0;
 
       for (const dep of this.dependencies) {
-        complexity += dep._complexity(cache) + 1;
+        complexity += dep.complexity(cache) + 1;
       }
 
       cache.set(this, complexity);
@@ -100,6 +100,7 @@ export abstract class Task extends EventEmitter<TaskEventMap> {
     }
 
     this._logger.verbose(`Running ${this.name}`);
+    this._setStatus('running');
     this._start();
   }
 
@@ -120,10 +121,6 @@ export abstract class Task extends EventEmitter<TaskEventMap> {
 
   get dependencies(): ReadonlyArray<Task> {
     return this._dependencies;
-  }
-
-  get complexity(): number {
-    return this._complexity();
   }
 
   get status(): TaskStatus {

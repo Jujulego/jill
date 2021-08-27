@@ -1,8 +1,6 @@
 import { spawn, ChildProcess } from 'child_process';
-import * as path from 'path';
 
-import { Task, TaskEventMap } from './task';
-import { TaskOptions } from '../task';
+import { Task, TaskEventMap, TaskOptions } from './task';
 
 // Types
 export type SpawnTaskStream = 'stdout' | 'stderr';
@@ -18,7 +16,7 @@ export interface SpawnTaskEventMap extends TaskEventMap {
 }
 
 // Class
-export class SpawnTask extends Task {
+export class SpawnTask extends Task<SpawnTaskEventMap> {
   // Attributes
   private _process?: ChildProcess;
   private readonly _streamLogLevel: Record<SpawnTaskStream, string> = {
@@ -50,10 +48,49 @@ export class SpawnTask extends Task {
   }
 
   // Methods
+  private _logStream(stream: 'stdout' | 'stderr', msg: string): void {
+    // Log message
+    this._logger.log(this._streamLogLevel[stream], msg.replace(/\n$/, ''));
+  }
+
   protected _start(): void {
+    this._process = spawn(this.cmd, this.args, {
+      cwd: this.cwd,
+      shell: true,
+      stdio: 'pipe',
+      windowsHide: true,
+      env: {
+        FORCE_COLOR: '1',
+        ...process.env,
+        ...this.env
+      }
+    });
+
+    this._process.stdout?.on('data', (buf: Buffer) => {
+      const msg = buf.toString('utf-8');
+
+      this._logStream('stdout', msg);
+      this.emit('data', 'stdout', msg);
+    });
+
+    this._process.stderr?.on('data', (buf: Buffer) => {
+      const msg = buf.toString('utf-8');
+
+      this._logStream('stderr', msg);
+      this.emit('data', 'stderr', msg);
+    });
+
+    this._process.on('close', (code) => {
+      if (code) {
+        this._setStatus('failed');
+      } else {
+        this._setStatus('done');
+      }
+    });
   }
 
   protected _stop(): void {
+    this._process?.kill();
   }
 
   // Properties
