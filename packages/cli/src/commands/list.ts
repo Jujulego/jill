@@ -15,7 +15,7 @@ export interface ListArgs {
   // Filters
   affected: string | undefined;
   private: boolean | undefined;
-  'with-script': string | undefined;
+  'with-script': string[] | undefined;
 
   // Formats
   attrs: Attribute[] | undefined;
@@ -57,12 +57,13 @@ export const listCommand: CommandHandler<ListArgs> = async (prj, argv) => {
       if ((wks.manifest.private ?? false) !== argv.private) continue;
     }
 
-    if (argv.affected !== undefined) {
-      if (!await wks.isAffected(argv.affected)) continue;
+    if (argv['with-script'] !== undefined) {
+      const scripts = Object.keys(wks.manifest.scripts || {});
+      if (!argv['with-script'].some(scr => scripts.includes(scr))) continue;
     }
 
-    if (argv['with-script'] !== undefined) {
-      if (!(argv['with-script'] in (wks.manifest.scripts || {}))) continue;
+    if (argv.affected !== undefined) {
+      if (!await wks.isAffected(argv.affected)) continue;
     }
 
     workspaces.push(wks);
@@ -76,7 +77,11 @@ export const listCommand: CommandHandler<ListArgs> = async (prj, argv) => {
 
   // Print data
   if (argv.json) {
-    console.log(JSON.stringify(data, null, 2));
+    if (process.stdout.isTTY) { // Pretty print for ttys
+      console.log(JSON.stringify(data, null, 2));
+    } else {
+      console.log(JSON.stringify(data));
+    }
   } else {
     const list = new CliList();
 

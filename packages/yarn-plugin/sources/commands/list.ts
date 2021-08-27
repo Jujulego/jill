@@ -12,8 +12,8 @@ export class ListCommand extends JillCommand {
   @Command.Boolean('--private', { description: 'Print only private workspaces' })
   private?: boolean;
 
-  @Command.String('--with-script', { description: 'Print only workspaces having the given script' })
-  withScript?: string;
+  @Command.Array('--with-script', { description: 'Print only workspaces having the given script' })
+  withScript?: string[];
 
   @Command.Array('--attrs', { description: 'Select printed attributes' })
   attrs?: Attribute[];
