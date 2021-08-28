@@ -27,7 +27,7 @@ export abstract class Task<M extends TaskEventMap = TaskEventMap> extends EventE
   protected readonly _context: Readonly<TaskContext>;
 
   // Constructor
-  protected constructor(opts: TaskOptions) {
+  protected constructor(opts: TaskOptions = {}) {
     super();
 
     this._logger = opts.logger || logger;
@@ -37,22 +37,6 @@ export abstract class Task<M extends TaskEventMap = TaskEventMap> extends EventE
   // Methods
   protected abstract _start(): void;
   protected abstract _stop(): void;
-
-  complexity(cache: Map<Task, number> = new Map()): number {
-    let complexity = cache.get(this);
-
-    if (complexity === undefined) {
-      complexity = 0;
-
-      for (const dep of this.dependencies) {
-        complexity += dep.complexity(cache) + 1;
-      }
-
-      cache.set(this, complexity);
-    }
-
-    return complexity;
-  }
 
   protected _setStatus(status: TaskStatus): void {
     if (this._status === status) return;
@@ -92,6 +76,22 @@ export abstract class Task<M extends TaskEventMap = TaskEventMap> extends EventE
     } else {
       throw Error(`Cannot add a dependency to a ${this._status} task`);
     }
+  }
+
+  complexity(cache: Map<Task, number> = new Map()): number {
+    let complexity = cache.get(this);
+
+    if (complexity === undefined) {
+      complexity = 0;
+
+      for (const dep of this.dependencies) {
+        complexity += dep.complexity(cache) + 1;
+      }
+
+      cache.set(this, complexity);
+    }
+
+    return complexity;
   }
 
   start(): void {
