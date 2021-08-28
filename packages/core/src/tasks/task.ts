@@ -61,6 +61,13 @@ export abstract class Task<M extends TaskEventMap = TaskEventMap> extends EventE
     }
   }
 
+  /**
+   * Add a dependency to this task.
+   * A task will be waiting as long as all it's dependencies aren't done.
+   * If a task fails, all tasks that depends on it will also fails without running.
+   *
+   * @param task the dependency to add
+   */
   dependsOn(task: Task): void {
     if (['waiting', 'ready'].includes(this._status)) {
       this._dependencies.push(task);
@@ -78,6 +85,12 @@ export abstract class Task<M extends TaskEventMap = TaskEventMap> extends EventE
     }
   }
 
+  /**
+   * Computes task complexity.
+   * The task complexity equals to the count of all it's direct and indirect dependencies.
+   *
+   * @param cache stores all computed complexities, to not recompute complexities while running threw the whole graph.
+   */
   complexity(cache: Map<Task, number> = new Map()): number {
     let complexity = cache.get(this);
 
@@ -94,6 +107,11 @@ export abstract class Task<M extends TaskEventMap = TaskEventMap> extends EventE
     return complexity;
   }
 
+  /**
+   * Start the task.
+   * The task will be started only if it's status is "ready".
+   * In other cases, it will throw an error.
+   */
   start(): void {
     if (this._status !== 'ready') {
       throw Error(`Cannot start a ${this._status} task`);
@@ -104,6 +122,11 @@ export abstract class Task<M extends TaskEventMap = TaskEventMap> extends EventE
     this._start();
   }
 
+  /**
+   * Stop the task.
+   * The task will be stopped only if it's status is "running".
+   * In other cases, it won't do anything.
+   */
   stop(): void {
     if (this._status !== 'running') {
       return;

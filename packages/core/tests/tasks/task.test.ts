@@ -56,6 +56,30 @@ describe('Task.dependsOn', () => {
   }
 });
 
+describe('Task.complexity', () => {
+  // Setup
+  const ta = new TestTask('task-a');
+  const tb = new TestTask('task-b');
+  const tc = new TestTask('task-c');
+
+  ta.dependsOn(tb);
+  ta.dependsOn(tc);
+  tb.dependsOn(tc);
+
+  // Tests
+  test('task A should have complexity 3', () => {
+    expect(ta.complexity()).toBe(3);
+  });
+
+  test('task B should have complexity 1', () => {
+    expect(tb.complexity()).toBe(1);
+  });
+
+  test('task C should have complexity 0', () => {
+    expect(tc.complexity()).toBe(0);
+  });
+});
+
 describe('Task.start', () => {
   it('should set task status to running and call _start method', () => {
     const task = new TestTask('test');
@@ -109,30 +133,6 @@ describe('Task.stop', () => {
       expect(task._stop).not.toHaveBeenCalled();
     });
   }
-});
-
-describe('Task.complexity', () => {
-  // Setup
-  const ta = new TestTask('task-a');
-  const tb = new TestTask('task-b');
-  const tc = new TestTask('task-c');
-
-  ta.dependsOn(tb);
-  ta.dependsOn(tc);
-  tb.dependsOn(tc);
-
-  // Tests
-  test('task A should have complexity 3', () => {
-    expect(ta.complexity()).toBe(3);
-  });
-
-  test('task B should have complexity 1', () => {
-    expect(tb.complexity()).toBe(1);
-  });
-
-  test('task C should have complexity 0', () => {
-    expect(tc.complexity()).toBe(0);
-  });
 });
 
 describe('Task.completed', () => {
