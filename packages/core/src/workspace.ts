@@ -4,7 +4,7 @@ import { Logger } from 'winston';
 import { logger } from './logger';
 import type { Manifest } from './manifest';
 import { Project } from './project';
-import { SpawnTask, SpawnTaskOption } from './tasks';
+import { SpawnTask, SpawnTaskOption, Task } from './tasks';
 import { combine, spawn } from './utils';
 
 // Types
@@ -15,7 +15,7 @@ export interface WorkspaceRunOptions extends Omit<SpawnTaskOption, 'cwd'> {
 // Class
 export class Workspace {
   // Attributes
-  private _lastBuild?: SpawnTask;
+  private _lastBuild?: Task;
 
   private _isAffected?: boolean;
   private readonly _logger: Logger;
@@ -30,7 +30,7 @@ export class Workspace {
   }
 
   // Methods
-  private async _buildDependencies(task: SpawnTask) {
+  private async _buildDependencies(task: Task) {
     for await (const dep of combine(this.dependencies(), this.devDependencies())) {
       task.dependsOn(await dep.build());
     }
@@ -83,7 +83,7 @@ export class Workspace {
     }
   }
 
-  async run(script: string, args: string[] = [], opts: WorkspaceRunOptions = {}): Promise<SpawnTask> {
+  async run(script: string, args: string[] = [], opts: WorkspaceRunOptions = {}): Promise<Task> {
     const pm = await this.project.packageManager();
 
     const task = new SpawnTask(pm, ['run', script, ...args], {
@@ -97,7 +97,7 @@ export class Workspace {
     return task;
   }
 
-  async build(): Promise<SpawnTask> {
+  async build(): Promise<Task> {
     if (!this._lastBuild) {
       this._lastBuild = await this.run('jill:build');
     }

@@ -1,8 +1,7 @@
 import { Project, TaskManager, Workspace } from '@jujulego/jill-core';
 
-import { eachCommand, logger } from '../../src';
-
 import { MockTask } from '../../mocks/task';
+import { eachCommand, logger } from '../../src';
 import '../logger';
 
 // Setup
@@ -35,7 +34,7 @@ describe('jill each', () => {
 
   it('should exit 0 when manager is finished', async () => {
     const wks = new Workspace('./wks', { name: 'wks', version: '1.0.0', scripts: { test: 'test' } }, project);
-    const tsk = new MockTask('test', [], { context: { workspace: wks }});
+    const tsk = new MockTask('test', { context: { workspace: wks }});
 
     jest.spyOn(project, 'workspaces').mockImplementation(async function* () { yield wks; });
     jest.spyOn(wks, 'run').mockResolvedValue(tsk);
@@ -64,8 +63,8 @@ describe('jill each', () => {
   it('should filter workspaces without script', async () => {
     const wks1 = new Workspace('./wks-1', { name: 'wks-1', version: '1.0.0', scripts: { test: 'test' } }, project);
     const wks2 = new Workspace('./wks-2', { name: 'wks-2', version: '1.0.0' }, project);
-    const tsk1 = new MockTask('test', [], { context: { workspace: wks1 }});
-    const tsk2 = new MockTask('test', [], { context: { workspace: wks2 }});
+    const tsk1 = new MockTask('test', { context: { workspace: wks1 }});
+    const tsk2 = new MockTask('test', { context: { workspace: wks2 }});
 
     jest.spyOn(project, 'workspaces').mockImplementation(async function* () { yield wks1; yield wks2; });
     jest.spyOn(wks1, 'run').mockResolvedValue(tsk1);
@@ -89,8 +88,8 @@ describe('jill each', () => {
   it('should filter private workspaces', async () => {
     const wks1 = new Workspace('./wks-1', { name: 'wks-1', version: '1.0.0', private: true, scripts: { test: 'test' } }, project);
     const wks2 = new Workspace('./wks-2', { name: 'wks-2', version: '1.0.0', scripts: { test: 'test' } }, project);
-    const tsk1 = new MockTask('test', [], { context: { workspace: wks1 }});
-    const tsk2 = new MockTask('test', [], { context: { workspace: wks2 }});
+    const tsk1 = new MockTask('test', { context: { workspace: wks1 }});
+    const tsk2 = new MockTask('test', { context: { workspace: wks2 }});
 
     jest.spyOn(project, 'workspaces').mockImplementation(async function* () { yield wks1; yield wks2; });
     jest.spyOn(wks1, 'run').mockResolvedValue(tsk1);
@@ -113,8 +112,8 @@ describe('jill each', () => {
   it('should filter affected workspaces', async () => {
     const wks1 = new Workspace('./wks-1', { name: 'wks-1', version: '1.0.0', scripts: { test: 'test' } }, project);
     const wks2 = new Workspace('./wks-2', { name: 'wks-2', version: '1.0.0', scripts: { test: 'test' } }, project);
-    const tsk1 = new MockTask('test', [], { context: { workspace: wks1 }});
-    const tsk2 = new MockTask('test', [], { context: { workspace: wks2 }});
+    const tsk1 = new MockTask('test', { context: { workspace: wks1 }});
+    const tsk2 = new MockTask('test', { context: { workspace: wks2 }});
 
     jest.spyOn(project, 'workspaces').mockImplementation(async function* () { yield wks1; yield wks2; });
     jest.spyOn(wks1, 'run').mockResolvedValue(tsk1);

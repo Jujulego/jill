@@ -1,18 +1,19 @@
-import { Task, TaskManager, Workspace, Project } from '@jujulego/jill-core';
+import { TaskManager, Workspace, Project } from '@jujulego/jill-core';
 
+import { MockTask } from '../mocks/task';
 import { TaskLogger } from '../src/task-logger';
 import { logger } from '../src';
-
 import './logger';
 
 // Constants
 const prj = new Project('prj');
 const wks1 = new Workspace('wks-1', { name: 'wks-1' }, prj);
+const wks2 = new Workspace('wks-2', { name: 'wks-2' }, prj);
 
 // Setup
 let mng: TaskManager;
-let tsk1: Task;
-let tsk2: Task;
+let tsk1: MockTask;
+let tsk2: MockTask;
 
 beforeEach(() => {
   jest.restoreAllMocks();
@@ -20,8 +21,8 @@ beforeEach(() => {
   // Mocks
   mng = new TaskManager();
 
-  tsk1 = new Task('task', [], { cwd: 'prj/wks-1', context: { workspace: wks1 } });
-  tsk2 = new Task('task', [], { cwd: 'prj/wks-2' });
+  tsk1 = new MockTask('task-1', { context: { workspace: wks1 }});
+  tsk2 = new MockTask('task-2', { context: { workspace: wks2 }});
 
   mng.add(tsk1);
   mng.add(tsk2);
@@ -96,13 +97,13 @@ it('should print default messages', () => {
   mng.emit('completed', tsk1);
 
   expect(logger.succeed).toHaveBeenCalledWith('wks-1 built');
-  expect(logger.spin).toHaveBeenCalledWith('Building prj/wks-2 ...');
+  expect(logger.spin).toHaveBeenCalledWith('Building wks-2 ...');
 
   // fail 2nd task
   jest.spyOn(tsk2, 'status', 'get').mockReturnValue('failed');
   mng.emit('completed', tsk2);
 
-  expect(logger.fail).toHaveBeenCalledWith('Failed to build prj/wks-2');
+  expect(logger.fail).toHaveBeenCalledWith('Failed to build wks-2');
 });
 
 it('should print default messages (2)', () => {
@@ -126,11 +127,11 @@ it('should print default messages (2)', () => {
   mng.emit('completed', tsk1);
 
   expect(logger.fail).toHaveBeenCalledWith('Failed to build wks-1');
-  expect(logger.spin).toHaveBeenCalledWith('Building prj/wks-2 ...');
+  expect(logger.spin).toHaveBeenCalledWith('Building wks-2 ...');
 
   // succeed 2nd task
   jest.spyOn(tsk2, 'status', 'get').mockReturnValue('done');
   mng.emit('completed', tsk2);
 
-  expect(logger.succeed).toHaveBeenCalledWith('prj/wks-2 built');
+  expect(logger.succeed).toHaveBeenCalledWith('wks-2 built');
 });

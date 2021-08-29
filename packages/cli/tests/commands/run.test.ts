@@ -1,8 +1,7 @@
 import { Project, TaskManager, Workspace } from '@jujulego/jill-core';
 
-import { logger, runCommand } from '../../src';
-
 import { MockTask } from '../../mocks/task';
+import { logger, runCommand } from '../../src';
 import '../logger';
 
 // Setup
@@ -50,7 +49,7 @@ describe('jill run', () => {
 
   it('should exit 0 when manager finished', async () => {
     const wks = new Workspace('./wks', { name: 'wks', version: '1.0.0' }, project);
-    const tsk = new MockTask('test', [], { context: { workspace: wks }});
+    const tsk = new MockTask('test', { context: { workspace: wks }});
 
     jest.spyOn(project, 'workspace').mockResolvedValue(wks);
     jest.spyOn(wks, 'run').mockResolvedValue(tsk);
@@ -77,7 +76,7 @@ describe('jill run', () => {
 
   it('should use current workspace', async () => {
     const wks = new Workspace('./wks', { name: 'wks', version: '1.0.0' }, project);
-    const tsk = new MockTask('test', [], { context: { workspace: wks }});
+    const tsk = new MockTask('test', { context: { workspace: wks }});
 
     jest.spyOn(project, 'workspace');
     jest.spyOn(project, 'currentWorkspace').mockResolvedValue(wks);
