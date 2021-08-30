@@ -26,6 +26,17 @@ export class TaskManager extends EventEmitter<TaskManagerEventMap> {
     logger.verbose(`Run up to ${jobs} tasks at the same time`);
   }
 
+  // Statics
+  private static _instance?: TaskManager;
+
+  static get global(): TaskManager {
+    if (!this._instance) {
+      this._instance = new TaskManager();
+    }
+
+    return this._instance;
+  }
+
   // Methods
   private _sortByComplexity() {
     const cache = new Map<Task, number>();
