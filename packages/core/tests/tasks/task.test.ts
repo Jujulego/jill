@@ -27,17 +27,17 @@ describe('Task.constructor', () => {
 });
 
 describe('Task.dependsOn', () => {
-  it('should change task state to waiting', () => {
+  it('should change task state to blocked', () => {
     const taskA = new TestTask('test-a');
     const taskB = new TestTask('test-b');
 
     const spy = jest.fn();
-    taskA.on('waiting', spy);
+    taskA.on('blocked', spy);
 
     // Test
     taskA.dependsOn(taskB);
 
-    expect(taskA.status).toBe('waiting');
+    expect(taskA.status).toBe('blocked');
     expect(taskA.dependencies).toEqual([taskB]);
     expect(spy).toHaveBeenCalledTimes(1);
   });
@@ -95,7 +95,7 @@ describe('Task.start', () => {
     expect(spyRunning).toHaveBeenCalledTimes(1);
   });
 
-  for (const status of ['waiting', 'running', 'done', 'failed'] as TaskStatus[]) {
+  for (const status of ['blocked', 'running', 'done', 'failed'] as TaskStatus[]) {
     it(`should fail if task is ${status}`, () => {
       const task = new TestTask('test');
       task._setStatus(status);
@@ -121,7 +121,7 @@ describe('Task.stop', () => {
     expect(task._stop).toHaveBeenCalledTimes(1);
   });
 
-  for (const status of ['waiting', 'ready', 'done', 'failed'] as TaskStatus[]) {
+  for (const status of ['blocked', 'ready', 'done', 'failed'] as TaskStatus[]) {
     it(`should do nothing if task is ${status}`, () => {
       const task = new TestTask('test');
       task._setStatus(status);
@@ -146,7 +146,7 @@ describe('Task.completed', () => {
     });
   }
 
-  for (const status of ['waiting', 'ready', 'running'] as TaskStatus[]) {
+  for (const status of ['blocked', 'ready', 'running'] as TaskStatus[]) {
     it(`should be false if task is ${status}`, () => {
       const tsk = new TestTask('test');
       tsk._setStatus(status);

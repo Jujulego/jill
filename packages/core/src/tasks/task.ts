@@ -14,7 +14,7 @@ export interface TaskOptions {
   logger?: Logger;
 }
 
-export type TaskStatus = 'waiting' | 'ready' | 'running' | 'done' | 'failed';
+export type TaskStatus = 'blocked' | 'ready' | 'running' | 'done' | 'failed';
 export type TaskEventMap = Record<TaskStatus, []>;
 
 // Class
@@ -48,7 +48,7 @@ export abstract class Task<M extends TaskEventMap = TaskEventMap> extends EventE
   }
 
   private _recomputeStatus(): void {
-    if (['waiting', 'ready'].includes(this._status)) {
+    if (['blocked', 'ready'].includes(this._status)) {
       if (this._dependencies.some(dep => dep.status === 'failed')) {
         // Check if one dependency is failed
         this._setStatus('failed');
@@ -56,20 +56,20 @@ export abstract class Task<M extends TaskEventMap = TaskEventMap> extends EventE
         // Check if all dependencies are done
         this._setStatus('ready');
       } else {
-        this._setStatus('waiting');
+        this._setStatus('blocked');
       }
     }
   }
 
   /**
    * Add a dependency to this task.
-   * A task will be waiting as long as all it's dependencies aren't done.
+   * A task will be blocked as long as all it's dependencies aren't done.
    * If a task fails, all tasks that depends on it will also fails without running.
    *
    * @param task the dependency to add
    */
   dependsOn(task: Task): void {
-    if (['waiting', 'ready'].includes(this._status)) {
+    if (['blocked', 'ready'].includes(this._status)) {
       this._dependencies.push(task);
       this._recomputeStatus();
 
