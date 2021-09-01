@@ -1,4 +1,5 @@
 import * as cp from 'child_process';
+import { Logger } from 'winston';
 
 import { logger } from './logger';
 
@@ -11,6 +12,7 @@ export interface SpawnResult {
 export interface SpawnOptions {
   cwd?: string;
   env?: Record<string, string>;
+  logger?: Logger;
 }
 
 // Utils
@@ -21,8 +23,10 @@ export async function* combine<T>(...generators: AsyncGenerator<T>[]): AsyncGene
 }
 
 export function spawn(cmd: string, args: ReadonlyArray<string>, opts: SpawnOptions = {}): Promise<SpawnResult> {
+  const log = opts.logger ?? logger;
+
   return new Promise<SpawnResult>((resolve, reject) => {
-    logger.debug(`Running ${[cmd, ...args].join(' ')}`);
+    log.debug(`Running ${[cmd, ...args].join(' ')}`);
 
     const proc = cp.spawn(cmd, args, {
       cwd: opts.cwd,
