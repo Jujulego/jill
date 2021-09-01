@@ -99,6 +99,10 @@ export class OraLogger {
     this.logger.error({ message });
   }
 
+  child(options: Record<string, unknown>): OraLogger {
+    return new OraLogger(this.logger.child(options), this.transport);
+  }
+
   // - ora
   spin(msg: string): void {
     this.transport.spin(msg);

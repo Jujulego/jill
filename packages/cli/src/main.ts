@@ -36,8 +36,13 @@ import { commandHandler } from './wrapper';
         alias: 'a',
         type: 'string',
         coerce: (rev: string) => rev === '' ? 'master' : rev,
-        group: 'Filters:',
-        desc: 'Print only affected workspaces towards given git revision. If no revision is given, it will check towards master',
+        group: 'Affected:',
+        desc: 'Print only affected workspaces towards given git revision. If no revision is given, it will check towards master. Replace %name by workspace name.',
+      },
+      'affected-rev-sort': {
+        type: 'string',
+        group: 'Affected:',
+        desc: 'Sort applied to git tag / git branch command.',
       },
       private: {
         type: 'boolean',

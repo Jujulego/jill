@@ -4,6 +4,7 @@ import path from 'path';
 
 import { logger } from '../logger';
 import { CliList } from '../utils/cli-list';
+import { spawn } from '../utils/spawn';
 import { CommandHandler } from '../wrapper';
 
 // Types
@@ -13,9 +14,10 @@ export type Data = Partial<Record<Attribute, string>>;
 
 export interface ListArgs {
   // Filters
-  affected: string | undefined;
   private: boolean | undefined;
   'with-script': string[] | undefined;
+  affected: string | undefined;
+  'affected-rev-sort': string | undefined;
 
   // Formats
   attrs: Attribute[] | undefined;
@@ -45,6 +47,44 @@ function buildExtractor(attrs: Attribute[]): Extractor<Data> {
   };
 }
 
+async function formatRev(rev: string, wks: Workspace, argv: ListArgs): Promise<string> {
+  const log = logger.child({ label: wks.name });
+
+  // Format revision
+  let result = rev;
+  result = result.replace(/(?<!\\)((?:\\\\)*)%name/g, `$1${wks.name}`);
+  result = result.replace(/\\(.)/g, '$1');
+
+  // Ask git to complete it
+  const sortArgs = argv['affected-rev-sort'] ? ['--sort', argv['affected-rev-sort']] : [];
+
+  // Search in branches
+  if (result.includes('*')) {
+    let { stdout: branches } = await spawn('git', ['branch', '-l', ...sortArgs, result], { cwd: wks.cwd, logger: log });
+    branches = branches.map(tag => tag.trim());
+
+    if (branches.length > 0) {
+      result = branches[branches.length - 1];
+    }
+  }
+
+  // Search in tags
+  if (result.includes('*')) {
+    let { stdout: tags } = await spawn('git', ['tag', '-l', ...sortArgs, result], { cwd: wks.cwd, logger: log });
+    tags = tags.map(tag => tag.trim());
+
+    if (tags.length > 0) {
+      result = tags[tags.length - 1];
+    }
+  }
+
+  if (result !== rev) {
+    log.verbose(`Resolved ${rev} into ${result}`);
+  }
+
+  return result;
+}
+
 // Handler
 export const listCommand: CommandHandler<ListArgs> = async (prj, argv) => {
   // Get data
@@ -63,7 +103,8 @@ export const listCommand: CommandHandler<ListArgs> = async (prj, argv) => {
     }
 
     if (argv.affected !== undefined) {
-      if (!await wks.isAffected(argv.affected)) continue;
+      const rev = await formatRev(argv.affected, wks, argv);
+      if (!await wks.isAffected(rev)) continue;
     }
 
     workspaces.push(wks);
