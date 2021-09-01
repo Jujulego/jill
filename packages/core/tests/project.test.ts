@@ -18,6 +18,7 @@ beforeEach(() => {
   // Mocks
   jest.restoreAllMocks();
   jest.spyOn(fs, 'readFile');
+  jest.spyOn(fs, 'stat');
 
   (glob as jest.MockedFunction<typeof glob>)
     .mockResolvedValue(['workspaces/test-a', 'workspaces/test-b', 'workspaces/test-c', 'workspaces/test-d']);
@@ -146,12 +147,11 @@ describe('Project.workspace', () => {
 
     // Checks
     expect(glob).toHaveBeenCalledWith('workspaces/*', { cwd: root });
-    expect(fs.readFile).toHaveBeenCalledTimes(2);
-    expect(fs.readFile).toHaveBeenCalledWith(path.join(root, 'package.json'), 'utf-8');
+    expect(fs.stat).toHaveBeenCalledWith(path.join(root, 'workspaces/test-a'));
     expect(fs.readFile).toHaveBeenCalledWith(path.join(root, 'workspaces/test-a/package.json'), 'utf-8');
   });
 
-  it('should fail to return unknown workspace', async () => {
+  it('should return null for unknown workspace', async () => {
     await expect(project.workspace('does-not-exists'))
       .resolves.toBeNull();
 
@@ -163,6 +163,32 @@ describe('Project.workspace', () => {
     expect(fs.readFile).toHaveBeenCalledWith(path.join(root, 'workspaces/test-b/package.json'), 'utf-8');
     expect(fs.readFile).toHaveBeenCalledWith(path.join(root, 'workspaces/test-c/package.json'), 'utf-8');
     expect(fs.readFile).toHaveBeenCalledWith(path.join(root, 'workspaces/test-d/package.json'), 'utf-8');
+  });
+
+  it('should handle ENOENT erorr', async () => {
+    (glob as jest.MockedFunction<typeof glob>)
+      .mockResolvedValue(['workspaces/empty']); // existing directory without any package.json
+
+    await expect(project.workspace('mock'))
+      .resolves.toBeNull();
+
+    // Checks
+    expect(glob).toHaveBeenCalledWith('workspaces/*', { cwd: root });
+    expect(fs.stat).toHaveBeenCalledWith(path.join(root, 'workspaces/empty'));
+    expect(fs.readFile).toHaveBeenCalledWith(path.join(root, 'package.json'), 'utf-8');
+  });
+
+  it('should ignore non directory glob returns', async () => {
+    (glob as jest.MockedFunction<typeof glob>)
+      .mockResolvedValue(['workspaces/just-a-file.txt']);
+
+    await expect(project.workspace('mock'))
+      .resolves.toBeNull();
+
+    // Checks
+    expect(glob).toHaveBeenCalledWith('workspaces/*', { cwd: root });
+    expect(fs.stat).toHaveBeenCalledWith(path.join(root, 'workspaces/just-a-file.txt'));
+    expect(fs.readFile).not.toHaveBeenCalledWith(path.join(root, 'workspaces/just-a-file.txt/package.json'), 'utf-8');
   });
 });
 
