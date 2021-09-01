@@ -9,6 +9,9 @@ export class ListCommand extends JillCommand {
   @Command.String('-a,--affected', { tolerateBoolean: true, description: 'Print only affected workspaces towards given git revision. If no revision is given test against master' })
   affected?: string;
 
+  @Command.String('--affected-rev-sort', { description: 'Sort applied to git tag / git branch command' })
+  affectedRevSort?: string;
+
   @Command.Boolean('--private', { description: 'Print only private workspaces' })
   private?: boolean;
 
@@ -39,6 +42,7 @@ export class ListCommand extends JillCommand {
 
     await listCommand(prj, {
       affected: this.affected === '' ? 'master' : this.affected,
+      'affected-rev-sort': this.affectedRevSort,
       private: this.private,
       'with-script': this.withScript,
       attrs: this.attrs,

@@ -42,7 +42,7 @@ import { commandHandler } from './wrapper';
       'affected-rev-sort': {
         type: 'string',
         group: 'Affected:',
-        desc: 'Sort applied to git tag / git branch command.',
+        desc: 'Sort applied to git tag / git branch command',
       },
       private: {
         type: 'boolean',
