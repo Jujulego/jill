@@ -147,7 +147,22 @@ export class Project {
 
       for (const pattern of workspaces) {
         for (const dir of await glob(pattern, { cwd: this.root })) {
-          yield this._loadWorkspace(dir);
+          try {
+            // Check if dir is a directory exists
+            const file = path.resolve(this.root, dir);
+            const stat = await fs.stat(file);
+
+            if (stat.isDirectory()) {
+              yield this._loadWorkspace(dir);
+            }
+
+          } catch (error) {
+            if (error.code === 'ENOENT') {
+              continue;
+            }
+
+            throw error;
+          }
         }
       }
 
