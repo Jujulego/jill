@@ -88,8 +88,12 @@ export class TaskManager extends EventEmitter<TaskManagerEventMap> {
   add(task: Task): void {
     this._add(task);
     this._sortByComplexity();
+    this._startNext();
   }
 
+  /**
+   * @deprecated Useless tasks started on add
+   */
   start(): void {
     this._startNext();
   }

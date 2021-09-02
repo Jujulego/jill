@@ -6,6 +6,7 @@ import type { Manifest } from './manifest';
 import { Project } from './project';
 import { SpawnTask, SpawnTaskOption, Task } from './tasks';
 import { combine, spawn } from './utils';
+import { git } from './tasks/git';
 
 // Types
 export interface WorkspaceRunOptions extends Omit<SpawnTaskOption, 'cwd'> {
@@ -41,12 +42,13 @@ export class Workspace {
 
     if (isAffected === undefined) {
       // Test workspace
-      const { stdout } = await spawn('git', ['diff', '--name-only', base, '--', this.cwd], {
-        cwd: this.project.root,
-        logger: this._logger
-      });
+      let count = 0;
 
-      isAffected = stdout.length > 0;
+      for await (const file of git.diff(['--name-only', base, '--', this.cwd], { cwd: this.project.root, logger: this._logger, streamLogLevel: 'debug' })) {
+        ++count;
+      }
+
+      isAffected = count > 0;
 
       if (!isAffected) {
         // Test it's dependencies
