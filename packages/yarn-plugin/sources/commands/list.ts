@@ -6,14 +6,20 @@ import { JillCommand } from './base';
 // Command
 export class ListCommand extends JillCommand {
   // Attributes
-  @Command.String('-a,--affected', { tolerateBoolean: true, description: 'Print only affected workspaces towards given git revision. If no revision is given test against master' })
-  affected?: string;
-
   @Command.Boolean('--private', { description: 'Print only private workspaces' })
   private?: boolean;
 
   @Command.Array('--with-script', { description: 'Print only workspaces having the given script' })
   withScript?: string[];
+
+  @Command.String('-a,--affected', { tolerateBoolean: true, description: 'Print only affected workspaces towards given git revision. If no revision is given test against master' })
+  affected?: string;
+
+  @Command.String('--affected-rev-sort', { description: 'Sort applied to git tag / git branch command' })
+  affectedRevSort?: string;
+
+  @Command.String('--affected-rev-fallback', { description: 'Fallback revision, used if no revision matching the given format is found' })
+  affectedRevFallback?: string;
 
   @Command.Array('--attrs', { description: 'Select printed attributes' })
   attrs?: Attribute[];
@@ -39,6 +45,8 @@ export class ListCommand extends JillCommand {
 
     await listCommand(prj, {
       affected: this.affected === '' ? 'master' : this.affected,
+      'affected-rev-sort': this.affectedRevSort,
+      'affected-rev-fallback': this.affectedRevFallback || 'master',
       private: this.private,
       'with-script': this.withScript,
       attrs: this.attrs,

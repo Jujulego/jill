@@ -116,7 +116,11 @@ describe('Workspace.isAffected', () => {
 
     // Checks
     expect(utils.spawn).toHaveBeenCalledTimes(1);
-    expect(utils.spawn).toHaveBeenCalledWith('git', ['diff', '--name-only', 'test', '--',  path.join(root, 'workspaces/test-a')], { cwd: root });
+    expect(utils.spawn).toHaveBeenCalledWith(
+      'git',
+      ['diff', '--name-only', 'test', '--',  path.join(root, 'workspaces/test-a')],
+      expect.objectContaining({ cwd: root })
+    );
   });
 
   it('should return false', async () => {
@@ -127,9 +131,25 @@ describe('Workspace.isAffected', () => {
 
     // Checks
     expect(utils.spawn).toHaveBeenCalledTimes(4);
-    expect(utils.spawn).toHaveBeenCalledWith('git', ['diff', '--name-only', 'test', '--',  path.join(root, 'workspaces/test-a')], { cwd: root });
-    expect(utils.spawn).toHaveBeenCalledWith('git', ['diff', '--name-only', 'test', '--',  path.join(root, 'workspaces/test-b')], { cwd: root });
-    expect(utils.spawn).toHaveBeenCalledWith('git', ['diff', '--name-only', 'test', '--',  path.join(root, 'workspaces/test-c')], { cwd: root });
-    expect(utils.spawn).toHaveBeenCalledWith('git', ['diff', '--name-only', 'test', '--',  path.join(root, 'workspaces/test-d')], { cwd: root });
+    expect(utils.spawn).toHaveBeenCalledWith(
+      'git',
+      ['diff', '--name-only', 'test', '--',  path.join(root, 'workspaces/test-a')],
+      expect.objectContaining({ cwd: root })
+    );
+    expect(utils.spawn).toHaveBeenCalledWith(
+      'git',
+      ['diff', '--name-only', 'test', '--',  path.join(root, 'workspaces/test-b')],
+      expect.objectContaining({ cwd: root })
+    );
+    expect(utils.spawn).toHaveBeenCalledWith(
+      'git',
+      ['diff', '--name-only', 'test', '--',  path.join(root, 'workspaces/test-c')],
+      expect.objectContaining({ cwd: root })
+    );
+    expect(utils.spawn).toHaveBeenCalledWith(
+      'git',
+      ['diff', '--name-only', 'test', '--',  path.join(root, 'workspaces/test-d')],
+      expect.objectContaining({ cwd: root })
+    );
   });
 });
