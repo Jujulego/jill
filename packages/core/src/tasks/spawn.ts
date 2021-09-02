@@ -1,3 +1,4 @@
+import { Repeater } from '@repeaterjs/repeater';
 import { spawn, ChildProcess } from 'child_process';
 
 import { Task, TaskEventMap, TaskOptions } from './task';
@@ -15,10 +16,19 @@ export interface SpawnTaskEventMap extends TaskEventMap {
   data: [SpawnTaskStream, string]
 }
 
+// Exceptions
+export class SpawnTaskFailed extends Error {
+  // Constructor
+  constructor(task: SpawnTask) {
+    super(`Task ${task.name} failed with code ${task.exitCode}`);
+  }
+}
+
 // Class
 export class SpawnTask extends Task<SpawnTaskEventMap> {
   // Attributes
   private _process?: ChildProcess;
+  private _exitCode: number | null = null;
   private readonly _streamLogLevel: Record<SpawnTaskStream, string> = {
     stdout: 'info',
     stderr: 'info',
@@ -81,6 +91,8 @@ export class SpawnTask extends Task<SpawnTaskEventMap> {
     });
 
     this._process.on('close', (code) => {
+      this._exitCode = code;
+
       if (code) {
         this._setStatus('failed');
       } else {
@@ -93,8 +105,47 @@ export class SpawnTask extends Task<SpawnTaskEventMap> {
     this._process?.kill();
   }
 
+  streams(): Repeater<SpawnTaskEventMap['data'], void> {
+    return new Repeater(async (push, stop) => {
+      // Listening
+      function listenData(...args: SpawnTaskEventMap['data']) {
+        push(args);
+      }
+
+      function fail() {
+        stop(new SpawnTaskFailed(this));
+      }
+
+      this.on('data', listenData);
+      this.on('done', stop);
+      this.on('failed', fail);
+
+      // Clean up
+      await stop;
+      this.off('data', listenData);
+      this.off('done', stop);
+      this.off('failed', fail);
+    });
+  }
+
+  async *stdout(): AsyncGenerator<string, void> {
+    for await (const [stream, data] of this.streams()) {
+      if (stream === 'stdout') yield data;
+    }
+  }
+
+  async *stderr(): AsyncGenerator<string, void> {
+    for await (const [stream, data] of this.streams()) {
+      if (stream === 'stderr') yield data;
+    }
+  }
+
   // Properties
   get name(): string {
     return [this.cmd, ...this.args].join(' ');
+  }
+
+  get exitCode(): number | null {
+    return this._exitCode;
   }
 }

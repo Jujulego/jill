@@ -1,3 +1,4 @@
+import { Repeater } from '@repeaterjs/repeater';
 import * as events from 'events';
 
 // Types
@@ -8,22 +9,23 @@ export type EventListener<M extends EventMap, E extends keyof M> = (...args: M[E
 // Class
 export class EventEmitter<M extends EventMap> extends events.EventEmitter {
   // Methods
-  async waitFor<E extends keyof M>(...events: E[]): Promise<M[E]> {
+  async waitFor<E extends keyof M>(event: E): Promise<M[E]> {
     return new Promise<M[E]>(resolve => {
+      this.once(event, (...args) => resolve(args));
+    });
+  }
+
+  follow<E extends keyof M>(event: E): Repeater<M[E], void> {
+    return new Repeater(async (push, stop) => {
+      // Setup listener
       function listener(...args: M[E]) {
-        // Prevent from being triggered twice
-        for (const event of events) {
-          this.off(event, listener);
-        }
-
-        // Resolves
-        resolve(args);
+        push(args);
       }
+      this.on(event, listener);
 
-      // Listen for all given statuses
-      for (const event of events) {
-        this.once(event, listener);
-      }
+      // Stop listening event
+      await stop;
+      this.off(event, listener);
     });
   }
 }
