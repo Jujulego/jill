@@ -16,7 +16,10 @@ export interface ListArgs {
   // Filters
   private: boolean | undefined;
   'with-script': string[] | undefined;
+
+  // Affected
   affected: string | undefined;
+  'affected-rev-fallback': string;
   'affected-rev-sort': string | undefined;
 
   // Formats
@@ -80,6 +83,12 @@ async function formatRev(rev: string, wks: Workspace, argv: ListArgs): Promise<s
 
   if (result !== rev) {
     log.verbose(`Resolved ${rev} into ${result}`);
+  }
+
+  if (result.includes('*')) {
+    log.warn(`No revision found matching ${result}, using fallback ${argv['affected-rev-fallback']}`);
+
+    return argv['affected-rev-fallback'];
   }
 
   return result;
