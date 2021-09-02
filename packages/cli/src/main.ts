@@ -59,7 +59,7 @@ import { commandHandler } from './wrapper';
         type: 'string',
         default: 'master',
         group: 'Affected:',
-        desc: 'Fallback revision, if no revision matching format given is found',
+        desc: 'Fallback revision, used if no revision matching the given format is found',
       },
       attrs: {
         type: 'array',
