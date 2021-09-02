@@ -1,7 +1,6 @@
 import * as cp from 'child_process';
-import { Logger } from 'winston';
 
-import { logger } from './logger';
+import { logger, OraLogger } from '../logger';
 
 // Type
 export interface SpawnResult {
@@ -12,16 +11,10 @@ export interface SpawnResult {
 export interface SpawnOptions {
   cwd?: string;
   env?: Record<string, string>;
-  logger?: Logger;
+  logger?: OraLogger;
 }
 
 // Utils
-export async function* combine<T>(...generators: AsyncGenerator<T>[]): AsyncGenerator<T> {
-  for (const gen of generators) {
-    yield* gen;
-  }
-}
-
 export function spawn(cmd: string, args: ReadonlyArray<string>, opts: SpawnOptions = {}): Promise<SpawnResult> {
   const log = opts.logger ?? logger;
 
@@ -45,11 +38,11 @@ export function spawn(cmd: string, args: ReadonlyArray<string>, opts: SpawnOptio
     };
 
     proc.stdout.on('data', (msg: Buffer) => {
-      res.stdout.push(msg.toString('utf-8'));
+      res.stdout.push(...msg.toString('utf-8').replace(/\n$/, '').split('\n'));
     });
 
     proc.stderr.on('data', (msg: Buffer) => {
-      res.stderr.push(msg.toString('utf-8'));
+      res.stderr.push(...msg.toString('utf-8').replace(/\n$/, '').split('\n'));
     });
 
     // Emit result

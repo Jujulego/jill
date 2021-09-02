@@ -17,8 +17,8 @@ export class Workspace {
   // Attributes
   private _lastBuild?: Task;
 
-  private _isAffected?: boolean;
   private readonly _logger: Logger;
+  private readonly _isAffected = new Map<string, boolean>();
 
   // Constructor
   constructor(
@@ -37,26 +37,31 @@ export class Workspace {
   }
 
   async isAffected(base: string): Promise<boolean> {
-    if (this._isAffected === undefined) {
+    let isAffected = this._isAffected.get(base);
+
+    if (isAffected === undefined) {
       // Test workspace
       const { stdout } = await spawn('git', ['diff', '--name-only', base, '--', this.cwd], {
         cwd: this.project.root,
+        logger: this._logger
       });
 
-      this._isAffected = stdout.length > 0;
+      isAffected = stdout.length > 0;
 
-      if (!this._isAffected) {
+      if (!isAffected) {
         // Test it's dependencies
         for await (const dep of combine(this.dependencies(), this.devDependencies())) {
           if (await dep.isAffected(base)) {
-            this._isAffected = true;
+            isAffected = true;
             break;
           }
         }
       }
+
+      this._isAffected.set(base, isAffected);
     }
 
-    return this._isAffected;
+    return isAffected;
   }
 
   async* dependencies(): AsyncGenerator<Workspace, void> {

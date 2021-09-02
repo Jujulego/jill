@@ -9,9 +9,12 @@ jest.mock('../../src/logger');
 chalk.level = 1;
 
 const defaults: ListArgs = {
-  affected: undefined,
   private: undefined,
   'with-script': undefined,
+
+  affected: undefined,
+  'affected-rev-sort': undefined,
+  'affected-rev-fallback': 'master',
 
   attrs: undefined,
   headers: undefined,

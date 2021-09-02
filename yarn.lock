@@ -541,7 +541,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jest/core@npm:^27.0.6, @jest/core@npm:^27.1.0":
+"@jest/core@npm:^27.1.0":
   version: 27.1.0
   resolution: "@jest/core@npm:27.1.0"
   dependencies:
@@ -728,17 +728,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jujulego/jill-core@^1.0.3, @jujulego/jill-core@workspace:packages/core":
+"@jujulego/jill-core@^1.0.5, @jujulego/jill-core@workspace:packages/core":
   version: 0.0.0-use.local
   resolution: "@jujulego/jill-core@workspace:packages/core"
   dependencies:
     "@types/jest": 27.0.1
-    "@types/node": 14.17.12
-    "@typescript-eslint/eslint-plugin": 4.29.3
-    "@typescript-eslint/parser": 4.29.3
+    "@types/node": 14.17.14
+    "@typescript-eslint/eslint-plugin": 4.30.0
+    "@typescript-eslint/parser": 4.30.0
     eslint: 7.32.0
     eslint-plugin-jest: 24.4.0
-    jest: 27.0.6
+    jest: 27.1.0
     tiny-glob: ^0.2.9
     ts-jest: 27.0.5
     typescript: 4.3.5
@@ -747,20 +747,20 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jujulego/jill@1.0.4, @jujulego/jill@^1.0.4, @jujulego/jill@workspace:packages/cli":
+"@jujulego/jill@1.0.6, @jujulego/jill@^1.0.6, @jujulego/jill@workspace:packages/cli":
   version: 0.0.0-use.local
   resolution: "@jujulego/jill@workspace:packages/cli"
   dependencies:
-    "@jujulego/jill-core": ^1.0.3
+    "@jujulego/jill-core": ^1.0.5
     "@types/jest": 27.0.1
-    "@types/node": 14.17.12
+    "@types/node": 14.17.14
     "@types/yargs": 17.0.2
-    "@typescript-eslint/eslint-plugin": 4.29.3
-    "@typescript-eslint/parser": 4.29.3
+    "@typescript-eslint/eslint-plugin": 4.30.0
+    "@typescript-eslint/parser": 4.30.0
     chalk: ^4.1.1
     eslint: 7.32.0
     eslint-plugin-jest: 24.4.0
-    jest: 27.0.6
+    jest: 27.1.0
     ora: ^5.4.1
     ts-jest: 27.0.5
     ts-node: 10.2.1
@@ -777,11 +777,11 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@jujulego/yarn-plugin-jill@workspace:packages/yarn-plugin"
   dependencies:
-    "@jujulego/jill": ^1.0.4
-    "@jujulego/jill-core": ^1.0.3
-    "@types/node": 14.17.12
-    "@typescript-eslint/eslint-plugin": 4.29.3
-    "@typescript-eslint/parser": 4.29.3
+    "@jujulego/jill": ^1.0.6
+    "@jujulego/jill-core": ^1.0.5
+    "@types/node": 14.17.14
+    "@typescript-eslint/eslint-plugin": 4.30.0
+    "@typescript-eslint/parser": 4.30.0
     "@yarnpkg/builder": 2.1.3
     "@yarnpkg/core": 2.4.0
     "@yarnpkg/fslib": 2.5.1
@@ -789,7 +789,7 @@ __metadata:
     clipanion: 2.6.2
     eslint: 7.31.0
     eslint-plugin-jest: 24.4.0
-    jest: 27.0.6
+    jest: 27.1.0
     typescript: 4.3.5
   languageName: unknown
   linkType: soft
@@ -1071,10 +1071,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:14.17.12":
-  version: 14.17.12
-  resolution: "@types/node@npm:14.17.12"
-  checksum: 7efbce3781a0ea5d7a39bca3c5ed9c4e4d99fed3483fb2a89670aeb049cd9d25f1ddecd8fb58420fd92de371278721ddd6e3ad95c4f55992592f1ac5d1dedf98
+"@types/node@npm:14.17.14":
+  version: 14.17.14
+  resolution: "@types/node@npm:14.17.14"
+  checksum: 66ed675a324fdddc4f693f1b240c0d81a9f53e1c68f7de8b84d02d65c0b447f9fa30d318481d04e1502f68dd37091b5cadc59633b57246582ad25e3fa835cd7d
   languageName: node
   linkType: hard
 
@@ -1154,12 +1154,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/eslint-plugin@npm:4.29.3":
-  version: 4.29.3
-  resolution: "@typescript-eslint/eslint-plugin@npm:4.29.3"
+"@typescript-eslint/eslint-plugin@npm:4.30.0":
+  version: 4.30.0
+  resolution: "@typescript-eslint/eslint-plugin@npm:4.30.0"
   dependencies:
-    "@typescript-eslint/experimental-utils": 4.29.3
-    "@typescript-eslint/scope-manager": 4.29.3
+    "@typescript-eslint/experimental-utils": 4.30.0
+    "@typescript-eslint/scope-manager": 4.30.0
     debug: ^4.3.1
     functional-red-black-tree: ^1.0.1
     regexpp: ^3.1.0
@@ -1171,11 +1171,27 @@ __metadata:
   peerDependenciesMeta:
     typescript:
       optional: true
-  checksum: ded1580fc6348848df3ed92d4365586bf13a05cd698c07aa7727155ca13788b5c33bd326b5435af3e97b702156b1eef811ace20fb5ca44eab6388cecfd8e264a
+  checksum: 131079d73537d960e8bfbf56df9687e0eaa9b0b6791a029d2f4fd367ebe8db56086361e5ebff74be95bef40855f1dd3f9145bd1b02d48e547a9896256e4648f7
   languageName: node
   linkType: hard
 
-"@typescript-eslint/experimental-utils@npm:4.29.3, @typescript-eslint/experimental-utils@npm:^4.0.1":
+"@typescript-eslint/experimental-utils@npm:4.30.0":
+  version: 4.30.0
+  resolution: "@typescript-eslint/experimental-utils@npm:4.30.0"
+  dependencies:
+    "@types/json-schema": ^7.0.7
+    "@typescript-eslint/scope-manager": 4.30.0
+    "@typescript-eslint/types": 4.30.0
+    "@typescript-eslint/typescript-estree": 4.30.0
+    eslint-scope: ^5.1.1
+    eslint-utils: ^3.0.0
+  peerDependencies:
+    eslint: "*"
+  checksum: 2f63ec6a463edd4e41669febb16160590044a4a065b3d9badebcbe97b1725d1264390135cfe5cc3deb567df7b086f810763b761eddca5d901b9bdf1a462b03b3
+  languageName: node
+  linkType: hard
+
+"@typescript-eslint/experimental-utils@npm:^4.0.1":
   version: 4.29.3
   resolution: "@typescript-eslint/experimental-utils@npm:4.29.3"
   dependencies:
@@ -1191,20 +1207,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/parser@npm:4.29.3":
-  version: 4.29.3
-  resolution: "@typescript-eslint/parser@npm:4.29.3"
+"@typescript-eslint/parser@npm:4.30.0":
+  version: 4.30.0
+  resolution: "@typescript-eslint/parser@npm:4.30.0"
   dependencies:
-    "@typescript-eslint/scope-manager": 4.29.3
-    "@typescript-eslint/types": 4.29.3
-    "@typescript-eslint/typescript-estree": 4.29.3
+    "@typescript-eslint/scope-manager": 4.30.0
+    "@typescript-eslint/types": 4.30.0
+    "@typescript-eslint/typescript-estree": 4.30.0
     debug: ^4.3.1
   peerDependencies:
     eslint: ^5.0.0 || ^6.0.0 || ^7.0.0
   peerDependenciesMeta:
     typescript:
       optional: true
-  checksum: 3fac6b5219de8b9aea361cc2fa170105661068d5eee5594f2f68526801a66b9525a766fc17427a8d410ada0da2d852f8c021d0b2fac7442a1e913f248ac85d90
+  checksum: aed2048c5eade38a57db50f551245b72cd460c3f8c38f51f3b62ce7715d43b691a91bf277b0a4f5b5e0383fb5d8a93ff0501187e2454eb6d128da34ef802e3ab
   languageName: node
   linkType: hard
 
@@ -1218,10 +1234,27 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@typescript-eslint/scope-manager@npm:4.30.0":
+  version: 4.30.0
+  resolution: "@typescript-eslint/scope-manager@npm:4.30.0"
+  dependencies:
+    "@typescript-eslint/types": 4.30.0
+    "@typescript-eslint/visitor-keys": 4.30.0
+  checksum: 7756f13cb5fc103e61c765ad8d15249804cec8c13c2051a63c0d543307ab178052f5bcb4a19cb50df281b4097b728f33ba92c83b670a091a51a69795ac8e3b86
+  languageName: node
+  linkType: hard
+
 "@typescript-eslint/types@npm:4.29.3":
   version: 4.29.3
   resolution: "@typescript-eslint/types@npm:4.29.3"
   checksum: 26fd2bd6782b763ff6d5ef3bcc08e1d29b64d15ef6f3604203f6171517935d822c103f803d8755c8e0cb77319143e5d5108dc90e8e897c8e72bab9f178be67ce
+  languageName: node
+  linkType: hard
+
+"@typescript-eslint/types@npm:4.30.0":
+  version: 4.30.0
+  resolution: "@typescript-eslint/types@npm:4.30.0"
+  checksum: 1be5c9a30c1e552b5b215fe1ca38f3ac48ea68a06c103eb498d3a987b8cbdbe4770992d4498ab28e216fa9b2d2806ee3c856cc97cbca1a7f01e8032537bd6bef
   languageName: node
   linkType: hard
 
@@ -1243,6 +1276,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@typescript-eslint/typescript-estree@npm:4.30.0":
+  version: 4.30.0
+  resolution: "@typescript-eslint/typescript-estree@npm:4.30.0"
+  dependencies:
+    "@typescript-eslint/types": 4.30.0
+    "@typescript-eslint/visitor-keys": 4.30.0
+    debug: ^4.3.1
+    globby: ^11.0.3
+    is-glob: ^4.0.1
+    semver: ^7.3.5
+    tsutils: ^3.21.0
+  peerDependenciesMeta:
+    typescript:
+      optional: true
+  checksum: e35410e33b5afc010f8bde683f4fd4f9fbe3ad821e916eb5ff1ed23943e6202a817a4cb21eb8e697a55f01182ceecaca1731cb98791d767f7fe67b11f84f3d67
+  languageName: node
+  linkType: hard
+
 "@typescript-eslint/visitor-keys@npm:4.29.3":
   version: 4.29.3
   resolution: "@typescript-eslint/visitor-keys@npm:4.29.3"
@@ -1250,6 +1301,16 @@ __metadata:
     "@typescript-eslint/types": 4.29.3
     eslint-visitor-keys: ^2.0.0
   checksum: 76d485cb573cfccb8a6aded5b98fd58266c10f82362685d3d0b870e197cbe5e3d61b485e220a7a973765c4861df9ea52a35757ecb818f125e405925556ee1f90
+  languageName: node
+  linkType: hard
+
+"@typescript-eslint/visitor-keys@npm:4.30.0":
+  version: 4.30.0
+  resolution: "@typescript-eslint/visitor-keys@npm:4.30.0"
+  dependencies:
+    "@typescript-eslint/types": 4.30.0
+    eslint-visitor-keys: ^2.0.0
+  checksum: b825d1340c3209390c39b31f67c995b5a25db716088822c5d056889b700fffb4cd9acb89d75a26db034e52fdbc67d0f7fbfc03ce502f52bcd300ce2379a9aaac
   languageName: node
   linkType: hard
 
@@ -4349,7 +4410,7 @@ fsevents@^2.3.2:
   languageName: node
   linkType: hard
 
-"jest-cli@npm:^27.0.6":
+"jest-cli@npm:^27.1.0":
   version: 27.1.0
   resolution: "jest-cli@npm:27.1.0"
   dependencies:
@@ -4799,13 +4860,13 @@ fsevents@^2.3.2:
   languageName: node
   linkType: hard
 
-"jest@npm:27.0.6":
-  version: 27.0.6
-  resolution: "jest@npm:27.0.6"
+"jest@npm:27.1.0":
+  version: 27.1.0
+  resolution: "jest@npm:27.1.0"
   dependencies:
-    "@jest/core": ^27.0.6
+    "@jest/core": ^27.1.0
     import-local: ^3.0.2
-    jest-cli: ^27.0.6
+    jest-cli: ^27.1.0
   peerDependencies:
     node-notifier: ^8.0.1 || ^9.0.0 || ^10.0.0
   peerDependenciesMeta:
@@ -4813,7 +4874,7 @@ fsevents@^2.3.2:
       optional: true
   bin:
     jest: bin/jest.js
-  checksum: 60de979335cf28c03f8fdf8ba7aee240d72e11d2b918e50ed31a835b08debf593bca6ad058d3c323ffb670dcd8d5c060c22e0ec9a716fdb40ffa2134db7d6aca
+  checksum: e9cc602bb860b805461d3ed8a7029b3353bfdf8fc4c8dc8da79490e49d00b3a98fec1efa1aa0099873636406d813e1f0dd28fa616b045fb8288cd06f2c4e2bf5
   languageName: node
   linkType: hard
 
@@ -4821,15 +4882,15 @@ fsevents@^2.3.2:
   version: 0.0.0-use.local
   resolution: "jill-e2e@workspace:e2e"
   dependencies:
-    "@jujulego/jill": 1.0.4
+    "@jujulego/jill": 1.0.6
     "@types/jest": 27.0.1
-    "@types/node": 14.17.12
-    "@typescript-eslint/eslint-plugin": 4.29.3
-    "@typescript-eslint/parser": 4.29.3
+    "@types/node": 14.17.14
+    "@typescript-eslint/eslint-plugin": 4.30.0
+    "@typescript-eslint/parser": 4.30.0
     chalk: 4.1.2
     eslint: 7.32.0
     eslint-plugin-jest: 24.4.0
-    jest: 27.0.6
+    jest: 27.1.0
     ts-jest: 27.0.5
     typescript: 4.3.5
   languageName: unknown
@@ -4839,13 +4900,13 @@ fsevents@^2.3.2:
   version: 0.0.0-use.local
   resolution: "jill@workspace:."
   dependencies:
-    "@jujulego/jill": 1.0.4
-    "@typescript-eslint/eslint-plugin": 4.29.3
-    "@typescript-eslint/parser": 4.29.3
+    "@jujulego/jill": 1.0.6
+    "@typescript-eslint/eslint-plugin": 4.30.0
+    "@typescript-eslint/parser": 4.30.0
     "@yarnpkg/builder": 2.1.3
     eslint: 7.32.0
     eslint-plugin-jest: 24.4.0
-    jest: 27.0.6
+    jest: 27.1.0
     typescript: 4.3.5
   languageName: unknown
   linkType: soft

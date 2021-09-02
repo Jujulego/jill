@@ -1,6 +1,6 @@
 {
   "name": "@jujulego/jill",
-  "version": "1.0.4",
+  "version": "1.0.6",
   "license": "MIT",
   "bin": "./bin/jill.js",
   "main": "./dist/index.js",
@@ -17,7 +17,7 @@
     "node": "^14"
   },
   "dependencies": {
-    "@jujulego/jill-core": "^1.0.3",
+    "@jujulego/jill-core": "^1.0.5",
     "chalk": "^4.1.1",
     "ora": "^5.4.1",
     "winston": "^3.3.3",
@@ -26,13 +26,13 @@
   },
   "devDependencies": {
     "@types/jest": "27.0.1",
-    "@types/node": "14.17.12",
+    "@types/node": "14.17.14",
     "@types/yargs": "17.0.2",
-    "@typescript-eslint/eslint-plugin": "4.29.3",
-    "@typescript-eslint/parser": "4.29.3",
+    "@typescript-eslint/eslint-plugin": "4.30.0",
+    "@typescript-eslint/parser": "4.30.0",
     "eslint": "7.32.0",
     "eslint-plugin-jest": "24.4.0",
-    "jest": "27.0.6",
+    "jest": "27.1.0",
     "ts-jest": "27.0.5",
     "ts-node": "10.2.1",
     "typescript": "4.3.5"

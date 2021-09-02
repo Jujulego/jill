@@ -32,13 +32,6 @@ import { commandHandler } from './wrapper';
       'populate--': true,
     })
     .command(['list', 'ls'], 'List workspaces', {
-      affected: {
-        alias: 'a',
-        type: 'string',
-        coerce: (rev: string) => rev === '' ? 'master' : rev,
-        group: 'Filters:',
-        desc: 'Print only affected workspaces towards given git revision. If no revision is given, it will check towards master',
-      },
       private: {
         type: 'boolean',
         group: 'Filters:',
@@ -48,6 +41,25 @@ import { commandHandler } from './wrapper';
         type: 'array',
         group: 'Filters:',
         desc: 'Print only workspaces having the given script',
+      },
+      affected: {
+        alias: 'a',
+        type: 'string',
+        coerce: (rev: string) => rev === '' ? 'master' : rev,
+        group: 'Affected:',
+        desc: 'Print only affected workspaces towards given git revision. If no revision is given, it will check towards master.\n' +
+          'Replaces %name by workspace name.',
+      },
+      'affected-rev-sort': {
+        type: 'string',
+        group: 'Affected:',
+        desc: 'Sort applied to git tag / git branch command',
+      },
+      'affected-rev-fallback': {
+        type: 'string',
+        default: 'master',
+        group: 'Affected:',
+        desc: 'Fallback revision, used if no revision matching the given format is found',
       },
       attrs: {
         type: 'array',
