@@ -1,8 +1,11 @@
 import cp from 'child_process';
 import { EventEmitter } from 'events';
 
-import { logger, SpawnTask } from '../../src';
+import { logger, SpawnTask, SpawnTaskFailed } from '../../src';
+
 import '../logger';
+import { TestSpawnTask } from './task';
+import { SpawnTaskStream } from '../../dist';
 
 beforeEach(() => {
   jest.resetAllMocks();
@@ -29,7 +32,7 @@ describe('SpawnTask.start', () => {
     const task = new SpawnTask('test', ['arg1', 'arg2'], { cwd: '/test' });
     const proc = new EventEmitter();
 
-    jest.spyOn(cp, 'spawn')
+    jest.spyOn(cp, 'execFile')
       .mockReturnValue(proc as cp.ChildProcess);
 
     const spy = jest.fn();
@@ -38,11 +41,10 @@ describe('SpawnTask.start', () => {
     // Start task
     task.start();
 
-    expect(cp.spawn).toHaveBeenCalledTimes(1);
-    expect(cp.spawn).toHaveBeenCalledWith('test', ['arg1', 'arg2'], {
+    expect(cp.execFile).toHaveBeenCalledTimes(1);
+    expect(cp.execFile).toHaveBeenCalledWith('test', ['arg1', 'arg2'], {
       cwd: '/test',
       shell: true,
-      stdio: 'pipe',
       windowsHide: true,
       env: expect.objectContaining({
         FORCE_COLOR: process.env.FORCE_COLOR || '1'
@@ -60,7 +62,7 @@ describe('SpawnTask.start', () => {
     const task = new SpawnTask('test', ['arg1', 'arg2'], { cwd: '/test' });
     const proc = new EventEmitter();
 
-    jest.spyOn(cp, 'spawn')
+    jest.spyOn(cp, 'execFile')
       .mockReturnValue(proc as cp.ChildProcess);
 
     const spy = jest.fn();
@@ -69,11 +71,10 @@ describe('SpawnTask.start', () => {
     // Start task
     task.start();
 
-    expect(cp.spawn).toHaveBeenCalledTimes(1);
-    expect(cp.spawn).toHaveBeenCalledWith('test', ['arg1', 'arg2'], {
+    expect(cp.execFile).toHaveBeenCalledTimes(1);
+    expect(cp.execFile).toHaveBeenCalledWith('test', ['arg1', 'arg2'], {
       cwd: '/test',
       shell: true,
-      stdio: 'pipe',
       windowsHide: true,
       env: expect.objectContaining({
         FORCE_COLOR: process.env.FORCE_COLOR || '1'
@@ -95,7 +96,7 @@ describe('SpawnTask.stop', () => {
     const proc = (new EventEmitter()) as cp.ChildProcess;
     proc.kill = () => true;
 
-    jest.spyOn(cp, 'spawn').mockReturnValue(proc);
+    jest.spyOn(cp, 'execFile').mockReturnValue(proc);
     jest.spyOn(proc, 'kill').mockImplementation();
 
     task.start();
@@ -115,7 +116,7 @@ describe('SpawnTask.stop', () => {
     const proc = (new EventEmitter()) as cp.ChildProcess;
     proc.kill = () => true;
 
-    jest.spyOn(cp, 'spawn').mockReturnValue(proc);
+    jest.spyOn(cp, 'execFile').mockReturnValue(proc);
     jest.spyOn(proc, 'kill').mockImplementation();
 
     task.start();
@@ -137,8 +138,82 @@ describe('SpawnTask.name', function () {
   });
 });
 
+describe('SpawnTask.streams', () => {
+  it('should yield all streamed data', async () => {
+    const task = new TestSpawnTask('test');
+    const streamsGen = task.streams();
+
+    // stdout
+    let prom = streamsGen.next();
+    task.emit('data', 'stdout', 'test stdout');
+    await expect(prom).resolves.toEqual({ value: ['stdout', 'test stdout'], done: false });
+
+    // stderr
+    prom = streamsGen.next();
+    task.emit('data', 'stderr', 'test stderr');
+    await expect(prom).resolves.toEqual({ value: ['stderr', 'test stderr'], done: false });
+  });
+
+  it('should end on done', async () => {
+    const task = new TestSpawnTask('test');
+    const streamsGen = task.streams();
+
+    // done
+    const prom = streamsGen.next();
+    task.emit('done');
+    await expect(prom).resolves.toEqual({ done: true });
+  });
+
+  it('should throw on failed', async () => {
+    const task = new TestSpawnTask('test');
+    const streamsGen = task.streams();
+
+    // failed
+    const prom = streamsGen.next();
+    task.emit('failed');
+    await expect(prom).rejects.toEqual(new SpawnTaskFailed(task));
+  });
+});
+
+for (const stream of ['stdout', 'stderr'] as SpawnTaskStream[]) {
+  const other = stream === 'stdout' ? 'stderr' : 'stdout';
+
+  describe(`SpawnTask.${stream}`, () => {
+    it('should yield all streamed data', async () => {
+      const task = new TestSpawnTask('test');
+      const streamGen = task[stream]();
+
+      // stdout
+      const prom = streamGen.next();
+      task.emit('data', other, `test ${other}`);
+      task.emit('data', stream, `test ${stream}`);
+      await expect(prom).resolves.toEqual({ value: `test ${stream}`, done: false });
+    });
+
+    it('should end on done', async () => {
+      const task = new TestSpawnTask('test');
+      const streamGen = task[stream]();
+
+      // done
+      const prom = streamGen.next();
+      task.emit('done');
+      await expect(prom).resolves.toEqual({ done: true });
+    });
+
+    it('should throw on failed', async () => {
+      const task = new TestSpawnTask('test');
+      const streamGen = task[stream]();
+
+      // failed
+      const prom = streamGen.next();
+      task.emit('failed');
+      await expect(prom).rejects.toEqual(new SpawnTaskFailed(task));
+    });
+  });
+}
+
 // Independent tests
-describe('spawned process standrad streams', () => {
+describe('spawned process standard streams', () => {
   test('SpawnTask should log and emit all received data', () => {
     // Start a task
     const task = new SpawnTask('test', [], {});
@@ -146,7 +221,7 @@ describe('spawned process standrad streams', () => {
     proc.stdout = (new EventEmitter()) as any;
     proc.stderr = (new EventEmitter()) as any;
 
-    jest.spyOn(cp, 'spawn').mockReturnValue(proc);
+    jest.spyOn(cp, 'execFile').mockReturnValue(proc);
     jest.spyOn(logger, 'log');
 
     const spy = jest.fn();
@@ -172,7 +247,7 @@ describe('spawned process standrad streams', () => {
     proc.stdout = (new EventEmitter()) as any;
     proc.stderr = (new EventEmitter()) as any;
 
-    jest.spyOn(cp, 'spawn').mockReturnValue(proc);
+    jest.spyOn(cp, 'execFile').mockReturnValue(proc);
     jest.spyOn(logger, 'log');
 
     task.start();
@@ -193,7 +268,7 @@ describe('spawned process standrad streams', () => {
     proc.stdout = (new EventEmitter()) as any;
     proc.stderr = (new EventEmitter()) as any;
 
-    jest.spyOn(cp, 'spawn').mockReturnValue(proc);
+    jest.spyOn(cp, 'execFile').mockReturnValue(proc);
     jest.spyOn(logger, 'log');
 
     task.start();
