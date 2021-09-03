@@ -1,8 +1,8 @@
 import path from 'path';
 
-import './logger';
+import './utils/logger';
 import { Project, Workspace, git } from '../src';
-import { TestSpawnTask } from './tasks/task';
+import { TestSpawnTask } from './utils/task';
 
 // Setup
 const root = path.resolve(__dirname, '../../../mock');

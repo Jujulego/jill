@@ -1,6 +1,6 @@
 import { Task, TaskManager } from '../src';
-import { TestTask } from './tasks/task';
-import './logger';
+import { TestTask } from './utils/task';
+import './utils/logger';
 
 // Setup
 let manager: TaskManager;

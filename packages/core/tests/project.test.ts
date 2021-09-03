@@ -3,7 +3,7 @@ import path from 'path';
 import glob from 'tiny-glob';
 
 import { Project, Workspace } from '../src';
-import './logger';
+import './utils/logger';
 
 // Mock
 jest.mock('tiny-glob');

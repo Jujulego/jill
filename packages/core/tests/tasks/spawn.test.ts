@@ -3,8 +3,8 @@ import { EventEmitter } from 'events';
 
 import { logger, SpawnTask, SpawnTaskFailed } from '../../src';
 
-import '../logger';
-import { TestSpawnTask } from './task';
+import '../utils/logger';
+import { TestSpawnTask } from '../utils/task';
 import { SpawnTaskStream } from '../../dist';
 
 beforeEach(() => {

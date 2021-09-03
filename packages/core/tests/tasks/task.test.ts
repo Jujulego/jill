@@ -1,7 +1,7 @@
 import { TaskStatus, Workspace } from '../../src';
 
-import '../logger';
-import { TestTask } from './task';
+import '../utils/logger';
+import { TestTask } from '../utils/task';
 
 beforeEach(() => {
   jest.resetAllMocks();
