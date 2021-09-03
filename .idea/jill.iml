@@ -10,8 +10,6 @@
       <excludeFolder url="file://$MODULE_DIR$/.tmp" />
       <excludeFolder url="file://$MODULE_DIR$/tmp" />
       <excludeFolder url="file://$MODULE_DIR$/packages/core/coverage" />
-      <excludeFolder url="file://$MODULE_DIR$/packages/core/dist" />
-      <excludeFolder url="file://$MODULE_DIR$/packages/cli/dist" />
       <excludeFolder url="file://$MODULE_DIR$/.yarn" />
       <excludeFolder url="file://$MODULE_DIR$/packages/cli/coverage" />
       <excludeFolder url="file://$MODULE_DIR$/packages/yarn-plugin/bundles" />

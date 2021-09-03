@@ -1,10 +1,11 @@
 import path from 'path';
 import { Logger } from 'winston';
 
+import { git } from './git';
 import { logger } from './logger';
 import type { Manifest } from './manifest';
 import { Project } from './project';
-import { git, SpawnTask, SpawnTaskOption, Task } from './tasks';
+import { SpawnTask, SpawnTaskOption, Task } from './tasks';
 import { combine } from './utils';
 
 // Types

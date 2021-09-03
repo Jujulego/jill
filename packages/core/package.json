@@ -8,8 +8,7 @@
   "scripts": {
     "lint": "eslint {src,tests}/**/*.*",
     "build": "tsc -p tsconfig.build.json",
-    "test": "jest",
-    "jill:build": "tsc -p tsconfig.build.json"
+    "test": "jest"
   },
   "engines": {
     "node": "^14"

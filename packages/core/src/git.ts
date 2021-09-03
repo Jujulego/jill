@@ -1,5 +1,5 @@
-import { SpawnTask, SpawnTaskOption } from './spawn';
-import { TaskManager } from '../task-manager';
+import { SpawnTask, SpawnTaskOption } from './tasks';
+import { TaskManager } from './task-manager';
 
 // Types
 export interface GitOptions extends SpawnTaskOption {
