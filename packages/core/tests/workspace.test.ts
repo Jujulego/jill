@@ -1,8 +1,8 @@
 import path from 'path';
 
-import * as utils from '../src/utils';
-import { Project, Workspace } from '../src';
-import './logger';
+import './utils/logger';
+import { Project, Workspace, git } from '../src';
+import { TestSpawnTask } from './utils/task';
 
 // Setup
 const root = path.resolve(__dirname, '../../../mock');
@@ -109,46 +109,47 @@ describe('Workspace.run', () => {
 
 describe('Workspace.isAffected', () => {
   it('should return true', async () => {
-    jest.spyOn(utils, 'spawn').mockResolvedValue({ stdout: ['test.ts'], stderr: [] });
+    const diff = new TestSpawnTask('git', ['diff']);
+    diff._setExitCode(1);
+
+    jest.spyOn(git, 'diff').mockReturnValue(diff);
 
     await expect(workspace.isAffected('test'))
         .resolves.toBe(true);
 
     // Checks
-    expect(utils.spawn).toHaveBeenCalledTimes(1);
-    expect(utils.spawn).toHaveBeenCalledWith(
-      'git',
-      ['diff', '--name-only', 'test', '--',  path.join(root, 'workspaces/test-a')],
+    expect(git.diff).toHaveBeenCalledTimes(1);
+    expect(git.diff).toHaveBeenCalledWith(
+      ['--quiet', 'test', '--',  path.join(root, 'workspaces/test-a')],
       expect.objectContaining({ cwd: root })
     );
   });
 
   it('should return false', async () => {
-    jest.spyOn(utils, 'spawn').mockResolvedValue({ stdout: [], stderr: [] });
+    const diff = new TestSpawnTask('git', ['diff']);
+    diff._setExitCode(0);
+
+    jest.spyOn(git, 'diff').mockReturnValue(diff);
 
     await expect(workspace.isAffected('test'))
         .resolves.toBe(false);
 
     // Checks
-    expect(utils.spawn).toHaveBeenCalledTimes(4);
-    expect(utils.spawn).toHaveBeenCalledWith(
-      'git',
-      ['diff', '--name-only', 'test', '--',  path.join(root, 'workspaces/test-a')],
+    expect(git.diff).toHaveBeenCalledTimes(4);
+    expect(git.diff).toHaveBeenCalledWith(
+      ['--quiet', 'test', '--',  path.join(root, 'workspaces/test-a')],
       expect.objectContaining({ cwd: root })
     );
-    expect(utils.spawn).toHaveBeenCalledWith(
-      'git',
-      ['diff', '--name-only', 'test', '--',  path.join(root, 'workspaces/test-b')],
+    expect(git.diff).toHaveBeenCalledWith(
+      ['--quiet', 'test', '--',  path.join(root, 'workspaces/test-b')],
       expect.objectContaining({ cwd: root })
     );
-    expect(utils.spawn).toHaveBeenCalledWith(
-      'git',
-      ['diff', '--name-only', 'test', '--',  path.join(root, 'workspaces/test-c')],
+    expect(git.diff).toHaveBeenCalledWith(
+      ['--quiet', 'test', '--',  path.join(root, 'workspaces/test-c')],
       expect.objectContaining({ cwd: root })
     );
-    expect(utils.spawn).toHaveBeenCalledWith(
-      'git',
-      ['diff', '--name-only', 'test', '--',  path.join(root, 'workspaces/test-d')],
+    expect(git.diff).toHaveBeenCalledWith(
+      ['--quiet', 'test', '--',  path.join(root, 'workspaces/test-d')],
       expect.objectContaining({ cwd: root })
     );
   });

@@ -1,8 +1,6 @@
-import { EventEmitter } from 'events';
-import cp from 'child_process';
-
 import { Task, TaskManager } from '../src';
-import './logger';
+import { TestTask } from './utils/task';
+import './utils/logger';
 
 // Setup
 let manager: TaskManager;
@@ -14,13 +12,13 @@ beforeEach(() => {
 // Test suites
 describe('TaskManager.add', () => {
   // Setup
-  const ta = new Task('task-a');
-  const tb = new Task('task-b');
-  const tc = new Task('task-c');
+  const ta = new TestTask('task-a');
+  const tb = new TestTask('task-b');
+  const tc = new TestTask('task-c');
 
-  ta.addDependency(tb); // complexity 3
-  ta.addDependency(tc); // complexity 1
-  tb.addDependency(tc); // complexity 0
+  ta.dependsOn(tb); // complexity 3
+  ta.dependsOn(tc); // complexity 1
+  tb.dependsOn(tc); // complexity 0
 
   // Tests
   it('should add task and it\'s dependencies, then sort by complexity', () => {
@@ -31,24 +29,19 @@ describe('TaskManager.add', () => {
 
 describe('TaskManager.start', () => {
   // Setup
-  const ta = new Task('task-a');
-  const tb = new Task('task-b');
-  const tc = new Task('task-c');
+  const ta = new TestTask('task-a');
+  const tb = new TestTask('task-b');
+  const tc = new TestTask('task-c');
 
-  ta.addDependency(tb); // complexity 3
-  ta.addDependency(tc); // complexity 1
-  tb.addDependency(tc); // complexity 0
+  ta.dependsOn(tb); // complexity 3
+  ta.dependsOn(tc); // complexity 1
+  tb.dependsOn(tc); // complexity 0
 
   // Tests
   it('should start all tasks, one after another', () => {
     jest.spyOn(ta, 'start');
     jest.spyOn(tb, 'start');
     jest.spyOn(tc, 'start');
-
-    const proc = new EventEmitter();
-
-    jest.spyOn(cp, 'spawn')
-      .mockReturnValue(proc as cp.ChildProcess);
 
     const spyStarted = jest.fn<void, [Task]>();
     manager.on('started', spyStarted);
@@ -61,7 +54,6 @@ describe('TaskManager.start', () => {
 
     // Start !
     manager.add(ta);
-    manager.start();
 
     // First task c should start
     expect(ta.start).not.toHaveBeenCalled();
@@ -70,8 +62,8 @@ describe('TaskManager.start', () => {
 
     expect(spyStarted).toHaveBeenCalledWith(tc);
 
-    // When c completes b should start
-    proc.emit('close', 0);
+    // When c completes, b should start
+    tc._setStatus('done');
 
     expect(ta.start).not.toHaveBeenCalled();
     expect(tb.start).toHaveBeenCalled();
@@ -79,8 +71,8 @@ describe('TaskManager.start', () => {
     expect(spyCompleted).toHaveBeenCalledWith(tc);
     expect(spyStarted).toHaveBeenCalledWith(tb);
 
-    // When b completes a should start
-    proc.emit('close', 0);
+    // When b completes, a should start
+    tb._setStatus('done');
 
     expect(ta.start).toHaveBeenCalled();
 
@@ -88,8 +80,8 @@ describe('TaskManager.start', () => {
     expect(spyStarted).toHaveBeenCalledWith(ta);
     expect(spyFinished).not.toHaveBeenCalled();
 
-    // When b completes a should start
-    proc.emit('close', 0);
+    // When a completes, manager should emit finished
+    ta._setStatus('done');
 
     expect(spyCompleted).toHaveBeenCalledWith(ta);
     expect(spyFinished).toHaveBeenCalled();

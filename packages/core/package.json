@@ -8,13 +8,13 @@
   "scripts": {
     "lint": "eslint {src,tests}/**/*.*",
     "build": "tsc -p tsconfig.build.json",
-    "test": "jest",
-    "jill:build": "tsc -p tsconfig.build.json"
+    "test": "jest"
   },
   "engines": {
     "node": "^14"
   },
   "dependencies": {
+    "@repeaterjs/repeater": "^3.0.4",
     "tiny-glob": "^0.2.9",
     "winston": "^3.3.3"
   },

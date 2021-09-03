@@ -1,14 +1,15 @@
 import path from 'path';
 import { Logger } from 'winston';
 
+import { git } from './git';
 import { logger } from './logger';
 import type { Manifest } from './manifest';
 import { Project } from './project';
-import { Task, TaskOptions } from './task';
-import { combine, spawn } from './utils';
+import { SpawnTask, SpawnTaskOption, Task } from './tasks';
+import { combine } from './utils';
 
 // Types
-export interface WorkspaceRunOptions extends Omit<TaskOptions, 'cwd'> {
+export interface WorkspaceRunOptions extends Omit<SpawnTaskOption, 'cwd'> {
   buildDeps?: 'all' | 'prod' | 'none';
 }
 
@@ -18,7 +19,7 @@ export class Workspace {
   private _lastBuild?: Task;
 
   private readonly _logger: Logger;
-  private readonly _isAffected = new Map<string, boolean>();
+  private readonly _isAffected = new Map<string, boolean | SpawnTask>();
 
   // Constructor
   constructor(
@@ -32,30 +33,43 @@ export class Workspace {
   // Methods
   private async _buildDependencies(task: Task) {
     for await (const dep of combine(this.dependencies(), this.devDependencies())) {
-      task.addDependency(await dep.build());
+      task.dependsOn(await dep.build());
     }
   }
 
   async isAffected(base: string): Promise<boolean> {
     let isAffected = this._isAffected.get(base);
 
-    if (isAffected === undefined) {
-      // Test workspace
-      const { stdout } = await spawn('git', ['diff', '--name-only', base, '--', this.cwd], {
-        cwd: this.project.root,
-        logger: this._logger
-      });
+    if (typeof isAffected !== 'boolean') {
+      // Run git diff
+      if (!(isAffected instanceof SpawnTask)) {
+        isAffected = git.diff(['--quiet', base, '--', this.cwd], {
+          cwd: this.project.root,
+          logger: this._logger,
+          streamLogLevel: 'debug'
+        });
 
-      isAffected = stdout.length > 0;
+        this._isAffected.set(base, isAffected);
+      }
 
+      // Wait for git diff to end and parse exit code
+      if (!['done', 'failed'].includes(isAffected.status)) {
+        await isAffected.waitFor('done', 'failed');
+      }
+
+      isAffected = isAffected.exitCode !== 0;
+
+      // If not affected check for workspaces
       if (!isAffected) {
         // Test it's dependencies
+        const proms: Promise<boolean>[] = [];
+
         for await (const dep of combine(this.dependencies(), this.devDependencies())) {
-          if (await dep.isAffected(base)) {
-            isAffected = true;
-            break;
-          }
+          proms.push(dep.isAffected(base));
         }
+
+        const results = await Promise.all(proms);
+        isAffected = results.some(r => r);
       }
 
       this._isAffected.set(base, isAffected);
@@ -91,7 +105,7 @@ export class Workspace {
   async run(script: string, args: string[] = [], opts: WorkspaceRunOptions = {}): Promise<Task> {
     const pm = await this.project.packageManager();
 
-    const task = new Task(pm, ['run', script, ...args], {
+    const task = new SpawnTask(pm, ['run', script, ...args], {
       ...opts,
       cwd: this.cwd,
       logger: this._logger,

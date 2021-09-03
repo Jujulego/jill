@@ -5,6 +5,7 @@ import glob from 'tiny-glob';
 import type { Manifest } from './manifest';
 import { logger } from './logger';
 import { Workspace } from './workspace';
+import { AsyncLock } from './lock';
 
 // Types
 export type PackageManager = 'npm' | 'yarn';
@@ -21,6 +22,7 @@ export class Project {
 
   private _packageManager?: PackageManager;
   private _isFullyLoaded = false;
+  private _lock = new AsyncLock();
 
   // Constructor
   constructor(
@@ -75,17 +77,19 @@ export class Project {
   }
 
   private async _loadWorkspace(dir: string): Promise<Workspace> {
-    let ws = this._workspaces.get(dir);
+    return await this._lock.with(async () => {
+      let wks = this._workspaces.get(dir);
 
-    if (!ws) {
-      const manifest = await this._loadManifest(dir);
-      ws = new Workspace(dir, manifest, this);
+      if (!wks) {
+        const manifest = await this._loadManifest(dir);
+        wks = new Workspace(dir, manifest, this);
 
-      this._workspaces.set(dir, ws);
-      this._names.set(ws.name, ws);
-    }
+        this._workspaces.set(dir, wks);
+        this._names.set(wks.name, wks);
+      }
 
-    return ws;
+      return wks;
+    });
   }
 
   async packageManager(): Promise<PackageManager> {
@@ -153,7 +157,7 @@ export class Project {
             const stat = await fs.stat(file);
 
             if (stat.isDirectory()) {
-              yield this._loadWorkspace(dir);
+              yield await this._loadWorkspace(dir);
             }
 
           } catch (error) {
@@ -178,10 +182,8 @@ export class Project {
     }
 
     // Try name index
-    const ws = this._names.get(name);
-    if (ws) {
-      return ws;
-    }
+    const wks = this._names.get(name);
+    if (wks) return wks;
 
     if (this._isFullyLoaded) {
       return null;

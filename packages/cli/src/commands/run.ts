@@ -23,17 +23,15 @@ export const runCommand: CommandHandler<RunArgs> = async (prj, argv) => {
   }
 
   // Run build task
-  const manager = new TaskManager();
   const task = await wks.run(argv.script, argv['--']?.map(arg => arg.toString()));
-  manager.add(task);
+  TaskManager.global.add(task);
 
   const tlogger = new TaskLogger();
-  tlogger.on('spin-simple', (tsk) => tsk === task ? `Running ${argv.script} in ${wks.name} ...` : `Building ${tsk.context.workspace?.name || tsk.cwd} ...`);
-  tlogger.on('fail', (tsk) => tsk === task ? `${argv.script} failed` : `Failed to build ${tsk.context.workspace?.name || tsk.cwd}`);
-  tlogger.on('succeed', (tsk) => tsk === task ? `${wks.name} ${argv.script} done` : `${tsk.context.workspace?.name || tsk.cwd} built`);
-  tlogger.connect(manager);
+  tlogger.on('spin-simple', (tsk) => tsk === task ? `Running ${argv.script} in ${wks.name} ...` : `Building ${tsk.context.workspace?.name} ...`);
+  tlogger.on('fail', (tsk) => tsk === task ? `${argv.script} failed` : `Failed to build ${tsk.context.workspace?.name}`);
+  tlogger.on('succeed', (tsk) => tsk === task ? `${wks.name} ${argv.script} done` : `${tsk.context.workspace?.name} built`);
+  tlogger.connect(TaskManager.global);
 
-  manager.start();
-  await manager.waitFor('finished');
+  await TaskManager.global.waitFor('finished');
   return 0;
 };

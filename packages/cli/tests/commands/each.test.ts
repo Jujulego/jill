@@ -1,8 +1,7 @@
 import { Project, TaskManager, Workspace } from '@jujulego/jill-core';
 
-import { eachCommand, logger } from '../../src';
-
 import { MockTask } from '../../mocks/task';
+import { eachCommand, logger } from '../../src';
 import '../logger';
 
 // Setup
@@ -35,15 +34,14 @@ describe('jill each', () => {
 
   it('should exit 0 when manager is finished', async () => {
     const wks = new Workspace('./wks', { name: 'wks', version: '1.0.0', scripts: { test: 'test' } }, project);
-    const tsk = new MockTask('test', [], { context: { workspace: wks }});
+    const tsk = new MockTask('test', { context: { workspace: wks }});
 
     jest.spyOn(project, 'workspaces').mockImplementation(async function* () { yield wks; });
     jest.spyOn(wks, 'run').mockResolvedValue(tsk);
 
-    jest.spyOn(TaskManager.prototype, 'add').mockImplementation();
-    jest.spyOn(TaskManager.prototype, 'on').mockImplementation();
-    jest.spyOn(TaskManager.prototype, 'start').mockImplementation();
-    jest.spyOn(TaskManager.prototype, 'waitFor').mockResolvedValue([]);
+    jest.spyOn(TaskManager.global, 'add').mockImplementation();
+    jest.spyOn(TaskManager.global, 'on').mockImplementation();
+    jest.spyOn(TaskManager.global, 'waitFor').mockResolvedValue([]);
 
     // Call
     await expect(eachCommand(project, { script: 'test', affected: undefined, private: undefined, '--': ['--arg', 1] }))
@@ -54,27 +52,25 @@ describe('jill each', () => {
     expect(project.workspaces).toHaveBeenCalled();
     expect(logger.verbose).toHaveBeenCalledWith('Will run test in wks');
     expect(wks.run).toHaveBeenCalledWith('test', ['--arg', '1']);
-    expect(TaskManager.prototype.add).toHaveBeenCalledWith(tsk);
-    expect(TaskManager.prototype.start).toHaveBeenCalled();
-    expect(TaskManager.prototype.on).toHaveBeenCalledWith('started', expect.any(Function));
-    expect(TaskManager.prototype.on).toHaveBeenCalledWith('completed', expect.any(Function));
-    expect(TaskManager.prototype.waitFor).toHaveBeenCalledWith('finished');
+    expect(TaskManager.global.add).toHaveBeenCalledWith(tsk);
+    expect(TaskManager.global.on).toHaveBeenCalledWith('started', expect.any(Function));
+    expect(TaskManager.global.on).toHaveBeenCalledWith('completed', expect.any(Function));
+    expect(TaskManager.global.waitFor).toHaveBeenCalledWith('finished');
   });
 
   it('should filter workspaces without script', async () => {
     const wks1 = new Workspace('./wks-1', { name: 'wks-1', version: '1.0.0', scripts: { test: 'test' } }, project);
     const wks2 = new Workspace('./wks-2', { name: 'wks-2', version: '1.0.0' }, project);
-    const tsk1 = new MockTask('test', [], { context: { workspace: wks1 }});
-    const tsk2 = new MockTask('test', [], { context: { workspace: wks2 }});
+    const tsk1 = new MockTask('test', { context: { workspace: wks1 }});
+    const tsk2 = new MockTask('test', { context: { workspace: wks2 }});
 
     jest.spyOn(project, 'workspaces').mockImplementation(async function* () { yield wks1; yield wks2; });
     jest.spyOn(wks1, 'run').mockResolvedValue(tsk1);
     jest.spyOn(wks2, 'run').mockResolvedValue(tsk2);
 
-    jest.spyOn(TaskManager.prototype, 'add').mockImplementation();
-    jest.spyOn(TaskManager.prototype, 'on').mockReturnThis();
-    jest.spyOn(TaskManager.prototype, 'start').mockImplementation();
-    jest.spyOn(TaskManager.prototype, 'waitFor').mockResolvedValue([]);
+    jest.spyOn(TaskManager.global, 'add').mockImplementation();
+    jest.spyOn(TaskManager.global, 'on').mockReturnThis();
+    jest.spyOn(TaskManager.global, 'waitFor').mockResolvedValue([]);
 
     // Call
     await expect(eachCommand(project, { script: 'test', affected: undefined, private: undefined }))
@@ -89,17 +85,16 @@ describe('jill each', () => {
   it('should filter private workspaces', async () => {
     const wks1 = new Workspace('./wks-1', { name: 'wks-1', version: '1.0.0', private: true, scripts: { test: 'test' } }, project);
     const wks2 = new Workspace('./wks-2', { name: 'wks-2', version: '1.0.0', scripts: { test: 'test' } }, project);
-    const tsk1 = new MockTask('test', [], { context: { workspace: wks1 }});
-    const tsk2 = new MockTask('test', [], { context: { workspace: wks2 }});
+    const tsk1 = new MockTask('test', { context: { workspace: wks1 }});
+    const tsk2 = new MockTask('test', { context: { workspace: wks2 }});
 
     jest.spyOn(project, 'workspaces').mockImplementation(async function* () { yield wks1; yield wks2; });
     jest.spyOn(wks1, 'run').mockResolvedValue(tsk1);
     jest.spyOn(wks2, 'run').mockResolvedValue(tsk2);
 
-    jest.spyOn(TaskManager.prototype, 'add').mockImplementation();
-    jest.spyOn(TaskManager.prototype, 'on').mockReturnThis();
-    jest.spyOn(TaskManager.prototype, 'start').mockImplementation();
-    jest.spyOn(TaskManager.prototype, 'waitFor').mockResolvedValue([]);
+    jest.spyOn(TaskManager.global, 'add').mockImplementation();
+    jest.spyOn(TaskManager.global, 'on').mockReturnThis();
+    jest.spyOn(TaskManager.global, 'waitFor').mockResolvedValue([]);
 
     // Call
     await expect(eachCommand(project, { script: 'test', affected: undefined, private: true }))
@@ -113,8 +108,8 @@ describe('jill each', () => {
   it('should filter affected workspaces', async () => {
     const wks1 = new Workspace('./wks-1', { name: 'wks-1', version: '1.0.0', scripts: { test: 'test' } }, project);
     const wks2 = new Workspace('./wks-2', { name: 'wks-2', version: '1.0.0', scripts: { test: 'test' } }, project);
-    const tsk1 = new MockTask('test', [], { context: { workspace: wks1 }});
-    const tsk2 = new MockTask('test', [], { context: { workspace: wks2 }});
+    const tsk1 = new MockTask('test', { context: { workspace: wks1 }});
+    const tsk2 = new MockTask('test', { context: { workspace: wks2 }});
 
     jest.spyOn(project, 'workspaces').mockImplementation(async function* () { yield wks1; yield wks2; });
     jest.spyOn(wks1, 'run').mockResolvedValue(tsk1);
@@ -122,10 +117,9 @@ describe('jill each', () => {
     jest.spyOn(wks2, 'run').mockResolvedValue(tsk2);
     jest.spyOn(wks2, 'isAffected').mockResolvedValue(false);
 
-    jest.spyOn(TaskManager.prototype, 'add').mockImplementation();
-    jest.spyOn(TaskManager.prototype, 'on').mockReturnThis();
-    jest.spyOn(TaskManager.prototype, 'start').mockImplementation();
-    jest.spyOn(TaskManager.prototype, 'waitFor').mockResolvedValue([]);
+    jest.spyOn(TaskManager.global, 'add').mockImplementation();
+    jest.spyOn(TaskManager.global, 'on').mockReturnThis();
+    jest.spyOn(TaskManager.global, 'waitFor').mockResolvedValue([]);
 
     // Call
     await expect(eachCommand(project, { script: 'test', affected: 'test', private: undefined }))

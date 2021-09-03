@@ -2,7 +2,7 @@ import os from 'os';
 
 import { EventEmitter } from './event-emitter';
 import { logger } from './logger';
-import { Task } from './task';
+import { Task } from './tasks';
 
 // Types
 export type TaskManagerEventMap = {
@@ -24,6 +24,17 @@ export class TaskManager extends EventEmitter<TaskManagerEventMap> {
   ) {
     super();
     logger.verbose(`Run up to ${jobs} tasks at the same time`);
+  }
+
+  // Statics
+  private static _instance?: TaskManager;
+
+  static get global(): TaskManager {
+    if (!this._instance) {
+      this._instance = new TaskManager();
+    }
+
+    return this._instance;
   }
 
   // Methods
@@ -77,9 +88,6 @@ export class TaskManager extends EventEmitter<TaskManagerEventMap> {
   add(task: Task): void {
     this._add(task);
     this._sortByComplexity();
-  }
-
-  start(): void {
     this._startNext();
   }
 
