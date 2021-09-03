@@ -91,13 +91,6 @@ export class TaskManager extends EventEmitter<TaskManagerEventMap> {
     this._startNext();
   }
 
-  /**
-   * @deprecated Useless tasks started on add
-   */
-  start(): void {
-    this._startNext();
-  }
-
   // Properties
   get tasks(): Task[] {
     return this._tasks;

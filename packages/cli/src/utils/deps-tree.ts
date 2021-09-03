@@ -35,7 +35,7 @@ async function printTree(wks: Workspace, level: string, dev: boolean, printed: S
   }
 }
 
-export async function printDepsTree(wks: Workspace) {
+export async function printDepsTree(wks: Workspace): Promise<void> {
   console.log(chalk`{bold Dependencies:}`);
   const printed = new Set([wks.name]);
 

@@ -21,13 +21,11 @@ export const buildCommand: CommandHandler<BuildArgs> = async (prj, argv) => {
   }
 
   // Run build task
-  const manager = new TaskManager();
-  manager.add(await wks.build());
+  TaskManager.global.add(await wks.build());
 
   const tlogger = new TaskLogger();
-  tlogger.connect(manager);
+  tlogger.connect(TaskManager.global);
 
-  manager.start();
-  await manager.waitFor('finished');
+  await TaskManager.global.waitFor('finished');
   return 0;
 };

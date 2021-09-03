@@ -48,14 +48,13 @@ export const eachCommand: CommandHandler<EachArgs> = async (prj, argv) => {
   logger.verbose(`Will run ${argv.script} in ${workspaces.map(wks => wks.name).join(', ')}`);
 
   // Run tasks
-  const manager = new TaskManager();
   const tasks: Task[] = [];
 
   for (const wks of workspaces) {
     const task = await wks.run(argv.script, argv['--']?.map(arg => arg.toString()));
 
     tasks.push(task);
-    manager.add(task);
+    TaskManager.global.add(task);
   }
 
   const tlogger = new TaskLogger();
@@ -63,9 +62,8 @@ export const eachCommand: CommandHandler<EachArgs> = async (prj, argv) => {
   tlogger.on('spin-simple', (tsk) => tasks.includes(tsk) ? `Running ${argv.script} in ${tsk.context.workspace?.name} ...` : `Building ${tsk.context.workspace?.name} ...`);
   tlogger.on('fail', (tsk) => tasks.includes(tsk) ? `${tsk.context.workspace?.name} ${argv.script} failed` : `Failed to build ${tsk.context.workspace?.name}`);
   tlogger.on('succeed', (tsk) => tasks.includes(tsk) ? `${tsk.context.workspace?.name} ${argv.script} done` : `${tsk.context.workspace?.name} built`);
-  tlogger.connect(manager);
+  tlogger.connect(TaskManager.global);
 
-  manager.start();
-  await manager.waitFor('finished');
+  await TaskManager.global.waitFor('finished');
   return 0;
 };
