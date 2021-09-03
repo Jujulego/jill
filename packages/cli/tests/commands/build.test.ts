@@ -53,10 +53,9 @@ describe('jill build', () => {
     jest.spyOn(project, 'workspace').mockResolvedValue(wks);
     jest.spyOn(wks, 'build').mockResolvedValue(tsk);
 
-    jest.spyOn(TaskManager.prototype, 'add').mockImplementation();
-    jest.spyOn(TaskManager.prototype, 'on').mockImplementation();
-    jest.spyOn(TaskManager.prototype, 'start').mockImplementation();
-    jest.spyOn(TaskManager.prototype, 'waitFor').mockResolvedValue([]);
+    jest.spyOn(TaskManager.global, 'add').mockImplementation();
+    jest.spyOn(TaskManager.global, 'on').mockImplementation();
+    jest.spyOn(TaskManager.global, 'waitFor').mockResolvedValue([]);
 
     // Call
     await expect(buildCommand(project, { workspace: 'wks' }))
@@ -66,11 +65,10 @@ describe('jill build', () => {
     expect(logger.spin).toHaveBeenCalledWith('Loading project');
     expect(project.workspace).toHaveBeenCalledWith('wks');
     expect(wks.build).toHaveBeenCalled();
-    expect(TaskManager.prototype.add).toHaveBeenCalledWith(tsk);
-    expect(TaskManager.prototype.start).toHaveBeenCalled();
-    expect(TaskManager.prototype.on).toHaveBeenCalledWith('started', expect.any(Function));
-    expect(TaskManager.prototype.on).toHaveBeenCalledWith('completed', expect.any(Function));
-    expect(TaskManager.prototype.waitFor).toHaveBeenCalledWith('finished');
+    expect(TaskManager.global.add).toHaveBeenCalledWith(tsk);
+    expect(TaskManager.global.on).toHaveBeenCalledWith('started', expect.any(Function));
+    expect(TaskManager.global.on).toHaveBeenCalledWith('completed', expect.any(Function));
+    expect(TaskManager.global.waitFor).toHaveBeenCalledWith('finished');
   });
 
   it('should use current workspace', async () => {
@@ -81,10 +79,9 @@ describe('jill build', () => {
     jest.spyOn(project, 'currentWorkspace').mockResolvedValue(wks);
     jest.spyOn(wks, 'build').mockResolvedValue(tsk);
 
-    jest.spyOn(TaskManager.prototype, 'add').mockImplementation();
-    jest.spyOn(TaskManager.prototype, 'on').mockReturnThis();
-    jest.spyOn(TaskManager.prototype, 'start').mockImplementation();
-    jest.spyOn(TaskManager.prototype, 'waitFor').mockResolvedValue([]);
+    jest.spyOn(TaskManager.global, 'add').mockImplementation();
+    jest.spyOn(TaskManager.global, 'on').mockReturnThis();
+    jest.spyOn(TaskManager.global, 'waitFor').mockResolvedValue([]);
 
     // Call
     await expect(buildCommand(project, { workspace: undefined }))
@@ -94,10 +91,9 @@ describe('jill build', () => {
     expect(logger.spin).toHaveBeenCalledWith('Loading project');
     expect(project.currentWorkspace).toHaveBeenCalled();
     expect(wks.build).toHaveBeenCalled();
-    expect(TaskManager.prototype.add).toHaveBeenCalledWith(tsk);
-    expect(TaskManager.prototype.start).toHaveBeenCalled();
-    expect(TaskManager.prototype.on).toHaveBeenCalledWith('started', expect.any(Function));
-    expect(TaskManager.prototype.on).toHaveBeenCalledWith('completed', expect.any(Function));
-    expect(TaskManager.prototype.waitFor).toHaveBeenCalledWith('finished');
+    expect(TaskManager.global.add).toHaveBeenCalledWith(tsk);
+    expect(TaskManager.global.on).toHaveBeenCalledWith('started', expect.any(Function));
+    expect(TaskManager.global.on).toHaveBeenCalledWith('completed', expect.any(Function));
+    expect(TaskManager.global.waitFor).toHaveBeenCalledWith('finished');
   });
 });
