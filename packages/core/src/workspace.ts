@@ -5,7 +5,7 @@ import { logger } from './logger';
 import type { Manifest } from './manifest';
 import { Project } from './project';
 import { SpawnTask, SpawnTaskOption, Task } from './tasks';
-import { combine, spawn } from './utils';
+import { combine } from './utils';
 import { git } from './tasks/git';
 
 // Types
