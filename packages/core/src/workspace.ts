@@ -19,7 +19,7 @@ export class Workspace {
   private _lastBuild?: Task;
 
   private readonly _logger: Logger;
-  private readonly _isAffected = new Map<string, boolean>();
+  private readonly _isAffected = new Map<string, boolean | SpawnTask>();
 
   // Constructor
   constructor(
@@ -40,16 +40,26 @@ export class Workspace {
   async isAffected(base: string): Promise<boolean> {
     let isAffected = this._isAffected.get(base);
 
-    if (isAffected === undefined) {
-      // Test workspace
-      let count = 0;
+    if (typeof isAffected !== 'boolean') {
+      // Run git diff
+      if (!(isAffected instanceof SpawnTask)) {
+        isAffected = git.diff(['--quiet', base, '--', this.cwd], {
+          cwd: this.project.root,
+          logger: this._logger,
+          streamLogLevel: 'debug'
+        });
 
-      for await (const file of git.diff(['--name-only', base, '--', this.cwd], { cwd: this.project.root, logger: this._logger, streamLogLevel: 'debug' })) {
-        ++count;
+        this._isAffected.set(base, isAffected);
       }
 
-      isAffected = count > 0;
+      // Wait for git diff to end and parse exit code
+      if (!['done', 'failed'].includes(isAffected.status)) {
+        await isAffected.waitFor('done', 'failed');
+      }
 
+      isAffected = isAffected.exitCode !== 0;
+
+      // If not affected check for workspaces
       if (!isAffected) {
         // Test it's dependencies
         const proms: Promise<boolean>[] = [];

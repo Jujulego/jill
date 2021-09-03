@@ -3,13 +3,19 @@ import * as events from 'events';
 
 // Types
 export type Event = string | symbol;
-export type EventMap = Record<Event, any[]>;
+export type EventMap = Record<Event, unknown[]>;
 export type EventListener<M extends EventMap, E extends keyof M> = (...args: M[E]) => void;
 
 // Class
 export class EventEmitter<M extends EventMap> extends events.EventEmitter {
   // Methods
-  async waitFor<E extends keyof M>(event: E): Promise<M[E]> {
+  async waitFor<E extends keyof M>(...events: E[]): Promise<M[E]> {
+    if (events.length > 1) {
+      return await Promise.race(events.map(event => this.waitFor(event)));
+    }
+
+    const event = events[0];
+
     return new Promise<M[E]>(resolve => {
       this.once(event, (...args) => resolve(args));
     });

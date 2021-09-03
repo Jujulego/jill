@@ -28,7 +28,7 @@ export class SpawnTaskFailed extends Error {
 export class SpawnTask extends Task<SpawnTaskEventMap> {
   // Attributes
   private _process?: ChildProcess;
-  private _exitCode: number | null = null;
+  protected _exitCode: number | null = null;
   private readonly _streamLogLevel: Record<SpawnTaskStream, string> = {
     stdout: 'info',
     stderr: 'info',
@@ -58,9 +58,17 @@ export class SpawnTask extends Task<SpawnTaskEventMap> {
   }
 
   // Methods
-  private _logStream(stream: 'stdout' | 'stderr', msg: string): void {
+  private _streamData(stream: 'stdout' | 'stderr', buf: Buffer): void {
+    // Parse message
+    const msg = buf.toString('utf-8').replace(/\n$/, '');
+
     // Log message
-    this._logger.log(this._streamLogLevel[stream], msg.replace(/\n$/, ''));
+    this._logger.log(this._streamLogLevel[stream], msg);
+
+    // Emit event
+    for (const line of msg.split('\n')) {
+      this.emit('data', stream, line);
+    }
   }
 
   protected _start(): void {
@@ -77,17 +85,11 @@ export class SpawnTask extends Task<SpawnTaskEventMap> {
     });
 
     this._process.stdout?.on('data', (buf: Buffer) => {
-      const msg = buf.toString('utf-8');
-
-      this._logStream('stdout', msg);
-      this.emit('data', 'stdout', msg);
+      this._streamData('stdout', buf);
     });
 
     this._process.stderr?.on('data', (buf: Buffer) => {
-      const msg = buf.toString('utf-8');
-
-      this._logStream('stderr', msg);
-      this.emit('data', 'stderr', msg);
+      this._streamData('stderr', buf);
     });
 
     this._process.on('close', (code) => {
