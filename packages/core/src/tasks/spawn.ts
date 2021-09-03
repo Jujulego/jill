@@ -1,5 +1,5 @@
 import { Repeater } from '@repeaterjs/repeater';
-import { spawn, ChildProcess } from 'child_process';
+import { execFile, ChildProcess } from 'child_process';
 
 import { Task, TaskEventMap, TaskOptions } from './task';
 
@@ -72,10 +72,9 @@ export class SpawnTask extends Task<SpawnTaskEventMap> {
   }
 
   protected _start(): void {
-    this._process = spawn(this.cmd, this.args, {
+    this._process = execFile(this.cmd, this.args, {
       cwd: this.cwd,
       shell: true,
-      stdio: 'pipe',
       windowsHide: true,
       env: {
         FORCE_COLOR: '1',
