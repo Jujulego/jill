@@ -1,4 +1,3 @@
-import { Repeater } from '@repeaterjs/repeater';
 import * as events from 'events';
 
 // Types
@@ -18,20 +17,6 @@ export class EventEmitter<M extends EventMap> extends events.EventEmitter {
 
     return new Promise<M[E]>(resolve => {
       this.once(event, (...args) => resolve(args));
-    });
-  }
-
-  follow<E extends keyof M>(event: E): Repeater<M[E], void> {
-    return new Repeater(async (push, stop) => {
-      // Setup listener
-      function listener(...args: M[E]) {
-        push(args);
-      }
-      this.on(event, listener);
-
-      // Stop listening event
-      await stop;
-      this.off(event, listener);
     });
   }
 }
