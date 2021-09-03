@@ -5,8 +5,8 @@ import { logger } from './logger';
 import type { Manifest } from './manifest';
 import { Project } from './project';
 import { SpawnTask, SpawnTaskOption, Task } from './tasks';
-import { combine } from './utils';
 import { git } from './tasks/git';
+import { combine } from './utils';
 
 // Types
 export interface WorkspaceRunOptions extends Omit<SpawnTaskOption, 'cwd'> {
@@ -52,12 +52,14 @@ export class Workspace {
 
       if (!isAffected) {
         // Test it's dependencies
+        const proms: Promise<boolean>[] = [];
+
         for await (const dep of combine(this.dependencies(), this.devDependencies())) {
-          if (await dep.isAffected(base)) {
-            isAffected = true;
-            break;
-          }
+          proms.push(dep.isAffected(base));
         }
+
+        const results = await Promise.all(proms);
+        isAffected = results.some(r => r);
       }
 
       this._isAffected.set(base, isAffected);
