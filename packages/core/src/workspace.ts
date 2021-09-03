@@ -4,8 +4,7 @@ import { Logger } from 'winston';
 import { logger } from './logger';
 import type { Manifest } from './manifest';
 import { Project } from './project';
-import { SpawnTask, SpawnTaskOption, Task } from './tasks';
-import { git } from './tasks/git';
+import { git, SpawnTask, SpawnTaskOption, Task } from './tasks';
 import { combine } from './utils';
 
 // Types
