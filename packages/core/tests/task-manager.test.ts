@@ -54,7 +54,6 @@ describe('TaskManager.start', () => {
 
     // Start !
     manager.add(ta);
-    manager.start();
 
     // First task c should start
     expect(ta.start).not.toHaveBeenCalled();
