@@ -1,7 +1,27 @@
 import { Workspace } from '@jujulego/jill-core';
 
 // Class
-export abstract class Filter {
+export class Filter {
+  // Constructor
+  constructor(
+    private _predicate?: (workspace: Workspace) => boolean
+  ) {}
+
+  // Statics
+  static privateWorkspace(value: boolean): Filter {
+    return new Filter((wks) => (wks.manifest.private ?? false) === value);
+  }
+
+  static scripts(values: string[]): Filter {
+    return new Filter((wks) => {
+      const scripts = Object.keys(wks.manifest.scripts || {});
+      return values.every(scr => scripts.includes(scr));
+    });
+  }
+
   // Methods
-  abstract test(workspace: Workspace): Promise<boolean>;
+  async test(workspace: Workspace): Promise<boolean> {
+    if (!this._predicate) return true;
+    return this._predicate(workspace);
+  }
 }
