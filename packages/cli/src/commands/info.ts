@@ -25,7 +25,7 @@ export const infoCommand: CommandHandler<InfoArgs> = async (prj, argv) => {
 
   // Print data
   console.log(chalk`Workspace {bold ${wks.name}}:`);
-  console.log(chalk`{bold Version:}   ${wks.manifest.version}`);
+  console.log(chalk`{bold Version:}   ${wks.manifest.version || chalk.grey('unset')}`);
   console.log(chalk`{bold Directory:} ${path.relative(process.cwd(), wks.cwd) || '.'}`);
   console.log('');
   await printDepsTree(wks);

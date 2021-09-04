@@ -38,6 +38,7 @@ jobs:
 
       matrix:
         package:
+          - 'jill-e2e'
           - '@jujulego/jill'
           - '@jujulego/jill-core'
           - '@jujulego/yarn-plugin-jill'

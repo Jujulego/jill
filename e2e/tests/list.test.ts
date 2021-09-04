@@ -10,7 +10,7 @@ describe('jill list', () => {
       .resolves.toEqual({
         code: 0,
         stderr: [
-          "- Loading project"
+          '- Loading project'
         ],
         stdout: [
           chalk`mock-root  `,
@@ -27,7 +27,7 @@ describe('jill list', () => {
       .resolves.toEqual({
         code: 0,
         stderr: [
-          "- Loading project"
+          '- Loading project'
         ],
         stdout: [
           chalk`mock-root`,
@@ -40,7 +40,7 @@ describe('jill list', () => {
       .resolves.toEqual({
         code: 0,
         stderr: [
-          "- Loading project"
+          '- Loading project'
         ],
         stdout: [
           chalk`mock-test-a`,
@@ -56,7 +56,7 @@ describe('jill list', () => {
       .resolves.toEqual({
         code: 0,
         stderr: [
-          "- Loading project"
+          '- Loading project'
         ],
         stdout: [
           chalk`mock-test-a`,
@@ -69,7 +69,7 @@ describe('jill list', () => {
       .resolves.toEqual({
         code: 0,
         stderr: [
-          "- Loading project"
+          '- Loading project'
         ],
         stdout: [
           chalk`{bold Name       }  {bold Version}`,
@@ -87,7 +87,7 @@ describe('jill list', () => {
       .resolves.toEqual({
         code: 0,
         stderr: [
-          "- Loading project"
+          '- Loading project'
         ],
         stdout: [
           chalk`{bold Name       }`,
@@ -105,7 +105,7 @@ describe('jill list', () => {
       .resolves.toEqual({
         code: 0,
         stderr: [
-          "- Loading project"
+          '- Loading project'
         ],
         stdout: [
           chalk`{bold Name       }  {bold Version}  {bold Root             }`,
@@ -123,34 +123,34 @@ describe('jill list', () => {
 
     expect(result.code).toBe(0);
     expect(result.stderr).toEqual([
-      "- Loading project"
+      '- Loading project'
     ]);
 
     expect(JSON.parse(result.stdout.join('\n'))).toEqual([
       {
-        name: "mock-root",
+        name: 'mock-root',
         version: undefined,
         root: MOCK,
       },
       {
-        name: "mock-test-a",
+        name: 'mock-test-a',
         version: undefined,
-        root: path.join(MOCK, "workspaces", "test-a"),
+        root: path.join(MOCK, 'workspaces', 'test-a'),
       },
       {
-        name: "mock-test-b",
+        name: 'mock-test-b',
         version: undefined,
-        root: path.join(MOCK, "workspaces", "test-b"),
+        root: path.join(MOCK, 'workspaces', 'test-b'),
       },
       {
-        name: "mock-test-c",
+        name: 'mock-test-c',
         version: undefined,
-        root: path.join(MOCK, "workspaces", "test-c"),
+        root: path.join(MOCK, 'workspaces', 'test-c'),
       },
       {
-        name: "mock-test-d",
+        name: 'mock-test-d',
         version: undefined,
-        root: path.join(MOCK, "workspaces", "test-d"),
+        root: path.join(MOCK, 'workspaces', 'test-d'),
       },
     ]);
   });
