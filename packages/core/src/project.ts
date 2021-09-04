@@ -10,7 +10,7 @@ import { AsyncLock } from './lock';
 // Types
 export type PackageManager = 'npm' | 'yarn';
 export interface ProjectOptions {
-  packageManager?: PackageManager;
+  packageManager?: PackageManager | undefined;
 }
 
 // Class

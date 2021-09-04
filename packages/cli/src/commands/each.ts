@@ -7,7 +7,7 @@ import { TaskLogger } from '../task-logger';
 // Types
 export interface EachArgs {
   script: string;
-  '--'?: (string | number)[];
+  '--'?: (string | number)[] | undefined;
 
   // Filters
   affected: string | undefined;
