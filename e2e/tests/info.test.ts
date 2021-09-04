@@ -10,11 +10,11 @@ describe('jill info', () => {
       .resolves.toEqual({
         code: 0,
         stderr: [
-          "- Loading project"
+          '- Loading project'
         ],
         stdout: [
           chalk`Workspace {bold mock-root}:`,
-          chalk`{bold Version:}   undefined`,
+          chalk`{bold Version:}   {grey unset}`,
           chalk`{bold Directory:} .`,
           chalk``,
           chalk`{bold Dependencies:}`,
@@ -28,11 +28,11 @@ describe('jill info', () => {
       .resolves.toEqual({
         code: 0,
         stderr: [
-          "- Loading project"
+          '- Loading project'
         ],
         stdout: [
           chalk`Workspace {bold mock-test-a}:`,
-          chalk`{bold Version:}   undefined`,
+          chalk`{bold Version:}   {grey unset}`,
           chalk`{bold Directory:} workspaces${path.sep}test-a`,
           chalk``,
           chalk`{bold Dependencies:}`,
@@ -50,11 +50,11 @@ describe('jill info', () => {
       .resolves.toEqual({
         code: 0,
         stderr: [
-          "- Loading project"
+          '- Loading project'
         ],
         stdout: [
           chalk`Workspace {bold mock-test-a}:`,
-          chalk`{bold Version:}   undefined`,
+          chalk`{bold Version:}   {grey unset}`,
           chalk`{bold Directory:} .`,
           chalk``,
           chalk`{bold Dependencies:}`,
