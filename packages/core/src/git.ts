@@ -20,20 +20,20 @@ export const git = {
   },
 
   // commands
-  branch(args: string[], opts: GitOptions = {}): SpawnTask {
+  branch(args: string[], opts?: GitOptions): SpawnTask {
     return this.command('branch', args, opts);
   },
 
-  diff(args: string[], opts: GitOptions = {}): SpawnTask {
+  diff(args: string[], opts?: GitOptions): SpawnTask {
     return this.command('diff', args, opts);
   },
 
-  tag(args: string[], opts: GitOptions = {}): SpawnTask {
+  tag(args: string[], opts?: GitOptions): SpawnTask {
     return this.command('tag', args, opts);
   },
 
   // high level
-  async listBranches(args: string[] = [], opts: GitOptions = {}): Promise<string[]> {
+  async listBranches(args: string[] = [], opts?: GitOptions): Promise<string[]> {
     const task = this.branch(['-l', ...args], opts);
     const result: string[] = [];
 
@@ -44,7 +44,7 @@ export const git = {
     return result;
   },
 
-  async listTags(args: string[] = [], opts: GitOptions = {}): Promise<string[]> {
+  async listTags(args: string[] = [], opts?: GitOptions): Promise<string[]> {
     const task = this.tag(['-l', ...args], opts);
     const result: string[] = [];
 
