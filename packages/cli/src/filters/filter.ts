@@ -15,7 +15,7 @@ export class Filter {
   static scripts(values: string[]): Filter {
     return new Filter((wks) => {
       const scripts = Object.keys(wks.manifest.scripts || {});
-      return values.every(scr => scripts.includes(scr));
+      return values.some(scr => scripts.includes(scr));
     });
   }
 
