@@ -1,47 +1,56 @@
 import { Task, TaskManager, Workspace } from '@jujulego/jill-core';
 
+import { AffectedFilter, Filter } from '../filters';
 import { logger } from '../logger';
 import { CommandHandler } from '../wrapper';
 import { TaskLogger } from '../task-logger';
+import { Pipeline } from '../pipeline';
 
 // Types
 export interface EachArgs {
   script: string;
-  '--'?: (string | number)[] | undefined;
+  '--': (string | number)[] | undefined;
 
   // Filters
-  affected: string | undefined;
   private: boolean | undefined;
+
+  // Affected
+  affected: string | undefined;
+  'affected-rev-fallback': string;
+  'affected-rev-sort': string | undefined;
 }
 
 // Handler
 export const eachCommand: CommandHandler<EachArgs> = async (prj, argv) => {
-  // Get data
   logger.spin('Loading project');
+
+  // Setup pipeline
+  const pipeline = new Pipeline();
+  pipeline.add(Filter.scripts([argv.script]));
+
+  if (argv.private !== undefined) {
+    pipeline.add(Filter.privateWorkspace(argv.private));
+  }
+
+  if (argv.affected !== undefined) {
+    pipeline.add(new AffectedFilter(
+      argv.affected,
+      argv['affected-rev-fallback'],
+      argv['affected-rev-sort']
+    ));
+  }
+
+  // Filter
   const workspaces: Workspace[] = [];
 
-  for await (const wks of prj.workspaces()) {
-    // Filter
-    if (argv.private !== undefined) {
-      if ((wks.manifest.private ?? false) !== argv.private) continue;
-    }
-
-    if (argv.affected !== undefined) {
-      if (!await wks.isAffected(argv.affected)) continue;
-    }
-
-    if (argv.script in (wks.manifest.scripts || {})) {
-      workspaces.push(wks);
-    } else {
-      logger.warn(`Workspace ${wks.name} ignored as it doesn't have the ${argv.script} script`);
-    }
+  for await (const wks of pipeline.filter(prj.workspaces())) {
+    workspaces.push(wks);
   }
 
   logger.stop();
 
   if (workspaces.length === 0) {
     logger.fail('No workspace found !');
-
     return 1;
   }
 

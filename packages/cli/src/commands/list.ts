@@ -2,12 +2,11 @@ import { Workspace } from '@jujulego/jill-core';
 import chalk from 'chalk';
 import path from 'path';
 
-import { Filter } from '../filters';
+import { AffectedFilter, Filter } from '../filters';
 import { logger } from '../logger';
 import { Pipeline } from '../pipeline';
 import { CliList } from '../utils/cli-list';
 import { CommandHandler } from '../wrapper';
-import { AffectedFilter } from '../filters/affected';
 
 // Types
 export type Attribute = 'name' | 'version' | 'root';

@@ -3,9 +3,23 @@ import { Project, TaskManager, Workspace } from '@jujulego/jill-core';
 import { MockTask } from '../../mocks/task';
 import { eachCommand, logger } from '../../src';
 import '../logger';
+import chalk from 'chalk';
+import { EachArgs } from '../../dist';
 
 // Setup
 jest.mock('../../src/logger');
+
+chalk.level = 1;
+
+const defaults: Omit<EachArgs, 'script'> = {
+  '--': undefined,
+
+  private: undefined,
+
+  affected: undefined,
+  'affected-rev-sort': undefined,
+  'affected-rev-fallback': 'master',
+};
 
 let project: Project;
 
@@ -23,7 +37,7 @@ describe('jill each', () => {
       .mockImplementation(async function* (): AsyncGenerator<Workspace> {}); // eslint-disable-line @typescript-eslint/no-empty-function
 
     // Call
-    await expect(eachCommand(project, { script: 'test', affected: undefined, private: undefined }))
+    await expect(eachCommand(project, { ...defaults, script: 'test' }))
       .resolves.toBe(1);
 
     // Checks
@@ -44,7 +58,7 @@ describe('jill each', () => {
     jest.spyOn(TaskManager.global, 'waitFor').mockResolvedValue([]);
 
     // Call
-    await expect(eachCommand(project, { script: 'test', affected: undefined, private: undefined, '--': ['--arg', 1] }))
+    await expect(eachCommand(project, { ...defaults, script: 'test', '--': ['--arg', 1] }))
       .resolves.toBe(0);
 
     // Checks
@@ -73,12 +87,11 @@ describe('jill each', () => {
     jest.spyOn(TaskManager.global, 'waitFor').mockResolvedValue([]);
 
     // Call
-    await expect(eachCommand(project, { script: 'test', affected: undefined, private: undefined }))
+    await expect(eachCommand(project, { ...defaults, script: 'test' }))
       .resolves.toBe(0);
 
     // Checks
     expect(project.workspaces).toHaveBeenCalled();
-    expect(logger.warn).toHaveBeenCalledWith('Workspace wks-2 ignored as it doesn\'t have the test script');
     expect(logger.verbose).toHaveBeenCalledWith('Will run test in wks-1');
   });
 
@@ -97,7 +110,7 @@ describe('jill each', () => {
     jest.spyOn(TaskManager.global, 'waitFor').mockResolvedValue([]);
 
     // Call
-    await expect(eachCommand(project, { script: 'test', affected: undefined, private: true }))
+    await expect(eachCommand(project, { ...defaults, script: 'test', private: true }))
       .resolves.toBe(0);
 
     // Checks
@@ -122,7 +135,7 @@ describe('jill each', () => {
     jest.spyOn(TaskManager.global, 'waitFor').mockResolvedValue([]);
 
     // Call
-    await expect(eachCommand(project, { script: 'test', affected: 'test', private: undefined }))
+    await expect(eachCommand(project, { ...defaults, script: 'test', affected: 'test' }))
       .resolves.toBe(0);
 
     // Checks
