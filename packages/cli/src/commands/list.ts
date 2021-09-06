@@ -2,9 +2,10 @@ import { Workspace } from '@jujulego/jill-core';
 import chalk from 'chalk';
 import path from 'path';
 
+import { AffectedFilter, Filter } from '../filters';
 import { logger } from '../logger';
+import { Pipeline } from '../pipeline';
 import { CliList } from '../utils/cli-list';
-import { spawn } from '../utils/spawn';
 import { CommandHandler } from '../wrapper';
 
 // Types
@@ -50,72 +51,33 @@ function buildExtractor(attrs: Attribute[]): Extractor<Data> {
   };
 }
 
-async function formatRev(rev: string, wks: Workspace, argv: ListArgs): Promise<string> {
-  const log = logger.child({ label: wks.name });
-
-  // Format revision
-  let result = rev;
-  result = result.replace(/(?<!\\)((?:\\\\)*)%name/g, `$1${wks.name}`);
-  result = result.replace(/\\(.)/g, '$1');
-
-  // Ask git to complete it
-  const sortArgs = argv['affected-rev-sort'] ? ['--sort', argv['affected-rev-sort']] : [];
-
-  // Search in branches
-  if (result.includes('*')) {
-    let { stdout: branches } = await spawn('git', ['branch', '-l', ...sortArgs, result], { cwd: wks.cwd, logger: log });
-    branches = branches.map(tag => tag.trim());
-
-    if (branches.length > 0) {
-      result = branches[branches.length - 1];
-    }
-  }
-
-  // Search in tags
-  if (result.includes('*')) {
-    let { stdout: tags } = await spawn('git', ['tag', '-l', ...sortArgs, result], { cwd: wks.cwd, logger: log });
-    tags = tags.map(tag => tag.trim());
-
-    if (tags.length > 0) {
-      result = tags[tags.length - 1];
-    }
-  }
-
-  if (result !== rev) {
-    log.verbose(`Resolved ${rev} into ${result}`);
-  }
-
-  if (result.includes('*')) {
-    log.warn(`No revision found matching ${result}, using fallback ${argv['affected-rev-fallback']}`);
-
-    return argv['affected-rev-fallback'];
-  }
-
-  return result;
-}
-
 // Handler
 export const listCommand: CommandHandler<ListArgs> = async (prj, argv) => {
-  // Get data
   logger.spin('Loading project');
+
+  // Setup pipeline
+  const pipeline = new Pipeline();
+
+  if (argv.private !== undefined) {
+    pipeline.add(Filter.privateWorkspace(argv.private));
+  }
+
+  if (argv['with-script'] !== undefined) {
+    pipeline.add(Filter.scripts(argv['with-script']));
+  }
+
+  if (argv.affected !== undefined) {
+    pipeline.add(new AffectedFilter(
+      argv.affected,
+      argv['affected-rev-fallback'],
+      argv['affected-rev-sort']
+    ));
+  }
+
+  // Filter
   const workspaces: Workspace[] = [];
 
-  for await (const wks of prj.workspaces()) {
-    // Filter
-    if (argv.private !== undefined) {
-      if ((wks.manifest.private ?? false) !== argv.private) continue;
-    }
-
-    if (argv['with-script'] !== undefined) {
-      const scripts = Object.keys(wks.manifest.scripts || {});
-      if (!argv['with-script'].some(scr => scripts.includes(scr))) continue;
-    }
-
-    if (argv.affected !== undefined) {
-      const rev = await formatRev(argv.affected, wks, argv);
-      if (!await wks.isAffected(rev)) continue;
-    }
-
+  for await (const wks of pipeline.filter(prj.workspaces())) {
     workspaces.push(wks);
   }
 

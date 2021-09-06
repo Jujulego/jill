@@ -107,17 +107,30 @@ import { commandHandler } from './wrapper';
       }
     }, commandHandler(runCommand))
     .command('each <script>', 'Run script on selected workspaces', {
-      affected: {
-        alias: 'a',
-        type: 'string',
-        coerce: (rev: string) => rev === '' ? 'master' : rev,
-        group: 'Filters:',
-        desc: 'Print only affected workspaces towards given git revision. If no revision is given, it will check towards master',
-      },
       private: {
         type: 'boolean',
         group: 'Filters:',
         desc: 'Print only private workspaces',
+      },
+      affected: {
+        alias: 'a',
+        nargs: 1,
+        type: 'string',
+        coerce: (rev: string) => rev === '' ? 'master' : rev,
+        group: 'Filters:',
+        desc: 'Print only affected workspaces towards given git revision. If no revision is given, it will check towards master.\n' +
+          'Replaces %name by workspace name.',
+      },
+      'affected-rev-sort': {
+        type: 'string',
+        group: 'Affected:',
+        desc: 'Sort applied to git tag / git branch command',
+      },
+      'affected-rev-fallback': {
+        type: 'string',
+        default: 'master',
+        group: 'Affected:',
+        desc: 'Fallback revision, used if no revision matching the given format is found',
       }
     }, commandHandler(eachCommand))
     .demandCommand(1)

@@ -9,11 +9,17 @@ export class EachCommand extends JillCommand {
   @Command.String({ required: true })
   script: string;
 
+  @Command.Boolean('--private', { description: 'Print only private workspaces' })
+  private?: boolean;
+
   @Command.String('-a,--affected', { tolerateBoolean: true, description: 'Print only affected workspaces towards given git revision. If no revision is given test against master' })
   affected?: string;
 
-  @Command.Boolean('--private', { description: 'Print only private workspaces' })
-  private?: boolean;
+  @Command.String('--affected-rev-sort', { description: 'Sort applied to git tag / git branch command' })
+  affectedRevSort?: string;
+
+  @Command.String('--affected-rev-fallback', { description: 'Fallback revision, used if no revision matching the given format is found' })
+  affectedRevFallback?: string;
 
   @Command.Proxy()
   options?: string[];
@@ -31,6 +37,8 @@ export class EachCommand extends JillCommand {
     await eachCommand(prj, {
       script: this.script,
       affected: this.affected === '' ? 'master' : this.affected,
+      'affected-rev-sort': this.affectedRevSort,
+      'affected-rev-fallback': this.affectedRevFallback || 'master',
       private: this.private,
       '--': this.options
     });

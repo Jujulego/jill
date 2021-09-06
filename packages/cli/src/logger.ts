@@ -99,8 +99,8 @@ export class OraLogger {
     this.logger.error({ message });
   }
 
-  child(options: Record<string, unknown>): OraLogger {
-    return new OraLogger(this.logger.child(options), this.transport);
+  child(options: Record<string, unknown>): Logger {
+    return this.logger.child(options);
   }
 
   // - ora
