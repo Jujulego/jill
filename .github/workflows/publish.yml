@@ -217,10 +217,15 @@ jobs:
         env:
           YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
+      - uses: actions/upload-artifact@v2
+        with:
+          name: packages
+          path: packages/*/package.json
+
   sonarcloud:
     if: ${{ !startsWith(github.head_ref, 'renovate/') }}
     runs-on: ubuntu-latest
-    needs: [ tests ]
+    needs: [ publish ]
 
     strategy:
       fail-fast: false
@@ -250,6 +255,11 @@ jobs:
         with:
           name: ${{ matrix.name }}-coverage
           path: ${{ matrix.workspace }}/coverage
+
+      - uses: actions/download-artifact@v2
+        with:
+          name: packages
+          path: packages/*/package.json
 
       - name: Load package.json
         id: info
