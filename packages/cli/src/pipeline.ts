@@ -1,7 +1,7 @@
 import { Workspace } from '@jujulego/jill-core';
-
-import { Filter } from './filters/filter';
 import { Repeater } from '@repeaterjs/repeater';
+
+import { Filter } from './filters';
 
 // Class
 export class Pipeline {
