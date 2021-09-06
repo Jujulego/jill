@@ -21,7 +21,7 @@
     "node": "^14"
   },
   "dependencies": {
-    "@jujulego/jill-core": "^1.0.9",
+    "@jujulego/jill-core": "^1.0.10",
     "@repeaterjs/repeater": "^3.0.4",
     "chalk": "^4.1.1",
     "ora": "^5.4.1",
