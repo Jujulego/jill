@@ -1,11 +1,15 @@
 {
   "name": "@jujulego/jill",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "license": "MIT",
   "bin": "./bin/jill.js",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "repository": "github:Jujulego/jill",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Jujulego/jill",
+    "directory": "packages/cli"
+  },
   "scripts": {
     "lint": "eslint {src,tests}/**/*.*",
     "build": "tsc -p tsconfig.build.json",
