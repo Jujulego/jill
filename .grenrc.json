@@ -3,6 +3,7 @@
   "ignoreLabels": ["cli", "core", "yarn-plugin"],
   "groupBy": {
     "Enhancements:": ["enhancement"],
-    "Bug Fixes:": ["bug"]
+    "Bug Fixes:": ["bug"],
+    "Documentation": ["documentation"]
   }
 }
