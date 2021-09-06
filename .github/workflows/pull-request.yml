@@ -5,6 +5,32 @@ on:
     branches: [ master ]
 
 jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v2.3.4
+        with:
+          ref: master
+
+      - name: Use Node.js 14.x
+        uses: actions/setup-node@v2.4.0
+        with:
+          node-version: 14.x
+
+      - name: Setup gren
+        run: npm install -g github-release-notes
+
+      - name: git tag 1.1.0
+
+      - name: Generate release
+        env:
+          GREN_GITHUB_TOKEN: ${{ github.token }}
+        run: gren release -d -t 1.1.0
+
   build:
     runs-on: ubuntu-latest
 
