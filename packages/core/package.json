@@ -1,10 +1,14 @@
 {
   "name": "@jujulego/jill-core",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "license": "MIT",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "repository": "github:Jujulego/jill",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Jujulego/jill",
+    "directory": "packages/core"
+  },
   "scripts": {
     "lint": "eslint {src,tests}/**/*.*",
     "build": "tsc -p tsconfig.build.json",
