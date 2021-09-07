@@ -13,8 +13,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2.3.4
-        with:
-          ref: master
+#        with:
+#          ref: master
 
       - name: Use Node.js 14.x
         uses: actions/setup-node@v2.4.0
