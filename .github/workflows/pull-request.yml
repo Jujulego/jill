@@ -24,8 +24,10 @@ jobs:
       - name: Setup gren
         run: npm install -g github-release-notes
 
-      - name: Generate release
-        run: gren release -d -t 1.1.0
+      - name: 🤖 Generate release
+        run: |
+          ls
+          gren release -d -t 1.1.0
         env:
           GREN_GITHUB_TOKEN: ${{ github.token }}
 
