@@ -296,7 +296,7 @@ jobs:
       - name: Setup gren
         run: npm install -g github-release-notes
 
-      - name: Generate release
+      - name: 🤖 Generate release
+        run: gren release -t ${{ github.event.milestone.title }}
         env:
           GREN_GITHUB_TOKEN: ${{ github.token }}
-        run: gren release
