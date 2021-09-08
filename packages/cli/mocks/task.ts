@@ -1,10 +1,10 @@
-import { Task, TaskOptions, TaskStatus } from '@jujulego/jill-core';
+import { SpawnTask, SpawnTaskOption, TaskStatus } from '@jujulego/jill-core';
 
 // Methods
-export class MockTask extends Task {
+export class MockTask extends SpawnTask {
   // Constructor
-  constructor(readonly name: string, opts?: TaskOptions) {
-    super(opts);
+  constructor(cmd: string, opts?: SpawnTaskOption) {
+    super(cmd, [], opts);
   }
 
   // Methods

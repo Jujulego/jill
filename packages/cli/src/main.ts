@@ -1,7 +1,6 @@
 import { hideBin } from 'yargs/helpers';
 import yargs from 'yargs';
 
-import { buildCommand } from './commands/build';
 import { eachCommand } from './commands/each';
 import { infoCommand } from './commands/info';
 import { listCommand } from './commands/list';
@@ -92,13 +91,6 @@ import { commandHandler } from './wrapper';
         desc: 'Workspace to use'
       }
     }, commandHandler(infoCommand))
-    .command('build', 'Build workspace', {
-      workspace: {
-        alias: 'w',
-        type: 'string',
-        desc: 'Workspace to use'
-      }
-    }, commandHandler(buildCommand))
     .command('run <script>', 'Run script inside workspace', {
       workspace: {
         alias: 'w',

@@ -1,6 +1,3 @@
 {
-  "name": "mock-test-d",
-  "scripts": {
-    "jill:build": "node -e \"setTimeout(() => process.exit(0), 2000)\" --"
-  }
+  "name": "mock-test-d"
 }

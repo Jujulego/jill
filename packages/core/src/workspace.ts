@@ -5,7 +5,7 @@ import { git } from './git';
 import { logger } from './logger';
 import type { Manifest } from './manifest';
 import { Project } from './project';
-import { SpawnTask, SpawnTaskOption, Task } from './tasks';
+import { SpawnTask, SpawnTaskOption } from './tasks';
 import { combine } from './utils';
 
 // Types
@@ -16,10 +16,9 @@ export interface WorkspaceRunOptions extends Omit<SpawnTaskOption, 'cwd'> {
 // Class
 export class Workspace {
   // Attributes
-  private _lastBuild?: Task;
-
   private readonly _logger: Logger;
   private readonly _isAffected = new Map<string, boolean | SpawnTask>();
+  private readonly _tasks = new Map<string, SpawnTask>();
 
   // Constructor
   constructor(
@@ -31,9 +30,13 @@ export class Workspace {
   }
 
   // Methods
-  private async _buildDependencies(task: Task) {
+  private async _buildDependencies(task: SpawnTask) {
     for await (const dep of combine(this.dependencies(), this.devDependencies())) {
-      task.dependsOn(await dep.build());
+      const build = await dep.build();
+
+      if (build) {
+        task.dependsOn(build);
+      }
     }
   }
 
@@ -102,26 +105,35 @@ export class Workspace {
     }
   }
 
-  async run(script: string, args: string[] = [], opts: WorkspaceRunOptions = {}): Promise<Task> {
-    const pm = await this.project.packageManager();
+  async run(script: string, args: string[] = [], opts: WorkspaceRunOptions = {}): Promise<SpawnTask> {
+    let task = this._tasks.get(script);
 
-    const task = new SpawnTask(pm, ['run', script, ...args], {
-      ...opts,
-      cwd: this.cwd,
-      logger: this._logger,
-      context: { workspace: this }
-    });
-    await this._buildDependencies(task);
+    if (!task) {
+      const pm = await this.project.packageManager();
+
+      task = new SpawnTask(pm, ['run', script, ...args], {
+        ...opts,
+        cwd: this.cwd,
+        logger: this._logger,
+        context: { workspace: this }
+      });
+      await this._buildDependencies(task);
+
+      this._tasks.set(script, task);
+    }
 
     return task;
   }
 
-  async build(): Promise<Task> {
-    if (!this._lastBuild) {
-      this._lastBuild = await this.run('jill:build');
+  async build(): Promise<SpawnTask | null> {
+    const { scripts = {} } = this.manifest;
+
+    if (!scripts.build) {
+      this._logger.warn('Will not be built (no build script)');
+      return null;
     }
 
-    return this._lastBuild;
+    return await this.run('build');
   }
 
   // Properties
