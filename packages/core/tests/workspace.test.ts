@@ -78,24 +78,19 @@ describe('Workspace.run', () => {
       dependencies: [
         expect.objectContaining({
           cmd: 'yarn',
-          args: ['run', 'jill:build'],
+          args: ['run', 'build'],
           cwd: path.join(root, 'workspaces/test-b'),
           dependencies: [
             expect.objectContaining({
               cmd: 'yarn',
-              args: ['run', 'jill:build'],
+              args: ['run', 'build'],
               cwd: path.join(root, 'workspaces/test-c')
-            }),
-            expect.objectContaining({
-              cmd: 'yarn',
-              args: ['run', 'jill:build'],
-              cwd: path.join(root, 'workspaces/test-d')
             })
           ]
         }),
         expect.objectContaining({
           cmd: 'yarn',
-          args: ['run', 'jill:build'],
+          args: ['run', 'build'],
           cwd: path.join(root, 'workspaces/test-c')
         })
       ]

@@ -14,8 +14,7 @@
     "lint": "eslint {src,tests}/**/*.*",
     "build": "tsc -p tsconfig.build.json",
     "start": "ts-node src/main.ts",
-    "test": "jest",
-    "jill:build": "tsc -p tsconfig.build.json --pretty"
+    "test": "jest"
   },
   "engines": {
     "node": "^14"
