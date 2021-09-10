@@ -1,6 +1,7 @@
 import { Workspace } from '@jujulego/jill-core';
 import chalk from 'chalk';
 import path from 'path';
+import slugify from 'slugify';
 
 import { AffectedFilter, Filter } from '../filters';
 import { logger } from '../logger';
@@ -9,7 +10,7 @@ import { CliList } from '../utils/cli-list';
 import { CommandHandler } from '../wrapper';
 
 // Types
-export type Attribute = 'name' | 'version' | 'root';
+export type Attribute = 'name' | 'version' | 'root' | 'slug';
 
 export type Data = Partial<Record<Attribute, string>>;
 
@@ -30,13 +31,19 @@ export interface ListArgs {
   json: boolean;
 }
 
+// Constants
+const LONG_ATTRIBUTES: Attribute[] = ['name', 'version', 'root'];
+const JSON_ATTRIBUTES: Attribute[] = ['name', 'version', 'slug', 'root'];
+const DEFAULT_ATTRIBUTES: Attribute[] = ['name'];
+
 // Utils
 type Extractor<T> = (wks: Workspace, argv: ListArgs) => T;
 
 const extractors: Record<Attribute, Extractor<string | undefined>> = {
   name: wks => wks.name,
   version: (wks, argv) => wks.manifest.version || (argv.json ? undefined : chalk.grey('unset')),
-  root: wks => wks.cwd
+  root: wks => wks.cwd,
+  slug: wks => slugify(wks.name)
 };
 
 function buildExtractor(attrs: Attribute[]): Extractor<Data> {
@@ -84,7 +91,16 @@ export const listCommand: CommandHandler<ListArgs> = async (prj, argv) => {
   logger.stop();
 
   // Build data
-  const attrs = argv.attrs || (argv.long || argv.json ? ['name', 'version', 'root'] : ['name']);
+  let attrs = argv.attrs || DEFAULT_ATTRIBUTES;
+
+  if (!argv.attrs) {
+    if (argv.long) {
+      attrs = LONG_ATTRIBUTES;
+    } else if (argv.json) {
+      attrs = JSON_ATTRIBUTES;
+    }
+  }
+
   const data = workspaces.map(wks => buildExtractor(attrs)(wks, argv));
 
   // Print data

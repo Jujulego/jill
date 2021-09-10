@@ -777,6 +777,7 @@ __metadata:
     eslint-plugin-jest: 24.4.0
     jest: 27.1.1
     ora: ^5.4.1
+    slugify: ^1.6.0
     ts-jest: 27.0.5
     ts-node: 10.2.1
     typescript: 4.4.2
@@ -6460,6 +6461,13 @@ resolve@^1.20.0:
     astral-regex: ^2.0.0
     is-fullwidth-code-point: ^3.0.0
   checksum: 4a82d7f085b0e1b070e004941ada3c40d3818563ac44766cca4ceadd2080427d337554f9f99a13aaeb3b4a94d9964d9466c807b3d7b7541d1ec37ee32d308756
+  languageName: node
+  linkType: hard
+
+"slugify@npm:^1.6.0":
+  version: 1.6.0
+  resolution: "slugify@npm:1.6.0"
+  checksum: 87035aa1a4559d2c861e5807e030e0a5d933d0a77563511eb91a2502f87c395690da14b8b3757513d1d77a4a7eb74c86abb95c51b8deaf328394bccdf19debb8
   languageName: node
   linkType: hard
 

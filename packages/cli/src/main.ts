@@ -62,7 +62,7 @@ import { commandHandler } from './wrapper';
       },
       attrs: {
         type: 'array',
-        choices: ['name', 'version', 'root'],
+        choices: ['name', 'version', 'root', 'slug'],
         group: 'Format:',
         desc: 'Select printed attributes'
       },
