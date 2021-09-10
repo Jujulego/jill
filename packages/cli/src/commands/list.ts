@@ -31,6 +31,11 @@ export interface ListArgs {
   json: boolean;
 }
 
+// Constants
+const LONG_ATTRIBUTES: Attribute[] = ['name', 'version', 'root'];
+const JSON_ATTRIBUTES: Attribute[] = ['name', 'version', 'slug', 'root'];
+const DEFAULT_ATTRIBUTES: Attribute[] = ['name'];
+
 // Utils
 type Extractor<T> = (wks: Workspace, argv: ListArgs) => T;
 
@@ -86,7 +91,16 @@ export const listCommand: CommandHandler<ListArgs> = async (prj, argv) => {
   logger.stop();
 
   // Build data
-  const attrs = argv.attrs || (argv.long || argv.json ? ['name', 'version', 'slug', 'root'] : ['name']);
+  let attrs = argv.attrs || DEFAULT_ATTRIBUTES;
+
+  if (!argv.attrs) {
+    if (argv.long) {
+      attrs = LONG_ATTRIBUTES;
+    } else if (argv.json) {
+      attrs = JSON_ATTRIBUTES;
+    }
+  }
+
   const data = workspaces.map(wks => buildExtractor(attrs)(wks, argv));
 
   // Print data

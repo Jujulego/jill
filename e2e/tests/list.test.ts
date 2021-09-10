@@ -130,26 +130,31 @@ describe('jill list', () => {
       {
         name: 'mock-root',
         version: undefined,
+        slug: 'mock-root',
         root: MOCK,
       },
       {
         name: 'mock-test-a',
         version: undefined,
+        slug: 'mock-test-a',
         root: path.join(MOCK, 'workspaces', 'test-a'),
       },
       {
         name: 'mock-test-b',
         version: undefined,
+        slug: 'mock-test-b',
         root: path.join(MOCK, 'workspaces', 'test-b'),
       },
       {
         name: 'mock-test-c',
         version: undefined,
+        slug: 'mock-test-c',
         root: path.join(MOCK, 'workspaces', 'test-c'),
       },
       {
         name: 'mock-test-d',
         version: undefined,
+        slug: 'mock-test-d',
         root: path.join(MOCK, 'workspaces', 'test-d'),
       },
     ]);

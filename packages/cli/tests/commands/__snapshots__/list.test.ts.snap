@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`jill list should print json array of all workspaces (--json) 1`] = `
-"[{\\"name\\":\\"wks-1\\",\\"version\\":\\"1.0.0\\",\\"root\\":\\"/full/path/to/wks-1\\"},{\\"name\\":\\"wks-2\\",\\"version\\":\\"1.0.0\\",\\"root\\":\\"/full/path/to/wks-2\\"},{\\"name\\":\\"wks-3\\",\\"version\\":\\"1.0.0\\",\\"root\\":\\"/full/path/to/wks-3\\"}]
+"[{\\"name\\":\\"wks-1\\",\\"version\\":\\"1.0.0\\",\\"slug\\":\\"wks-1\\",\\"root\\":\\"/full/path/to/wks-1\\"},{\\"name\\":\\"wks-2\\",\\"version\\":\\"1.0.0\\",\\"slug\\":\\"wks-2\\",\\"root\\":\\"/full/path/to/wks-2\\"},{\\"name\\":\\"wks-3\\",\\"version\\":\\"1.0.0\\",\\"slug\\":\\"wks-3\\",\\"root\\":\\"/full/path/to/wks-3\\"}]
 "
 `;
 
