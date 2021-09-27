@@ -802,7 +802,7 @@ __metadata:
     "@yarnpkg/core": 2.4.0
     "@yarnpkg/fslib": 2.5.2
     chalk: 4.1.2
-    clipanion: 2.6.2
+    clipanion: 3.1.0
     eslint: 7.32.0
     eslint-plugin-jest: 24.4.2
     jest: 27.2.2
@@ -2655,7 +2655,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"clipanion@npm:2.6.2, clipanion@npm:^2.6.2":
+"clipanion@npm:3.1.0":
+  version: 3.1.0
+  resolution: "clipanion@npm:3.1.0"
+  dependencies:
+    typanion: ^3.3.1
+  peerDependencies:
+    typanion: "*"
+  checksum: bf350082e8953c697cfe35262845700012bdeb1cc490f81cd17de2fe985c8861750164509795ad95d3ee6a2b3742a1d5c6394cdf0f3ff4c4d24173a9fec3418e
+  languageName: node
+  linkType: hard
+
+"clipanion@npm:^2.6.2":
   version: 2.6.2
   resolution: "clipanion@npm:2.6.2"
   checksum: 7a1dfc8c9ae70362fc12a8d148827b584f598c9f983143a847b33a84ec8a8c3a51e5888131a3e9847cddfa38096d17a38ced870ee2fd4bef5babb971ec198287
@@ -7121,6 +7132,13 @@ resolve@^1.20.0:
   version: 0.0.6
   resolution: "tunnel@npm:0.0.6"
   checksum: c362948df9ad34b649b5585e54ce2838fa583aa3037091aaed66793c65b423a264e5229f0d7e9a95513a795ac2bd4cb72cda7e89a74313f182c1e9ae0b0994fa
+  languageName: node
+  linkType: hard
+
+"typanion@npm:^3.3.1":
+  version: 3.5.0
+  resolution: "typanion@npm:3.5.0"
+  checksum: 9d9c7e7ba99f61a9bce3d02c486c264c1071bf946623d43c47b317450e37978bbb5c0dcab0aa31b8eb867a45417bc3ffbef3d1e59a32b92c3b932e4af488c77b
   languageName: node
   linkType: hard
 
