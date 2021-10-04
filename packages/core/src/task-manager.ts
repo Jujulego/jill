@@ -5,10 +5,15 @@ import { logger } from './logger';
 import { Task } from './tasks';
 
 // Types
+export type TaskManagerResults = {
+  success: number;
+  failed: number;
+}
+
 export type TaskManagerEventMap = {
   started: [Task];
   completed: [Task];
-  finished: [];
+  finished: [TaskManagerResults];
 }
 
 // Class
@@ -81,7 +86,10 @@ export class TaskManager extends EventEmitter<TaskManagerEventMap> {
 
     // Emit finished task if all tasks are done of failed
     if (this._tasks.every(tsk => tsk.completed)) {
-      this.emit('finished');
+      this.emit('finished', {
+        success: this._tasks.reduce((c, tsk) => tsk.status === 'done' ? c + 1 : c, 0),
+        failed: this._tasks.reduce((c, tsk) => tsk.status === 'failed' ? c + 1 : c, 0)
+      });
     }
   }
 
