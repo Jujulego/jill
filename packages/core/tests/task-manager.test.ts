@@ -29,13 +29,19 @@ describe('TaskManager.add', () => {
 
 describe('TaskManager.start', () => {
   // Setup
-  const ta = new TestTask('task-a');
-  const tb = new TestTask('task-b');
-  const tc = new TestTask('task-c');
+  let ta: TestTask;
+  let tb: TestTask;
+  let tc: TestTask;
 
-  ta.dependsOn(tb); // complexity 3
-  ta.dependsOn(tc); // complexity 1
-  tb.dependsOn(tc); // complexity 0
+  beforeEach(() => {
+    ta = new TestTask('task-a');
+    tb = new TestTask('task-b');
+    tc = new TestTask('task-c');
+
+    ta.dependsOn(tb); // complexity 3
+    ta.dependsOn(tc); // complexity 1
+    tb.dependsOn(tc); // complexity 0
+  });
 
   // Tests
   it('should start all tasks, one after another', () => {
@@ -85,5 +91,23 @@ describe('TaskManager.start', () => {
 
     expect(spyCompleted).toHaveBeenCalledWith(ta);
     expect(spyFinished).toHaveBeenCalled();
+  });
+
+  it('should emit finished with task results stats', () => {
+    jest.spyOn(ta, 'start');
+    jest.spyOn(tb, 'start');
+    jest.spyOn(tc, 'start');
+
+    const spyFinished = jest.fn<void, []>();
+    manager.on('finished', spyFinished);
+
+    // Start !
+    manager.add(ta);
+
+    tc._setStatus('done');
+    tb._setStatus('done');
+    ta._setStatus('failed');
+
+    expect(spyFinished).toHaveBeenCalledWith({ success: 2, failed: 1 });
   });
 });
