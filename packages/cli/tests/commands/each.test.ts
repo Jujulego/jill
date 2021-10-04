@@ -1,10 +1,9 @@
 import { Project, TaskManager, Workspace } from '@jujulego/jill-core';
+import chalk from 'chalk';
 
 import { MockTask } from '../../mocks/task';
-import { eachCommand, logger } from '../../src';
+import { EachArgs, eachCommand, logger } from '../../src';
 import '../logger';
-import chalk from 'chalk';
-import { EachArgs } from '../../dist';
 
 // Setup
 jest.mock('../../src/logger');
@@ -46,7 +45,7 @@ describe('jill each', () => {
     expect(logger.fail).toHaveBeenCalledWith('No workspace found !');
   });
 
-  it('should exit 0 when manager is finished', async () => {
+  it('should exit 0 when manager is finished and all tasks are successful', async () => {
     const wks = new Workspace('./wks', { name: 'wks', version: '1.0.0', scripts: { test: 'test' } }, project);
     const tsk = new MockTask('test', { context: { workspace: wks }});
 
@@ -55,11 +54,37 @@ describe('jill each', () => {
 
     jest.spyOn(TaskManager.global, 'add').mockImplementation();
     jest.spyOn(TaskManager.global, 'on').mockImplementation();
-    jest.spyOn(TaskManager.global, 'waitFor').mockResolvedValue([]);
+    jest.spyOn(TaskManager.global, 'waitFor').mockResolvedValue([{ success: 1, failed: 0 }]);
 
     // Call
     await expect(eachCommand(project, { ...defaults, script: 'test', '--': ['--arg', 1] }))
       .resolves.toBe(0);
+
+    // Checks
+    expect(logger.spin).toHaveBeenCalledWith('Loading project');
+    expect(project.workspaces).toHaveBeenCalled();
+    expect(logger.verbose).toHaveBeenCalledWith('Will run test in wks');
+    expect(wks.run).toHaveBeenCalledWith('test', ['--arg', '1']);
+    expect(TaskManager.global.add).toHaveBeenCalledWith(tsk);
+    expect(TaskManager.global.on).toHaveBeenCalledWith('started', expect.any(Function));
+    expect(TaskManager.global.on).toHaveBeenCalledWith('completed', expect.any(Function));
+    expect(TaskManager.global.waitFor).toHaveBeenCalledWith('finished');
+  });
+
+  it('should exit 1 when manager is finished and a task failed', async () => {
+    const wks = new Workspace('./wks', { name: 'wks', version: '1.0.0', scripts: { test: 'test' } }, project);
+    const tsk = new MockTask('test', { context: { workspace: wks }});
+
+    jest.spyOn(project, 'workspaces').mockImplementation(async function* () { yield wks; });
+    jest.spyOn(wks, 'run').mockResolvedValue(tsk);
+
+    jest.spyOn(TaskManager.global, 'add').mockImplementation();
+    jest.spyOn(TaskManager.global, 'on').mockImplementation();
+    jest.spyOn(TaskManager.global, 'waitFor').mockResolvedValue([{ success: 0, failed: 1 }]);
+
+    // Call
+    await expect(eachCommand(project, { ...defaults, script: 'test', '--': ['--arg', 1] }))
+      .resolves.toBe(1);
 
     // Checks
     expect(logger.spin).toHaveBeenCalledWith('Loading project');
@@ -84,7 +109,7 @@ describe('jill each', () => {
 
     jest.spyOn(TaskManager.global, 'add').mockImplementation();
     jest.spyOn(TaskManager.global, 'on').mockReturnThis();
-    jest.spyOn(TaskManager.global, 'waitFor').mockResolvedValue([]);
+    jest.spyOn(TaskManager.global, 'waitFor').mockResolvedValue([{ success: 1, failed: 0 }]);
 
     // Call
     await expect(eachCommand(project, { ...defaults, script: 'test' }))
@@ -107,7 +132,7 @@ describe('jill each', () => {
 
     jest.spyOn(TaskManager.global, 'add').mockImplementation();
     jest.spyOn(TaskManager.global, 'on').mockReturnThis();
-    jest.spyOn(TaskManager.global, 'waitFor').mockResolvedValue([]);
+    jest.spyOn(TaskManager.global, 'waitFor').mockResolvedValue([{ success: 1, failed: 0 }]);
 
     // Call
     await expect(eachCommand(project, { ...defaults, script: 'test', private: true }))
@@ -132,7 +157,7 @@ describe('jill each', () => {
 
     jest.spyOn(TaskManager.global, 'add').mockImplementation();
     jest.spyOn(TaskManager.global, 'on').mockReturnThis();
-    jest.spyOn(TaskManager.global, 'waitFor').mockResolvedValue([]);
+    jest.spyOn(TaskManager.global, 'waitFor').mockResolvedValue([{ success: 1, failed: 0 }]);
 
     // Call
     await expect(eachCommand(project, { ...defaults, script: 'test', affected: 'test' }))

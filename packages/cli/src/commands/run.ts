@@ -32,6 +32,6 @@ export const runCommand: CommandHandler<RunArgs> = async (prj, argv) => {
   tlogger.on('succeed', (tsk) => tsk === task ? `${wks.name} ${argv.script} done` : `${tsk.context.workspace?.name} built`);
   tlogger.connect(TaskManager.global);
 
-  await TaskManager.global.waitFor('finished');
-  return 0;
+  const [result] = await TaskManager.global.waitFor('finished');
+  return result.failed === 0 ? 0 : 1;
 };
