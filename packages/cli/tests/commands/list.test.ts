@@ -66,7 +66,7 @@ describe('jill list', () => {
     expect(logger.spin).toHaveBeenCalledWith('Loading project');
     expect(project.workspaces).toHaveBeenCalled();
     expect(logger.stop).toHaveBeenCalled();
-    expect(screen).toEqual('wks-1\nwks-2\nwks-3\n');
+    expect(screen).toBe('wks-1\nwks-2\nwks-3\n');
   });
 
   // Filters
@@ -76,7 +76,7 @@ describe('jill list', () => {
       .resolves.toBe(0);
 
     // Checks
-    expect(screen).toEqual('wks-1\n');
+    expect(screen).toBe('wks-1\n');
   });
 
   it('should print only public workspaces (--no-private)', async () => {
@@ -85,7 +85,7 @@ describe('jill list', () => {
       .resolves.toBe(0);
 
     // Checks
-    expect(screen).toEqual('wks-2\nwks-3\n');
+    expect(screen).toBe('wks-2\nwks-3\n');
   });
 
   it('should print only affected workspaces (--affected test)', async () => {
@@ -98,7 +98,7 @@ describe('jill list', () => {
       expect(wks.isAffected).toHaveBeenCalledWith('test');
     }
 
-    expect(screen).toEqual('wks-2\n');
+    expect(screen).toBe('wks-2\n');
   });
 
   it('should print only workspaces with \'test\' script (--with-script test)', async () => {
@@ -107,7 +107,7 @@ describe('jill list', () => {
       .resolves.toBe(0);
 
     // Checks
-    expect(screen).toEqual('wks-2\n');
+    expect(screen).toBe('wks-2\n');
   });
 
   it('should print only workspaces with \'test\' or \'lint\' scripts (--with-script test lint)', async () => {
@@ -116,7 +116,7 @@ describe('jill list', () => {
       .resolves.toBe(0);
 
     // Checks
-    expect(screen).toEqual('wks-2\nwks-3\n');
+    expect(screen).toBe('wks-2\nwks-3\n');
   });
 
   // Formats
