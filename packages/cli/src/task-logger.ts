@@ -14,7 +14,7 @@ export class TaskLogger {
     'spin-simple': (tsk: Task) => `Building ${tsk.context.workspace?.name} ...`,
     'fail': (tsk: Task) => `Failed to build ${tsk.context.workspace?.name}`,
     'succeed': (tsk: Task) => `${tsk.context.workspace?.name} built`,
-  }
+  };
 
   // Methods
   private _refreshSpinner() {
