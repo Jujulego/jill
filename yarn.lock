@@ -724,7 +724,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": 5.0.0
     "@typescript-eslint/parser": 5.0.0
     eslint: 8.0.1
-    eslint-plugin-jest: 25.0.5
+    eslint-plugin-jest: 25.1.0
     jest: 27.2.5
     tiny-glob: ^0.2.9
     ts-jest: 27.0.5
@@ -747,7 +747,7 @@ __metadata:
     "@typescript-eslint/parser": 5.0.0
     chalk: ^4.1.1
     eslint: 8.0.1
-    eslint-plugin-jest: 25.0.5
+    eslint-plugin-jest: 25.1.0
     jest: 27.2.5
     ora: ^5.4.1
     slugify: ^1.6.0
@@ -2105,18 +2105,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-jest@npm:25.0.5":
-  version: 25.0.5
-  resolution: "eslint-plugin-jest@npm:25.0.5"
+"eslint-plugin-jest@npm:25.1.0":
+  version: 25.1.0
+  resolution: "eslint-plugin-jest@npm:25.1.0"
   dependencies:
     "@typescript-eslint/experimental-utils": ^5.0.0
   peerDependencies:
     "@typescript-eslint/eslint-plugin": ^4.0.0 || ^5.0.0
-    eslint: ^6.0.0 || ^7.0.0
+    eslint: ^6.0.0 || ^7.0.0 || ^8.0.0
   peerDependenciesMeta:
     "@typescript-eslint/eslint-plugin":
       optional: true
-  checksum: 68826a0dfdda7aec1eed6eb5234c0a2e4adeed30e85b2ad464c3f7eff07aa3c59a5d7b6714085573d86f2cc48f16570f010b688c1dd08947bed6c2fd669f530b
+  checksum: dd91eab9ec29de4ae0e519cc7c16524f185c21b30f0940c8545943a47605dd4540402626a855e2d2497f11180be0fc0c9f7f7398396b5cb2a35fab5a725bf3f4
   languageName: node
   linkType: hard
 
@@ -3539,7 +3539,7 @@ fsevents@^2.3.2:
     "@typescript-eslint/parser": 5.0.0
     chalk: 4.1.2
     eslint: 8.0.1
-    eslint-plugin-jest: 25.0.5
+    eslint-plugin-jest: 25.1.0
     jest: 27.2.5
     ts-jest: 27.0.5
     typescript: 4.4.4
@@ -3554,7 +3554,7 @@ fsevents@^2.3.2:
     "@typescript-eslint/eslint-plugin": 5.0.0
     "@typescript-eslint/parser": 5.0.0
     eslint: 8.0.1
-    eslint-plugin-jest: 25.0.5
+    eslint-plugin-jest: 25.1.0
     jest: 27.2.5
     typescript: 4.4.4
   languageName: unknown
