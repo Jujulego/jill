@@ -37,10 +37,10 @@ describe('jill info', () => {
           chalk``,
           chalk`{bold Dependencies:}`,
           chalk`├─ mock-test-b`,
-          chalk`│  ├─ {grey mock-test-c (dev)}`,
-          chalk`│  │  {grey └─ }{grey mock-test-d (dev)}`,
-          chalk`│  └─ {italic.grey mock-test-d (dev)}`,
-          chalk`└─ {italic.grey mock-test-c (dev)}`,
+          chalk`│  ├─ {blue mock-test-c (dev)}`,
+          chalk`│  │  {blue └─ }{blue mock-test-d (dev)}`,
+          chalk`│  └─ {italic.blue mock-test-d (dev)}`,
+          chalk`└─ {italic.blue mock-test-c (dev)}`,
         ]
       });
   });
@@ -59,10 +59,10 @@ describe('jill info', () => {
           chalk``,
           chalk`{bold Dependencies:}`,
           chalk`├─ mock-test-b`,
-          chalk`│  ├─ {grey mock-test-c (dev)}`,
-          chalk`│  │  {grey └─ }{grey mock-test-d (dev)}`,
-          chalk`│  └─ {italic.grey mock-test-d (dev)}`,
-          chalk`└─ {italic.grey mock-test-c (dev)}`,
+          chalk`│  ├─ {blue mock-test-c (dev)}`,
+          chalk`│  │  {blue └─ }{blue mock-test-d (dev)}`,
+          chalk`│  └─ {italic.blue mock-test-d (dev)}`,
+          chalk`└─ {italic.blue mock-test-c (dev)}`,
         ]
       });
   });
