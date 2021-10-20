@@ -16,10 +16,10 @@ exports[`jill info should print workspace basic info with dependencies 1`] = `
 [1mDirectory:[22m wks
 
 [1mDependencies:[22m
-├─ depA
-│  ├─ [3mdepA[23m
-│  └─ [3mdepB[23m
-└─ [3mdepB[23m
+├─ depA[90m@1.0.0[39m
+│  ├─ [3mdepA[90m@1.0.0[39m[23m
+│  └─ [3mdepB[90m@1.0.0[39m[23m
+└─ [3mdepB[90m@1.0.0[39m[23m
 "
 `;
 
@@ -29,9 +29,9 @@ exports[`jill info should print workspace basic info with dev-dependencies 1`] =
 [1mDirectory:[22m wks
 
 [1mDependencies:[22m
-├─ [90mdepA (dev)[39m
-│  [90m├─ [39m[3m[90mdepA (dev)[39m[23m
-│  [90m└─ [39m[3m[90mdepB (dev)[39m[23m
-└─ [3m[90mdepB (dev)[39m[23m
+├─ [34mdepA[90m@1.0.0[39m[34m (dev)[39m
+│  [34m├─ [39m[3m[34mdepA[90m@1.0.0[39m[34m (dev)[39m[23m
+│  [34m└─ [39m[3m[34mdepB[90m@1.0.0[39m[34m (dev)[39m[23m
+└─ [3m[34mdepB[90m@1.0.0[39m[34m (dev)[39m[23m
 "
 `;

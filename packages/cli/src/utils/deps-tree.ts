@@ -20,10 +20,11 @@ async function printTree(wks: Workspace, level: string, dev: boolean, printed: S
 
     // Format
     let name = dep.name;
-    if (isDev) name = chalk.grey(`${name} (dev)`);
+    if (dep.version) name = chalk`${name}{grey @${dep.version}}`;
+    if (isDev) name = chalk.blue(`${name} (dev)`);
     if (isPrinted) name = chalk.italic(name);
 
-    const branchFmt = dev ? chalk.grey : (s: string) => s;
+    const branchFmt = dev ? chalk.blue : (s: string) => s;
 
     console.log(`${level}${branchFmt(`${isLast ? '└' : '├' }─ `)}${name}`);
 

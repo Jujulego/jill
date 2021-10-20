@@ -1,4 +1,5 @@
 import path from 'path';
+import { satisfies } from 'semver';
 import { Logger } from 'winston';
 
 import { git } from './git';
@@ -30,6 +31,10 @@ export class Workspace {
   }
 
   // Methods
+  private _satisfies(range: string): boolean {
+    return !this.version || satisfies(this.version, range);
+  }
+
   private async _buildDependencies(task: SpawnTask) {
     for await (const dep of combine(this.dependencies(), this.devDependencies())) {
       const build = await dep.build();
@@ -81,27 +86,33 @@ export class Workspace {
     return isAffected;
   }
 
-  async* dependencies(): AsyncGenerator<Workspace, void> {
-    if (!this.manifest.dependencies) return;
-
-    for (const dep of Object.keys(this.manifest.dependencies)) {
+  private async* _loadDependencies(dependencies: Record<string, string>, kind: string): AsyncGenerator<Workspace, void> {
+    for (const [dep, range] of Object.entries(dependencies)) {
       const ws = await this.project.workspace(dep);
 
       if (ws) {
-        yield ws;
+        if (ws._satisfies(range)) {
+          yield ws;
+        } else {
+          this._logger.verbose(`Ignoring ${kind} ${ws.reference} as it does not match requirement ${range}`);
+        }
       }
+    }
+  }
+
+  async* dependencies(): AsyncGenerator<Workspace, void> {
+    if (!this.manifest.dependencies) return;
+
+    for await (const ws of this._loadDependencies(this.manifest.dependencies, 'dependency')) {
+      yield ws;
     }
   }
 
   async* devDependencies(): AsyncGenerator<Workspace, void> {
     if (!this.manifest.devDependencies) return;
 
-    for (const dep of Object.keys(this.manifest.devDependencies)) {
-      const ws = await this.project.workspace(dep);
-
-      if (ws) {
-        yield ws;
-      }
+    for await (const ws of this._loadDependencies(this.manifest.devDependencies, 'devDependency')) {
+      yield ws;
     }
   }
 
@@ -139,6 +150,14 @@ export class Workspace {
   // Properties
   get name(): string {
     return this.manifest.name;
+  }
+
+  get version(): string | undefined {
+    return this.manifest.version;
+  }
+
+  get reference(): string {
+    return this.version ? `${this.name}@${this.version}` : this.name;
   }
 
   get cwd(): string {

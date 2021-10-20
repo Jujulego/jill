@@ -721,11 +721,13 @@ __metadata:
     "@repeaterjs/repeater": ^3.0.4
     "@types/jest": 27.0.2
     "@types/node": 14.17.27
+    "@types/semver": ^7.3.9
     "@typescript-eslint/eslint-plugin": 5.1.0
     "@typescript-eslint/parser": 5.1.0
     eslint: 8.0.1
     eslint-plugin-jest: 25.2.2
     jest: 27.3.1
+    semver: ^7.3.5
     tiny-glob: ^0.2.9
     ts-jest: 27.0.7
     typescript: 4.4.4
@@ -979,6 +981,13 @@ __metadata:
   version: 2.3.2
   resolution: "@types/prettier@npm:2.3.2"
   checksum: c4313e16650811f47b07a0fa7ac0742e966f61283a7292eb667fd4626d760bf3b7d896be3eaabb3354ad45fdbe3a340299b018dd3bcce1ff753d030a8cd2479c
+  languageName: node
+  linkType: hard
+
+"@types/semver@npm:^7.3.9":
+  version: 7.3.9
+  resolution: "@types/semver@npm:7.3.9"
+  checksum: 60bfcfdfa7f937be2c6f4b37ddb6714fb0f27b05fe4cbdfdd596a97d35ed95d13ee410efdd88e72a66449d0384220bf20055ab7d6b5df10de4990fbd20e5cbe0
   languageName: node
   linkType: hard
 
