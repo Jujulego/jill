@@ -13,7 +13,7 @@
   "devDependencies": {
     "@jujulego/jill": "1.1.4",
     "@types/jest": "27.0.2",
-    "@types/node": "14.17.27",
+    "@types/node": "14.17.29",
     "@typescript-eslint/eslint-plugin": "5.1.0",
     "@typescript-eslint/parser": "5.1.0",
     "chalk": "4.1.2",
