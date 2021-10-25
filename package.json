@@ -17,8 +17,8 @@
   },
   "devDependencies": {
     "@jujulego/jill": "1.1.4",
-    "@typescript-eslint/eslint-plugin": "5.1.0",
-    "@typescript-eslint/parser": "5.1.0",
+    "@typescript-eslint/eslint-plugin": "5.2.0",
+    "@typescript-eslint/parser": "5.2.0",
     "eslint": "8.1.0",
     "eslint-plugin-jest": "25.2.2",
     "jest": "27.3.1",
