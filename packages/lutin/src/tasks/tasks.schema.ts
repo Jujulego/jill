@@ -7,11 +7,10 @@ import { TasksResolvers } from './tasks.resolvers';
 export const TasksSchema = makeExecutableSchema({
   typeDefs: gql`
       type Task {
-          id: String!
           cmd: String!
           args: [String!]!
+          cwd: String!
           status: TaskStatus!
-          options: TaskOptions
       }
       
       enum TaskStatus {
@@ -19,10 +18,6 @@ export const TasksSchema = makeExecutableSchema({
           running
           done
           failed
-      }
-      
-      type TaskOptions {
-          cwd: String
       }
       
       type Query {
