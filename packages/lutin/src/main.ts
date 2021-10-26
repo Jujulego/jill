@@ -4,12 +4,22 @@ import { graphqlHTTP } from 'express-graphql';
 import { resolvers } from './resolvers';
 import { schema } from './schema';
 
-// Server
-const app = express();
-app.use('/graphql', graphqlHTTP({
-  schema,
-  rootValue: resolvers,
-  graphiql: true,
-}));
+// Bootstrap
+(async () => {
+  const app = express();
 
-app.listen(4000);
+  if (process.env.NODE_ENV === 'development') {
+    const { default: playground } = await import('graphql-playground-middleware-express');
+    app.get('/graphql', playground({
+      endpoint: '/graphql'
+    }));
+  }
+
+  app.use('/graphql', graphqlHTTP({
+    schema,
+    rootValue: resolvers,
+    graphiql: false,
+  }));
+
+  app.listen(4000);
+})();
