@@ -1,20 +1,8 @@
 import express from 'express';
 import { graphqlHTTP } from 'express-graphql';
-import { buildSchema } from 'graphql';
 
-// Graphql schema
-const schema = buildSchema(`
-  type Query {
-    hello: String
-  }
-`);
-
-// Resolvers
-const resolvers = {
-  hello: () => {
-    return 'Hello world!';
-  }
-};
+import { resolvers } from './resolvers';
+import { schema } from './schema';
 
 // Server
 const app = express();
