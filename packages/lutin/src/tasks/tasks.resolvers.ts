@@ -1,25 +1,33 @@
+import { createHash } from 'crypto';
+
 import { ISpawnArgs, ITask, TaskStatus } from './task.model';
 
 // Constants
-const tasks: ITask[] = [];
+const tasks = new Map<string, ITask>();
+
+// Utils
+function generateId(args: ISpawnArgs): string {
+  return createHash('md5').update(args.cwd).update(args.cmd).digest('hex');
+}
 
 // Resolvers
 export const TasksResolvers = {
   Query: {
-    tasks(): ITask[] {
-      return tasks;
+    tasks() {
+      return tasks.values();
     },
   },
   Mutation: {
     spawn(_: unknown, args: ISpawnArgs): ITask {
       const task: ITask = {
+        id: generateId(args),
         cwd: args.cwd,
         cmd: args.cmd,
         args: args.args ?? [],
         status: TaskStatus.ready
       };
 
-      tasks.push(task);
+      tasks.set(task.id, task);
       return task;
     }
   }

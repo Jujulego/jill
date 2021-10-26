@@ -7,6 +7,8 @@ import { TasksResolvers } from './tasks.resolvers';
 export const TasksSchema = makeExecutableSchema({
   typeDefs: gql`
       type Task {
+          "Task unique id"
+          id: ID!
           "Task working directory"
           cwd: String!
           "Task command"

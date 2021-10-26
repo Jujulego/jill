@@ -8,6 +8,7 @@ export enum TaskStatus {
 
 // Models
 export interface ITask {
+  id: string;
   cwd: string;
   cmd: string;
   args: string[];
