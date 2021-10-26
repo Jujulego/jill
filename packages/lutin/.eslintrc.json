@@ -1,0 +1,12 @@
+{
+  "extends": [
+    "../../.eslintrc.json"
+  ],
+  "env": {
+    "node": true,
+    "jest/globals": true
+  },
+  "rules": {
+    "no-console": "error"
+  }
+}
