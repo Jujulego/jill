@@ -6,13 +6,15 @@
   },
   "plugins": [
     "@typescript-eslint",
-    "jest"
+    "jest",
+    "workspaces"
   ],
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:jest/recommended",
-    "plugin:jest/style"
+    "plugin:jest/style",
+    "plugin:workspaces/recommended"
   ],
   "env": {
     "node": true,
