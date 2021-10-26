@@ -1,5 +1,12 @@
 export const resolvers = {
   Query: {
-    hello: () => ({ message: 'Hello world!' }),
+    hello: () => 'Hello world!',
   },
+  Subscription: {
+    greetings: async function* sayHiIn5Languages() {
+      for (const hi of ['Hi', 'Bonjour', 'Hola', 'Ciao', 'Zdravo']) {
+        yield { greetings: hi };
+      }
+    },
+  }
 };

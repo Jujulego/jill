@@ -7,11 +7,11 @@ import { resolvers } from './resolvers';
 export const schema = makeExecutableSchema({
   typeDefs: gql`
       type Query {
-          hello: Message
+          hello: String
       }
       
-      type Message {
-          message: String
+      type Subscription {
+          greetings: String
       }
   `,
   resolvers
