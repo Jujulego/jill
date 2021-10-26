@@ -19,7 +19,7 @@ import { schema } from './schema';
       subscriptionEndpoint: 'ws://localhost:4000/graphql'
     }));
 
-    logger.verbose('Server will serve graphql-playground');
+    logger.verbose('Will serve graphql-playground');
   }
 
   app.use('/graphql', graphqlHTTP({
