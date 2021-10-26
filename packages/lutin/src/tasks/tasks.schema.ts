@@ -7,21 +7,33 @@ import { TasksResolvers } from './tasks.resolvers';
 export const TasksSchema = makeExecutableSchema({
   typeDefs: gql`
       type Task {
-          cmd: String!
-          args: [String!]!
+          "Task working directory"
           cwd: String!
+          "Task command"
+          cmd: String!
+          "Task command arguments"
+          args: [String!]!
+          "Task current status"
           status: TaskStatus!
       }
       
       enum TaskStatus {
+          "Task is ready to start"
           ready
+          "Task is currently running"
           running
+          "Task has successfully finished"
           done
+          "Task ended with an error code"
           failed
       }
       
       type Query {
           tasks: [Task!]!
+      }
+      
+      type Mutation {
+          spawn(cwd: String!, cmd: String!, args: [String!]): Task!
       }
   `,
   resolvers: TasksResolvers
