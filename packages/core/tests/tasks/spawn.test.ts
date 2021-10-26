@@ -214,7 +214,7 @@ for (const stream of ['stdout', 'stderr'] as SpawnTaskStream[]) {
 
 // Independent tests
 describe('spawned process standard streams', () => {
-  test('SpawnTask should log and emit all received data', () => {
+  test('SpawnTask should log and emit all received data, lines by lines', () => {
     // Start a task
     const task = new SpawnTask('test', [], {});
     const proc = (new EventEmitter()) as cp.ChildProcess;
@@ -230,12 +230,13 @@ describe('spawned process standard streams', () => {
     task.start();
 
     // Send data on stdout
-    proc.stdout?.emit('data', Buffer.from('test stdout'));
+    proc.stdout?.emit('data', Buffer.from('test'));
+    proc.stdout?.emit('data', Buffer.from(' stdout\n'));
     expect(spy).toHaveBeenCalledWith('stdout', 'test stdout');
     expect(logger.log).toHaveBeenCalledWith('info', 'test stdout');
 
     // Send data on stderr
-    proc.stderr?.emit('data', Buffer.from('test stderr'));
+    proc.stderr?.emit('data', Buffer.from('test stderr\n'));
     expect(spy).toHaveBeenCalledWith('stderr', 'test stderr');
     expect(logger.log).toHaveBeenCalledWith('info', 'test stderr');
   });
@@ -253,11 +254,11 @@ describe('spawned process standard streams', () => {
     task.start();
 
     // Send data on stdout
-    proc.stdout?.emit('data', Buffer.from('test stdout'));
+    proc.stdout?.emit('data', Buffer.from('test stdout\n'));
     expect(logger.log).toHaveBeenCalledWith('warn', 'test stdout');
 
     // Send data on stderr
-    proc.stderr?.emit('data', Buffer.from('test stderr'));
+    proc.stderr?.emit('data', Buffer.from('test stderr\n'));
     expect(logger.log).toHaveBeenCalledWith('warn', 'test stderr');
   });
 
@@ -274,11 +275,11 @@ describe('spawned process standard streams', () => {
     task.start();
 
     // Send data on stdout
-    proc.stdout?.emit('data', Buffer.from('test stdout'));
+    proc.stdout?.emit('data', Buffer.from('test stdout\nsuccess'));
     expect(logger.log).toHaveBeenCalledWith('info', 'test stdout');
 
     // Send data on stderr
-    proc.stderr?.emit('data', Buffer.from('test stderr'));
+    proc.stderr?.emit('data', Buffer.from('test stderr\n'));
     expect(logger.log).toHaveBeenCalledWith('warn', 'test stderr');
   });
 });

@@ -33,6 +33,10 @@ export class SpawnTask extends Task<SpawnTaskEventMap> {
     stdout: 'info',
     stderr: 'info',
   };
+  private readonly _streamBuffer: Record<SpawnTaskStream, string> = {
+    stdout: '',
+    stderr: '',
+  };
 
   readonly cwd: string;
   readonly env: Partial<Record<string, string>>;
@@ -60,13 +64,19 @@ export class SpawnTask extends Task<SpawnTaskEventMap> {
   // Methods
   private _streamData(stream: 'stdout' | 'stderr', buf: Buffer): void {
     // Parse message
-    const msg = buf.toString('utf-8').replace(/\n$/, '');
+    this._streamBuffer[stream] += buf.toString('utf-8');
 
-    // Log message
-    this._logger.log(this._streamLogLevel[stream], msg);
+    // Extract messages
+    const msgs = this._streamBuffer[stream].split('\n');
+    if (msgs.length < 2) return;
+
+    this._streamBuffer[stream] = msgs.pop() || '';
+
+    // Log messages
+    this._logger.log(this._streamLogLevel[stream], msgs.join('\n'));
 
     // Emit event
-    for (const line of msg.split('\n')) {
+    for (const line of msgs) {
       this.emit('data', stream, line);
     }
   }
