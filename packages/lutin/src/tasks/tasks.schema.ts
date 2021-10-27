@@ -31,6 +31,7 @@ export const TasksSchema = makeExecutableSchema({
       }
       
       type Query {
+          task(id: ID!): Task!
           tasks: [Task!]!
       }
       

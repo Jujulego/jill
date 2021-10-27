@@ -15,6 +15,11 @@ export interface ITask {
   status: TaskStatus;
 }
 
+// Args
+export interface ITaskArgs {
+  id: string;
+}
+
 export interface ISpawnArgs {
   cwd: string;
   cmd: string;

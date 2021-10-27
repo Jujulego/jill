@@ -1,6 +1,7 @@
+import { IResolvers } from '@graphql-tools/utils';
 import { createHash } from 'crypto';
 
-import { ISpawnArgs, ITask, TaskStatus } from './task.model';
+import { ISpawnArgs, ITask, ITaskArgs, TaskStatus } from './task.model';
 
 // Constants
 const tasks = new Map<string, ITask>();
@@ -11,14 +12,17 @@ function generateId(args: ISpawnArgs): string {
 }
 
 // Resolvers
-export const TasksResolvers = {
+export const TasksResolvers: IResolvers = {
   Query: {
+    task(_, { id }: ITaskArgs) {
+      return tasks.get(id);
+    },
     tasks() {
       return tasks.values();
     },
   },
   Mutation: {
-    spawn(_: unknown, args: ISpawnArgs): ITask {
+    spawn(_, args: ISpawnArgs): ITask {
       const task: ITask = {
         id: generateId(args),
         cwd: args.cwd,
