@@ -1,3 +1,5 @@
+import gql from 'graphql-tag';
+
 // Enumeration
 export enum TaskStatus {
   ready = 'ready',
@@ -25,3 +27,14 @@ export interface ISpawnArgs {
   cmd: string;
   args?: string[];
 }
+
+// Fragments
+export const TaskFragment = gql`
+    fragment Task on Task {
+        id
+        cwd
+        cmd
+        args
+        status
+    }
+`;
