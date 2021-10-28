@@ -106,10 +106,9 @@ import { commandHandler } from './wrapper';
       },
       affected: {
         alias: 'a',
-        nargs: 1,
         type: 'string',
         coerce: (rev: string) => rev === '' ? 'master' : rev,
-        group: 'Filters:',
+        group: 'Affected:',
         desc: 'Print only affected workspaces towards given git revision. If no revision is given, it will check towards master.\n' +
           'Replaces %name by workspace name.',
       },
@@ -123,7 +122,7 @@ import { commandHandler } from './wrapper';
         default: 'master',
         group: 'Affected:',
         desc: 'Fallback revision, used if no revision matching the given format is found',
-      }
+      },
     }, commandHandler(eachCommand))
     .demandCommand(1)
     .help()
