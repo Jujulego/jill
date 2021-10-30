@@ -55,9 +55,6 @@ describe('TaskManager.start', () => {
     const spyCompleted = jest.fn<void, [Task]>();
     manager.on('completed', spyCompleted);
 
-    const spyFinished = jest.fn<void, []>();
-    manager.on('finished', spyFinished);
-
     // Start !
     manager.add(ta);
 
@@ -84,30 +81,10 @@ describe('TaskManager.start', () => {
 
     expect(spyCompleted).toHaveBeenCalledWith(tb);
     expect(spyStarted).toHaveBeenCalledWith(ta);
-    expect(spyFinished).not.toHaveBeenCalled();
 
-    // When a completes, manager should emit finished
+    // Finally a completes
     ta._setStatus('done');
 
     expect(spyCompleted).toHaveBeenCalledWith(ta);
-    expect(spyFinished).toHaveBeenCalled();
-  });
-
-  it('should emit finished with task results stats', () => {
-    jest.spyOn(ta, 'start');
-    jest.spyOn(tb, 'start');
-    jest.spyOn(tc, 'start');
-
-    const spyFinished = jest.fn<void, []>();
-    manager.on('finished', spyFinished);
-
-    // Start !
-    manager.add(ta);
-
-    tc._setStatus('done');
-    tb._setStatus('done');
-    ta._setStatus('failed');
-
-    expect(spyFinished).toHaveBeenCalledWith({ success: 2, failed: 1 });
   });
 });
