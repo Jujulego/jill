@@ -1,0 +1,30 @@
+{
+  "env": {
+    "esm": {
+      "presets": [
+        ["@babel/preset-env", {
+          "bugfixes": true,
+          "modules": false
+        }],
+        "@babel/preset-typescript"
+      ],
+      "plugins": [
+        "@babel/proposal-class-properties",
+        "@babel/proposal-object-rest-spread"
+      ]
+    },
+    "cjs": {
+      "presets": [
+        ["@babel/preset-env", {
+          "bugfixes": true,
+          "modules": "cjs"
+        }],
+        "@babel/preset-typescript"
+      ],
+      "plugins": [
+        "@babel/proposal-class-properties",
+        "@babel/proposal-object-rest-spread"
+      ]
+    }
+  }
+}
