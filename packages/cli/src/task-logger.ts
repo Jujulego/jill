@@ -1,4 +1,4 @@
-import { Task, TaskManager } from '@jujulego/jill-core';
+import { Task, TaskSet } from '@jujulego/jill-core';
 
 import { logger } from './logger';
 
@@ -44,9 +44,9 @@ export class TaskLogger {
     this._refreshSpinner();
   }
 
-  connect(manager: TaskManager): void {
-    manager.on('started', (task) => this._handleStarted(task));
-    manager.on('completed', (task) => this._handleCompleted(task));
+  connect(set: TaskSet): void {
+    set.on('started', (task) => this._handleStarted(task));
+    set.on('completed', (task) => this._handleCompleted(task));
   }
 
   on(state: 'spin-multiple', format: (count: number) => string): void;

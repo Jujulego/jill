@@ -1,4 +1,4 @@
-import { TaskManager } from '@jujulego/jill-core';
+import { TaskSet } from '@jujulego/jill-core';
 
 import { CommandHandler } from '../wrapper';
 import { logger } from '../logger';
@@ -23,15 +23,17 @@ export const runCommand: CommandHandler<RunArgs> = async (prj, argv) => {
   }
 
   // Run build task
+  const set = new TaskSet();
   const task = await wks.run(argv.script, argv['--']?.map(arg => arg.toString()));
-  TaskManager.global.add(task);
+  set.add(task);
 
   const tlogger = new TaskLogger();
   tlogger.on('spin-simple', (tsk) => tsk === task ? `Running ${argv.script} in ${wks.name} ...` : `Building ${tsk.context.workspace?.name} ...`);
   tlogger.on('fail', (tsk) => tsk === task ? `${argv.script} failed` : `Failed to build ${tsk.context.workspace?.name}`);
   tlogger.on('succeed', (tsk) => tsk === task ? `${wks.name} ${argv.script} done` : `${tsk.context.workspace?.name} built`);
-  tlogger.connect(TaskManager.global);
+  tlogger.connect(set);
 
-  const [result] = await TaskManager.global.waitFor('finished');
+  set.start();
+  const [result] = await set.waitFor('finished');
   return result.failed === 0 ? 0 : 1;
 };
