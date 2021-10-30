@@ -1,11 +1,10 @@
 import cp from 'child_process';
 import { EventEmitter } from 'events';
 
-import { logger, SpawnTask, SpawnTaskFailed } from '../../src';
+import { logger, SpawnTask, SpawnTaskFailed, SpawnTaskStream } from '../../src';
 
 import '../utils/logger';
 import { TestSpawnTask } from '../utils/task';
-import { SpawnTaskStream } from '../../dist';
 
 beforeEach(() => {
   jest.resetAllMocks();
