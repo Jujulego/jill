@@ -1920,6 +1920,12 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@jujulego/jill@workspace:packages/cli"
   dependencies:
+    "@babel/core": 7.15.8
+    "@babel/plugin-proposal-class-properties": 7.14.5
+    "@babel/plugin-proposal-object-rest-spread": 7.15.6
+    "@babel/preset-env": 7.15.8
+    "@babel/preset-typescript": 7.15.0
+    "@babel/runtime": 7.15.4
     "@jujulego/jill-core": ^1.1.5
     "@repeaterjs/repeater": ^3.0.4
     "@types/jest": 27.0.2
@@ -1928,9 +1934,14 @@ __metadata:
     "@typescript-eslint/eslint-plugin": 5.2.0
     "@typescript-eslint/parser": 5.2.0
     chalk: ^4.1.1
+    del: 6.0.0
     eslint: 7.32.0
     eslint-plugin-jest: 25.2.2
     eslint-plugin-workspaces: 0.7.0
+    gulp: 4.0.2
+    gulp-babel: 8.0.0
+    gulp-cli: 2.3.0
+    gulp-typescript: 6.0.0-alpha.1
     jest: 27.3.1
     ora: ^5.4.1
     slugify: ^1.6.0
