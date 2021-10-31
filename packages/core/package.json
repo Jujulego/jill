@@ -23,9 +23,6 @@
   },
   "dependencies": {
     "@repeaterjs/repeater": "^3.0.4",
-    "graphql": "^15.7.1",
-    "graphql-request": "^3.6.1",
-    "graphql-tag": "^2.12.5",
     "semver": "^7.3.5",
     "tiny-glob": "^0.2.9",
     "winston": "^3.3.3"
