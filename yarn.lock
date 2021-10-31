@@ -1882,7 +1882,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jujulego/jill-core@^1.1.5, @jujulego/jill-core@workspace:packages/core":
+"@jujulego/jill-core@^1.1.6, @jujulego/jill-core@workspace:packages/core":
   version: 0.0.0-use.local
   resolution: "@jujulego/jill-core@workspace:packages/core"
   dependencies:
@@ -1916,7 +1916,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jujulego/jill@1.1.7, @jujulego/jill@workspace:packages/cli":
+"@jujulego/jill@1.1.8, @jujulego/jill@workspace:packages/cli":
   version: 0.0.0-use.local
   resolution: "@jujulego/jill@workspace:packages/cli"
   dependencies:
@@ -1926,7 +1926,7 @@ __metadata:
     "@babel/preset-env": 7.15.8
     "@babel/preset-typescript": 7.15.0
     "@babel/runtime": 7.15.4
-    "@jujulego/jill-core": ^1.1.5
+    "@jujulego/jill-core": ^1.1.6
     "@repeaterjs/repeater": ^3.0.4
     "@types/jest": 27.0.2
     "@types/node": 14.17.32
@@ -6291,7 +6291,7 @@ fsevents@^2.3.2:
   version: 0.0.0-use.local
   resolution: "jill-e2e@workspace:e2e"
   dependencies:
-    "@jujulego/jill": 1.1.7
+    "@jujulego/jill": 1.1.8
     "@types/jest": 27.0.2
     "@types/node": 14.17.32
     "@typescript-eslint/eslint-plugin": 5.2.0
@@ -6309,7 +6309,7 @@ fsevents@^2.3.2:
   version: 0.0.0-use.local
   resolution: "jill@workspace:."
   dependencies:
-    "@jujulego/jill": 1.1.7
+    "@jujulego/jill": 1.1.8
     "@typescript-eslint/eslint-plugin": 5.2.0
     "@typescript-eslint/parser": 5.2.0
     eslint: 7.32.0
