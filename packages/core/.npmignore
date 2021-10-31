@@ -1,5 +1,6 @@
 # Sources
 /src
+/mocks
 /tests
 /node_modules
 
@@ -29,8 +30,10 @@ lerna-debug.log*
 .vscode/*
 
 # Configs
+.babelrc
 .eslintrc.json
 .gitignore
+gulpfile.js
 jest.config.js
 nest-cli.json
 sonar-project.properties
