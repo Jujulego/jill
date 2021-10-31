@@ -14,7 +14,7 @@
     "clean": "gulp clean",
     "build": "gulp build",
     "start": "nodemon src/main.ts",
-    "test": "jest"
+    "test": "jest --passWithNoTests"
   },
   "engines": {
     "node": "^14"

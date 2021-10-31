@@ -40,6 +40,7 @@ jobs:
           - 'jill-e2e'
           - '@jujulego/jill'
           - '@jujulego/jill-core'
+          - '@jujulego/jill-lutin'
 
     steps:
       - uses: actions/checkout@v2.4.0
@@ -72,6 +73,10 @@ jobs:
           - name: 'jill-core'
             package: '@jujulego/jill-core'
             workspace: 'packages/core'
+
+          - name: 'jill-lutin'
+            package: '@jujulego/jill-lutin'
+            workspace: 'packages/lutin'
 
     steps:
       - uses: actions/checkout@v2.4.0
@@ -226,6 +231,10 @@ jobs:
           - name: 'jill-core'
             package: '@jujulego/jill-core'
             workspace: 'packages/core'
+
+          - name: 'jill-lutin'
+            package: '@jujulego/jill-lutin'
+            workspace: 'packages/lutin'
 
     steps:
       - uses: actions/checkout@v2.4.0
