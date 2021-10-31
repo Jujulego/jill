@@ -1885,6 +1885,7 @@ __metadata:
     jest: 27.3.1
     semver: ^7.3.5
     tiny-glob: ^0.2.9
+    tree-kill: ^1.2.2
     ts-jest: 27.0.7
     typescript: 4.4.4
     winston: ^3.3.3
@@ -8851,6 +8852,15 @@ fsevents@^2.3.2:
   dependencies:
     punycode: ^2.1.1
   checksum: ffe6049b9dca3ae329b059aada7f515b0f0064c611b39b51ff6b53897e954650f6f63d9319c6c008d36ead477c7b55e5f64c9dc60588ddc91ff720d64eb710b3
+  languageName: node
+  linkType: hard
+
+"tree-kill@npm:^1.2.2":
+  version: 1.2.2
+  resolution: "tree-kill@npm:1.2.2"
+  bin:
+    tree-kill: cli.js
+  checksum: 49117f5f410d19c84b0464d29afb9642c863bc5ba40fcb9a245d474c6d5cc64d1b177a6e6713129eb346b40aebb9d4631d967517f9fbe8251c35b21b13cd96c7
   languageName: node
   linkType: hard
 

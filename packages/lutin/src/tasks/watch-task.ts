@@ -1,5 +1,6 @@
 import { SpawnTask, SpawnTaskOption } from '@jujulego/jill-core';
 import { createHash } from 'crypto';
+import path from 'path';
 
 import { ITask } from './task.model';
 
@@ -20,7 +21,10 @@ export class WatchTask extends SpawnTask {
 
   // Statics
   protected static _generateTaskId(task: WatchTask): string {
-    return createHash('md5').update(task.cwd).update(task.cmd).digest('hex');
+    return createHash('md5')
+      .update(path.resolve(task.cwd))
+      .update(task.cmd)
+      .digest('hex');
   }
 
   // Methods

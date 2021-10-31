@@ -33,12 +33,13 @@ export const TasksSchema = makeExecutableSchema({
       }
       
       type Query {
-          task(id: ID!): Task!
+          task(id: ID!): Task
           tasks: [Task!]!
       }
       
       type Mutation {
           spawn(cwd: String!, cmd: String!, args: [String!]): Task!
+          kill(id: ID!): Task
       }
   `,
   resolvers: TasksResolvers

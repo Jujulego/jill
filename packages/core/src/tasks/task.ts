@@ -132,6 +132,7 @@ export abstract class Task<M extends TaskEventMap = TaskEventMap> extends EventE
       return;
     }
 
+    this._logger.verbose(`Stopping ${this.name}`);
     this._stop();
   }
 
