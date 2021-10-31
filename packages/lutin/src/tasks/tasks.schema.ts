@@ -20,6 +20,8 @@ export const TasksSchema = makeExecutableSchema({
       }
       
       enum TaskStatus {
+          "Task is blocked by it's dependencies"
+          blocked
           "Task is ready to start"
           ready
           "Task is currently running"

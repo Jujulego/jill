@@ -1,19 +1,12 @@
+import { TaskStatus } from '@jujulego/jill-core';
 import gql from 'graphql-tag';
-
-// Enumeration
-export enum TaskStatus {
-  ready = 'ready',
-  running = 'running',
-  done = 'done',
-  failed = 'failed',
-}
 
 // Models
 export interface ITask {
   id: string;
   cwd: string;
   cmd: string;
-  args: string[];
+  args: readonly string[];
   status: TaskStatus;
 }
 
