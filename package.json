@@ -16,7 +16,7 @@
   ],
   "scripts": {
     "lint": "yarn workspaces foreach -pv run lint",
-    "build": "yarn workspaces foreach -ptv run build",
+    "build": "yarn workspaces foreach -pv --topological-dev run build",
     "e2e": "yarn workspace jill-e2e run start"
   },
   "devDependencies": {
