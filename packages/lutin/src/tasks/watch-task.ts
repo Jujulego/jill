@@ -17,15 +17,20 @@ export class WatchTask extends SpawnTask {
     opts?: SpawnTaskOption
   ) {
     super(cmd, args, { ...opts, cwd });
-    this.id = WatchTask.generateTaskId(cwd, cmd);
+    this.id = WatchTask.generateTaskId(cwd, cmd, args);
   }
 
   // Statics
-  static generateTaskId(cwd: string, cmd: string): string {
-    return createHash('md5')
+  static generateTaskId(cwd: string, cmd: string, args: readonly string[] = []): string {
+    let hash = createHash('md5')
       .update(path.resolve(cwd))
-      .update(cmd)
-      .digest('hex');
+      .update(cmd);
+
+    for (const arg of args) {
+      hash = hash.update(arg);
+    }
+
+    return hash.digest('hex');
   }
 
   // Methods
