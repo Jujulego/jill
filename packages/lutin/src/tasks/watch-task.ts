@@ -11,16 +11,17 @@ export class WatchTask extends SpawnTask {
 
   // Constructor
   constructor(
+    cwd: string,
     cmd: string,
-    args?: ReadonlyArray<string>,
+    args?: readonly string[],
     opts?: SpawnTaskOption
   ) {
-    super(cmd, args, opts);
-    this.id = WatchTask.generateTaskId(cmd, opts?.cwd);
+    super(cmd, args, { ...opts, cwd });
+    this.id = WatchTask.generateTaskId(cwd, cmd);
   }
 
   // Statics
-  static generateTaskId(cmd: string, cwd: string = process.cwd()): string {
+  static generateTaskId(cwd: string, cmd: string): string {
     return createHash('md5')
       .update(path.resolve(cwd))
       .update(cmd)
