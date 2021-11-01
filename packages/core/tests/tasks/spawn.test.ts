@@ -1,11 +1,15 @@
 import cp from 'child_process';
 import { EventEmitter } from 'events';
+import kill from 'tree-kill';
 
 import { logger, SpawnTask, SpawnTaskFailed, SpawnTaskStream } from '../../src';
-
-import '../utils/logger';
 import { TestSpawnTask } from '../utils/task';
+import '../utils/logger';
 
+// Mocks
+jest.mock('tree-kill');
+
+// Setup
 beforeEach(() => {
   jest.resetAllMocks();
 });
@@ -93,17 +97,16 @@ describe('SpawnTask.stop', () => {
     // Start a task
     const task = new SpawnTask('test', [], { cwd: '/test' });
     const proc = (new EventEmitter()) as cp.ChildProcess;
-    proc.kill = () => true;
+    (proc as any).pid = -1;
 
     jest.spyOn(cp, 'execFile').mockReturnValue(proc);
-    jest.spyOn(proc, 'kill').mockImplementation();
 
     task.start();
 
     // Stop it
     task.stop();
 
-    expect(proc.kill).toHaveBeenCalledTimes(1);
+    expect(kill).toHaveBeenCalledWith(-1, expect.any(Function));
     proc.emit('close', 0);
 
     expect(task.status).toBe('done');
@@ -113,17 +116,16 @@ describe('SpawnTask.stop', () => {
     // Start a task
     const task = new SpawnTask('test', [], { cwd: '/test' });
     const proc = (new EventEmitter()) as cp.ChildProcess;
-    proc.kill = () => true;
+    (proc as any).pid = -1;
 
     jest.spyOn(cp, 'execFile').mockReturnValue(proc);
-    jest.spyOn(proc, 'kill').mockImplementation();
 
     task.start();
 
     // Stop it
     task.stop();
 
-    expect(proc.kill).toHaveBeenCalledTimes(1);
+    expect(kill).toHaveBeenCalledWith(-1, expect.any(Function));
     proc.emit('close', 1);
 
     expect(task.status).toBe('failed');
