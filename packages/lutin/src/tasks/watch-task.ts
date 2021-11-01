@@ -32,7 +32,7 @@ export class WatchTask extends SpawnTask {
   toPlain(): ITask {
     return {
       id: this.id,
-      cwd: this.cwd,
+      cwd: path.resolve(this.cwd),
       cmd: this.cmd,
       args: this.args,
       status: this.status

@@ -5,6 +5,7 @@ import { eachCommand } from './commands/each';
 import { infoCommand } from './commands/info';
 import { listCommand } from './commands/list';
 import { runCommand } from './commands/run';
+import { lutinCommand } from './lutin/command';
 import { commandHandler } from './wrapper';
 
 // Bootstrap
@@ -124,6 +125,7 @@ import { commandHandler } from './wrapper';
         desc: 'Fallback revision, used if no revision matching the given format is found',
       },
     }, commandHandler(eachCommand))
+    .command('lutin', 'Interact with lutin server', lutinCommand)
     .demandCommand(1)
     .help()
     .example('$0 list -a', 'List all affected workspaces towards master branch')

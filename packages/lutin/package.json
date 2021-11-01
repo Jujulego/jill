@@ -13,6 +13,7 @@
     "lint": "eslint {src,tests}/**/*.*",
     "clean": "gulp clean",
     "build": "gulp build",
+    "watch": "gulp watch",
     "start": "nodemon src/main.ts",
     "test": "jest --passWithNoTests"
   },
