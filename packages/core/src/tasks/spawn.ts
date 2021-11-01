@@ -74,7 +74,9 @@ export class SpawnTask extends Task<SpawnTaskEventMap> {
     this._streamBuffer[stream] = msgs.pop() || '';
 
     // Log messages
-    this._logger.log(this._streamLogLevel[stream], msgs.join('\n'));
+    for (const msg of msgs) {
+      this._logger.log(this._streamLogLevel[stream], msg);
+    }
 
     // Emit event
     for (const line of msgs) {

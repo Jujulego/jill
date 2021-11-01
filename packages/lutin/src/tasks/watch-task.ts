@@ -16,14 +16,14 @@ export class WatchTask extends SpawnTask {
     opts?: SpawnTaskOption
   ) {
     super(cmd, args, opts);
-    this.id = WatchTask._generateTaskId(this);
+    this.id = WatchTask.generateTaskId(cmd, opts?.cwd);
   }
 
   // Statics
-  protected static _generateTaskId(task: WatchTask): string {
+  static generateTaskId(cmd: string, cwd: string = process.cwd()): string {
     return createHash('md5')
-      .update(path.resolve(task.cwd))
-      .update(task.cmd)
+      .update(path.resolve(cwd))
+      .update(cmd)
       .digest('hex');
   }
 

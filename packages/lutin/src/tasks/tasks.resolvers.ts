@@ -19,14 +19,17 @@ export const TasksResolvers: IResolvers = {
   },
   Mutation: {
     spawn(_, args: ISpawnArgs): ITask {
-      let task = new WatchTask(args.cmd, args.args, { cwd: args.cwd });
-      const stored = tasks.get(task.id);
+      const id = WatchTask.generateTaskId(args.cmd, args.cwd);
+      let task = tasks.get(id);
 
-      if (stored && ['ready', 'running'].includes(stored.status)) {
-        task = stored;
-      } else {
-        tasks.set(task.id, task);
+      if (!task || ['ready', 'running'].includes(task.status)) {
+        task = new WatchTask(args.cmd, args.args, {
+          cwd: args.cwd,
+          logger: logger.child({ task: id })
+        });
+        tasks.set(id, task);
         task.start();
+
         logger.info(`Started new task ${task.id}`);
       }
 
