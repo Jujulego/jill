@@ -15,7 +15,7 @@
     "build": "gulp build",
     "watch": "gulp watch",
     "start": "nodemon src/main.ts",
-    "test": "jest --passWithNoTests"
+    "test": "jest"
   },
   "engines": {
     "node": "^14"

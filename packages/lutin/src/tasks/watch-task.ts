@@ -13,7 +13,7 @@ export class WatchTask extends SpawnTask {
   constructor(
     cwd: string,
     cmd: string,
-    args?: readonly string[],
+    args: readonly string[],
     opts?: SpawnTaskOption
   ) {
     super(cmd, args, { ...opts, cwd });
@@ -21,7 +21,7 @@ export class WatchTask extends SpawnTask {
   }
 
   // Statics
-  static generateTaskId(cwd: string, cmd: string, args: readonly string[] = []): string {
+  static generateTaskId(cwd: string, cmd: string, args: readonly string[]): string {
     let hash = createHash('md5')
       .update(path.resolve(cwd))
       .update(cmd);

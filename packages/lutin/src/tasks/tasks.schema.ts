@@ -38,7 +38,7 @@ export const TasksSchema = makeExecutableSchema({
       }
       
       type Mutation {
-          spawn(cwd: String!, cmd: String!, args: [String!]): Task!
+          spawn(cwd: String!, cmd: String!, args: [String!]!): Task!
           kill(id: ID!): Task
       }
   `,

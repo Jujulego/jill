@@ -18,7 +18,7 @@ export interface ITaskArgs {
 export interface ISpawnArgs {
   cwd: string;
   cmd: string;
-  args?: string[];
+  args: string[];
 }
 
 // Fragments

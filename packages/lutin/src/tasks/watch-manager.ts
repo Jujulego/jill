@@ -12,7 +12,7 @@ export class WatchManager {
     return this._tasks.get(id) || null;
   }
 
-  spawn(cwd: string, cmd: string, args?: readonly string[]): WatchTask {
+  spawn(cwd: string, cmd: string, args: readonly string[]): WatchTask {
     const id = WatchTask.generateTaskId(cwd, cmd, args);
     let task = this.get(id);
 
