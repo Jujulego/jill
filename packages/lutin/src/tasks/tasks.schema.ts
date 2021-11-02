@@ -1,5 +1,5 @@
 import { makeExecutableSchema } from '@graphql-tools/schema';
-import gql from 'graphql-tag';
+import { gql } from 'graphql.macro';
 
 import { TasksResolvers } from './tasks.resolvers';
 

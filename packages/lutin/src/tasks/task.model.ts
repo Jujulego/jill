@@ -1,5 +1,5 @@
 import { TaskStatus } from '@jujulego/jill-core';
-import gql from 'graphql-tag';
+import { gql } from 'graphql.macro';
 
 // Models
 export interface ITask {
