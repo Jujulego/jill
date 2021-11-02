@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2.3.5
+      - uses: actions/checkout@v2.4.0
 
       - name: Use Node.js 14.x
         uses: actions/setup-node@v2.4.1
@@ -43,7 +43,7 @@ jobs:
           - '@jujulego/jill-core'
 
     steps:
-      - uses: actions/checkout@v2.3.5
+      - uses: actions/checkout@v2.4.0
 
       - name: Use Node.js 14.x
         uses: actions/setup-node@v2.4.1
@@ -75,7 +75,7 @@ jobs:
             workspace: 'packages/core'
 
     steps:
-      - uses: actions/checkout@v2.3.5
+      - uses: actions/checkout@v2.4.0
 
       - name: Use Node.js 14.x
         uses: actions/setup-node@v2.4.1
@@ -112,7 +112,7 @@ jobs:
           - 'windows-latest'
 
     steps:
-      - uses: actions/checkout@v2.3.5
+      - uses: actions/checkout@v2.4.0
         with:
           fetch-depth: 0
 
@@ -141,7 +141,7 @@ jobs:
     needs: [ lint, tests, e2e-tests ]
 
     steps:
-      - uses: actions/checkout@v2.3.5
+      - uses: actions/checkout@v2.4.0
         with:
           fetch-depth: 0
 
@@ -167,7 +167,7 @@ jobs:
             workspace: 'packages/core'
 
     steps:
-      - uses: actions/checkout@v2.3.5
+      - uses: actions/checkout@v2.4.0
         with:
           fetch-depth: 0
 
