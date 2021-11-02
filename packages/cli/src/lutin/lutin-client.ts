@@ -1,4 +1,4 @@
-import { ITask, TaskFragment } from '@jujulego/jill-lutin';
+import { ISpawnArgs, ITask, TaskFragment } from '@jujulego/jill-lutin';
 import { GraphQLClient } from 'graphql-request';
 import { gql } from 'graphql.macro';
 
@@ -21,5 +21,19 @@ export class LutinClient {
     `);
 
     return tasks;
+  }
+
+  async spawn(cwd: string, cmd: string, args: string[] = []): Promise<ITask> {
+    const { spawn } = await this._qclient.request<{ spawn: ITask }, ISpawnArgs>(gql`
+      mutation Spawn($cwd: String!, $cmd: String!, $args: [String!]!) {
+          spawn(cwd: $cwd, cmd: $cmd, args: $args) {
+              ...Task
+          }
+      }
+
+      ${TaskFragment}
+    `, { cwd, cmd, args });
+
+    return spawn;
   }
 }

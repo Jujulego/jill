@@ -1,6 +1,7 @@
 import yargs from 'yargs';
 
 import { listCommand } from './commands/list';
+import { spawnCommand } from './commands/spawn';
 import { commandHandler } from '../wrapper';
 
 // Command
@@ -32,5 +33,12 @@ export function lutinCommand(yargs: yargs.Argv) {
         desc: 'Prints more data on each tasks',
       },
     }, commandHandler(listCommand))
+    .command('spawn <command>', 'Spawn new task', {
+      workspace: {
+        alias: 'w',
+        type: 'string',
+        desc: 'Workspace to use'
+      }
+    }, commandHandler(spawnCommand))
     .demandCommand(1);
 }
