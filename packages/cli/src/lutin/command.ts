@@ -7,6 +7,12 @@ import { commandHandler } from '../wrapper';
 export function lutinCommand(yargs: yargs.Argv) {
   yargs
     .command(['list', 'ls'], 'List lutin tasks', {
+      all: {
+        alias: 'a',
+        type: 'boolean',
+        group: 'Filters:',
+        desc: 'Show all tasks (by default list shows only running tasks)',
+      },
       attrs: {
         type: 'array',
         choices: ['identifier', 'status', 'cwd' ,'command', 'cmd', 'args'],

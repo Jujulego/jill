@@ -13,6 +13,9 @@ export type Attribute = 'identifier' | 'status' | 'cwd' | 'command' | 'cmd' | 'a
 export type Data = Partial<Record<Attribute, string>>;
 
 export interface ListArgs {
+  // Filters
+  all: boolean;
+
   // Formats
   attrs: Attribute[] | undefined;
   headers: boolean | undefined;
@@ -73,7 +76,9 @@ export const listCommand: CommandHandler<ListArgs> = async (project, argv) => {
     attrs = LONG_ATTRIBUTES;
   }
 
-  const data = tasks.map(tsk => buildExtractor(attrs)(tsk, argv));
+  const data = tasks
+    .filter(tsk => argv.all || tsk.status === 'running')
+    .map(tsk => buildExtractor(attrs)(tsk, argv));
 
   // Print data
   const list = new CliList();
