@@ -36,4 +36,18 @@ export class LutinClient {
 
     return spawn;
   }
+
+  async kill(id: string): Promise<ITask | undefined> {
+    const { kill } = await this._qclient.request<{ kill: ITask | undefined }>(gql`
+      mutation Spawn($id: ID!) {
+          kill(id: $id) {
+              ...Task
+          }
+      }
+
+      ${TaskFragment}
+    `, { id });
+
+    return kill;
+  }
 }

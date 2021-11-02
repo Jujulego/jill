@@ -3,6 +3,7 @@ import yargs from 'yargs';
 import { listCommand } from './commands/list';
 import { spawnCommand } from './commands/spawn';
 import { commandHandler } from '../wrapper';
+import { killCommand } from './commands/kill';
 
 // Command
 export function lutinCommand(yargs: yargs.Argv) {
@@ -40,5 +41,6 @@ export function lutinCommand(yargs: yargs.Argv) {
         desc: 'Workspace to use'
       }
     }, commandHandler(spawnCommand))
+    .command('kill <id>', 'Kill task', {}, commandHandler(killCommand))
     .demandCommand(1);
 }
