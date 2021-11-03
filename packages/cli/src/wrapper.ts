@@ -5,7 +5,7 @@ import { logger } from './logger';
 
 // Types
 export interface CommonArgs {
-  project: string;
+  project?: string;
   'package-manager'?: PackageManager;
   verbose: number;
 }

@@ -1,5 +1,6 @@
 import { Repeater } from '@repeaterjs/repeater';
 import { execFile, ChildProcess } from 'child_process';
+import kill from 'tree-kill';
 
 import { Task, TaskEventMap, TaskOptions } from './task';
 
@@ -73,7 +74,9 @@ export class SpawnTask extends Task<SpawnTaskEventMap> {
     this._streamBuffer[stream] = msgs.pop() || '';
 
     // Log messages
-    this._logger.log(this._streamLogLevel[stream], msgs.join('\n'));
+    for (const msg of msgs) {
+      this._logger.log(this._streamLogLevel[stream], msg);
+    }
 
     // Emit event
     for (const line of msgs) {
@@ -101,7 +104,7 @@ export class SpawnTask extends Task<SpawnTaskEventMap> {
       this._streamData('stderr', buf);
     });
 
-    this._process.on('close', (code) => {
+    this._process.on('close', (code, signal) => {
       this._exitCode = code;
 
       if (code) {
@@ -109,11 +112,27 @@ export class SpawnTask extends Task<SpawnTaskEventMap> {
       } else {
         this._setStatus('done');
       }
+
+      if (signal) {
+        this._logger.verbose(`${this.name} was ended by signal ${signal}`);
+      }
+    });
+
+    this._process.on('error', (err) => {
+      this._logger.warn(`Error in ${this.name}: ${err.stack || err.message}`);
     });
   }
 
   protected _stop(): void {
-    this._process?.kill();
+    if (this._process) {
+      kill(this._process.pid, (err) => {
+        if (err) {
+          this._logger.warn(`Failed to kill ${this.name}: ${err.stack || err.message}`);
+        } else {
+          this._logger.debug(`Killed ${this.name}`);
+        }
+      });
+    }
   }
 
   streams(): Repeater<SpawnTaskEventMap['data'], void> {

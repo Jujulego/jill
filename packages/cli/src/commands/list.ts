@@ -11,7 +11,6 @@ import { CommandHandler } from '../wrapper';
 
 // Types
 export type Attribute = 'name' | 'version' | 'root' | 'slug';
-
 export type Data = Partial<Record<Attribute, string>>;
 
 export interface ListArgs {

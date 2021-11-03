@@ -25,6 +25,7 @@
     "@repeaterjs/repeater": "^3.0.4",
     "semver": "^7.3.5",
     "tiny-glob": "^0.2.9",
+    "tree-kill": "^1.2.2",
     "winston": "^3.3.3"
   },
   "devDependencies": {

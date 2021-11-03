@@ -6,6 +6,7 @@
       <sourceFolder url="file://$MODULE_DIR$/packages/core/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/packages/yarn-plugin/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/e2e" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/packages/lutin/tests" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/temp" />
       <excludeFolder url="file://$MODULE_DIR$/.tmp" />
       <excludeFolder url="file://$MODULE_DIR$/tmp" />
@@ -16,6 +17,7 @@
       <excludeFolder url="file://$MODULE_DIR$/coverage" />
       <excludeFolder url="file://$MODULE_DIR$/e2e/coverage" />
       <excludeFolder url="file://$MODULE_DIR$/packages/cli/dist" />
+      <excludeFolder url="file://$MODULE_DIR$/packages/lutin/dist" />
     </content>
     <content url="file://$MODULE_DIR$/.yarn" />
     <orderEntry type="inheritedJdk" />
