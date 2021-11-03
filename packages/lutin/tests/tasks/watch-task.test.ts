@@ -1,8 +1,15 @@
+import { createHash } from 'crypto';
 import path from 'path';
 
 import { WatchTask } from '../../src/tasks/watch-task';
 
 // Setup
+const mockId = createHash('md5')
+  .update(path.resolve('/project'))
+  .update('test')
+  .update('--arg')
+  .digest('hex');
+
 beforeEach(() => {
   jest.resetAllMocks();
 });
@@ -12,7 +19,7 @@ describe('new WatchTask', () => {
   it('should generate id', () => {
     const task = new WatchTask('/project', 'test', ['--arg']);
 
-    expect(task.id).toBe('0cfa710da3cc40387f54615ed9af7d5b');
+    expect(task.id).toBe(mockId);
     expect(task.status).toBe('ready');
     expect(task.cwd).toBe('/project');
     expect(task.cmd).toBe('test');
@@ -25,7 +32,7 @@ describe('WatchTask.toPlain', () => {
     const task = new WatchTask('/project', 'test', ['--arg']);
 
     expect(task.toPlain()).toEqual({
-      id: '0cfa710da3cc40387f54615ed9af7d5b',
+      id: mockId,
       status: 'ready',
       cwd: path.resolve('/project'),
       cmd: 'test',
