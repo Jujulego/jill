@@ -1,6 +1,6 @@
 {
   "name": "@jujulego/jill-lutin",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "license": "MIT",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -21,7 +21,7 @@
     "node": "^14"
   },
   "peerDependencies": {
-    "@jujulego/jill-core": "^1.1.6"
+    "@jujulego/jill-core": "^1.1.7"
   },
   "dependencies": {
     "@graphql-tools/merge": "^8.2.0",
@@ -41,7 +41,7 @@
     "@babel/preset-env": "7.15.8",
     "@babel/preset-typescript": "7.15.0",
     "@babel/runtime": "7.15.4",
-    "@jujulego/jill-core": "1.1.6",
+    "@jujulego/jill-core": "1.1.7",
     "@types/express": "4.17.13",
     "@types/jest": "27.0.2",
     "@types/node": "14.17.32",

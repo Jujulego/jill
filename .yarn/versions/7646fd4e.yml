@@ -1,4 +1,0 @@
-releases:
-  "@jujulego/jill": patch
-  "@jujulego/jill-core": patch
-  "@jujulego/jill-lutin": patch
