@@ -2123,7 +2123,7 @@ __metadata:
     express: ^4.17.1
     express-graphql: ^0.12.0
     graphql: ^15.6.1
-    graphql-playground-middleware-express: 1.7.22
+    graphql-playground-middleware-express: 1.7.23
     graphql-ws: ^5.5.3
     graphql.macro: 1.4.2
     gulp: 4.0.2
@@ -5968,23 +5968,23 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"graphql-playground-html@npm:^1.6.29":
-  version: 1.6.29
-  resolution: "graphql-playground-html@npm:1.6.29"
+"graphql-playground-html@npm:^1.6.30":
+  version: 1.6.30
+  resolution: "graphql-playground-html@npm:1.6.30"
   dependencies:
     xss: ^1.0.6
-  checksum: 492a7e5247e84407e84c0836421895496bb9d4ad0047481fd3ae8beb0ba0c366ba2dbd52a8c7210a92d3728816981ea51ab5ce46a19e5107bd397eac0fb53f10
+  checksum: a17b8cd4f9c1dd94c4e2aafb5f39b80fbee20adaf80dccc2d6dfebcd0ebf65dc8d7c913bd387461a0360e61d0a7474512817c5fdb636e6c0d631603ed1e8b54c
   languageName: node
   linkType: hard
 
-"graphql-playground-middleware-express@npm:1.7.22":
-  version: 1.7.22
-  resolution: "graphql-playground-middleware-express@npm:1.7.22"
+"graphql-playground-middleware-express@npm:1.7.23":
+  version: 1.7.23
+  resolution: "graphql-playground-middleware-express@npm:1.7.23"
   dependencies:
-    graphql-playground-html: ^1.6.29
+    graphql-playground-html: ^1.6.30
   peerDependencies:
     express: ^4.16.2
-  checksum: b42f1a01c9b8b3d340d5ae3c0b9fe6147e12855754134da8ca38104c1ef9774adcf6e949c7cc9c6cfaa9280468fc39616e87676a509312db941a413e1ff542cb
+  checksum: 65123c91e9e1d251d45bc9c1697cffb086925e429eedd7151334279c31fdb76eb8601c3e8ec8d56f3f253dc780932848b90d8a9d03f202dad14fd1e734de038d
   languageName: node
   linkType: hard
 
