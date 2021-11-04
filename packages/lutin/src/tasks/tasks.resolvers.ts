@@ -4,7 +4,7 @@ import { ISpawnArgs, ITask, ITaskArgs } from './task.model';
 import { WatchManager } from './watch-manager';
 
 // Constants
-const manager = new WatchManager();
+export const manager = new WatchManager();
 
 // Resolvers
 export const TasksResolvers: IResolvers = {

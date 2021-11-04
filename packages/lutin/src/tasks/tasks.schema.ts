@@ -1,11 +1,10 @@
 import { makeExecutableSchema } from '@graphql-tools/schema';
-import { gql } from 'graphql.macro';
 
 import { TasksResolvers } from './tasks.resolvers';
 
 // Schema
 export const TasksSchema = makeExecutableSchema({
-  typeDefs: gql`
+  typeDefs: /* GraphQL */`
       type Task {
           "Task unique id"
           id: ID!
