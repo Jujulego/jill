@@ -2059,7 +2059,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jujulego/jill-core@1.1.7, @jujulego/jill-core@^1.1.7, @jujulego/jill-core@workspace:packages/core":
+"@jujulego/jill-core@1.1.8, @jujulego/jill-core@^1.1.8, @jujulego/jill-core@workspace:packages/core":
   version: 0.0.0-use.local
   resolution: "@jujulego/jill-core@workspace:packages/core"
   dependencies:
@@ -2107,7 +2107,7 @@ __metadata:
     "@graphql-tools/merge": ^8.2.0
     "@graphql-tools/schema": ^8.3.0
     "@graphql-tools/utils": ^8.5.0
-    "@jujulego/jill-core": 1.1.7
+    "@jujulego/jill-core": 1.1.8
     "@types/express": 4.17.13
     "@types/jest": 27.0.2
     "@types/node": 14.17.32
@@ -2138,11 +2138,11 @@ __metadata:
     winston: ^3.3.3
     ws: ^8.2.3
   peerDependencies:
-    "@jujulego/jill-core": ^1.1.7
+    "@jujulego/jill-core": ^1.1.8
   languageName: unknown
   linkType: soft
 
-"@jujulego/jill@1.1.9, @jujulego/jill@workspace:packages/cli":
+"@jujulego/jill@1.1.10, @jujulego/jill@workspace:packages/cli":
   version: 0.0.0-use.local
   resolution: "@jujulego/jill@workspace:packages/cli"
   dependencies:
@@ -2152,7 +2152,7 @@ __metadata:
     "@babel/preset-env": 7.16.0
     "@babel/preset-typescript": 7.16.0
     "@babel/runtime": 7.16.0
-    "@jujulego/jill-core": ^1.1.7
+    "@jujulego/jill-core": ^1.1.8
     "@jujulego/jill-lutin": ^0.0.1
     "@repeaterjs/repeater": ^3.0.4
     "@types/jest": 27.0.2
@@ -7490,7 +7490,7 @@ fsevents@^1.2.7:
   version: 0.0.0-use.local
   resolution: "jill-e2e@workspace:e2e"
   dependencies:
-    "@jujulego/jill": 1.1.9
+    "@jujulego/jill": 1.1.10
     "@types/jest": 27.0.2
     "@types/node": 14.17.32
     "@typescript-eslint/eslint-plugin": 5.3.0
@@ -7508,7 +7508,7 @@ fsevents@^1.2.7:
   version: 0.0.0-use.local
   resolution: "jill@workspace:."
   dependencies:
-    "@jujulego/jill": 1.1.9
+    "@jujulego/jill": 1.1.10
     "@typescript-eslint/eslint-plugin": 5.3.0
     "@typescript-eslint/parser": 5.3.0
     eslint: 7.32.0
