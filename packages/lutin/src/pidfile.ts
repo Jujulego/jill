@@ -38,7 +38,7 @@ export class PidFile {
         // Try to update pidfile
         return await this.update();
       } else {
-        this._logger.error(err);
+        this._logger.error(err.stack || err.message);
       }
 
       return false;
