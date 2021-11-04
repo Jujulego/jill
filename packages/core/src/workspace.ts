@@ -31,7 +31,15 @@ export class Workspace {
   }
 
   // Methods
-  private _satisfies(range: string): boolean {
+  private _satisfies(from: Workspace, range: string): boolean {
+    if (range.startsWith('file:')) {
+      return path.resolve(from.cwd, range.substr(5)) === this.cwd;
+    }
+
+    if (range.startsWith('workspace:')) {
+      range = range.substr(10);
+    }
+
     return !this.version || satisfies(this.version, range);
   }
 
@@ -91,7 +99,7 @@ export class Workspace {
       const ws = await this.project.workspace(dep);
 
       if (ws) {
-        if (ws._satisfies(range)) {
+        if (ws._satisfies(this, range)) {
           yield ws;
         } else {
           this._logger.verbose(`Ignoring ${kind} ${ws.reference} as it does not match requirement ${range}`);
