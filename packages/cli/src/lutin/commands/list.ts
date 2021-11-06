@@ -63,6 +63,7 @@ export const listCommand: CommandHandler<ListArgs> = async (project, argv) => {
   // Requesting tasks
   logger.spin('Connecting to lutin');
   const client = new LutinClient();
+  await client.start(project);
 
   logger.spin('Requesting tasks');
   const tasks = await client.tasks();
