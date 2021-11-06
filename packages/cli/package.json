@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "@jujulego/jill-core": "^1.1.8",
-    "@jujulego/jill-lutin": "^0.0.1",
+    "@jujulego/jill-lutin": "^0.0.2",
     "@repeaterjs/repeater": "^3.0.4",
     "chalk": "^4.1.1",
     "graphql": "^15.7.2",
