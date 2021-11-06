@@ -1,4 +1,5 @@
-import { logger } from '../logger';
+import { logger } from '@jujulego/jill-core';
+
 import { WatchTask } from './watch-task';
 
 // Class

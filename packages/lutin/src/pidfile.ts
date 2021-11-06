@@ -1,7 +1,6 @@
+import { logger } from '@jujulego/jill-core';
 import { promises as fs } from 'fs';
 import { lock } from 'proper-lockfile';
-
-import { logger } from './logger';
 
 // Class
 export class PidFile {

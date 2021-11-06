@@ -1,9 +1,9 @@
+import { logger } from '@jujulego/jill-core';
 import express from 'express';
 import { graphqlHTTP } from 'express-graphql';
 import { useServer } from 'graphql-ws/lib/use/ws';
 import ws from 'ws';
 
-import { logger } from './logger';
 import { resolvers } from './resolvers';
 import { schema } from './schema';
 import { PidFile } from './pidfile';
