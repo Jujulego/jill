@@ -6,7 +6,7 @@ import { logger } from './logger';
 // Class
 export class PidFile {
   // Attributes
-  private readonly _logger = logger;
+  private readonly _logger = logger.child({ context: 'LutinServer' });
 
   // Statics
   private static processIsRunning(pid: number): boolean {
