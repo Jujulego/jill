@@ -56,7 +56,7 @@
     "eslint": "7.32.0",
     "eslint-plugin-jest": "25.2.3",
     "eslint-plugin-workspaces": "0.7.0",
-    "graphql-playground-middleware-express": "1.7.22",
+    "graphql-playground-middleware-express": "1.7.23",
     "graphql.macro": "1.4.2",
     "gulp": "4.0.2",
     "gulp-babel": "8.0.0",
