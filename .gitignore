@@ -7,3 +7,4 @@
 .pnp.*
 coverage/
 *.pid
+*.log

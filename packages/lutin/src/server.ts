@@ -2,6 +2,7 @@ import { logger } from '@jujulego/jill-core';
 import express from 'express';
 import { graphqlHTTP } from 'express-graphql';
 import { useServer } from 'graphql-ws/lib/use/ws';
+import winston, { format } from 'winston';
 import ws from 'ws';
 
 import { resolvers } from './resolvers';
@@ -31,6 +32,18 @@ export class LutinServer {
     this._logger.verbose('Will serve graphql-playground');
   }
 
+  private _setupLogger(): void {
+    logger.add(new winston.transports.File({
+      filename: '.jill-lutin.log',
+      options: { flag: 'w' },
+      level: 'debug',
+      format: format.combine(
+        format.timestamp(),
+        format.json(),
+      ),
+    }));
+  }
+
   private _setupShutdown(): void {
     process.once('SIGTERM', () => this._handleShutdown());
     process.once('SIGINT', () => this._handleShutdown());
@@ -44,6 +57,7 @@ export class LutinServer {
       return false;
     }
 
+    this._setupLogger();
     this._setupShutdown();
 
     // Setup app
