@@ -27,7 +27,7 @@ describe('PidFile.create', () => {
     const pidfile = new PidFile();
     await expect(pidfile.create()).resolves.toBe(true);
 
-    expect(fs.writeFile).toHaveBeenCalledWith('.jill-lutin.pid', process.pid.toString(), { flag: 'wx', encoding: 'utf-8' });
+    expect(fs.writeFile).toHaveBeenCalledWith('.jill-myr.pid', process.pid.toString(), { flag: 'wx', encoding: 'utf-8' });
   });
 
   it('should fail to create pidfile and try to update it', async () => {
@@ -70,10 +70,10 @@ describe('PidFile.update', () => {
     const pidfile = new PidFile();
     await expect(pidfile.update()).resolves.toBe(true);
 
-    expect(fs.readFile).toHaveBeenCalledWith('.jill-lutin.pid', 'utf-8');
+    expect(fs.readFile).toHaveBeenCalledWith('.jill-myr.pid', 'utf-8');
     expect(process.kill).toHaveBeenCalledWith(-10, 0);
-    expect(lock).toHaveBeenCalledWith('.jill-lutin.pid');
-    expect(fs.writeFile).toHaveBeenCalledWith('.jill-lutin.pid', process.pid.toString(), { flag: 'w', encoding: 'utf-8' });
+    expect(lock).toHaveBeenCalledWith('.jill-myr.pid');
+    expect(fs.writeFile).toHaveBeenCalledWith('.jill-myr.pid', process.pid.toString(), { flag: 'w', encoding: 'utf-8' });
     expect(lockRelease).toHaveBeenCalled();
   });
 
@@ -95,7 +95,7 @@ describe('PidFile.update', () => {
     const pidfile = new PidFile();
     await expect(pidfile.update()).resolves.toBe(false);
 
-    expect(lock).toHaveBeenCalledWith('.jill-lutin.pid');
+    expect(lock).toHaveBeenCalledWith('.jill-myr.pid');
     expect(lockRelease).toHaveBeenCalled();
   });
 });
@@ -109,6 +109,6 @@ describe('PidFile.delete', () => {
     const pidfile = new PidFile();
     await expect(pidfile.delete()).resolves.toBeUndefined();
 
-    expect(fs.unlink).toHaveBeenCalledWith('.jill-lutin.pid');
+    expect(fs.unlink).toHaveBeenCalledWith('.jill-myr.pid');
   });
 });

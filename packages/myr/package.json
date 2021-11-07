@@ -1,5 +1,5 @@
 {
-  "name": "@jujulego/jill-lutin",
+  "name": "@jujulego/jill-myr",
   "version": "0.0.3",
   "license": "MIT",
   "main": "./dist/index.js",
@@ -7,7 +7,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/Jujulego/jill",
-    "directory": "packages/lutin"
+    "directory": "packages/myr"
   },
   "scripts": {
     "lint": "eslint {src,tests}/**/*.*",

@@ -10,9 +10,9 @@ import { schema } from './schema';
 import { PidFile } from './pidfile';
 
 // Class
-export class LutinServer {
+export class MyrServer {
   // Attributes
-  private readonly _logger = logger.child({ context: LutinServer.name });
+  private readonly _logger = logger.child({ context: MyrServer.name });
   private readonly _pidfile = new PidFile();
 
   // Methods
@@ -34,7 +34,7 @@ export class LutinServer {
 
   private _setupLogger(): void {
     logger.add(new winston.transports.File({
-      filename: '.jill-lutin.log',
+      filename: '.jill-myr.log',
       options: { flag: 'w' },
       level: 'debug',
       format: format.combine(

@@ -9,4 +9,4 @@ Zero-config monorepo cli
 ## Packages
 - [@jujulego/jill](https://github.com/Jujulego/jill/tree/master/packages/cli)
 - [@jujulego/jill-core](https://github.com/Jujulego/jill/tree/master/packages/core)
-- [@jujulego/jill-lutin](https://github.com/Jujulego/jill/tree/master/packages/lutin)
+- [@jujulego/jill-myr](https://github.com/Jujulego/jill/tree/master/packages/myr)

@@ -2094,9 +2094,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jujulego/jill-lutin@^0.0.3, @jujulego/jill-lutin@workspace:packages/lutin":
+"@jujulego/jill-myr@^0.0.3, @jujulego/jill-myr@workspace:packages/myr":
   version: 0.0.0-use.local
-  resolution: "@jujulego/jill-lutin@workspace:packages/lutin"
+  resolution: "@jujulego/jill-myr@workspace:packages/myr"
   dependencies:
     "@babel/core": 7.15.8
     "@babel/plugin-proposal-class-properties": 7.14.5
@@ -2155,7 +2155,7 @@ __metadata:
     "@babel/preset-typescript": 7.16.0
     "@babel/runtime": 7.16.0
     "@jujulego/jill-core": ^1.1.8
-    "@jujulego/jill-lutin": ^0.0.3
+    "@jujulego/jill-myr": ^0.0.3
     "@repeaterjs/repeater": ^3.0.4
     "@types/jest": 27.0.2
     "@types/node": 14.17.32

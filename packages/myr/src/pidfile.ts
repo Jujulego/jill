@@ -5,7 +5,7 @@ import { lock } from 'proper-lockfile';
 // Class
 export class PidFile {
   // Attributes
-  private readonly _logger = logger.child({ context: 'LutinServer' });
+  private readonly _logger = logger.child({ context: 'MyrServer' });
 
   // Statics
   private static processIsRunning(pid: number): boolean {
@@ -19,7 +19,7 @@ export class PidFile {
 
   // Methods
   private async lock<R>(fun: () => Promise<R>): Promise<R> {
-    const release = await lock('.jill-lutin.pid');
+    const release = await lock('.jill-myr.pid');
 
     try {
       return await fun();
@@ -31,7 +31,7 @@ export class PidFile {
   async create(): Promise<boolean> {
     try {
       this._logger.debug(`Create pid file ${process.pid}`);
-      await fs.writeFile('.jill-lutin.pid', process.pid.toString(), { flag: 'wx', encoding: 'utf-8' });
+      await fs.writeFile('.jill-myr.pid', process.pid.toString(), { flag: 'wx', encoding: 'utf-8' });
     } catch (err) {
       if (err.code === 'EEXIST') {
         // Try to update pidfile
@@ -48,8 +48,8 @@ export class PidFile {
 
   async update(): Promise<boolean> {
     // Get other process pid
-    const pid = parseInt(await fs.readFile('.jill-lutin.pid', 'utf-8'));
-    this._logger.warn(`Looks like lutin was already started (${pid})`);
+    const pid = parseInt(await fs.readFile('.jill-myr.pid', 'utf-8'));
+    this._logger.warn(`Looks like myr was already started (${pid})`);
 
     // Check if other process is still running
     if (PidFile.processIsRunning(pid)) return false;
@@ -58,7 +58,7 @@ export class PidFile {
       // Lock pidfile
       await this.lock(async () => {
         this._logger.debug(`Update pid file ${pid} => ${process.pid}`);
-        await fs.writeFile('.jill-lutin.pid', process.pid.toString(), { flag: 'w', encoding: 'utf-8' });
+        await fs.writeFile('.jill-myr.pid', process.pid.toString(), { flag: 'w', encoding: 'utf-8' });
       });
 
       this._logger.info(`${pid} was killed or stopped, pidfile updated`);
@@ -72,6 +72,6 @@ export class PidFile {
 
   async delete(): Promise<void> {
     this._logger.debug('Delete pid file');
-    await fs.unlink('.jill-lutin.pid');
+    await fs.unlink('.jill-myr.pid');
   }
 }

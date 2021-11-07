@@ -6,9 +6,9 @@ import { commandHandler } from '../wrapper';
 import { killCommand } from './commands/kill';
 
 // Command
-export function lutinCommand(yargs: yargs.Argv) {
+export function myrCommand(yargs: yargs.Argv) {
   yargs
-    .command(['list', 'ls'], 'List lutin tasks', {
+    .command(['list', 'ls'], 'List myr tasks', {
       all: {
         alias: 'a',
         type: 'boolean',
