@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="start (jill-lutin)" type="js.build_tools.npm">
-    <package-json value="$PROJECT_DIR$/packages/lutin/package.json" />
+  <configuration default="false" name="start (jill-myr)" type="js.build_tools.npm">
+    <package-json value="$PROJECT_DIR$/packages/myr/package.json" />
     <command value="run" />
     <scripts>
       <script value="start" />

@@ -45,3 +45,4 @@ webpack.config.js
 /dist/.tsbuildinfo
 /dist/*.js.map
 /dist/*.d.ts.map
+/main.ts

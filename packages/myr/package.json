@@ -14,7 +14,7 @@
     "clean": "gulp clean",
     "build": "gulp build",
     "watch": "gulp watch",
-    "start": "nodemon src/main.ts",
+    "start": "nodemon main.ts",
     "test": "jest"
   },
   "engines": {
@@ -44,6 +44,8 @@
     "@babel/runtime": "7.15.4",
     "@jujulego/jill-core": "1.1.8",
     "@types/express": "4.17.13",
+    "@types/gulp": "4.0.9",
+    "@types/gulp-babel": "6.1.30",
     "@types/jest": "27.0.2",
     "@types/node": "14.17.32",
     "@types/proper-lockfile": "4.1.2",
