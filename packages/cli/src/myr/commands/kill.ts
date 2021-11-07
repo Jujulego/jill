@@ -1,5 +1,5 @@
 import { logger } from '../../logger';
-import { LutinClient } from '../lutin-client';
+import { MyrClient } from '../myr-client';
 import { CommandHandler } from '../../wrapper';
 
 // Types
@@ -10,8 +10,8 @@ export interface KillArgs {
 // Command
 export const killCommand: CommandHandler<KillArgs> = async (prj, argv) => {
   // Spawn task
-  logger.spin('Connecting to lutin');
-  const client = new LutinClient(prj);
+  logger.spin('Connecting to myr');
+  const client = new MyrClient(prj);
 
   logger.spin('Spawning task');
   const task = await client.kill(argv.id);

@@ -1,10 +1,10 @@
 import { TaskStatus } from '@jujulego/jill-core';
-import { ITask } from '@jujulego/jill-lutin';
+import { ITask } from '@jujulego/jill-myr';
 import chalk from 'chalk';
 import path from 'path';
 
 import { logger } from '../../logger';
-import { LutinClient } from '../lutin-client';
+import { MyrClient } from '../myr-client';
 import { CommandHandler } from '../../wrapper';
 import { CliList } from '../../utils/cli-list';
 
@@ -61,8 +61,8 @@ function buildExtractor(attrs: Attribute[]): Extractor<Data> {
 // Handle
 export const listCommand: CommandHandler<ListArgs> = async (prj, argv) => {
   // Requesting tasks
-  logger.spin('Connecting to lutin');
-  const client = new LutinClient(prj);
+  logger.spin('Connecting to myr');
+  const client = new MyrClient(prj);
 
   logger.spin('Requesting tasks');
   const tasks = await client.tasks();

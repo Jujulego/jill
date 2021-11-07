@@ -1,5 +1,5 @@
 import { logger } from '@jujulego/jill-core';
-import { LutinServer } from '@jujulego/jill-lutin';
+import { MyrServer } from '@jujulego/jill-myr';
 import winston, { format } from 'winston';
 
 // Setup logger
@@ -17,7 +17,7 @@ logger.add(trans);
 process.once('message', async () => {
   try {
     // Start server
-    const server = new LutinServer();
+    const server = new MyrServer();
     await server.start();
 
     logger.remove(trans);

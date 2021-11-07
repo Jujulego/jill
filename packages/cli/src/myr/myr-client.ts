@@ -1,5 +1,5 @@
 import { Project } from '@jujulego/jill-core';
-import { ISpawnArgs, ITask, TaskFragment } from '@jujulego/jill-lutin';
+import { ISpawnArgs, ITask, TaskFragment } from '@jujulego/jill-myr';
 import { fork } from 'child_process';
 import { GraphQLClient } from 'graphql-request';
 import { gql } from 'graphql.macro';
@@ -15,9 +15,9 @@ type ILog = Record<string, unknown> & {
 };
 
 // Class
-export class LutinClient {
+export class MyrClient {
   // Attributes
-  private readonly _logger = logger.child({ context: LutinClient.name });
+  private readonly _logger = logger.child({ context: MyrClient.name });
   private readonly _endpoint = 'http://localhost:5001/graphql';
   private readonly _qclient = new GraphQLClient(this._endpoint);
 
@@ -33,11 +33,11 @@ export class LutinClient {
     } catch (error) {
       if (error.code !== 'ECONNREFUSED') throw error;
 
-      // Start lutin if connection impossible
-      this._logger.verbose('Unable to connect to lutin server, trying to start it');
+      // Start myr if connection impossible
+      this._logger.verbose('Unable to connect to myr server, trying to start it');
       const ok = await this.start();
 
-      if (!ok) throw new Error('Unable to start and connect to lutin server');
+      if (!ok) throw new Error('Unable to start and connect to myr server');
 
       // Retry
       return await fn();
@@ -45,7 +45,7 @@ export class LutinClient {
   }
 
   start(): Promise<boolean> {
-    const child = fork(path.resolve(__dirname, './lutin.process'), [], {
+    const child = fork(path.resolve(__dirname, './myr.process'), [], {
       cwd: this.project.root,
       detached: true,
       stdio: ['ignore', 'pipe', 'pipe', 'ipc'],
