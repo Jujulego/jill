@@ -11,7 +11,7 @@ export interface KillArgs {
 export const killCommand: CommandHandler<KillArgs> = async (prj, argv) => {
   // Spawn task
   logger.spin('Connecting to lutin');
-  const client = new LutinClient();
+  const client = new LutinClient(prj);
 
   logger.spin('Spawning task');
   const task = await client.kill(argv.id);

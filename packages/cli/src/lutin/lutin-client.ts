@@ -17,13 +17,36 @@ type ILog = Record<string, unknown> & {
 // Class
 export class LutinClient {
   // Attributes
+  private readonly _logger = logger.child({ context: LutinClient.name });
   private readonly _endpoint = 'http://localhost:5001/graphql';
   private readonly _qclient = new GraphQLClient(this._endpoint);
 
+  // Constructor
+  constructor(
+    readonly project: Project,
+  ) {}
+
   // Methods
-  start(project: Project): Promise<boolean> {
+  private async _autoStart<T>(fn: () => Promise<T>): Promise<T> {
+    try {
+      return await fn();
+    } catch (error) {
+      if (error.code !== 'ECONNREFUSED') throw error;
+
+      // Start lutin if connection impossible
+      this._logger.verbose('Unable to connect to lutin server, trying to start it');
+      const ok = await this.start();
+
+      if (!ok) throw new Error('Unable to start and connect to lutin server');
+
+      // Retry
+      return await fn();
+    }
+  }
+
+  start(): Promise<boolean> {
     const child = fork(path.resolve(__dirname, './lutin.process'), [], {
-      cwd: project.root,
+      cwd: this.project.root,
       detached: true,
       stdio: ['ignore', 'pipe', 'pipe', 'ipc'],
     });
@@ -61,44 +84,50 @@ export class LutinClient {
   }
 
   async tasks(): Promise<ITask[]> {
-    const { tasks } = await this._qclient.request<{ tasks: ITask[] }>(gql`
-      query Tasks {
-          tasks {
-              ...Task
+    return await this._autoStart(async () => {
+      const { tasks } = await this._qclient.request<{ tasks: ITask[] }>(gql`
+          query Tasks {
+              tasks {
+                  ...Task
+              }
           }
-      }
-      
-      ${TaskFragment}
-    `);
 
-    return tasks;
+          ${TaskFragment}
+      `);
+
+      return tasks;
+    });
   }
 
   async spawn(cwd: string, cmd: string, args: string[] = []): Promise<ITask> {
-    const { spawn } = await this._qclient.request<{ spawn: ITask }, ISpawnArgs>(gql`
-      mutation Spawn($cwd: String!, $cmd: String!, $args: [String!]!) {
-          spawn(cwd: $cwd, cmd: $cmd, args: $args) {
-              ...Task
+    return await this._autoStart(async () => {
+      const { spawn } = await this._qclient.request<{ spawn: ITask }, ISpawnArgs>(gql`
+          mutation Spawn($cwd: String!, $cmd: String!, $args: [String!]!) {
+              spawn(cwd: $cwd, cmd: $cmd, args: $args) {
+                  ...Task
+              }
           }
-      }
 
-      ${TaskFragment}
-    `, { cwd, cmd, args });
+          ${TaskFragment}
+      `, { cwd, cmd, args });
 
-    return spawn;
+      return spawn;
+    });
   }
 
   async kill(id: string): Promise<ITask | undefined> {
-    const { kill } = await this._qclient.request<{ kill: ITask | undefined }>(gql`
-      mutation Spawn($id: ID!) {
-          kill(id: $id) {
-              ...Task
+    return await this._autoStart(async () => {
+      const { kill } = await this._qclient.request<{ kill: ITask | undefined }>(gql`
+          mutation Spawn($id: ID!) {
+              kill(id: $id) {
+                  ...Task
+              }
           }
-      }
 
-      ${TaskFragment}
-    `, { id });
+          ${TaskFragment}
+      `, { id });
 
-    return kill;
+      return kill;
+    });
   }
 }
