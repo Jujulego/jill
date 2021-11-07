@@ -1,57 +1,27 @@
-import express from 'express';
-import { graphqlHTTP } from 'express-graphql';
-import { useServer } from 'graphql-ws/lib/use/ws';
-import ws from 'ws';
+import { logger } from '@jujulego/jill-core';
+import { format, transports } from 'winston';
+import chalk from 'chalk';
 
-import { logger } from './logger';
-import { resolvers } from './resolvers';
-import { schema } from './schema';
-import { PidFile } from './pidfile';
+import { LutinServer } from './server';
+
+// Setup logger
+logger.add(
+  new transports.Console({
+    level: 'debug',
+    format: format.combine(
+      format.timestamp({ format: () => new Date().toLocaleString() }),
+      { transform: (info) => Object.assign(info, { context: info.task?.substr(0, 8) || info.context }) },
+      format.printf(({ context, message, timestamp }) => context
+        ? chalk`[jill-lutin] {white ${timestamp}} {grey [${context}]} ${message}`
+        : chalk`[jill-lutin] {white ${timestamp}} ${message}`
+      ),
+      format.colorize({ all: true }),
+    ),
+  })
+);
 
 // Bootstrap
 (async () => {
-  // Lock pid file
-  const pidfile = new PidFile();
-
-  if (!await pidfile.create()) {
-    process.exit(1);
-  }
-
-  // Shutdown
-  function handleShutdown() {
-    logger.info('Shutdown signal received');
-    pidfile.delete();
-  }
-
-  process.once('SIGTERM', handleShutdown);
-  process.once('SIGINT', handleShutdown);
-  process.once('SIGUSR1', handleShutdown);
-  process.once('SIGUSR2', handleShutdown);
-
-  // Stat express
-  const app = express();
-
-  if (process.env.NODE_ENV === 'development') {
-    const { default: playground } = await import('graphql-playground-middleware-express');
-
-    app.get('/graphql', playground({
-      endpoint: '/graphql',
-      subscriptionEndpoint: 'ws://localhost:4000/graphql'
-    }));
-
-    logger.verbose('Will serve graphql-playground');
-  }
-
-  app.use('/graphql', graphqlHTTP({
-    schema,
-    rootValue: resolvers,
-    graphiql: false,
-  }));
-
-  const server = app.listen(4000, () => {
-    const wsServer = new ws.Server({ server, path: '/graphql' });
-    useServer({ schema }, wsServer);
-
-    logger.info('Server is accessible at http://localhost:4000/graphql');
-  });
+  const server = new LutinServer();
+  await server.start();
 })();

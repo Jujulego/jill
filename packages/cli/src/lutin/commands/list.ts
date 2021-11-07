@@ -59,10 +59,10 @@ function buildExtractor(attrs: Attribute[]): Extractor<Data> {
 }
 
 // Handle
-export const listCommand: CommandHandler<ListArgs> = async (project, argv) => {
+export const listCommand: CommandHandler<ListArgs> = async (prj, argv) => {
   // Requesting tasks
   logger.spin('Connecting to lutin');
-  const client = new LutinClient();
+  const client = new LutinClient(prj);
 
   logger.spin('Requesting tasks');
   const tasks = await client.tasks();

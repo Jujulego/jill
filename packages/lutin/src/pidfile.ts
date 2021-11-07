@@ -1,12 +1,11 @@
+import { logger } from '@jujulego/jill-core';
 import { promises as fs } from 'fs';
 import { lock } from 'proper-lockfile';
-
-import { logger } from './logger';
 
 // Class
 export class PidFile {
   // Attributes
-  private readonly _logger = logger;
+  private readonly _logger = logger.child({ context: 'LutinServer' });
 
   // Statics
   private static processIsRunning(pid: number): boolean {
