@@ -1,0 +1,3 @@
+releases:
+  "@jujulego/jill": patch
+  "@jujulego/jill-lutin": patch
