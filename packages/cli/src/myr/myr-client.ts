@@ -1,4 +1,4 @@
-import { Project } from '@jujulego/jill-core';
+import { Project, Workspace } from '@jujulego/jill-core';
 import { ISpawnArgs, ITask, TaskFragment } from '@jujulego/jill-myr';
 import { fork } from 'child_process';
 import { GraphQLClient } from 'graphql-request';
@@ -113,6 +113,10 @@ export class MyrClient {
 
       return spawn;
     });
+  }
+
+  async spawnScript(wks: Workspace, script: string, args: string[] = []): Promise<ITask> {
+    return await this.spawn(wks.cwd, await wks.project.packageManager(), [script, ...args]);
   }
 
   async kill(id: string): Promise<ITask | undefined> {

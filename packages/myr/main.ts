@@ -2,7 +2,7 @@ import { logger } from '@jujulego/jill-core';
 import { format, transports } from 'winston';
 import chalk from 'chalk';
 
-import { MyrServer } from './src/server';
+import { MyrServer } from './src';
 
 // Setup logger
 logger.add(

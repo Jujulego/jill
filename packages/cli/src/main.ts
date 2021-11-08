@@ -6,6 +6,7 @@ import { infoCommand } from './commands/info';
 import { listCommand } from './commands/list';
 import { runCommand } from './commands/run';
 import { myrCommand } from './myr/command';
+import { watchCommand } from './myr/watch';
 import { commandHandler } from './wrapper';
 
 // Bootstrap
@@ -126,6 +127,13 @@ import { commandHandler } from './wrapper';
       },
     }, commandHandler(eachCommand))
     .command('myr', 'Interact with myr server', myrCommand)
+    .command('watch <script>', 'Run script inside workspace and watch over deps', {
+      workspace: {
+        alias: 'w',
+        type: 'string',
+        desc: 'Workspace to use'
+      }
+    }, commandHandler(watchCommand))
     .demandCommand(1)
     .help()
     .example('$0 list -a', 'List all affected workspaces towards master branch')
