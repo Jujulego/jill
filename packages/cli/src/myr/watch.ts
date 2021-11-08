@@ -8,6 +8,7 @@ import { CommandHandler } from '../wrapper';
 export interface WatchArgs {
   script: string;
   workspace: string | undefined;
+  daemon: boolean;
   '--'?: (string | number)[] | undefined;
 }
 
@@ -45,13 +46,21 @@ export const watchCommand: CommandHandler<WatchArgs> = async (prj, argv) => {
 
   // Spawn watch
   logger.spin('Connecting to myr');
-  const count = await spawnDepsTree(new MyrClient(prj), wks, new Set());
-  logger.succeed(`${count} watch tasks spawned`);
+  const myr = new MyrClient(prj);
+  const count = await spawnDepsTree(myr, wks, new Set());
 
   // Spawn task
-  const tsk = await wks.run(argv.script, argv['--']?.map(arg => arg.toString()), { buildDeps: 'none' });
-  tsk.start();
+  if (argv.daemon) {
+    const tsk = await myr.spawnScript(wks, argv.script, argv['--']?.map(arg => arg.toString()));
+    logger.log('info', `Task ${tsk.id} spawned`, { label: wks.name });
+    logger.succeed(`${count + 1} watch tasks spawned`);
+  } else {
+    logger.succeed(`${count} watch tasks spawned`);
 
-  await tsk.waitFor('done', 'failed');
-  return tsk.exitCode === 0 ? 0 : 1;
+    const tsk = await wks.run(argv.script, argv['--']?.map(arg => arg.toString()), { buildDeps: 'none' });
+    tsk.start();
+
+    await tsk.waitFor('done', 'failed');
+    return tsk.exitCode === 0 ? 0 : 1;
+  }
 };

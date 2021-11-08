@@ -128,6 +128,12 @@ import { commandHandler } from './wrapper';
     }, commandHandler(eachCommand))
     .command('myr', 'Interact with myr server', myrCommand)
     .command('watch <script>', 'Run script inside workspace and watch over deps', {
+      daemon: {
+        alias: 'd',
+        boolean: true,
+        default: false,
+        desc: 'Run watch script also in background'
+      },
       workspace: {
         alias: 'w',
         type: 'string',
