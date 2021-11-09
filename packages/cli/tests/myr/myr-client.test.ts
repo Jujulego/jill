@@ -1,32 +1,11 @@
 import { Project } from '@jujulego/jill-core';
-import { ITask } from '@jujulego/jill-myr';
-import { graphql } from 'msw';
-import { setupServer } from 'msw/node';
 
 import { MyrClient } from '../../src/myr/myr-client';
-
-// Server setup
-const server = setupServer(
-  graphql.query<{ tasks: ITask[] }>('Tasks', (req, res, ctx) => {
-    return res(
-      ctx.data({
-        tasks: [
-          {
-            id: 'mock-1',
-            cwd: '/mock',
-            cmd: 'test',
-            args: [],
-            status: 'running'
-          }
-        ]
-      })
-    );
-  })
-);
+import { myrServer } from '../../mocks/myr-server';
 
 // Setup
 beforeAll(() => {
-  server.listen();
+  myrServer.listen();
 });
 
 let project: Project;
@@ -38,11 +17,11 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  server.resetHandlers();
+  myrServer.resetHandlers();
 });
 
 afterAll(() => {
-  server.close();
+  myrServer.close();
 });
 
 // Test suites
