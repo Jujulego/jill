@@ -1,4 +1,4 @@
-import { Task, TaskSet, Workspace } from '@jujulego/jill-core';
+import { Task, TaskSet, Workspace, WorkspaceDepsMode } from '@jujulego/jill-core';
 
 import { AffectedFilter, Filter } from '../filters';
 import { logger } from '../logger';
@@ -9,6 +9,7 @@ import { Pipeline } from '../pipeline';
 // Types
 export interface EachArgs {
   script: string;
+  'deps-mode': WorkspaceDepsMode;
   '--': (string | number)[] | undefined;
 
   // Filters
@@ -61,7 +62,9 @@ export const eachCommand: CommandHandler<EachArgs> = async (prj, argv) => {
   const tasks: Task[] = [];
 
   for (const wks of workspaces) {
-    const task = await wks.run(argv.script, argv['--']?.map(arg => arg.toString()));
+    const task = await wks.run(argv.script, argv['--']?.map(arg => arg.toString()), {
+      buildDeps: argv['deps-mode']
+    });
 
     tasks.push(task);
     set.add(task);
