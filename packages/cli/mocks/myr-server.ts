@@ -18,5 +18,31 @@ export const myrServer = setupServer(
         ]
       })
     );
+  }),
+  graphql.mutation<{ spawn: ITask }>('Spawn', (req, res, ctx) => {
+    return res(
+      ctx.data({
+        spawn: {
+          id: 'mock-spawn',
+          cwd: req.body?.variables.cwd,
+          cmd: req.body?.variables.cmd,
+          args: req.body?.variables.args,
+          status: 'running'
+        }
+      })
+    );
+  }),
+  graphql.mutation<{ kill: ITask }>('Kill', (req, res, ctx) => {
+    return res(
+      ctx.data({
+        kill: {
+          id: req.body?.variables.id,
+          cwd: '/mock',
+          cmd: 'test',
+          args: [],
+          status: 'failed'
+        }
+      })
+    );
   })
 );

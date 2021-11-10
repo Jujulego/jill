@@ -122,7 +122,7 @@ export class MyrClient {
   async kill(id: string): Promise<ITask | undefined> {
     return await this._autoStart(async () => {
       const { kill } = await this._qclient.request<{ kill: ITask | undefined }>(gql`
-          mutation Spawn($id: ID!) {
+          mutation Kill($id: ID!) {
               kill(id: $id) {
                   ...Task
               }
