@@ -11,6 +11,7 @@ jest.mock('../../src/logger');
 chalk.level = 1;
 
 const defaults: Omit<EachArgs, 'script'> = {
+  'deps-mode': 'all',
   '--': undefined,
 
   private: undefined,
@@ -64,7 +65,7 @@ describe('jill each', () => {
     expect(logger.spin).toHaveBeenCalledWith('Loading project');
     expect(project.workspaces).toHaveBeenCalled();
     expect(logger.verbose).toHaveBeenCalledWith('Will run test in wks');
-    expect(wks.run).toHaveBeenCalledWith('test', ['--arg', '1']);
+    expect(wks.run).toHaveBeenCalledWith('test', ['--arg', '1'], { buildDeps: 'all' });
     expect(TaskSet.prototype.add).toHaveBeenCalledWith(tsk);
     expect(TaskSet.prototype.on).toHaveBeenCalledWith('started', expect.any(Function));
     expect(TaskSet.prototype.on).toHaveBeenCalledWith('completed', expect.any(Function));
@@ -90,7 +91,7 @@ describe('jill each', () => {
     expect(logger.spin).toHaveBeenCalledWith('Loading project');
     expect(project.workspaces).toHaveBeenCalled();
     expect(logger.verbose).toHaveBeenCalledWith('Will run test in wks');
-    expect(wks.run).toHaveBeenCalledWith('test', ['--arg', '1']);
+    expect(wks.run).toHaveBeenCalledWith('test', ['--arg', '1'], { buildDeps: 'all' });
     expect(TaskSet.prototype.add).toHaveBeenCalledWith(tsk);
     expect(TaskSet.prototype.on).toHaveBeenCalledWith('started', expect.any(Function));
     expect(TaskSet.prototype.on).toHaveBeenCalledWith('completed', expect.any(Function));

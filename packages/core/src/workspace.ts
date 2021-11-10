@@ -10,8 +10,10 @@ import { SpawnTask, SpawnTaskOption } from './tasks';
 import { combine } from './utils';
 
 // Types
+export type WorkspaceDepsMode = 'all' | 'prod' | 'none';
+
 export interface WorkspaceRunOptions extends Omit<SpawnTaskOption, 'cwd'> {
-  buildDeps?: 'all' | 'prod' | 'none';
+  buildDeps?: WorkspaceDepsMode;
 }
 
 // Class
@@ -43,8 +45,21 @@ export class Workspace {
     return !this.version || satisfies(this.version, range);
   }
 
-  private async _buildDependencies(task: SpawnTask) {
-    for await (const dep of combine(this.dependencies(), this.devDependencies())) {
+  private async _buildDependencies(task: SpawnTask, deps: WorkspaceDepsMode = 'all') {
+    // Generators
+    const generators: AsyncGenerator<Workspace, void>[] = [];
+
+    switch (deps) {
+      case 'all':
+        generators.unshift(this.devDependencies());
+
+      // eslint-disable-next no-fallthrough
+      case 'prod':
+        generators.unshift(this.dependencies());
+    }
+
+    // Build deps
+    for await (const dep of combine(...generators)) {
       const build = await dep.build();
 
       if (build) {
@@ -136,7 +151,7 @@ export class Workspace {
         logger: this._logger,
         context: { workspace: this }
       });
-      await this._buildDependencies(task);
+      await this._buildDependencies(task, opts.buildDeps);
 
       this._tasks.set(script, task);
     }
@@ -144,7 +159,7 @@ export class Workspace {
     return task;
   }
 
-  async build(): Promise<SpawnTask | null> {
+  async build(opts?: WorkspaceRunOptions): Promise<SpawnTask | null> {
     const { scripts = {} } = this.manifest;
 
     if (!scripts.build) {
@@ -152,7 +167,7 @@ export class Workspace {
       return null;
     }
 
-    return await this.run('build');
+    return await this.run('build', [], opts);
   }
 
   // Properties
