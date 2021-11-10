@@ -50,12 +50,12 @@ export class Workspace {
     const generators: AsyncGenerator<Workspace, void>[] = [];
 
     switch (deps) {
-      case 'prod':
-        generators.push(this.dependencies());
+      case 'all':
+        generators.unshift(this.devDependencies());
 
       // eslint-disable-next no-fallthrough
-      case 'all':
-        generators.push(this.devDependencies());
+      case 'prod':
+        generators.unshift(this.dependencies());
     }
 
     // Build deps
