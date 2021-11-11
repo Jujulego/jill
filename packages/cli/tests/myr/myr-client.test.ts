@@ -6,6 +6,14 @@ import path from 'path';
 import { myrServer } from '../../mocks/myr-server';
 import { MyrClient } from '../../src/myr/myr-client';
 import { logger } from '../../src';
+import '../logger';
+
+// Class
+class MyrClientTest extends MyrClient {
+  public async _autoStart<T>(fn: () => Promise<T>): Promise<T> {
+    return super._autoStart(fn);
+  }
+}
 
 // Setup
 beforeAll(() => {
@@ -14,6 +22,7 @@ beforeAll(() => {
 
 let prj: Project;
 let wks: Workspace;
+let myr: MyrClientTest;
 let proc: cp.ChildProcess;
 
 beforeEach(() => {
@@ -21,6 +30,7 @@ beforeEach(() => {
 
   prj = new Project('/prj');
   wks = new Workspace('wks', { name: 'wks' }, prj);
+  myr = new MyrClientTest(prj);
 
   proc = (new EventEmitter()) as cp.ChildProcess;
   proc.send = jest.fn();
@@ -38,10 +48,47 @@ afterAll(() => {
 });
 
 // Test suites
+describe('MyrClient._autoStart', () => {
+  let started: boolean;
+
+  beforeEach(() => {
+    started = false;
+    jest.spyOn(myr, 'start').mockImplementation(async () => { started = true; });
+  });
+
+  // Tests
+  it('should run function once and return it\'s result', async () => {
+    const fun = jest.fn().mockResolvedValue('ok');
+
+    await expect(myr._autoStart(fun)).resolves.toBe('ok');
+    expect(myr.start).not.toHaveBeenCalled();
+  });
+
+  it('should run function once and throw it\'s error', async () => {
+    const fun = jest.fn().mockRejectedValue(new Error('failed'));
+
+    await expect(myr._autoStart(fun)).rejects.toEqual(new Error('failed'));
+    expect(myr.start).not.toHaveBeenCalled();
+  });
+
+  it('should rerun function after starting myr process', async () => {
+    const fun = jest.fn().mockImplementation(async () => {
+      if (started) {
+        return 'ok';
+      } else {
+        throw { code: 'ECONNREFUSED' };
+      }
+    });
+
+    await expect(myr._autoStart(fun)).resolves.toBe('ok');
+    expect(myr.start).toHaveBeenCalledTimes(1);
+    expect(fun).toHaveBeenCalledTimes(2);
+  });
+});
+
 describe('MyrClient.start', () => {
   // Tests
   it('should start myr process and resolve true when it send "started"', async () => {
-    const myr = new MyrClient(prj);
     const prom = myr.start();
 
     expect(cp.fork).toHaveBeenCalledWith(path.resolve(__dirname, '../../src/myr/myr.process'), [], {
@@ -52,11 +99,10 @@ describe('MyrClient.start', () => {
     expect(proc.send).toHaveBeenCalledWith('start');
 
     proc.emit('message', 'started');
-    await expect(prom).resolves.toBe(true);
+    await expect(prom).resolves.toBeUndefined();
   });
 
   it('should reject if process rejected', async () => {
-    const myr = new MyrClient(prj);
     const prom = myr.start();
 
     proc.emit('message', { name: 'Error', message: 'Test failed !' });
@@ -64,7 +110,6 @@ describe('MyrClient.start', () => {
   });
 
   it('should reject if process ended', async () => {
-    const myr = new MyrClient(prj);
     const prom = myr.start();
 
     proc.emit('close', 1, 'SIGINT');
@@ -75,36 +120,36 @@ describe('MyrClient.start', () => {
     const stdout = proc.stdout = (new EventEmitter()) as any;
     jest.spyOn(logger, 'log');
 
-    const myr = new MyrClient(prj);
     const prom = myr.start();
 
     stdout.emit('data', Buffer.from(JSON.stringify({ level: 'info', message: 'test stdout', metadata: 85 })));
     expect(logger.log).toHaveBeenCalledWith('info', 'test stdout', { metadata: 85 });
 
     proc.emit('message', 'started');
-    await expect(prom).resolves.toBe(true);
+    await expect(prom).resolves.toBeUndefined();
   });
 
   it('should pass stderr output to logger', async () => {
     const stderr = proc.stderr = (new EventEmitter()) as any;
     jest.spyOn(logger, 'error');
 
-    const myr = new MyrClient(prj);
     const prom = myr.start();
 
     stderr.emit('data', Buffer.from('test stderr'));
     expect(logger.error).toHaveBeenCalledWith('test stderr');
 
     proc.emit('message', 'started');
-    await expect(prom).resolves.toBe(true);
+    await expect(prom).resolves.toBeUndefined();
   });
 });
 
 describe('MyrClient.tasks', () => {
+  beforeEach(() => {
+    jest.spyOn(myr, '_autoStart').mockImplementation((fn) => fn());
+  });
+
   // Tests
   it('should return all tasks', async () => {
-    const myr = new MyrClient(prj);
-
     await expect(myr.tasks()).resolves.toEqual([
       {
         id: 'mock-1',
@@ -114,14 +159,18 @@ describe('MyrClient.tasks', () => {
         status: 'running'
       }
     ]);
+    
+    expect(myr._autoStart).toHaveBeenCalledTimes(1);
   });
 });
 
 describe('MyrClient.spawn', () => {
+  beforeEach(() => {
+    jest.spyOn(myr, '_autoStart').mockImplementation((fn) => fn());
+  });
+
   // Tests
   it('should return spawned task', async () => {
-    const myr = new MyrClient(prj);
-
     await expect(myr.spawn('/project', 'test', ['--arg'])).resolves.toEqual({
       id: 'mock-spawn',
       cwd: '/project',
@@ -129,14 +178,18 @@ describe('MyrClient.spawn', () => {
       args: ['--arg'],
       status: 'running'
     });
+
+    expect(myr._autoStart).toHaveBeenCalledTimes(1);
   });
 });
 
 describe('MyrClient.spawnScript', () => {
+  beforeEach(() => {
+    jest.spyOn(myr, '_autoStart').mockImplementation((fn) => fn());
+  });
+
   // Tests
   it('should return spawned script task', async () => {
-    const myr = new MyrClient(prj);
-
     await expect(myr.spawnScript(wks, 'test', ['--arg'])).resolves.toEqual({
       id: 'mock-spawn',
       cwd: path.resolve('/prj/wks'),
@@ -144,14 +197,18 @@ describe('MyrClient.spawnScript', () => {
       args: ['test', '--arg'],
       status: 'running'
     });
+
+    expect(myr._autoStart).toHaveBeenCalledTimes(1);
   });
 });
 
 describe('MyrClient.kill', () => {
+  beforeEach(() => {
+    jest.spyOn(myr, '_autoStart').mockImplementation((fn) => fn());
+  });
+
   // Tests
   it('should return killed task', async () => {
-    const myr = new MyrClient(prj);
-
     await expect(myr.kill('mock-kill')).resolves.toEqual({
       id: 'mock-kill',
       cwd: '/mock',
@@ -159,5 +216,7 @@ describe('MyrClient.kill', () => {
       args: [],
       status: 'failed'
     });
+
+    expect(myr._autoStart).toHaveBeenCalledTimes(1);
   });
 });

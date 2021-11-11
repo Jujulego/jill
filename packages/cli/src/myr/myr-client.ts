@@ -27,7 +27,7 @@ export class MyrClient {
   ) {}
 
   // Methods
-  private async _autoStart<T>(fn: () => Promise<T>): Promise<T> {
+  protected async _autoStart<T>(fn: () => Promise<T>): Promise<T> {
     try {
       return await fn();
     } catch (error) {
@@ -35,16 +35,14 @@ export class MyrClient {
 
       // Start myr if connection impossible
       this._logger.verbose('Unable to connect to myr server, trying to start it');
-      const ok = await this.start();
-
-      if (!ok) throw new Error('Unable to start and connect to myr server');
+      await this.start();
 
       // Retry
       return await fn();
     }
   }
 
-  start(): Promise<boolean> {
+  start(): Promise<void> {
     const child = fork(path.resolve(__dirname, './myr.process'), [], {
       cwd: this.project.root,
       detached: true,
@@ -66,10 +64,10 @@ export class MyrClient {
     });
 
     // Start server
-    return new Promise<boolean>((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       child.on('message', (msg: 'started' | Error) => {
         if (msg === 'started') {
-          resolve(true);
+          resolve();
         } else {
           reject(msg);
         }
