@@ -6,6 +6,9 @@ const ts = require('gulp-typescript');
 // Config
 const paths = {
   src: 'src/**/*.ts',
+  deps: [
+    '../../.pnp.*',
+  ]
 };
 
 const tsProject = ts.createProject('tsconfig.json', {
@@ -36,6 +39,6 @@ gulp.task('build', gulp.series(
   gulp.parallel('build:cjs', 'build:esm', 'build:types'),
 ));
 
-gulp.task('watch', () => gulp.watch(paths.src, { ignoreInitial: false },
+gulp.task('watch', () => gulp.watch([paths.src, ...paths.deps], { ignoreInitial: false },
   gulp.parallel('build:cjs', 'build:esm', 'build:types')
 ));
