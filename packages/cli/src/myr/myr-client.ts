@@ -1,4 +1,4 @@
-import { Project } from '@jujulego/jill-core';
+import { Project, Workspace } from '@jujulego/jill-core';
 import { ISpawnArgs, ITask, TaskFragment } from '@jujulego/jill-myr';
 import { fork } from 'child_process';
 import { GraphQLClient } from 'graphql-request';
@@ -27,7 +27,7 @@ export class MyrClient {
   ) {}
 
   // Methods
-  private async _autoStart<T>(fn: () => Promise<T>): Promise<T> {
+  protected async _autoStart<T>(fn: () => Promise<T>): Promise<T> {
     try {
       return await fn();
     } catch (error) {
@@ -35,16 +35,14 @@ export class MyrClient {
 
       // Start myr if connection impossible
       this._logger.verbose('Unable to connect to myr server, trying to start it');
-      const ok = await this.start();
-
-      if (!ok) throw new Error('Unable to start and connect to myr server');
+      await this.start();
 
       // Retry
       return await fn();
     }
   }
 
-  start(): Promise<boolean> {
+  start(): Promise<void> {
     const child = fork(path.resolve(__dirname, './myr.process'), [], {
       cwd: this.project.root,
       detached: true,
@@ -66,17 +64,17 @@ export class MyrClient {
     });
 
     // Start server
-    return new Promise<boolean>((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       child.on('message', (msg: 'started' | Error) => {
         if (msg === 'started') {
-          resolve(true);
+          resolve();
         } else {
           reject(msg);
         }
       });
 
-      child.on('close', (code) => {
-        resolve(code === 0);
+      child.on('close', (code, signal) => {
+        reject(new Error(`Myr process ended with code ${code} by signal ${signal}`));
       });
 
       child.send('start');
@@ -115,10 +113,14 @@ export class MyrClient {
     });
   }
 
+  async spawnScript(wks: Workspace, script: string, args: string[] = []): Promise<ITask> {
+    return await this.spawn(wks.cwd, await wks.project.packageManager(), [script, ...args]);
+  }
+
   async kill(id: string): Promise<ITask | undefined> {
     return await this._autoStart(async () => {
       const { kill } = await this._qclient.request<{ kill: ITask | undefined }>(gql`
-          mutation Spawn($id: ID!) {
+          mutation Kill($id: ID!) {
               kill(id: $id) {
                   ...Task
               }
