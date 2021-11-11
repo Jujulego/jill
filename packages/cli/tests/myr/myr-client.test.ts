@@ -122,7 +122,7 @@ describe('MyrClient.start', () => {
 
     const prom = myr.start();
 
-    stdout.emit('data', Buffer.from(JSON.stringify({ level: 'info', message: 'test stdout', metadata: 85 })));
+    stdout.emit('data', Buffer.from(JSON.stringify({ level: 'info', message: 'test stdout', metadata: 85 })) + '\n');
     expect(logger.log).toHaveBeenCalledWith('info', 'test stdout', { metadata: 85 });
 
     proc.emit('message', 'started');
@@ -181,6 +181,18 @@ describe('MyrClient.spawn', () => {
 
     expect(myr._autoStart).toHaveBeenCalledTimes(1);
   });
+
+  it('should return spawned task with default args', async () => {
+    await expect(myr.spawn('/project', 'test')).resolves.toEqual({
+      id: 'mock-spawn',
+      cwd: '/project',
+      cmd: 'test',
+      args: [],
+      status: 'running'
+    });
+
+    expect(myr._autoStart).toHaveBeenCalledTimes(1);
+  });
 });
 
 describe('MyrClient.spawnScript', () => {
@@ -195,6 +207,18 @@ describe('MyrClient.spawnScript', () => {
       cwd: path.resolve('/prj/wks'),
       cmd: 'yarn',
       args: ['test', '--arg'],
+      status: 'running'
+    });
+
+    expect(myr._autoStart).toHaveBeenCalledTimes(1);
+  });
+
+  it('should return spawned script task with default args', async () => {
+    await expect(myr.spawnScript(wks, 'test')).resolves.toEqual({
+      id: 'mock-spawn',
+      cwd: path.resolve('/prj/wks'),
+      cmd: 'yarn',
+      args: ['test'],
       status: 'running'
     });
 
