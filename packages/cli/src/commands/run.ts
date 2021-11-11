@@ -1,4 +1,4 @@
-import { TaskSet } from '@jujulego/jill-core';
+import { TaskSet, WorkspaceDepsMode } from '@jujulego/jill-core';
 
 import { CommandHandler } from '../wrapper';
 import { logger } from '../logger';
@@ -8,6 +8,7 @@ import { TaskLogger } from '../task-logger';
 export interface RunArgs {
   script: string;
   workspace: string | undefined;
+  'deps-mode': WorkspaceDepsMode;
   '--'?: (string | number)[] | undefined;
 }
 
@@ -24,7 +25,9 @@ export const runCommand: CommandHandler<RunArgs> = async (prj, argv) => {
 
   // Run build task
   const set = new TaskSet();
-  const task = await wks.run(argv.script, argv['--']?.map(arg => arg.toString()));
+  const task = await wks.run(argv.script, argv['--']?.map(arg => arg.toString()), {
+    buildDeps: argv['deps-mode']
+  });
   set.add(task);
 
   const tlogger = new TaskLogger();

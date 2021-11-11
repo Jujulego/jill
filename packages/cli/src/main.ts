@@ -98,9 +98,25 @@ import { commandHandler } from './wrapper';
         alias: 'w',
         type: 'string',
         desc: 'Workspace to use'
-      }
+      },
+      'deps-mode': {
+        choice: ['all', 'prod', 'none'],
+        default: 'all',
+        desc: 'Dependency selection mode:\n' +
+          ' - all = dependencies AND devDependencies\n' +
+          ' - prod = dependencies\n' +
+          ' - none = nothing'
+      },
     }, commandHandler(runCommand))
     .command('each <script>', 'Run script on selected workspaces', {
+      'deps-mode': {
+        choice: ['all', 'prod', 'none'],
+        default: 'all',
+        desc: 'Dependency selection mode:\n' +
+          ' - all = dependencies AND devDependencies\n' +
+          ' - prod = dependencies\n' +
+          ' - none = nothing'
+      },
       private: {
         type: 'boolean',
         group: 'Filters:',

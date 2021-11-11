@@ -50,12 +50,12 @@ export class Workspace {
     const generators: AsyncGenerator<Workspace, void>[] = [];
 
     switch (deps) {
-      case 'prod':
-        generators.push(this.dependencies());
+      case 'all':
+        generators.unshift(this.devDependencies());
 
       // eslint-disable-next no-fallthrough
-      case 'all':
-        generators.push(this.devDependencies());
+      case 'prod':
+        generators.unshift(this.dependencies());
     }
 
     // Build deps
@@ -159,7 +159,7 @@ export class Workspace {
     return task;
   }
 
-  async build(): Promise<SpawnTask | null> {
+  async build(opts?: WorkspaceRunOptions): Promise<SpawnTask | null> {
     const { scripts = {} } = this.manifest;
 
     if (!scripts.build) {
@@ -167,7 +167,7 @@ export class Workspace {
       return null;
     }
 
-    return await this.run('build');
+    return await this.run('build', [], opts);
   }
 
   // Properties
