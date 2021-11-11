@@ -75,8 +75,8 @@ export class MyrClient {
         }
       });
 
-      child.on('close', (code) => {
-        resolve(code === 0);
+      child.on('close', (code, signal) => {
+        reject(new Error(`Myr process ended with code ${code} by signal ${signal}`));
       });
 
       child.send('start');

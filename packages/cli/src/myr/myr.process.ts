@@ -9,7 +9,9 @@ const trans = new winston.transports.Console({
     format.timestamp({ format: () => new Date().toLocaleString() }),
     format.errors(),
     format.json()
-  )
+  ),
+  consoleWarnLevels: [],
+  stderrLevels: []
 });
 logger.add(trans);
 
