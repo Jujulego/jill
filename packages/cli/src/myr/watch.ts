@@ -18,16 +18,16 @@ async function spawnDepsTree(myr: MyrClient, wks: Workspace, set: Set<string>): 
 
   for await (const ws of combine(wks.dependencies(), wks.devDependencies())) {
     if (set.has(ws.cwd)) continue;
+    set.add(ws.cwd);
+
+    // Spawn dependencies
+    count += await spawnDepsTree(myr, ws, set);
 
     // Spawn task
     const tsk = await myr.spawnScript(ws, 'watch');
     logger.log('info', `Task ${tsk.id} spawned`, { label: ws.name });
 
     count++;
-    set.add(ws.cwd);
-
-    // Spawn dependencies
-    count += await spawnDepsTree(myr, ws, set);
   }
 
   return count;
@@ -45,15 +45,18 @@ export const watchCommand: CommandHandler<WatchArgs> = async (prj, argv) => {
   }
 
   // Spawn watch
-  logger.spin('Connecting to myr');
+  logger.spin('Spawning dependencies watch tasks');
   const myr = new MyrClient(prj);
   const count = await spawnDepsTree(myr, wks, new Set());
 
   // Spawn task
   if (argv.daemon) {
+    logger.spin(`Spawning ${argv.script} task`);
     const tsk = await myr.spawnScript(wks, argv.script, argv['--']?.map(arg => arg.toString()));
     logger.log('info', `Task ${tsk.id} spawned`, { label: wks.name });
     logger.succeed(`${count + 1} watch tasks spawned`);
+
+    return 0;
   } else {
     logger.succeed(`${count} watch tasks spawned`);
 

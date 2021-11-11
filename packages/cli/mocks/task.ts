@@ -12,6 +12,10 @@ export class MockTask extends SpawnTask {
     super._setStatus(status);
   }
 
+  _setExitCode(code: number): void {
+    this._exitCode = code;
+  }
+
   _start(): void {
     return;
   }

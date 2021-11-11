@@ -7,6 +7,7 @@ const ts = require('gulp-typescript');
 const paths = {
   src: 'src/**/*.ts',
   deps: [
+    '../../.pnp.*',
     '../core/dist/**/*.js',
     '../myr/dist/**/*.js',
   ]
