@@ -119,15 +119,15 @@ export class SpawnTask extends Task<SpawnTaskEventMap> {
     });
 
     this._process.on('error', (err) => {
-      this._logger.warn(`Error in ${this.name}: ${err.stack || err.message}`);
+      this._logger.warn(`Error in ${this.name}: ${err}`);
     });
   }
 
   protected _stop(): void {
     if (this._process) {
-      kill(this._process.pid, (err) => {
+      kill(this._process.pid, 'SIGTERM', (err) => {
         if (err) {
-          this._logger.warn(`Failed to kill ${this.name}: ${err.stack || err.message}`);
+          this._logger.warn(`Failed to kill ${this.name}: ${err}`);
         } else {
           this._logger.debug(`Killed ${this.name}`);
         }

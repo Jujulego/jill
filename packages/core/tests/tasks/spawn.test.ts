@@ -1,6 +1,6 @@
 import cp from 'child_process';
 import { EventEmitter } from 'events';
-import kill from 'tree-kill';
+import _kill from 'tree-kill';
 
 import { logger, SpawnTask, SpawnTaskFailed, SpawnTaskStream } from '../../src';
 import { TestSpawnTask } from '../utils/task';
@@ -8,6 +8,7 @@ import '../utils/logger';
 
 // Mocks
 jest.mock('tree-kill');
+const kill = _kill as jest.MockedFunction<typeof _kill>;
 
 // Setup
 beforeEach(() => {
@@ -15,7 +16,7 @@ beforeEach(() => {
 });
 
 // Test suites
-describe('SpawnTask.constructor', () => {
+describe('new SpawnTask', () => {
   // Tests
   it('should use current cwd by default', () => {
     const task = new SpawnTask('test');
@@ -31,13 +32,16 @@ describe('SpawnTask.constructor', () => {
 });
 
 describe('SpawnTask.start', () => {
+  let proc: EventEmitter;
+
+  beforeEach(() => {
+    proc = new EventEmitter();
+    jest.spyOn(cp, 'execFile').mockReturnValue(proc as cp.ChildProcess);
+  });
+
+  // Tests
   it('should spawn process and mark task as done if it\'s successful', () => {
     const task = new SpawnTask('test', ['arg1', 'arg2'], { cwd: '/test' });
-    const proc = new EventEmitter();
-
-    jest.spyOn(cp, 'execFile')
-      .mockReturnValue(proc as cp.ChildProcess);
-
     const spy = jest.fn();
     task.on('done', spy);
 
@@ -61,74 +65,83 @@ describe('SpawnTask.start', () => {
     expect(spy).toHaveBeenCalledTimes(1);
   });
 
-  it('should spawn process and mark task as failed if it fails', () => {
+  it('should mark task as failed if process fails', () => {
     const task = new SpawnTask('test', ['arg1', 'arg2'], { cwd: '/test' });
-    const proc = new EventEmitter();
-
-    jest.spyOn(cp, 'execFile')
-      .mockReturnValue(proc as cp.ChildProcess);
-
     const spy = jest.fn();
     task.on('failed', spy);
 
     // Start task
     task.start();
 
-    expect(cp.execFile).toHaveBeenCalledTimes(1);
-    expect(cp.execFile).toHaveBeenCalledWith('test', ['arg1', 'arg2'], {
-      cwd: '/test',
-      shell: true,
-      windowsHide: true,
-      env: expect.objectContaining({
-        FORCE_COLOR: process.env.FORCE_COLOR || '1'
-      })
-    });
-
     // Complete process
-    proc.emit('close', 1);
+    proc.emit('close', 1, null);
 
     expect(task.status).toBe('failed');
     expect(spy).toHaveBeenCalledTimes(1);
   });
+
+  it('should mark task as done if process end\'s by signal', () => {
+    const task = new SpawnTask('test', ['arg1', 'arg2'], { cwd: '/test' });
+    const spy = jest.fn();
+    task.on('done', spy);
+
+    // Start task
+    task.start();
+
+    // Complete process
+    proc.emit('close', null, 'SIGINT');
+
+    expect(task.status).toBe('done');
+    expect(spy).toHaveBeenCalledTimes(1);
+  });
+
+  it('should log if an error happens', () => {
+    jest.spyOn(logger, 'warn');
+
+    // Start task
+    const task = new SpawnTask('test', [], { cwd: '/test' });
+    task.start();
+
+    // Error !
+    proc.emit('error', new Error('Test !'));
+
+    expect(logger.warn).toHaveBeenCalledWith('Error in test: Error: Test !');
+  });
 });
 
 describe('SpawnTask.stop', () => {
-  it('should kill process and mark task done', async () => {
-    // Start a task
-    const task = new SpawnTask('test', [], { cwd: '/test' });
-    const proc = (new EventEmitter()) as cp.ChildProcess;
+  let proc: EventEmitter;
+
+  beforeEach(() => {
+    proc = new EventEmitter();
     (proc as any).pid = -1;
 
-    jest.spyOn(cp, 'execFile').mockReturnValue(proc);
-
-    task.start();
-
-    // Stop it
-    task.stop();
-
-    expect(kill).toHaveBeenCalledWith(-1, expect.any(Function));
-    proc.emit('close', 0);
-
-    expect(task.status).toBe('done');
+    jest.spyOn(cp, 'execFile').mockReturnValue(proc as cp.ChildProcess);
   });
 
-  it('should kill process and mark task failed', async () => {
+  // Tests
+  it('should kill process and log success or error', async () => {
     // Start a task
     const task = new SpawnTask('test', [], { cwd: '/test' });
-    const proc = (new EventEmitter()) as cp.ChildProcess;
-    (proc as any).pid = -1;
-
-    jest.spyOn(cp, 'execFile').mockReturnValue(proc);
-
     task.start();
 
     // Stop it
     task.stop();
+    expect(kill).toHaveBeenCalledWith(-1, 'SIGTERM', expect.any(Function));
 
-    expect(kill).toHaveBeenCalledWith(-1, expect.any(Function));
-    proc.emit('close', 1);
+    const cb = kill.mock.calls[0][2]!;
 
-    expect(task.status).toBe('failed');
+    // Test callback success
+    jest.spyOn(logger, 'debug');
+
+    cb();
+    expect(logger.debug).toHaveBeenCalledWith('Killed test');
+
+    // Test callback failure
+    jest.spyOn(logger, 'warn');
+
+    cb(new Error('Failed !'));
+    expect(logger.warn).toHaveBeenCalledWith('Failed to kill test: Error: Failed !');
   });
 });
 
