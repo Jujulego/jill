@@ -1,3 +1,4 @@
+import AsyncLock from 'async-lock';
 import { promises as fs } from 'fs';
 import path from 'path';
 import glob from 'tiny-glob';
@@ -5,7 +6,6 @@ import glob from 'tiny-glob';
 import type { Manifest } from './manifest';
 import { logger } from './logger';
 import { Workspace } from './workspace';
-import { AsyncLock } from './lock';
 
 // Types
 export type PackageManager = 'npm' | 'yarn';
@@ -77,7 +77,7 @@ export class Project {
   }
 
   private async _loadWorkspace(dir: string): Promise<Workspace> {
-    return await this._lock.with(async () => {
+    return await this._lock.acquire('workspaces', async () => {
       let wks = this._workspaces.get(dir);
 
       if (!wks) {

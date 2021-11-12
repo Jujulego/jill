@@ -7,6 +7,7 @@
       <sourceFolder url="file://$MODULE_DIR$/packages/yarn-plugin/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/e2e" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/packages/lutin/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/packages/myr/tests" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/temp" />
       <excludeFolder url="file://$MODULE_DIR$/.tmp" />
       <excludeFolder url="file://$MODULE_DIR$/tmp" />
