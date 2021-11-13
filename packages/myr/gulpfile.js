@@ -8,7 +8,7 @@ const paths = {
   src: 'src/**/*.ts',
   deps: [
     '../../.pnp.*',
-    '../core/dist/**/*.js',
+    '../core/dist/**',
   ]
 };
 
@@ -30,10 +30,7 @@ gulp.task('build:types', () => gulp.src(paths.src)
   .pipe(gulp.dest('dist'))
 );
 
-gulp.task('build', gulp.series(
-  'clean',
-  gulp.parallel('build:cjs', 'build:types'),
-));
+gulp.task('build', gulp.parallel('build:cjs', 'build:types'));
 
 gulp.task('watch', () => gulp.watch([paths.src, ...paths.deps], { ignoreInitial: false },
   gulp.parallel('build:cjs', 'build:types')

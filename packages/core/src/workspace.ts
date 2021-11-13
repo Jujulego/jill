@@ -19,7 +19,7 @@ export interface WorkspaceRunOptions extends Omit<SpawnTaskOption, 'cwd'> {
 // Class
 export class Workspace {
   // Attributes
-  private readonly _logger: Logger;
+  private readonly _logger = logger.child({ label: this.manifest.name });
   private readonly _isAffected = new Map<string, boolean | SpawnTask>();
   private readonly _tasks = new Map<string, SpawnTask>();
 
@@ -28,9 +28,7 @@ export class Workspace {
     private readonly _cwd: string,
     readonly manifest: Manifest,
     readonly project: Project
-  ) {
-    this._logger = logger.child({ label: manifest.name });
-  }
+  ) {}
 
   // Methods
   private _satisfies(from: Workspace, range: string): boolean {

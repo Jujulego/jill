@@ -19,6 +19,7 @@
       <excludeFolder url="file://$MODULE_DIR$/e2e/coverage" />
       <excludeFolder url="file://$MODULE_DIR$/packages/cli/dist" />
       <excludeFolder url="file://$MODULE_DIR$/packages/lutin/coverage" />
+      <excludeFolder url="file://$MODULE_DIR$/packages/myr/coverage" />
     </content>
     <content url="file://$MODULE_DIR$/.yarn" />
     <orderEntry type="inheritedJdk" />
