@@ -2,9 +2,11 @@ import { logger } from '@jujulego/jill-core';
 import express from 'express';
 import { graphqlHTTP } from 'express-graphql';
 import { useServer } from 'graphql-ws/lib/use/ws';
+import { exhaustMap, filter } from 'rxjs';
 import winston, { format } from 'winston';
 import ws from 'ws';
 
+import { $control } from './control/control.resolvers';
 import { resolvers } from './resolvers';
 import { schema } from './schema';
 import { PidFile } from './pidfile';
@@ -19,6 +21,8 @@ export class MyrServer {
   private async _handleShutdown(): Promise<void> {
     this._logger.info('Shutdown signal received');
     await this._pidfile.delete();
+
+    process.exit(0);
   }
 
   private async _setupDevtools(app: express.Router): Promise<void> {
@@ -49,6 +53,11 @@ export class MyrServer {
     process.once('SIGINT', () => this._handleShutdown());
     process.once('SIGUSR1', () => this._handleShutdown());
     process.once('SIGUSR2', () => this._handleShutdown());
+
+    $control.pipe(
+      filter((event) => event.action === 'shutdown'),
+      exhaustMap(() => this._handleShutdown())
+    ).subscribe();
   }
 
   async start(): Promise<boolean> {
