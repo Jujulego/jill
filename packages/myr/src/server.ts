@@ -7,6 +7,7 @@ import winston, { format } from 'winston';
 import ws from 'ws';
 
 import { $control } from './control/control.resolvers';
+import { manager } from './tasks/tasks.resolvers';
 import { resolvers } from './resolvers';
 import { schema } from './schema';
 import { PidFile } from './pidfile';
@@ -20,6 +21,12 @@ export class MyrServer {
   // Methods
   private async _handleShutdown(): Promise<void> {
     this._logger.info('Shutdown signal received');
+
+    // kill all running tasks
+    const n = await manager.killAll();
+    this._logger.info(`${n} tasks killed`);
+
+    // Delete pid file
     await this._pidfile.delete();
 
     process.exit(0);
