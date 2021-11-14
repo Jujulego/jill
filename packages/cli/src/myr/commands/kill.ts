@@ -13,7 +13,7 @@ export const killCommand: CommandHandler<KillArgs> = async (prj, argv) => {
   logger.spin('Connecting to myr');
   const client = new MyrClient(prj);
 
-  logger.spin('Spawning task');
+  logger.spin('Killing task');
   const task = await client.kill(argv.id);
 
   if (task) {

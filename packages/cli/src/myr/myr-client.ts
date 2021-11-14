@@ -81,6 +81,22 @@ export class MyrClient {
     });
   }
 
+  async stop(): Promise<boolean> {
+    try {
+      await this._qclient.request(gql`
+        mutation Shutdown {
+            shutdown
+        }
+    `);
+
+      return true;
+    } catch (error) {
+      if (error.code !== 'ECONNREFUSED') throw error;
+
+      return false;
+    }
+  }
+
   async tasks(): Promise<ITask[]> {
     return await this._autoStart(async () => {
       const { tasks } = await this._qclient.request<{ tasks: ITask[] }>(gql`
