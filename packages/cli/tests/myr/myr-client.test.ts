@@ -1,6 +1,7 @@
 import { Project, Workspace } from '@jujulego/jill-core';
 import cp from 'child_process';
 import { EventEmitter } from 'events';
+import { GraphQLClient } from 'graphql-request';
 import path from 'path';
 
 import { myrServer } from '../../mocks/myr-server';
@@ -140,6 +141,31 @@ describe('MyrClient.start', () => {
 
     proc.emit('message', 'started');
     await expect(prom).resolves.toBeUndefined();
+  });
+});
+
+describe('MyrClient.stop', () => {
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  // Tests
+  it('should return true if request is successful', async () => {
+    await expect(myr.stop()).resolves.toBe(true);
+  });
+
+  it('should return false if failed to connect to the server', async () => {
+    jest.spyOn(GraphQLClient.prototype, 'request')
+      .mockRejectedValue({ code: 'ECONNREFUSED' });
+
+    await expect(myr.stop()).resolves.toBe(false);
+  });
+
+  it('should throw received error', async () => {
+    jest.spyOn(GraphQLClient.prototype, 'request')
+      .mockRejectedValue(new Error('Failed !'));
+
+    await expect(myr.stop()).rejects.toEqual(new Error('Failed !'));
   });
 });
 
