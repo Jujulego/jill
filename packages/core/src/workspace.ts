@@ -1,10 +1,9 @@
 import path from 'path';
+import { Package } from 'normalize-package-data';
 import { satisfies } from 'semver';
-import { Logger } from 'winston';
 
 import { git } from './git';
 import { logger } from './logger';
-import type { Manifest } from './manifest';
 import { Project } from './project';
 import { SpawnTask, SpawnTaskOption } from './tasks';
 import { combine } from './utils';
@@ -26,7 +25,7 @@ export class Workspace {
   // Constructor
   constructor(
     private readonly _cwd: string,
-    readonly manifest: Manifest,
+    readonly manifest: Package,
     readonly project: Project
   ) {}
 
@@ -173,7 +172,7 @@ export class Workspace {
     return this.manifest.name;
   }
 
-  get version(): string | undefined {
+  get version(): string {
     return this.manifest.version;
   }
 
