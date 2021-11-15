@@ -1,9 +1,9 @@
 import AsyncLock from 'async-lock';
 import { promises as fs } from 'fs';
+import normalize, { Package } from 'normalize-package-data';
 import path from 'path';
 import glob from 'tiny-glob';
 
-import type { Manifest } from './manifest';
 import { logger } from './logger';
 import { Workspace } from './workspace';
 
@@ -68,12 +68,16 @@ export class Project {
   }
 
   // Methods
-  private async _loadManifest(dir: string): Promise<Manifest> {
+  private async _loadManifest(dir: string): Promise<Package> {
     const file = path.resolve(this.root, dir, 'package.json');
-    logger.verbose(`Loading ${path.relative(process.cwd(), file)} ...`);
+    const log = logger.child({ label: path.relative(process.cwd(), path.dirname(file)) });
+    log.verbose('Loading package.json ...');
 
     const data = await fs.readFile(file, 'utf-8');
-    return JSON.parse(data) as Manifest;
+    const mnf = JSON.parse(data);
+    normalize(mnf, (msg) => log.verbose(msg));
+
+    return mnf;
   }
 
   private async _loadWorkspace(dir: string): Promise<Workspace> {
