@@ -30,7 +30,7 @@ beforeEach(() => {
   jest.resetAllMocks();
 
   prj = new Project('/prj');
-  wks = new Workspace('wks', { name: 'wks' }, prj);
+  wks = new Workspace('wks', { _id: '', name: 'wks', version: '', readme: '' }, prj);
   myr = new MyrClientTest(prj);
 
   proc = (new EventEmitter()) as cp.ChildProcess;

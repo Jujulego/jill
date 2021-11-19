@@ -1,5 +1,5 @@
 import { logger } from '@jujulego/jill-core';
-import express from 'express';
+import connect from 'connect';
 import { graphqlHTTP } from 'express-graphql';
 import { useServer } from 'graphql-ws/lib/use/ws';
 import { exhaustMap, filter } from 'rxjs';
@@ -32,12 +32,12 @@ export class MyrServer {
     process.exit(0);
   }
 
-  private async _setupDevtools(app: express.Router): Promise<void> {
+  private async _setupDevtools(app: connect.Server): Promise<void> {
     const { default: playground } = await import('graphql-playground-middleware-express');
 
-    app.get('/graphql', playground({
-      endpoint: '/graphql',
-      subscriptionEndpoint: 'ws://localhost:5001/graphql'
+    app.use('/graphql', playground({
+      endpoint: '/',
+      subscriptionEndpoint: 'ws://localhost:5001/'
     }));
 
     this._logger.verbose('Will serve graphql-playground');
@@ -77,14 +77,13 @@ export class MyrServer {
     this._setupShutdown();
 
     // Setup app
-    const app = express();
+    const app = connect();
 
     if (process.env.NODE_ENV === 'development') {
       await this._setupDevtools(app);
     }
 
-    // Setup graphql
-    app.use('/graphql', graphqlHTTP({
+    app.use('/', graphqlHTTP({
       schema,
       rootValue: resolvers,
       graphiql: false,
@@ -93,10 +92,10 @@ export class MyrServer {
     const server = await app.listen(5001);
 
     // Setup websockets
-    const wsServer = new ws.Server({ server, path: '/graphql' });
+    const wsServer = new ws.Server({ server, path: '/' });
     useServer({ schema }, wsServer);
 
-    this._logger.info('Server is accessible at http://localhost:5001/graphql');
+    this._logger.info('Server is accessible at http://localhost:5001/');
     return true;
   }
 }
