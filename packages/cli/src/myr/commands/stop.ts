@@ -3,12 +3,10 @@ import { MyrClient } from '../myr-client';
 import { CommandHandler } from '../../wrapper';
 
 // Command
-export const stopCommand: CommandHandler = async (prj, argv) => {
+export const stopCommand: CommandHandler = async (prj) => {
   // Spawn task
-  logger.spin('Connecting to myr');
-  const client = new MyrClient(prj);
-
   logger.spin('Stopping myr');
+  const client = new MyrClient(prj);
   const ok = await client.stop();
 
   if (ok) {
