@@ -18,7 +18,7 @@ type ILog = Record<string, unknown> & {
 export class MyrClient {
   // Attributes
   private readonly _logger = logger.child({ context: MyrClient.name });
-  private readonly _endpoint = 'http://localhost:5001/graphql';
+  private readonly _endpoint = 'http://localhost:5001/';
   private readonly _qclient = new GraphQLClient(this._endpoint);
 
   // Constructor
