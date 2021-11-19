@@ -20,8 +20,9 @@ export const TasksResolvers: IResolvers = {
     spawn(_, { cwd, cmd, args }: ISpawnArgs): ITask {
       return manager.spawn(cwd, cmd, args).toPlain();
     },
-    kill(_, { id }: ITaskArgs): ITask | undefined {
-      return manager.kill(id)?.toPlain();
+    async kill(_, { id }: ITaskArgs): Promise<ITask | undefined> {
+      const task = await manager.kill(id);
+      return task?.toPlain();
     }
   }
 };

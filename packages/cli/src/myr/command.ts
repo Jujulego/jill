@@ -1,9 +1,10 @@
 import yargs from 'yargs';
 
+import { killCommand } from './commands/kill';
 import { listCommand } from './commands/list';
 import { spawnCommand } from './commands/spawn';
+import { stopCommand } from './commands/stop';
 import { commandHandler } from '../wrapper';
-import { killCommand } from './commands/kill';
 
 // Command
 export function myrCommand(yargs: yargs.Argv) {
@@ -42,5 +43,6 @@ export function myrCommand(yargs: yargs.Argv) {
       }
     }, commandHandler(spawnCommand))
     .command('kill <id>', 'Kill task', {}, commandHandler(killCommand))
+    .command('stop', 'Stop myr server. This will kill all running tasks', {}, commandHandler(stopCommand))
     .demandCommand(1);
 }

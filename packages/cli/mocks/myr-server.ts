@@ -44,5 +44,12 @@ export const myrServer = setupServer(
         }
       })
     );
+  }),
+  graphql.mutation<{ shutdown: boolean }>('Shutdown', (req, res, ctx) => {
+    return res(
+      ctx.data({
+        shutdown: true
+      })
+    );
   })
 );

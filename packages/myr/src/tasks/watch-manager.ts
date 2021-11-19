@@ -30,15 +30,37 @@ export class WatchManager {
     return task;
   }
 
-  kill(id: string): WatchTask | null {
+  async kill(id: string): Promise<WatchTask | null> {
     const task = this.get(id);
 
-    if (task) {
+    if (task && task.status === 'running') {
       task.stop();
+      this._logger.info(`Killing task ${id}`);
+
+      await task.waitFor('done', 'failed');
       this._logger.info(`Task ${id} killed`);
     }
 
     return task;
+  }
+
+  async killAll(): Promise<number> {
+    const tasks: Promise<unknown>[] = [];
+
+    for (const task of this._tasks.values()) {
+      if (task.status === 'running') {
+        task.stop();
+        this._logger.info(`Killing task ${task.id}`);
+
+        tasks.push((async () => {
+          await task.waitFor('done', 'failed');
+          this._logger.info(`Task ${task.id} killed`);
+        })());
+      }
+    }
+
+    await Promise.all(tasks);
+    return tasks.length;
   }
 
   // Properties
