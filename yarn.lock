@@ -2007,7 +2007,7 @@ __metadata:
     "@graphql-tools/schema": ^8.3.0
     "@graphql-tools/utils": ^8.5.0
     "@jujulego/jill-core": 1.1.11
-    "@types/connect": ^3.4.35
+    "@types/connect": 3.4.35
     "@types/gulp": 4.0.9
     "@types/gulp-babel": 6.1.30
     "@types/jest": 27.0.3
@@ -2293,7 +2293,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/connect@npm:^3.4.35":
+"@types/connect@npm:3.4.35":
   version: 3.4.35
   resolution: "@types/connect@npm:3.4.35"
   dependencies:
