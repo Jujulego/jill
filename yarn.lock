@@ -1994,7 +1994,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jujulego/jill-myr@^0.0.5, @jujulego/jill-myr@workspace:packages/myr":
+"@jujulego/jill-myr@^0.0.6, @jujulego/jill-myr@workspace:packages/myr":
   version: 0.0.0-use.local
   resolution: "@jujulego/jill-myr@workspace:packages/myr"
   dependencies:
@@ -2057,7 +2057,7 @@ __metadata:
     "@babel/preset-typescript": 7.16.0
     "@babel/runtime": 7.16.3
     "@jujulego/jill-core": ^1.1.11
-    "@jujulego/jill-myr": ^0.0.5
+    "@jujulego/jill-myr": ^0.0.6
     "@repeaterjs/repeater": ^3.0.4
     "@types/jest": 27.0.3
     "@types/node": 14.17.34
