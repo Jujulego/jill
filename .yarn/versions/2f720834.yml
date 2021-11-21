@@ -1,0 +1,5 @@
+releases:
+  "@jujulego/jill-myr": patch
+
+declined:
+  - "@jujulego/jill"
