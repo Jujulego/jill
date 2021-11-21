@@ -1,4 +1,5 @@
 import { logger } from '@jujulego/jill-core';
+import { PidFile } from '@jujulego/pid-file';
 import connect from 'connect';
 import { graphqlHTTP } from 'express-graphql';
 import { useServer } from 'graphql-ws/lib/use/ws';
@@ -10,13 +11,12 @@ import { $control } from './control/control.resolvers';
 import { manager } from './tasks/tasks.resolvers';
 import { resolvers } from './resolvers';
 import { schema } from './schema';
-import { PidFile } from './pidfile';
 
 // Class
 export class MyrServer {
   // Attributes
   private readonly _logger = logger.child({ context: MyrServer.name });
-  private readonly _pidfile = new PidFile();
+  private readonly _pidfile = new PidFile('.jill-myr.pid', this._logger);
 
   // Methods
   private async _handleShutdown(): Promise<void> {

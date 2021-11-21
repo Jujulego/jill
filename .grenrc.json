@@ -1,5 +1,5 @@
 {
-  "dataSources": "prs",
+  "dataSource": "prs",
   "ignoreLabels": ["cli", "core", "yarn-plugin"],
   "groupBy": {
     "Enhancements:": ["enhancement"],
