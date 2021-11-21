@@ -2007,6 +2007,7 @@ __metadata:
     "@graphql-tools/schema": ^8.3.0
     "@graphql-tools/utils": ^8.5.0
     "@jujulego/jill-core": 1.1.11
+    "@jujulego/pid-file": ^1.0.3
     "@types/connect": 3.4.35
     "@types/gulp": 4.0.9
     "@types/gulp-babel": 6.1.30
@@ -2090,6 +2091,16 @@ __metadata:
     jill: ./bin/jill.js
   languageName: unknown
   linkType: soft
+
+"@jujulego/pid-file@npm:^1.0.3":
+  version: 1.0.3
+  resolution: "@jujulego/pid-file@npm:1.0.3"
+  dependencies:
+    debug: ^4.3.2
+    proper-lockfile: ^4.1.2
+  checksum: 2c4d4eae055d52b9249fbf95e62b397494ae7c860fa9e52aa5ded65254d47cd4fc69eac0026787f8f4a66b86b0e15c4fac27cdfe87db524afa8a229574c1e101
+  languageName: node
+  linkType: hard
 
 "@mswjs/cookies@npm:^0.1.6":
   version: 0.1.6
