@@ -1,8 +1,9 @@
 import { logger } from '@jujulego/jill-core';
 import { PidFile } from '@jujulego/pid-file';
 import connect from 'connect';
-import { graphqlHTTP } from 'express-graphql';
+import { getGraphQLParams, graphqlHTTP } from 'express-graphql';
 import { useServer } from 'graphql-ws/lib/use/ws';
+import http from 'http';
 import { exhaustMap, filter } from 'rxjs';
 import winston, { format } from 'winston';
 import ws from 'ws';
@@ -82,6 +83,14 @@ export class MyrServer {
     if (process.env.NODE_ENV === 'development') {
       await this._setupDevtools(app);
     }
+
+    app.use('/', async (req, res, next) => {
+      const start = Date.now();
+      next();
+
+      const { operationName, variables } = await getGraphQLParams(req as http.IncomingMessage & { url: string });
+      this._logger.verbose(`${operationName || 'unnamed'} ${JSON.stringify(variables)} took ${Date.now() - start}ms`);
+    });
 
     app.use('/', graphqlHTTP({
       schema,
