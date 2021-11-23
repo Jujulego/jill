@@ -1,3 +1,4 @@
+import { IResolvers } from '@graphql-tools/utils';
 import { logger } from '@jujulego/jill-core';
 import { Subject } from 'rxjs';
 
@@ -16,7 +17,7 @@ export const $control = _control.asObservable();
 // Resolvers
 export const ControlResolvers = {
   Query: {
-    logs(args: LogsArgs): Promise<unknown[]> {
+    logs(_: IResolvers, args: LogsArgs): Promise<unknown[]> {
       return new Promise<unknown[]>((resolve, reject) => {
         logger.query({
           start: args.start,

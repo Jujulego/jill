@@ -5,11 +5,10 @@ import { ControlResolvers } from './control.resolvers';
 // Schema
 export const ControlSchema = makeExecutableSchema({
   typeDefs: /* GraphQL */`
-      """JSON data"""
-      scalar Log
+      scalar JSONObject
       
       type Query {
-          logs(start: Int, limit: Int): [Log!]!
+          logs(start: Int, limit: Int): [JSONObject!]!
       }
       
       type Mutation {
