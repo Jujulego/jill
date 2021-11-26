@@ -2,7 +2,7 @@
   "name": "jill",
   "private": true,
   "license": "MIT",
-  "packageManager": "yarn@3.1.0",
+  "packageManager": "yarn@3.1.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/Jujulego/jill"
