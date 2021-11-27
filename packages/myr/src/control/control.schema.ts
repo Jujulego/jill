@@ -11,6 +11,10 @@ export const ControlSchema = makeExecutableSchema({
           logs(start: Int, limit: Int): [JSONObject!]!
       }
       
+      type Subscription {
+          logs: JSONObject!
+      }
+      
       type Mutation {
           shutdown: Boolean!
       }

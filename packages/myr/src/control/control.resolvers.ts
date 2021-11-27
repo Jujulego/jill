@@ -3,6 +3,7 @@ import { logger } from '@jujulego/jill-core';
 import { Subject } from 'rxjs';
 
 import { Event } from '../event';
+import { pubsub } from '../pubsub';
 
 // Types
 export interface LogsArgs {
@@ -13,6 +14,10 @@ export interface LogsArgs {
 // Constants
 const _control = new Subject<Event<null, 'shutdown'>>();
 export const $control = _control.asObservable();
+
+// Setup
+logger.stream({ start: 0 })
+  .on('log', (log) => pubsub.publish('log', log));
 
 // Resolvers
 export const ControlResolvers = {
@@ -30,6 +35,11 @@ export const ControlResolvers = {
           resolve(results.file);
         });
       });
+    }
+  },
+  Subscription: {
+    logs() {
+      return pubsub.asyncIterator('logs');
     }
   },
   Mutation: {
