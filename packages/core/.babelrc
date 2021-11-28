@@ -5,8 +5,7 @@
         ["@babel/preset-env", {
           "bugfixes": true,
           "modules": false
-        }],
-        "@babel/preset-typescript"
+        }]
       ],
       "plugins": [
         "@babel/proposal-class-properties"
@@ -17,8 +16,7 @@
         ["@babel/preset-env", {
           "bugfixes": true,
           "modules": "cjs"
-        }],
-        "@babel/preset-typescript"
+        }]
       ],
       "plugins": [
         "@babel/proposal-class-properties"

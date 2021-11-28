@@ -1,7 +1,8 @@
-const del = require('del');
-const gulp = require('gulp');
-const babel = require('gulp-babel');
-const typescript = require('gulp-typescript');
+import del from 'del';
+import gulp from 'gulp';
+import babel from 'gulp-babel';
+import sourcemaps from 'gulp-sourcemaps';
+import typescript from 'gulp-typescript';
 
 // Config
 const paths = {
@@ -9,10 +10,9 @@ const paths = {
   deps: [
     '../../.pnp.*',
     '../core/dist/**',
+    '../myr/dist/**',
   ]
 };
-
-const ts = typescript.createProject('tsconfig.json');
 
 const dts = typescript.createProject('tsconfig.json', {
   isolatedModules: false,
@@ -22,14 +22,17 @@ const dts = typescript.createProject('tsconfig.json', {
 // Tasks
 gulp.task('clean', () => del('dist'));
 
-gulp.task('build:cjs', () => gulp.src(paths.src)
-  .pipe(ts())
+gulp.task('build:cjs', () => gulp.src(paths.src, { since: gulp.lastRun('build:cjs') })
+  .pipe(sourcemaps.init())
   .pipe(babel())
+  .pipe(sourcemaps.write())
   .pipe(gulp.dest('dist'))
 );
 
-gulp.task('build:types', () => gulp.src(paths.src)
+gulp.task('build:types', () => gulp.src(paths.src, { since: gulp.lastRun('build:types') })
+  .pipe(sourcemaps.init())
   .pipe(dts()).dts
+  .pipe(sourcemaps.write())
   .pipe(gulp.dest('dist'))
 );
 
