@@ -1,51 +1,67 @@
-import { IResolvers } from '@graphql-tools/utils';
+import { OnModuleInit } from '@nestjs/common';
+import { Args, ArgsType, Field, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
 import { logger } from '@jujulego/jill-core';
+import { PubSub } from 'graphql-subscriptions';
 import { Subject } from 'rxjs';
 
 import { Event } from '../event';
-import { pubsub } from '../pubsub';
+import { JSONObject } from '../json-obj.scalar';
 
 // Types
-export interface LogsArgs {
+@ArgsType()
+export class LogsArgs {
+  @Field({ nullable: true })
   start: number;
+
+  @Field({ nullable: true })
   limit: number;
 }
 
-// Constants
-const _control = new Subject<Event<null, 'shutdown'>>();
-export const $control = _control.asObservable();
+// Resolver
+@Resolver()
+export class ControlResolver implements OnModuleInit {
+  // Attributes
+  private readonly _control = new Subject<Event<null, 'shutdown'>>();
+  readonly $control = this._control.asObservable();
 
-// Setup
-logger.stream({ start: 0 })
-  .on('log', (log) => pubsub.publish('log', log));
+  // Constructor
+  constructor(
+    private readonly pubsub: PubSub
+  ) {}
 
-// Resolvers
-export const ControlResolvers = {
-  Query: {
-    logs(_: IResolvers, args: LogsArgs): Promise<unknown[]> {
-      return new Promise<unknown[]>((resolve, reject) => {
-        logger.query({
-          start: args.start,
-          limit: args.limit,
-          order: 'asc',
-          fields: null
-        }, (err, results: { file: unknown[] }) => {
-          if (err) reject(err);
-
-          resolve(results.file);
-        });
-      });
-    }
-  },
-  Subscription: {
-    logs() {
-      return pubsub.asyncIterator('logs');
-    }
-  },
-  Mutation: {
-    shutdown(): boolean {
-      _control.next({ value: null, action: 'shutdown' });
-      return true;
-    }
+  // Lifecycle
+  onModuleInit(): void {
+    logger.stream({ start: 0 })
+      .on('log', (log) => this.pubsub.publish('log', log));
   }
-};
+
+  // Queries
+  @Query(() => [JSONObject])
+  logs(@Args() args: LogsArgs): Promise<unknown[]> {
+    return new Promise<unknown[]>((resolve, reject) => {
+      logger.query({
+        start: args.start,
+        limit: args.limit,
+        order: 'asc',
+        fields: null
+      }, (err, results: { file: unknown[] }) => {
+        if (err) reject(err);
+
+        resolve(results.file);
+      });
+    });
+  }
+
+  // Subscriptions
+  @Subscription(() => JSONObject)
+  log() {
+    return this.pubsub.asyncIterator('log');
+  }
+
+  // Mutations
+  @Mutation(() => Boolean)
+  shutdown(): boolean {
+    this._control.next({ value: null, action: 'shutdown' });
+    return true;
+  }
+}
