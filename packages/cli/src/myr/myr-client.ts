@@ -1,5 +1,5 @@
 import { Project, Workspace } from '@jujulego/jill-core';
-import { ISpawnArgs, ITask, TaskFragment } from '@jujulego/jill-myr';
+import { SpawnArgs, Task, TaskFragment } from '@jujulego/jill-myr';
 import { fork } from 'child_process';
 import { GraphQLClient } from 'graphql-request';
 import { gql } from 'graphql.macro';
@@ -97,9 +97,9 @@ export class MyrClient {
     }
   }
 
-  async tasks(): Promise<ITask[]> {
+  async tasks(): Promise<Task[]> {
     return await this._autoStart(async () => {
-      const { tasks } = await this._qclient.request<{ tasks: ITask[] }>(gql`
+      const { tasks } = await this._qclient.request<{ tasks: Task[] }>(gql`
           query Tasks {
               tasks {
                   ...Task
@@ -113,9 +113,9 @@ export class MyrClient {
     });
   }
 
-  async spawn(cwd: string, cmd: string, args: string[] = []): Promise<ITask> {
+  async spawn(cwd: string, cmd: string, args: string[] = []): Promise<Task> {
     return await this._autoStart(async () => {
-      const { spawn } = await this._qclient.request<{ spawn: ITask }, ISpawnArgs>(gql`
+      const { spawn } = await this._qclient.request<{ spawn:Task },SpawnArgs>(gql`
           mutation Spawn($cwd: String!, $cmd: String!, $args: [String!]!) {
               spawn(cwd: $cwd, cmd: $cmd, args: $args) {
                   ...Task
@@ -129,13 +129,13 @@ export class MyrClient {
     });
   }
 
-  async spawnScript(wks: Workspace, script: string, args: string[] = []): Promise<ITask> {
+  async spawnScript(wks: Workspace, script: string, args: string[] = []): Promise<Task> {
     return await this.spawn(wks.cwd, await wks.project.packageManager(), [script, ...args]);
   }
 
-  async kill(id: string): Promise<ITask | undefined> {
+  async kill(id: string): Promise<Task | undefined> {
     return await this._autoStart(async () => {
-      const { kill } = await this._qclient.request<{ kill: ITask | undefined }>(gql`
+      const { kill } = await this._qclient.request<{ kill: Task | undefined }>(gql`
           mutation Kill($id: ID!) {
               kill(id: $id) {
                   ...Task

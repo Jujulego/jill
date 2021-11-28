@@ -19,7 +19,7 @@ logger.add(trans);
 process.once('message', async () => {
   try {
     // Start server
-    const server = new MyrServer();
+    const server = await MyrServer.createServer();
     await server.start();
 
     logger.remove(trans);
