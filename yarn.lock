@@ -694,6 +694,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@babel/plugin-proposal-decorators@npm:7.16.4":
+  version: 7.16.4
+  resolution: "@babel/plugin-proposal-decorators@npm:7.16.4"
+  dependencies:
+    "@babel/helper-create-class-features-plugin": ^7.16.0
+    "@babel/helper-plugin-utils": ^7.14.5
+    "@babel/plugin-syntax-decorators": ^7.16.0
+  peerDependencies:
+    "@babel/core": ^7.0.0-0
+  checksum: de4f3187c60d14fca37f4edf9d27c61b22e62609708bbaa48bd25b705ab4d5d09457b1011bf6fb55607b11c7a227310f3db5ced4802ded96a79202af7fad7101
+  languageName: node
+  linkType: hard
+
 "@babel/plugin-proposal-dynamic-import@npm:^7.16.0":
   version: 7.16.0
   resolution: "@babel/plugin-proposal-dynamic-import@npm:7.16.0"
@@ -885,6 +898,17 @@ __metadata:
   peerDependencies:
     "@babel/core": ^7.0.0-0
   checksum: 3e80814b5b6d4fe17826093918680a351c2d34398a914ce6e55d8083d72a9bdde4fbaf6a2dcea0e23a03de26dc2917ae3efd603d27099e2b98380345703bf948
+  languageName: node
+  linkType: hard
+
+"@babel/plugin-syntax-decorators@npm:^7.16.0":
+  version: 7.16.0
+  resolution: "@babel/plugin-syntax-decorators@npm:7.16.0"
+  dependencies:
+    "@babel/helper-plugin-utils": ^7.14.5
+  peerDependencies:
+    "@babel/core": ^7.0.0-0
+  checksum: afee8cc796f4e8e7ab407420f25d6241932a988036d9b49db289f5e71346e8e7e93157d3c0305f3d95acf4c901cfd6d2ad2d951701e208457788427dc38319c2
   languageName: node
   linkType: hard
 
@@ -2120,6 +2144,7 @@ __metadata:
   dependencies:
     "@babel/core": 7.16.0
     "@babel/plugin-proposal-class-properties": 7.16.0
+    "@babel/plugin-proposal-decorators": 7.16.4
     "@babel/preset-env": 7.16.4
     "@babel/preset-typescript": 7.16.0
     "@babel/runtime": 7.16.3
@@ -2138,6 +2163,7 @@ __metadata:
     apollo-server-core: ^3.5.0
     apollo-server-express: ^3.5.0
     babel-plugin-macros: 3.1.0
+    babel-plugin-transform-typescript-metadata: 0.3.2
     chalk: 4.1.2
     del: 6.0.0
     eslint: 7.32.0
@@ -3983,6 +4009,15 @@ __metadata:
   peerDependencies:
     "@babel/core": ^7.0.0-0
   checksum: ecca4389fd557554efc6de834f84f7c85e83c348d5283de2032d35429bc7121ed6f336553d3d704021f9bef22fca339fbee560d3b0fb8bb1d4eca2fecaaeebcb
+  languageName: node
+  linkType: hard
+
+"babel-plugin-transform-typescript-metadata@npm:0.3.2":
+  version: 0.3.2
+  resolution: "babel-plugin-transform-typescript-metadata@npm:0.3.2"
+  dependencies:
+    "@babel/helper-plugin-utils": ^7.0.0
+  checksum: 15aa2a05c9ec2817155cc15746e55e0e06dd57762e7fc1eea168ce9a65fd89372174ecc7506434b6abde367a264c5953f27468a0c3dcab2fb4a14bec1c719536
   languageName: node
   linkType: hard
 
