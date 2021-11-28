@@ -41,7 +41,7 @@ export class ControlResolver implements OnModuleInit {
     return new Promise<unknown[]>((resolve, reject) => {
       logger.query({
         start: args.start,
-        limit: args.limit,
+        limit: args.limit ?? Infinity,
         order: 'asc',
         fields: null
       }, (err, results: { file: unknown[] }) => {

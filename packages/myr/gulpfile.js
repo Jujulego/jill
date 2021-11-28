@@ -1,7 +1,7 @@
 const del = require('del');
 const gulp = require('gulp');
 const babel = require('gulp-babel');
-const ts = require('gulp-typescript');
+const typescript = require('gulp-typescript');
 
 // Config
 const paths = {
@@ -12,7 +12,9 @@ const paths = {
   ]
 };
 
-const tsProject = ts.createProject('tsconfig.json', {
+const ts = typescript.createProject('tsconfig.json');
+
+const dts = typescript.createProject('tsconfig.json', {
   isolatedModules: false,
   emitDeclarationOnly: true
 });
@@ -21,12 +23,13 @@ const tsProject = ts.createProject('tsconfig.json', {
 gulp.task('clean', () => del('dist'));
 
 gulp.task('build:cjs', () => gulp.src(paths.src)
+  .pipe(ts())
   .pipe(babel())
   .pipe(gulp.dest('dist'))
 );
 
 gulp.task('build:types', () => gulp.src(paths.src)
-  .pipe(tsProject()).dts
+  .pipe(dts()).dts
   .pipe(gulp.dest('dist'))
 );
 
