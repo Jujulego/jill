@@ -2014,7 +2014,7 @@ __metadata:
     "@types/jest": 27.0.3
     "@types/node": 14.17.34
     "@types/proper-lockfile": 4.1.2
-    "@types/ws": 8.2.0
+    "@types/ws": 8.2.1
     "@typescript-eslint/eslint-plugin": 5.4.0
     "@typescript-eslint/parser": 5.4.0
     babel-plugin-macros: 3.1.0
@@ -2582,12 +2582,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/ws@npm:8.2.0":
-  version: 8.2.0
-  resolution: "@types/ws@npm:8.2.0"
+"@types/ws@npm:8.2.1":
+  version: 8.2.1
+  resolution: "@types/ws@npm:8.2.1"
   dependencies:
     "@types/node": "*"
-  checksum: fb2f1cc1bc294607cf737a998a04d4eaca78b0a183905b879849c0e009f47ff4adaa6cbc7d9ac2d2ecc61652c8367e0f8bb02aab0af67a82e8c922746e96434b
+  checksum: 3721c9e5ba2dbe122fb40645ec0397b19abc91989573286bcccd992a0b97383e43c1349b6997bdded21522dfe7d9207d37b719e558e8f7dc62910360e6d2097b
   languageName: node
   linkType: hard
 
