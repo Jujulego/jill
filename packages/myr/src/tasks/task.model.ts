@@ -17,7 +17,7 @@ export class Task {
   @Field(() => [String], { description: 'Task command arguments' })
   args: readonly string[];
 
-  @Field({ description: 'Task current status' })
+  @Field(() => String, { description: 'Task current status' })
   status: TaskStatus;
 }
 

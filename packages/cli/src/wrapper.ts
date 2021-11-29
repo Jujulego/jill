@@ -32,7 +32,7 @@ export function commandHandler<A = Record<string, never>>(handler: CommandHandle
     try {
       process.exit(await handler(prj, argv) || 0);
     } catch (error) {
-      logger.fail(error);
+      logger.fail(JSON.stringify(error));
       process.exit(1);
     }
   };

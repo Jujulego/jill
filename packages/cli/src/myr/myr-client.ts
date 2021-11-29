@@ -18,7 +18,7 @@ type ILog = Record<string, unknown> & {
 export class MyrClient {
   // Attributes
   private readonly _logger = logger.child({ context: MyrClient.name });
-  private readonly _endpoint = 'http://localhost:5001/';
+  private readonly _endpoint = 'http://localhost:5001/graphql';
   private readonly _qclient = new GraphQLClient(this._endpoint);
 
   // Constructor
@@ -131,6 +131,22 @@ export class MyrClient {
 
   async spawnScript(wks: Workspace, script: string, args: string[] = []): Promise<Task> {
     return await this.spawn(wks.cwd, await wks.project.packageManager(), [script, ...args]);
+  }
+
+  async logs(): Promise<unknown[]> {
+    try {
+      const res = await this._qclient.request<{ logs: unknown[] }>(gql`
+          query Logs {
+              logs
+          }
+      `);
+
+      return res.logs;
+    } catch (error) {
+      if (error.code !== 'ECONNREFUSED') throw error;
+
+      return [];
+    }
   }
 
   async kill(id: string): Promise<Task | undefined> {
