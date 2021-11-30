@@ -43,7 +43,14 @@ export function myrCommand(yargs: yargs.Argv) {
         desc: 'Workspace to use'
       }
     }, commandHandler(spawnCommand))
-    .command('logs', 'Request myr logs', {}, commandHandler(logsCommand))
+    .command('logs', 'Request myr logs', {
+      follow: {
+        alias: 'f',
+        type: 'boolean',
+        default: false,
+        description: 'Subscribe to logs stream'
+      }
+    }, commandHandler(logsCommand))
     .command('kill <id>', 'Kill task', {}, commandHandler(killCommand))
     .command('stop', 'Stop myr server. This will kill all running tasks', {}, commandHandler(stopCommand))
     .demandCommand(1);

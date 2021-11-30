@@ -1,9 +1,13 @@
 import { Project, Workspace } from '@jujulego/jill-core';
 import { SpawnArgs, Task, TaskFragment } from '@jujulego/jill-myr';
+import { Repeater } from '@repeaterjs/repeater';
 import { fork } from 'child_process';
+import { DocumentNode, print } from 'graphql';
 import { GraphQLClient } from 'graphql-request';
+import { createClient } from 'graphql-ws';
 import { gql } from 'graphql.macro';
 import path from 'path';
+import WebSocket from 'ws';
 
 import { logger } from '../logger';
 
@@ -20,6 +24,11 @@ export class MyrClient {
   private readonly _logger = logger.child({ context: MyrClient.name });
   private readonly _endpoint = 'http://localhost:5001/graphql';
   private readonly _qclient = new GraphQLClient(this._endpoint);
+  private readonly _sclient = createClient({
+    url: this._endpoint.replace(/^http/, 'ws'),
+    webSocketImpl: WebSocket,
+    lazy: true
+  });
 
   // Constructor
   constructor(
@@ -40,6 +49,22 @@ export class MyrClient {
       // Retry
       return await fn();
     }
+  }
+
+  protected _subscription<T>(query: DocumentNode, variables: Record<string, unknown>): Repeater<T> {
+    return new Repeater<T>((push, stop) => {
+      this._sclient.subscribe<T>({ query: print(query), variables }, {
+        next(value) {
+          push(value.data!).then();
+        },
+        error(error) {
+          stop(error);
+        },
+        complete() {
+          stop();
+        }
+      });
+    });
   }
 
   start(): Promise<void> {
@@ -146,6 +171,18 @@ export class MyrClient {
       if (error.code !== 'ECONNREFUSED') throw error;
 
       return [];
+    }
+  }
+
+  async* logs$(): AsyncGenerator<unknown> {
+    try {
+      for await (const { log } of this._subscription<{ log: unknown }>(gql`subscription Logs { log }`, {})) {
+        yield log;
+      }
+    } catch (error) {
+      if (error.code !== 'ECONNREFUSED') throw error;
+
+      return;
     }
   }
 

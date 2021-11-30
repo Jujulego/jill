@@ -32,7 +32,7 @@ export class ControlResolver implements OnModuleInit {
   // Lifecycle
   onModuleInit(): void {
     logger.stream({ start: 0 })
-      .on('log', (log) => this.pubsub.publish('log', log));
+      .on('log', (log) => this.pubsub.publish('log', { log }));
   }
 
   // Queries

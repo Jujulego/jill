@@ -2210,6 +2210,7 @@ __metadata:
     "@types/gulp-sourcemaps": 0.0.35
     "@types/jest": 27.0.3
     "@types/node": 14.17.34
+    "@types/ws": 8.2.1
     "@types/yargs": 17.0.7
     "@typescript-eslint/eslint-plugin": 5.4.0
     "@typescript-eslint/parser": 5.4.0
@@ -2222,6 +2223,7 @@ __metadata:
     eslint-plugin-workspaces: 0.7.0
     graphql: ^15.7.2
     graphql-request: ^3.6.1
+    graphql-ws: ^5.5.5
     graphql.macro: 1.4.2
     gulp: 4.0.2
     gulp-babel: 8.0.0
@@ -2236,6 +2238,7 @@ __metadata:
     typescript: 4.5.2
     winston: ^3.3.3
     winston-transport: ^4.4.0
+    ws: ^8.3.0
     yargs: ^17.0.1
   bin:
     jill: ./bin/jill.js
@@ -3055,6 +3058,15 @@ __metadata:
     "@types/expect": ^1.20.4
     "@types/node": "*"
   checksum: 5012fb61e3a29e7deaac7e66b6d8cb73d87d15965c8a38cb69277c2beb851a9a8ec09d4a1b07a3151e143afc2e3a102ca368b9a0e08f2f29de9183c97f9c7d85
+  languageName: node
+  linkType: hard
+
+"@types/ws@npm:8.2.1":
+  version: 8.2.1
+  resolution: "@types/ws@npm:8.2.1"
+  dependencies:
+    "@types/node": "*"
+  checksum: 3721c9e5ba2dbe122fb40645ec0397b19abc91989573286bcccd992a0b97383e43c1349b6997bdded21522dfe7d9207d37b719e558e8f7dc62910360e6d2097b
   languageName: node
   linkType: hard
 
@@ -6762,7 +6774,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"graphql-ws@npm:5.5.5, graphql-ws@npm:^5.5.3":
+"graphql-ws@npm:5.5.5, graphql-ws@npm:^5.5.3, graphql-ws@npm:^5.5.5":
   version: 5.5.5
   resolution: "graphql-ws@npm:5.5.5"
   peerDependencies:
@@ -12555,7 +12567,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"ws@npm:8.3.0":
+"ws@npm:8.3.0, ws@npm:^8.3.0":
   version: 8.3.0
   resolution: "ws@npm:8.3.0"
   peerDependencies:
