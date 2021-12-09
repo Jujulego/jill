@@ -158,9 +158,9 @@ export class MyrClient {
     return await this.spawn(wks.cwd, await wks.project.packageManager(), [script, ...args]);
   }
 
-  async logs(): Promise<unknown[]> {
+  async logs(): Promise<any[]> {
     try {
-      const res = await this._qclient.request<{ logs: unknown[] }>(gql`
+      const res = await this._qclient.request<{ logs: any[] }>(gql`
           query Logs {
               logs
           }
@@ -174,9 +174,9 @@ export class MyrClient {
     }
   }
 
-  async* logs$(): AsyncGenerator<unknown> {
+  async* logs$(): AsyncGenerator<any> {
     try {
-      for await (const { log } of this._subscription<{ log: unknown }>(gql`subscription Logs { log }`, {})) {
+      for await (const { log } of this._subscription<{ log: any }>(gql`subscription Logs { log }`, {})) {
         yield log;
       }
     } catch (error) {
