@@ -3,8 +3,7 @@
     ["@babel/preset-env", {
       "bugfixes": true,
       "modules": "cjs"
-    }],
-    "@babel/preset-typescript"
+    }]
   ],
   "plugins": [
     "@babel/proposal-class-properties",

@@ -22,6 +22,6 @@ logger.add(
 
 // Bootstrap
 (async () => {
-  const server = new MyrServer();
+  const server = await MyrServer.createServer();
   await server.start();
 })();

@@ -1,8 +1,10 @@
+import { Injectable } from '@nestjs/common';
 import { logger } from '@jujulego/jill-core';
 
 import { WatchTask } from './watch-task';
 
 // Class
+@Injectable()
 export class WatchManager {
   // Attributes
   private readonly _tasks = new Map<string, WatchTask>();

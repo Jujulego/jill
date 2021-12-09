@@ -1,16 +1,14 @@
 import { logger } from '@jujulego/jill-core';
 import { PidFile } from '@jujulego/pid-file';
-import connect from 'connect';
-import { graphqlHTTP } from 'express-graphql';
-import { useServer } from 'graphql-ws/lib/use/ws';
 import { exhaustMap, filter } from 'rxjs';
 import winston, { format } from 'winston';
-import ws from 'ws';
+import { INestApplication } from '@nestjs/common';
+import { NestFactory } from '@nestjs/core';
 
-import { $control } from './control/control.resolvers';
-import { manager } from './tasks/tasks.resolvers';
-import { resolvers } from './resolvers';
-import { schema } from './schema';
+import { Logger } from './logger';
+import { AppModule } from './app.module';
+import { ControlResolver } from './control/control.resolver';
+import { WatchManager } from './tasks/watch-manager';
 
 // Class
 export class MyrServer {
@@ -18,29 +16,29 @@ export class MyrServer {
   private readonly _logger = logger.child({ context: MyrServer.name });
   private readonly _pidfile = new PidFile('.jill-myr.pid', this._logger);
 
+  // Constructor
+  private constructor(
+    readonly app: INestApplication
+  ) {}
+
+  // Statics
+  static async createServer(): Promise<MyrServer> {
+    const app = await NestFactory.create(AppModule, { logger: new Logger() });
+    return new MyrServer(app);
+  }
+
   // Methods
   private async _handleShutdown(): Promise<void> {
     this._logger.info('Shutdown signal received');
 
     // kill all running tasks
-    const n = await manager.killAll();
+    const n = await this.manager.killAll();
     this._logger.info(`${n} tasks killed`);
 
     // Delete pid file
     await this._pidfile.delete();
 
     process.exit(0);
-  }
-
-  private async _setupDevtools(app: connect.Server): Promise<void> {
-    const { default: playground } = await import('graphql-playground-middleware-express');
-
-    app.use('/graphql', playground({
-      endpoint: '/',
-      subscriptionEndpoint: 'ws://localhost:5001/'
-    }));
-
-    this._logger.verbose('Will serve graphql-playground');
   }
 
   private _setupLogger(): void {
@@ -61,7 +59,7 @@ export class MyrServer {
     process.once('SIGUSR1', () => this._handleShutdown());
     process.once('SIGUSR2', () => this._handleShutdown());
 
-    $control.pipe(
+    this.control.$control.pipe(
       filter((event) => event.action === 'shutdown'),
       exhaustMap(() => this._handleShutdown())
     ).subscribe();
@@ -73,29 +71,33 @@ export class MyrServer {
       return false;
     }
 
+    // Start server
     this._setupLogger();
-    this._setupShutdown();
+
+    await this.app.listen(5001, () => {
+      this._logger.info('Server is listening at http://localhost:5001/');
+
+      this._setupShutdown();
+    });
 
     // Setup app
-    const app = connect();
+    // app.use('/', async (req, res, next) => {
+    //   const start = Date.now();
+    //   next();
+    //
+    //   const { operationName, variables } = await getGraphQLParams(req as http.IncomingMessage & { url: string });
+    //   this._logger.verbose(`${operationName || 'unnamed'} ${JSON.stringify(variables)} took ${Date.now() - start}ms`);
+    // });
 
-    if (process.env.NODE_ENV === 'development') {
-      await this._setupDevtools(app);
-    }
-
-    app.use('/', graphqlHTTP({
-      schema,
-      rootValue: resolvers,
-      graphiql: false,
-    }));
-
-    const server = await app.listen(5001);
-
-    // Setup websockets
-    const wsServer = new ws.Server({ server, path: '/' });
-    useServer({ schema }, wsServer);
-
-    this._logger.info('Server is accessible at http://localhost:5001/');
     return true;
+  }
+
+  // Properties
+  get control(): ControlResolver {
+    return this.app.get(ControlResolver);
+  }
+
+  get manager(): WatchManager {
+    return this.app.get(WatchManager);
   }
 }

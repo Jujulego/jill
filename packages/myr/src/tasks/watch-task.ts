@@ -2,7 +2,7 @@ import { SpawnTask, SpawnTaskOption } from '@jujulego/jill-core';
 import { createHash } from 'crypto';
 import path from 'path';
 
-import { ITask } from './task.model';
+import { Task } from './task.model';
 
 // Class
 export class WatchTask extends SpawnTask {
@@ -34,7 +34,7 @@ export class WatchTask extends SpawnTask {
   }
 
   // Methods
-  toPlain(): ITask {
+  toPlain(): Task {
     return {
       id: this.id,
       cwd: path.resolve(this.cwd),

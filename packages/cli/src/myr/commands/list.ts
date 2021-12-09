@@ -1,5 +1,5 @@
 import { TaskStatus } from '@jujulego/jill-core';
-import { ITask } from '@jujulego/jill-myr';
+import { Task } from '@jujulego/jill-myr';
 import chalk from 'chalk';
 import path from 'path';
 
@@ -35,7 +35,7 @@ const LONG_ATTRIBUTES: Attribute[] = ['identifier', 'status', 'cwd', 'command'];
 const DEFAULT_ATTRIBUTES: Attribute[] = ['identifier', 'command'];
 
 // Utils
-type Extractor<T> = (tsk: ITask, argv: ListArgs) => T;
+type Extractor<T> = (tsk: Task, argv: ListArgs) => T;
 
 const extractors: Record<Attribute, Extractor<string | undefined>> = {
   identifier: tsk => chalk.grey(tsk.id),

@@ -1,9 +1,13 @@
 import { Project, Workspace } from '@jujulego/jill-core';
-import { ISpawnArgs, ITask, TaskFragment } from '@jujulego/jill-myr';
+import { SpawnArgs, Task, TaskFragment } from '@jujulego/jill-myr';
+import { Repeater } from '@repeaterjs/repeater';
 import { fork } from 'child_process';
+import { DocumentNode, print } from 'graphql';
 import { GraphQLClient } from 'graphql-request';
+import { createClient } from 'graphql-ws';
 import { gql } from 'graphql.macro';
 import path from 'path';
+import WebSocket from 'ws';
 
 import { logger } from '../logger';
 
@@ -18,8 +22,13 @@ type ILog = Record<string, unknown> & {
 export class MyrClient {
   // Attributes
   private readonly _logger = logger.child({ context: MyrClient.name });
-  private readonly _endpoint = 'http://localhost:5001/';
+  private readonly _endpoint = 'http://localhost:5001/graphql';
   private readonly _qclient = new GraphQLClient(this._endpoint);
+  private readonly _sclient = createClient({
+    url: this._endpoint.replace(/^http/, 'ws'),
+    webSocketImpl: WebSocket,
+    lazy: true
+  });
 
   // Constructor
   constructor(
@@ -40,6 +49,22 @@ export class MyrClient {
       // Retry
       return await fn();
     }
+  }
+
+  protected _subscription<T>(query: DocumentNode, variables: Record<string, unknown>): Repeater<T> {
+    return new Repeater<T>((push, stop) => {
+      this._sclient.subscribe<T>({ query: print(query), variables }, {
+        next(value) {
+          push(value.data!).then();
+        },
+        error(error) {
+          stop(error);
+        },
+        complete() {
+          stop();
+        }
+      });
+    });
   }
 
   start(): Promise<void> {
@@ -97,9 +122,9 @@ export class MyrClient {
     }
   }
 
-  async tasks(): Promise<ITask[]> {
+  async tasks(): Promise<Task[]> {
     return await this._autoStart(async () => {
-      const { tasks } = await this._qclient.request<{ tasks: ITask[] }>(gql`
+      const { tasks } = await this._qclient.request<{ tasks: Task[] }>(gql`
           query Tasks {
               tasks {
                   ...Task
@@ -113,9 +138,9 @@ export class MyrClient {
     });
   }
 
-  async spawn(cwd: string, cmd: string, args: string[] = []): Promise<ITask> {
+  async spawn(cwd: string, cmd: string, args: string[] = []): Promise<Task> {
     return await this._autoStart(async () => {
-      const { spawn } = await this._qclient.request<{ spawn: ITask }, ISpawnArgs>(gql`
+      const { spawn } = await this._qclient.request<{ spawn:Task },SpawnArgs>(gql`
           mutation Spawn($cwd: String!, $cmd: String!, $args: [String!]!) {
               spawn(cwd: $cwd, cmd: $cmd, args: $args) {
                   ...Task
@@ -129,13 +154,41 @@ export class MyrClient {
     });
   }
 
-  async spawnScript(wks: Workspace, script: string, args: string[] = []): Promise<ITask> {
+  async spawnScript(wks: Workspace, script: string, args: string[] = []): Promise<Task> {
     return await this.spawn(wks.cwd, await wks.project.packageManager(), [script, ...args]);
   }
 
-  async kill(id: string): Promise<ITask | undefined> {
+  async logs(): Promise<any[]> {
+    try {
+      const res = await this._qclient.request<{ logs: any[] }>(gql`
+          query Logs {
+              logs
+          }
+      `);
+
+      return res.logs;
+    } catch (error) {
+      if (error.code !== 'ECONNREFUSED') throw error;
+
+      return [];
+    }
+  }
+
+  async* logs$(): AsyncGenerator<any> {
+    try {
+      for await (const { log } of this._subscription<{ log: any }>(gql`subscription Logs { log }`, {})) {
+        yield log;
+      }
+    } catch (error) {
+      if (error.code !== 'ECONNREFUSED') throw error;
+
+      return;
+    }
+  }
+
+  async kill(id: string): Promise<Task | undefined> {
     return await this._autoStart(async () => {
-      const { kill } = await this._qclient.request<{ kill: ITask | undefined }>(gql`
+      const { kill } = await this._qclient.request<{ kill: Task | undefined }>(gql`
           mutation Kill($id: ID!) {
               kill(id: $id) {
                   ...Task
