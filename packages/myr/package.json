@@ -1,6 +1,6 @@
 {
   "name": "@jujulego/jill-myr",
-  "version": "0.0.6",
+  "version": "0.1.0",
   "license": "MIT",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -21,7 +21,7 @@
     "node": "^14"
   },
   "peerDependencies": {
-    "@jujulego/jill-core": "^1.1.11"
+    "@jujulego/jill-core": "^1.1.12"
   },
   "dependencies": {
     "@jujulego/pid-file": "^1.0.3",
@@ -44,7 +44,7 @@
     "@babel/plugin-proposal-class-properties": "7.16.0",
     "@babel/preset-env": "7.16.4",
     "@babel/runtime": "7.16.3",
-    "@jujulego/jill-core": "1.1.11",
+    "@jujulego/jill-core": "1.1.12",
     "@types/gulp": "4.0.9",
     "@types/gulp-babel": "6.1.30",
     "@types/gulp-sourcemaps": "0.0.35",

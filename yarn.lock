@@ -2099,7 +2099,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jujulego/jill-core@1.1.11, @jujulego/jill-core@^1.1.11, @jujulego/jill-core@workspace:packages/core":
+"@jujulego/jill-core@1.1.12, @jujulego/jill-core@^1.1.12, @jujulego/jill-core@workspace:packages/core":
   version: 0.0.0-use.local
   resolution: "@jujulego/jill-core@workspace:packages/core"
   dependencies:
@@ -2141,7 +2141,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jujulego/jill-myr@^0.0.6, @jujulego/jill-myr@workspace:packages/myr":
+"@jujulego/jill-myr@^0.1.0, @jujulego/jill-myr@workspace:packages/myr":
   version: 0.0.0-use.local
   resolution: "@jujulego/jill-myr@workspace:packages/myr"
   dependencies:
@@ -2149,7 +2149,7 @@ __metadata:
     "@babel/plugin-proposal-class-properties": 7.16.0
     "@babel/preset-env": 7.16.4
     "@babel/runtime": 7.16.3
-    "@jujulego/jill-core": 1.1.11
+    "@jujulego/jill-core": 1.1.12
     "@jujulego/pid-file": ^1.0.3
     "@nestjs/common": ^8.2.3
     "@nestjs/core": ^8.2.3
@@ -2189,11 +2189,11 @@ __metadata:
     typescript: 4.5.2
     winston: ^3.3.3
   peerDependencies:
-    "@jujulego/jill-core": ^1.1.11
+    "@jujulego/jill-core": ^1.1.12
   languageName: unknown
   linkType: soft
 
-"@jujulego/jill@1.1.16, @jujulego/jill@workspace:packages/cli":
+"@jujulego/jill@1.1.17, @jujulego/jill@workspace:packages/cli":
   version: 0.0.0-use.local
   resolution: "@jujulego/jill@workspace:packages/cli"
   dependencies:
@@ -2202,8 +2202,8 @@ __metadata:
     "@babel/preset-env": 7.16.4
     "@babel/preset-typescript": 7.16.0
     "@babel/runtime": 7.16.3
-    "@jujulego/jill-core": ^1.1.11
-    "@jujulego/jill-myr": ^0.0.6
+    "@jujulego/jill-core": ^1.1.12
+    "@jujulego/jill-myr": ^0.1.0
     "@repeaterjs/repeater": ^3.0.4
     "@types/gulp": 4.0.9
     "@types/gulp-babel": 6.1.30
@@ -8358,7 +8358,7 @@ fsevents@^1.2.7:
   version: 0.0.0-use.local
   resolution: "jill-e2e@workspace:e2e"
   dependencies:
-    "@jujulego/jill": 1.1.16
+    "@jujulego/jill": 1.1.17
     "@types/jest": 27.0.3
     "@types/node": 14.18.0
     "@typescript-eslint/eslint-plugin": 5.6.0
@@ -8376,7 +8376,7 @@ fsevents@^1.2.7:
   version: 0.0.0-use.local
   resolution: "jill@workspace:."
   dependencies:
-    "@jujulego/jill": 1.1.16
+    "@jujulego/jill": 1.1.17
     "@typescript-eslint/eslint-plugin": 5.6.0
     "@typescript-eslint/parser": 5.6.0
     eslint: 7.32.0
