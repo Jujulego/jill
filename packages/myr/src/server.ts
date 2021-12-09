@@ -7,7 +7,7 @@ import { NestFactory } from '@nestjs/core';
 
 import { Logger } from './logger';
 import { AppModule } from './app.module';
-import { ControlResolver } from './control/control.resolvers';
+import { ControlResolver } from './control/control.resolver';
 import { WatchManager } from './tasks/watch-manager';
 
 // Class

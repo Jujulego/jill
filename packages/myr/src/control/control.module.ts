@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 
 import { CommonModule } from '../common.module';
-import { ControlResolver } from './control.resolvers';
+import { ControlResolver } from './control.resolver';
 
 // Module
 @Module({
