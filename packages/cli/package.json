@@ -2,13 +2,22 @@
   "name": "@jujulego/jill",
   "version": "1.1.17",
   "license": "MIT",
-  "bin": "./bin/jill.js",
-  "main": "./dist/main.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/Jujulego/jill",
     "directory": "packages/cli"
   },
+  "engines": {
+    "node": "^14"
+  },
+  "main": "./dist/index.js",
+  "bin": {
+    "jill": "./bin/jill.js"
+  },
+  "files": [
+    "/bin",
+    "/dist"
+  ],
   "scripts": {
     "lint": "eslint {src,tests}/**/*.*",
     "clean": "gulp clean",
@@ -17,12 +26,11 @@
     "start": "ts-node src/main.ts",
     "test": "jest"
   },
-  "engines": {
-    "node": "^14"
-  },
   "dependencies": {
     "@jujulego/jill-core": "^1.1.12",
     "@jujulego/jill-myr": "^0.1.0",
+    "@oclif/core": "^1.0.10",
+    "@oclif/plugin-help": "^5.1.10",
     "@repeaterjs/repeater": "^3.0.4",
     "chalk": "^4.1.1",
     "graphql": "^15.7.2",
@@ -66,5 +74,12 @@
     "msw": "0.36.3",
     "ts-node": "10.4.0",
     "typescript": "4.5.2"
+  },
+  "oclif": {
+    "bin": "jill",
+    "plugins": [
+      "@oclif/plugin-help"
+    ],
+    "commands": "./dist/_commands"
   }
 }

@@ -1,3 +1,5 @@
+export { run } from '@oclif/core';
+
 export { eachCommand } from './commands/each';
 export { infoCommand } from './commands/info';
 export { listCommand } from './commands/list';
