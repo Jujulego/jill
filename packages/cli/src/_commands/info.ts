@@ -2,10 +2,9 @@ import { Flags } from '@oclif/core';
 import path from 'path';
 import chalk from 'chalk';
 
+import ProjectCommand from '../bases/project.command';
 import { logger } from '../logger';
 import { printDepsTree } from '../utils/deps-tree';
-
-import ProjectCommand from '../bases/project.command';
 
 // Command
 export default class InfoCommand extends ProjectCommand {
