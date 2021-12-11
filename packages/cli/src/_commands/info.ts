@@ -1,31 +1,18 @@
-import { PackageManager, Project } from '@jujulego/jill-core';
-import { Command, Flags } from '@oclif/core';
+import { Flags } from '@oclif/core';
 import path from 'path';
 import chalk from 'chalk';
 
 import { logger } from '../logger';
 import { printDepsTree } from '../utils/deps-tree';
 
+import ProjectCommand from '../bases/project.command';
+
 // Command
-export default class InfoCommand extends Command {
+export default class InfoCommand extends ProjectCommand {
   // Attributes
   static description = 'Print workspace data';
   static flags = {
-    packageManager: Flags.string({
-      name: 'package-manager',
-      options: ['yarn', 'npm'],
-      description: 'Force package manager'
-    }),
-    project: Flags.string({
-      char: 'p',
-      default: () => Project.searchProjectRoot(process.cwd()),
-      description: 'Project root directory'
-    }),
-    verbosity: Flags.string({
-      char: 'v',
-      default: 'info',
-      options: ['warn', 'info', 'verbose', 'debug']
-    }),
+    ...ProjectCommand.flags,
     workspace: Flags.string({
       char: 'w',
       description: 'Workspace to use'
@@ -37,15 +24,13 @@ export default class InfoCommand extends Command {
   async run(): Promise<void> {
     const { flags } = await this.parse(InfoCommand);
 
-    logger.level = flags.verbosity;
     logger.spin('Loading project');
 
     // Get workspace
-    const prj = new Project(flags.project, { packageManager: flags.packageManager as PackageManager });
-    const wks = await (flags.workspace ? prj.workspace(flags.workspace) : prj.currentWorkspace());
+    const wks = await (flags.workspace ? this.project.workspace(flags.workspace) : this.project.currentWorkspace());
 
     if (!wks) {
-      logger.fail('Workspace \'.\' not found');
+      logger.fail(`Workspace '${flags.workspace ?? '.'}' not found`);
       return this.exit(1);
     }
 

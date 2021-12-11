@@ -13,7 +13,7 @@ export class OraTransport extends Transport {
   readonly _spinner = ora();
 
   // Methods
-  private _keepSpinner<T>(fun: () => T): T {
+  keepSpinner<T>(fun: () => T): T {
     // Save state
     let spinning = false;
     let text = '';
@@ -37,7 +37,7 @@ export class OraTransport extends Transport {
     // Print message
     const msg = info[MESSAGE] as string;
 
-    this._keepSpinner(() => {
+    this.keepSpinner(() => {
       this._spinner.stop();
 
       for (const line of msg.split('\n')) {
