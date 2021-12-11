@@ -2099,7 +2099,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jujulego/jill-core@1.1.11, @jujulego/jill-core@^1.1.11, @jujulego/jill-core@workspace:packages/core":
+"@jujulego/jill-core@1.1.12, @jujulego/jill-core@^1.1.12, @jujulego/jill-core@workspace:packages/core":
   version: 0.0.0-use.local
   resolution: "@jujulego/jill-core@workspace:packages/core"
   dependencies:
@@ -2141,7 +2141,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jujulego/jill-myr@^0.0.6, @jujulego/jill-myr@workspace:packages/myr":
+"@jujulego/jill-myr@^0.1.0, @jujulego/jill-myr@workspace:packages/myr":
   version: 0.0.0-use.local
   resolution: "@jujulego/jill-myr@workspace:packages/myr"
   dependencies:
@@ -2149,7 +2149,7 @@ __metadata:
     "@babel/plugin-proposal-class-properties": 7.16.0
     "@babel/preset-env": 7.16.4
     "@babel/runtime": 7.16.3
-    "@jujulego/jill-core": 1.1.11
+    "@jujulego/jill-core": 1.1.12
     "@jujulego/pid-file": ^1.0.3
     "@nestjs/common": ^8.2.3
     "@nestjs/core": ^8.2.3
@@ -2189,11 +2189,11 @@ __metadata:
     typescript: 4.5.2
     winston: ^3.3.3
   peerDependencies:
-    "@jujulego/jill-core": ^1.1.11
+    "@jujulego/jill-core": ^1.1.12
   languageName: unknown
   linkType: soft
 
-"@jujulego/jill@1.1.16, @jujulego/jill@workspace:packages/cli":
+"@jujulego/jill@1.1.17, @jujulego/jill@workspace:packages/cli":
   version: 0.0.0-use.local
   resolution: "@jujulego/jill@workspace:packages/cli"
   dependencies:
@@ -2202,10 +2202,10 @@ __metadata:
     "@babel/preset-env": 7.16.4
     "@babel/preset-typescript": 7.16.0
     "@babel/runtime": 7.16.3
-    "@jujulego/jill-core": ^1.1.11
-    "@jujulego/jill-myr": ^0.0.6
+    "@jujulego/jill-core": ^1.1.12
+    "@jujulego/jill-myr": ^0.1.0
     "@oclif/core": ^1.0.10
-    "@oclif/plugin-help": ^5.1.10
+    "@oclif/plugin-help": ^3.2.17
     "@repeaterjs/repeater": ^3.0.4
     "@types/gulp": 4.0.9
     "@types/gulp-babel": 6.1.30
@@ -2472,6 +2472,68 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@oclif/cmd@npm:@oclif/command@1.8.12":
+  version: 1.8.12
+  resolution: "@oclif/command@npm:1.8.12"
+  dependencies:
+    "@oclif/config": ^1.18.2
+    "@oclif/errors": ^1.3.5
+    "@oclif/parser": ^3.8.6
+    "@oclif/plugin-help": 3.2.16
+    debug: ^4.1.1
+    semver: ^7.3.2
+  peerDependencies:
+    "@oclif/config": ^1
+  checksum: 12fdf13f2e380df0976d28abfd610d604c714ad68c25894be3fc5b3521a09da92d28931d0593ecd44777a81dc744ef2badf5c05073889a845d38181ae417cf1f
+  languageName: node
+  linkType: hard
+
+"@oclif/command@npm:1.8.11":
+  version: 1.8.11
+  resolution: "@oclif/command@npm:1.8.11"
+  dependencies:
+    "@oclif/config": ^1.18.2
+    "@oclif/errors": ^1.3.5
+    "@oclif/parser": ^3.8.6
+    "@oclif/plugin-help": 3.2.14
+    debug: ^4.1.1
+    semver: ^7.3.2
+  peerDependencies:
+    "@oclif/config": ^1
+  checksum: c0bb4938f8f252615ee778693e9cb9c56e9ba8e2d58bd922ebc17b3eb8dc965a8253beda94331a1f7fd3cf06b6ac5666e158a5b360b73df75915556aeb0afa37
+  languageName: node
+  linkType: hard
+
+"@oclif/command@npm:^1.8.9":
+  version: 1.8.13
+  resolution: "@oclif/command@npm:1.8.13"
+  dependencies:
+    "@oclif/config": ^1.18.2
+    "@oclif/errors": ^1.3.5
+    "@oclif/parser": ^3.8.6
+    "@oclif/plugin-help": 3.2.14
+    debug: ^4.1.1
+    semver: ^7.3.2
+  peerDependencies:
+    "@oclif/config": ^1
+  checksum: 49fc99a68e60bb6375af510979cbead5e39f6700e3cee20332cd6db37e8b6e9333c68ccf18932a1470713bb1d21261490e7915fec2bf09a21d371a736e28b3ae
+  languageName: node
+  linkType: hard
+
+"@oclif/config@npm:1.18.2, @oclif/config@npm:^1.18.2":
+  version: 1.18.2
+  resolution: "@oclif/config@npm:1.18.2"
+  dependencies:
+    "@oclif/errors": ^1.3.3
+    "@oclif/parser": ^3.8.0
+    debug: ^4.1.1
+    globby: ^11.0.1
+    is-wsl: ^2.1.1
+    tslib: ^2.0.0
+  checksum: edb82ae885bb5a7a244d99707f837f8f0c7a3286a9f19e6cda2af599a06c189c21221082acde9927dadf951d060bdc05bee9ea5f9e8223c12688956b94c3b1e0
+  languageName: node
+  linkType: hard
+
 "@oclif/core@npm:^1.0.10, @oclif/core@npm:^1.0.8":
   version: 1.0.10
   resolution: "@oclif/core@npm:1.0.10"
@@ -2497,6 +2559,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@oclif/errors@npm:1.3.5, @oclif/errors@npm:^1.2.2, @oclif/errors@npm:^1.3.3, @oclif/errors@npm:^1.3.5":
+  version: 1.3.5
+  resolution: "@oclif/errors@npm:1.3.5"
+  dependencies:
+    clean-stack: ^3.0.0
+    fs-extra: ^8.1
+    indent-string: ^4.0.0
+    strip-ansi: ^6.0.0
+    wrap-ansi: ^7.0.0
+  checksum: abce216ff1321ac4924fe405c50e9b2a93cfb51ad229d7e6ced8ee1c4bd01a85ee270b4433a12c73da9394dd8e9f6ec73443f8582da7ac46379b7e4991c3fa50
+  languageName: node
+  linkType: hard
+
 "@oclif/linewrap@npm:^1.0.0":
   version: 1.0.0
   resolution: "@oclif/linewrap@npm:1.0.0"
@@ -2504,12 +2579,69 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@oclif/plugin-help@npm:^5.1.10":
-  version: 5.1.10
-  resolution: "@oclif/plugin-help@npm:5.1.10"
+"@oclif/parser@npm:^3.8.0, @oclif/parser@npm:^3.8.6":
+  version: 3.8.6
+  resolution: "@oclif/parser@npm:3.8.6"
   dependencies:
-    "@oclif/core": ^1.0.10
-  checksum: fb419b4aefd5ff427513387a516aea8cca0714bb7f3e7a7bba6d2a63822e2952eb03193c11589da8840ef799671b18875dd734876389999481cdb3a41b7b2636
+    "@oclif/errors": ^1.2.2
+    "@oclif/linewrap": ^1.0.0
+    chalk: ^4.1.0
+    tslib: ^2.0.0
+  checksum: 833450bafb86630f4b887e52477136abe368e1702f93d4aa81ef26bb208afa2183d48ca833898f8164cd56ed8489564fc59d4f58c7b6ea9d3d918a7754be7535
+  languageName: node
+  linkType: hard
+
+"@oclif/plugin-help@npm:3.2.14":
+  version: 3.2.14
+  resolution: "@oclif/plugin-help@npm:3.2.14"
+  dependencies:
+    "@oclif/command": ^1.8.9
+    "@oclif/config": ^1.18.2
+    "@oclif/errors": ^1.3.5
+    chalk: ^4.1.2
+    indent-string: ^4.0.0
+    lodash: ^4.17.21
+    string-width: ^4.2.0
+    strip-ansi: ^6.0.0
+    widest-line: ^3.1.0
+    wrap-ansi: ^6.2.0
+  checksum: 5dbb0265b9edb88d35b948e8795b5aeed8370dff0bc6c4053fb5191983f2cdc3b9345ecc7f8a9415821c25fea9668ef9e6894dfae8e160606931364bcc6549b6
+  languageName: node
+  linkType: hard
+
+"@oclif/plugin-help@npm:3.2.16":
+  version: 3.2.16
+  resolution: "@oclif/plugin-help@npm:3.2.16"
+  dependencies:
+    "@oclif/command": 1.8.11
+    "@oclif/config": 1.18.2
+    "@oclif/errors": 1.3.5
+    chalk: ^4.1.2
+    indent-string: ^4.0.0
+    lodash: ^4.17.21
+    string-width: ^4.2.0
+    strip-ansi: ^6.0.0
+    widest-line: ^3.1.0
+    wrap-ansi: ^6.2.0
+  checksum: 91e37208947bfda8905dbad7ffd8d9bfcedb474117582e4b5eda863a585ce2ef56b5bfdaa960038877c0aa77164a57252a584bf07c09f47b342efa1996b90d54
+  languageName: node
+  linkType: hard
+
+"@oclif/plugin-help@npm:^3.2.17":
+  version: 3.2.17
+  resolution: "@oclif/plugin-help@npm:3.2.17"
+  dependencies:
+    "@oclif/cmd": "npm:@oclif/command@1.8.12"
+    "@oclif/config": 1.18.2
+    "@oclif/errors": 1.3.5
+    chalk: ^4.1.2
+    indent-string: ^4.0.0
+    lodash: ^4.17.21
+    string-width: ^4.2.0
+    strip-ansi: ^6.0.0
+    widest-line: ^3.1.0
+    wrap-ansi: ^6.2.0
+  checksum: cfe447f70b1ecc411b4316db1271d1ed0d66d157f5a539e1abafd04f0d213bdf108e95de75e723cc99ec7b78dbef9bde13e851380107bd202593818593553968
   languageName: node
   linkType: hard
 
@@ -7923,7 +8055,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"is-wsl@npm:^2.2.0":
+"is-wsl@npm:^2.1.1, is-wsl@npm:^2.2.0":
   version: 2.2.0
   resolution: "is-wsl@npm:2.2.0"
   dependencies:
@@ -8573,7 +8705,7 @@ fsevents@^1.2.7:
   version: 0.0.0-use.local
   resolution: "jill-e2e@workspace:e2e"
   dependencies:
-    "@jujulego/jill": 1.1.16
+    "@jujulego/jill": 1.1.17
     "@types/jest": 27.0.3
     "@types/node": 14.18.0
     "@typescript-eslint/eslint-plugin": 5.6.0
@@ -8591,7 +8723,7 @@ fsevents@^1.2.7:
   version: 0.0.0-use.local
   resolution: "jill@workspace:."
   dependencies:
-    "@jujulego/jill": 1.1.16
+    "@jujulego/jill": 1.1.17
     "@typescript-eslint/eslint-plugin": 5.6.0
     "@typescript-eslint/parser": 5.6.0
     eslint: 7.32.0
@@ -12856,6 +12988,17 @@ fsevents@^1.2.7:
     string-width: ^1.0.1
     strip-ansi: ^3.0.1
   checksum: 2dacd4b3636f7a53ee13d4d0fe7fa2ed9ad81e9967e17231924ea88a286ec4619a78288de8d41881ee483f4449ab2c0287cde8154ba1bd0126c10271101b2ee3
+  languageName: node
+  linkType: hard
+
+"wrap-ansi@npm:^6.2.0":
+  version: 6.2.0
+  resolution: "wrap-ansi@npm:6.2.0"
+  dependencies:
+    ansi-styles: ^4.0.0
+    string-width: ^4.1.0
+    strip-ansi: ^6.0.0
+  checksum: 6cd96a410161ff617b63581a08376f0cb9162375adeb7956e10c8cd397821f7eb2a6de24eb22a0b28401300bf228c86e50617cd568209b5f6775b93c97d2fe3a
   languageName: node
   linkType: hard
 

@@ -11,9 +11,7 @@
     "node": "^14"
   },
   "main": "./dist/index.js",
-  "bin": {
-    "jill": "./bin/jill.js"
-  },
+  "bin": "./bin/jill.js",
   "files": [
     "/bin",
     "/dist"
@@ -30,7 +28,7 @@
     "@jujulego/jill-core": "^1.1.12",
     "@jujulego/jill-myr": "^0.1.0",
     "@oclif/core": "^1.0.10",
-    "@oclif/plugin-help": "^5.1.10",
+    "@oclif/plugin-help": "^3.2.17",
     "@repeaterjs/repeater": "^3.0.4",
     "chalk": "^4.1.1",
     "graphql": "^15.7.2",
