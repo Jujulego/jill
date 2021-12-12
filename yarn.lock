@@ -2223,6 +2223,7 @@ __metadata:
     eslint: 7.32.0
     eslint-plugin-jest: 25.3.0
     eslint-plugin-workspaces: 0.7.0
+    globby: 11.0.4
     graphql: ^15.7.2
     graphql-request: ^3.6.1
     graphql-ws: ^5.5.5
@@ -6997,7 +6998,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"globby@npm:^11.0.1, globby@npm:^11.0.3, globby@npm:^11.0.4":
+"globby@npm:11.0.4, globby@npm:^11.0.1, globby@npm:^11.0.3, globby@npm:^11.0.4":
   version: 11.0.4
   resolution: "globby@npm:11.0.4"
   dependencies:
