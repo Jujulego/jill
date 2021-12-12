@@ -15,44 +15,19 @@ import { CliList } from '../utils/cli-list';
 export type Attribute = 'name' | 'version' | 'root' | 'slug';
 export type Data = Partial<Record<Attribute, string>>;
 
+type Extractor<T> = (wks: Workspace, json: boolean) => T;
+
 // Constants
 const LONG_ATTRIBUTES: Attribute[] = ['name', 'version', 'root'];
 const JSON_ATTRIBUTES: Attribute[] = ['name', 'version', 'slug', 'root'];
 const DEFAULT_ATTRIBUTES: Attribute[] = ['name'];
 
-// Utils
-interface ListArgs {
-  // Filters
-  private: boolean | undefined;
-  ['with-script']: string[] | undefined;
-
-  // Formats
-  attr: Attribute[] | undefined;
-  headers: boolean | undefined;
-  long: boolean;
-  json: boolean;
-}
-
-type Extractor<T> = (wks: Workspace, argv: ListArgs) => T;
-
-const extractors: Record<Attribute, Extractor<string | undefined>> = {
+const EXTRACTORS: Record<Attribute, Extractor<string | undefined>> = {
   name: wks => wks.name,
-  version: (wks, argv) => wks.manifest.version || (argv.json ? undefined : chalk.grey('unset')),
+  version: (wks, json) => wks.manifest.version || (json ? undefined : chalk.grey('unset')),
   root: wks => wks.cwd,
   slug: wks => slugify(wks.name)
 };
-
-function buildExtractor(attrs: Attribute[]): Extractor<Data> {
-  return (wks, argv: ListArgs) => {
-    const data: Data = {};
-
-    for (const attr of attrs) {
-      data[attr] = extractors[attr](wks, argv);
-    }
-
-    return data;
-  };
-}
 
 // Command
 export default class ListCommand extends ProjectCommand {
@@ -112,6 +87,18 @@ export default class ListCommand extends ProjectCommand {
   static args = [];
 
   // Methods
+  buildExtractor(attrs: Attribute[]): Extractor<Data> {
+    return (wks, json: boolean) => {
+      const data: Data = {};
+
+      for (const attr of attrs) {
+        data[attr] = EXTRACTORS[attr](wks, json);
+      }
+
+      return data;
+    };
+  }
+
   async run(): Promise<void> {
     const { flags } = await this.parse(ListCommand);
 
@@ -156,7 +143,7 @@ export default class ListCommand extends ProjectCommand {
       }
     }
 
-    const data = workspaces.map(wks => buildExtractor(attrs)(wks, flags));
+    const data = workspaces.map(wks => this.buildExtractor(attrs)(wks, flags.json));
 
     // Print data
     if (flags.json) {
