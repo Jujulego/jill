@@ -13,11 +13,11 @@ export interface InfoArgs {
 // Handler
 export const infoCommand: CommandHandler<InfoArgs> = async (prj, argv) => {
   // Get workspace
-  logger.spin('Loading project');
+  logger.spin(`Loading "${argv.workspace || '.'}" workspace`);
   const wks = await (argv.workspace ? prj.workspace(argv.workspace) : prj.currentWorkspace());
 
   if (!wks) {
-    logger.fail(`Workspace ${argv.workspace || '.'} not found`);
+    logger.fail(`Workspace "${argv.workspace || '.'}" not found`);
     return 1;
   }
 

@@ -194,7 +194,6 @@ describe('OraTransport', () => {
 
       expect(mockedOra.isSpinning).toBe(true);
       expect(mockedOra.text).toBe('testing ...');
-      expect(mockedOra.start).toHaveBeenCalledWith('testing ...');
     });
   });
 });

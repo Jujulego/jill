@@ -1,8 +1,9 @@
 import { logger as coreLogger } from '@jujulego/jill-core';
+import chalk from 'chalk';
+import process from 'process';
+import ora from 'ora';
 import { format, Logger } from 'winston';
 import Transport from 'winston-transport';
-import ora from 'ora';
-import chalk from 'chalk';
 
 // Constants
 const MESSAGE = Symbol.for('message');
@@ -13,37 +14,18 @@ export class OraTransport extends Transport {
   readonly _spinner = ora();
 
   // Methods
-  private _keepSpinner<T>(fun: () => T): T {
-    // Save state
-    let spinning = false;
-    let text = '';
-
-    if (this._spinner.isSpinning) {
-      spinning = true;
-      text = this._spinner.text;
-    }
-
-    try {
-      return fun();
-    } finally {
-      // Restore state
-      if (!this._spinner.isSpinning && spinning) {
-        this._spinner.start(text);
-      }
-    }
-  }
-
   log(info: any, next: () => void): void {
     // Print message
     const msg = info[MESSAGE] as string;
 
-    this._keepSpinner(() => {
-      this._spinner.stop();
+    // Clear out spinner before printing logs
+    if (this._spinner.isSpinning) {
+      this._spinner.clear();
+    }
 
-      for (const line of msg.split('\n')) {
-        process.stderr.write(line + '\n');
-      }
-    });
+    for (const line of msg.split('\n')) {
+      process.stderr.write(line + '\n');
+    }
 
     next();
   }

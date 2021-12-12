@@ -22,6 +22,8 @@ export function commandHandler<A = Record<string, never>>(handler: CommandHandle
       logger.level = 'debug';
     }
 
+    logger.spin('Loading project');
+
     if (!argv.project) {
       argv.project = await Project.searchProjectRoot(process.cwd());
     }

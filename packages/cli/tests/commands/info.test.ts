@@ -16,6 +16,7 @@ beforeEach(() => {
   screen = '';
 
   // Mocks
+  jest.resetAllMocks();
   jest.restoreAllMocks();
 
   jest.spyOn(console, 'log').mockImplementation((message) => screen += message + '\n');
@@ -31,9 +32,9 @@ describe('jill info', () => {
       .resolves.toBe(1);
 
     // Checks
-    expect(logger.spin).toHaveBeenCalledWith('Loading project');
+    expect(logger.spin).toHaveBeenCalledWith('Loading "does-not-exists" workspace');
     expect(project.workspace).toHaveBeenCalledWith('does-not-exists');
-    expect(logger.fail).toHaveBeenCalledWith('Workspace does-not-exists not found');
+    expect(logger.fail).toHaveBeenCalledWith('Workspace "does-not-exists" not found');
   });
 
   it('should exit 1 if current workspace not found', async () => {
@@ -45,10 +46,10 @@ describe('jill info', () => {
       .resolves.toBe(1);
 
     // Checks
-    expect(logger.spin).toHaveBeenCalledWith('Loading project');
+    expect(logger.spin).toHaveBeenCalledWith('Loading "." workspace');
     expect(project.workspace).not.toHaveBeenCalled();
     expect(project.currentWorkspace).toHaveBeenCalled();
-    expect(logger.fail).toHaveBeenCalledWith('Workspace . not found');
+    expect(logger.fail).toHaveBeenCalledWith('Workspace "." not found');
   });
 
   it('should print workspace basic info', async () => {
@@ -61,7 +62,7 @@ describe('jill info', () => {
       .resolves.toBe(0);
 
     // Checks
-    expect(logger.spin).toHaveBeenCalledWith('Loading project');
+    expect(logger.spin).toHaveBeenCalledWith('Loading "wks" workspace');
     expect(project.workspace).toHaveBeenCalledWith('wks');
     expect(logger.stop).toHaveBeenCalled();
     expect(screen).toMatchSnapshot();
@@ -78,7 +79,7 @@ describe('jill info', () => {
       .resolves.toBe(0);
 
     // Checks
-    expect(logger.spin).toHaveBeenCalledWith('Loading project');
+    expect(logger.spin).toHaveBeenCalledWith('Loading "." workspace');
     expect(project.workspace).not.toHaveBeenCalled();
     expect(project.currentWorkspace).toHaveBeenCalled();
   });
@@ -92,7 +93,7 @@ describe('jill info', () => {
       .resolves.toBe(0);
 
     // Checks
-    expect(logger.spin).toHaveBeenCalledWith('Loading project');
+    expect(logger.spin).toHaveBeenCalledWith('Loading "wks" workspace');
     expect(project.workspace).toHaveBeenCalledWith('wks');
     expect(logger.stop).toHaveBeenCalled();
     expect(screen).toMatchSnapshot();
@@ -107,7 +108,7 @@ describe('jill info', () => {
       .resolves.toBe(0);
 
     // Checks
-    expect(logger.spin).toHaveBeenCalledWith('Loading project');
+    expect(logger.spin).toHaveBeenCalledWith('Loading "wks" workspace');
     expect(project.workspace).toHaveBeenCalledWith('wks');
     expect(logger.stop).toHaveBeenCalled();
     expect(screen).toMatchSnapshot();

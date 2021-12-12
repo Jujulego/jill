@@ -20,6 +20,7 @@ beforeEach(() => {
   project = new Project('.');
 
   // Mocks
+  jest.resetAllMocks();
   jest.restoreAllMocks();
 });
 
@@ -33,9 +34,9 @@ describe('jill run', () => {
       .resolves.toBe(1);
 
     // Checks
-    expect(logger.spin).toHaveBeenCalledWith('Loading project');
+    expect(logger.spin).toHaveBeenCalledWith('Loading "does-not-exists" workspace');
     expect(project.workspace).toHaveBeenCalledWith('does-not-exists');
-    expect(logger.fail).toHaveBeenCalledWith('Workspace does-not-exists not found');
+    expect(logger.fail).toHaveBeenCalledWith('Workspace "does-not-exists" not found');
   });
 
   it('should exit 1 if current workspace not found', async () => {
@@ -47,10 +48,10 @@ describe('jill run', () => {
       .resolves.toBe(1);
 
     // Checks
-    expect(logger.spin).toHaveBeenCalledWith('Loading project');
+    expect(logger.spin).toHaveBeenCalledWith('Loading "." workspace');
     expect(project.workspace).not.toHaveBeenCalled();
     expect(project.currentWorkspace).toHaveBeenCalled();
-    expect(logger.fail).toHaveBeenCalledWith('Workspace . not found');
+    expect(logger.fail).toHaveBeenCalledWith('Workspace "." not found');
   });
 
   it('should exit 0 when task-set is finished and all tasks are successful', async () => {
@@ -69,7 +70,7 @@ describe('jill run', () => {
       .resolves.toBe(0);
 
     // Checks
-    expect(logger.spin).toHaveBeenCalledWith('Loading project');
+    expect(logger.spin).toHaveBeenCalledWith('Loading "wks" workspace');
     expect(project.workspace).toHaveBeenCalledWith('wks');
     expect(wks.run).toHaveBeenCalledWith('test', ['--arg', '1'], { buildDeps: 'all' });
     expect(TaskSet.prototype.add).toHaveBeenCalledWith(tsk);
@@ -94,7 +95,7 @@ describe('jill run', () => {
       .resolves.toBe(1);
 
     // Checks
-    expect(logger.spin).toHaveBeenCalledWith('Loading project');
+    expect(logger.spin).toHaveBeenCalledWith('Loading "wks" workspace');
     expect(project.workspace).toHaveBeenCalledWith('wks');
     expect(wks.run).toHaveBeenCalledWith('test', ['--arg', '1'], { buildDeps: 'all' });
     expect(TaskSet.prototype.add).toHaveBeenCalledWith(tsk);
@@ -120,7 +121,7 @@ describe('jill run', () => {
       .resolves.toBe(0);
 
     // Checks
-    expect(logger.spin).toHaveBeenCalledWith('Loading project');
+    expect(logger.spin).toHaveBeenCalledWith('Loading "." workspace');
     expect(project.workspace).not.toHaveBeenCalled();
     expect(project.currentWorkspace).toHaveBeenCalled();
     expect(wks.run).toHaveBeenCalledWith('test', undefined, { buildDeps: 'all' });
