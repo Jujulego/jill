@@ -1,8 +1,8 @@
-import { TaskSet, WorkspaceDepsMode } from '@jujulego/jill-core';
-import { Flags } from '@oclif/core';
+import { TaskSet } from '@jujulego/jill-core';
 
 import ProjectCommand from '../bases/project.command';
 import { workspaceFlag } from '../bases/workspace.flag';
+import { depsModeFlag } from '../bases/deps-mode.flag';
 import { logger } from '../logger';
 import { TaskLogger } from '../task-logger';
 
@@ -13,14 +13,7 @@ export default class RunCommand extends ProjectCommand {
   static flags = {
     ...ProjectCommand.flags,
     workspace: workspaceFlag(),
-    'deps-mode': Flags.enum<WorkspaceDepsMode>({
-      default: 'all',
-      options: ['all', 'prod', 'none'],
-      description: 'Dependency selection mode:\n' +
-        ' - all = dependencies AND devDependencies\n' +
-        ' - prod = dependencies\n' +
-        ' - none = nothing'
-    })
+    'deps-mode': depsModeFlag()
   };
   static args = [
     { name: 'script', required: true }

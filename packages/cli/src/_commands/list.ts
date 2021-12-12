@@ -38,7 +38,8 @@ export default class ListCommand extends ProjectCommand {
     ...ProjectCommand.flags,
     private: Flags.boolean({
       helpGroup: 'filters',
-      description: 'Print only private workspaces'
+      description: 'Print only private workspaces',
+      allowNo: true
     }),
     'with-script': Flags.string({
       multiple: true,
@@ -58,7 +59,7 @@ export default class ListCommand extends ProjectCommand {
     }),
     ['affected-rev-fallback']: Flags.string({
       name: 'affected-rev-fallback',
-      dependsOn: ['affected'],
+      default: 'master',
       helpGroup: 'affected',
       description: 'Fallback revision, used if no revision matching the given format is found',
     }),
@@ -118,7 +119,7 @@ export default class ListCommand extends ProjectCommand {
     if (flags.affected !== undefined) {
       pipeline.add(new AffectedFilter(
         flags.affected,
-        flags['affected-rev-fallback'] || 'master',
+        flags['affected-rev-fallback'],
         flags['affected-rev-sort']
       ));
     }
