@@ -1,8 +1,8 @@
-import { Flags } from '@oclif/core';
 import path from 'path';
 import chalk from 'chalk';
 
 import ProjectCommand from '../bases/project.command';
+import { workspaceFlag } from '../bases/workspace.flag';
 import { logger } from '../logger';
 import { printDepsTree } from '../utils/deps-tree';
 
@@ -12,10 +12,7 @@ export default class InfoCommand extends ProjectCommand {
   static description = 'Print workspace data';
   static flags = {
     ...ProjectCommand.flags,
-    workspace: Flags.string({
-      char: 'w',
-      description: 'Workspace to use'
-    }),
+    workspace: workspaceFlag()
   };
   static args = [];
 

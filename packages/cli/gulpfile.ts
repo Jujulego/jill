@@ -9,8 +9,8 @@ const paths = {
   src: 'src/**/*.ts',
   deps: [
     '../../.pnp.*',
-    '../core/dist/**',
-    '../myr/dist/**',
+    '../core/dist/types/**',
+    '../myr/dist/types/**',
   ]
 };
 

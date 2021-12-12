@@ -6,7 +6,7 @@ import { logger } from '../logger';
 export default abstract class BaseCommand extends Command {
   // Statics
   static flags = {
-    verbosity: Flags.string({
+    verbosity: Flags.enum({
       char: 'v',
       default: 'info',
       options: ['warn', 'info', 'verbose', 'debug']
@@ -15,7 +15,7 @@ export default abstract class BaseCommand extends Command {
 
   // Methods
   protected async init() {
-    const { flags } = await this.parse(this.ctor);
+    const { flags } = await this.parse(this.constructor as typeof BaseCommand);
 
     logger.level = flags.verbosity;
   }

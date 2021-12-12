@@ -1,4 +1,4 @@
-import { Project } from '@jujulego/jill-core';
+import { PackageManager, Project } from '@jujulego/jill-core';
 import { Flags } from '@oclif/core';
 
 import BaseCommand from './base.command';
@@ -8,7 +8,7 @@ export default abstract class ProjectCommand extends BaseCommand {
   // Statics
   static flags = {
     ...BaseCommand.flags,
-    'package-manager': Flags.enum({
+    'package-manager': Flags.enum<PackageManager>({
       options: ['yarn', 'npm'],
       description: 'Force package manager'
     }),
@@ -27,7 +27,7 @@ export default abstract class ProjectCommand extends BaseCommand {
     await super.init();
 
     // Instantiate project
-    const { flags } = await this.parse(this.ctor);
+    const { flags } = await this.parse(this.constructor as typeof ProjectCommand);
     this._project = new Project(flags.project, { packageManager: flags['package-manager'] });
   }
 
