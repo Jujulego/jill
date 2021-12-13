@@ -4,7 +4,7 @@ import { AffectedFilter } from '../../src/filters';
 
 // Setup
 const prj = new Project('test');
-const wks = new Workspace('wks', { name: 'wks' }, prj);
+const wks = new Workspace('wks', { name: 'wks' } as any, prj);
 
 beforeEach(() => {
   jest.resetAllMocks();

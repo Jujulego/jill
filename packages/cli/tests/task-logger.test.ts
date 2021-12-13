@@ -7,8 +7,8 @@ import './logger';
 
 // Constants
 const prj = new Project('prj');
-const wks1 = new Workspace('wks-1', { name: 'wks-1' }, prj);
-const wks2 = new Workspace('wks-2', { name: 'wks-2' }, prj);
+const wks1 = new Workspace('wks-1', { name: 'wks-1' } as any, prj);
+const wks2 = new Workspace('wks-2', { name: 'wks-2' } as any, prj);
 
 // Setup
 let set: TaskSet;

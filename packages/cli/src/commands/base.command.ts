@@ -3,7 +3,7 @@ import { Command, Options } from '../command';
 // Command
 export abstract class BaseCommand extends Command {
   // Methods
-  async define<O extends Options>(command: string | ReadonlyArray<string>, description: string, options: O) {
+  protected async define<O extends Options>(command: string | ReadonlyArray<string>, description: string, options: O) {
     const argv = await super.define(command, description, {
       ...options,
       verbose: {

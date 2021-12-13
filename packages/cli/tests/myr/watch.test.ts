@@ -27,9 +27,9 @@ beforeEach(() => {
   jest.resetAllMocks();
 
   prj = new Project('/prj');
-  wksA = new Workspace('wks-a', { name: 'wks-a', dependencies: { 'wks-b': '*' }, devDependencies: { 'wks-c': '*' }}, prj);
-  wksB = new Workspace('wks-b', { name: 'wks-b', devDependencies: { 'wks-c': '*' }}, prj);
-  wksC = new Workspace('wks-c', { name: 'wks-c' }, prj);
+  wksA = new Workspace('wks-a', { name: 'wks-a', dependencies: { 'wks-b': '*' }, devDependencies: { 'wks-c': '*' }} as any, prj);
+  wksB = new Workspace('wks-b', { name: 'wks-b', devDependencies: { 'wks-c': '*' }} as any, prj);
+  wksC = new Workspace('wks-c', { name: 'wks-c' } as any, prj);
   tskA = new MockTask('test');
 
   jest.spyOn(prj, 'workspace').mockResolvedValue(wksA);

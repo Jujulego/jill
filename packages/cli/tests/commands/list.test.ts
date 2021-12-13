@@ -42,9 +42,9 @@ describe('jill list', () => {
 
   beforeEach(() => {
     workspaces = [
-      new Workspace('./wks-1', { name: 'wks-1', private: true, version: '1.0.0' }, project),
-      new Workspace('./wks-2', { name: 'wks-2', version: '1.0.0', scripts: { test: 'test' } }, project),
-      new Workspace('./wks-3', { name: 'wks-3', version: '1.0.0', scripts: { lint: 'lint' } }, project),
+      new Workspace('./wks-1', { name: 'wks-1', private: true, version: '1.0.0' } as any, project),
+      new Workspace('./wks-2', { name: 'wks-2', version: '1.0.0', scripts: { test: 'test' } } as any, project),
+      new Workspace('./wks-3', { name: 'wks-3', version: '1.0.0', scripts: { lint: 'lint' } } as any, project),
     ];
 
     jest.spyOn(project, 'workspaces').mockImplementation(async function* () {

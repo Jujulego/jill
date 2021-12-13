@@ -5,7 +5,7 @@ import { fork } from 'child_process';
 import { DocumentNode, print } from 'graphql';
 import { GraphQLClient } from 'graphql-request';
 import { createClient } from 'graphql-ws';
-import { gql } from 'graphql.macro';
+import gql from 'graphql-tag';
 import path from 'path';
 import WebSocket from 'ws';
 

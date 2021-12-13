@@ -55,7 +55,7 @@ describe('jill run', () => {
   });
 
   it('should exit 0 when task-set is finished and all tasks are successful', async () => {
-    const wks = new Workspace('./wks', { name: 'wks', version: '1.0.0' }, project);
+    const wks = new Workspace('./wks', { name: 'wks', version: '1.0.0' } as any, project);
     const tsk = new MockTask('test', { context: { workspace: wks }});
 
     jest.spyOn(project, 'workspace').mockResolvedValue(wks);
@@ -80,7 +80,7 @@ describe('jill run', () => {
   });
 
   it('should exit 1 when task-set is finished and a task failed', async () => {
-    const wks = new Workspace('./wks', { name: 'wks', version: '1.0.0' }, project);
+    const wks = new Workspace('./wks', { name: 'wks', version: '1.0.0' } as any, project);
     const tsk = new MockTask('test', { context: { workspace: wks }});
 
     jest.spyOn(project, 'workspace').mockResolvedValue(wks);
@@ -105,7 +105,7 @@ describe('jill run', () => {
   });
 
   it('should use current workspace', async () => {
-    const wks = new Workspace('./wks', { name: 'wks', version: '1.0.0' }, project);
+    const wks = new Workspace('./wks', { name: 'wks', version: '1.0.0' } as any, project);
     const tsk = new MockTask('test', { context: { workspace: wks }});
 
     jest.spyOn(project, 'workspace');

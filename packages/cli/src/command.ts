@@ -13,16 +13,18 @@ export abstract class Command {
   protected readonly spinner = transport.spinner;
 
   // Constructor
-  constructor(private readonly _yargs: yargs.Argv) {}
+  constructor(
+    protected readonly yargs: yargs.Argv
+  ) {}
 
   // Methods
-  define<O extends Options>(
+  protected define<O extends Options>(
     command: string | ReadonlyArray<string>,
     description: string,
     options: O
   ): Promise<Arguments<O>> {
     return new Promise<Arguments<O>>((resolve) => {
-      yargs.command<O>(command, description, options, resolve);
+      this.yargs.command<O>(command, description, options, resolve);
     });
   }
 

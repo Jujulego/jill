@@ -47,7 +47,7 @@ describe('jill each', () => {
   });
 
   it('should exit 0 when task-set is is finished and all tasks are successful', async () => {
-    const wks = new Workspace('./wks', { name: 'wks', version: '1.0.0', scripts: { test: 'test' } }, project);
+    const wks = new Workspace('./wks', { name: 'wks', version: '1.0.0', scripts: { test: 'test' } } as any, project);
     const tsk = new MockTask('test', { context: { workspace: wks }});
 
     jest.spyOn(project, 'workspaces').mockImplementation(async function* () { yield wks; });
@@ -73,7 +73,7 @@ describe('jill each', () => {
   });
 
   it('should exit 1 when task-set is is finished and a task failed', async () => {
-    const wks = new Workspace('./wks', { name: 'wks', version: '1.0.0', scripts: { test: 'test' } }, project);
+    const wks = new Workspace('./wks', { name: 'wks', version: '1.0.0', scripts: { test: 'test' } } as any, project);
     const tsk = new MockTask('test', { context: { workspace: wks }});
 
     jest.spyOn(project, 'workspaces').mockImplementation(async function* () { yield wks; });
@@ -99,8 +99,8 @@ describe('jill each', () => {
   });
 
   it('should filter workspaces without script', async () => {
-    const wks1 = new Workspace('./wks-1', { name: 'wks-1', version: '1.0.0', scripts: { test: 'test' } }, project);
-    const wks2 = new Workspace('./wks-2', { name: 'wks-2', version: '1.0.0' }, project);
+    const wks1 = new Workspace('./wks-1', { name: 'wks-1', version: '1.0.0', scripts: { test: 'test' } } as any, project);
+    const wks2 = new Workspace('./wks-2', { name: 'wks-2', version: '1.0.0' } as any, project);
     const tsk1 = new MockTask('test', { context: { workspace: wks1 }});
     const tsk2 = new MockTask('test', { context: { workspace: wks2 }});
 
@@ -122,8 +122,8 @@ describe('jill each', () => {
   });
 
   it('should filter private workspaces', async () => {
-    const wks1 = new Workspace('./wks-1', { name: 'wks-1', version: '1.0.0', private: true, scripts: { test: 'test' } }, project);
-    const wks2 = new Workspace('./wks-2', { name: 'wks-2', version: '1.0.0', scripts: { test: 'test' } }, project);
+    const wks1 = new Workspace('./wks-1', { name: 'wks-1', version: '1.0.0', private: true, scripts: { test: 'test' } } as any, project);
+    const wks2 = new Workspace('./wks-2', { name: 'wks-2', version: '1.0.0', scripts: { test: 'test' } } as any, project);
     const tsk1 = new MockTask('test', { context: { workspace: wks1 }});
     const tsk2 = new MockTask('test', { context: { workspace: wks2 }});
 
@@ -145,8 +145,8 @@ describe('jill each', () => {
   });
 
   it('should filter affected workspaces', async () => {
-    const wks1 = new Workspace('./wks-1', { name: 'wks-1', version: '1.0.0', scripts: { test: 'test' } }, project);
-    const wks2 = new Workspace('./wks-2', { name: 'wks-2', version: '1.0.0', scripts: { test: 'test' } }, project);
+    const wks1 = new Workspace('./wks-1', { name: 'wks-1', version: '1.0.0', scripts: { test: 'test' } } as any, project);
+    const wks2 = new Workspace('./wks-2', { name: 'wks-2', version: '1.0.0', scripts: { test: 'test' } } as any, project);
     const tsk1 = new MockTask('test', { context: { workspace: wks1 }});
     const tsk2 = new MockTask('test', { context: { workspace: wks2 }});
 
