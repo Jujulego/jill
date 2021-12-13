@@ -2,7 +2,7 @@ import { hideBin } from 'yargs/helpers';
 import yargs from 'yargs';
 
 import { eachCommand } from './commands/each';
-import { infoCommand } from './commands/info';
+import { InfoCommand } from './commands/info.command';
 import { listCommand } from './commands/list';
 import { runCommand } from './commands/run';
 import { myrCommand } from './myr/command';
@@ -12,7 +12,7 @@ import { commandHandler } from './wrapper';
 // Bootstrap
 (async () => {
   // Options
-  await yargs(hideBin(process.argv))
+  const parser = await yargs(hideBin(process.argv))
     .scriptName('jill')
     .option('project', {
       alias: 'p',
@@ -86,13 +86,6 @@ import { commandHandler } from './wrapper';
         desc: 'Prints data as a JSON array',
       }
     }, commandHandler(listCommand))
-    .command('info', 'Print workspace data', {
-      workspace: {
-        alias: 'w',
-        type: 'string',
-        desc: 'Workspace to use'
-      }
-    }, commandHandler(infoCommand))
     .command('run <script>', 'Run script inside workspace', {
       workspace: {
         alias: 'w',
@@ -159,6 +152,11 @@ import { commandHandler } from './wrapper';
     .demandCommand(1)
     .help()
     .example('$0 list -a', 'List all affected workspaces towards master branch')
-    .example('$0 list --no-private', 'List all public workspaces')
-    .parse();
+    .example('$0 list --no-private', 'List all public workspaces');
+
+  Promise.race([
+    (new InfoCommand(parser)).run()
+  ]);
+
+  parser.parse();
 })();

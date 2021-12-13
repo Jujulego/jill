@@ -11,7 +11,7 @@ const MESSAGE = Symbol.for('message');
 // Transport
 export class OraTransport extends Transport {
   // Attributes
-  readonly _spinner = ora();
+  readonly spinner = ora();
 
   // Methods
   log(info: any, next: () => void): void {
@@ -19,8 +19,8 @@ export class OraTransport extends Transport {
     const msg = info[MESSAGE] as string;
 
     // Clear out spinner before printing logs
-    if (this._spinner.isSpinning) {
-      this._spinner.clear();
+    if (this.spinner.isSpinning) {
+      this.spinner.clear();
     }
 
     for (const line of msg.split('\n')) {
@@ -30,24 +30,28 @@ export class OraTransport extends Transport {
     next();
   }
 
+  /** @deprecated */
   spin(message: string): void {
-    this._spinner.start(message);
+    this.spinner.start(message);
   }
 
+  /** @deprecated */
   succeed(log: string): void {
-    this._spinner.succeed(log);
+    this.spinner.succeed(log);
   }
 
+  /** @deprecated */
   fail(log: Error | string): void {
     if (typeof log === 'string') {
-      this._spinner.fail(log);
+      this.spinner.fail(log);
     } else {
-      this._spinner.fail(log.stack || log.toString());
+      this.spinner.fail(log.stack || log.toString());
     }
   }
 
+  /** @deprecated */
   stop(): void {
-    this._spinner.stop();
+    this.spinner.stop();
   }
 }
 
@@ -90,18 +94,22 @@ export class OraLogger {
   }
 
   // - ora
+  /** @deprecated */
   spin(msg: string): void {
     this.transport.spin(msg);
   }
 
+  /** @deprecated */
   succeed(msg: string): void {
     this.transport.succeed(msg);
   }
 
+  /** @deprecated */
   fail(msg: string): void {
     this.transport.fail(msg);
   }
 
+  /** @deprecated */
   stop(): void {
     this.transport.stop();
   }
@@ -127,4 +135,5 @@ export const transport = new OraTransport({
 
 coreLogger.add(transport);
 
+/** @deprecated */
 export const logger = new OraLogger(coreLogger, transport);
