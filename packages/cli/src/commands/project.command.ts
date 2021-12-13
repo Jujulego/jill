@@ -9,7 +9,7 @@ export abstract class ProjectCommand extends BaseCommand {
   private _project?: Project;
 
   // Methods
-  protected async define<U>(command: string | ReadonlyArray<string>, description: string, builder: CommandBuilder<U>) {
+  protected async define<U>(command: string | readonly string[], description: string, builder: CommandBuilder<U>) {
     const argv = await super.define(command, description, y => builder(y)
       .option('project', {
         alias: 'p',
