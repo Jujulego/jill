@@ -2246,7 +2246,7 @@ __metadata:
     ts-node: 10.4.0
     typescript: 4.5.3
     winston: ^3.3.3
-    winston-transport: 4.4.0
+    winston-transport: 4.4.1
   languageName: unknown
   linkType: soft
 
@@ -12614,7 +12614,18 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"winston-transport@npm:4.4.0, winston-transport@npm:^4.4.0":
+"winston-transport@npm:4.4.1":
+  version: 4.4.1
+  resolution: "winston-transport@npm:4.4.1"
+  dependencies:
+    logform: ^2.2.0
+    readable-stream: ^3.4.0
+    triple-beam: ^1.2.0
+  checksum: eeca0f269a686182839902de3f3921434ae938511f506a3a56c9e80b2f399517389d1b6656a2913f5e865348ef5fcf45e303b3412797ce38585b836df0491f94
+  languageName: node
+  linkType: hard
+
+"winston-transport@npm:^4.4.0":
   version: 4.4.0
   resolution: "winston-transport@npm:4.4.0"
   dependencies:
