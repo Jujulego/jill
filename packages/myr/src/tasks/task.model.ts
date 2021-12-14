@@ -1,6 +1,6 @@
 import { TaskStatus } from '@jujulego/jill-core';
 import { ArgsType, Field, ID, ObjectType } from '@nestjs/graphql';
-import gql from 'graphql-tag';
+import { gql } from 'graphql.macro';
 
 // Models
 @ObjectType()
