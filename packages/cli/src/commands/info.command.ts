@@ -29,10 +29,10 @@ export class InfoCommand extends ProjectCommand {
     this.spinner.stop();
 
     // Print data
-    console.log(chalk`Workspace {bold ${wks.name}}:`);
-    console.log(chalk`{bold Version:}   ${wks.manifest.version || chalk.grey('unset')}`);
-    console.log(chalk`{bold Directory:} ${path.relative(process.cwd(), wks.cwd) || '.'}`);
-    console.log('');
+    this.log(chalk`Workspace {bold ${wks.name}}:`);
+    this.log(chalk`{bold Version:}   ${wks.manifest.version || chalk.grey('unset')}`);
+    this.log(chalk`{bold Directory:} ${path.relative(process.cwd(), wks.cwd) || '.'}`);
+    this.log('');
     await printDepsTree(wks);
   }
 }

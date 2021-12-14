@@ -38,8 +38,6 @@ export class RunCommand extends ProjectCommand {
 
     this.spinner.stop();
 
-    console.log(argv);
-
     // Run build task
     const set = new TaskSet();
     const task = await wks.run(argv.script, argv['--']?.map(arg => arg.toString()), {

@@ -10,8 +10,8 @@ export type CommandBuilder<T = Record<string, unknown>> = (y: yargs.Argv) => yar
 // Command
 export abstract class Command {
   // Attributes
-  protected readonly logger = logger;
-  protected readonly spinner = transport.spinner;
+  readonly logger = logger;
+  readonly spinner = transport.spinner;
 
   // Constructor
   constructor(
@@ -19,12 +19,19 @@ export abstract class Command {
   ) {}
 
   // Methods
-  protected define<T>(command: string | readonly string[], description: string, builder: CommandBuilder<T>): Promise<Arguments<T>>;
-  protected define(command: string | ReadonlyArray<string>, description: string, builder: CommandBuilder): Promise<Arguments> {
-    return new Promise<Arguments>((resolve) => {
+  abstract run(): Promise<number | void>;
+
+  protected define<T>(command: string | readonly string[], description: string, builder?: CommandBuilder<T>): Promise<Arguments<T>> {
+    return new Promise<Arguments<T>>((resolve) => {
       this.yargs.command(command, description, builder, resolve);
     });
   }
 
-  abstract run(): Promise<number | void>;
+  log(msg: string): void {
+    if (this.spinner.isSpinning) {
+      this.spinner.clear();
+    }
+
+    console.log(msg);
+  }
 }
