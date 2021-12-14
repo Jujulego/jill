@@ -7,6 +7,8 @@ import { TestBed, TestCommand } from '../test-bed';
 // Setup
 chalk.level = 1;
 
+let project: Project;
+
 const TestInfoCommand = TestCommand(InfoCommand);
 const testBed = new TestBed(TestInfoCommand);
 const defaults = {
@@ -16,8 +18,6 @@ const defaults = {
   project: '/project',
   'package-manager': undefined
 };
-
-let project: Project;
 
 beforeEach(() => {
   testBed.beforeEach();

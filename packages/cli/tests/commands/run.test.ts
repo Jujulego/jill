@@ -1,28 +1,37 @@
 import { Project, TaskSet, Workspace } from '@jujulego/jill-core';
 
 import { MockTask } from '../../mocks/task';
-import { logger } from '../../src';
-import { RunArgs, runCommand } from '../../src/commands/run';
+import { RunCommand } from '../../src';
+import { TestBed, TestCommand } from '../test-bed';
 import '../logger';
 
 // Setup
+
 jest.mock('../../src/logger');
 jest.mock('../../src/wrapper');
 
 let project: Project;
 
-const defaults: Omit<RunArgs, 'script' | 'workspace'> = {
+const TestRunCommand = TestCommand(RunCommand);
+const testBed = new TestBed(TestRunCommand);
+const defaults = {
+  '$0': 'jill',
+  _: [],
+  verbose: 0,
+  project: '/project',
+  'package-manager': undefined,
   'deps-mode': 'all',
-  '--': undefined,
 };
 
-
 beforeEach(() => {
+  testBed.beforeEach();
   project = new Project('.');
 
   // Mocks
   jest.resetAllMocks();
   jest.restoreAllMocks();
+
+  jest.spyOn(testBed.cmd, 'project', 'get').mockReturnValue(project);
 });
 
 // Tests
@@ -31,13 +40,13 @@ describe('jill run', () => {
     jest.spyOn(project, 'workspace').mockResolvedValue(null);
 
     // Call
-    await expect(runCommand(project, { workspace: 'does-not-exists', script: 'test', ...defaults }))
+    await expect(testBed.run({ ...defaults, workspace: 'does-not-exists', script: 'test' }))
       .resolves.toBe(1);
 
     // Checks
-    expect(logger.spin).toHaveBeenCalledWith('Loading "does-not-exists" workspace');
+    expect(testBed.spinner.start).toHaveBeenCalledWith('Loading "does-not-exists" workspace');
     expect(project.workspace).toHaveBeenCalledWith('does-not-exists');
-    expect(logger.fail).toHaveBeenCalledWith('Workspace "does-not-exists" not found');
+    expect(testBed.spinner.fail).toHaveBeenCalledWith('Workspace "does-not-exists" not found');
   });
 
   it('should exit 1 if current workspace not found', async () => {
@@ -45,14 +54,14 @@ describe('jill run', () => {
     jest.spyOn(project, 'currentWorkspace').mockResolvedValue(null);
 
     // Call
-    await expect(runCommand(project, { workspace: undefined, script: 'test', ...defaults }))
+    await expect(testBed.run({ ...defaults, workspace: undefined, script: 'test' }))
       .resolves.toBe(1);
 
     // Checks
-    expect(logger.spin).toHaveBeenCalledWith('Loading "." workspace');
+    expect(testBed.spinner.start).toHaveBeenCalledWith('Loading "." workspace');
     expect(project.workspace).not.toHaveBeenCalled();
     expect(project.currentWorkspace).toHaveBeenCalled();
-    expect(logger.fail).toHaveBeenCalledWith('Workspace "." not found');
+    expect(testBed.spinner.fail).toHaveBeenCalledWith('Workspace "." not found');
   });
 
   it('should exit 0 when task-set is finished and all tasks are successful', async () => {
@@ -67,11 +76,11 @@ describe('jill run', () => {
     jest.spyOn(TaskSet.prototype, 'waitFor').mockResolvedValue([{ success: 1, failed: 0 }]);
 
     // Call
-    await expect(runCommand(project, { workspace: 'wks', script: 'test', ...defaults, '--': ['--arg', 1] }))
+    await expect(testBed.run({ ...defaults, workspace: 'wks', script: 'test', '--': ['--arg', 1] }))
       .resolves.toBe(0);
 
     // Checks
-    expect(logger.spin).toHaveBeenCalledWith('Loading "wks" workspace');
+    expect(testBed.spinner.start).toHaveBeenCalledWith('Loading "wks" workspace');
     expect(project.workspace).toHaveBeenCalledWith('wks');
     expect(wks.run).toHaveBeenCalledWith('test', ['--arg', '1'], { buildDeps: 'all' });
     expect(TaskSet.prototype.add).toHaveBeenCalledWith(tsk);
@@ -92,11 +101,11 @@ describe('jill run', () => {
     jest.spyOn(TaskSet.prototype, 'waitFor').mockResolvedValue([{ success: 0, failed: 1 }]);
 
     // Call
-    await expect(runCommand(project, { workspace: 'wks', script: 'test', ...defaults, '--': ['--arg', 1] }))
+    await expect(testBed.run({ ...defaults, workspace: 'wks', script: 'test', '--': ['--arg', 1] }))
       .resolves.toBe(1);
 
     // Checks
-    expect(logger.spin).toHaveBeenCalledWith('Loading "wks" workspace');
+    expect(testBed.spinner.start).toHaveBeenCalledWith('Loading "wks" workspace');
     expect(project.workspace).toHaveBeenCalledWith('wks');
     expect(wks.run).toHaveBeenCalledWith('test', ['--arg', '1'], { buildDeps: 'all' });
     expect(TaskSet.prototype.add).toHaveBeenCalledWith(tsk);
@@ -118,11 +127,11 @@ describe('jill run', () => {
     jest.spyOn(TaskSet.prototype, 'waitFor').mockResolvedValue([{ success: 1, failed: 0 }]);
 
     // Call
-    await expect(runCommand(project, { workspace: undefined, script: 'test', ...defaults }))
+    await expect(testBed.run({ ...defaults, workspace: undefined, script: 'test' }))
       .resolves.toBe(0);
 
     // Checks
-    expect(logger.spin).toHaveBeenCalledWith('Loading "." workspace');
+    expect(testBed.spinner.start).toHaveBeenCalledWith('Loading "." workspace');
     expect(project.workspace).not.toHaveBeenCalled();
     expect(project.currentWorkspace).toHaveBeenCalled();
     expect(wks.run).toHaveBeenCalledWith('test', undefined, { buildDeps: 'all' });
