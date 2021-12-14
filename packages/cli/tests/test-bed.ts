@@ -45,6 +45,12 @@ export class TestBed<C extends Type<MockableCommand>> {
     jest.spyOn(this._cmd.spinner, 'stop').mockImplementation();
     jest.spyOn(this._cmd.spinner, 'fail').mockImplementation();
 
+    jest.spyOn(this._cmd.logger, 'debug');
+    jest.spyOn(this._cmd.logger, 'verbose');
+    jest.spyOn(this._cmd.logger, 'info');
+    jest.spyOn(this._cmd.logger, 'warn');
+    jest.spyOn(this._cmd.logger, 'error');
+
     jest.spyOn(this._cmd, 'define').mockResolvedValue(args);
     jest.spyOn(this._cmd as Command, 'log').mockImplementation((message) => this._screen += message + '\n');
     jest.spyOn(console, 'log').mockImplementation((message) => this._screen += message + '\n');

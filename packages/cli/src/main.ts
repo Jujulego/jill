@@ -1,7 +1,7 @@
 import { hideBin } from 'yargs/helpers';
 import yargs from 'yargs';
 
-import { eachCommand } from './commands/each';
+import { EachCommand } from './commands/each.command';
 import { InfoCommand } from './commands/info.command';
 import { ListCommand } from './commands/list.command';
 import { RunCommand } from './commands/run.command';
@@ -32,40 +32,6 @@ import { commandHandler } from './wrapper';
     .parserConfiguration({
       'populate--': true,
     })
-    .command('each <script>', 'Run script on selected workspaces', {
-      'deps-mode': {
-        choice: ['all', 'prod', 'none'],
-        default: 'all',
-        desc: 'Dependency selection mode:\n' +
-          ' - all = dependencies AND devDependencies\n' +
-          ' - prod = dependencies\n' +
-          ' - none = nothing'
-      },
-      private: {
-        type: 'boolean',
-        group: 'Filters:',
-        desc: 'Print only private workspaces',
-      },
-      affected: {
-        alias: 'a',
-        type: 'string',
-        coerce: (rev: string) => rev === '' ? 'master' : rev,
-        group: 'Affected:',
-        desc: 'Print only affected workspaces towards given git revision. If no revision is given, it will check towards master.\n' +
-          'Replaces %name by workspace name.',
-      },
-      'affected-rev-sort': {
-        type: 'string',
-        group: 'Affected:',
-        desc: 'Sort applied to git tag / git branch command',
-      },
-      'affected-rev-fallback': {
-        type: 'string',
-        default: 'master',
-        group: 'Affected:',
-        desc: 'Fallback revision, used if no revision matching the given format is found',
-      },
-    }, commandHandler(eachCommand))
     .command('myr', 'Interact with myr server', myrCommand)
     .command('watch <script>', 'Run script inside workspace and watch over deps', {
       daemon: {
@@ -88,7 +54,8 @@ import { commandHandler } from './wrapper';
   const exit = Promise.race([
     (new InfoCommand(parser)).run(),
     (new ListCommand(parser)).run(),
-    (new RunCommand(parser)).run()
+    (new RunCommand(parser)).run(),
+    (new EachCommand(parser)).run()
   ]);
 
   await parser.parse();

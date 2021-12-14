@@ -2,7 +2,8 @@ import { Project, TaskSet, Workspace } from '@jujulego/jill-core';
 import chalk from 'chalk';
 
 import { MockTask } from '../../mocks/task';
-import { EachArgs, eachCommand, logger } from '../../src';
+import { EachCommand } from '../../src';
+import { TestBed, TestCommand } from '../test-bed';
 import '../logger';
 
 // Setup
@@ -10,24 +11,29 @@ jest.mock('../../src/logger');
 
 chalk.level = 1;
 
-const defaults: Omit<EachArgs, 'script'> = {
+let project: Project;
+
+const TestEachCommand = TestCommand(EachCommand);
+const testBed = new TestBed(TestEachCommand);
+const defaults = {
+  '$0': 'jill',
+  _: [],
+  verbose: 0,
+  project: '/project',
+  'package-manager': undefined,
   'deps-mode': 'all',
-  '--': undefined,
-
-  private: undefined,
-
-  affected: undefined,
-  'affected-rev-sort': undefined,
   'affected-rev-fallback': 'master',
 };
 
-let project: Project;
-
 beforeEach(() => {
+  testBed.beforeEach();
   project = new Project('.');
 
   // Mocks
+  jest.resetAllMocks();
   jest.restoreAllMocks();
+
+  jest.spyOn(testBed.cmd, 'project', 'get').mockReturnValue(project);
 });
 
 // Tests
@@ -37,13 +43,12 @@ describe('jill each', () => {
       .mockImplementation(async function* (): AsyncGenerator<Workspace> {}); // eslint-disable-line @typescript-eslint/no-empty-function
 
     // Call
-    await expect(eachCommand(project, { ...defaults, script: 'test' }))
+    await expect(testBed.run({ ...defaults, script: 'test' }))
       .resolves.toBe(1);
 
     // Checks
-    expect(logger.spin).toHaveBeenCalledWith('Loading project');
     expect(project.workspaces).toHaveBeenCalled();
-    expect(logger.fail).toHaveBeenCalledWith('No workspace found !');
+    expect(testBed.spinner.fail).toHaveBeenCalledWith('No workspace found !');
   });
 
   it('should exit 0 when task-set is is finished and all tasks are successful', async () => {
@@ -58,13 +63,12 @@ describe('jill each', () => {
     jest.spyOn(TaskSet.prototype, 'waitFor').mockResolvedValue([{ success: 1, failed: 0 }]);
 
     // Call
-    await expect(eachCommand(project, { ...defaults, script: 'test', '--': ['--arg', 1] }))
+    await expect(testBed.run({ ...defaults, script: 'test', '--': ['--arg', 1] }))
       .resolves.toBe(0);
 
     // Checks
-    expect(logger.spin).toHaveBeenCalledWith('Loading project');
     expect(project.workspaces).toHaveBeenCalled();
-    expect(logger.verbose).toHaveBeenCalledWith('Will run test in wks');
+    expect(testBed.logger.verbose).toHaveBeenCalledWith('Will run test in wks');
     expect(wks.run).toHaveBeenCalledWith('test', ['--arg', '1'], { buildDeps: 'all' });
     expect(TaskSet.prototype.add).toHaveBeenCalledWith(tsk);
     expect(TaskSet.prototype.on).toHaveBeenCalledWith('started', expect.any(Function));
@@ -84,13 +88,12 @@ describe('jill each', () => {
     jest.spyOn(TaskSet.prototype, 'waitFor').mockResolvedValue([{ success: 0, failed: 1 }]);
 
     // Call
-    await expect(eachCommand(project, { ...defaults, script: 'test', '--': ['--arg', 1] }))
+    await expect(testBed.run({ ...defaults, script: 'test', '--': ['--arg', 1] }))
       .resolves.toBe(1);
 
     // Checks
-    expect(logger.spin).toHaveBeenCalledWith('Loading project');
     expect(project.workspaces).toHaveBeenCalled();
-    expect(logger.verbose).toHaveBeenCalledWith('Will run test in wks');
+    expect(testBed.logger.verbose).toHaveBeenCalledWith('Will run test in wks');
     expect(wks.run).toHaveBeenCalledWith('test', ['--arg', '1'], { buildDeps: 'all' });
     expect(TaskSet.prototype.add).toHaveBeenCalledWith(tsk);
     expect(TaskSet.prototype.on).toHaveBeenCalledWith('started', expect.any(Function));
@@ -113,12 +116,12 @@ describe('jill each', () => {
     jest.spyOn(TaskSet.prototype, 'waitFor').mockResolvedValue([{ success: 1, failed: 0 }]);
 
     // Call
-    await expect(eachCommand(project, { ...defaults, script: 'test' }))
+    await expect(testBed.run({ ...defaults, script: 'test' }))
       .resolves.toBe(0);
 
     // Checks
     expect(project.workspaces).toHaveBeenCalled();
-    expect(logger.verbose).toHaveBeenCalledWith('Will run test in wks-1');
+    expect(testBed.logger.verbose).toHaveBeenCalledWith('Will run test in wks-1');
   });
 
   it('should filter private workspaces', async () => {
@@ -136,12 +139,12 @@ describe('jill each', () => {
     jest.spyOn(TaskSet.prototype, 'waitFor').mockResolvedValue([{ success: 1, failed: 0 }]);
 
     // Call
-    await expect(eachCommand(project, { ...defaults, script: 'test', private: true }))
+    await expect(testBed.run({ ...defaults, script: 'test', private: true }))
       .resolves.toBe(0);
 
     // Checks
     expect(project.workspaces).toHaveBeenCalled();
-    expect(logger.verbose).toHaveBeenCalledWith('Will run test in wks-1');
+    expect(testBed.logger.verbose).toHaveBeenCalledWith('Will run test in wks-1');
   });
 
   it('should filter affected workspaces', async () => {
@@ -161,13 +164,13 @@ describe('jill each', () => {
     jest.spyOn(TaskSet.prototype, 'waitFor').mockResolvedValue([{ success: 1, failed: 0 }]);
 
     // Call
-    await expect(eachCommand(project, { ...defaults, script: 'test', affected: 'test' }))
+    await expect(testBed.run({ ...defaults, script: 'test', affected: 'test' }))
       .resolves.toBe(0);
 
     // Checks
     expect(project.workspaces).toHaveBeenCalled();
     expect(wks1.isAffected).toHaveBeenCalledWith('test');
     expect(wks2.isAffected).toHaveBeenCalledWith('test');
-    expect(logger.verbose).toHaveBeenCalledWith('Will run test in wks-1');
+    expect(testBed.logger.verbose).toHaveBeenCalledWith('Will run test in wks-1');
   });
 });
