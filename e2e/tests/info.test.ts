@@ -10,7 +10,8 @@ describe('jill info', () => {
       .resolves.toEqual({
         code: 0,
         stderr: [
-          '- Loading project'
+          '- Loading project',
+          '- Loading "." workspace'
         ],
         stdout: [
           chalk`Workspace {bold mock-root}:`,
@@ -28,7 +29,8 @@ describe('jill info', () => {
       .resolves.toEqual({
         code: 0,
         stderr: [
-          '- Loading project'
+          '- Loading project',
+          '- Loading "mock-test-a" workspace'
         ],
         stdout: [
           chalk`Workspace {bold mock-test-a}:`,
@@ -50,7 +52,8 @@ describe('jill info', () => {
       .resolves.toEqual({
         code: 0,
         stderr: [
-          '- Loading project'
+          '- Loading project',
+          '- Loading "." workspace'
         ],
         stdout: [
           chalk`Workspace {bold mock-test-a}:`,
