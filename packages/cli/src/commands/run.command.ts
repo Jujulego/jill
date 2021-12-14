@@ -8,7 +8,7 @@ export class RunCommand extends ProjectCommand {
   // Methods
   async run(): Promise<number | void> {
     // Define command
-    const argv = await this.define('run <script>', 'Run script inside workspace', y => y
+    const argv = await this.define('run', 'Run script inside workspace', y => y
       .positional('script', { type: 'string', demandOption: true })
       .options({
         workspace: {
