@@ -1,17 +1,16 @@
-import { Command, Options } from '../command';
+import { Command, CommandBuilder } from '../command';
 
 // Command
 export abstract class BaseCommand extends Command {
   // Methods
-  protected async define<O extends Options>(command: string | ReadonlyArray<string>, description: string, options: O) {
-    const argv = await super.define(command, description, {
-      ...options,
-      verbose: {
+  protected async define<U>(command: string | ReadonlyArray<string>, description: string, builder: CommandBuilder<U>) {
+    const argv = await super.define(command, description, y => builder(y)
+      .option('verbose', {
         alias: 'v',
         type: 'count',
         description: 'Set verbosity level (1 for verbose, 2 for debug)',
-      }
-    });
+      })
+    );
 
     // Manage log level
     if (argv.verbose === 1) {

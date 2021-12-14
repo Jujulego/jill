@@ -7,7 +7,15 @@ import * as testBed from '../test-bed';
 
 // Setup
 chalk.level = 1;
+
 const TestInfoCommand = testBed.TestCommand(InfoCommand);
+const defaults = {
+  '$0': 'jill',
+  _: [],
+  verbose: 0,
+  project: '/project',
+  'package-manager': undefined
+};
 
 let cmd: InstanceType<typeof TestInfoCommand>;
 let project: Project;
@@ -34,7 +42,7 @@ beforeEach(() => {
 describe('jill info', () => {
   it('should exit 1 if workspace doesn\'t exists', async () => {
     jest.spyOn(project, 'workspace').mockResolvedValue(null);
-    jest.spyOn(cmd, 'define').mockResolvedValue({ workspace: 'does-not-exists' });
+    jest.spyOn(cmd, 'define').mockResolvedValue({ ...defaults, workspace: 'does-not-exists' });
 
     // Call
     await expect(cmd.run())
@@ -49,7 +57,7 @@ describe('jill info', () => {
   it('should exit 1 if current workspace not found', async () => {
     jest.spyOn(project, 'workspace');
     jest.spyOn(project, 'currentWorkspace').mockResolvedValue(null);
-    jest.spyOn(cmd, 'define').mockResolvedValue({ workspace: undefined });
+    jest.spyOn(cmd, 'define').mockResolvedValue({ ...defaults, workspace: undefined });
 
     // Call
     await expect(cmd.run())
@@ -66,7 +74,7 @@ describe('jill info', () => {
     const wks = new Workspace('./wks', { name: 'wks', version: '1.0.0' } as any, project);
 
     jest.spyOn(project, 'workspace').mockResolvedValue(wks);
-    jest.spyOn(cmd, 'define').mockResolvedValue({ workspace: 'wks' });
+    jest.spyOn(cmd, 'define').mockResolvedValue({ ...defaults, workspace: 'wks' });
 
     // Call
     await expect(cmd.run())
@@ -84,7 +92,7 @@ describe('jill info', () => {
 
     jest.spyOn(project, 'workspace');
     jest.spyOn(project, 'currentWorkspace').mockResolvedValue(wks);
-    jest.spyOn(cmd, 'define').mockResolvedValue({ workspace: undefined });
+    jest.spyOn(cmd, 'define').mockResolvedValue({ ...defaults, workspace: undefined });
 
     // Call
     await expect(cmd.run())
@@ -97,7 +105,7 @@ describe('jill info', () => {
   });
 
   it('should print workspace basic info with dependencies', async () => {
-    jest.spyOn(cmd, 'define').mockResolvedValue({ workspace: 'wks' });
+    jest.spyOn(cmd, 'define').mockResolvedValue({ ...defaults, workspace: 'wks' });
     jest.spyOn(project, 'workspace')
       .mockImplementation(async (name = 'wks') => new Workspace('./wks', { name, version: '1.0.0', dependencies: { depA: '1.0.0', depB: '1.0.0' } } as any, project));
 
@@ -113,7 +121,7 @@ describe('jill info', () => {
   });
 
   it('should print workspace basic info with dev-dependencies', async () => {
-    jest.spyOn(cmd, 'define').mockResolvedValue({ workspace: 'wks' });
+    jest.spyOn(cmd, 'define').mockResolvedValue({ ...defaults, workspace: 'wks' });
     jest.spyOn(project, 'workspace')
       .mockImplementation(async (name = 'wks') => new Workspace('./wks', { name, version: '1.0.0', devDependencies: { depA: '1.0.0', depB: '1.0.0' } } as any, project));
 

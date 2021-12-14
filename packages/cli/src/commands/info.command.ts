@@ -9,13 +9,13 @@ export class InfoCommand extends ProjectCommand {
   // Methods
   async run(): Promise<number | void> {
     // Define command
-    const argv = await this.define('info', 'Print workspace data', {
+    const argv = await this.define('info', 'Print workspace data', y => y.options({
       workspace: {
         alias: 'w',
         type: 'string',
         desc: 'Workspace to use'
       }
-    });
+    }));
 
     // Load workspace
     this.spinner.start(`Loading "${argv.workspace || '.'}" workspace`);
@@ -26,9 +26,9 @@ export class InfoCommand extends ProjectCommand {
       return 1;
     }
 
-    // Print data
     this.spinner.stop();
 
+    // Print data
     console.log(chalk`Workspace {bold ${wks.name}}:`);
     console.log(chalk`{bold Version:}   ${wks.manifest.version || chalk.grey('unset')}`);
     console.log(chalk`{bold Directory:} ${path.relative(process.cwd(), wks.cwd) || '.'}`);

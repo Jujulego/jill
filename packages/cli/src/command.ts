@@ -1,10 +1,11 @@
+import { logger } from '@jujulego/jill-core';
 import yargs from 'yargs';
 
-import { logger, transport } from './logger';
+import { transport } from './logger';
 
 // Types
-export type Options = Record<string, yargs.Options>;
-export type Arguments<O extends Options> = yargs.Arguments<yargs.InferredOptionTypes<O>>;
+export type Arguments<T = Record<string, unknown>> = yargs.Arguments<T> & { '--'?: readonly (string | number)[] };
+export type CommandBuilder<T = Record<string, unknown>> = (y: yargs.Argv) => yargs.Argv<T>;
 
 // Command
 export abstract class Command {
@@ -18,13 +19,10 @@ export abstract class Command {
   ) {}
 
   // Methods
-  protected define<O extends Options>(
-    command: string | ReadonlyArray<string>,
-    description: string,
-    options: O
-  ): Promise<Arguments<O>> {
-    return new Promise<Arguments<O>>((resolve) => {
-      this.yargs.command<O>(command, description, options, resolve);
+  protected define<T>(command: string | readonly string[], description: string, builder: CommandBuilder<T>): Promise<Arguments<T>>;
+  protected define(command: string | ReadonlyArray<string>, description: string, builder: CommandBuilder): Promise<Arguments> {
+    return new Promise<Arguments>((resolve) => {
+      this.yargs.command(command, description, builder, resolve);
     });
   }
 

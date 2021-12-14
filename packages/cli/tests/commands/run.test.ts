@@ -1,7 +1,8 @@
 import { Project, TaskSet, Workspace } from '@jujulego/jill-core';
 
 import { MockTask } from '../../mocks/task';
-import { RunArgs, logger, runCommand } from '../../src';
+import { logger } from '../../src';
+import { RunArgs, runCommand } from '../../src/commands/run';
 import '../logger';
 
 // Setup

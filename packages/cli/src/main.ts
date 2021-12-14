@@ -4,7 +4,7 @@ import yargs from 'yargs';
 import { eachCommand } from './commands/each';
 import { InfoCommand } from './commands/info.command';
 import { listCommand } from './commands/list';
-import { runCommand } from './commands/run';
+import { RunCommand } from './commands/run.command';
 import { myrCommand } from './myr/command';
 import { watchCommand } from './myr/watch';
 import { commandHandler } from './wrapper';
@@ -86,21 +86,6 @@ import { commandHandler } from './wrapper';
         desc: 'Prints data as a JSON array',
       }
     }, commandHandler(listCommand))
-    .command('run <script>', 'Run script inside workspace', {
-      workspace: {
-        alias: 'w',
-        type: 'string',
-        desc: 'Workspace to use'
-      },
-      'deps-mode': {
-        choice: ['all', 'prod', 'none'],
-        default: 'all',
-        desc: 'Dependency selection mode:\n' +
-          ' - all = dependencies AND devDependencies\n' +
-          ' - prod = dependencies\n' +
-          ' - none = nothing'
-      },
-    }, commandHandler(runCommand))
     .command('each <script>', 'Run script on selected workspaces', {
       'deps-mode': {
         choice: ['all', 'prod', 'none'],
@@ -149,14 +134,17 @@ import { commandHandler } from './wrapper';
         desc: 'Workspace to use'
       }
     }, commandHandler(watchCommand))
-    .demandCommand(1)
+    .strictCommands()
     .help()
     .example('$0 list -a', 'List all affected workspaces towards master branch')
     .example('$0 list --no-private', 'List all public workspaces');
 
-  Promise.race([
-    (new InfoCommand(parser)).run()
+  const exit = Promise.race([
+    (new InfoCommand(parser)).run(),
+    (new RunCommand(parser)).run()
   ]);
 
-  parser.parse();
+  await parser.parse();
+
+  process.exit((await exit) ?? 0);
 })();
