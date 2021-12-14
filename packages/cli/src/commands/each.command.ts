@@ -10,7 +10,7 @@ export class EachCommand extends ProjectCommand {
   // Methods
   async run(): Promise<number | void> {
     // Define command
-    const argv = await this.define('each', 'Run script on selected workspaces', y => y
+    const argv = await this.define('each <script>', 'Run script on selected workspaces', y => y
       .positional('script', { type: 'string', demandOption: true })
       .options({
         'deps-mode': {
