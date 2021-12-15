@@ -4,7 +4,7 @@ import { KillCommand } from './commands/kill.command';
 import { listCommand } from './commands/list';
 import { LogsCommand } from './commands/logs.command';
 import { spawnCommand } from './commands/spawn';
-import { stopCommand } from './commands/stop';
+import { StopCommand } from './commands/stop.command';
 import { commandHandler } from '../wrapper';
 
 // Command
@@ -43,10 +43,10 @@ export function myrCommand(yargs: yargs.Argv){
         desc: 'Workspace to use'
       }
     }, commandHandler(spawnCommand))
-    .command('stop', 'Stop myr server. This will kill all running tasks', {}, commandHandler(stopCommand))
     .strictCommands();
 
   // Commands
   (new KillCommand(yargs)).run();
   (new LogsCommand(yargs)).run();
+  (new StopCommand(yargs)).run();
 }
