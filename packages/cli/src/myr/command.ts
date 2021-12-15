@@ -3,12 +3,12 @@ import yargs from 'yargs';
 import { KillCommand } from './commands/kill.command';
 import { listCommand } from './commands/list';
 import { LogsCommand } from './commands/logs.command';
-import { spawnCommand } from './commands/spawn';
+import { SpawnCommand } from './commands/spawn.command';
 import { StopCommand } from './commands/stop.command';
 import { commandHandler } from '../wrapper';
 
 // Command
-export function myrCommand(yargs: yargs.Argv){
+export function myrCommand(yargs: yargs.Argv) {
   yargs
     .command(['list', 'ls'], 'List myr tasks', {
       all: {
@@ -36,17 +36,11 @@ export function myrCommand(yargs: yargs.Argv){
         desc: 'Prints more data on each tasks',
       },
     }, commandHandler(listCommand))
-    .command('spawn <command>', 'Spawn new task', {
-      workspace: {
-        alias: 'w',
-        type: 'string',
-        desc: 'Workspace to use'
-      }
-    }, commandHandler(spawnCommand))
     .strictCommands();
 
   // Commands
   (new KillCommand(yargs)).run();
   (new LogsCommand(yargs)).run();
+  (new SpawnCommand(yargs)).run();
   (new StopCommand(yargs)).run();
 }
