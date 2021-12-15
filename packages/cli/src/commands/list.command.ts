@@ -99,6 +99,8 @@ export class ListCommand extends ProjectCommand {
           desc: 'Prints data as a JSON array',
         }
       })
+      .example('$0 list -a', 'List all affected workspaces towards master branch')
+      .example('$0 list --no-private', 'List all public workspaces')
     );
 
     // Setup pipeline

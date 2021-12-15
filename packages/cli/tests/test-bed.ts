@@ -43,6 +43,7 @@ export class TestBed<C extends Type<MockableCommand>> {
     // Setup mocks & spies
     jest.spyOn(this._cmd.spinner, 'start').mockImplementation();
     jest.spyOn(this._cmd.spinner, 'stop').mockImplementation();
+    jest.spyOn(this._cmd.spinner, 'succeed').mockImplementation();
     jest.spyOn(this._cmd.spinner, 'fail').mockImplementation();
 
     jest.spyOn(this._cmd.logger, 'debug');
