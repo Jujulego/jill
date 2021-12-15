@@ -2,7 +2,7 @@ import yargs from 'yargs';
 
 import { KillCommand } from './commands/kill.command';
 import { listCommand } from './commands/list';
-import { logsCommand } from './commands/logs';
+import { LogsCommand } from './commands/logs.command';
 import { spawnCommand } from './commands/spawn';
 import { stopCommand } from './commands/stop';
 import { commandHandler } from '../wrapper';
@@ -43,17 +43,10 @@ export function myrCommand(yargs: yargs.Argv){
         desc: 'Workspace to use'
       }
     }, commandHandler(spawnCommand))
-    .command('logs', 'Request myr logs', {
-      follow: {
-        alias: 'f',
-        type: 'boolean',
-        default: false,
-        description: 'Subscribe to logs stream'
-      }
-    }, commandHandler(logsCommand))
     .command('stop', 'Stop myr server. This will kill all running tasks', {}, commandHandler(stopCommand))
     .strictCommands();
 
   // Commands
   (new KillCommand(yargs)).run();
+  (new LogsCommand(yargs)).run();
 }
