@@ -8,7 +8,7 @@ import { AffectedFilter, Filter } from '../filters';
 // Command
 export class EachCommand extends ProjectCommand {
   // Methods
-  async run(): Promise<number | void> {
+  protected async run(): Promise<number | void> {
     // Define command
     const argv = await this.define('each <script>', 'Run script on selected workspaces', y => y
       .positional('script', { type: 'string', demandOption: true })

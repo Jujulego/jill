@@ -21,12 +21,12 @@ import { WatchCommand } from './myr/watch.command';
     .help();
 
   const exit = Promise.race([
-    (new InfoCommand(parser)).run(),
-    (new ListCommand(parser)).run(),
-    (new RunCommand(parser)).run(),
-    (new EachCommand(parser)).run(),
+    (new InfoCommand(parser)).setup(),
+    (new ListCommand(parser)).setup(),
+    (new RunCommand(parser)).setup(),
+    (new EachCommand(parser)).setup(),
 
-    (new WatchCommand(parser)).run()
+    (new WatchCommand(parser)).setup()
   ]);
 
   await parser.parse();

@@ -4,7 +4,7 @@ import { MyrClient } from '../myr-client';
 // Command
 export class StopCommand extends ProjectCommand {
   // Methods
-  async run(): Promise<number | void> {
+  protected async run(): Promise<number | void> {
     // Define command
     await this.define('stop', 'Stop myr server. This will kill all running tasks', y => y);
 

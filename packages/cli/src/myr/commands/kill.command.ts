@@ -4,7 +4,7 @@ import { MyrClient } from '../myr-client';
 // Command
 export class KillCommand extends ProjectCommand {
   // Methods
-  async run(): Promise<number | void> {
+  protected async run(): Promise<number | void> {
     // Define command
     const argv = await this.define('kill <id>', 'Kill task', y => y
       .positional('id', { type: 'string', demandOption: true })

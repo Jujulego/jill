@@ -4,16 +4,16 @@ import { Command } from '../src/command';
 
 // Types
 export type Type<C> = { new(...args: any[]): C };
-export type TestableCommand = Command & { run(): Promise<number | void> };
-export type MockableCommand = Command & { define: Command['define'] };
+export type TestableCommand = Omit<Command, '_defined'>;
+export type MockableCommand = Omit<Command, '_defined'> & { define: Command['define'] };
 export type CommandArgs<C extends MockableCommand> = jest.ResolvedValue<ReturnType<Required<C>['define']>>;
 
 // Utils
 export function TestCommand<C extends Type<TestableCommand>>(Cmd: C) {
   return class extends Cmd {
     // Redefinitions as public
-    readonly yargs: Command['yargs'];
     readonly define: Command['define'];
+    readonly run: Command['run'];
 
     // Constructor
     constructor(...args: any[]) {
@@ -57,7 +57,7 @@ export class TestBed<C extends Type<MockableCommand>> {
     jest.spyOn(console, 'log').mockImplementation((message) => this._screen += message + '\n');
 
     // Run
-    return await this._cmd.run();
+    return await (this._cmd as any).run();
   }
 
   // Properties

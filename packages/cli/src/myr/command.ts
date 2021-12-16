@@ -11,9 +11,9 @@ export function myrCommand(yargs: yargs.Argv) {
   yargs.strictCommands();
 
   // Commands
-  (new KillCommand(yargs)).run();
-  (new ListCommand(yargs)).run();
-  (new LogsCommand(yargs)).run();
-  (new SpawnCommand(yargs)).run();
-  (new StopCommand(yargs)).run();
+  (new KillCommand(yargs)).setup();
+  (new ListCommand(yargs)).setup();
+  (new LogsCommand(yargs)).setup();
+  (new SpawnCommand(yargs)).setup();
+  (new StopCommand(yargs)).setup();
 }

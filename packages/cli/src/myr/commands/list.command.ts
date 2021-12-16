@@ -49,7 +49,7 @@ export class ListCommand extends ProjectCommand {
     };
   }
 
-  async run(): Promise<number | void> {
+  protected async run(): Promise<number | void> {
     // Define command
     const argv = await this.define(['list', 'ls'], 'List myr tasks', y => y
       .options({

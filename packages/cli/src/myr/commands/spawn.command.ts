@@ -4,7 +4,7 @@ import { MyrClient } from '../myr-client';
 // Command
 export class SpawnCommand extends ProjectCommand {
   // Methods
-  async run(): Promise<number | void> {
+  protected async run(): Promise<number | void> {
     // Define command
     const argv = await this.define('spawn <command>', 'Spawn new task', y => y
       .positional('command', { type: 'string', demandOption: true })

@@ -18,7 +18,7 @@ const printLog = format.combine(
 // Command
 export class LogsCommand extends ProjectCommand {
   // Methods
-  async run(): Promise<void> {
+  protected async run(): Promise<number | void> {
     // Define command
     const argv = await this.define('logs', 'Request myr logs', y => y
       .options({

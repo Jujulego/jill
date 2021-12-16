@@ -7,7 +7,7 @@ import { printDepsTree } from '../utils/deps-tree';
 // Command
 export class InfoCommand extends ProjectCommand {
   // Methods
-  async run(): Promise<number | void> {
+  protected async run(): Promise<number | void> {
     // Define command
     const argv = await this.define('info', 'Print workspace data', y => y.options({
       workspace: {

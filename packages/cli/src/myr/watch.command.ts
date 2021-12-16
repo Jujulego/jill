@@ -26,7 +26,7 @@ export class WatchCommand extends ProjectCommand {
     return count;
   }
 
-  async run(): Promise<number | void> {
+  protected async run(): Promise<number | void> {
     // Define command
     const argv = await this.define('watch <script>', 'Run script inside workspace and watch over deps', y => y
       .positional('script', { type: 'string', demandOption: true })

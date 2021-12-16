@@ -6,7 +6,7 @@ import { TaskLogger } from '../task-logger';
 // Command
 export class RunCommand extends ProjectCommand {
   // Methods
-  async run(): Promise<number | void> {
+  protected async run(): Promise<number | void> {
     // Define command
     const argv = await this.define('run <script>', 'Run script inside workspace', y => y
       .positional('script', { type: 'string', demandOption: true })
