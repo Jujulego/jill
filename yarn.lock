@@ -2222,7 +2222,7 @@ __metadata:
     "@types/gulp-babel": 6.1.30
     "@types/gulp-sourcemaps": 0.0.35
     "@types/jest": 27.0.3
-    "@types/node": 14.18.0
+    "@types/node": 14.18.1
     "@types/normalize-package-data": 2.4.1
     "@types/semver": 7.3.9
     "@typescript-eslint/eslint-plugin": 5.7.0
@@ -2268,7 +2268,7 @@ __metadata:
     "@types/gulp-babel": 6.1.30
     "@types/gulp-sourcemaps": 0.0.35
     "@types/jest": 27.0.3
-    "@types/node": 14.18.0
+    "@types/node": 14.18.1
     "@typescript-eslint/eslint-plugin": 5.7.0
     "@typescript-eslint/parser": 5.7.0
     apollo-server-core: ^3.5.0
@@ -2318,7 +2318,7 @@ __metadata:
     "@types/gulp-babel": 6.1.30
     "@types/gulp-sourcemaps": 0.0.35
     "@types/jest": 27.0.3
-    "@types/node": 14.18.0
+    "@types/node": 14.18.1
     "@types/ws": 8.2.1
     "@types/yargs": 17.0.7
     "@typescript-eslint/eslint-plugin": 5.7.0
@@ -3031,10 +3031,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:14.18.0":
-  version: 14.18.0
-  resolution: "@types/node@npm:14.18.0"
-  checksum: b120c26fe5f30bc358e861db8d7e401e419d14bd9dd25c022f3c2ea8b0b429d4c9efd77ad5d6d2a8bde61702a6786fb74d409f1b2cbb61c79133e2a65aab4fb1
+"@types/node@npm:14.18.1":
+  version: 14.18.1
+  resolution: "@types/node@npm:14.18.1"
+  checksum: 4ad88c071792081a04069d7380aff855b8982bf3e064c7c9614c8dba69cafa0f50899950326429baa9ee7b2c5b4306ed7dca1411e209281aaea31809a40adbe4
   languageName: node
   linkType: hard
 
@@ -8469,7 +8469,7 @@ fsevents@^1.2.7:
   dependencies:
     "@jujulego/jill": 1.1.17
     "@types/jest": 27.0.3
-    "@types/node": 14.18.0
+    "@types/node": 14.18.1
     "@typescript-eslint/eslint-plugin": 5.7.0
     "@typescript-eslint/parser": 5.7.0
     chalk: 4.1.2
