@@ -10,6 +10,8 @@ export type CommandBuilder<T = Record<string, unknown>> = (y: yargs.Argv) => yar
 export type CommandEvent = 'defined';
 export type CommandEventMap = Record<CommandEvent, []>
 
+export type CommandType = { new (parser: yargs.Argv): Command };
+
 // Command
 export abstract class Command extends EventEmitter<CommandEventMap> {
   // Attributes

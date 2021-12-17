@@ -7,6 +7,7 @@ import { ListCommand } from './commands/list.command';
 import { RunCommand } from './commands/run.command';
 import { myrCommand } from './myr/command';
 import { WatchCommand } from './myr/watch.command';
+import { Plugin } from './plugin';
 
 // Bootstrap
 (async () => {
@@ -20,14 +21,17 @@ import { WatchCommand } from './myr/watch.command';
     .strictCommands()
     .help();
 
-  const exit = Promise.race([
-    (new InfoCommand(parser)).setup(),
-    (new ListCommand(parser)).setup(),
-    (new RunCommand(parser)).setup(),
-    (new EachCommand(parser)).setup(),
-
-    (new WatchCommand(parser)).setup()
+  const core = Plugin.createPlugin('core', [
+    InfoCommand,
+    ListCommand,
+    RunCommand,
+    EachCommand,
+    WatchCommand,
   ]);
+
+  core.setup(parser);
+
+  const exit = core.run();
 
   await parser.parse();
 
