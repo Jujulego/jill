@@ -4,7 +4,7 @@ import yargs from 'yargs';
 // Class
 export abstract class Plugin {
   // Attributes
-  readonly commands: readonly Command[] = [];
+  private _commands: Command[] = [];
 
   // Constructor
   protected constructor(
@@ -20,16 +20,25 @@ export abstract class Plugin {
       }
 
       // Methods
-      setup(parser: yargs.Argv): Command[] {
+      init(parser: yargs.Argv): Command[] {
         return commands.map(Cmd => new Cmd(parser));
       }
     };
   }
 
   // Methods
-  abstract setup(parser: yargs.Argv): Command[];
+  abstract init(parser: yargs.Argv): Command[];
+
+  setup(parser: yargs.Argv) {
+    this._commands = this.init(parser);
+  }
 
   async run(): Promise<number | void> {
-    return Promise.race(this.commands.map(cmd => cmd.setup()));
+    return Promise.race(this._commands.map(cmd => cmd.setup()));
+  }
+
+  // Properties
+  get commands(): Command[] {
+    return this._commands;
   }
 }

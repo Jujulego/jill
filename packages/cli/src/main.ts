@@ -26,12 +26,16 @@ import { Plugin } from './plugin';
     ListCommand,
     RunCommand,
     EachCommand,
+  ]);
+
+  const myr = Plugin.createPlugin('myr', [
     WatchCommand,
   ]);
 
   core.setup(parser);
+  myr.setup(parser);
 
-  const exit = core.run();
+  const exit = Promise.race([core.run(), myr.run()]);
 
   await parser.parse();
 
