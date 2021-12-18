@@ -1,52 +1,28 @@
-import { EventEmitter, logger } from '@jujulego/jill-core';
-import yargs from 'yargs';
+import { logger } from '@jujulego/jill-core';
+import { Arguments, Argv } from 'yargs';
 
 import { transport } from './logger';
 
-// Types
-export type Arguments<T = Record<string, unknown>> = yargs.Arguments<T> & { '--'?: readonly (string | number)[] };
-export type CommandBuilder<T = Record<string, unknown>> = (y: yargs.Argv) => yargs.Argv<T>;
-
-export type CommandEvent = 'defined';
-export type CommandEventMap = Record<CommandEvent, []>
-
-export type CommandType = { new (parser: yargs.Argv): Command };
+// Export
+export type Builder<T, A = T> = (yargs: Argv<T>) => Argv<A>
 
 // Command
-export abstract class Command extends EventEmitter<CommandEventMap> {
+export abstract class Command<A> {
   // Attributes
   readonly logger = logger;
   readonly spinner = transport.spinner;
 
-  private _defined = false;
-
-  // Constructor
-  constructor(
-    protected readonly yargs: yargs.Argv
-  ) {
-    super();
-  }
-
   // Methods
-  async setup(): Promise<number | void> {
-    const res = await this.run();
+  protected abstract define<T, U>(builder: Builder<T, U>): Builder<T, U & A>;
+  protected abstract run(args: Arguments<A>): void | Promise<void>;
 
-    if (!this._defined) {
-      throw new Error(`You must call define in run method of ${this.constructor.name} !`);
-    }
-
-    return res;
-  }
-
-  protected abstract run(): Promise<number | void>;
-
-  protected define<T>(command: string | readonly string[], description: string, builder?: CommandBuilder<T>): Promise<Arguments<T>> {
-    return new Promise<Arguments<T>>((resolve) => {
-      this.yargs.command(command, description, builder, resolve);
-
-      this._defined = true;
-      this.emit('defined');
-    });
+  setup(yargs: Argv) {
+    return yargs.command(
+      this.name,
+      this.description,
+      (y) => this.define(y => y)(y),
+      (a) => this.run(a)
+    );
   }
 
   log(msg: string): void {
@@ -56,4 +32,8 @@ export abstract class Command extends EventEmitter<CommandEventMap> {
 
     console.log(msg);
   }
+
+  // Properties
+  abstract get name(): string | readonly string[];
+  abstract get description(): string;
 }

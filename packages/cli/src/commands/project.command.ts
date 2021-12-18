@@ -1,16 +1,23 @@
 import { PackageManager, Project } from '@jujulego/jill-core';
+import { Arguments } from 'yargs';
 
-import { BaseCommand } from './base.command';
-import { CommandBuilder } from '../command';
+import { Builder } from '../command';
+import { BaseArgs, BaseCommand } from './base.command';
+
+// Types
+export interface ProjectArgs extends BaseArgs {
+  project: string | undefined;
+  'package-manager': PackageManager | undefined;
+}
 
 // Command
-export abstract class ProjectCommand extends BaseCommand {
+export abstract class ProjectCommand<A extends ProjectArgs> extends BaseCommand<A> {
   // Attributes
   private _project?: Project;
 
   // Methods
-  protected async define<U>(command: string | readonly string[], description: string, builder: CommandBuilder<U>) {
-    const argv = await super.define(command, description, y => builder(y)
+  protected define<T, U>(builder: Builder<T, U>): Builder<T, U & ProjectArgs> {
+    return super.define(y => builder(y)
       .option('project', {
         alias: 'p',
         type: 'string',
@@ -23,16 +30,18 @@ export abstract class ProjectCommand extends BaseCommand {
         description: 'Force package manager'
       })
     );
+  }
+
+  protected async run(args: Arguments<A>): Promise<void> {
+    super.run(args);
 
     // Load project
     this.spinner.start('Loading project');
-    const dir = argv.project ?? await Project.searchProjectRoot(process.cwd());
+    const dir = args.project ?? await Project.searchProjectRoot(process.cwd());
 
     this._project = new Project(dir, {
-      packageManager: argv['package-manager']
+      packageManager: args['package-manager']
     });
-
-    return argv;
   }
 
   // Properties

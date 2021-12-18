@@ -1,24 +1,30 @@
-import { Command, CommandBuilder } from '../command';
+import { Arguments } from 'yargs';
+
+import { Builder, Command } from '../command';
+
+// Types
+export interface BaseArgs {
+  verbose: number;
+}
 
 // Command
-export abstract class BaseCommand extends Command {
+export abstract class BaseCommand<A extends BaseArgs> extends Command<BaseArgs> {
   // Methods
-  protected async define<U>(command: string | readonly string[], description: string, builder: CommandBuilder<U>) {
-    const argv = await super.define(command, description, y => builder(y)
+  protected define<T, U>(builder: Builder<T, U>): Builder<T, U & BaseArgs> {
+    return y => builder(y)
       .option('verbose', {
         alias: 'v',
         type: 'count',
         description: 'Set verbosity level (1 for verbose, 2 for debug)',
-      })
-    );
+      });
+  }
 
-    // Manage log level
-    if (argv.verbose === 1) {
+  protected run(args: Arguments<A>): void | Promise<void> {
+    // Setup logger verbosity
+    if (args.verbose === 1) {
       this.logger.level = 'verbose';
-    } else if (argv.verbose >= 2) {
+    } else if (args.verbose >= 2) {
       this.logger.level = 'debug';
     }
-
-    return argv;
   }
 }
