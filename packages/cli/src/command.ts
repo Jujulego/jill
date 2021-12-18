@@ -9,7 +9,7 @@ export type Arguments<A> = yargs.Arguments<A> & { '--': readonly (string | numbe
 export type Builder<T, A = T> = (yargs: yargs.Argv<T>) => yargs.Argv<A>;
 
 // Command
-export abstract class Command<A> {
+export abstract class Command<A = unknown> {
   // Attributes
   readonly logger = logger;
   readonly spinner = transport.spinner;
@@ -18,13 +18,15 @@ export abstract class Command<A> {
   protected abstract define<T, U>(builder: Builder<T, U>): Builder<T, U & A>;
   protected abstract run(args: Arguments<A>): Awaitable<number | void>;
 
-  setup(yargs: yargs.Argv): void {
+  setup<T>(yargs: yargs.Argv<T>): yargs.Argv<T> {
     yargs.command<A>(
       this.name,
       this.description,
       (y) => this.define(y => y)(y),
       (a) => this._wrapper(a as Arguments<A>)
     );
+
+    return yargs;
   }
 
   private async _wrapper(args: Arguments<A>): Promise<void> {
