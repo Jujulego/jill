@@ -22,7 +22,7 @@ export abstract class Command<A = unknown> {
     yargs.command<A>(
       this.name,
       this.description,
-      (y) => this.define(y => y)(y),
+      (y) => this.define(_ => _)(y),
       (a) => this._wrapper(a as Arguments<A>)
     );
 
@@ -34,7 +34,7 @@ export abstract class Command<A = unknown> {
       const exit = await this.run(args);
       process.exit(exit ?? 0);
     } catch (err) {
-      this.spinner.fail(err);
+      this.spinner.fail(err.message);
       process.exit(1);
     }
   }

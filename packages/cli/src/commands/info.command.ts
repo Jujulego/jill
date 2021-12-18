@@ -13,8 +13,8 @@ export interface InfoArgs extends ProjectArgs {
 // Command
 export class InfoCommand extends ProjectCommand<InfoArgs> {
   // Attributes
-  readonly name: 'info';
-  readonly description: 'Print workspace data';
+  readonly name = 'info';
+  readonly description = 'Print workspace data';
 
   // Methods
   protected define<T, U>(builder: Builder<T, U>): Builder<T, U & InfoArgs> {

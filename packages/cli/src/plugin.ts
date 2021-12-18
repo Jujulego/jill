@@ -1,44 +1,30 @@
-import { Command, CommandType } from './command';
 import yargs from 'yargs';
+
+import { Command } from './command';
+
+// Types
+export type CommandType = { new(): Command };
 
 // Class
 export abstract class Plugin {
-  // Attributes
-  private _commands: Command[] = [];
-
-  // Constructor
-  protected constructor(
-    readonly name: string
-  ) {}
-
   // Statics
   static createPlugin(name: string, commands: CommandType[]): Plugin {
     return new class extends Plugin {
-      // Constructor
-      constructor() {
-        super(name);
-      }
-
-      // Methods
-      init(parser: yargs.Argv): Command[] {
-        return commands.map(Cmd => new Cmd(parser));
-      }
+      readonly name = name;
+      readonly commands = commands.map(Cmd => new Cmd());
     };
   }
 
   // Methods
-  abstract init(parser: yargs.Argv): Command[];
+  setup<T>(yargs: yargs.Argv<T>): yargs.Argv<T> {
+    for (const cmd of this.commands) {
+      cmd.setup(yargs);
+    }
 
-  setup(parser: yargs.Argv) {
-    this._commands = this.init(parser);
-  }
-
-  async run(): Promise<number | void> {
-    return Promise.race(this._commands.map(cmd => cmd.setup()));
+    return yargs;
   }
 
   // Properties
-  get commands(): Command[] {
-    return this._commands;
-  }
+  abstract get name(): string;
+  abstract get commands(): readonly Command[];
 }

@@ -5,7 +5,7 @@ import { EachCommand } from './commands/each.command';
 import { InfoCommand } from './commands/info.command';
 import { ListCommand } from './commands/list.command';
 import { RunCommand } from './commands/run.command';
-import { myrCommand } from './myr/command';
+import { MyrCommand } from './myr/myr.command';
 import { WatchCommand } from './myr/watch.command';
 import { Plugin } from './plugin';
 
@@ -17,7 +17,6 @@ import { Plugin } from './plugin';
     .parserConfiguration({
       'populate--': true,
     })
-    .command('myr', 'Interact with myr server', myrCommand)
     .strictCommands()
     .help();
 
@@ -29,15 +28,12 @@ import { Plugin } from './plugin';
   ]);
 
   const myr = Plugin.createPlugin('myr', [
+    MyrCommand,
     WatchCommand,
   ]);
 
   core.setup(parser);
   myr.setup(parser);
 
-  const exit = Promise.race([core.run(), myr.run()]);
-
   await parser.parse();
-
-  process.exit((await exit) ?? 0);
 })();
