@@ -3,16 +3,31 @@ import chalk from 'chalk';
 import slugify from 'slugify';
 import path from 'path';
 
-import { ProjectCommand } from './project.command';
+import { ProjectArgs, ProjectCommand } from './project.command';
 import { Pipeline } from '../pipeline';
 import { AffectedFilter, Filter } from '../filters';
 import { CliList } from '../utils/cli-list';
+import { Arguments, Builder } from '../command';
 
 // Types
 export type Attribute = 'name' | 'version' | 'root' | 'slug';
 export type Data = Partial<Record<Attribute, string>>;
 
 type Extractor<T> = (wks: Workspace, json: boolean) => T;
+
+export interface ListArgs extends ProjectArgs {
+  private: boolean | undefined;
+  'with-script': string[] | undefined;
+
+  affected: string | undefined;
+  'affected-rev-sort': string | undefined;
+  'affected-rev-fallback': string;
+
+  attrs: Attribute[] | undefined;
+  headers: boolean | undefined;
+  long: boolean | undefined;
+  json: boolean | undefined;
+}
 
 // Constants
 const LONG_ATTRIBUTES: Attribute[] = ['name', 'version', 'root'];
@@ -27,7 +42,11 @@ const EXTRACTORS: Record<Attribute, Extractor<string | undefined>> = {
 };
 
 // Command
-export class ListCommand extends ProjectCommand {
+export class ListCommand extends ProjectCommand<ListArgs> {
+  // Attributes
+  readonly name = ['list', 'ls'];
+  readonly description = 'List workspaces';
+
   // Methods
   private buildExtractor(attrs: Attribute[]): Extractor<Data> {
     return (wks, json: boolean) => {
@@ -41,84 +60,84 @@ export class ListCommand extends ProjectCommand {
     };
   }
 
-  protected async run(): Promise<number | void> {
-    // Define command
-    const argv = await this.define(['list', 'ls'], 'List workspaces', y => y
-      .options({
-        private: {
-          type: 'boolean',
-          group: 'Filters:',
-          desc: 'Print only private workspaces',
-        },
-        'with-script': {
-          type: 'array',
-          string: true,
-          group: 'Filters:',
-          desc: 'Print only workspaces having the given script',
-        },
-        affected: {
-          alias: 'a',
-          type: 'string',
-          coerce: (rev: string) => rev === '' ? 'master' : rev,
-          group: 'Affected:',
-          desc: 'Print only affected workspaces towards given git revision. If no revision is given, it will check towards master.\n' +
-            'Replaces %name by workspace name.',
-        },
-        'affected-rev-sort': {
-          type: 'string',
-          group: 'Affected:',
-          desc: 'Sort applied to git tag / git branch command',
-        },
-        'affected-rev-fallback': {
-          type: 'string',
-          default: 'master',
-          group: 'Affected:',
-          desc: 'Fallback revision, used if no revision matching the given format is found',
-        },
-        attrs: {
-          type: 'array',
-          choices: ['name', 'version', 'root', 'slug'],
-          group: 'Format:',
-          desc: 'Select printed attributes'
-        },
-        headers: {
-          type: 'boolean',
-          group: 'Format:',
-          desc: 'Prints columns headers'
-        },
-        long: {
-          alias: 'l',
-          type: 'boolean',
-          conflicts: 'attrs',
-          group: 'Format:',
-          desc: 'Prints name, version and root of all workspaces',
-        },
-        json: {
-          type: 'boolean',
-          group: 'Format:',
-          desc: 'Prints data as a JSON array',
-        }
+  protected define<T, U>(builder: Builder<T, U>): Builder<T, U & ListArgs> {
+    return super.define(y => builder(y)
+      .option('private', {
+        type: 'boolean',
+        group: 'Filters:',
+        desc: 'Print only private workspaces',
       })
-      .example('$0 list -a', 'List all affected workspaces towards master branch')
-      .example('$0 list --no-private', 'List all public workspaces')
+      .option('with-script', {
+        type: 'array',
+        string: true,
+        group: 'Filters:',
+        desc: 'Print only workspaces having the given script',
+      })
+      .option('affected', {
+        alias: 'a',
+        type: 'string',
+        coerce: (rev: string) => rev === '' ? 'master' : rev,
+        group: 'Affected:',
+        desc: 'Print only affected workspaces towards given git revision. If no revision is given, it will check towards master.\n' +
+          'Replaces %name by workspace name.',
+      })
+      .option('affected-rev-sort', {
+        type: 'string',
+        group: 'Affected:',
+        desc: 'Sort applied to git tag / git branch command',
+      })
+      .option('affected-rev-fallback', {
+        type: 'string',
+        default: 'master',
+        group: 'Affected:',
+        desc: 'Fallback revision, used if no revision matching the given format is found',
+      })
+      .option('attrs', {
+        type: 'array',
+        choices: ['name', 'version', 'root', 'slug'],
+        default: undefined as Attribute[] | undefined,
+        group: 'Format:',
+        desc: 'Select printed attributes'
+      })
+      .option('headers', {
+        type: 'boolean',
+        group: 'Format:',
+        desc: 'Prints columns headers'
+      })
+      .option('long', {
+        alias: 'l',
+        type: 'boolean',
+        conflicts: 'attrs',
+        group: 'Format:',
+        desc: 'Prints name, version and root of all workspaces',
+      })
+      .option('json', {
+        type: 'boolean',
+        group: 'Format:',
+        desc: 'Prints data as a JSON array',
+      })
     );
+  }
+
+  protected async run(args: Arguments<ListArgs>): Promise<number | void> {
+    await super.run(args);
 
     // Setup pipeline
     const pipeline = new Pipeline();
 
-    if (argv.private !== undefined) {
-      pipeline.add(Filter.privateWorkspace(argv.private));
+    if (args.private !== undefined) {
+      pipeline.add(Filter.privateWorkspace(args.private));
     }
 
-    if (argv['with-script'] !== undefined) {
-      pipeline.add(Filter.scripts(argv['with-script']));
+    if (args['with-script'] !== undefined) {
+      pipeline.add(Filter.scripts(args['with-script']));
     }
 
-    if (argv.affected !== undefined) {
+    if (args.affected !== undefined) {
       pipeline.add(new AffectedFilter(
-        argv.affected,
-        argv['affected-rev-fallback'],
-        argv['affected-rev-sort']
+        args.affected,
+        args['affected-rev-fallback'],
+        args['affected-rev-sort']
       ));
     }
 
@@ -132,20 +151,20 @@ export class ListCommand extends ProjectCommand {
     this.spinner.stop();
 
     // Build data
-    let attrs = argv.attrs as Attribute[] || DEFAULT_ATTRIBUTES;
+    let attrs = args.attrs as Attribute[] || DEFAULT_ATTRIBUTES;
 
-    if (!argv.attrs) {
-      if (argv.long) {
+    if (!args.attrs) {
+      if (args.long) {
         attrs = LONG_ATTRIBUTES;
-      } else if (argv.json) {
+      } else if (args.json) {
         attrs = JSON_ATTRIBUTES;
       }
     }
 
-    const data = workspaces.map(wks => this.buildExtractor(attrs)(wks, argv.json || false));
+    const data = workspaces.map(wks => this.buildExtractor(attrs)(wks, args.json || false));
 
     // Print data
-    if (argv.json) {
+    if (args.json) {
       if (process.stdout.isTTY) { // Pretty print for ttys
         console.log(JSON.stringify(data, null, 2));
       } else {
@@ -154,7 +173,7 @@ export class ListCommand extends ProjectCommand {
     } else {
       const list = new CliList();
 
-      if (argv.headers ?? (attrs.length > 1)) {
+      if (args.headers ?? (attrs.length > 1)) {
         list.setHeaders(attrs);
       }
 

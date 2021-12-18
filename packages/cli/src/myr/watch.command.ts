@@ -1,10 +1,22 @@
 import { combine, Workspace } from '@jujulego/jill-core';
 
-import { ProjectCommand } from '../commands/project.command';
+import { ProjectArgs, ProjectCommand } from '../commands/project.command';
 import { MyrClient } from './myr-client';
+import { Arguments, Builder } from '../command';
+
+// Types
+export interface WatchArgs extends ProjectArgs {
+  script: string;
+  daemon: boolean;
+  workspace: string | undefined;
+}
 
 // Command
-export class WatchCommand extends ProjectCommand {
+export class WatchCommand extends ProjectCommand<WatchArgs> {
+  // Attributes
+  readonly name = 'watch <script>';
+  readonly description = 'Run script with watcher inside workspace and watch over deps';
+
   // Methods
   private async spawnDepsTree(myr: MyrClient, wks: Workspace, set: Set<string>): Promise<number> {
     let count = 0;
@@ -26,31 +38,32 @@ export class WatchCommand extends ProjectCommand {
     return count;
   }
 
-  protected async run(): Promise<number | void> {
-    // Define command
-    const argv = await this.define('watch <script>', 'Run script inside workspace and watch over deps', y => y
+  protected define<T, U>(builder: Builder<T, U>): Builder<T, U & WatchArgs> {
+    return super.define(y => builder(y)
       .positional('script', { type: 'string', demandOption: true })
-      .options({
-        daemon: {
-          alias: 'd',
-          boolean: true,
-          default: false,
-          desc: 'Run watch script also in background'
-        },
-        workspace: {
-          alias: 'w',
-          type: 'string',
-          desc: 'Workspace to use'
-        }
+      .option('daemon', {
+        alias: 'd',
+        boolean: true,
+        default: false,
+        desc: 'Run watch script also in background'
+      })
+      .option('workspace', {
+        alias: 'w',
+        type: 'string',
+        desc: 'Workspace to use'
       })
     );
+  }
+
+  protected async run(args: Arguments<WatchArgs>): Promise<number> {
+    await super.run(args);
 
     // Load workspace
-    this.spinner.start(`Loading "${argv.workspace || '.'}" workspace`);
-    const wks = await (argv.workspace ? this.project.workspace(argv.workspace) : this.project.currentWorkspace());
+    this.spinner.start(`Loading "${args.workspace || '.'}" workspace`);
+    const wks = await (args.workspace ? this.project.workspace(args.workspace) : this.project.currentWorkspace());
 
     if (!wks) {
-      this.spinner.fail(`Workspace "${argv.workspace || '.'}" not found`);
+      this.spinner.fail(`Workspace "${args.workspace || '.'}" not found`);
       return 1;
     }
 
@@ -60,9 +73,9 @@ export class WatchCommand extends ProjectCommand {
     const count = await this.spawnDepsTree(myr, wks, new Set());
 
     // Spawn task
-    if (argv.daemon) {
-      this.spinner.start(`Spawning ${argv.script} task`);
-      const tsk = await myr.spawnScript(wks, argv.script, argv['--']?.map(arg => arg.toString()));
+    if (args.daemon) {
+      this.spinner.start(`Spawning ${args.script} task`);
+      const tsk = await myr.spawnScript(wks, args.script, args['--']?.map(arg => arg.toString()));
       this.logger.log('info', `Task ${tsk.id} spawned`, { label: wks.name });
       this.spinner.succeed(`${count + 1} watch tasks spawned`);
 
@@ -70,7 +83,7 @@ export class WatchCommand extends ProjectCommand {
     } else {
       this.spinner.succeed(`${count} watch tasks spawned`);
 
-      const tsk = await wks.run(argv.script, argv['--']?.map(arg => arg.toString()), { buildDeps: 'none' });
+      const tsk = await wks.run(args.script, args['--']?.map(arg => arg.toString()), { buildDeps: 'none' });
       tsk.start();
 
       await tsk.waitFor('done', 'failed');

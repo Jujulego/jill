@@ -1,8 +1,14 @@
 import { format } from 'winston';
 import chalk from 'chalk';
 
-import { ProjectCommand } from '../../commands/project.command';
+import { ProjectArgs, ProjectCommand } from '../../commands/project.command';
 import { MyrClient } from '../myr-client';
+import { Arguments, Builder } from '../../command';
+
+// Types
+export interface LogsArgs extends ProjectArgs {
+  follow: boolean;
+}
 
 // Utils
 const printLog = format.combine(
@@ -16,20 +22,25 @@ const printLog = format.combine(
 );
 
 // Command
-export class LogsCommand extends ProjectCommand {
+export class LogsCommand extends ProjectCommand<LogsArgs> {
+  // Attributes
+  readonly name = 'logs';
+  readonly description = 'Request myr logs';
+
   // Methods
-  protected async run(): Promise<number | void> {
-    // Define command
-    const argv = await this.define('logs', 'Request myr logs', y => y
-      .options({
-        follow: {
-          alias: 'f',
-          type: 'boolean',
-          default: false,
-          description: 'Subscribe to logs stream'
-        }
+  protected define<T, U>(builder: Builder<T, U>): Builder<T, U & LogsArgs> {
+    return super.define(y => builder(y)
+      .option('follow', {
+        alias: 'f',
+        type: 'boolean',
+        default: false,
+        description: 'Subscribe to logs stream'
       })
     );
+  }
+
+  protected async run(args: Arguments<LogsArgs>): Promise<void> {
+    await super.run(args);
 
     // Spawn task
     this.spinner.start('Connecting to myr');
@@ -45,7 +56,7 @@ export class LogsCommand extends ProjectCommand {
     }
 
     // Follow
-    if (argv.follow) {
+    if (args.follow) {
       for await (const log of client.logs$()) {
         printLog.transform(log);
         this.log(log[Symbol.for('message')]);

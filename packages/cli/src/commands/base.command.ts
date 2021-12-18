@@ -1,6 +1,4 @@
-import { Arguments } from 'yargs';
-
-import { Builder, Command } from '../command';
+import { Arguments, Awaitable, Builder, Command } from '../command';
 
 // Types
 export interface BaseArgs {
@@ -19,7 +17,7 @@ export abstract class BaseCommand<A extends BaseArgs> extends Command<BaseArgs> 
       });
   }
 
-  protected run(args: Arguments<A>): void | Promise<void> {
+  protected run(args: Arguments<A>): Awaitable<number | void> {
     // Setup logger verbosity
     if (args.verbose === 1) {
       this.logger.level = 'verbose';

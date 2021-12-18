@@ -1,7 +1,6 @@
 import { PackageManager, Project } from '@jujulego/jill-core';
-import { Arguments } from 'yargs';
 
-import { Builder } from '../command';
+import { Arguments, Builder } from '../command';
 import { BaseArgs, BaseCommand } from './base.command';
 
 // Types
@@ -11,7 +10,7 @@ export interface ProjectArgs extends BaseArgs {
 }
 
 // Command
-export abstract class ProjectCommand<A extends ProjectArgs> extends BaseCommand<A> {
+export abstract class ProjectCommand<A extends ProjectArgs = ProjectArgs> extends BaseCommand<A> {
   // Attributes
   private _project?: Project;
 
@@ -32,7 +31,7 @@ export abstract class ProjectCommand<A extends ProjectArgs> extends BaseCommand<
     );
   }
 
-  protected async run(args: Arguments<A>): Promise<void> {
+  protected async run(args: Arguments<A>): Promise<number | void> {
     super.run(args);
 
     // Load project

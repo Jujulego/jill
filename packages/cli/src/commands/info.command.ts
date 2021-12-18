@@ -1,10 +1,9 @@
 import chalk from 'chalk';
 import path from 'path';
 
-import { Builder } from '../command';
+import { Arguments, Builder } from '../command';
 import { printDepsTree } from '../utils/deps-tree';
 import { ProjectArgs, ProjectCommand } from './project.command';
-import { Arguments } from 'yargs';
 
 // Types
 export interface InfoArgs extends ProjectArgs {
@@ -28,14 +27,16 @@ export class InfoCommand extends ProjectCommand<InfoArgs> {
     );
   }
 
-  protected async run(argv: Arguments<InfoArgs>): Promise<void> {
+  protected async run(args: Arguments<InfoArgs>): Promise<number | void> {
+    await super.run(args);
+
     // Load workspace
-    this.spinner.start(`Loading "${argv.workspace || '.'}" workspace`);
-    const wks = await (argv.workspace ? this.project.workspace(argv.workspace) : this.project.currentWorkspace());
+    this.spinner.start(`Loading "${args.workspace || '.'}" workspace`);
+    const wks = await (args.workspace ? this.project.workspace(args.workspace) : this.project.currentWorkspace());
 
     if (!wks) {
-      this.spinner.fail(`Workspace "${argv.workspace || '.'}" not found`);
-      return;
+      this.spinner.fail(`Workspace "${args.workspace || '.'}" not found`);
+      return 1;
     }
 
     this.spinner.stop();

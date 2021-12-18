@@ -3,15 +3,25 @@ import { Task } from '@jujulego/jill-myr';
 import chalk from 'chalk';
 import path from 'path';
 
-import { ProjectCommand } from '../../commands/project.command';
+import { ProjectArgs, ProjectCommand } from '../../commands/project.command';
 import { MyrClient } from '../myr-client';
 import { CliList } from '../../utils/cli-list';
+import { Arguments, Builder } from '../../command';
 
 // Types
 export type Attribute = 'identifier' | 'status' | 'cwd' | 'command' | 'cmd' | 'args';
 export type Data = Partial<Record<Attribute, string>>;
 
 type Extractor<T> = (tsk: Task) => T;
+
+export interface ListArgs extends ProjectArgs {
+  all: boolean | undefined;
+
+  attrs: Attribute[] | undefined;
+  headers: boolean | undefined;
+  long: boolean | undefined;
+  json: boolean | undefined;
+}
 
 // Constants
 const COLORED_STATUS: Record<TaskStatus, string> = {
@@ -35,7 +45,11 @@ const EXTRACTORS: Record<Attribute, Extractor<string | undefined>> = {
 };
 
 // Command
-export class ListCommand extends ProjectCommand {
+export class ListCommand extends ProjectCommand<ListArgs> {
+  // Attributes
+  readonly name = ['list', 'ls'];
+  readonly description = 'List myr tasks';
+
   // Methods
   private buildExtractor(attrs: Attribute[]): Extractor<Data> {
     return (tsk) => {
@@ -49,37 +63,42 @@ export class ListCommand extends ProjectCommand {
     };
   }
 
-  protected async run(): Promise<number | void> {
-    // Define command
-    const argv = await this.define(['list', 'ls'], 'List myr tasks', y => y
-      .options({
-        all: {
-          alias: 'a',
-          type: 'boolean',
-          group: 'Filters:',
-          desc: 'Show all tasks (by default list shows only running tasks)',
-        },
-        attrs: {
-          type: 'array',
-          choices: ['identifier', 'status', 'cwd' ,'command', 'cmd', 'args'],
-          group: 'Format:',
-          desc: 'Select printed attributes'
-        },
-        headers: {
-          type: 'boolean',
-          group: 'Format:',
-          desc: 'Prints columns headers'
-        },
-        long: {
-          alias: 'l',
-          type: 'boolean',
-          conflicts: 'attrs',
-          group: 'Format:',
-          desc: 'Prints more data on each tasks',
-        },
+  protected define<T, U>(builder: Builder<T, U>): Builder<T, U & ListArgs> {
+    return super.define(y => builder(y)
+      .option('all', {
+        alias: 'a',
+        type: 'boolean',
+        group: 'Filters:',
+        desc: 'Show all tasks (by default list shows only running tasks)',
+      })
+      .option('attrs', {
+        type: 'array',
+        choices: ['identifier', 'status', 'cwd' ,'command', 'cmd', 'args'],
+        default: undefined as Attribute[] | undefined,
+        group: 'Format:',
+        desc: 'Select printed attributes'
+      })
+      .option('headers', {
+        type: 'boolean',
+        group: 'Format:',
+        desc: 'Prints columns headers'
+      })
+      .option('long', {
+        alias: 'l',
+        type: 'boolean',
+        conflicts: 'attrs',
+        group: 'Format:',
+        desc: 'Prints name, version and root of all workspaces',
+      })
+      .option('json', {
+        type: 'boolean',
+        group: 'Format:',
+        desc: 'Prints data as a JSON array',
       })
     );
+  }
 
+  protected async run(argv: Arguments<ListArgs>): Promise<void> {
     // Spawn task
     this.spinner.start('Connecting to myr');
     const client = new MyrClient(this.project);

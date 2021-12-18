@@ -1,28 +1,40 @@
-import { ProjectCommand } from '../../commands/project.command';
+import { ProjectArgs, ProjectCommand } from '../../commands/project.command';
 import { MyrClient } from '../myr-client';
+import { Arguments, Builder } from '../../command';
+
+// Types
+export interface SpawnArgs extends ProjectArgs {
+  command: string;
+  workspace: string | undefined;
+}
 
 // Command
-export class SpawnCommand extends ProjectCommand {
+export class SpawnCommand extends ProjectCommand<SpawnArgs> {
+  // Attributes
+  readonly name = 'spawn <command>';
+  readonly description = 'Spawn new task';
+
   // Methods
-  protected async run(): Promise<number | void> {
-    // Define command
-    const argv = await this.define('spawn <command>', 'Spawn new task', y => y
+  protected define<T, U>(builder: Builder<T, U>): Builder<T, U & SpawnArgs> {
+    return super.define(y => builder(y)
       .positional('command', { type: 'string', demandOption: true })
-      .options({
-        workspace: {
-          alias: 'w',
-          type: 'string',
-          desc: 'Workspace to use'
-        }
+      .option('workspace', {
+        alias: 'w',
+        type: 'string',
+        desc: 'Workspace to use'
       })
     );
+  }
+
+  protected async run(args: Arguments<SpawnArgs>): Promise<number | void> {
+    await super.run(args);
 
     // Load workspace
-    this.spinner.start(`Loading "${argv.workspace || '.'}" workspace`);
-    const wks = await (argv.workspace ? this.project.workspace(argv.workspace) : this.project.currentWorkspace());
+    this.spinner.start(`Loading "${args.workspace || '.'}" workspace`);
+    const wks = await (args.workspace ? this.project.workspace(args.workspace) : this.project.currentWorkspace());
 
     if (!wks) {
-      this.spinner.fail(`Workspace "${argv.workspace || '.'}" not found`);
+      this.spinner.fail(`Workspace "${args.workspace || '.'}" not found`);
       return 1;
     }
 
@@ -31,7 +43,7 @@ export class SpawnCommand extends ProjectCommand {
     const client = new MyrClient(this.project);
 
     this.spinner.start('Spawning task');
-    const task = await client.spawn(wks.cwd, argv.command, argv['--']?.map(arg => arg.toString()));
+    const task = await client.spawn(wks.cwd, args.command, args['--']?.map(arg => arg.toString()));
 
     this.spinner.succeed(`Task ${task.id} spawned`);
   }

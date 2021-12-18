@@ -1,10 +1,12 @@
 import { logger } from '@jujulego/jill-core';
-import { Arguments, Argv } from 'yargs';
+import yargs from 'yargs';
 
 import { transport } from './logger';
 
 // Export
-export type Builder<T, A = T> = (yargs: Argv<T>) => Argv<A>
+export type Awaitable<T> = T | PromiseLike<T>;
+export type Arguments<A> = yargs.Arguments<A> & { '--': readonly (string | number)[] };
+export type Builder<T, A = T> = (yargs: yargs.Argv<T>) => yargs.Argv<A>;
 
 // Command
 export abstract class Command<A> {
@@ -14,15 +16,25 @@ export abstract class Command<A> {
 
   // Methods
   protected abstract define<T, U>(builder: Builder<T, U>): Builder<T, U & A>;
-  protected abstract run(args: Arguments<A>): void | Promise<void>;
+  protected abstract run(args: Arguments<A>): Awaitable<number | void>;
 
-  setup(yargs: Argv) {
-    return yargs.command(
+  setup(yargs: yargs.Argv): void {
+    yargs.command<A>(
       this.name,
       this.description,
       (y) => this.define(y => y)(y),
-      (a) => this.run(a)
+      (a) => this._wrapper(a as Arguments<A>)
     );
+  }
+
+  private async _wrapper(args: Arguments<A>): Promise<void> {
+    try {
+      const exit = await this.run(args);
+      process.exit(exit ?? 0);
+    } catch (err) {
+      this.spinner.fail(err);
+      process.exit(1);
+    }
   }
 
   log(msg: string): void {
