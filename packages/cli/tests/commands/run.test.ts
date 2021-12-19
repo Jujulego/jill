@@ -7,7 +7,6 @@ import '../logger';
 
 // Setup
 jest.mock('../../src/logger');
-jest.mock('../../src/wrapper');
 
 let project: Project;
 let testBed: TestBed<RunArgs, RunCommand>;

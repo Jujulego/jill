@@ -3,6 +3,7 @@ import chalk from 'chalk';
 
 import { ListArgs, ListCommand } from '../../src/commands/list.command';
 import { TestArgs, TestBed } from '../test-bed';
+import '../logger';
 
 // Setup
 jest.mock('../../src/logger');

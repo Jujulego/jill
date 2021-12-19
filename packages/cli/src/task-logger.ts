@@ -1,6 +1,6 @@
 import { Task, TaskSet } from '@jujulego/jill-core';
 
-import { logger } from './logger';
+import { transport } from './logger';
 
 // Types
 export type TaskLoggerState = 'spin-multiple' | 'spin-simple' | 'fail' | 'succeed';
@@ -19,10 +19,10 @@ export class TaskLogger {
   // Methods
   private _refreshSpinner() {
     if (this._running.size > 1) {
-      logger.spin(this._formats['spin-multiple'](this._running.size));
+      transport.spin(this._formats['spin-multiple'](this._running.size));
     } else if (this._running.size > 0) {
       const tsk = this._running.values().next().value;
-      logger.spin(this._formats['spin-simple'](tsk));
+      transport.spin(this._formats['spin-simple'](tsk));
     }
   }
 
@@ -36,9 +36,9 @@ export class TaskLogger {
     this._running.delete(task);
 
     if (task.status === 'failed') {
-      logger.fail(this._formats['fail'](task));
+      transport.fail(this._formats['fail'](task));
     } else {
-      logger.succeed(this._formats['succeed'](task));
+      transport.succeed(this._formats['succeed'](task));
     }
 
     this._refreshSpinner();

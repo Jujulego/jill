@@ -1,4 +1,4 @@
-import { Project, Workspace } from '@jujulego/jill-core';
+import { logger, Project, Workspace } from '@jujulego/jill-core';
 import cp from 'child_process';
 import { EventEmitter } from 'events';
 import { GraphQLClient } from 'graphql-request';
@@ -6,7 +6,6 @@ import path from 'path';
 
 import { myrServer } from '../../mocks/myr-server';
 import { MyrClient } from '../../src/myr/myr-client';
-import { logger } from '../../src';
 import '../logger';
 
 // Class

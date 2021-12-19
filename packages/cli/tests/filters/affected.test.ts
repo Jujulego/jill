@@ -1,6 +1,7 @@
 import { git, Project, Workspace } from '@jujulego/jill-core';
 
 import { AffectedFilter } from '../../src/filters';
+import '../logger';
 
 // Setup
 const prj = new Project('test');
