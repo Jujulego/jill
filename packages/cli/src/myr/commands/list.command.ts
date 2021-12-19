@@ -133,7 +133,7 @@ export class ListCommand extends ProjectCommand<ListArgs> {
     }
 
     for (const d of list.lines()) {
-      console.log(d);
+      this.log(d);
     }
   }
 }

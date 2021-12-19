@@ -44,7 +44,7 @@ export abstract class Command<A = unknown> {
       this.spinner.clear();
     }
 
-    console.log(msg);
+    process.stdout.write(msg + '\n');
   }
 
   // Properties
