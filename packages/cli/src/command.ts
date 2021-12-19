@@ -8,6 +8,14 @@ export type Awaitable<T> = T | PromiseLike<T>;
 export type Arguments<A> = yargs.Arguments<A> & { '--': readonly (string | number)[] };
 export type Builder<T, A = T> = (yargs: yargs.Argv<T>) => yargs.Argv<A>;
 
+// Exceptions
+export class Exit extends Error {
+  // Constructor
+  constructor(readonly code = 1) {
+    super();
+  }
+}
+
 // Command
 export abstract class Command<A = unknown> {
   // Attributes
@@ -34,6 +42,10 @@ export abstract class Command<A = unknown> {
       const exit = await this.run(args);
       process.exit(exit ?? 0);
     } catch (err) {
+      if (err instanceof Exit) {
+        process.exit(err.code);
+      }
+
       this.spinner.fail(err.message);
       process.exit(1);
     }

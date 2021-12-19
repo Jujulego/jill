@@ -3,7 +3,7 @@ import chalk from 'chalk';
 import slugify from 'slugify';
 import path from 'path';
 
-import { ProjectArgs, ProjectCommand } from './project.command';
+import { ProjectArgs, ProjectCommand } from '../project.command';
 import { Pipeline } from '../pipeline';
 import { AffectedFilter, Filter } from '../filters';
 import { CliList } from '../utils/cli-list';

@@ -1,16 +1,17 @@
 import { Project, Workspace } from '@jujulego/jill-core';
 import chalk from 'chalk';
 
-import { InfoArgs, InfoCommand } from '../../src/commands/info.command';
+import { InfoCommand } from '../../src/commands/info.command';
+import { WorkspaceArgs } from '../../src/workspace.command';
 import { TestArgs, TestBed } from '../test-bed';
 
 // Setup
 chalk.level = 1;
 
 let project: Project;
-let testBed: TestBed<InfoArgs, InfoCommand>;
+let testBed: TestBed<WorkspaceArgs, InfoCommand>;
 
-const defaults: TestArgs<InfoArgs> = {
+const defaults: TestArgs<WorkspaceArgs> = {
   verbose: 0,
   project: '/project',
   'package-manager': undefined,

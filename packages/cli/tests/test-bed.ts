@@ -1,4 +1,4 @@
-import { Arguments, Command } from '../src/command';
+import { Arguments, Command, Exit } from '../src/command';
 
 // Types
 export type TestArgs<A> = A & Partial<Arguments<A>>;
@@ -29,8 +29,16 @@ export class TestBed<A, C extends Command<A>> {
     jest.spyOn(console, 'log').mockImplementation((message) => this._screen += message + '\n');
 
     // Run
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return await (this.command as any).run({ $0: 'jill', _: [], '--': [], ...args });
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return await (this.command as any).run({ $0: 'jill', _: [], '--': [], ...args });
+    } catch (err) {
+      if (err instanceof Exit) {
+        return err.code;
+      }
+
+      throw err;
+    }
   }
 
   // Properties

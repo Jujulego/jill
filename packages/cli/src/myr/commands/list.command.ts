@@ -3,7 +3,7 @@ import { Task } from '@jujulego/jill-myr';
 import chalk from 'chalk';
 import path from 'path';
 
-import { ProjectArgs, ProjectCommand } from '../../commands/project.command';
+import { ProjectArgs, ProjectCommand } from '../../project.command';
 import { MyrClient } from '../myr-client';
 import { CliList } from '../../utils/cli-list';
 import { Arguments, Builder } from '../../command';

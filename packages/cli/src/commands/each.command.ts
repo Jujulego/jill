@@ -4,7 +4,7 @@ import { Arguments, Builder } from '../command';
 import { AffectedFilter, Filter } from '../filters';
 import { Pipeline } from '../pipeline';
 import { TaskLogger } from '../task-logger';
-import { ProjectArgs, ProjectCommand } from './project.command';
+import { ProjectArgs, ProjectCommand } from '../project.command';
 
 // Types
 export interface EachArgs extends ProjectArgs {
