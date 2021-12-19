@@ -98,7 +98,9 @@ export class ListCommand extends ProjectCommand<ListArgs> {
     );
   }
 
-  protected async run(argv: Arguments<ListArgs>): Promise<void> {
+  protected async run(args: Arguments<ListArgs>): Promise<void> {
+    await super.run(args);
+
     // Spawn task
     this.spinner.start('Connecting to myr');
     const client = new MyrClient(this.project);
@@ -109,20 +111,20 @@ export class ListCommand extends ProjectCommand<ListArgs> {
     this.spinner.stop();
 
     // Build data
-    let attrs = argv.attrs as Attribute[] || DEFAULT_ATTRIBUTES;
+    let attrs = args.attrs as Attribute[] || DEFAULT_ATTRIBUTES;
 
-    if (!argv.attrs && argv.long) {
+    if (!args.attrs && args.long) {
       attrs = LONG_ATTRIBUTES;
     }
 
     const data = tasks
-      .filter(tsk => argv.all || tsk.status === 'running')
+      .filter(tsk => args.all || tsk.status === 'running')
       .map(tsk => this.buildExtractor(attrs)(tsk));
 
     // Print data
     const list = new CliList();
 
-    if (argv.headers ?? (attrs.length > 1)) {
+    if (args.headers ?? (attrs.length > 1)) {
       list.setHeaders(attrs);
     }
 
