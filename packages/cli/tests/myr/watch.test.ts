@@ -1,32 +1,30 @@
 import { Project, Workspace } from '@jujulego/jill-core';
 
-import '../logger';
-import { MockTask } from '../../mocks/task';
 import { MyrClient as _MyrClient } from '../../src/myr/myr-client';
-import { WatchCommand } from '../../src/myr/watch.command';
-import { TestBed, TestCommand } from '../test-bed';
+import { WatchArgs, WatchCommand } from '../../src/myr/watch.command';
+import { MockTask } from '../../mocks/task';
+import { TestArgs, TestBed } from '../test-bed';
+import '../logger';
 
 // Mocks
 jest.mock('../../src/myr/myr-client');
 const MyrClient = _MyrClient as jest.MockedClass<typeof _MyrClient>;
 
 // Setup
-const TestWatchCommand = TestCommand(WatchCommand);
-const testBed = new TestBed(TestWatchCommand);
-const defaults = {
-  '$0': 'jill',
-  _: [],
-  verbose: 0,
-  project: '/project',
-  'package-manager': undefined,
-  daemon: false
-};
-
 let prj: Project;
 let wksA: Workspace;
 let wksB: Workspace;
 let wksC: Workspace;
 let tskA: MockTask;
+let testBed: TestBed<WatchArgs, WatchCommand>;
+
+const defaults: TestArgs<Omit<WatchArgs, 'script'>> = {
+  verbose: 0,
+  project: '/project',
+  'package-manager': undefined,
+  workspace: undefined,
+  daemon: false
+};
 
 beforeEach(() => {
   jest.resetAllMocks();
@@ -38,8 +36,8 @@ beforeEach(() => {
   wksC = new Workspace('wks-c', { name: 'wks-c' } as any, prj);
   tskA = new MockTask('test');
 
-  testBed.beforeEach();
-  jest.spyOn(testBed.cmd, 'project', 'get').mockReturnValue(prj);
+  testBed = new TestBed(new WatchCommand());
+  jest.spyOn(testBed.command, 'project', 'get').mockReturnValue(prj);
 
   jest.spyOn(prj, 'workspace').mockResolvedValue(wksA);
   jest.spyOn(prj, 'currentWorkspace').mockResolvedValue(wksA);
@@ -103,7 +101,7 @@ describe('jill watch', () => {
     expect(MyrClient.prototype.spawnScript).toHaveBeenCalledTimes(3);
     expect(MyrClient.prototype.spawnScript).toHaveBeenCalledWith(wksC, 'watch');
     expect(MyrClient.prototype.spawnScript).toHaveBeenCalledWith(wksB, 'watch');
-    expect(MyrClient.prototype.spawnScript).toHaveBeenCalledWith(wksA, 'test', undefined);
+    expect(MyrClient.prototype.spawnScript).toHaveBeenCalledWith(wksA, 'test', []);
     expect(testBed.spinner.succeed).toHaveBeenCalledWith('3 watch tasks spawned');
   });
 
@@ -135,7 +133,7 @@ describe('jill watch', () => {
     expect(MyrClient.prototype.spawnScript).toHaveBeenCalledWith(wksC, 'watch');
     expect(MyrClient.prototype.spawnScript).toHaveBeenCalledWith(wksB, 'watch');
     expect(testBed.spinner.succeed).toHaveBeenCalledWith('2 watch tasks spawned');
-    expect(wksA.run).toHaveBeenCalledWith('test', undefined, { buildDeps: 'none' });
+    expect(wksA.run).toHaveBeenCalledWith('test', [], { buildDeps: 'none' });
     expect(tskA.start).toHaveBeenCalled();
     expect(tskA.waitFor).toHaveBeenCalledWith('done', 'failed');
   });

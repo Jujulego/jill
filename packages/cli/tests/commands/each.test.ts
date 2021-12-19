@@ -1,9 +1,9 @@
 import { Project, TaskSet, Workspace } from '@jujulego/jill-core';
 import chalk from 'chalk';
 
+import { EachArgs, EachCommand } from '../../src/commands/each.command';
 import { MockTask } from '../../mocks/task';
-import { EachCommand } from '../../src';
-import { TestBed, TestCommand } from '../test-bed';
+import { TestArgs, TestBed } from '../test-bed';
 import '../logger';
 
 // Setup
@@ -12,28 +12,28 @@ jest.mock('../../src/logger');
 chalk.level = 1;
 
 let project: Project;
+let testBed: TestBed<EachArgs, EachCommand>;
 
-const TestEachCommand = TestCommand(EachCommand);
-const testBed = new TestBed(TestEachCommand);
-const defaults = {
-  '$0': 'jill',
-  _: [],
+const defaults: TestArgs<Omit<EachArgs, 'script'>> = {
   verbose: 0,
   project: '/project',
   'package-manager': undefined,
   'deps-mode': 'all',
+  private: undefined,
+  affected: undefined,
+  'affected-rev-sort': undefined,
   'affected-rev-fallback': 'master',
 };
 
 beforeEach(() => {
-  testBed.beforeEach();
   project = new Project('.');
+  testBed = new TestBed(new EachCommand());
 
   // Mocks
   jest.resetAllMocks();
   jest.restoreAllMocks();
 
-  jest.spyOn(testBed.cmd, 'project', 'get').mockReturnValue(project);
+  jest.spyOn(testBed.command, 'project', 'get').mockReturnValue(project);
 });
 
 // Tests

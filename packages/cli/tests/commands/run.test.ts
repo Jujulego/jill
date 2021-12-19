@@ -1,8 +1,8 @@
 import { Project, TaskSet, Workspace } from '@jujulego/jill-core';
 
+import { RunArgs, RunCommand } from '../../src/commands/run.command';
 import { MockTask } from '../../mocks/task';
-import { RunCommand } from '../../src';
-import { TestBed, TestCommand } from '../test-bed';
+import { TestArgs, TestBed } from '../test-bed';
 import '../logger';
 
 // Setup
@@ -10,27 +10,25 @@ jest.mock('../../src/logger');
 jest.mock('../../src/wrapper');
 
 let project: Project;
+let testBed: TestBed<RunArgs, RunCommand>;
 
-const TestRunCommand = TestCommand(RunCommand);
-const testBed = new TestBed(TestRunCommand);
-const defaults = {
-  '$0': 'jill',
-  _: [],
+const defaults: TestArgs<Omit<RunArgs, 'script'>> = {
   verbose: 0,
   project: '/project',
   'package-manager': undefined,
+  workspace: undefined,
   'deps-mode': 'all',
 };
 
 beforeEach(() => {
-  testBed.beforeEach();
   project = new Project('.');
+  testBed = new TestBed(new RunCommand());
 
   // Mocks
   jest.resetAllMocks();
   jest.restoreAllMocks();
 
-  jest.spyOn(testBed.cmd, 'project', 'get').mockReturnValue(project);
+  jest.spyOn(testBed.command, 'project', 'get').mockReturnValue(project);
 });
 
 // Tests
@@ -133,7 +131,7 @@ describe('jill run', () => {
     expect(testBed.spinner.start).toHaveBeenCalledWith('Loading "." workspace');
     expect(project.workspace).not.toHaveBeenCalled();
     expect(project.currentWorkspace).toHaveBeenCalled();
-    expect(wks.run).toHaveBeenCalledWith('test', undefined, { buildDeps: 'all' });
+    expect(wks.run).toHaveBeenCalledWith('test', [], { buildDeps: 'all' });
     expect(TaskSet.prototype.add).toHaveBeenCalledWith(tsk);
     expect(TaskSet.prototype.waitFor).toHaveBeenCalledWith('finished');
   });

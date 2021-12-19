@@ -1,79 +1,48 @@
-import yargs from 'yargs';
-
-import { Command } from '../src/command';
+import { Arguments, Command } from '../src/command';
 
 // Types
-export type Type<C> = { new(...args: any[]): C };
-export type TestableCommand = Omit<Command, '_defined'>;
-export type MockableCommand = Omit<Command, '_defined'> & { define: Command['define'] };
-export type CommandArgs<C extends MockableCommand> = jest.ResolvedValue<ReturnType<Required<C>['define']>>;
-
-// Utils
-export function TestCommand<C extends Type<TestableCommand>>(Cmd: C) {
-  return class extends Cmd {
-    // Redefinitions as public
-    readonly define: Command['define'];
-    readonly run: Command['run'];
-
-    // Constructor
-    constructor(...args: any[]) {
-      super(args);
-    }
-  };
-}
+export type TestArgs<A> = A & Partial<Arguments<A>>;
 
 // Class
-export class TestBed<C extends Type<MockableCommand>> {
+export class TestBed<A, C extends Command<A>> {
   // Attributes
   private _screen = '';
-  private _cmd = (new this.Command(yargs)) as InstanceType<C>;
 
   // Constructor
-  constructor(
-    readonly Command: C
-  ) {}
+  constructor(readonly command: C) {}
 
   // Methods
-  beforeEach() {
-    this._cmd = (new this.Command(yargs)) as InstanceType<C>;
-    this._screen = '';
-  }
-
-  async run(args: CommandArgs<InstanceType<C>>): Promise<number | void> {
+  async run(args: TestArgs<A>): Promise<number | void> {
     // Setup mocks & spies
-    jest.spyOn(this._cmd.spinner, 'start').mockImplementation();
-    jest.spyOn(this._cmd.spinner, 'stop').mockImplementation();
-    jest.spyOn(this._cmd.spinner, 'succeed').mockImplementation();
-    jest.spyOn(this._cmd.spinner, 'fail').mockImplementation();
+    jest.spyOn(this.command.spinner, 'start').mockImplementation();
+    jest.spyOn(this.command.spinner, 'stop').mockImplementation();
+    jest.spyOn(this.command.spinner, 'succeed').mockImplementation();
+    jest.spyOn(this.command.spinner, 'fail').mockImplementation();
 
-    jest.spyOn(this._cmd.logger, 'debug');
-    jest.spyOn(this._cmd.logger, 'verbose');
-    jest.spyOn(this._cmd.logger, 'info');
-    jest.spyOn(this._cmd.logger, 'warn');
-    jest.spyOn(this._cmd.logger, 'error');
+    jest.spyOn(this.command.logger, 'debug');
+    jest.spyOn(this.command.logger, 'verbose');
+    jest.spyOn(this.command.logger, 'info');
+    jest.spyOn(this.command.logger, 'warn');
+    jest.spyOn(this.command.logger, 'error');
 
-    jest.spyOn(this._cmd, 'define').mockResolvedValue(args);
-    jest.spyOn(this._cmd as Command, 'log').mockImplementation((message) => this._screen += message + '\n');
+    jest.spyOn(this.command as Command<A>, 'log').mockImplementation((message) => this._screen += message + '\n');
     jest.spyOn(console, 'log').mockImplementation((message) => this._screen += message + '\n');
 
     // Run
-    return await (this._cmd as any).run();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return await (this.command as any).run({ $0: 'jill', _: [], '--': [], ...args });
   }
 
   // Properties
-  get cmd() {
-    return this._cmd;
-  }
-
   get screen() {
     return this._screen;
   }
 
   get spinner() {
-    return this._cmd.spinner;
+    return this.command.spinner;
   }
 
   get logger() {
-    return this._cmd.logger;
+    return this.command.logger;
   }
 }

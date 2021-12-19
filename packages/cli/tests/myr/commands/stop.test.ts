@@ -1,9 +1,10 @@
 import { Project } from '@jujulego/jill-core';
 
-import '../../logger';
 import { MyrClient as _MyrClient } from '../../../src/myr/myr-client';
 import { StopCommand } from '../../../src/myr/commands/stop.command';
-import { TestBed, TestCommand } from '../../test-bed';
+import { TestArgs, TestBed } from '../../test-bed';
+import '../../logger';
+import { ProjectArgs } from '../../../src/commands/project.command';
 
 // Mocks
 jest.mock('../../../src/myr/myr-client');
@@ -11,26 +12,22 @@ const MyrClient = _MyrClient as jest.MockedClass<typeof _MyrClient>;
 
 // Setup
 let prj: Project;
+let testBed: TestBed<ProjectArgs, StopCommand>;
 
-const TestStopCommand = TestCommand(StopCommand);
-const testBed = new TestBed(TestStopCommand);
-const defaults = {
-  '$0': 'jill',
-  _: [],
+const defaults: TestArgs<ProjectArgs> = {
   verbose: 0,
   project: '/project',
   'package-manager': undefined
 };
 
 beforeEach(() => {
+  prj = new Project('/prj');
+  testBed = new TestBed(new StopCommand());
+
   jest.resetAllMocks();
   jest.restoreAllMocks();
 
-  prj = new Project('/prj');
-
-  testBed.beforeEach();
-  jest.spyOn(testBed.cmd, 'project', 'get').mockReturnValue(prj);
-
+  jest.spyOn(testBed.command, 'project', 'get').mockReturnValue(prj);
   MyrClient.prototype.stop.mockResolvedValue(true);
 });
 

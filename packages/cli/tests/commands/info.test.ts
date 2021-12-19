@@ -1,33 +1,31 @@
 import { Project, Workspace } from '@jujulego/jill-core';
 import chalk from 'chalk';
 
-import { InfoCommand } from '../../src';
-import { TestBed, TestCommand } from '../test-bed';
+import { InfoArgs, InfoCommand } from '../../src/commands/info.command';
+import { TestArgs, TestBed } from '../test-bed';
 
 // Setup
 chalk.level = 1;
 
 let project: Project;
+let testBed: TestBed<InfoArgs, InfoCommand>;
 
-const TestInfoCommand = TestCommand(InfoCommand);
-const testBed = new TestBed(TestInfoCommand);
-const defaults = {
-  '$0': 'jill',
-  _: [],
+const defaults: TestArgs<InfoArgs> = {
   verbose: 0,
   project: '/project',
-  'package-manager': undefined
+  'package-manager': undefined,
+  workspace: undefined
 };
 
 beforeEach(() => {
-  testBed.beforeEach();
   project = new Project('.');
+  testBed = new TestBed(new InfoCommand());
 
   // Mocks
   jest.resetAllMocks();
   jest.restoreAllMocks();
 
-  jest.spyOn(testBed.cmd, 'project', 'get').mockReturnValue(project);
+  jest.spyOn(testBed.command, 'project', 'get').mockReturnValue(project);
 });
 
 // Tests
