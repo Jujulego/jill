@@ -1,10 +1,10 @@
-import { ITask } from '@jujulego/jill-myr';
+import { Task } from '@jujulego/jill-myr';
 import { setupServer } from 'msw/node';
 import { graphql } from 'msw';
 
 // Server setup
 export const myrServer = setupServer(
-  graphql.query<{ tasks: ITask[] }>('Tasks', (req, res, ctx) => {
+  graphql.query<{ tasks: Task[] }>('Tasks', (req, res, ctx) => {
     return res(
       ctx.data({
         tasks: [
@@ -19,7 +19,7 @@ export const myrServer = setupServer(
       })
     );
   }),
-  graphql.mutation<{ spawn: ITask }>('Spawn', (req, res, ctx) => {
+  graphql.mutation<{ spawn: Task }>('Spawn', (req, res, ctx) => {
     return res(
       ctx.data({
         spawn: {
@@ -32,7 +32,7 @@ export const myrServer = setupServer(
       })
     );
   }),
-  graphql.mutation<{ kill: ITask }>('Kill', (req, res, ctx) => {
+  graphql.mutation<{ kill: Task }>('Kill', (req, res, ctx) => {
     return res(
       ctx.data({
         kill: {

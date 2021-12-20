@@ -1,7 +1,6 @@
-import { git, Workspace } from '@jujulego/jill-core';
+import { git, logger, Workspace } from '@jujulego/jill-core';
 
 import { Filter } from './filter';
-import { logger } from '../logger';
 
 // Class
 export class AffectedFilter extends Filter {

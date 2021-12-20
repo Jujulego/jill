@@ -36,6 +36,10 @@ export const mockedOra = {
     return this;
   },
 
+  clear(): ora.Ora {
+    return this;
+  },
+
   stopAndPersist(opts: ora.PersistOptions) {
     this.isSpinning = false;
     this.text = opts?.text ?? this.text;

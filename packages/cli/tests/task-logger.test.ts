@@ -2,13 +2,13 @@ import { Workspace, Project, TaskSet } from '@jujulego/jill-core';
 
 import { MockTask } from '../mocks/task';
 import { TaskLogger } from '../src/task-logger';
-import { logger } from '../src';
+import { transport } from '../src/logger';
 import './logger';
 
 // Constants
 const prj = new Project('prj');
-const wks1 = new Workspace('wks-1', { name: 'wks-1' }, prj);
-const wks2 = new Workspace('wks-2', { name: 'wks-2' }, prj);
+const wks1 = new Workspace('wks-1', { name: 'wks-1' } as any, prj);
+const wks2 = new Workspace('wks-2', { name: 'wks-2' } as any, prj);
 
 // Setup
 let set: TaskSet;
@@ -27,9 +27,9 @@ beforeEach(() => {
   set.add(tsk1);
   set.add(tsk2);
 
-  jest.spyOn(logger, 'spin').mockImplementation();
-  jest.spyOn(logger, 'succeed').mockImplementation();
-  jest.spyOn(logger, 'fail').mockImplementation();
+  jest.spyOn(transport, 'spin').mockImplementation();
+  jest.spyOn(transport, 'succeed').mockImplementation();
+  jest.spyOn(transport, 'fail').mockImplementation();
 });
 
 // Tests
@@ -84,26 +84,26 @@ it('should print default messages', () => {
   jest.spyOn(tsk1, 'status', 'get').mockReturnValue('running');
   set.emit('started', tsk1);
 
-  expect(logger.spin).toHaveBeenCalledWith('Building wks-1 ...');
+  expect(transport.spin).toHaveBeenCalledWith('Building wks-1 ...');
 
   // 2 task started
   jest.spyOn(tsk2, 'status', 'get').mockReturnValue('running');
   set.emit('started', tsk2);
 
-  expect(logger.spin).toHaveBeenCalledWith('Building 2 workspaces ...');
+  expect(transport.spin).toHaveBeenCalledWith('Building 2 workspaces ...');
 
   // succeed 1st task
   jest.spyOn(tsk1, 'status', 'get').mockReturnValue('done');
   set.emit('completed', tsk1);
 
-  expect(logger.succeed).toHaveBeenCalledWith('wks-1 built');
-  expect(logger.spin).toHaveBeenCalledWith('Building wks-2 ...');
+  expect(transport.succeed).toHaveBeenCalledWith('wks-1 built');
+  expect(transport.spin).toHaveBeenCalledWith('Building wks-2 ...');
 
   // fail 2nd task
   jest.spyOn(tsk2, 'status', 'get').mockReturnValue('failed');
   set.emit('completed', tsk2);
 
-  expect(logger.fail).toHaveBeenCalledWith('Failed to build wks-2');
+  expect(transport.fail).toHaveBeenCalledWith('Failed to build wks-2');
 });
 
 it('should print default messages (2)', () => {
@@ -114,24 +114,24 @@ it('should print default messages (2)', () => {
   jest.spyOn(tsk1, 'status', 'get').mockReturnValue('running');
   set.emit('started', tsk1);
 
-  expect(logger.spin).toHaveBeenCalledWith('Building wks-1 ...');
+  expect(transport.spin).toHaveBeenCalledWith('Building wks-1 ...');
 
   // 2 task started
   jest.spyOn(tsk2, 'status', 'get').mockReturnValue('running');
   set.emit('started', tsk2);
 
-  expect(logger.spin).toHaveBeenCalledWith('Building 2 workspaces ...');
+  expect(transport.spin).toHaveBeenCalledWith('Building 2 workspaces ...');
 
   // fail 1st task
   jest.spyOn(tsk1, 'status', 'get').mockReturnValue('failed');
   set.emit('completed', tsk1);
 
-  expect(logger.fail).toHaveBeenCalledWith('Failed to build wks-1');
-  expect(logger.spin).toHaveBeenCalledWith('Building wks-2 ...');
+  expect(transport.fail).toHaveBeenCalledWith('Failed to build wks-1');
+  expect(transport.spin).toHaveBeenCalledWith('Building wks-2 ...');
 
   // succeed 2nd task
   jest.spyOn(tsk2, 'status', 'get').mockReturnValue('done');
   set.emit('completed', tsk2);
 
-  expect(logger.succeed).toHaveBeenCalledWith('wks-2 built');
+  expect(transport.succeed).toHaveBeenCalledWith('wks-2 built');
 });
