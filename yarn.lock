@@ -2302,7 +2302,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jujulego/jill@1.1.17, @jujulego/jill@workspace:packages/cli":
+"@jujulego/jill@1.1.18, @jujulego/jill@workspace:packages/cli":
   version: 0.0.0-use.local
   resolution: "@jujulego/jill@workspace:packages/cli"
   dependencies:
@@ -8466,7 +8466,7 @@ fsevents@^1.2.7:
   version: 0.0.0-use.local
   resolution: "jill-e2e@workspace:e2e"
   dependencies:
-    "@jujulego/jill": 1.1.17
+    "@jujulego/jill": 1.1.18
     "@types/jest": 27.0.3
     "@types/node": 14.18.1
     "@typescript-eslint/eslint-plugin": 5.8.0
@@ -8484,7 +8484,7 @@ fsevents@^1.2.7:
   version: 0.0.0-use.local
   resolution: "jill@workspace:."
   dependencies:
-    "@jujulego/jill": 1.1.17
+    "@jujulego/jill": 1.1.18
     "@typescript-eslint/eslint-plugin": 5.8.0
     "@typescript-eslint/parser": 5.8.0
     eslint: 7.32.0
