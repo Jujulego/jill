@@ -17,7 +17,7 @@ type Extractor<T> = (tsk: Task) => T;
 export interface ListArgs extends ProjectArgs {
   all: boolean | undefined;
 
-  attrs: Attribute[] | undefined;
+  attrs: Attribute[];
   headers: boolean | undefined;
   long: boolean | undefined;
   json: boolean | undefined;
@@ -74,7 +74,7 @@ export class ListCommand extends ProjectCommand<ListArgs> {
       .option('attrs', {
         type: 'array',
         choices: ['identifier', 'status', 'cwd' ,'command', 'cmd', 'args'],
-        default: undefined as Attribute[] | undefined,
+        default: [] as Attribute[],
         group: 'Format:',
         desc: 'Select printed attributes'
       })
@@ -86,7 +86,6 @@ export class ListCommand extends ProjectCommand<ListArgs> {
       .option('long', {
         alias: 'l',
         type: 'boolean',
-        conflicts: 'attrs',
         group: 'Format:',
         desc: 'Prints name, version and root of all workspaces',
       })
@@ -111,10 +110,14 @@ export class ListCommand extends ProjectCommand<ListArgs> {
     this.spinner.stop();
 
     // Build data
-    let attrs = args.attrs as Attribute[] || DEFAULT_ATTRIBUTES;
+    let attrs = args.attrs;
 
-    if (!args.attrs && args.long) {
-      attrs = LONG_ATTRIBUTES;
+    if (args.attrs.length === 0) {
+      if (args.long) {
+        attrs = LONG_ATTRIBUTES;
+      } else {
+        attrs = DEFAULT_ATTRIBUTES;
+      }
     }
 
     const data = tasks
