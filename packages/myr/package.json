@@ -2,13 +2,16 @@
   "name": "@jujulego/jill-myr",
   "version": "0.1.0",
   "license": "MIT",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/Jujulego/jill",
     "directory": "packages/myr"
   },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "lint": "eslint {src,tests}/**/*.*",
     "clean": "gulp clean",
