@@ -2208,6 +2208,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@jujulego/flow@npm:1.0.0":
+  version: 1.0.0
+  resolution: "@jujulego/flow@npm:1.0.0"
+  dependencies:
+    lodash.flatten: ^4.4.0
+  checksum: 08a88bc13fd94ec5c48f1e5568502051662535e2d8541db6cccc01a128a69ad2cd032aa5523b80dd9e1e276a06c210920daf47a0620300f8d26b79c96b91376f
+  languageName: node
+  linkType: hard
+
 "@jujulego/jill-core@1.1.12, @jujulego/jill-core@^1.1.12, @jujulego/jill-core@workspace:packages/core":
   version: 0.0.0-use.local
   resolution: "@jujulego/jill-core@workspace:packages/core"
@@ -8480,6 +8489,19 @@ fsevents@^1.2.7:
   languageName: unknown
   linkType: soft
 
+"jill-tools@workspace:tools":
+  version: 0.0.0-use.local
+  resolution: "jill-tools@workspace:tools"
+  dependencies:
+    "@jujulego/flow": 1.0.0
+    "@types/gulp": 4.0.9
+    "@types/gulp-sourcemaps": 0.0.35
+    gulp-sourcemaps: 3.0.0
+  peerDependencies:
+    gulp: 4.0.2
+  languageName: unknown
+  linkType: soft
+
 "jill@workspace:.":
   version: 0.0.0-use.local
   resolution: "jill@workspace:."
@@ -8835,6 +8857,13 @@ fsevents@^1.2.7:
   version: 4.0.8
   resolution: "lodash.debounce@npm:4.0.8"
   checksum: a3f527d22c548f43ae31c861ada88b2637eb48ac6aa3eb56e82d44917971b8aa96fbb37aa60efea674dc4ee8c42074f90f7b1f772e9db375435f6c83a19b3bc6
+  languageName: node
+  linkType: hard
+
+"lodash.flatten@npm:^4.4.0":
+  version: 4.4.0
+  resolution: "lodash.flatten@npm:4.4.0"
+  checksum: 0ac34a393d4b795d4b7421153d27c13ae67e08786c9cbb60ff5b732210d46f833598eee3fb3844bb10070e8488efe390ea53bb567377e0cb47e9e630bf0811cb
   languageName: node
   linkType: hard
 

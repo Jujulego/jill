@@ -1,0 +1,13 @@
+{
+  "name": "jill-tools",
+  "private": true,
+  "peerDependencies": {
+    "gulp": "4.0.2"
+  },
+  "dependencies": {
+    "@jujulego/flow": "1.0.0",
+    "@types/gulp": "4.0.9",
+    "@types/gulp-sourcemaps": "0.0.35",
+    "gulp-sourcemaps": "3.0.0"
+  }
+}
