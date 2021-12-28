@@ -9,7 +9,8 @@
   },
   "workspaces": [
     "e2e",
-    "packages/*"
+    "packages/*",
+    "tools"
   ],
   "browserslist": [
     "maintained node versions and node >= 14"

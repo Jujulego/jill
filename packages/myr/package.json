@@ -2,13 +2,16 @@
   "name": "@jujulego/jill-myr",
   "version": "0.1.0",
   "license": "MIT",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/Jujulego/jill",
     "directory": "packages/myr"
   },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "lint": "eslint {src,tests}/**/*.*",
     "clean": "gulp clean",
@@ -46,8 +49,6 @@
     "@babel/runtime": "7.16.5",
     "@jujulego/jill-core": "1.1.12",
     "@types/gulp": "4.0.9",
-    "@types/gulp-babel": "6.1.30",
-    "@types/gulp-sourcemaps": "0.0.35",
     "@types/jest": "27.0.3",
     "@types/node": "14.18.3",
     "@typescript-eslint/eslint-plugin": "5.8.1",
@@ -60,11 +61,9 @@
     "eslint-plugin-workspaces": "0.7.0",
     "graphql.macro": "1.4.2",
     "gulp": "4.0.2",
-    "gulp-babel": "8.0.0",
     "gulp-cli": "2.3.0",
-    "gulp-sourcemaps": "3.0.0",
-    "gulp-typescript": "6.0.0-alpha.1",
     "jest": "27.4.5",
+    "jill-tools": "workspace:*",
     "nodemon": "2.0.15",
     "ts-jest": "27.1.2",
     "ts-node": "10.4.0",
