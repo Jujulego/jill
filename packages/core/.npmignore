@@ -30,7 +30,7 @@ lerna-debug.log*
 .vscode/*
 
 # Configs
-.babelrc
+.babelrc.js
 .eslintrc.json
 .gitignore
 gulpfile.js
