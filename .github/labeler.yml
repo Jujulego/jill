@@ -1,3 +1,4 @@
 cli: packages/cli/**/*
 core: packages/core/**/*
+common: packages/common/**/*
 myr: packages/myr/**/*

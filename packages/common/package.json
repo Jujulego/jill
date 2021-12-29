@@ -1,44 +1,41 @@
 {
-  "name": "@jujulego/jill",
-  "version": "1.1.18",
+  "name": "@jujulego/jill-common",
+  "version": "1.0.0",
   "license": "MIT",
+  "sideEffects": false,
   "repository": {
     "type": "git",
     "url": "https://github.com/Jujulego/jill",
-    "directory": "packages/cli"
+    "directory": "packages/common"
   },
-  "bin": "./bin/jill.js",
-  "main": "./dist/main.js",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/types/index.d.ts",
   "files": [
-    "bin",
     "dist"
   ],
+  "exports": {
+    "require": "./dist/cjs/index.js",
+    "import": "./dist/esm/index.js",
+    "types": "./dist/types/index.d.ts"
+  },
   "scripts": {
     "lint": "eslint {src,tests}/**/*.*",
     "clean": "gulp clean",
     "build": "gulp build",
     "watch": "gulp watch",
-    "start": "ts-node src/main.ts",
     "test": "jest"
   },
   "engines": {
     "node": "^14"
   },
   "dependencies": {
-    "@jujulego/jill-common": "^1.0.0",
     "@jujulego/jill-core": "^1.1.12",
-    "@jujulego/jill-myr": "^0.1.0",
     "@repeaterjs/repeater": "^3.0.4",
     "chalk": "^4.1.1",
-    "graphql": "^15.7.2",
-    "graphql-request": "^3.6.1",
-    "graphql-tag": "^2.12.6",
-    "graphql-ws": "^5.5.5",
     "ora": "^5.4.1",
-    "slugify": "^1.6.0",
     "winston": "^3.3.3",
     "winston-transport": "^4.4.0",
-    "ws": "^8.3.0",
     "yargs": "^17.0.1"
   },
   "devDependencies": {
@@ -49,7 +46,6 @@
     "@types/gulp": "4.0.9",
     "@types/jest": "27.0.3",
     "@types/node": "14.18.3",
-    "@types/ws": "8.2.1",
     "@types/yargs": "17.0.8",
     "@typescript-eslint/eslint-plugin": "5.8.1",
     "@typescript-eslint/parser": "5.8.1",
@@ -61,8 +57,7 @@
     "gulp-cli": "2.3.0",
     "jest": "27.4.5",
     "jill-tools": "workspace:*",
-    "msw": "0.36.3",
-    "ts-jest": "27.1.1",
+    "ts-jest": "27.1.2",
     "ts-node": "10.4.0",
     "typescript": "4.5.4"
   }

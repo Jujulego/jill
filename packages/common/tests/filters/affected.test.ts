@@ -1,6 +1,6 @@
 import { git, Project, Workspace } from '@jujulego/jill-core';
 
-import { AffectedFilter } from '../../src/filters';
+import { AffectedFilter } from '../../src';
 import '../logger';
 
 // Setup

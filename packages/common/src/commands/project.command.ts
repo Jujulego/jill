@@ -1,6 +1,6 @@
 import { PackageManager, Project } from '@jujulego/jill-core';
 
-import { Arguments, Builder } from './command';
+import { Arguments, Builder } from '../command';
 import { BaseArgs, BaseCommand } from './base.command';
 
 // Types

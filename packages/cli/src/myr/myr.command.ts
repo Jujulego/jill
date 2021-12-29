@@ -1,4 +1,5 @@
-import { Builder, Command } from '../command';
+import { Builder, Command } from '@jujulego/jill-common';
+
 import { KillCommand } from './commands/kill.command';
 import { ListCommand } from './commands/list.command';
 import { LogsCommand } from './commands/logs.command';

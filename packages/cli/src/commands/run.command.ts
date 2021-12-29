@@ -1,7 +1,6 @@
+import { Arguments, Builder, WorkspaceArgs, WorkspaceCommand } from '@jujulego/jill-common';
 import { TaskSet, WorkspaceDepsMode } from '@jujulego/jill-core';
 
-import { Arguments, Builder } from '../command';
-import { WorkspaceArgs, WorkspaceCommand } from '../workspace.command';
 import { TaskLogger } from '../task-logger';
 
 // Types

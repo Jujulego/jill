@@ -7,8 +7,6 @@ import { TestArgs, TestBed } from '../test-bed';
 import '../logger';
 
 // Setup
-jest.mock('../../src/logger');
-
 chalk.level = 1;
 
 let project: Project;

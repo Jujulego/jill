@@ -1,4 +1,4 @@
-import { Arguments, Awaitable, Builder, Command } from './command';
+import { Arguments, Awaitable, Builder, Command } from '../command';
 
 // Types
 export interface BaseArgs {

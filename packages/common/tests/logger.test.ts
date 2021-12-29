@@ -1,7 +1,7 @@
 import chalk from 'chalk';
 
 import { mockedOra } from '../mocks/ora';
-import { OraTransport } from '../src/logger';
+import { OraTransport } from '../src';
 
 // Setup
 chalk.level = 1;

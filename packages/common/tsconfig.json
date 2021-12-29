@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "incremental": true,
+    "rootDir": ".",
+    "tsBuildInfoFile": "./dist/.tsbuildinfo",
+    "resolveJsonModule": true,
+  },
+  "ts-node": {
+    "compilerOptions": {
+      "module": "commonjs"
+    }
+  }
+}

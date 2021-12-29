@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 
-import { CliList } from '../../src/utils/cli-list';
+import { CliList } from '../src';
 
 // Setup
 chalk.level = 1;

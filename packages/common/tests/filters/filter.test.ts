@@ -1,6 +1,6 @@
 import { Project, Workspace } from '@jujulego/jill-core';
 
-import { Filter } from '../../src/filters';
+import { Filter } from '../../src';
 
 // Setup
 const prj = new Project('test');

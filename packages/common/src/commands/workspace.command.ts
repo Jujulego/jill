@@ -1,6 +1,6 @@
 import { Workspace } from '@jujulego/jill-core';
 
-import { Arguments, Builder, Exit } from './command';
+import { Arguments, Builder, Exit } from '../command';
 import { ProjectArgs, ProjectCommand } from './project.command';
 
 // Types

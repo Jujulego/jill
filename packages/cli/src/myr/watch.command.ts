@@ -1,7 +1,6 @@
+import { Arguments, Builder, WorkspaceArgs, WorkspaceCommand } from '@jujulego/jill-common';
 import { combine, Workspace } from '@jujulego/jill-core';
 
-import { Arguments, Builder } from '../command';
-import { WorkspaceArgs, WorkspaceCommand } from '../workspace.command';
 import { MyrClient } from './myr-client';
 
 // Types

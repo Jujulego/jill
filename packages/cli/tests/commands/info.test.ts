@@ -1,8 +1,8 @@
+import { WorkspaceArgs } from '@jujulego/jill-common';
 import { Project, Workspace } from '@jujulego/jill-core';
 import chalk from 'chalk';
 
 import { InfoCommand } from '../../src/commands/info.command';
-import { WorkspaceArgs } from '../../src/workspace.command';
 import { TestArgs, TestBed } from '../test-bed';
 
 // Setup

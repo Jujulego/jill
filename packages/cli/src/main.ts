@@ -1,3 +1,4 @@
+import { Plugin } from '@jujulego/jill-common';
 import { hideBin } from 'yargs/helpers';
 import yargs from 'yargs';
 
@@ -7,7 +8,6 @@ import { ListCommand } from './commands/list.command';
 import { RunCommand } from './commands/run.command';
 import { MyrCommand } from './myr/myr.command';
 import { WatchCommand } from './myr/watch.command';
-import { Plugin } from './plugin';
 
 // Bootstrap
 (async () => {

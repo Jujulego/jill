@@ -1,9 +1,7 @@
+import { Arguments, WorkspaceArgs, WorkspaceCommand } from '@jujulego/jill-common';
 import { Workspace } from '@jujulego/jill-core';
 import chalk from 'chalk';
 import path from 'path';
-
-import { Arguments } from '../command';
-import { WorkspaceArgs, WorkspaceCommand } from '../workspace.command';
 
 // Command
 export class InfoCommand extends WorkspaceCommand {
