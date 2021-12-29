@@ -1,0 +1,54 @@
+{
+  "name": "@jujulego/jill-common",
+  "version": "1.0.0",
+  "license": "MIT",
+  "sideEffects": false,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Jujulego/jill",
+    "directory": "packages/common"
+  },
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/types/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    "require": "./dist/cjs/index.js",
+    "import": "./dist/esm/index.js",
+    "types": "./dist/types/index.d.ts"
+  },
+  "scripts": {
+    "lint": "eslint {src,tests}/**/*.*",
+    "clean": "gulp clean",
+    "build": "gulp build",
+    "watch": "gulp watch",
+    "test": "jest"
+  },
+  "engines": {
+    "node": "^14"
+  },
+  "devDependencies": {
+    "@babel/core": "7.16.5",
+    "@babel/plugin-proposal-class-properties": "7.16.5",
+    "@babel/preset-env": "7.16.5",
+    "@babel/runtime": "7.16.5",
+    "@types/gulp": "4.0.9",
+    "@types/jest": "27.0.3",
+    "@types/node": "14.18.3",
+    "@typescript-eslint/eslint-plugin": "5.8.1",
+    "@typescript-eslint/parser": "5.8.1",
+    "del": "6.0.0",
+    "eslint": "7.32.0",
+    "eslint-plugin-jest": "25.3.2",
+    "eslint-plugin-workspaces": "0.7.0",
+    "gulp": "4.0.2",
+    "gulp-cli": "2.3.0",
+    "jest": "27.4.5",
+    "jill-tools": "workspace:*",
+    "ts-jest": "27.1.2",
+    "ts-node": "10.4.0",
+    "typescript": "4.5.4"
+  }
+}
