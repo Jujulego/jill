@@ -29,6 +29,15 @@
   "engines": {
     "node": "^14"
   },
+  "dependencies": {
+    "@jujulego/jill-core": "^1.1.12",
+    "@repeaterjs/repeater": "^3.0.4",
+    "chalk": "^4.1.1",
+    "ora": "^5.4.1",
+    "winston": "^3.3.3",
+    "winston-transport": "^4.4.0",
+    "yargs": "^17.0.1"
+  },
   "devDependencies": {
     "@babel/core": "7.16.5",
     "@babel/plugin-proposal-class-properties": "7.16.5",
@@ -37,6 +46,7 @@
     "@types/gulp": "4.0.9",
     "@types/jest": "27.0.3",
     "@types/node": "14.18.3",
+    "@types/yargs": "17.0.8",
     "@typescript-eslint/eslint-plugin": "5.8.1",
     "@typescript-eslint/parser": "5.8.1",
     "del": "6.0.0",
