@@ -40,6 +40,7 @@ jobs:
         package:
           - 'jill-e2e'
           - '@jujulego/jill'
+          - '@jujulego/jill-common'
           - '@jujulego/jill-core'
           - '@jujulego/jill-myr'
 
@@ -74,6 +75,10 @@ jobs:
           - name: 'jill-core'
             package: '@jujulego/jill-core'
             workspace: 'packages/core'
+
+          - name: 'jill-common'
+            package: '@jujulego/jill-common'
+            workspace: 'packages/common'
 
           - name: 'jill-myr'
             package: '@jujulego/jill-myr'
@@ -166,6 +171,10 @@ jobs:
           - name: 'jill'
             package: '@jujulego/jill'
             workspace: 'packages/cli'
+
+          - name: 'jill-common'
+            package: '@jujulego/jill-common'
+            workspace: 'packages/common'
 
           - name: 'jill-core'
             package: '@jujulego/jill-core'
