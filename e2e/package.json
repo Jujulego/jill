@@ -11,7 +11,7 @@
     "node": "^14"
   },
   "devDependencies": {
-    "@jujulego/jill": "1.1.18",
+    "@jujulego/jill": "1.1.19",
     "@types/jest": "27.0.3",
     "@types/node": "14.18.3",
     "@typescript-eslint/eslint-plugin": "5.8.1",
