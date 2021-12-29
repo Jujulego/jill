@@ -6,8 +6,6 @@ import { TestArgs, TestBed } from '../test-bed';
 import '../logger';
 
 // Setup
-jest.mock('../../src/logger');
-
 let project: Project;
 let testBed: TestBed<RunArgs, RunCommand>;
 
