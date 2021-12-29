@@ -1,5 +1,5 @@
-import { Arguments } from '../../command';
-import { ProjectArgs, ProjectCommand } from '../../project.command';
+import { Arguments, ProjectArgs, ProjectCommand } from '@jujulego/jill-common';
+
 import { MyrClient } from '../myr-client';
 
 // Command

@@ -1,13 +1,8 @@
+import { AffectedFilter, Arguments, Builder, CliList, Filter, Pipeline, ProjectArgs, ProjectCommand } from '@jujulego/jill-common';
 import { Workspace } from '@jujulego/jill-core';
 import chalk from 'chalk';
 import slugify from 'slugify';
 import path from 'path';
-
-import { ProjectArgs, ProjectCommand } from '../project.command';
-import { Pipeline } from '../pipeline';
-import { AffectedFilter, Filter } from '../filters';
-import { CliList } from '../utils/cli-list';
-import { Arguments, Builder } from '../command';
 
 // Types
 export type Attribute = 'name' | 'version' | 'root' | 'slug';

@@ -2143,7 +2143,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jujulego/jill-common@workspace:packages/common":
+"@jujulego/jill-common@^1.0.0, @jujulego/jill-common@workspace:packages/common":
   version: 0.0.0-use.local
   resolution: "@jujulego/jill-common@workspace:packages/common"
   dependencies:
@@ -2272,6 +2272,7 @@ __metadata:
     "@babel/plugin-proposal-class-properties": 7.16.5
     "@babel/preset-env": 7.16.5
     "@babel/runtime": 7.16.5
+    "@jujulego/jill-common": ^1.0.0
     "@jujulego/jill-core": ^1.1.12
     "@jujulego/jill-myr": ^0.1.0
     "@repeaterjs/repeater": ^3.0.4

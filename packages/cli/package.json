@@ -25,6 +25,7 @@
     "node": "^14"
   },
   "dependencies": {
+    "@jujulego/jill-common": "^1.0.0",
     "@jujulego/jill-core": "^1.1.12",
     "@jujulego/jill-myr": "^0.1.0",
     "@repeaterjs/repeater": "^3.0.4",

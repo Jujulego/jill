@@ -1,6 +1,5 @@
+import { transport } from '@jujulego/jill-common';
 import { Task, TaskSet } from '@jujulego/jill-core';
-
-import { transport } from './logger';
 
 // Types
 export type TaskLoggerState = 'spin-multiple' | 'spin-simple' | 'fail' | 'succeed';

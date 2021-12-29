@@ -1,8 +1,8 @@
+import { transport } from '@jujulego/jill-common';
 import { Workspace, Project, TaskSet } from '@jujulego/jill-core';
 
 import { MockTask } from '../mocks/task';
 import { TaskLogger } from '../src/task-logger';
-import { transport } from '../src/logger';
 import './logger';
 
 // Constants

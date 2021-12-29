@@ -1,9 +1,8 @@
+import { Arguments, Builder, ProjectArgs, ProjectCommand } from '@jujulego/jill-common';
 import { format } from 'winston';
 import chalk from 'chalk';
 
-import { ProjectArgs, ProjectCommand } from '../../project.command';
 import { MyrClient } from '../myr-client';
-import { Arguments, Builder } from '../../command';
 
 // Types
 export interface LogsArgs extends ProjectArgs {

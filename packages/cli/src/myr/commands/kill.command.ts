@@ -1,6 +1,6 @@
-import { ProjectArgs, ProjectCommand } from '../../project.command';
+import { Arguments, Builder, ProjectArgs, ProjectCommand } from '@jujulego/jill-common';
+
 import { MyrClient } from '../myr-client';
-import { Arguments, Builder } from '../../command';
 
 // Types
 export interface KillArgs extends ProjectArgs {

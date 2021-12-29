@@ -1,10 +1,10 @@
+import { ProjectArgs } from '@jujulego/jill-common';
 import { Project } from '@jujulego/jill-core';
 
 import { MyrClient as _MyrClient } from '../../../src/myr/myr-client';
 import { StopCommand } from '../../../src/myr/commands/stop.command';
 import { TestArgs, TestBed } from '../../test-bed';
 import '../../logger';
-import { ProjectArgs } from '../../../src/project.command';
 
 // Mocks
 jest.mock('../../../src/myr/myr-client');
