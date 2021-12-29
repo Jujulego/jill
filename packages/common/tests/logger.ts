@@ -1,7 +1,7 @@
+import { logger } from '@jujulego/jill-core';
 import Transport from 'winston-transport';
 
-import { logger } from '../../src';
-
+// Transport
 class NoopTransport extends Transport {
   // Methods
   log(): void {
