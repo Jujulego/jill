@@ -1,5 +1,5 @@
+import { logger } from '@jujulego/jill-core';
 import { Injectable } from '@nestjs/common';
-import { logger } from 'packages/core';
 
 import { WatchTask } from './watch-task';
 

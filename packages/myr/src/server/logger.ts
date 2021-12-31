@@ -1,4 +1,4 @@
-import { logger } from 'packages/core';
+import { logger } from '@jujulego/jill-core';
 import { LoggerService } from '@nestjs/common';
 import winston from 'winston';
 

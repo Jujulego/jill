@@ -1,4 +1,4 @@
-import { logger } from 'packages/core';
+import { logger } from '@jujulego/jill-core';
 import { PidFile } from '@jujulego/pid-file';
 import { exhaustMap, filter } from 'rxjs';
 import winston, { format } from 'winston';
