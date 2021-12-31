@@ -1,4 +1,4 @@
-import { SpawnTask, SpawnTaskOption } from '@jujulego/jill-core';
+import { SpawnTask, SpawnTaskOption } from 'packages/core';
 import { createHash } from 'crypto';
 import path from 'path';
 

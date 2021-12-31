@@ -1,6 +1,6 @@
 import { OnModuleInit } from '@nestjs/common';
 import { Args, ArgsType, Field, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
-import { logger } from '@jujulego/jill-core';
+import { logger } from 'packages/core';
 import { PubSub } from 'graphql-subscriptions';
 import { Subject } from 'rxjs';
 
