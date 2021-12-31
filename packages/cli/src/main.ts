@@ -1,13 +1,7 @@
-import { Plugin } from '@jujulego/jill-common';
 import { hideBin } from 'yargs/helpers';
 import yargs from 'yargs';
 
-import { EachCommand } from './commands/each.command';
-import { InfoCommand } from './commands/info.command';
-import { ListCommand } from './commands/list.command';
-import { RunCommand } from './commands/run.command';
-import { MyrCommand } from './myr/myr.command';
-import { WatchCommand } from './myr/watch.command';
+import { corePlugin } from './core.plugin';
 
 // Bootstrap
 (async () => {
@@ -20,20 +14,10 @@ import { WatchCommand } from './myr/watch.command';
     .strictCommands()
     .help();
 
-  const core = Plugin.createPlugin('core', [
-    InfoCommand,
-    ListCommand,
-    RunCommand,
-    EachCommand,
-  ]);
+  const { default: myrPlugin } = await import('@jujulego/jill-myr');
 
-  const myr = Plugin.createPlugin('myr', [
-    MyrCommand,
-    WatchCommand,
-  ]);
-
-  core.setup(parser);
-  myr.setup(parser);
+  corePlugin.setup(parser);
+  myrPlugin.setup(parser);
 
   await parser.parse();
 })();
