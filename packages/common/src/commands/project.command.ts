@@ -1,22 +1,22 @@
 import { PackageManager, Project } from '@jujulego/jill-core';
 
-import { Arguments, Builder } from '../command';
-import { BaseArgs, BaseCommand } from './base.command';
+import { Arguments, Builder, Command } from '../command';
 
 // Types
-export interface ProjectArgs extends BaseArgs {
+export interface ProjectArgs {
   project: string | undefined;
   'package-manager': PackageManager | undefined;
+  verbose: number;
 }
 
 // Command
-export abstract class ProjectCommand<A extends ProjectArgs = ProjectArgs> extends BaseCommand<A> {
+export abstract class ProjectCommand<A extends ProjectArgs = ProjectArgs> extends Command<ProjectArgs> {
   // Attributes
   private _project?: Project;
 
   // Methods
   protected define<T, U>(builder: Builder<T, U>): Builder<T, U & ProjectArgs> {
-    return super.define(y => builder(y)
+    return y => builder(y)
       .option('project', {
         alias: 'p',
         type: 'string',
@@ -28,11 +28,20 @@ export abstract class ProjectCommand<A extends ProjectArgs = ProjectArgs> extend
         type: 'string',
         description: 'Force package manager'
       })
-    );
+      .option('verbose', {
+        alias: 'v',
+        type: 'count',
+        description: 'Set verbosity level (1 for verbose, 2 for debug)',
+      });
   }
 
   protected async run(args: Arguments<A>): Promise<number | void> {
-    super.run(args);
+    // Setup logger verbosity
+    if (args.verbose === 1) {
+      this.logger.level = 'verbose';
+    } else if (args.verbose >= 2) {
+      this.logger.level = 'debug';
+    }
 
     // Load project
     this.spinner.start('Loading project');

@@ -14,6 +14,7 @@ import { corePlugin } from './core.plugin';
     .strictCommands()
     .help();
 
+  // Load plugins
   const { default: myrPlugin } = await import('@jujulego/jill-myr');
 
   corePlugin.setup(parser);
