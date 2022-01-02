@@ -43,10 +43,10 @@
     "winston": "^3.3.3"
   },
   "devDependencies": {
-    "@babel/core": "7.16.5",
-    "@babel/plugin-proposal-class-properties": "7.16.5",
-    "@babel/preset-env": "7.16.5",
-    "@babel/runtime": "7.16.5",
+    "@babel/core": "7.16.7",
+    "@babel/plugin-proposal-class-properties": "7.16.7",
+    "@babel/preset-env": "7.16.7",
+    "@babel/runtime": "7.16.7",
     "@jujulego/jill-core": "1.1.12",
     "@types/gulp": "4.0.9",
     "@types/jest": "27.4.0",
