@@ -1,4 +1,4 @@
-import { Builder, Command } from '@jujulego/jill-common';
+import { SuperCommand } from '@jujulego/jill-common';
 
 import { KillCommand } from './commands/kill.command';
 import { ListCommand } from './commands/list.command';
@@ -7,25 +7,16 @@ import { SpawnCommand } from './commands/spawn.command';
 import { StopCommand } from './commands/stop.command';
 
 // Command
-export class MyrCommand extends Command {
+export class MyrCommand extends SuperCommand {
   // Properties
   readonly name = 'myr';
   readonly description = 'Interact with myr server';
 
-  readonly commands: readonly Command[] = [
+  readonly commands = [
     new KillCommand(),
     new ListCommand(),
     new LogsCommand(),
     new SpawnCommand(),
     new StopCommand(),
   ];
-
-  // Methods
-  protected define<U>(builder: Builder<U>): Builder<U> {
-    return yargs => this.commands.reduce((y, cmd) => cmd.setup(y), builder(yargs));
-  }
-
-  protected run(): number {
-    return 0;
-  }
 }
