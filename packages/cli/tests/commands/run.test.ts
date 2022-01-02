@@ -11,6 +11,7 @@ let testBed: TestBed<RunArgs, RunCommand>;
 
 const defaults: TestArgs<Omit<RunArgs, 'script'>> = {
   verbose: 0,
+  plugins: [],
   project: '/project',
   'package-manager': undefined,
   workspace: undefined,

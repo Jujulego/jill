@@ -14,6 +14,7 @@ let testBed: TestBed<EachArgs, EachCommand>;
 
 const defaults: TestArgs<Omit<EachArgs, 'script'>> = {
   verbose: 0,
+  plugins: [],
   project: '/project',
   'package-manager': undefined,
   'deps-mode': 'all',

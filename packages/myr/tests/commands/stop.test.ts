@@ -1,13 +1,13 @@
 import { ProjectArgs } from '@jujulego/jill-common';
 import { Project } from '@jujulego/jill-core';
 
-import { MyrClient as _MyrClient } from '../../../src/myr/myr-client';
-import { StopCommand } from '../../../src/myr/commands/stop.command';
-import { TestArgs, TestBed } from '../../test-bed';
-import '../../logger';
+import { MyrClient as _MyrClient } from '../../src/myr-client';
+import { StopCommand } from '../../src/commands/stop.command';
+import { TestArgs, TestBed } from '../test-bed';
+import '../logger';
 
 // Mocks
-jest.mock('../../../src/myr/myr-client');
+jest.mock('../../src/myr-client');
 const MyrClient = _MyrClient as jest.MockedClass<typeof _MyrClient>;
 
 // Setup
@@ -16,6 +16,7 @@ let testBed: TestBed<ProjectArgs, StopCommand>;
 
 const defaults: TestArgs<ProjectArgs> = {
   verbose: 0,
+  plugins: [],
   project: '/project',
   'package-manager': undefined
 };

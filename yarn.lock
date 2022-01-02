@@ -2251,6 +2251,7 @@ __metadata:
     gulp-cli: 2.3.0
     jest: 27.4.5
     jill-tools: "workspace:*"
+    msw: 0.36.3
     nodemon: 2.0.15
     reflect-metadata: ^0.1.13
     rxjs: ^7.4.0
@@ -2258,6 +2259,7 @@ __metadata:
     ts-node: 10.4.0
     typescript: 4.5.4
     winston: ^3.3.3
+    winston-transport: 4.4.1
     ws: ^8.3.0
   peerDependencies:
     "@jujulego/jill": ^1.1.19
