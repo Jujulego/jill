@@ -2,11 +2,12 @@ import { logger } from '@jujulego/jill-core';
 import yargs from 'yargs';
 
 import { transport } from './logger';
+import { ApplicationArgs } from './application';
 
 // Export
 export type Awaitable<T> = T | PromiseLike<T>;
-export type Arguments<A> = yargs.Arguments<A> & { '--': readonly (string | number)[] };
-export type Builder<T, A = T> = (yargs: yargs.Argv<T>) => yargs.Argv<A>;
+export type Arguments<A> = yargs.Arguments<A & ApplicationArgs> & { '--': readonly (string | number)[] };
+export type Builder<A = ApplicationArgs> = (yargs: yargs.Argv<ApplicationArgs>) => yargs.Argv<A & ApplicationArgs>;
 
 // Exceptions
 export class Exit extends Error {
@@ -17,16 +18,16 @@ export class Exit extends Error {
 }
 
 // Command
-export abstract class Command<A = unknown> {
+export abstract class Command<A extends ApplicationArgs = ApplicationArgs> {
   // Attributes
   readonly logger = logger;
   readonly spinner = transport.spinner;
 
   // Methods
-  protected abstract define<T, U>(builder: Builder<T, U>): Builder<T, U & A>;
+  protected abstract define<U>(builder: Builder<U>): Builder<U & A>;
   protected abstract run(args: Arguments<A>): Awaitable<number | void>;
 
-  setup<T>(yargs: yargs.Argv<T>): yargs.Argv<T> {
+  setup(yargs: yargs.Argv<ApplicationArgs>): yargs.Argv<ApplicationArgs> {
     yargs.command<A>(
       this.name,
       this.description,

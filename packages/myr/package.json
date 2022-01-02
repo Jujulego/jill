@@ -24,6 +24,7 @@
     "node": "^14"
   },
   "peerDependencies": {
+    "@jujulego/jill": "^1.1.19",
     "@jujulego/jill-core": "^1.1.12"
   },
   "dependencies": {

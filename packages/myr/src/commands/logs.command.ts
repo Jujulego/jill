@@ -27,7 +27,7 @@ export class LogsCommand extends ProjectCommand<LogsArgs> {
   readonly description = 'Request myr logs';
 
   // Methods
-  protected define<T, U>(builder: Builder<T, U>): Builder<T, U & LogsArgs> {
+  protected define<U>(builder: Builder<U>): Builder<U & LogsArgs> {
     return super.define(y => builder(y)
       .option('follow', {
         alias: 'f',

@@ -21,7 +21,7 @@ export class MyrCommand extends Command {
   ];
 
   // Methods
-  protected define<T, U>(builder: Builder<T, U>): Builder<T, U> {
+  protected define<U>(builder: Builder<U>): Builder<U> {
     return yargs => this.commands.reduce((y, cmd) => cmd.setup(y), builder(yargs));
   }
 

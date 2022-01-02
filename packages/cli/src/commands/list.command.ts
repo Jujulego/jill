@@ -55,7 +55,7 @@ export class ListCommand extends ProjectCommand<ListArgs> {
     };
   }
 
-  protected define<T, U>(builder: Builder<T, U>): Builder<T, U & ListArgs> {
+  protected define<U>(builder: Builder<U>): Builder<U & ListArgs> {
     return super.define(y => builder(y)
       .option('private', {
         type: 'boolean',

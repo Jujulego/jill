@@ -36,7 +36,7 @@ export class WatchCommand extends WorkspaceCommand<WatchArgs> {
     return count;
   }
 
-  protected define<T, U>(builder: Builder<T, U>): Builder<T, U & WatchArgs> {
+  protected define<U>(builder: Builder<U>): Builder<U & WatchArgs> {
     return super.define(y => builder(y)
       .positional('script', { type: 'string', demandOption: true })
       .option('daemon', {

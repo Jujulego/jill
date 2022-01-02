@@ -1,24 +1,16 @@
-import { hideBin } from 'yargs/helpers';
-import yargs from 'yargs';
+import { Application } from '@jujulego/jill-common';
 
 import { corePlugin } from './core.plugin';
 
+// Class
+class JillApp extends Application {
+  // Attributes
+  readonly name = 'jill';
+  readonly corePlugin = corePlugin;
+}
+
 // Bootstrap
 (async () => {
-  // Options
-  const parser = await yargs(hideBin(process.argv))
-    .scriptName('jill')
-    .parserConfiguration({
-      'populate--': true,
-    })
-    .strictCommands()
-    .help();
-
-  // Load plugins
-  const { default: myrPlugin } = await import('@jujulego/jill-myr');
-
-  corePlugin.setup(parser);
-  myrPlugin.setup(parser);
-
-  await parser.parse();
+  const app = new JillApp();
+  await app.parse();
 })();

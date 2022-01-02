@@ -2166,6 +2166,11 @@ __metadata:
     winston: ^3.3.3
     winston-transport: ^4.4.0
     yargs: ^17.0.1
+  peerDependencies:
+    "@jujulego/jill-myr": 0.1.0
+  peerDependenciesMeta:
+    "@jujulego/jill-myr":
+      optional: true
   languageName: unknown
   linkType: soft
 
@@ -2207,7 +2212,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jujulego/jill-myr@^0.1.0, @jujulego/jill-myr@workspace:packages/myr":
+"@jujulego/jill-myr@0.1.0, @jujulego/jill-myr@workspace:packages/myr":
   version: 0.0.0-use.local
   resolution: "@jujulego/jill-myr@workspace:packages/myr"
   dependencies:
@@ -2255,6 +2260,7 @@ __metadata:
     winston: ^3.3.3
     ws: ^8.3.0
   peerDependencies:
+    "@jujulego/jill": ^1.1.19
     "@jujulego/jill-core": ^1.1.12
   languageName: unknown
   linkType: soft
@@ -2269,7 +2275,6 @@ __metadata:
     "@babel/runtime": 7.16.5
     "@jujulego/jill-common": ^1.0.0
     "@jujulego/jill-core": ^1.1.12
-    "@jujulego/jill-myr": ^0.1.0
     "@repeaterjs/repeater": ^3.0.4
     "@types/gulp": 4.0.9
     "@types/jest": 27.0.3
@@ -2301,6 +2306,11 @@ __metadata:
     winston-transport: ^4.4.0
     ws: ^8.3.0
     yargs: ^17.0.1
+  peerDependencies:
+    "@jujulego/jill-myr": 0.1.0
+  peerDependenciesMeta:
+    "@jujulego/jill-myr":
+      optional: true
   bin:
     jill: ./bin/jill.js
   languageName: unknown
@@ -8365,6 +8375,7 @@ fsevents@^1.2.7:
   resolution: "jill@workspace:."
   dependencies:
     "@jujulego/jill": 1.1.19
+    "@jujulego/jill-myr": 0.1.0
     "@typescript-eslint/eslint-plugin": 5.8.1
     "@typescript-eslint/parser": 5.8.1
     eslint: 7.32.0

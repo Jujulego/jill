@@ -19,7 +19,7 @@ export class TaskManager extends EventEmitter<TaskManagerEventMap> {
 
   // Constructor
   constructor(
-    readonly jobs: number = os.cpus().length
+    readonly jobs = os.cpus().length
   ) {
     super();
     logger.verbose(`Run up to ${jobs} tasks at the same time`);
