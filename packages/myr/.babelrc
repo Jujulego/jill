@@ -6,7 +6,6 @@
     }]
   ],
   "plugins": [
-    "@babel/proposal-class-properties",
-    "macros"
+    "@babel/proposal-class-properties"
   ]
 }

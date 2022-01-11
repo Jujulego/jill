@@ -1,6 +1,7 @@
 import { logger } from '@jujulego/jill-core';
-import { MyrServer } from '@jujulego/jill-myr';
 import winston, { format } from 'winston';
+
+import { MyrServer } from './server';
 
 // Setup logger
 const trans = new winston.transports.Console({

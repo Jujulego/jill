@@ -8,6 +8,7 @@ const paths = {
   tsconfig: 'tsconfig.json',
   deps: [
     '../../.pnp.*',
+    '../common/dist/**',
     '../core/dist/**',
   ]
 };

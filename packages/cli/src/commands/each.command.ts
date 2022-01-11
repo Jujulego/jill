@@ -21,7 +21,7 @@ export class EachCommand extends ProjectCommand<EachArgs> {
   readonly description = 'Run script on selected workspaces';
 
   // Methods
-  protected define<T, U>(builder: Builder<T, U>): Builder<T, U & EachArgs> {
+  protected define<U>(builder: Builder<U>): Builder<U & EachArgs> {
     return super.define(y => builder(y)
       .positional('script', { type: 'string', demandOption: true })
       .option('deps-mode', {

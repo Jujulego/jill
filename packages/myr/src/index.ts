@@ -1,2 +1,12 @@
-export * from './tasks';
-export * from './server';
+import { Plugin } from '@jujulego/jill-common';
+
+import { MyrCommand } from './myr.command';
+import { WatchCommand } from './watch.command';
+
+// Plugin
+const myrPlugin = Plugin.createPlugin('myr', [
+  MyrCommand,
+  WatchCommand
+]);
+
+export default myrPlugin;

@@ -14,7 +14,7 @@ export abstract class WorkspaceCommand<A extends WorkspaceArgs = WorkspaceArgs> 
   private _workspace?: Workspace | null;
 
   // Methods
-  protected define<T, U>(builder: Builder<T, U>): Builder<T, U & WorkspaceArgs> {
+  protected define<U>(builder: Builder<U>): Builder<U & WorkspaceArgs> {
     return super.define(y => builder(y)
       .option('workspace', {
         alias: 'w',

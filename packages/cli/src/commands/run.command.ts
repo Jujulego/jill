@@ -16,7 +16,7 @@ export class RunCommand extends WorkspaceCommand<RunArgs> {
   readonly description = 'Run script inside workspace';
 
   // Methods
-  protected define<T, U>(builder: Builder<T, U>): Builder<T, U & RunArgs> {
+  protected define<U>(builder: Builder<U>): Builder<U & RunArgs> {
     return super.define(y => builder(y)
       .positional('script', { type: 'string', demandOption: true })
       .option('deps-mode', {

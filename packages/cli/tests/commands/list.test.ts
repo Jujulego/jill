@@ -13,6 +13,7 @@ let testBed: TestBed<ListArgs, ListCommand>;
 
 const defaults: TestArgs<ListArgs> = {
   verbose: 0,
+  plugins: [],
   project: '/project',
   'package-manager': undefined,
   private: undefined,

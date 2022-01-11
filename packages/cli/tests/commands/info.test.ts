@@ -13,6 +13,7 @@ let testBed: TestBed<WorkspaceArgs, InfoCommand>;
 
 const defaults: TestArgs<WorkspaceArgs> = {
   verbose: 0,
+  plugins: [],
   project: '/project',
   'package-manager': undefined,
   workspace: undefined

@@ -4,9 +4,9 @@ import { EventEmitter } from 'events';
 import { GraphQLClient } from 'graphql-request';
 import path from 'path';
 
-import { myrServer } from '../../mocks/myr-server';
-import { MyrClient } from '../../src/myr/myr-client';
-import '../logger';
+import { myrServer } from '../mocks/myr-server';
+import { MyrClient } from '../src/myr-client';
+import './logger';
 
 // Class
 class MyrClientTest extends MyrClient {
@@ -91,7 +91,7 @@ describe('MyrClient.start', () => {
   it('should start myr process and resolve true when it send "started"', async () => {
     const prom = myr.start();
 
-    expect(cp.fork).toHaveBeenCalledWith(path.resolve(__dirname, '../../src/myr/myr.process'), [], {
+    expect(cp.fork).toHaveBeenCalledWith(path.resolve(__dirname, '../src/myr.process'), [], {
       cwd: prj.root,
       detached: true,
       stdio: ['ignore', 'pipe', 'pipe', 'ipc'],

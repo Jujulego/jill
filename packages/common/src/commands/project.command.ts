@@ -1,22 +1,22 @@
 import { PackageManager, Project } from '@jujulego/jill-core';
 
-import { Arguments, Builder } from '../command';
-import { BaseArgs, BaseCommand } from './base.command';
+import { Arguments, Builder, Command } from '../command';
+import { ApplicationArgs } from '../application';
 
 // Types
-export interface ProjectArgs extends BaseArgs {
+export interface ProjectArgs extends ApplicationArgs {
   project: string | undefined;
   'package-manager': PackageManager | undefined;
 }
 
 // Command
-export abstract class ProjectCommand<A extends ProjectArgs = ProjectArgs> extends BaseCommand<A> {
+export abstract class ProjectCommand<A extends ProjectArgs = ProjectArgs> extends Command<ProjectArgs> {
   // Attributes
   private _project?: Project;
 
   // Methods
-  protected define<T, U>(builder: Builder<T, U>): Builder<T, U & ProjectArgs> {
-    return super.define(y => builder(y)
+  protected define<U>(builder: Builder<U>): Builder<U & ProjectArgs> {
+    return y => builder(y)
       .option('project', {
         alias: 'p',
         type: 'string',
@@ -27,13 +27,10 @@ export abstract class ProjectCommand<A extends ProjectArgs = ProjectArgs> extend
         default: undefined as PackageManager | undefined,
         type: 'string',
         description: 'Force package manager'
-      })
-    );
+      });
   }
 
   protected async run(args: Arguments<A>): Promise<number | void> {
-    super.run(args);
-
     // Load project
     this.spinner.start('Loading project');
     const dir = args.project ?? await Project.searchProjectRoot(process.cwd());

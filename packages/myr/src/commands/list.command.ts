@@ -1,10 +1,10 @@
 import { Arguments, Builder, CliList, ProjectArgs, ProjectCommand } from '@jujulego/jill-common';
 import { TaskStatus } from '@jujulego/jill-core';
-import { Task } from '@jujulego/jill-myr';
 import chalk from 'chalk';
 import path from 'path';
 
 import { MyrClient } from '../myr-client';
+import { Task } from '../server';
 
 // Types
 export type Attribute = 'identifier' | 'status' | 'cwd' | 'command' | 'cmd' | 'args';
@@ -61,7 +61,7 @@ export class ListCommand extends ProjectCommand<ListArgs> {
     };
   }
 
-  protected define<T, U>(builder: Builder<T, U>): Builder<T, U & ListArgs> {
+  protected define<U>(builder: Builder<U>): Builder<U & ListArgs> {
     return super.define(y => builder(y)
       .option('all', {
         alias: 'a',

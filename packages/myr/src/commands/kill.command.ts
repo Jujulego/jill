@@ -14,7 +14,7 @@ export class KillCommand extends ProjectCommand<KillArgs> {
   readonly description = 'Kill task';
 
   // Methods
-  protected define<T, U>(builder: Builder<T, U>): Builder<T, U & KillArgs> {
+  protected define<U>(builder: Builder<U>): Builder<U & KillArgs> {
     return super.define(y => builder(y)
       .positional('id', { type: 'string', demandOption: true })
     );

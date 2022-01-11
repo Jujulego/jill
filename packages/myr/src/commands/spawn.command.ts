@@ -1,4 +1,5 @@
 import { Arguments, Builder, WorkspaceArgs, WorkspaceCommand } from '@jujulego/jill-common';
+
 import { MyrClient } from '../myr-client';
 
 // Types
@@ -13,7 +14,7 @@ export class SpawnCommand extends WorkspaceCommand<SpawnArgs> {
   readonly description = 'Spawn new task';
 
   // Methods
-  protected define<T, U>(builder: Builder<T, U>): Builder<T, U & SpawnArgs> {
+  protected define<U>(builder: Builder<U>): Builder<U & SpawnArgs> {
     return super.define(y => builder(y)
       .positional('command', { type: 'string', demandOption: true })
     );

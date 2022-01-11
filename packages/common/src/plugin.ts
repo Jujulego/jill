@@ -1,6 +1,7 @@
 import yargs from 'yargs';
 
 import { Command } from './command';
+import { ApplicationArgs } from './application';
 
 // Types
 export type CommandType = { new(): Command };
@@ -16,7 +17,7 @@ export abstract class Plugin {
   }
 
   // Methods
-  setup<T>(yargs: yargs.Argv<T>): yargs.Argv<T> {
+  setup(yargs: yargs.Argv<ApplicationArgs>): yargs.Argv<ApplicationArgs> {
     for (const cmd of this.commands) {
       cmd.setup(yargs);
     }
