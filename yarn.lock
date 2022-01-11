@@ -2243,7 +2243,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jujulego/jill-common@^1.0.0, @jujulego/jill-common@workspace:packages/common":
+"@jujulego/jill-common@^1.2.0, @jujulego/jill-common@workspace:packages/common":
   version: 0.0.0-use.local
   resolution: "@jujulego/jill-common@workspace:packages/common"
   dependencies:
@@ -2251,7 +2251,7 @@ __metadata:
     "@babel/plugin-proposal-class-properties": 7.16.7
     "@babel/preset-env": 7.16.8
     "@babel/runtime": 7.16.7
-    "@jujulego/jill-core": ^1.1.12
+    "@jujulego/jill-core": ^1.2.0
     "@repeaterjs/repeater": ^3.0.4
     "@types/gulp": 4.0.9
     "@types/jest": 27.4.0
@@ -2276,14 +2276,14 @@ __metadata:
     winston-transport: ^4.4.0
     yargs: ^17.0.1
   peerDependencies:
-    "@jujulego/jill-myr": 0.1.0
+    "@jujulego/jill-myr": 1.2.0
   peerDependenciesMeta:
     "@jujulego/jill-myr":
       optional: true
   languageName: unknown
   linkType: soft
 
-"@jujulego/jill-core@1.1.12, @jujulego/jill-core@^1.1.12, @jujulego/jill-core@workspace:packages/core":
+"@jujulego/jill-core@1.2.0, @jujulego/jill-core@^1.2.0, @jujulego/jill-core@workspace:packages/core":
   version: 0.0.0-use.local
   resolution: "@jujulego/jill-core@workspace:packages/core"
   dependencies:
@@ -2321,7 +2321,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jujulego/jill-myr@0.1.0, @jujulego/jill-myr@workspace:packages/myr":
+"@jujulego/jill-myr@1.2.0, @jujulego/jill-myr@workspace:packages/myr":
   version: 0.0.0-use.local
   resolution: "@jujulego/jill-myr@workspace:packages/myr"
   dependencies:
@@ -2329,8 +2329,8 @@ __metadata:
     "@babel/plugin-proposal-class-properties": 7.16.7
     "@babel/preset-env": 7.16.8
     "@babel/runtime": 7.16.7
-    "@jujulego/jill-common": ^1.0.0
-    "@jujulego/jill-core": 1.1.12
+    "@jujulego/jill-common": ^1.2.0
+    "@jujulego/jill-core": 1.2.0
     "@jujulego/pid-file": ^1.0.3
     "@nestjs/common": ^8.2.3
     "@nestjs/core": ^8.2.3
@@ -2371,12 +2371,12 @@ __metadata:
     winston-transport: 4.4.1
     ws: ^8.3.0
   peerDependencies:
-    "@jujulego/jill": ^1.1.19
-    "@jujulego/jill-core": ^1.1.12
+    "@jujulego/jill": ^1.2.0
+    "@jujulego/jill-core": ^1.2.0
   languageName: unknown
   linkType: soft
 
-"@jujulego/jill@1.1.19, @jujulego/jill@workspace:packages/cli":
+"@jujulego/jill@1.2.0, @jujulego/jill@workspace:packages/cli":
   version: 0.0.0-use.local
   resolution: "@jujulego/jill@workspace:packages/cli"
   dependencies:
@@ -2384,8 +2384,8 @@ __metadata:
     "@babel/plugin-proposal-class-properties": 7.16.7
     "@babel/preset-env": 7.16.8
     "@babel/runtime": 7.16.7
-    "@jujulego/jill-common": ^1.0.0
-    "@jujulego/jill-core": ^1.1.12
+    "@jujulego/jill-common": ^1.2.0
+    "@jujulego/jill-core": ^1.2.0
     "@repeaterjs/repeater": ^3.0.4
     "@types/gulp": 4.0.9
     "@types/jest": 27.4.0
@@ -2418,7 +2418,7 @@ __metadata:
     ws: ^8.3.0
     yargs: ^17.0.1
   peerDependencies:
-    "@jujulego/jill-myr": 0.1.0
+    "@jujulego/jill-myr": 1.2.0
   peerDependenciesMeta:
     "@jujulego/jill-myr":
       optional: true
@@ -8460,7 +8460,7 @@ fsevents@^1.2.7:
   version: 0.0.0-use.local
   resolution: "jill-e2e@workspace:e2e"
   dependencies:
-    "@jujulego/jill": 1.1.19
+    "@jujulego/jill": 1.2.0
     "@types/jest": 27.4.0
     "@types/node": 14.18.5
     "@typescript-eslint/eslint-plugin": 5.9.1
@@ -8496,8 +8496,8 @@ fsevents@^1.2.7:
   version: 0.0.0-use.local
   resolution: "jill@workspace:."
   dependencies:
-    "@jujulego/jill": 1.1.19
-    "@jujulego/jill-myr": 0.1.0
+    "@jujulego/jill": 1.2.0
+    "@jujulego/jill-myr": 1.2.0
     "@typescript-eslint/eslint-plugin": 5.9.1
     "@typescript-eslint/parser": 5.9.1
     eslint: 8.6.0

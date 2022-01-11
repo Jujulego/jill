@@ -1,6 +1,6 @@
 {
   "name": "@jujulego/jill-myr",
-  "version": "0.1.0",
+  "version": "1.2.0",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -24,11 +24,11 @@
     "node": "^14"
   },
   "peerDependencies": {
-    "@jujulego/jill": "^1.1.19",
-    "@jujulego/jill-core": "^1.1.12"
+    "@jujulego/jill": "^1.2.0",
+    "@jujulego/jill-core": "^1.2.0"
   },
   "dependencies": {
-    "@jujulego/jill-common": "^1.0.0",
+    "@jujulego/jill-common": "^1.2.0",
     "@jujulego/pid-file": "^1.0.3",
     "@nestjs/common": "^8.2.3",
     "@nestjs/core": "^8.2.3",
@@ -54,7 +54,7 @@
     "@babel/plugin-proposal-class-properties": "7.16.7",
     "@babel/preset-env": "7.16.8",
     "@babel/runtime": "7.16.7",
-    "@jujulego/jill-core": "1.1.12",
+    "@jujulego/jill-core": "1.2.0",
     "@types/gulp": "4.0.9",
     "@types/jest": "27.4.0",
     "@types/node": "14.18.5",
