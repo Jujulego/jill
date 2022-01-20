@@ -16,7 +16,7 @@ export class WatchManager {
   }
 
   spawn(cwd: string, cmd: string, args: readonly string[]): WatchTask {
-    const id = WatchTask.generateTaskId(cwd, cmd, args);
+    const id = WatchTask.generateId(cwd, cmd, args);
     let task = this.get(id);
 
     if (task && ['ready', 'running'].includes(task.status)) {

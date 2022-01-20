@@ -1,10 +1,11 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 
-import { SpawnArgs, Task, TaskArgs } from './task.model';
+import { SpawnArgs, TaskArgs } from './task.model';
 import { WatchManager } from './watch-manager';
+import { WatchTask } from './watch-task';
 
 // Resolver
-@Resolver(() => Task)
+@Resolver(() => WatchTask)
 export class TasksResolver {
   // Constructor
   constructor(
@@ -12,25 +13,24 @@ export class TasksResolver {
   ) {}
 
   // Queries
-  @Query(() => Task, { nullable: true })
-  task(@Args() { id }: TaskArgs): Task | undefined {
-    return this.manager.get(id)?.toPlain();
+  @Query(() => WatchTask, { nullable: true })
+  task(@Args() { id }: TaskArgs): WatchTask | null {
+    return this.manager.get(id);
   }
 
-  @Query(() => [Task])
-  tasks(): Task[] {
-    return this.manager.tasks.map(tsk => tsk.toPlain());
+  @Query(() => [WatchTask])
+  tasks(): readonly WatchTask[] {
+    return this.manager.tasks;
   }
 
   // Mutations
-  @Mutation(() => Task)
-  spawn(@Args() { cwd, cmd, args }: SpawnArgs): Task {
-    return this.manager.spawn(cwd, cmd, args).toPlain();
+  @Mutation(() => WatchTask)
+  spawn(@Args() { cwd, cmd, args }: SpawnArgs): WatchTask {
+    return this.manager.spawn(cwd, cmd, args);
   }
 
-  @Mutation(() => Task, { nullable: true })
-  async kill(@Args() { id }: TaskArgs): Promise<Task | undefined> {
-    const task = await this.manager.kill(id);
-    return task?.toPlain();
+  @Mutation(() => WatchTask, { nullable: true })
+  async kill(@Args() { id }: TaskArgs): Promise<WatchTask | null> {
+    return await this.manager.kill(id);
   }
 }

@@ -4,13 +4,13 @@ import chalk from 'chalk';
 import path from 'path';
 
 import { MyrClient } from '../myr-client';
-import { Task } from '../server';
+import { IWatchTask } from '../common/watch-task.model';
 
 // Types
 export type Attribute = 'identifier' | 'status' | 'cwd' | 'command' | 'cmd' | 'args';
 export type Data = Partial<Record<Attribute, string>>;
 
-type Extractor<T> = (tsk: Task) => T;
+type Extractor<T> = (tsk: IWatchTask) => T;
 
 export interface ListArgs extends ProjectArgs {
   all: boolean | undefined;

@@ -8,7 +8,8 @@ import gql from 'graphql-tag';
 import path from 'path';
 import WebSocket from 'ws';
 
-import { SpawnArgs, Task, TaskFragment } from './server';
+import { SpawnArgs } from './server';
+import { IWatchTask, WatchTaskFragment } from './common/watch-task.model';
 
 // Types
 type ILog = Record<string, unknown> & {
@@ -121,39 +122,39 @@ export class MyrClient {
     }
   }
 
-  async tasks(): Promise<Task[]> {
+  async tasks(): Promise<IWatchTask[]> {
     return await this._autoStart(async () => {
-      const { tasks } = await this._qclient.request<{ tasks: Task[] }>(gql`
+      const { tasks } = await this._qclient.request<{ tasks: IWatchTask[] }>(gql`
           query Tasks {
               tasks {
-                  ...Task
+                  ...WatchTask
               }
           }
 
-          ${TaskFragment}
+          ${WatchTaskFragment}
       `);
 
       return tasks;
     });
   }
 
-  async spawn(cwd: string, cmd: string, args: string[] = []): Promise<Task> {
+  async spawn(cwd: string, cmd: string, args: string[] = []): Promise<IWatchTask> {
     return await this._autoStart(async () => {
-      const { spawn } = await this._qclient.request<{ spawn:Task },SpawnArgs>(gql`
+      const { spawn } = await this._qclient.request<{ spawn: IWatchTask }, SpawnArgs>(gql`
           mutation Spawn($cwd: String!, $cmd: String!, $args: [String!]!) {
               spawn(cwd: $cwd, cmd: $cmd, args: $args) {
-                  ...Task
+                  ...WatchTask
               }
           }
 
-          ${TaskFragment}
+          ${WatchTaskFragment}
       `, { cwd, cmd, args });
 
       return spawn;
     });
   }
 
-  async spawnScript(wks: Workspace, script: string, args: string[] = []): Promise<Task> {
+  async spawnScript(wks: Workspace, script: string, args: string[] = []): Promise<IWatchTask> {
     return await this.spawn(wks.cwd, await wks.project.packageManager(), [script, ...args]);
   }
 
@@ -185,16 +186,16 @@ export class MyrClient {
     }
   }
 
-  async kill(id: string): Promise<Task | undefined> {
+  async kill(id: string): Promise<IWatchTask | undefined> {
     return await this._autoStart(async () => {
-      const { kill } = await this._qclient.request<{ kill: Task | undefined }>(gql`
+      const { kill } = await this._qclient.request<{ kill: IWatchTask | undefined }>(gql`
           mutation Kill($id: ID!) {
               kill(id: $id) {
-                  ...Task
+                  ...WatchTask
               }
           }
 
-          ${TaskFragment}
+          ${WatchTaskFragment}
       `, { id });
 
       return kill;
