@@ -1,8 +1,9 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 
-import { SpawnArgs, TaskArgs } from './task.model';
-import { WatchManager } from './watch-manager';
-import { WatchTask } from './watch-task';
+import { SpawnTaskArgs } from './spawn-task.args';
+import { TaskIDArgs } from './task-id.args';
+import { WatchManager } from './watch-manager.service';
+import { WatchTask } from './watch-task.model';
 
 // Resolver
 @Resolver(() => WatchTask)
@@ -14,7 +15,7 @@ export class TasksResolver {
 
   // Queries
   @Query(() => WatchTask, { nullable: true })
-  task(@Args() { id }: TaskArgs): WatchTask | null {
+  task(@Args() { id }: TaskIDArgs): WatchTask | null {
     return this.manager.get(id);
   }
 
@@ -25,12 +26,12 @@ export class TasksResolver {
 
   // Mutations
   @Mutation(() => WatchTask)
-  spawn(@Args() { cwd, cmd, args }: SpawnArgs): WatchTask {
+  spawn(@Args() { cwd, cmd, args }: SpawnTaskArgs): WatchTask {
     return this.manager.spawn(cwd, cmd, args);
   }
 
   @Mutation(() => WatchTask, { nullable: true })
-  async kill(@Args() { id }: TaskArgs): Promise<WatchTask | null> {
+  async kill(@Args() { id }: TaskIDArgs): Promise<WatchTask | null> {
     return await this.manager.kill(id);
   }
 }

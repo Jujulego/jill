@@ -8,8 +8,7 @@ import gql from 'graphql-tag';
 import path from 'path';
 import WebSocket from 'ws';
 
-import { SpawnArgs } from './server';
-import { IWatchTask, WatchTaskFragment } from './common/watch-task.model';
+import { ISpawnTaskArgs, IWatchTask, WatchTaskFragment } from './common';
 
 // Types
 type ILog = Record<string, unknown> & {
@@ -140,7 +139,7 @@ export class MyrClient {
 
   async spawn(cwd: string, cmd: string, args: string[] = []): Promise<IWatchTask> {
     return await this._autoStart(async () => {
-      const { spawn } = await this._qclient.request<{ spawn: IWatchTask }, SpawnArgs>(gql`
+      const { spawn } = await this._qclient.request<{ spawn: IWatchTask }, ISpawnTaskArgs>(gql`
           mutation Spawn($cwd: String!, $cmd: String!, $args: [String!]!) {
               spawn(cwd: $cwd, cmd: $cmd, args: $args) {
                   ...WatchTask

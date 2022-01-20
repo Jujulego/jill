@@ -1,7 +1,7 @@
 import { logger } from '@jujulego/jill-core';
 import { Injectable } from '@nestjs/common';
 
-import { WatchTask } from './watch-task';
+import { WatchTask } from './watch-task.model';
 
 // Class
 @Injectable()

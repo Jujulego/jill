@@ -1,7 +1,7 @@
 import { createHash } from 'crypto';
 import path from 'path';
 
-import { WatchTask } from '../../../src/server/tasks/watch-task';
+import { WatchTask } from '../../../src/server/tasks/watch-task.model';
 
 // Setup
 const mockId = createHash('md5')

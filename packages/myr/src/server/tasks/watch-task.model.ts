@@ -3,7 +3,7 @@ import { SpawnTask, SpawnTaskOption } from '@jujulego/jill-core';
 import { createHash } from 'crypto';
 import path from 'path';
 
-import { IWatchTask, WatchTaskStatus } from '../../common/watch-task.model';
+import { IWatchTask, WatchTaskStatus } from '../../common';
 
 // Enums
 registerEnumType(WatchTaskStatus, {
