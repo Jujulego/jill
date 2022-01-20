@@ -1,3 +1,4 @@
+import { ValidationPipe } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 
 import { SpawnTaskArgs } from './spawn-task.args';
@@ -15,7 +16,7 @@ export class TasksResolver {
 
   // Queries
   @Query(() => WatchTask, { nullable: true })
-  task(@Args() { id }: TaskIDArgs): WatchTask | null {
+  task(@Args(ValidationPipe) { id }: TaskIDArgs): WatchTask | null {
     return this.manager.get(id);
   }
 
@@ -26,12 +27,12 @@ export class TasksResolver {
 
   // Mutations
   @Mutation(() => WatchTask)
-  spawn(@Args() { cwd, cmd, args }: SpawnTaskArgs): WatchTask {
+  spawn(@Args(ValidationPipe) { cwd, cmd, args }: SpawnTaskArgs): WatchTask {
     return this.manager.spawn(cwd, cmd, args);
   }
 
   @Mutation(() => WatchTask, { nullable: true })
-  async kill(@Args() { id }: TaskIDArgs): Promise<WatchTask | null> {
+  async kill(@Args(ValidationPipe) { id }: TaskIDArgs): Promise<WatchTask | null> {
     return await this.manager.kill(id);
   }
 }
