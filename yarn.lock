@@ -2419,7 +2419,7 @@ __metadata:
     eslint-plugin-workspaces: 0.7.0
     express: ^4.17.1
     graphql: ^15.7.2
-    graphql-request: ^3.6.1
+    graphql-request: ^4.0.0
     graphql-subscriptions: ^2.0.0
     graphql-tag: ^2.12.6
     graphql-ws: ^5.5.3
@@ -2467,7 +2467,7 @@ __metadata:
     eslint-plugin-jest: 25.7.0
     eslint-plugin-workspaces: 0.7.0
     graphql: ^15.7.2
-    graphql-request: ^3.6.1
+    graphql-request: ^4.0.0
     graphql-tag: ^2.12.6
     graphql-ws: ^5.5.5
     gulp: 4.0.2
@@ -6931,16 +6931,16 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"graphql-request@npm:^3.6.1":
-  version: 3.6.1
-  resolution: "graphql-request@npm:3.6.1"
+"graphql-request@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "graphql-request@npm:4.0.0"
   dependencies:
     cross-fetch: ^3.0.6
     extract-files: ^9.0.0
     form-data: ^3.0.0
   peerDependencies:
-    graphql: 14.x || 15.x
-  checksum: 15e98c29760fca8ce230459dd2448a56eca54f7fcce9cb5f3fd82c9af1e31bfb5a85b67ef405479d9a45acae4d2a1f278ebda6ca1950cad9a5b40dc215b82dd3
+    graphql: 14 - 16
+  checksum: 0d16c7f06360679c022faaa19554c2693e200263beae0dec920b0668f6c48b0d08de6e1155a50a050283a58a878b29b04db129a2d932a645bfadbe8d55530243
   languageName: node
   linkType: hard
 
