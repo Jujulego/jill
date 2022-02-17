@@ -50,10 +50,10 @@
     "ws": "^8.3.0"
   },
   "devDependencies": {
-    "@babel/core": "7.16.10",
+    "@babel/core": "7.17.5",
     "@babel/plugin-proposal-class-properties": "7.16.7",
     "@babel/preset-env": "7.16.11",
-    "@babel/runtime": "7.16.7",
+    "@babel/runtime": "7.17.2",
     "@jujulego/jill-core": "1.2.0",
     "@types/gulp": "4.0.9",
     "@types/jest": "27.4.0",
