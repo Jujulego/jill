@@ -2472,7 +2472,7 @@ __metadata:
     "@types/gulp": 4.0.9
     "@types/jest": 27.4.0
     "@types/node": 14.18.12
-    "@types/ws": 8.2.1
+    "@types/ws": 8.2.3
     "@typescript-eslint/eslint-plugin": 5.12.0
     "@typescript-eslint/parser": 5.12.0
     apollo-server-core: ^3.5.0
@@ -2522,7 +2522,7 @@ __metadata:
     "@types/gulp": 4.0.9
     "@types/jest": 27.4.0
     "@types/node": 14.18.12
-    "@types/ws": 8.2.1
+    "@types/ws": 8.2.3
     "@types/yargs": 17.0.8
     "@typescript-eslint/eslint-plugin": 5.12.0
     "@typescript-eslint/parser": 5.12.0
@@ -3349,12 +3349,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/ws@npm:8.2.1":
-  version: 8.2.1
-  resolution: "@types/ws@npm:8.2.1"
+"@types/ws@npm:8.2.3":
+  version: 8.2.3
+  resolution: "@types/ws@npm:8.2.3"
   dependencies:
     "@types/node": "*"
-  checksum: 3721c9e5ba2dbe122fb40645ec0397b19abc91989573286bcccd992a0b97383e43c1349b6997bdded21522dfe7d9207d37b719e558e8f7dc62910360e6d2097b
+  checksum: 94e949ef66909334eb8d77079a28ce8fcea8780295eadab1bccdbb85adc0534d96d9a61910a80720769c6019e7bfaba90cea6f95f58e93de135b766074aa53cb
   languageName: node
   linkType: hard
 
