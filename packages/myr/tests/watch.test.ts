@@ -1,5 +1,6 @@
 import { Project, Workspace } from '@jujulego/jill-core';
 
+import { SpawnTaskMode, WatchTaskStatus } from '../src/common';
 import { MyrClient as _MyrClient } from '../src/myr-client';
 import { WatchArgs, WatchCommand } from '../src/watch.command';
 import { MockTask } from '../mocks/task';
@@ -57,7 +58,9 @@ beforeEach(() => {
     cwd: wks.cwd,
     cmd: 'yarn',
     args: [script, ...args],
-    status: 'running'
+    status: WatchTaskStatus.RUNNING,
+    mode: SpawnTaskMode.MANAGED,
+    watchOn: [],
   }));
 });
 

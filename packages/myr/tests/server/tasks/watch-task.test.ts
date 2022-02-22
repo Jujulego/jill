@@ -1,15 +1,10 @@
 import { createHash } from 'crypto';
 import path from 'path';
 
+import { SpawnTaskMode } from '../../../src/common';
 import { WatchTask } from '../../../src/server/tasks/watch-task.model';
 
 // Setup
-const mockId = createHash('md5')
-  .update(path.resolve('/project'))
-  .update('test')
-  .update('--arg')
-  .digest('hex');
-
 beforeEach(() => {
   jest.resetAllMocks();
 });
@@ -17,26 +12,34 @@ beforeEach(() => {
 // Tests suites
 describe('new WatchTask', () => {
   it('should generate id', () => {
-    const task = new WatchTask('/project', 'test', ['--arg']);
+    const task = new WatchTask('/project', 'test', ['--arg'], SpawnTaskMode.MANAGED);
 
-    expect(task.id).toBe(mockId);
+    expect(task.id).toBe(
+      createHash('md5')
+        .update(path.resolve('/project'))
+        .update('test')
+        .update('--arg')
+        .digest('hex')
+    );
+
     expect(task.status).toBe('ready');
     expect(task.cwd).toBe('/project');
     expect(task.cmd).toBe('test');
     expect(task.args).toEqual(['--arg']);
+
+    expect(task.mode).toBe('managed');
+    expect(task.watchOn).toEqual([]);
   });
 });
 
-describe('WatchTask.toPlain', () => {
-  it('should return plain object with task data', () => {
-    const task = new WatchTask('/project', 'test', ['--arg']);
+describe('WatchTask.watch', () => {
+  it('should add task to "watchOn" array', () => {
+    const deps = new WatchTask('/project', 'test', [], SpawnTaskMode.AUTO);
+    const task = new WatchTask('/project', 'test', [], SpawnTaskMode.MANAGED);
 
-    expect(task.toPlain()).toEqual({
-      id: mockId,
-      status: 'ready',
-      cwd: path.resolve('/project'),
-      cmd: 'test',
-      args: ['--arg'],
-    });
+    // Call
+    task.watch(deps);
+
+    expect(task.watchOn).toEqual([deps]);
   });
 });

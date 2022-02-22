@@ -181,7 +181,9 @@ describe('MyrClient.tasks', () => {
         cwd: '/mock',
         cmd: 'test',
         args: [],
-        status: 'running'
+        status: 'running',
+        mode: 'managed',
+        watchOn: []
       }
     ]);
     
@@ -201,7 +203,9 @@ describe('MyrClient.spawn', () => {
       cwd: '/project',
       cmd: 'test',
       args: ['--arg'],
-      status: 'running'
+      status: 'running',
+      mode: 'managed',
+      watchOn: []
     });
 
     expect(myr._autoStart).toHaveBeenCalledTimes(1);
@@ -213,7 +217,9 @@ describe('MyrClient.spawn', () => {
       cwd: '/project',
       cmd: 'test',
       args: [],
-      status: 'running'
+      status: 'running',
+      mode: 'managed',
+      watchOn: []
     });
 
     expect(myr._autoStart).toHaveBeenCalledTimes(1);
@@ -232,7 +238,9 @@ describe('MyrClient.spawnScript', () => {
       cwd: path.resolve('/prj/wks'),
       cmd: 'yarn',
       args: ['test', '--arg'],
-      status: 'running'
+      status: 'running',
+      mode: 'managed',
+      watchOn: []
     });
 
     expect(myr._autoStart).toHaveBeenCalledTimes(1);
@@ -244,7 +252,9 @@ describe('MyrClient.spawnScript', () => {
       cwd: path.resolve('/prj/wks'),
       cmd: 'yarn',
       args: ['test'],
-      status: 'running'
+      status: 'running',
+      mode: 'managed',
+      watchOn: []
     });
 
     expect(myr._autoStart).toHaveBeenCalledTimes(1);
@@ -263,7 +273,9 @@ describe('MyrClient.kill', () => {
       cwd: '/mock',
       cmd: 'test',
       args: [],
-      status: 'failed'
+      status: 'failed',
+      mode: 'managed',
+      watchOn: []
     });
 
     expect(myr._autoStart).toHaveBeenCalledTimes(1);
