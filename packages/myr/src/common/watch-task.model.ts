@@ -1,5 +1,7 @@
 import gql from 'graphql-tag';
 
+import { SpawnTaskMode } from './spawn-task.args';
+
 // Enum
 export enum WatchTaskStatus {
   BLOCKED = 'blocked',
@@ -17,7 +19,8 @@ export interface IWatchTask {
   cmd: string;
   args: readonly string[];
   status: WatchTaskStatus;
-  watchOn: IWatchTask[];
+  mode: SpawnTaskMode;
+  watchOn: readonly IWatchTask[];
 }
 
 // Fragments

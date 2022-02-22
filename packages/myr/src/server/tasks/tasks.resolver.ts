@@ -27,8 +27,8 @@ export class TasksResolver {
 
   // Mutations
   @Mutation(() => WatchTask)
-  spawn(@Args(ValidationPipe) { cwd, cmd, args }: SpawnTaskArgs): WatchTask {
-    return this.manager.spawn(cwd, cmd, args);
+  spawn(@Args(ValidationPipe) { cwd, cmd, args, mode, watchOn }: SpawnTaskArgs): WatchTask {
+    return this.manager.spawn(cwd, cmd, args, mode, watchOn);
   }
 
   @Mutation(() => WatchTask, { nullable: true })
