@@ -2496,7 +2496,7 @@ __metadata:
     eslint: 8.9.0
     eslint-plugin-jest: 26.1.1
     eslint-plugin-workspaces: 0.7.0
-    graphql: ^15.7.2
+    graphql: ^16.0.0
     graphql-request: ^4.0.0
     graphql-tag: ^2.12.6
     graphql-ws: ^5.5.5
@@ -7006,14 +7006,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"graphql@npm:^15.7.2":
-  version: 15.7.2
-  resolution: "graphql@npm:15.7.2"
-  checksum: eacb746e2981d0c346ef7365601873963af5356f64ce4d890ab89d213c67bf5bc1ae957b93c3902198798774c842b55dff219f38bad858691765e4debc265750
-  languageName: node
-  linkType: hard
-
-"graphql@npm:^16.3.0":
+"graphql@npm:^16.0.0, graphql@npm:^16.3.0":
   version: 16.3.0
   resolution: "graphql@npm:16.3.0"
   checksum: ba540641e9cd2a8de5b989ff1433b015f232fa73aaef478d6709c1339cd43113347917acb965a5799c004667687852fc8ff0cfaa935eb26374c91c1fd7fdaeb1
