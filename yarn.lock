@@ -2350,7 +2350,7 @@ __metadata:
     "@jujulego/jill-core": ^1.2.0
     "@repeaterjs/repeater": ^3.0.4
     "@types/gulp": 4.0.9
-    "@types/jest": 27.4.0
+    "@types/jest": 27.4.1
     "@types/node": 14.18.12
     "@types/yargs": 17.0.8
     "@typescript-eslint/eslint-plugin": 5.12.1
@@ -2390,7 +2390,7 @@ __metadata:
     "@repeaterjs/repeater": ^3.0.4
     "@types/async-lock": 1.1.3
     "@types/gulp": 4.0.9
-    "@types/jest": 27.4.0
+    "@types/jest": 27.4.1
     "@types/node": 14.18.12
     "@types/normalize-package-data": 2.4.1
     "@types/semver": 7.3.9
@@ -2435,7 +2435,7 @@ __metadata:
     "@nestjs/platform-express": ^8.2.3
     "@repeaterjs/repeater": ^3.0.4
     "@types/gulp": 4.0.9
-    "@types/jest": 27.4.0
+    "@types/jest": 27.4.1
     "@types/node": 14.18.12
     "@types/ws": 8.2.3
     "@typescript-eslint/eslint-plugin": 5.12.1
@@ -2485,7 +2485,7 @@ __metadata:
     "@jujulego/jill-core": ^1.2.0
     "@repeaterjs/repeater": ^3.0.4
     "@types/gulp": 4.0.9
-    "@types/jest": 27.4.0
+    "@types/jest": 27.4.1
     "@types/node": 14.18.12
     "@types/ws": 8.2.3
     "@types/yargs": 17.0.8
@@ -3137,13 +3137,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/jest@npm:27.4.0":
-  version: 27.4.0
-  resolution: "@types/jest@npm:27.4.0"
+"@types/jest@npm:27.4.1":
+  version: 27.4.1
+  resolution: "@types/jest@npm:27.4.1"
   dependencies:
-    jest-diff: ^27.0.0
+    jest-matcher-utils: ^27.0.0
     pretty-format: ^27.0.0
-  checksum: d2350267f954f9a2e4a15e5f02fbf19a77abfb9fd9e57a954de1fb0e9a0d3d5f8d3646ac7d9c42aeb4b4d828d2e70624ec149c85bb50a48634a54eed8429e1f8
+  checksum: 5184f3eef4832d01ee8f59bed15eec45ccc8e29c724a5e6ce37bf74396b37bdf04f557000f45ba4fc38ae6075cf9cfcce3d7a75abc981023c61ceb27230a93e4
   languageName: node
   linkType: hard
 
@@ -5582,13 +5582,6 @@ __metadata:
     readable-stream: 1.1.x
     streamsearch: 0.1.2
   checksum: a6f0ce9ac5099c7ffeaec7398d711eea1dd803eb99036d0f05342e9ed46a4235a5ed0ea01ad5d6c785fdb0aae6d61d2722e6e64f9fabdfe39885f7f52eb635ee
-  languageName: node
-  linkType: hard
-
-"diff-sequences@npm:^27.0.6":
-  version: 27.0.6
-  resolution: "diff-sequences@npm:27.0.6"
-  checksum: f35ad024d426cd1026d6c98a1f604c41966a0e89712b05a38812fc11e645ff0e915ec17bc8f4b6910fed6df0b309b255aa6c7c77728be452c6dbbfa30aa2067b
   languageName: node
   linkType: hard
 
@@ -8137,18 +8130,6 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"jest-diff@npm:^27.0.0":
-  version: 27.1.0
-  resolution: "jest-diff@npm:27.1.0"
-  dependencies:
-    chalk: ^4.0.0
-    diff-sequences: ^27.0.6
-    jest-get-type: ^27.0.6
-    pretty-format: ^27.1.0
-  checksum: 8475d6daf0e0ab166a647debd9c6c622e2a79fb0c4c98b1158b87bedf3b118ffbf56004020335dad4f45686667f621f6c102f79d1a3b6a20379c01699b8b3adc
-  languageName: node
-  linkType: hard
-
 "jest-diff@npm:^27.5.1":
   version: 27.5.1
   resolution: "jest-diff@npm:27.5.1"
@@ -8209,13 +8190,6 @@ fsevents@^1.2.7:
     jest-mock: ^27.5.1
     jest-util: ^27.5.1
   checksum: 0f988330c4f3eec092e3fb37ea753b0c6f702e83cd8f4d770af9c2bf964a70bc45fbd34ec6fdb6d71ce98a778d9f54afd673e63f222e4667fff289e8069dba39
-  languageName: node
-  linkType: hard
-
-"jest-get-type@npm:^27.0.6":
-  version: 27.0.6
-  resolution: "jest-get-type@npm:27.0.6"
-  checksum: 2d4c1381bb5ddb212d80ad00497c7cbb3312358e10b62ac19f1fe5a28ae4af709202bfc235b77ec508970b83fd89945937652d636bcaf88614fa00028a6f3138
   languageName: node
   linkType: hard
 
@@ -8285,7 +8259,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"jest-matcher-utils@npm:^27.5.1":
+"jest-matcher-utils@npm:^27.0.0, jest-matcher-utils@npm:^27.5.1":
   version: 27.5.1
   resolution: "jest-matcher-utils@npm:27.5.1"
   dependencies:
@@ -8562,7 +8536,7 @@ fsevents@^1.2.7:
   resolution: "jill-e2e@workspace:e2e"
   dependencies:
     "@jujulego/jill": 1.2.0
-    "@types/jest": 27.4.0
+    "@types/jest": 27.4.1
     "@types/node": 14.18.12
     "@typescript-eslint/eslint-plugin": 5.12.1
     "@typescript-eslint/parser": 5.12.1
@@ -10329,7 +10303,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"pretty-format@npm:^27.0.0, pretty-format@npm:^27.1.0":
+"pretty-format@npm:^27.0.0":
   version: 27.1.0
   resolution: "pretty-format@npm:27.1.0"
   dependencies:
