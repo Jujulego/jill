@@ -137,24 +137,24 @@ export class MyrClient {
     });
   }
 
-  async spawn(cwd: string, cmd: string, args: string[] = []): Promise<IWatchTask> {
+  async spawn(cwd: string, cmd: string, args: string[] = [], opts?: Omit<ISpawnTaskArgs, 'cwd' | 'cmd' | 'args'>): Promise<Omit<IWatchTask, 'watchOn'>> {
     return await this._autoStart(async () => {
-      const { spawn } = await this._qclient.request<{ spawn: IWatchTask }, ISpawnTaskArgs>(gql`
-          mutation Spawn($cwd: String!, $cmd: String!, $args: [String!]!) {
-              spawn(cwd: $cwd, cmd: $cmd, args: $args) {
+      const { spawn } = await this._qclient.request<{ spawn: Omit<IWatchTask, 'watchOn'> }, ISpawnTaskArgs>(gql`
+          mutation Spawn($cwd: String!, $cmd: String!, $args: [String!]!, $mode: SpawnTaskMode, $watchOn: [ID!]) {
+              spawn(cwd: $cwd, cmd: $cmd, args: $args, mode: $mode, watchOn: $watchOn) {
                   ...WatchTask
               }
           }
 
           ${WatchTaskFragment}
-      `, { cwd, cmd, args });
+      `, { cwd, cmd, args, ...opts });
 
       return spawn;
     });
   }
 
-  async spawnScript(wks: Workspace, script: string, args: string[] = []): Promise<IWatchTask> {
-    return await this.spawn(wks.cwd, await wks.project.packageManager(), [script, ...args]);
+  async spawnScript(wks: Workspace, script: string, args: string[] = [], opts?: Omit<ISpawnTaskArgs, 'cwd' | 'cmd' | 'args'>): Promise<Omit<IWatchTask, 'watchOn'>> {
+    return await this.spawn(wks.cwd, await wks.project.packageManager(), [script, ...args], opts);
   }
 
   async logs(): Promise<any[]> {

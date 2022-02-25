@@ -31,5 +31,6 @@ export const WatchTaskFragment = gql`
         cmd
         args
         status
+        mode
     }
 `;

@@ -18,7 +18,7 @@ export class WatchManager {
     // Start watch deps
     for (const tsk of task.watchOn) {
       if (tsk.status === 'ready') {
-        if (tsk.mode === 'auto') {
+        if (tsk.mode === SpawnTaskMode.AUTO) {
           this._spawnTree(tsk);
           this._logger.verbose(`Watch dependency ${tsk.id} of (${task.id}) spawned`);
         } else {
