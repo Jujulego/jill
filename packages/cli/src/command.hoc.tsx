@@ -1,5 +1,6 @@
-import { FC } from 'react';
+import { FC, useContext } from 'react';
 import yargs from 'yargs';
+import { ArgsContext } from './application';
 
 // Types
 export type Arguments<A> = yargs.Arguments<A> & { '--': readonly (string | number)[] };
@@ -18,7 +19,9 @@ export type CommandComponent<A, P = Record<string, unknown>> = FC<P> & {
 // HOC
 export function command<A, P = Record<string, unknown>>(command: CommandMetadata<A>, Component: FC<P & Arguments<A>>): CommandComponent<A, P> {
   const Wrapper: FC<P> = (props) => {
-    return <Component {...props as any} />;
+    const args = useContext(ArgsContext) as Arguments<A>;
+
+    return <Component {...props} {...args} />;
   };
 
   Wrapper.displayName = `command(${Component.name || Component.displayName})`;

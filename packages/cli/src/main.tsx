@@ -19,8 +19,12 @@ import { render } from 'ink';
 import { Application } from './application';
 import { TestCommand } from './commands/test.command';
 
-render(
-  <Application name="jill">
-    <TestCommand />
-  </Application>
-);
+(async () => {
+  const { waitUntilExit } = render(
+    <Application name="jill">
+      <TestCommand />
+    </Application>
+  );
+
+  await waitUntilExit();
+})();
