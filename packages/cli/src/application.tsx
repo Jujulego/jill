@@ -1,43 +1,74 @@
-import { Children, FC, isValidElement, ReactElement, useEffect, useState } from 'react';
+import { logger } from '@jujulego/jill-core';
 import Spinner from 'ink-spinner';
 import { Text } from 'ink';
+import { Children, FC, isValidElement, ReactElement, useEffect, useRef, useState } from 'react';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
-import { CommandComponent } from './command.hoc';
-import { ApplicationContext, ApplicationContextState, applicationDefaultState, Args } from './application.context';
+import {
+  ApplicationContext,
+  ApplicationContextState,
+  applicationDefaultState,
+  Args,
+  CommandComponent
+} from './application.context';
 
 // Types
 export interface ApplicationProps {
   name: string;
 }
 
-// Constants
-const parser = yargs(hideBin(process.argv))
-  .parserConfiguration({
-    'populate--': true,
-  });
-
-const commands = new Map<string, ReactElement>();
+export interface GlobalArgs {
+  plugins: string[];
+  verbose: number;
+}
 
 // Component
 export const Application: FC<ApplicationProps> = ({ name, children }) => {
   // State
   const [state, setState] = useState<ApplicationContextState>(applicationDefaultState);
 
-  // Effects
-  useEffect(() => {
-    // Config yargs
-    parser.scriptName(name);
+  // Refs
+  const commands = useRef(new Map<string, ReactElement>());
 
-    // Define commands
-    Children.map(children, (child) => {
+  // Effects
+  useEffect(() => void (async () => {
+    // Config yargs
+    const parser = yargs(hideBin(process.argv))
+      .parserConfiguration({
+        'populate--': true,
+      })
+      .scriptName(name)
+      .pkgConf(name)
+      .option('plugins', {
+        type: 'array',
+        default: [] as string[],
+        description: 'Plugins to load',
+      })
+      .option('verbose', {
+        alias: 'v',
+        type: 'count',
+        description: 'Set verbosity level (1 for verbose, 2 for debug)',
+      });
+
+    // Parse global options
+    const { verbose, plugins } = await parser.help(false).parse();
+
+    // Setup logger verbosity
+    if (verbose === 1) {
+      logger.level = 'verbose';
+    } else if (verbose >= 2) {
+      logger.level = 'debug';
+    }
+
+    // Define core commands
+    Children.forEach(children, (child) => {
       if (!isValidElement(child)) {
         return;
       }
 
       const { command } = child.type as CommandComponent<unknown, unknown>;
-      commands.set(command.id, child);
+      commands.current.set(command.id, child);
       parser.command(
         command.name,
         command.description,
@@ -56,7 +87,7 @@ export const Application: FC<ApplicationProps> = ({ name, children }) => {
     parser.strictCommands()
       .help()
       .parse();
-  }, [name, children]);
+  })(), [name, children]);
 
   // Render
   if (!state.command) {
@@ -70,7 +101,7 @@ export const Application: FC<ApplicationProps> = ({ name, children }) => {
 
   return (
     <ApplicationContext.Provider value={state}>
-      { commands.get(state.command.id) }
+      { commands.current.get(state.command.id) }
     </ApplicationContext.Provider>
   );
 };

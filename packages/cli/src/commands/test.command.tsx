@@ -1,6 +1,6 @@
 import { Text } from 'ink';
 
-import { command } from '../command.hoc';
+import { command } from '../command';
 
 // Command
 const { wrapper, useArgs } = command({

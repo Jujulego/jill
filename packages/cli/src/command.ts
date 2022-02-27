@@ -1,23 +1,20 @@
 import { FC } from 'react';
 
-import { Args, Command, useArgs } from './application.context';
+import { GlobalArgs } from './application';
+import { Args, Command, CommandComponent, useArgs } from './application.context';
 
 // Types
 export type CommandMetadata<A> = Omit<Command<A>, 'id'>
 
-export type CommandComponent<A, P> = FC<P> & {
-  command: Command<A>;
-}
-
 export interface CommandUtils<A> {
-  useArgs: () => Args<A>;
+  useArgs: () => Args<A & GlobalArgs>;
   wrapper: <P>(Component: FC<P>) => CommandComponent<A, P>;
 }
 
 // Generate HOC & Hook for command components
 export function command<A>(command: CommandMetadata<A>): CommandUtils<A> {
   return {
-    useArgs: () => useArgs<A>(),
+    useArgs: () => useArgs<A & GlobalArgs>(),
     wrapper: <P>(Component: FC<P>): CommandComponent<A, P> => {
       Component.displayName = `command(${Component.displayName || Component.name})`;
 

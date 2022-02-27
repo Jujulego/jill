@@ -1,4 +1,4 @@
-import { createContext, useContext } from 'react';
+import { createContext, FC, useContext } from 'react';
 import yargs from 'yargs';
 
 // Test
@@ -10,6 +10,10 @@ export interface Command<A> {
   name: string | readonly [string, ...string[]];
   description: string;
   builder: Builder<A>;
+}
+
+export type CommandComponent<A, P> = FC<P> & {
+  command: Command<A>;
 }
 
 export interface ApplicationContextState {
