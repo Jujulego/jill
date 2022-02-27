@@ -1,6 +1,9 @@
 import { Children, FC, isValidElement, ReactElement, useEffect, useState } from 'react';
+import Spinner from 'ink-spinner';
+import { Text } from 'ink';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
+
 import { CommandComponent } from './command.hoc';
 import { ApplicationContext, ApplicationContextState, applicationDefaultState, Args } from './application.context';
 
@@ -57,7 +60,12 @@ export const Application: FC<ApplicationProps> = ({ name, children }) => {
 
   // Render
   if (!state.command) {
-    return null;
+    return (
+      <Text>
+        <Spinner />
+        {' '} Loading { name } ...
+      </Text>
+    );
   }
 
   return (
