@@ -1,7 +1,8 @@
-import { Children, createContext, FC, isValidElement, ReactElement, useEffect, useState } from 'react';
+import { Children, FC, isValidElement, ReactElement, useEffect, useState } from 'react';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 import { CommandComponent } from './command.hoc';
+import { ApplicationContext, ApplicationContextState, applicationDefaultState, Args } from './application.context';
 
 // Types
 export interface ApplicationProps {
@@ -16,17 +17,14 @@ const parser = yargs(hideBin(process.argv))
 
 const commands = new Map<string, ReactElement>();
 
-// Context
-export const ArgsContext = createContext<Record<string, unknown>>({});
-
 // Component
 export const Application: FC<ApplicationProps> = ({ name, children }) => {
   // State
-  const [args, setArgs] = useState<Record<string, unknown>>({});
-  const [command, setCommand] = useState<string>();
+  const [state, setState] = useState<ApplicationContextState>(applicationDefaultState);
 
   // Effects
   useEffect(() => {
+    // Config yargs
     parser.scriptName(name);
 
     // Define commands
@@ -35,15 +33,18 @@ export const Application: FC<ApplicationProps> = ({ name, children }) => {
         return;
       }
 
-      const { command } = child.type as CommandComponent<unknown>;
+      const { command } = child.type as CommandComponent<unknown, unknown>;
       commands.set(command.id, child);
       parser.command(
         command.name,
         command.description,
-        (y) => command.define(y),
-        (a) => {
-          setArgs(a);
-          setCommand(command.id);
+        (y) => command.builder(y),
+        (args) => {
+          setState((old) => ({
+            ...old,
+            args: args as Args<unknown>,
+            command
+          }));
         }
       );
     });
@@ -55,13 +56,13 @@ export const Application: FC<ApplicationProps> = ({ name, children }) => {
   }, [name, children]);
 
   // Render
-  if (!command) {
+  if (!state.command) {
     return null;
   }
 
   return (
-    <ArgsContext.Provider value={args}>
-      { commands.get(command) }
-    </ArgsContext.Provider>
+    <ApplicationContext.Provider value={state}>
+      { commands.get(state.command.id) }
+    </ApplicationContext.Provider>
   );
 };

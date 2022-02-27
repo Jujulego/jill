@@ -3,15 +3,20 @@ import { Text } from 'ink';
 import { command } from '../command.hoc';
 
 // Command
-export const TestCommand = command({
+const { wrapper, useArgs } = command({
   name: 'test',
   description: 'Just a test !',
-  define: (yargs) => yargs
+  builder: (yargs) => yargs
     .option('success', {
       type: 'boolean',
       default: true,
     })
-}, function TestCommand({ success }) {
+});
+
+// Component
+export const TestCommand = wrapper(function TestCommand() {
+  const { success } = useArgs();
+
   return (
     <Text color={success ? 'green' : 'red'}>Test { success ? 'successful' : 'failed' }</Text>
   );
