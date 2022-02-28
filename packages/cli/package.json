@@ -43,6 +43,7 @@
     "graphql-ws": "^5.5.5",
     "ink": "^3.2.0",
     "ink-spinner": "^4.0.3",
+    "log-symbols": "^4.1.0",
     "ora": "^5.4.1",
     "react": "^17.0.2",
     "slugify": "^1.6.0",

@@ -3,7 +3,7 @@ import { Text } from 'ink';
 import Spinner from 'ink-spinner';
 import { createContext, useContext, useEffect, useState } from 'react';
 
-import { commandWrapper } from './wrapper';
+import { commandWrapper } from '../wrapper';
 
 // Context
 const ProjectContext = createContext<Project | null>(null);
