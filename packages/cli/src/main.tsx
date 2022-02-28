@@ -18,12 +18,12 @@
 import { render } from 'ink';
 
 import { Application } from './application';
-import { InfoCommand } from './commands/test.command';
+import { TreeCommand } from './commands/tree.command';
 
 (async () => {
   const { waitUntilExit } = render(
     <Application name="jill">
-      <InfoCommand />
+      <TreeCommand />
     </Application>
   );
 
