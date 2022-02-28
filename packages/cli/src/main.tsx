@@ -19,10 +19,13 @@ import { render } from 'ink';
 
 import { Application } from './application';
 import { TreeCommand } from './commands/tree.command';
+import { StaticLogs } from './components/StaticLogs';
 
+// Bootstrap
 (async () => {
   const { waitUntilExit } = render(
     <Application name="jill">
+      <StaticLogs />
       <TreeCommand />
     </Application>
   );
