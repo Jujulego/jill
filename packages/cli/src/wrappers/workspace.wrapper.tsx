@@ -39,7 +39,7 @@ export const withWorkspace = commandWrapper(
 
     // Effects
     useEffect(() => void (async () => {
-      await new Promise(resolve => setTimeout(resolve, 3000));
+      await new Promise(resolve => setTimeout(resolve, 1000));
       setWks(await (workspace ? project.workspace(workspace) : project.currentWorkspace()));
     })(), [workspace]);
 

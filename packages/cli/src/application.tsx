@@ -28,6 +28,8 @@ export const Application: FC<ApplicationProps> = ({ name, children }) => {
 
   // Effects
   useEffect(() => void (async () => {
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
     // Config yargs
     const parser = yargs(hideBin(process.argv))
       .parserConfiguration({
@@ -88,8 +90,7 @@ export const Application: FC<ApplicationProps> = ({ name, children }) => {
   if (!state.command) {
     return (
       <Text>
-        <Spinner />
-        {' '} Loading { name } ...
+        <Spinner /> Loading { name } ...
       </Text>
     );
   }

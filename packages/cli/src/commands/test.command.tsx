@@ -1,27 +1,36 @@
-import { Text } from 'ink';
+import { Box, Text } from 'ink';
 
 import { command } from '../command';
-import { useProject, withProject } from '../wrappers/project.wrapper';
+import { withProject } from '../wrappers/project.wrapper';
 import { useWorkspace, withWorkspace } from '../wrappers/workspace.wrapper';
+import path from 'path';
 
 // Command
-const { wrapper, useArgs } = withProject(withWorkspace(command({
-  name: 'test',
-  description: 'Just a test !',
+const { wrapper } = withProject(withWorkspace(command({
+  name: 'info',
+  description: 'Print workspace data',
   builder: (yargs) => yargs
-    .option('success', {
-      type: 'boolean',
-      default: true,
-    })
 })));
 
 // Component
-export const TestCommand = wrapper(function TestCommand() {
-  const { success } = useArgs();
-  const project = useProject();
-  const workspace = useWorkspace();
+export const InfoCommand = wrapper(function InfoCommand() {
+  const wks = useWorkspace();
+  const mnf = wks.manifest;
 
+  // Render
   return (
-    <Text color={success ? 'green' : 'red'}>Test { success ? 'successful' : 'failed' } in { workspace.name } of { project.root }</Text>
+    <>
+      <Text>Workspace <Text bold>{ wks.name }</Text>:</Text>
+      <Box>
+        <Box flexDirection="column" marginRight={1}>
+          <Text bold>Version:</Text>
+          <Text bold>Directory:</Text>
+        </Box>
+        <Box flexDirection="column">
+          <Text color={mnf.version ? '' : 'grey'}>{ mnf.version || 'unset' }</Text>
+          <Text>{ path.relative(process.cwd(), wks.cwd) || '.' }</Text>
+        </Box>
+      </Box>
+    </>
   );
 });

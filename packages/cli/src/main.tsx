@@ -16,13 +16,14 @@
 // })();
 
 import { render } from 'ink';
+
 import { Application } from './application';
-import { TestCommand } from './commands/test.command';
+import { InfoCommand } from './commands/test.command';
 
 (async () => {
   const { waitUntilExit } = render(
     <Application name="jill">
-      <TestCommand />
+      <InfoCommand />
     </Application>
   );
 
