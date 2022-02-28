@@ -1,7 +1,7 @@
 import { logger } from '@jujulego/jill-core';
 import Spinner from 'ink-spinner';
 import { Text } from 'ink';
-import { Children, FC, isValidElement, ReactElement, useEffect, useRef, useState } from 'react';
+import { Children, FC, ReactElement, useEffect, useRef, useState } from 'react';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
@@ -10,7 +10,7 @@ import {
   ApplicationContextState,
   applicationDefaultState,
   Args,
-  CommandComponent, GlobalArgs
+  GlobalArgs, isCommandElement
 } from './application.context';
 
 // Types
@@ -28,8 +28,6 @@ export const Application: FC<ApplicationProps> = ({ name, children }) => {
 
   // Effects
   useEffect(() => void (async () => {
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
     // Config yargs
     const parser = yargs(hideBin(process.argv))
       .parserConfiguration({
@@ -60,11 +58,11 @@ export const Application: FC<ApplicationProps> = ({ name, children }) => {
 
     // Define core commands
     Children.forEach(children, (child) => {
-      if (!isValidElement(child)) {
+      if (!isCommandElement(child)) {
         return;
       }
 
-      const { command } = child.type as CommandComponent<unknown, unknown>;
+      const { command } = child.type;
       commands.current.set(command.id, child);
       parser.command(
         command.name,
@@ -88,15 +86,12 @@ export const Application: FC<ApplicationProps> = ({ name, children }) => {
 
   // Render
   if (!state.command) {
-    return (
-      <Text>
-        <Spinner /> Loading { name } ...
-      </Text>
-    );
+    return <Text><Spinner /> Loading { name } ...</Text>;
   }
 
   return (
     <ApplicationContext.Provider value={state}>
+      { Children.map(children, child => isCommandElement(child) ? null : child) }
       { commands.current.get(state.command.id) }
     </ApplicationContext.Provider>
   );

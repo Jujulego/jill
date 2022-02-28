@@ -1,4 +1,4 @@
-import { createContext, FC, useContext } from 'react';
+import { createContext, FC, isValidElement, ReactElement, useContext } from 'react';
 import yargs from 'yargs';
 
 // Test
@@ -28,6 +28,11 @@ export type CommandComponent<A, P> = FC<P> & {
 }
 
 export type UseArgsHook<A> = () => Args<A & GlobalArgs>;
+
+// Utils
+export function isCommandElement(el: any): el is ReactElement<unknown, CommandComponent<unknown, unknown>> {
+  return isValidElement(el) && (typeof el.type !== 'string') && ('command' in el.type);
+}
 
 // Context
 export const applicationDefaultState: ApplicationContextState = {

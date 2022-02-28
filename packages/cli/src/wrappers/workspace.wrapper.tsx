@@ -39,25 +39,16 @@ export const withWorkspace = commandWrapper(
 
     // Effects
     useEffect(() => void (async () => {
-      await new Promise(resolve => setTimeout(resolve, 1000));
       setWks(await (workspace ? project.workspace(workspace) : project.currentWorkspace()));
     })(), [workspace]);
 
     // Render
     if (wks === undefined) {
-      return (
-        <Text>
-          <Spinner /> Loading "{workspace || '.'}" workspace
-        </Text>
-      );
+      return <Text><Spinner /> Loading "{workspace || '.'}" workspace</Text>;
     }
 
     if (wks === null) {
-      return (
-        <Text color="red">
-          {logSymbols.error} Workspace "{workspace || '.'}" not found
-        </Text>
-      );
+      return <Text color="red">{logSymbols.error} Workspace "{workspace || '.'}" not found</Text>;
     }
 
     return (

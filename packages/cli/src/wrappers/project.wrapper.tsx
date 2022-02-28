@@ -42,7 +42,6 @@ export const withProject = commandWrapper(
 
     // Effects
     useEffect(() => void (async () => {
-      await new Promise(resolve => setTimeout(resolve, 1000));
       const dir = args.project ?? await Project.searchProjectRoot(process.cwd());
 
       setProject(await new Project(dir, {
@@ -52,11 +51,7 @@ export const withProject = commandWrapper(
 
     // Render
     if (!project) {
-      return (
-        <Text>
-          <Spinner /> Loading project ...
-        </Text>
-      );
+      return <Text><Spinner /> Loading project ...</Text>;
     }
 
     return (
