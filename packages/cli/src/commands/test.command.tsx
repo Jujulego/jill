@@ -1,7 +1,7 @@
 import { Text } from 'ink';
 
 import { command } from '../command';
-import { useProject, withProject } from '../wrapper';
+import { useProject, withProject } from '../project.wrapper';
 
 // Command
 const { wrapper, useArgs } = withProject(command({

@@ -10,17 +10,12 @@ import {
   ApplicationContextState,
   applicationDefaultState,
   Args,
-  CommandComponent
+  CommandComponent, GlobalArgs
 } from './application.context';
 
 // Types
 export interface ApplicationProps {
   name: string;
-}
-
-export interface GlobalArgs {
-  plugins: string[];
-  verbose: number;
 }
 
 // Component
@@ -76,7 +71,7 @@ export const Application: FC<ApplicationProps> = ({ name, children }) => {
         (args) => {
           setState((old) => ({
             ...old,
-            args: args as Args<unknown>,
+            args: args as Args<GlobalArgs>,
             command
           }));
         }
