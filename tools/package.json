@@ -4,7 +4,7 @@
   "peerDependencies": {
     "@babel/core": "7.17.5",
     "gulp": "4.0.2",
-    "typescript": "4.5.5"
+    "typescript": "4.6.2"
   },
   "dependencies": {
     "@jujulego/flow": "1.0.0",
