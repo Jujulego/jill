@@ -16,18 +16,23 @@
 // })();
 
 import { render } from 'ink';
+import { StrictMode } from 'react';
 
 import { Application } from './application';
+import { ListCommand } from './commands/list.command';
 import { TreeCommand } from './commands/tree.command';
 import { StaticLogs } from './components/StaticLogs';
 
 // Bootstrap
 (async () => {
   const { waitUntilExit } = render(
-    <Application name="jill">
+    <StrictMode>
       <StaticLogs />
-      <TreeCommand />
-    </Application>
+      <Application name="jill">
+        <ListCommand />
+        <TreeCommand />
+      </Application>
+    </StrictMode>
   );
 
   await waitUntilExit();

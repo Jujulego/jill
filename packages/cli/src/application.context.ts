@@ -23,7 +23,7 @@ export interface ApplicationContextState {
   command?: Command<unknown>;
 }
 
-export type CommandComponent<A, P> = FC<P> & {
+export interface CommandComponent<A, P> extends FC<P> {
   command: Command<A>;
 }
 

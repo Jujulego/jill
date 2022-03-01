@@ -4,10 +4,20 @@ import { format } from 'winston';
 import Transport from 'winston-transport';
 import { Static, Text } from 'ink';
 
+// Types
+interface Log {
+  id: number;
+  label?: string;
+  message: string;
+}
+
+// Utils
+let ID = 0;
+
 // Components
 export const StaticLogs: FC = () => {
   // State
-  const [logs, setLogs] = useState<any[]>([]);
+  const [logs, setLogs] = useState<Log[]>([]);
 
   // Effects
   useEffect(() => {
@@ -23,8 +33,8 @@ export const StaticLogs: FC = () => {
       }
 
       // Methods
-      log(log: any, next: () => void): void {
-        setLogs((old) => [...old, log]);
+      log(log: Log, next: () => void): void {
+        setLogs((old) => [...old, Object.assign(log, { id: ++ID })]);
         next();
       }
     });
@@ -33,10 +43,9 @@ export const StaticLogs: FC = () => {
   // Render
   return (
     <Static items={logs}>
-      { ({ label, message }, idx) => (
-        <Text key={idx}>
-          <Text color="grey">jill: { label && `[${label}] ` }</Text>
-          { message }
+      { ({ id, label, message }) => (
+        <Text key={id}>
+          <Text color="grey">jill: { label && `[${label}] ` }</Text>{ message }
         </Text>
       ) }
     </Static>

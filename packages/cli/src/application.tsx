@@ -1,6 +1,4 @@
 import { logger } from '@jujulego/jill-core';
-import Spinner from 'ink-spinner';
-import { Text } from 'ink';
 import { Children, FC, ReactElement, useEffect, useRef, useState } from 'react';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
@@ -86,13 +84,18 @@ export const Application: FC<ApplicationProps> = ({ name, children }) => {
 
   // Render
   if (!state.command) {
-    return <Text><Spinner /> Loading { name } ...</Text>;
+    return null;
   }
 
   return (
     <ApplicationContext.Provider value={state}>
-      { Children.map(children, child => isCommandElement(child) ? null : child) }
-      { commands.current.get(state.command.id) }
+      { Children.map(children, (child) => {
+        if (isCommandElement(child)) {
+          return child.type.command.id === state.command?.id ? child : null;
+        }
+
+        return child;
+      }) }
     </ApplicationContext.Provider>
   );
 };
