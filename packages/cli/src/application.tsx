@@ -1,5 +1,5 @@
 import { logger } from '@jujulego/jill-core';
-import { Children, FC, ReactElement, useEffect, useRef, useState } from 'react';
+import { FC, useEffect, useMemo, useState } from 'react';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
@@ -7,22 +7,25 @@ import {
   ApplicationContext,
   ApplicationContextState,
   applicationDefaultState,
-  Args,
-  GlobalArgs, isCommandElement
+  Args, CommandComponent,
+  GlobalArgs
 } from './application.context';
 
 // Types
 export interface ApplicationProps {
   name: string;
+  commands: CommandComponent<unknown>[]
 }
 
 // Component
-export const Application: FC<ApplicationProps> = ({ name, children }) => {
+export const Application: FC<ApplicationProps> = ({ name, commands }) => {
   // State
   const [state, setState] = useState<ApplicationContextState>(applicationDefaultState);
 
-  // Refs
-  const commands = useRef(new Map<string, ReactElement>());
+  // Memo
+  const Command = useMemo(() => {
+    return commands.find((cmd) => cmd.command.id === state.command?.id);
+  }, [commands, state.command?.id]);
 
   // Effects
   useEffect(() => void (async () => {
@@ -55,13 +58,7 @@ export const Application: FC<ApplicationProps> = ({ name, children }) => {
     }
 
     // Define core commands
-    Children.forEach(children, (child) => {
-      if (!isCommandElement(child)) {
-        return;
-      }
-
-      const { command } = child.type;
-      commands.current.set(command.id, child);
+    for (const { command } of commands) {
       parser.command(
         command.name,
         command.description,
@@ -74,28 +71,22 @@ export const Application: FC<ApplicationProps> = ({ name, children }) => {
           }));
         }
       );
-    });
+    }
 
     // Parse to run command
     parser.strictCommands()
       .help()
       .parse();
-  })(), [name, children]);
+  })(), [name, commands]);
 
   // Render
-  if (!state.command) {
+  if (!Command) {
     return null;
   }
 
   return (
     <ApplicationContext.Provider value={state}>
-      { Children.map(children, (child) => {
-        if (isCommandElement(child)) {
-          return child.type.command.id === state.command?.id ? child : null;
-        }
-
-        return child;
-      }) }
+      <Command />
     </ApplicationContext.Provider>
   );
 };

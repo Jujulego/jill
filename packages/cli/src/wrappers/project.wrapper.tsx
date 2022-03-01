@@ -34,7 +34,7 @@ export const withProject = commandWrapper(
       type: 'string',
       description: 'Force package manager'
     }),
-  (props, useArgs, Wrapped) => {
+  (useArgs, Wrapped) => {
     const args = useArgs();
 
     // State
@@ -56,7 +56,7 @@ export const withProject = commandWrapper(
 
     return (
       <ProjectContext.Provider value={project}>
-        <Wrapped {...props} />
+        <Wrapped />
       </ProjectContext.Provider>
     );
   }

@@ -30,7 +30,7 @@ export const withWorkspace = commandWrapper(
       type: 'string',
       desc: 'Workspace to use'
     }),
-  (props, useArgs, Wrapped) => {
+  (useArgs, Wrapped) => {
     const { workspace } = useArgs();
     const project = useProject();
 
@@ -53,7 +53,7 @@ export const withWorkspace = commandWrapper(
 
     return (
       <WorkspaceContext.Provider value={wks}>
-        <Wrapped {...props} />
+        <Wrapped />
       </WorkspaceContext.Provider>
     );
   }

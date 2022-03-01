@@ -28,10 +28,10 @@ import { StaticLogs } from './components/StaticLogs';
   const { waitUntilExit } = render(
     <StrictMode>
       <StaticLogs />
-      <Application name="jill">
-        <ListCommand />
-        <TreeCommand />
-      </Application>
+      <Application name="jill" commands={[
+        ListCommand,
+        TreeCommand
+      ]} />
     </StrictMode>
   );
 

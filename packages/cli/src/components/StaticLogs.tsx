@@ -1,18 +1,14 @@
 import { logger } from '@jujulego/jill-core';
+import { Static, Text } from 'ink';
 import { FC, useEffect, useState } from 'react';
 import { format } from 'winston';
 import Transport from 'winston-transport';
-import { Static, Text } from 'ink';
 
 // Types
 interface Log {
-  id: number;
   label?: string;
   message: string;
 }
-
-// Utils
-let ID = 0;
 
 // Components
 export const StaticLogs: FC = () => {
@@ -34,7 +30,7 @@ export const StaticLogs: FC = () => {
 
       // Methods
       log(log: Log, next: () => void): void {
-        setLogs((old) => [...old, Object.assign(log, { id: ++ID })]);
+        setLogs((old) => [...old, log]);
         next();
       }
     });
@@ -42,11 +38,9 @@ export const StaticLogs: FC = () => {
 
   // Render
   return (
-    <Static items={logs}>
-      { ({ id, label, message }) => (
-        <Text key={id}>
-          <Text color="grey">jill: { label && `[${label}] ` }</Text>{ message }
-        </Text>
+    <Static items={logs} style={{ height: 1 }}>
+      { ({ label, message }, idx) => (
+        <Text key={idx}><Text color="grey">jill: { label && `[${label}] ` }</Text>{ message }</Text>
       ) }
     </Static>
   );
