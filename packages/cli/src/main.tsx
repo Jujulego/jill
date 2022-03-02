@@ -20,6 +20,7 @@ import { StrictMode } from 'react';
 
 import { Application } from './application';
 import { ListCommand } from './commands/list.command';
+import { RunCommand } from './commands/run.command';
 import { TreeCommand } from './commands/tree.command';
 import { StaticLogs } from './components/StaticLogs';
 
@@ -30,6 +31,7 @@ import { StaticLogs } from './components/StaticLogs';
       <StaticLogs />
       <Application name="jill" commands={[
         ListCommand,
+        RunCommand,
         TreeCommand
       ]} />
     </StrictMode>
