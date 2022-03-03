@@ -27,7 +27,7 @@ export const RunCommand = wrapper(function InfoCommand() {
   const { script, depsMode, '--': rest = [] } = useArgs();
   const wks = useWorkspace();
 
-  // Status
+  // Refs
   const tasks = useRef(new TaskSet());
 
   // Effects
