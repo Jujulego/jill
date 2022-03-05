@@ -1,5 +1,6 @@
 import { Arguments, Builder, WorkspaceArgs, WorkspaceCommand } from '@jujulego/jill-common';
 import { combine, Workspace } from '@jujulego/jill-core';
+import { format } from 'winston';
 
 import { MyrClient } from './myr-client';
 import { IWatchTask, SpawnTaskMode } from './common';
@@ -7,8 +8,14 @@ import { IWatchTask, SpawnTaskMode } from './common';
 // Types
 export interface WatchArgs extends WorkspaceArgs {
   script: string;
-  daemon: boolean;
+  follow: boolean;
 }
+
+// Utils
+const printLog = format.combine(
+  { transform: (info) => Object.assign(info, { [Symbol.for('level')]: info.level }) },
+  format.colorize({ all: true }),
+);
 
 // Command
 export class WatchCommand extends WorkspaceCommand<WatchArgs> {
@@ -43,11 +50,11 @@ export class WatchCommand extends WorkspaceCommand<WatchArgs> {
   protected define<U>(builder: Builder<U>): Builder<U & WatchArgs> {
     return super.define(y => builder(y)
       .positional('script', { type: 'string', demandOption: true })
-      .option('daemon', {
-        alias: 'd',
-        boolean: true,
+      .option('follow', {
+        alias: 'f',
+        type: 'boolean',
         default: false,
-        desc: 'Run watch script also in background'
+        description: 'Subscribe to task logs'
       })
     );
   }
@@ -55,27 +62,27 @@ export class WatchCommand extends WorkspaceCommand<WatchArgs> {
   protected async run(args: Arguments<WatchArgs>): Promise<number> {
     await super.run(args);
 
-    // Spawn watch
+    // Spawn watch deps
     this.spinner.start('Spawning dependencies watch tasks');
     const myr = new MyrClient(this.project);
     const [count, deps] = await this.spawnDepsTree(myr, this.workspace, new Set());
 
     // Spawn task
-    if (args.daemon) {
-      this.spinner.start(`Spawning ${args.script} task`);
-      const tsk = await myr.spawnScript(this.workspace, args.script, args['--']?.map(arg => arg.toString()), { watchOn: deps.map(t => t.id) });
-      this.logger.log('info', `Task ${tsk.id} spawned`, { label: this.workspace.name });
-      this.spinner.succeed(`${count + 1} watch tasks spawned`);
+    this.spinner.start(`Spawning ${args.script} task`);
+    const tsk = await myr.spawnScript(this.workspace, args.script, args['--']?.map(arg => arg.toString()), { watchOn: deps.map(t => t.id) });
+    this.logger.log('info', `Task ${tsk.id} spawned`, { label: this.workspace.name });
+    this.spinner.succeed(`${count + 1} watch tasks spawned`);
 
-      return 0;
-    } else {
-      this.spinner.succeed(`${count} watch tasks spawned`);
+    // Follow logs
+    if (args.follow) {
+      for await (const log of myr.logs$()) {
+        if (log.task !== tsk.id) continue;
 
-      const tsk = await this.workspace.run(args.script, args['--']?.map(arg => arg.toString()), { buildDeps: 'none' });
-      tsk.start();
-
-      await tsk.waitFor('done', 'failed');
-      return tsk.exitCode === 0 ? 0 : 1;
+        printLog.transform(log);
+        this.log(log[Symbol.for('message')]);
+      }
     }
+
+    return 0;
   }
 }
