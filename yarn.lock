@@ -2330,12 +2330,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jujulego/flow@npm:1.0.0":
-  version: 1.0.0
-  resolution: "@jujulego/flow@npm:1.0.0"
+"@jujulego/flow@npm:1.1.0":
+  version: 1.1.0
+  resolution: "@jujulego/flow@npm:1.1.0"
   dependencies:
     lodash.flatten: ^4.4.0
-  checksum: 08a88bc13fd94ec5c48f1e5568502051662535e2d8541db6cccc01a128a69ad2cd032aa5523b80dd9e1e276a06c210920daf47a0620300f8d26b79c96b91376f
+  checksum: ac28945513977a635cccbefd7c2db0091099cbbe1e52c8541f7752088c4344a81135c0526d66ac5cd329ed302bff6e98b152767330b2af8279a2ad75231aac20
   languageName: node
   linkType: hard
 
@@ -8553,7 +8553,7 @@ fsevents@^1.2.7:
   version: 0.0.0-use.local
   resolution: "jill-tools@workspace:tools"
   dependencies:
-    "@jujulego/flow": 1.0.0
+    "@jujulego/flow": 1.1.0
     "@types/gulp": 4.0.9
     "@types/gulp-babel": 6.1.30
     "@types/gulp-sourcemaps": 0.0.35
