@@ -154,7 +154,7 @@ export class MyrClient {
   }
 
   async spawnScript(wks: Workspace, script: string, args: string[] = [], opts?: Omit<ISpawnTaskArgs, 'cwd' | 'cmd' | 'args'>): Promise<Omit<IWatchTask, 'watchOn'>> {
-    return await this.spawn(wks.cwd, await wks.project.packageManager(), [script, ...args], opts);
+    return await this.spawn(wks.cwd, await wks.project.packageManager(), ['run', script, ...args], opts);
   }
 
   async logs(): Promise<any[]> {

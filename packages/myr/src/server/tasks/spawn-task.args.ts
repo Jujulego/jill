@@ -10,10 +10,10 @@ registerEnumType(SpawnTaskMode, {
   name: 'SpawnTaskMode',
   description: 'Task management mode',
   valuesMap: {
-    AUTO: {
+    auto: {
       description: 'Managed by myr'
     },
-    MANAGED: {
+    managed: {
       description: 'Managed by the client'
     }
   }
@@ -35,7 +35,7 @@ export class SpawnTaskArgs implements ISpawnTaskArgs {
   @Field(() => [String], { defaultValue: [] })
   args: string[];
 
-  @Field(() => SpawnTaskMode, { defaultValue: SpawnTaskMode.MANAGED })
+  @Field(() => SpawnTaskMode, { defaultValue: SpawnTaskMode.managed })
   mode: SpawnTaskMode;
 
   @Field(() => [ID], { defaultValue: [] })

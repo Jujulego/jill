@@ -10,19 +10,19 @@ registerEnumType(WatchTaskStatus, {
   name: 'WatchTaskStatus',
   description: 'Task status',
   valuesMap: {
-    BLOCKED: {
+    blocked: {
       description: 'Blocked by an other task'
     },
-    READY: {
+    ready: {
       description: 'Ready to run',
     },
-    RUNNING: {
+    running: {
       description: 'Running'
     },
-    DONE: {
+    done: {
       description: 'Task finished successfully'
     },
-    FAILED: {
+    failed: {
       description: 'Task failed to run (or killed)'
     }
   }
@@ -47,7 +47,8 @@ export class WatchTask extends SpawnTask implements IWatchTask {
   @Field(() => SpawnTaskMode)
   readonly mode: SpawnTaskMode;
 
-  private readonly _watchOn: WatchTask[] = [];
+  private readonly _watchOn = new Set<WatchTask>();
+  private readonly _watchedBy = new Set<WatchTask>();
 
   // Constructor
   constructor(cwd: string, cmd: string, args: readonly string[], mode: SpawnTaskMode, opts?: SpawnTaskOption) {
@@ -74,7 +75,12 @@ export class WatchTask extends SpawnTask implements IWatchTask {
   // Methods
   watch(task: WatchTask): void {
     if (['blocked', 'ready'].includes(this.status)) {
-      this._watchOn.push(task);
+      this._watchOn.add(task);
+
+      // Revert link
+      task._watchedBy.add(this);
+      this.once('failed', () => task._watchedBy.delete(this));
+      this.once('done', () => task._watchedBy.delete(this));
     } else {
       throw Error(`Cannot add a watch deps to a ${this.status} task`);
     }
@@ -88,6 +94,11 @@ export class WatchTask extends SpawnTask implements IWatchTask {
 
   @Field(() => [WatchTask], { description: 'Tasks watched by this task' })
   get watchOn(): readonly WatchTask[] {
-    return this._watchOn;
+    return Array.from(this._watchOn);
+  }
+
+  @Field(() => [WatchTask], { description: 'Tasks watched by this task' })
+  get watchBy(): readonly WatchTask[] {
+    return Array.from(this._watchedBy);
   }
 }

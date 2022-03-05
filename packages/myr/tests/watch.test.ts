@@ -59,7 +59,7 @@ beforeEach(() => {
     cmd: 'yarn',
     args: [script, ...args],
     status: WatchTaskStatus.RUNNING,
-    mode: SpawnTaskMode.MANAGED,
+    mode: SpawnTaskMode.managed,
     watchOn: [],
   }));
 });

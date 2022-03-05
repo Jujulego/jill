@@ -4,11 +4,11 @@ import { SpawnTaskMode } from './spawn-task.args';
 
 // Enum
 export enum WatchTaskStatus {
-  BLOCKED = 'blocked',
-  READY   = 'ready',
-  RUNNING = 'running',
-  DONE    = 'done',
-  FAILED  = 'failed',
+  blocked = 'blocked',
+  ready   = 'ready',
+  running = 'running',
+  done    = 'done',
+  failed  = 'failed',
 }
 
 // Model
@@ -21,6 +21,7 @@ export interface IWatchTask {
   status: WatchTaskStatus;
   mode: SpawnTaskMode;
   watchOn: readonly IWatchTask[];
+  watchBy: readonly IWatchTask[];
 }
 
 // Fragments

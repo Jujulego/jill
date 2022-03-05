@@ -1,10 +1,10 @@
 // Enum
 export enum SpawnTaskMode {
   /** Managed by myr */
-  AUTO    = 'AUTO',
+  auto    = 'auto',
 
   /** Managed by the client */
-  MANAGED = 'MANAGED',
+  managed = 'managed',
 }
 
 // Model

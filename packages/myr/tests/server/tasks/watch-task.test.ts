@@ -12,7 +12,7 @@ beforeEach(() => {
 // Tests suites
 describe('new WatchTask', () => {
   it('should generate id', () => {
-    const task = new WatchTask('/project', 'test', ['--arg'], SpawnTaskMode.MANAGED);
+    const task = new WatchTask('/project', 'test', ['--arg'], SpawnTaskMode.managed);
 
     expect(task.id).toBe(
       createHash('md5')
@@ -34,8 +34,8 @@ describe('new WatchTask', () => {
 
 describe('WatchTask.watch', () => {
   it('should add task to "watchOn" array', () => {
-    const deps = new WatchTask('/project', 'test', [], SpawnTaskMode.AUTO);
-    const task = new WatchTask('/project', 'test', [], SpawnTaskMode.MANAGED);
+    const deps = new WatchTask('/project', 'test', [], SpawnTaskMode.auto);
+    const task = new WatchTask('/project', 'test', [], SpawnTaskMode.managed);
 
     // Call
     task.watch(deps);

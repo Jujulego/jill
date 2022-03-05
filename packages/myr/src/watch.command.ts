@@ -14,6 +14,8 @@ export interface WatchArgs extends WorkspaceArgs {
 // Utils
 const printLog = format.combine(
   { transform: (info) => Object.assign(info, { [Symbol.for('level')]: info.level }) },
+  format.printf(({ message }) => message
+  ),
   format.colorize({ all: true }),
 );
 
@@ -37,7 +39,7 @@ export class WatchCommand extends WorkspaceCommand<WatchArgs> {
       count += c;
 
       // Spawn task
-      const tsk = await myr.spawnScript(ws, 'watch', [], { mode: SpawnTaskMode.AUTO, watchOn: deps.map(t => t.id) });
+      const tsk = await myr.spawnScript(ws, 'watch', [], { mode: SpawnTaskMode.auto, watchOn: deps.map(t => t.id) });
       this.logger.log('info', `Task ${tsk.id} spawned`, { label: ws.name });
       tasks.push(tsk);
 

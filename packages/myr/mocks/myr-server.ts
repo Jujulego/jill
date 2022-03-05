@@ -15,7 +15,7 @@ export const myrServer = setupServer(
             cmd: 'test',
             args: [],
             status: WatchTaskStatus.RUNNING,
-            mode: SpawnTaskMode.MANAGED,
+            mode: SpawnTaskMode.managed,
             watchOn: [],
           }
         ]
@@ -30,8 +30,8 @@ export const myrServer = setupServer(
           cwd: req.body?.variables.cwd,
           cmd: req.body?.variables.cmd,
           args: req.body?.variables.args,
-          status: req.body?.variables.mode === SpawnTaskMode.AUTO ? WatchTaskStatus.READY : WatchTaskStatus.RUNNING,
-          mode: req.body?.variables.mode ?? SpawnTaskMode.MANAGED,
+          status: req.body?.variables.mode === SpawnTaskMode.auto ? WatchTaskStatus.READY : WatchTaskStatus.RUNNING,
+          mode: req.body?.variables.mode ?? SpawnTaskMode.managed,
           watchOn: [],
         }
       })
@@ -46,7 +46,7 @@ export const myrServer = setupServer(
           cmd: 'test',
           args: [],
           status: WatchTaskStatus.FAILED,
-          mode: SpawnTaskMode.MANAGED,
+          mode: SpawnTaskMode.managed,
           watchOn: [],
         }
       })

@@ -18,7 +18,7 @@ export class WatchManager {
     // Start watch deps
     for (const tsk of task.watchOn) {
       if (tsk.status === 'ready') {
-        if (tsk.mode === SpawnTaskMode.AUTO) {
+        if (tsk.mode === SpawnTaskMode.auto) {
           this._spawnTree(tsk);
           this._logger.verbose(`Watch dependency ${tsk.id} of (${task.id}) spawned`);
         } else {
@@ -29,8 +29,22 @@ export class WatchManager {
       }
     }
 
+    // Event handlers
+    task.once('done', () => this._handleTaskComplete(task));
+    task.once('failed', () => this._handleTaskComplete(task));
+
     // Start task it self
     task.start();
+  }
+
+  private _handleTaskComplete(task: WatchTask): void {
+    // Stop running auto tasks without watchers
+    for (const tsk of task.watchOn) {
+      if (tsk.status === 'running' && tsk.mode === SpawnTaskMode.auto && tsk.watchBy.length === 0) {
+        this._logger.verbose(`Killing auto task ${task.id} (not watched anymore)`);
+        tsk.stop();
+      }
+    }
   }
 
   get(id: string): WatchTask | null {
@@ -60,7 +74,7 @@ export class WatchManager {
       this._tasks.set(id, task);
 
       // Start task if required
-      if (mode !== SpawnTaskMode.AUTO) {
+      if (mode !== SpawnTaskMode.auto) {
         this._spawnTree(task);
         this._logger.info(`Task ${id} spawned`);
       } else {
