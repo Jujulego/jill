@@ -21,6 +21,15 @@ export const myrServer = setupServer(
       })
     );
   }),
+  graphql.query<{ logs: any[] }>('Logs', (req, res, ctx) => {
+    return res(
+      ctx.data({
+        logs: [
+          { level: 'test', message: 'Mock is working' }
+        ]
+      })
+    );
+  }),
   graphql.mutation<{ spawn: FWatchTask }>('Spawn', (req, res, ctx) => {
     return res(
       ctx.data({

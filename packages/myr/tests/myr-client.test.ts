@@ -5,6 +5,7 @@ import { GraphQLClient } from 'graphql-request';
 import path from 'path';
 
 import { myrServer } from '../mocks/myr-server';
+import { SpawnTaskMode } from '../src/common';
 import { MyrClient } from '../src/myr-client';
 import './logger';
 
@@ -197,13 +198,13 @@ describe('MyrClient.spawn', () => {
 
   // Tests
   it('should return spawned task', async () => {
-    await expect(myr.spawn('/project', 'test', ['--arg'])).resolves.toEqual({
+    await expect(myr.spawn('/project', 'test', ['--arg'], { mode: SpawnTaskMode.auto })).resolves.toEqual({
       id: 'mock-spawn',
       cwd: '/project',
       cmd: 'test',
       args: ['--arg'],
-      status: 'running',
-      mode: 'managed'
+      status: 'ready',
+      mode: 'auto'
     });
 
     expect(myr._autoStart).toHaveBeenCalledTimes(1);
@@ -253,6 +254,33 @@ describe('MyrClient.spawnScript', () => {
     });
 
     expect(myr._autoStart).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('MyrClient.logs', () => {
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  // Tests
+  it('should return logs', async () => {
+    await expect(myr.logs()).resolves.toEqual([
+      { level: 'test', message: 'Mock is working' },
+    ]);
+  });
+
+  it('should return an empty array if failed to connect to the server', async () => {
+    jest.spyOn(GraphQLClient.prototype, 'request')
+      .mockRejectedValue({ code: 'ECONNREFUSED' });
+
+    await expect(myr.logs()).resolves.toEqual([]);
+  });
+
+  it('should throw received error', async () => {
+    jest.spyOn(GraphQLClient.prototype, 'request')
+      .mockRejectedValue(new Error('Failed !'));
+
+    await expect(myr.logs()).rejects.toEqual(new Error('Failed !'));
   });
 });
 
