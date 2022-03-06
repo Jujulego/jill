@@ -35,3 +35,5 @@ export const WatchTaskFragment = gql`
         mode
     }
 `;
+
+export type FWatchTask = Omit<IWatchTask, 'watchOn' | 'watchedBy'>;

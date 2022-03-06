@@ -3,14 +3,14 @@ import { TaskStatus } from '@jujulego/jill-core';
 import chalk from 'chalk';
 import path from 'path';
 
-import { IWatchTask } from '../common';
+import { FWatchTask } from '../common';
 import { MyrClient } from '../myr-client';
 
 // Types
 export type Attribute = 'identifier' | 'status' | 'mode' | 'cwd' | 'command' | 'cmd' | 'args';
 export type Data = Partial<Record<Attribute, string>>;
 
-type Extractor<T> = (tsk: IWatchTask) => T;
+type Extractor<T> = (tsk: FWatchTask) => T;
 
 export interface ListArgs extends ProjectArgs {
   all: boolean | undefined;

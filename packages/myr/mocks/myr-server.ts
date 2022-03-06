@@ -1,11 +1,11 @@
 import { setupServer } from 'msw/node';
 import { graphql } from 'msw';
 
-import { IWatchTask, SpawnTaskMode, WatchTaskStatus } from '../src/common';
+import { FWatchTask, SpawnTaskMode, WatchTaskStatus } from '../src/common';
 
 // Server setup
 export const myrServer = setupServer(
-  graphql.query<{ tasks: IWatchTask[] }>('Tasks', (req, res, ctx) => {
+  graphql.query<{ tasks: FWatchTask[] }>('Tasks', (req, res, ctx) => {
     return res(
       ctx.data({
         tasks: [
@@ -16,14 +16,12 @@ export const myrServer = setupServer(
             args: [],
             status: WatchTaskStatus.running,
             mode: SpawnTaskMode.managed,
-            watchOn: [],
-            watchedBy: [],
           }
         ]
       })
     );
   }),
-  graphql.mutation<{ spawn: IWatchTask }>('Spawn', (req, res, ctx) => {
+  graphql.mutation<{ spawn: FWatchTask }>('Spawn', (req, res, ctx) => {
     return res(
       ctx.data({
         spawn: {
@@ -33,13 +31,11 @@ export const myrServer = setupServer(
           args: req.body?.variables.args,
           status: req.body?.variables.mode === SpawnTaskMode.auto ? WatchTaskStatus.ready : WatchTaskStatus.running,
           mode: req.body?.variables.mode ?? SpawnTaskMode.managed,
-          watchOn: [],
-          watchedBy: [],
         }
       })
     );
   }),
-  graphql.mutation<{ kill: IWatchTask }>('Kill', (req, res, ctx) => {
+  graphql.mutation<{ kill: FWatchTask }>('Kill', (req, res, ctx) => {
     return res(
       ctx.data({
         kill: {
@@ -49,8 +45,6 @@ export const myrServer = setupServer(
           args: [],
           status: WatchTaskStatus.failed,
           mode: SpawnTaskMode.managed,
-          watchOn: [],
-          watchedBy: [],
         }
       })
     );

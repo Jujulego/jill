@@ -3,7 +3,7 @@ import { combine, Workspace } from '@jujulego/jill-core';
 import { format } from 'winston';
 
 import { MyrClient } from './myr-client';
-import { IWatchTask, SpawnTaskMode } from './common';
+import { FWatchTask, SpawnTaskMode } from './common';
 
 // Types
 export interface WatchArgs extends WorkspaceArgs {
@@ -25,8 +25,8 @@ export class WatchCommand extends WorkspaceCommand<WatchArgs> {
   readonly description = 'Run script with watcher inside workspace and watch over deps';
 
   // Methods
-  private async spawnDepsTree(myr: MyrClient, wks: Workspace, set: Set<string>): Promise<[number, Omit<IWatchTask, 'watchOn'>[]]> {
-    const tasks: Omit<IWatchTask, 'watchOn'>[] = [];
+  private async spawnDepsTree(myr: MyrClient, wks: Workspace, set: Set<string>): Promise<[number, FWatchTask[]]> {
+    const tasks: FWatchTask[] = [];
     let count = 0;
 
     for await (const ws of combine(wks.dependencies(), wks.devDependencies())) {

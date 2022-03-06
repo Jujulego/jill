@@ -8,7 +8,7 @@ import gql from 'graphql-tag';
 import path from 'path';
 import WebSocket from 'ws';
 
-import { ISpawnTaskArgs, IWatchTask, WatchTaskFragment } from './common';
+import { ISpawnTaskArgs, FWatchTask, WatchTaskFragment } from './common';
 
 // Types
 type ILog = Record<string, unknown> & {
@@ -121,9 +121,9 @@ export class MyrClient {
     }
   }
 
-  async tasks(): Promise<IWatchTask[]> {
+  async tasks(): Promise<FWatchTask[]> {
     return await this._autoStart(async () => {
-      const { tasks } = await this._qclient.request<{ tasks: IWatchTask[] }>(gql`
+      const { tasks } = await this._qclient.request<{ tasks: FWatchTask[] }>(gql`
           query Tasks {
               tasks {
                   ...WatchTask
@@ -137,9 +137,9 @@ export class MyrClient {
     });
   }
 
-  async spawn(cwd: string, cmd: string, args: string[] = [], opts?: Omit<ISpawnTaskArgs, 'cwd' | 'cmd' | 'args'>): Promise<Omit<IWatchTask, 'watchOn'>> {
+  async spawn(cwd: string, cmd: string, args: string[] = [], opts?: Omit<ISpawnTaskArgs, 'cwd' | 'cmd' | 'args'>): Promise<FWatchTask> {
     return await this._autoStart(async () => {
-      const { spawn } = await this._qclient.request<{ spawn: Omit<IWatchTask, 'watchOn'> }, ISpawnTaskArgs>(gql`
+      const { spawn } = await this._qclient.request<{ spawn: FWatchTask }, ISpawnTaskArgs>(gql`
           mutation Spawn($cwd: String!, $cmd: String!, $args: [String!]!, $mode: SpawnTaskMode, $watchOn: [ID!]) {
               spawn(cwd: $cwd, cmd: $cmd, args: $args, mode: $mode, watchOn: $watchOn) {
                   ...WatchTask
@@ -153,7 +153,7 @@ export class MyrClient {
     });
   }
 
-  async spawnScript(wks: Workspace, script: string, args: string[] = [], opts?: Omit<ISpawnTaskArgs, 'cwd' | 'cmd' | 'args'>): Promise<Omit<IWatchTask, 'watchOn'>> {
+  async spawnScript(wks: Workspace, script: string, args: string[] = [], opts?: Omit<ISpawnTaskArgs, 'cwd' | 'cmd' | 'args'>): Promise<FWatchTask> {
     return await this.spawn(wks.cwd, await wks.project.packageManager(), ['run', script, ...args], opts);
   }
 
@@ -185,9 +185,9 @@ export class MyrClient {
     }
   }
 
-  async kill(id: string): Promise<IWatchTask | undefined> {
+  async kill(id: string): Promise<FWatchTask | undefined> {
     return await this._autoStart(async () => {
-      const { kill } = await this._qclient.request<{ kill: IWatchTask | undefined }>(gql`
+      const { kill } = await this._qclient.request<{ kill?: FWatchTask }>(gql`
           mutation Kill($id: ID!) {
               kill(id: $id) {
                   ...WatchTask
