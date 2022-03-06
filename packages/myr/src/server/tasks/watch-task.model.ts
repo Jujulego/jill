@@ -98,7 +98,7 @@ export class WatchTask extends SpawnTask implements IWatchTask {
   }
 
   @Field(() => [WatchTask], { description: 'Tasks watched by this task' })
-  get watchBy(): readonly WatchTask[] {
+  get watchedBy(): readonly WatchTask[] {
     return Array.from(this._watchedBy);
   }
 }

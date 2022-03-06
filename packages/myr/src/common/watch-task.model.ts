@@ -21,7 +21,7 @@ export interface IWatchTask {
   status: WatchTaskStatus;
   mode: SpawnTaskMode;
   watchOn: readonly IWatchTask[];
-  watchBy: readonly IWatchTask[];
+  watchedBy: readonly IWatchTask[];
 }
 
 // Fragments

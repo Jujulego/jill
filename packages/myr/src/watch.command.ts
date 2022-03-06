@@ -14,8 +14,7 @@ export interface WatchArgs extends WorkspaceArgs {
 // Utils
 const printLog = format.combine(
   { transform: (info) => Object.assign(info, { [Symbol.for('level')]: info.level }) },
-  format.printf(({ message }) => message
-  ),
+  format.printf(({ message }) => message),
   format.colorize({ all: true }),
 );
 

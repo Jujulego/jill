@@ -25,7 +25,7 @@ const defaults: TestArgs<Omit<WatchArgs, 'script'>> = {
   project: '/project',
   'package-manager': undefined,
   workspace: undefined,
-  daemon: false
+  follow: false
 };
 
 beforeEach(() => {
@@ -58,9 +58,10 @@ beforeEach(() => {
     cwd: wks.cwd,
     cmd: 'yarn',
     args: [script, ...args],
-    status: WatchTaskStatus.RUNNING,
+    status: WatchTaskStatus.running,
     mode: SpawnTaskMode.managed,
     watchOn: [],
+    watchedBy: [],
   }));
 });
 

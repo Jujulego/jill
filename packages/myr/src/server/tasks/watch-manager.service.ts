@@ -40,7 +40,7 @@ export class WatchManager {
   private _handleTaskComplete(task: WatchTask): void {
     // Stop running auto tasks without watchers
     for (const tsk of task.watchOn) {
-      if (tsk.status === 'running' && tsk.mode === SpawnTaskMode.auto && tsk.watchBy.length === 0) {
+      if (tsk.status === 'running' && tsk.mode === SpawnTaskMode.auto && tsk.watchedBy.length === 0) {
         this._logger.verbose(`Killing auto task ${task.id} (not watched anymore)`);
         tsk.stop();
       }

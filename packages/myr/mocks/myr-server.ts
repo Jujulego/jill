@@ -14,9 +14,10 @@ export const myrServer = setupServer(
             cwd: '/mock',
             cmd: 'test',
             args: [],
-            status: WatchTaskStatus.RUNNING,
+            status: WatchTaskStatus.running,
             mode: SpawnTaskMode.managed,
             watchOn: [],
+            watchedBy: [],
           }
         ]
       })
@@ -30,9 +31,10 @@ export const myrServer = setupServer(
           cwd: req.body?.variables.cwd,
           cmd: req.body?.variables.cmd,
           args: req.body?.variables.args,
-          status: req.body?.variables.mode === SpawnTaskMode.auto ? WatchTaskStatus.READY : WatchTaskStatus.RUNNING,
+          status: req.body?.variables.mode === SpawnTaskMode.auto ? WatchTaskStatus.ready : WatchTaskStatus.running,
           mode: req.body?.variables.mode ?? SpawnTaskMode.managed,
           watchOn: [],
+          watchedBy: [],
         }
       })
     );
@@ -45,9 +47,10 @@ export const myrServer = setupServer(
           cwd: '/mock',
           cmd: 'test',
           args: [],
-          status: WatchTaskStatus.FAILED,
+          status: WatchTaskStatus.failed,
           mode: SpawnTaskMode.managed,
           watchOn: [],
+          watchedBy: [],
         }
       })
     );
