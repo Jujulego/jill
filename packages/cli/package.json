@@ -25,7 +25,7 @@
     "node": "^14"
   },
   "peerDependencies": {
-    "@jujulego/jill-myr": "1.2.0"
+    "@jujulego/jill-myr": "1.2.1"
   },
   "peerDependenciesMeta": {
     "@jujulego/jill-myr": {
