@@ -1,7 +1,8 @@
 {
   "name": "mock-test-b",
   "scripts": {
-    "build": "node -e \"setTimeout(() => process.exit(0), 3000)\" --"
+    "build": "node -e \"setTimeout(() => process.exit(0), 3000)\" --",
+    "watch": "node -e \"setInterval(() => console.log('hello i\\'m b'), 3000)\" --"
   },
   "devDependencies": {
     "mock-test-c": "workspace:*",

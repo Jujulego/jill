@@ -1,10 +1,13 @@
+import { ValidationPipe } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 
-import { SpawnArgs, Task, TaskArgs } from './task.model';
-import { WatchManager } from './watch-manager';
+import { SpawnTaskArgs } from './spawn-task.args';
+import { TaskIDArgs } from './task-id.args';
+import { WatchManager } from './watch-manager.service';
+import { WatchTask } from './watch-task.model';
 
 // Resolver
-@Resolver(() => Task)
+@Resolver(() => WatchTask)
 export class TasksResolver {
   // Constructor
   constructor(
@@ -12,25 +15,24 @@ export class TasksResolver {
   ) {}
 
   // Queries
-  @Query(() => Task, { nullable: true })
-  task(@Args() { id }: TaskArgs): Task | undefined {
-    return this.manager.get(id)?.toPlain();
+  @Query(() => WatchTask, { nullable: true })
+  task(@Args(ValidationPipe) { id }: TaskIDArgs): WatchTask | null {
+    return this.manager.get(id);
   }
 
-  @Query(() => [Task])
-  tasks(): Task[] {
-    return this.manager.tasks.map(tsk => tsk.toPlain());
+  @Query(() => [WatchTask])
+  tasks(): readonly WatchTask[] {
+    return this.manager.tasks;
   }
 
   // Mutations
-  @Mutation(() => Task)
-  spawn(@Args() { cwd, cmd, args }: SpawnArgs): Task {
-    return this.manager.spawn(cwd, cmd, args).toPlain();
+  @Mutation(() => WatchTask)
+  spawn(@Args(ValidationPipe) { cwd, cmd, args, mode, watchOn }: SpawnTaskArgs): WatchTask {
+    return this.manager.spawn(cwd, cmd, args, mode, watchOn);
   }
 
-  @Mutation(() => Task, { nullable: true })
-  async kill(@Args() { id }: TaskArgs): Promise<Task | undefined> {
-    const task = await this.manager.kill(id);
-    return task?.toPlain();
+  @Mutation(() => WatchTask, { nullable: true })
+  async kill(@Args(ValidationPipe) { id }: TaskIDArgs): Promise<WatchTask | null> {
+    return await this.manager.kill(id);
   }
 }

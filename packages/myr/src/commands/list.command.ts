@@ -3,14 +3,14 @@ import { TaskStatus } from '@jujulego/jill-core';
 import chalk from 'chalk';
 import path from 'path';
 
+import { FWatchTask } from '../common';
 import { MyrClient } from '../myr-client';
-import { Task } from '../server';
 
 // Types
-export type Attribute = 'identifier' | 'status' | 'cwd' | 'command' | 'cmd' | 'args';
+export type Attribute = 'identifier' | 'status' | 'mode' | 'cwd' | 'command' | 'cmd' | 'args';
 export type Data = Partial<Record<Attribute, string>>;
 
-type Extractor<T> = (tsk: Task) => T;
+type Extractor<T> = (tsk: FWatchTask) => T;
 
 export interface ListArgs extends ProjectArgs {
   all: boolean | undefined;
@@ -30,12 +30,13 @@ const COLORED_STATUS: Record<TaskStatus, string> = {
   done: chalk.green('done')
 };
 
-const LONG_ATTRIBUTES: Attribute[] = ['identifier', 'status', 'cwd', 'command'];
+const LONG_ATTRIBUTES: Attribute[] = ['identifier', 'status', 'mode', 'cwd', 'command'];
 const DEFAULT_ATTRIBUTES: Attribute[] = ['identifier', 'command'];
 
 const EXTRACTORS: Record<Attribute, Extractor<string | undefined>> = {
   identifier: tsk => chalk.grey(tsk.id),
   status: tsk => COLORED_STATUS[tsk.status],
+  mode: tsk => tsk.mode,
   cwd: tsk => path.relative(process.cwd(), tsk.cwd) || '.',
   command: tsk => `${tsk.cmd} ${tsk.args.join(' ')}`,
   cmd: tsk => tsk.cmd,

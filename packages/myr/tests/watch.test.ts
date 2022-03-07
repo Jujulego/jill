@@ -1,5 +1,7 @@
 import { Project, Workspace } from '@jujulego/jill-core';
+import chalk from 'chalk';
 
+import { SpawnTaskMode, WatchTaskStatus } from '../src/common';
 import { MyrClient as _MyrClient } from '../src/myr-client';
 import { WatchArgs, WatchCommand } from '../src/watch.command';
 import { MockTask } from '../mocks/task';
@@ -11,6 +13,8 @@ jest.mock('../src/myr-client');
 const MyrClient = _MyrClient as jest.MockedClass<typeof _MyrClient>;
 
 // Setup
+chalk.level = 1;
+
 let prj: Project;
 let wksA: Workspace;
 let wksB: Workspace;
@@ -24,7 +28,7 @@ const defaults: TestArgs<Omit<WatchArgs, 'script'>> = {
   project: '/project',
   'package-manager': undefined,
   workspace: undefined,
-  daemon: false
+  follow: false
 };
 
 beforeEach(() => {
@@ -57,7 +61,10 @@ beforeEach(() => {
     cwd: wks.cwd,
     cmd: 'yarn',
     args: [script, ...args],
-    status: 'running'
+    status: WatchTaskStatus.running,
+    mode: SpawnTaskMode.managed,
+    watchOn: [],
+    watchedBy: [],
   }));
 });
 
@@ -93,22 +100,22 @@ describe('jill watch', () => {
 
   it('should spawn deps watch in myr, asked task in myr and return 0', async () => {
     // Call
-    await expect(testBed.run({ ...defaults, script: 'test', workspace: 'wks-a', daemon: true }))
+    await expect(testBed.run({ ...defaults, script: 'test', workspace: 'wks-a' }))
       .resolves.toBe(0);
 
     expect(testBed.spinner.start).toHaveBeenCalledWith('Loading "wks-a" workspace');
     expect(testBed.spinner.start).toHaveBeenCalledWith('Spawning dependencies watch tasks');
     expect(MyrClient).toHaveBeenCalledWith(prj);
     expect(MyrClient.prototype.spawnScript).toHaveBeenCalledTimes(3);
-    expect(MyrClient.prototype.spawnScript).toHaveBeenCalledWith(wksC, 'watch');
-    expect(MyrClient.prototype.spawnScript).toHaveBeenCalledWith(wksB, 'watch');
-    expect(MyrClient.prototype.spawnScript).toHaveBeenCalledWith(wksA, 'test', []);
+    expect(MyrClient.prototype.spawnScript).toHaveBeenCalledWith(wksC, 'watch', [], { mode: SpawnTaskMode.auto, watchOn: [] });
+    expect(MyrClient.prototype.spawnScript).toHaveBeenCalledWith(wksB, 'watch', [], { mode: SpawnTaskMode.auto, watchOn: ['mock-wks-c-watch'] });
+    expect(MyrClient.prototype.spawnScript).toHaveBeenCalledWith(wksA, 'test', [], { watchOn: ['mock-wks-b-watch'] });
     expect(testBed.spinner.succeed).toHaveBeenCalledWith('3 watch tasks spawned');
   });
 
   it('should spawn task in myr with given args', async () => {
     // Call
-    await expect(testBed.run({ ...defaults, script: 'test', workspace: 'wks-a', daemon: true, '--': ['--arg'] }))
+    await expect(testBed.run({ ...defaults, script: 'test', workspace: 'wks-a', '--': ['--arg'] }))
       .resolves.toBe(0);
 
     expect(testBed.spinner.start).toHaveBeenCalledWith('Loading "wks-a" workspace');
@@ -116,54 +123,34 @@ describe('jill watch', () => {
     expect(testBed.spinner.start).toHaveBeenCalledWith('Spawning test task');
     expect(MyrClient).toHaveBeenCalledWith(prj);
     expect(MyrClient.prototype.spawnScript).toHaveBeenCalledTimes(3);
-    expect(MyrClient.prototype.spawnScript).toHaveBeenCalledWith(wksC, 'watch');
-    expect(MyrClient.prototype.spawnScript).toHaveBeenCalledWith(wksB, 'watch');
-    expect(MyrClient.prototype.spawnScript).toHaveBeenCalledWith(wksA, 'test', ['--arg']);
+    expect(MyrClient.prototype.spawnScript).toHaveBeenCalledWith(wksC, 'watch', [], { mode: SpawnTaskMode.auto, watchOn: [] });
+    expect(MyrClient.prototype.spawnScript).toHaveBeenCalledWith(wksB, 'watch', [], { mode: SpawnTaskMode.auto, watchOn: ['mock-wks-c-watch'] });
+    expect(MyrClient.prototype.spawnScript).toHaveBeenCalledWith(wksA, 'test', ['--arg'], { watchOn: ['mock-wks-b-watch'] });
     expect(testBed.spinner.succeed).toHaveBeenCalledWith('3 watch tasks spawned');
   });
 
-  it('should spawn deps watch in myr, asked task locally and return 0 when task end successfully', async () => {
-    // Call
-    await expect(testBed.run({ ...defaults, script: 'test', workspace: 'wks-a' }))
-      .resolves.toBe(0);
-
-    expect(testBed.spinner.start).toHaveBeenCalledWith('Loading "wks-a" workspace');
-    expect(testBed.spinner.start).toHaveBeenCalledWith('Spawning dependencies watch tasks');
-    expect(MyrClient).toHaveBeenCalledWith(prj);
-    expect(MyrClient.prototype.spawnScript).toHaveBeenCalledTimes(2);
-    expect(MyrClient.prototype.spawnScript).toHaveBeenCalledWith(wksC, 'watch');
-    expect(MyrClient.prototype.spawnScript).toHaveBeenCalledWith(wksB, 'watch');
-    expect(testBed.spinner.succeed).toHaveBeenCalledWith('2 watch tasks spawned');
-    expect(wksA.run).toHaveBeenCalledWith('test', [], { buildDeps: 'none' });
-    expect(tskA.start).toHaveBeenCalled();
-    expect(tskA.waitFor).toHaveBeenCalledWith('done', 'failed');
-  });
-
-  it('should spawn task locally with given args', async () => {
-    // Call
-    await expect(testBed.run({ ...defaults, script: 'test', workspace: 'wks-a', '--': ['--arg'] }))
-      .resolves.toBe(0);
-
-    expect(testBed.spinner.start).toHaveBeenCalledWith('Loading "wks-a" workspace');
-    expect(testBed.spinner.start).toHaveBeenCalledWith('Spawning dependencies watch tasks');
-    expect(MyrClient).toHaveBeenCalledWith(prj);
-    expect(MyrClient.prototype.spawnScript).toHaveBeenCalledTimes(2);
-    expect(MyrClient.prototype.spawnScript).toHaveBeenCalledWith(wksC, 'watch');
-    expect(MyrClient.prototype.spawnScript).toHaveBeenCalledWith(wksB, 'watch');
-    expect(testBed.spinner.succeed).toHaveBeenCalledWith('2 watch tasks spawned');
-    expect(wksA.run).toHaveBeenCalledWith('test', ['--arg'], { buildDeps: 'none' });
-    expect(tskA.start).toHaveBeenCalled();
-    expect(tskA.waitFor).toHaveBeenCalledWith('done', 'failed');
-  });
-
-  it('should return 1 when task failed', async () => {
-    jest.spyOn(tskA, 'waitFor').mockImplementation(async () => {
-      tskA._setExitCode(1);
-      return [];
+  it('should spawn deps watch in myr, asked task in myr then follow logs', async () => {
+    jest.spyOn(testBed.command, 'log').mockImplementation();
+    jest.spyOn(MyrClient.prototype, 'logs$').mockImplementation(async function* () {
+      yield { level: 'info', message: 'Test log' };
+      yield { level: 'info', message: 'Test wks-c log', task: 'mock-wks-c-watch' };
+      yield { level: 'info', message: 'Test wks-b log', task: 'mock-wks-b-watch' };
+      yield { level: 'info', message: 'Test wks-a log', task: 'mock-wks-a-test' };
     });
 
     // Call
-    await expect(testBed.run({ ...defaults, script: 'test', workspace: 'wks-a' }))
-      .resolves.toBe(1);
+    await expect(testBed.run({ ...defaults, script: 'test', workspace: 'wks-a', follow: true }))
+      .resolves.toBe(0);
+
+    expect(testBed.spinner.start).toHaveBeenCalledWith('Loading "wks-a" workspace');
+    expect(testBed.spinner.start).toHaveBeenCalledWith('Spawning dependencies watch tasks');
+    expect(MyrClient).toHaveBeenCalledWith(prj);
+    expect(MyrClient.prototype.spawnScript).toHaveBeenCalledTimes(3);
+    expect(testBed.spinner.succeed).toHaveBeenCalledWith('3 watch tasks spawned');
+    expect(testBed.command.log).not.toHaveBeenCalledWith('Test log');
+    expect(testBed.command.log).not.toHaveBeenCalledWith('Test wks-c log');
+    expect(testBed.command.log).not.toHaveBeenCalledWith('Test wks-b log');
+    expect(testBed.command.log).toHaveBeenCalledWith(chalk`{white Test wks-a log}`);
+    expect(testBed.command.log).toHaveBeenCalledTimes(1);
   });
 });

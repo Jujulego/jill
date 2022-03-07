@@ -1,11 +1,11 @@
 import { setupServer } from 'msw/node';
 import { graphql } from 'msw';
 
-import { Task } from '../src/server';
+import { FWatchTask, SpawnTaskMode, WatchTaskStatus } from '../src/common';
 
 // Server setup
 export const myrServer = setupServer(
-  graphql.query<{ tasks: Task[] }>('Tasks', (req, res, ctx) => {
+  graphql.query<{ tasks: FWatchTask[] }>('Tasks', (req, res, ctx) => {
     return res(
       ctx.data({
         tasks: [
@@ -14,13 +14,23 @@ export const myrServer = setupServer(
             cwd: '/mock',
             cmd: 'test',
             args: [],
-            status: 'running'
+            status: WatchTaskStatus.running,
+            mode: SpawnTaskMode.managed,
           }
         ]
       })
     );
   }),
-  graphql.mutation<{ spawn: Task }>('Spawn', (req, res, ctx) => {
+  graphql.query<{ logs: any[] }>('Logs', (req, res, ctx) => {
+    return res(
+      ctx.data({
+        logs: [
+          { level: 'test', message: 'Mock is working' }
+        ]
+      })
+    );
+  }),
+  graphql.mutation<{ spawn: FWatchTask }>('Spawn', (req, res, ctx) => {
     return res(
       ctx.data({
         spawn: {
@@ -28,12 +38,13 @@ export const myrServer = setupServer(
           cwd: req.body?.variables.cwd,
           cmd: req.body?.variables.cmd,
           args: req.body?.variables.args,
-          status: 'running'
+          status: req.body?.variables.mode === SpawnTaskMode.auto ? WatchTaskStatus.ready : WatchTaskStatus.running,
+          mode: req.body?.variables.mode ?? SpawnTaskMode.managed,
         }
       })
     );
   }),
-  graphql.mutation<{ kill: Task }>('Kill', (req, res, ctx) => {
+  graphql.mutation<{ kill: FWatchTask }>('Kill', (req, res, ctx) => {
     return res(
       ctx.data({
         kill: {
@@ -41,7 +52,8 @@ export const myrServer = setupServer(
           cwd: '/mock',
           cmd: 'test',
           args: [],
-          status: 'failed'
+          status: WatchTaskStatus.failed,
+          mode: SpawnTaskMode.managed,
         }
       })
     );

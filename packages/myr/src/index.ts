@@ -10,3 +10,4 @@ const myrPlugin = Plugin.createPlugin('myr', [
 ]);
 
 export default myrPlugin;
+export { WatchTaskFragment } from './common/watch-task.model';
