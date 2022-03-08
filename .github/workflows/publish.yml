@@ -215,18 +215,13 @@ jobs:
           git push --tags
 
       - name: Publish
-        run: yarn workspaces foreach --no-private npm publish --access public --tolerate-republish
-        env:
-          YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Publish
-        if: ${{ github.ref == 'master' }}
+        if: ${{ github.ref_name == 'master' }}
         run: yarn workspaces foreach --no-private npm publish --access public --tolerate-republish
         env:
           YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish next
-        if: ${{ github.ref == 'next' }}
+        if: ${{ github.ref_name == 'next' }}
         run: yarn workspaces foreach --no-private npm publish --access public --tag next --tolerate-republish
         env:
           YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
