@@ -1,10 +1,12 @@
 import { Box, Static, Text, useStdout } from 'ink';
-import { FC } from 'react';
+import { ReactElement } from 'react';
 
 // Types
-export interface ListProps {
-	attrs: string[];
-	data: Partial<Record<string, string>>[];
+export type ListItem<K extends string> = Partial<Record<K, string | number>> & Record<string, unknown>;
+
+export interface ListProps<K extends string> {
+	attrs: K[];
+	data: ListItem<K>[];
 	withoutHeaders?: boolean;
 	json?: boolean;
 }
@@ -15,7 +17,7 @@ function capitalize(str: string): string {
 }
 
 // Component
-export const List: FC<ListProps> = (props) => {
+export const List = <K extends string>(props: ListProps<K>): ReactElement => {
 	const { attrs, data, withoutHeaders, json } = props;
 	const { stdout } = useStdout();
 

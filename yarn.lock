@@ -2590,6 +2590,7 @@ __metadata:
     gulp-cli: 2.3.0
     ink: ^3.2.0
     ink-spinner: ^4.0.3
+    ink-testing-library: 2.1.0
     jest: 27.5.1
     jill-tools: "workspace:*"
     log-symbols: ^4.1.0
@@ -4809,24 +4810,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"caniuse-lite@npm:^1.0.30001251":
-  version: 1.0.30001252
-  resolution: "caniuse-lite@npm:1.0.30001252"
-  checksum: 0d25a2795ca224c1a689b08fe37a5dc6c4c79d80720f927bf7df70ed30c1b1b62c3cc51429eac01902d3fc298d9531b85efec331c2a051e42615c76fa348f118
-  languageName: node
-  linkType: hard
-
-"caniuse-lite@npm:^1.0.30001271":
-  version: 1.0.30001273
-  resolution: "caniuse-lite@npm:1.0.30001273"
-  checksum: babdb29977ad9c19fa2ec5a3c0416993ff240bfb61f63638d15a452d3a38dfade717bdf0388e6c22015a4ce81bf9bc2eaac0f8b58a7497c1e3fca77720e51e7a
-  languageName: node
-  linkType: hard
-
-"caniuse-lite@npm:^1.0.30001286":
-  version: 1.0.30001298
-  resolution: "caniuse-lite@npm:1.0.30001298"
-  checksum: 43566732d1b8746e3dfae57f558471c701b26b2c166fb9fc53ad750d83128b2eb680a5e08233717e64055779b408c72d3b2cfad6d4ae33a3e647a11dc1c0d515
+"caniuse-lite@npm:^1.0.30001251, caniuse-lite@npm:^1.0.30001271, caniuse-lite@npm:^1.0.30001286":
+  version: 1.0.30001317
+  resolution: "caniuse-lite@npm:1.0.30001317"
+  checksum: 0a5fc7fb8c54dde515c2d468e5fc9e0cf2e82dd40d596cdffed90f64c50b5dadd0ab0c25e04769d86488b3115f949abd31d54d1f74d0029b45fa8206a031f47a
   languageName: node
   linkType: hard
 
@@ -7657,6 +7644,18 @@ fsevents@^1.2.7:
     ink: ">=3.0.5"
     react: ">=16.8.2"
   checksum: d3785d688dd1ba19fb7a850b7a2c1dd8b2d06e4c77e6a7cc6c5bbd366a5a721e9ea45d036447016a9028f7519994077ce603a60a43a495e17b7b443b8a513ddc
+  languageName: node
+  linkType: hard
+
+"ink-testing-library@npm:2.1.0":
+  version: 2.1.0
+  resolution: "ink-testing-library@npm:2.1.0"
+  peerDependencies:
+    "@types/react": ">=16.8.0"
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+  checksum: 932bc3feed2d68e853f69c56b40610f50ea4366750400ee9597c0f5231acdfd29ac41d8c86924c7f85b7a0ab31cf0ad0726a9d29fdfe6ff82bc836177e7ff063
   languageName: node
   linkType: hard
 
