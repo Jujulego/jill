@@ -25,16 +25,3 @@ exports[`List should render as json 1`] = `
 n°128\\",\\"result\\":\\"failed\\"},{\\"id\\":223,\\"name\\":\\"Test n°223\\"}]
 "
 `;
-
-exports[`List should render data in aligned column 1`] = `
-"[1mId[22m   [1mResult[22m
-85   success
-128  failed
-223  [90munset[39m"
-`;
-
-exports[`List should render without headers 1`] = `
-"85   success
-128  failed
-223  [90munset[39m"
-`;

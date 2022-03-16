@@ -1,3 +1,4 @@
+import chalk from 'chalk';
 import ink from 'ink';
 import { render } from 'ink-testing-library';
 
@@ -9,6 +10,9 @@ const TEST_DATA = [
   { id: 128, name: 'Test n°128', result: 'failed' },
   { id: 223, name: 'Test n°223' },
 ];
+
+// Setup
+chalk.level = 1;
 
 // Mocks
 jest.mock('ink', () => {
@@ -32,7 +36,12 @@ describe('List', () => {
     );
 
     // Checks
-    expect(lastFrame()).toMatchSnapshot();
+    expect(lastFrame()).toBe(
+      chalk`{bold Id}   {bold Result}\n` +
+      chalk`85   success\n` +
+      chalk`128  failed\n` +
+      chalk`223  {grey unset}`
+    );
   });
 
   it('should render without headers', () => {
@@ -46,7 +55,11 @@ describe('List', () => {
     );
 
     // Checks
-    expect(lastFrame()).toMatchSnapshot();
+    expect(lastFrame()).toBe(
+      chalk`85   success\n` +
+      chalk`128  failed\n` +
+      chalk`223  {grey unset}`
+    );
   });
 
   it('should render as json', () => {
