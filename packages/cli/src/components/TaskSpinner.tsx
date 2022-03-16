@@ -12,6 +12,7 @@ export interface TaskSpinnerProps {
 // Component
 export const TaskSpinner: FC<TaskSpinnerProps> = (props) => {
   const { task } = props;
+  const wks = task.context.workspace;
 
   // State
   const [status, setStatus] = useState(task.status);
@@ -29,16 +30,16 @@ export const TaskSpinner: FC<TaskSpinnerProps> = (props) => {
   if (status === 'done') {
     return (
       <Text>
-        <Text color="green">{ logSymbols.success }</Text>{' '}
-        <Text color="grey">[{ task.context.workspace?.name }]</Text>{' '}
+        { logSymbols.success }{' '}
+        { wks && <><Text color="grey">[{ wks.name }]</Text>{' '}</> }
         { task.name } is { status }
       </Text>
     );
   } else if (status === 'failed') {
     return (
       <Text>
-        <Text color="red">{ logSymbols.error }</Text>{' '}
-        <Text color="grey">[{ task.context.workspace?.name }]</Text>{' '}
+        { logSymbols.error }{' '}
+        { wks && <><Text color="grey">[{ wks.name }]</Text>{' '}</> }
         { task.name } is { status }
       </Text>
     );
@@ -47,7 +48,7 @@ export const TaskSpinner: FC<TaskSpinnerProps> = (props) => {
   return (
     <Text>
       <Spinner type={status === 'running' ? 'line' : 'simpleDotsScrolling'} />{' '}
-      <Text color="grey">[{ task.context.workspace?.name }]</Text>{' '}
+      { wks && <><Text color="grey">[{ wks.name }]</Text>{' '}</> }
       { task.name } is { status }
     </Text>
   );
