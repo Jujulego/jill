@@ -7,7 +7,7 @@ import { List } from '../../src/components/List';
 const TEST_DATA = [
   { id: 85, name: 'Test n°85', result: 'success' },
   { id: 128, name: 'Test n°128', result: 'failed' },
-  { id: 223, name: 'Test n°128' },
+  { id: 223, name: 'Test n°223' },
 ];
 
 // Mocks

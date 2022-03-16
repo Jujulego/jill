@@ -17,7 +17,7 @@ export const StaticLogs: FC = () => {
 
   // Effects
   useEffect(() => {
-    logger.add(new class extends Transport {
+    const transport = new class extends Transport {
       // Constructor
       constructor() {
         super({
@@ -33,7 +33,11 @@ export const StaticLogs: FC = () => {
         setLogs((old) => [...old, log]);
         next();
       }
-    });
+    };
+
+    logger.add(transport);
+
+    return () => void logger.remove(transport);
   }, []);
 
   // Render
