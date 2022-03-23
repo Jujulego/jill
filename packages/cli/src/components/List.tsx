@@ -18,30 +18,36 @@ function capitalize(str: string): string {
 
 // Component
 export const List = <K extends string>(props: ListProps<K>): ReactElement => {
-	const { attrs, data, withoutHeaders, json } = props;
-	const { stdout } = useStdout();
+	try {
+		const { attrs, data, withoutHeaders = false, json = false } = props;
+		const { stdout } = useStdout();
 
-	// Render
-	if (json) {
-		const lines = JSON.stringify(data, null, stdout?.isTTY ? 2 : 0).split('\n');
+		// Render
+		if (json) {
+			const lines = JSON.stringify(data, null, stdout?.isTTY ? 2 : 0).split('\n');
+
+			return (
+				<Static items={lines}>
+					{(line, idx) => <Text key={idx}>{line}</Text>}
+				</Static>
+			);
+		}
 
 		return (
-			<Static items={lines}>
-				{ (line, idx) => <Text key={idx}>{ line }</Text> }
-			</Static>
+			<Box>
+				{attrs.map((attr) => (
+					<Box key={attr} flexDirection="column" marginRight={2}>
+						{!withoutHeaders && <Text bold>{capitalize(attr)}</Text>}
+						{data.map((d, idx) => (
+							<Text key={idx} color={d[attr] ? '' : 'grey'}>{d[attr] || 'unset'}</Text>
+						))}
+					</Box>
+				))}
+			</Box>
 		);
+	} catch (e) {
+		// eslint-disable-next-line no-console
+		console.error(e);
+		throw e;
 	}
-
-	return (
-		<Box>
-			{attrs.map((attr) => (
-				<Box key={attr} flexDirection="column" marginRight={2}>
-					{!withoutHeaders && <Text bold>{capitalize(attr)}</Text>}
-					{data.map((d, idx) => (
-						<Text key={idx} color={d[attr] ? '' : 'grey'}>{d[attr] || 'unset'}</Text>
-					))}
-				</Box>
-			))}
-		</Box>
-	);
 };
