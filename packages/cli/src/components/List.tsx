@@ -13,41 +13,35 @@ export interface ListProps<K extends string> {
 
 // Utils
 function capitalize(str: string): string {
-	return `${str.at(0)?.toUpperCase()}${str.substring(1)}`;
+	return `${str.substring(0, 1)?.toUpperCase()}${str.substring(1)}`;
 }
 
 // Component
 export const List = <K extends string>(props: ListProps<K>): ReactElement => {
-	try {
-		const { attrs, data, withoutHeaders = false, json = false } = props;
-		const { stdout } = useStdout();
+	const { attrs, data, withoutHeaders = false, json = false } = props;
+	const { stdout } = useStdout();
 
-		// Render
-		if (json) {
-			const lines = JSON.stringify(data, null, stdout?.isTTY ? 2 : 0).split('\n');
-
-			return (
-				<Static items={lines}>
-					{(line, idx) => <Text key={idx}>{line}</Text>}
-				</Static>
-			);
-		}
+	// Render
+	if (json) {
+		const lines = JSON.stringify(data, null, stdout?.isTTY ? 2 : 0).split('\n');
 
 		return (
-			<Box>
-				{attrs.map((attr) => (
-					<Box key={attr} flexDirection="column" marginRight={2}>
-						{!withoutHeaders && <Text bold>{capitalize(attr)}</Text>}
-						{data.map((d, idx) => (
-							<Text key={idx} color={d[attr] ? '' : 'grey'}>{d[attr] || 'unset'}</Text>
-						))}
-					</Box>
-				))}
-			</Box>
+			<Static items={lines}>
+				{(line, idx) => <Text key={idx}>{line}</Text>}
+			</Static>
 		);
-	} catch (e) {
-		// eslint-disable-next-line no-console
-		console.error(e);
-		throw e;
 	}
+
+	return (
+		<Box>
+			{attrs.map((attr) => (
+				<Box key={attr} flexDirection="column" marginRight={2}>
+					{!withoutHeaders && <Text bold>{capitalize(attr)}</Text>}
+					{data.map((d, idx) => (
+						<Text key={idx} color={d[attr] ? '' : 'grey'}>{d[attr] || 'unset'}</Text>
+					))}
+				</Box>
+			))}
+		</Box>
+	);
 };
