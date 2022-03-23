@@ -13,7 +13,7 @@ export interface ListProps<K extends string> {
 
 // Utils
 function capitalize(str: string): string {
-	return `${str.substring(0, 1)?.toUpperCase()}${str.substring(1)}`;
+	return `${str.substring(0, 1).toUpperCase()}${str.substring(1)}`;
 }
 
 // Component
