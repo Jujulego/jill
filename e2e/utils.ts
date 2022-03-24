@@ -6,9 +6,12 @@ export const MAIN = path.join(__filename, '../../packages/cli/bin/jill.js');
 export const MOCK = path.join(__filename, '../../mock');
 export const ROOT = path.join(__filename, '../../');
 
+const INK_NEW_FRAME = '\u001b[2K\u001b[1A\u001b[2K\u001b[G';
+
 // Type
 export interface SpawnResult {
-  stdout: string[];
+  lastFrame: string[];
+  frames: string[][];
   stderr: string[];
   code: number;
 }
@@ -30,17 +33,35 @@ export function jill(args: ReadonlyArray<string>, opts: SpawnOptions = {}): Prom
 
     // Gather result
     const res: SpawnResult = {
-      stdout: [],
+      lastFrame: [],
+      frames: [[]],
       stderr: [],
       code: 0
     };
 
+    res.lastFrame = res.frames[0];
+
     proc.stdout.on('data', (msg: Buffer) => {
-      res.stdout.push(...msg.toString('utf-8').replace(/\n$/, '').split('\n'));
+      const data = msg.toString('utf-8');
+      console.log(JSON.stringify(data));
+      const frames = data.split(INK_NEW_FRAME);
+
+      // First one complete previous
+      if (frames[0] !== '') {
+        res.lastFrame.push(...frames[0].replace(/\n$/, '').split('\n'));
+      }
+
+      // New frames
+      for (const frame of frames.slice(1)) {
+        res.frames.push(frame.replace(/\n$/, '').split('\n'));
+      }
+
+      res.lastFrame = res.frames[res.frames.length - 1];
     });
 
     proc.stderr.on('data', (msg: Buffer) => {
-      res.stderr.push(...msg.toString('utf-8').replace(/\n$/, '').split('\n'));
+      const data = msg.toString('utf-8').replace(/\r?\n$/, '');
+      res.stderr.push(...data.split(/\r?\n/));
     });
 
     // Emit result
