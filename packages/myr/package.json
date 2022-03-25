@@ -24,11 +24,11 @@
     "node": "^14"
   },
   "peerDependencies": {
-    "@jujulego/jill": "^1.2.0",
-    "@jujulego/jill-core": "^1.2.0"
+    "@jujulego/jill": "^2.0.0-beta.1",
+    "@jujulego/jill-core": "^2.0.0-beta.1"
   },
   "dependencies": {
-    "@jujulego/jill-common": "^1.2.0",
+    "@jujulego/jill-common": "^2.0.0-beta.1",
     "@jujulego/pid-file": "^1.0.3",
     "@nestjs/apollo": "^10.0.4",
     "@nestjs/common": "^8.2.3",
@@ -57,7 +57,7 @@
     "@babel/plugin-proposal-class-properties": "7.16.7",
     "@babel/preset-env": "7.16.11",
     "@babel/runtime": "7.17.2",
-    "@jujulego/jill-core": "1.2.0",
+    "@jujulego/jill-core": "2.0.0-beta.1",
     "@types/gulp": "4.0.9",
     "@types/jest": "27.4.1",
     "@types/node": "14.18.12",

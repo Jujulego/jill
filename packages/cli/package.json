@@ -1,6 +1,6 @@
 {
   "name": "@jujulego/jill",
-  "version": "1.2.0",
+  "version": "2.0.0-beta.1",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -33,8 +33,8 @@
     }
   },
   "dependencies": {
-    "@jujulego/jill-common": "^1.2.0",
-    "@jujulego/jill-core": "^1.2.0",
+    "@jujulego/jill-common": "^2.0.0-beta.1",
+    "@jujulego/jill-core": "^2.0.0-beta.1",
     "@repeaterjs/repeater": "^3.0.4",
     "chalk": "^4.1.1",
     "graphql": "^16.0.0",
@@ -81,5 +81,6 @@
     "ts-jest": "27.1.3",
     "ts-node": "10.7.0",
     "typescript": "4.6.2"
-  }
+  },
+  "stableVersion": "1.2.0"
 }

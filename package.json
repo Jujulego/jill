@@ -27,7 +27,7 @@
     "e2e": "yarn workspace jill-e2e run start"
   },
   "devDependencies": {
-    "@jujulego/jill": "1.2.0",
+    "@jujulego/jill": "2.0.0-beta.1",
     "@jujulego/jill-myr": "1.2.1",
     "@typescript-eslint/eslint-plugin": "5.14.0",
     "@typescript-eslint/parser": "5.14.0",
