@@ -15,7 +15,9 @@ export interface TaskOptions {
 }
 
 export type TaskStatus = 'blocked' | 'ready' | 'running' | 'done' | 'failed';
-export type TaskEventMap = Record<TaskStatus, []>;
+export type TaskEventMap = Record<TaskStatus, []> & {
+  status: [TaskStatus]
+}
 
 // Class
 export abstract class Task<M extends TaskEventMap = TaskEventMap> extends EventEmitter<M> {
@@ -44,7 +46,9 @@ export abstract class Task<M extends TaskEventMap = TaskEventMap> extends EventE
     // Update and emit
     this._status = status;
     this._logger.debug(`${this.name} is ${status}`);
+
     this.emit(status);
+    this.emit('status', status);
   }
 
   private _recomputeStatus(): void {

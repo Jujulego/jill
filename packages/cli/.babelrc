@@ -3,6 +3,9 @@
     ["@babel/preset-env", {
       "bugfixes": true,
       "modules": "cjs"
+    }],
+    ["@babel/preset-react", {
+      "runtime": "automatic"
     }]
   ],
   "plugins": [

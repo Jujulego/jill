@@ -64,4 +64,4 @@ export const transport = new OraTransport({
   )
 });
 
-coreLogger.add(transport);
+// coreLogger.add(transport);

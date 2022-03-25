@@ -4,7 +4,7 @@ import { babel, dest, dts, flow, src, ts } from 'jill-tools';
 
 // Config
 const paths = {
-  src: 'src/**/*.ts',
+  src: ['src/**/*.ts', 'src/**/*.tsx'],
   tsconfig: 'tsconfig.json',
   deps: [
     '../../.pnp.*',
@@ -35,6 +35,6 @@ gulp.task('build', gulp.series(
   gulp.parallel('build:cjs', 'build:types')
 ));
 
-gulp.task('watch', () => gulp.watch([paths.src, ...paths.deps], { ignoreInitial: false },
+gulp.task('watch', () => gulp.watch([...paths.src, ...paths.deps], { ignoreInitial: false },
   gulp.parallel('build:cjs', 'build:types')
 ));

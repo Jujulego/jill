@@ -1,0 +1,7 @@
+releases:
+  "@jujulego/jill": 2.0.0-beta.1
+  "@jujulego/jill-common": 2.0.0-beta.1
+  "@jujulego/jill-core": 2.0.0-beta.1
+
+declined:
+  - "@jujulego/jill-myr"

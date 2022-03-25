@@ -3,6 +3,7 @@
   "compilerOptions": {
     "incremental": true,
     "rootDir": ".",
+    "jsx": "react-jsx",
     "tsBuildInfoFile": "./dist/.tsbuildinfo",
     "resolveJsonModule": true,
   },
