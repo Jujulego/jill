@@ -1,7 +1,3 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`List should render as json 1`] = `
-"[{\\"id\\":85,\\"name\\":\\"Test n°85\\",\\"result\\":\\"success\\"},{\\"id\\":128,\\"name\\":\\"Test
-n°128\\",\\"result\\":\\"failed\\"},{\\"id\\":223,\\"name\\":\\"Test n°223\\"}]
-"
-`;
+exports[`List should render as json 1`] = `"[{\\"id\\":85,\\"name\\":\\"Test n°85\\",\\"result\\":\\"success\\"},{\\"id\\":128,\\"name\\":\\"Test n°128\\",\\"result\\":\\"failed\\"},{\\"id\\":223,\\"name\\":\\"Test n°223\\"}]"`;

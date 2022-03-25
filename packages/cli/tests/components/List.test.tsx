@@ -51,7 +51,9 @@ describe('List', () => {
     );
   });
 
-  it('should render as json', () => {
+  it('should render as json', async () => {
+    jest.spyOn(process.stdout, 'write');
+
     // Render
     const { lastFrame } = render(
       <List
@@ -60,6 +62,7 @@ describe('List', () => {
         json
       />
     );
+    await new Promise(res => setTimeout(res, 0));
 
     // Checks
     expect(lastFrame()).toMatchSnapshot();
