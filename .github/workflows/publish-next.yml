@@ -1,11 +1,8 @@
-name: 'Publish'
+name: 'Publish next'
 
 on:
   push:
-    branches: [ master ]
-
-  milestone:
-    types: [ closed ]
+    branches: [ next ]
 
 jobs:
   build:
@@ -161,8 +158,6 @@ jobs:
           access_token: ${{ github.token }}
 
       - uses: actions/checkout@v3.0.0
-        with:
-          ref: master
 
       - name: Use Node.js 14.x
         uses: actions/setup-node@v3.0.0
@@ -185,7 +180,6 @@ jobs:
           git config --global user.email 'boobrie@users.noreply.github.com'
 
       - name: Apply version update
-        if: ${{ github.event_name == 'push' }}
         run: |
           yarn version apply --all
 
@@ -196,26 +190,13 @@ jobs:
             git commit -am "chore: update bundles & version numbers"
           fi
 
-      - name: Apply milestone version
-        if: ${{ github.event_name == 'milestone' }}
-        run: |
-          yarn workspaces foreach version -i ${{ github.event.milestone.title }}
-
-          if `git diff --quiet --exit-code`
-          then
-            echo "::warning::Nothing changed !"
-          else
-            git commit -am "chore: update bundles & version numbers"
-            git tag ${{ github.event.milestone.title }}
-          fi
-
       - name: Push
         run: |
           git push
           git push --tags
 
-      - name: Publish
-        run: yarn workspaces foreach --no-private npm publish --access public --tolerate-republish
+      - name: Publish next
+        run: yarn workspaces foreach --no-private npm publish --access public --tag next --tolerate-republish
         env:
           YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
@@ -271,29 +252,3 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
-  release:
-    runs-on: ubuntu-latest
-    needs: [publish]
-    if: ${{ github.event_name == 'milestone' }}
-
-    permissions:
-      contents: write
-
-    steps:
-      - uses: actions/checkout@v3.0.0
-        with:
-          ref: master
-
-      - name: Use Node.js 14.x
-        uses: actions/setup-node@v3.0.0
-        with:
-          node-version: 14.x
-
-      - name: Setup gren
-        run: npm install -g github-release-notes
-
-      - name: 🤖 Generate release
-        run: gren release -t ${{ github.event.milestone.title }}
-        env:
-          GREN_GITHUB_TOKEN: ${{ github.token }}
