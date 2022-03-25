@@ -163,7 +163,7 @@ export const ListCommand = wrapper(function ListComponent() {
 
   // Render
   if (!data) {
-    return <Text><Spinner /> Load workspaces</Text>;
+    return <Text><Spinner /> Loading workspaces</Text>;
   }
 
   return (

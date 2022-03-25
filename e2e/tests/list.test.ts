@@ -9,16 +9,12 @@ describe('jill list', () => {
     const res = await jill(['list'], { cwd: MOCK });
 
     expect(res.code).toBe(0);
-    expect(res.frames).toEqual([
-      ['⠋ Loading project ...'],
-      ['⠋ Load workspaces'],
-      [
-        'mock-root',
-        'mock-test-a',
-        'mock-test-b',
-        'mock-test-c',
-        'mock-test-d'
-      ]
+    expect(res.lastFrame).toEqual([
+      'mock-root',
+      'mock-test-a',
+      'mock-test-b',
+      'mock-test-c',
+      'mock-test-d'
     ]);
   });
 
@@ -26,26 +22,18 @@ describe('jill list', () => {
     const res = await jill(['list', '--private'], { cwd: MOCK });
 
     expect(res.code).toBe(0);
-    expect(res.frames).toEqual([
-      ['⠋ Loading project ...'],
-      ['⠋ Load workspaces'],
-      ['mock-root']
-    ]);
+    expect(res.lastFrame).toEqual(['mock-root']);
   });
 
   it('should print list of all public projects (--no-private)', async () => {
     const res = await jill(['list', '--no-private'], { cwd: MOCK });
 
     expect(res.code).toBe(0);
-    expect(res.frames).toEqual([
-      ['⠋ Loading project ...'],
-      ['⠋ Load workspaces'],
-      [
-        'mock-test-a',
-        'mock-test-b',
-        'mock-test-c',
-        'mock-test-d'
-      ]
+    expect(res.lastFrame).toEqual([
+      'mock-test-a',
+      'mock-test-b',
+      'mock-test-c',
+      'mock-test-d'
     ]);
   });
 
@@ -53,28 +41,20 @@ describe('jill list', () => {
     const res = await jill(['list', '--with-script', 'start'], { cwd: MOCK });
 
     expect(res.code).toBe(0);
-    expect(res.frames).toEqual([
-      ['⠋ Loading project ...'],
-      ['⠋ Load workspaces'],
-      ['mock-test-a']
-    ]);
+    expect(res.lastFrame).toEqual(['mock-test-a']);
   });
 
   it('should print name and version of all projects (--attrs name version)', async () => {
     const res = await jill(['list', '--attrs', 'name', 'version'], { cwd: MOCK });
 
     expect(res.code).toBe(0);
-    expect(res.frames).toEqual([
-      ['⠋ Loading project ...'],
-      ['⠋ Load workspaces'],
-      [
-        chalk`{bold Name}         {bold Version}`,
-        chalk`mock-root    {grey unset}`,
-        chalk`mock-test-a  {grey unset}`,
-        chalk`mock-test-b  {grey unset}`,
-        chalk`mock-test-c  {grey unset}`,
-        chalk`mock-test-d  {grey unset}`,
-      ]
+    expect(res.lastFrame).toEqual([
+      chalk`{bold Name}         {bold Version}`,
+      chalk`mock-root    {grey unset}`,
+      chalk`mock-test-a  {grey unset}`,
+      chalk`mock-test-b  {grey unset}`,
+      chalk`mock-test-c  {grey unset}`,
+      chalk`mock-test-d  {grey unset}`,
     ]);
   });
 
@@ -82,17 +62,13 @@ describe('jill list', () => {
     const res = await jill(['list', '--headers'], { cwd: MOCK });
 
     expect(res.code).toBe(0);
-    expect(res.frames).toEqual([
-      ['⠋ Loading project ...'],
-      ['⠋ Load workspaces'],
-      [
-        chalk`{bold Name}`,
-        chalk`mock-root`,
-        chalk`mock-test-a`,
-        chalk`mock-test-b`,
-        chalk`mock-test-c`,
-        chalk`mock-test-d`,
-      ]
+    expect(res.lastFrame).toEqual([
+      chalk`{bold Name}`,
+      chalk`mock-root`,
+      chalk`mock-test-a`,
+      chalk`mock-test-b`,
+      chalk`mock-test-c`,
+      chalk`mock-test-d`,
     ]);
   });
 
@@ -100,17 +76,13 @@ describe('jill list', () => {
     const res = await jill(['list', '-l'], { cwd: MOCK });
 
     expect(res.code).toBe(0);
-    expect(res.frames).toEqual([
-      ['⠋ Loading project ...'],
-      ['⠋ Load workspaces'],
-      [
-        chalk`{bold Name}         {bold Version}  {bold Root}`,
-        chalk`mock-root    {grey unset}    .`,
-        chalk`mock-test-a  {grey unset}    workspaces${path.sep}test-a`,
-        chalk`mock-test-b  {grey unset}    workspaces${path.sep}test-b`,
-        chalk`mock-test-c  {grey unset}    workspaces${path.sep}test-c`,
-        chalk`mock-test-d  {grey unset}    workspaces${path.sep}test-d`,
-      ]
+    expect(res.lastFrame).toEqual([
+      chalk`{bold Name}         {bold Version}  {bold Root}`,
+      chalk`mock-root    {grey unset}    .`,
+      chalk`mock-test-a  {grey unset}    workspaces${path.sep}test-a`,
+      chalk`mock-test-b  {grey unset}    workspaces${path.sep}test-b`,
+      chalk`mock-test-c  {grey unset}    workspaces${path.sep}test-c`,
+      chalk`mock-test-d  {grey unset}    workspaces${path.sep}test-d`,
     ]);
   });
 
