@@ -23,7 +23,7 @@ const DEFAULT_ATTRIBUTES: Attribute[] = ['name'];
 
 const EXTRACTORS: Record<Attribute, Extractor<string | undefined>> = {
   name: wks => wks.name,
-  version: wks => wks.manifest.version,
+  version: wks => wks.manifest.version || undefined,
   root: (wks, json) =>  json ? wks.cwd : path.relative(process.cwd(), wks.cwd) || '.',
   slug: wks => slugify(wks.name)
 };

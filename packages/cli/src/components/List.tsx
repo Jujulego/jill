@@ -1,5 +1,5 @@
-import { Box, Static, Text, useStdout } from 'ink';
-import { ReactElement } from 'react';
+import { Box, Text, useStdout } from 'ink';
+import { ReactElement, useEffect } from 'react';
 
 // Types
 export type ListItem<K extends string> = Partial<Record<K, string | number>> & Record<string, unknown>;
@@ -17,20 +17,20 @@ function capitalize(str: string): string {
 }
 
 // Component
-export const List = <K extends string>(props: ListProps<K>): ReactElement => {
+export const List = <K extends string>(props: ListProps<K>): ReactElement | null => {
 	const { attrs, data, withoutHeaders = false, json = false } = props;
 	const { stdout } = useStdout();
 
-	// Render
-	if (json) {
-		const lines = JSON.stringify(data, null, stdout?.isTTY ? 2 : 0).split('\n');
+	// Effects
+	useEffect(() => {
+		if (!json) return;
+		if (!stdout) return;
 
-		return (
-			<Static items={lines}>
-				{(line, idx) => <Text key={idx}>{line}</Text>}
-			</Static>
-		);
-	}
+		stdout.write(JSON.stringify(data, null, stdout.isTTY ? 2 : 0));
+	}, [stdout, data, json]);
+
+	// Render
+	if (json) return null;
 
 	return (
 		<Box>

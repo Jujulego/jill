@@ -34,25 +34,18 @@ export function jill(args: ReadonlyArray<string>, opts: SpawnOptions = {}): Prom
     // Gather result
     const res: SpawnResult = {
       lastFrame: [],
-      frames: [[]],
+      frames: [],
       stderr: [],
       code: 0
     };
 
-    res.lastFrame = res.frames[0];
-
     proc.stdout.on('data', (msg: Buffer) => {
-      const data = msg.toString('utf-8');
-      console.log(JSON.stringify(data));
-      const frames = data.split(INK_NEW_FRAME);
-
-      // First one complete previous
-      if (frames[0] !== '') {
-        res.lastFrame.push(...frames[0].replace(/\n$/, '').split('\n'));
-      }
+      const frames = msg.toString('utf-8')
+        .split(INK_NEW_FRAME)
+        .filter(f => f && f !== '\n');
 
       // New frames
-      for (const frame of frames.slice(1)) {
+      for (const frame of frames) {
         res.frames.push(frame.replace(/\n$/, '').split('\n'));
       }
 

@@ -118,7 +118,6 @@ describe('jill list', () => {
     const res = await jill(['list', '--json'], { cwd: MOCK });
 
     expect(res.code).toBe(0);
-    console.log(res.lastFrame);
     expect(JSON.parse(res.lastFrame.join('\n'))).toEqual([
       {
         name: 'mock-root',
