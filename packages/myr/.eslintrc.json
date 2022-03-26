@@ -9,7 +9,6 @@
   "rules": {
     "no-console": "error"
   },
-
   "overrides": [
     {
       "files": "*.js",
