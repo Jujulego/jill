@@ -2510,6 +2510,7 @@ __metadata:
     gulp-cli: 2.3.0
     ink: ^3.2.0
     ink-spinner: ^4.0.3
+    ink-testing-library: 2.1.0
     jest: 27.5.1
     jill-tools: "workspace:*"
     ora: ^5.4.1

@@ -1,4 +1,4 @@
-import { AffectedFilter, Filter, Pipeline } from '@jujulego/jill-common';
+import { AffectedFilter, Filter, List, Pipeline } from '@jujulego/jill-common';
 import { Workspace } from '@jujulego/jill-core';
 import { Text } from 'ink';
 import Spinner from 'ink-spinner';
@@ -8,7 +8,6 @@ import slugify from 'slugify';
 
 import { command } from '../command';
 import { useProject, withProject } from '../wrappers/project.wrapper';
-import { List } from '../components/List';
 
 // Types
 export type Attribute = 'name' | 'version' | 'root' | 'slug';
@@ -159,7 +158,7 @@ export const ListCommand = wrapper(function ListComponent() {
     }
 
     setWorkspaces(workspaces);
-  })(), [args]);
+  })(), [project, args]);
 
   // Render
   if (!data) {

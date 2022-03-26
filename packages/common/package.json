@@ -71,6 +71,7 @@
     "eslint-plugin-workspaces": "0.7.0",
     "gulp": "4.0.2",
     "gulp-cli": "2.3.0",
+    "ink-testing-library": "2.1.0",
     "jest": "27.5.1",
     "jill-tools": "workspace:*",
     "react": "17.0.2",
