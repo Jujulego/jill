@@ -1,7 +1,6 @@
 {
   "name": "@jujulego/jill",
   "version": "2.0.0-beta.1",
-  "stableVersion": "1.2.0",
   "license": "MIT",
   "repository": {
     "type": "git",
