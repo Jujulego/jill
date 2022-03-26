@@ -1,10 +1,9 @@
-import { AffectedFilter, Filter, Pipeline } from '@jujulego/jill-common';
+import { AffectedFilter, Filter, Pipeline, TaskSetSpinner } from '@jujulego/jill-common';
 import { TaskSet, WorkspaceDepsMode } from '@jujulego/jill-core';
 import { useApp } from 'ink';
 import { useEffect, useRef } from 'react';
 
 import { command } from '../command';
-import { TaskSetSpinner } from '../components/TaskSetSpinner';
 import { useProject, withProject } from '../wrappers/project.wrapper';
 
 // Command
@@ -89,7 +88,7 @@ export const EachCommand = wrapper(function EachCommand() {
     if (result.failed) {
       exit(new Error('Some tasks has failed'));
     }
-  })(), [args]);
+  })(), [args, project, exit]);
 
   // Render
   return (
