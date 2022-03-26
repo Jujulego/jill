@@ -15,11 +15,6 @@
   "browserslist": [
     "maintained node versions and node >= 14"
   ],
-  "jill": {
-    "plugins": [
-      "@jujulego/jill-myr"
-    ]
-  },
   "scripts": {
     "lint": "yarn workspaces foreach -pv run lint",
     "clean": "yarn workspaces foreach -pv run clean",
@@ -28,7 +23,6 @@
   },
   "devDependencies": {
     "@jujulego/jill": "2.0.0-beta.1",
-    "@jujulego/jill-myr": "1.2.1",
     "@typescript-eslint/eslint-plugin": "5.16.0",
     "@typescript-eslint/parser": "5.16.0",
     "eslint": "8.11.0",

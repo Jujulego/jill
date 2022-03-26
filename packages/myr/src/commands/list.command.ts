@@ -131,7 +131,7 @@ export class ListCommand extends ProjectCommand<ListArgs> {
     }
 
     for (const d of data) {
-      list.add(attrs.map(attr => d[attr] || ''));
+      list.add(attrs.map((attr: Attribute) => d[attr] || ''));
     }
 
     for (const d of list.lines()) {

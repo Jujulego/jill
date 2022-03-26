@@ -1,10 +1,10 @@
+import { TaskSetSpinner } from '@jujulego/jill-common';
 import { TaskSet, WorkspaceDepsMode } from '@jujulego/jill-core';
 import { useEffect, useRef } from 'react';
 
 import { command } from '../command';
 import { withProject } from '../wrappers/project.wrapper';
 import { useWorkspace, withWorkspace } from '../wrappers/workspace.wrapper';
-import { TaskSetSpinner } from '../components/TaskSetSpinner';
 
 // Command
 const { wrapper, useArgs } = withProject(withWorkspace(command({

@@ -1,13 +1,13 @@
 import { Project, Workspace } from '@jujulego/jill-core';
 import chalk from 'chalk';
 import { render, cleanup } from 'ink-testing-library';
+import logSymbols from 'log-symbols';
 
-import { TaskSpinner } from '../../src/components/TaskSpinner';
+import { TaskSpinner } from '../../src';
 
 import '../logger';
 import { pkg } from '../utils/package';
 import { TestTask } from '../utils/task';
-import logSymbols from 'log-symbols';
 
 // Setup
 chalk.level = 1;
@@ -30,7 +30,7 @@ describe('TaskSpinner', () => {
     expect(tsk.listenerCount('status')).toBe(0);
 
     // First render
-    const { lastFrame, rerender, unmount } = render(<TaskSpinner task={tsk} />);
+    const { lastFrame, unmount } = render(<TaskSpinner task={tsk} />);
     await new Promise(res => setTimeout(res, 0));
 
     expect(lastFrame()).toBe('.   test is ready');
@@ -38,8 +38,6 @@ describe('TaskSpinner', () => {
 
     // Update state
     tsk._setStatus('running');
-    rerender(<TaskSpinner task={tsk} />);
-
     expect(lastFrame()).toBe('- test is running');
 
     // Unmount

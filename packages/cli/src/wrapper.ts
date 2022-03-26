@@ -21,7 +21,7 @@ export function commandWrapper<A>(name: string, builder: BuilderWrapper<A>, wrap
       };
 
       // Component wrapper
-      const Wrapper: FC = () => wrapper(() => useArgs<A>(), Wrapped);
+      const Wrapper: FC = () => wrapper(useArgs, Wrapped);
 
       Wrapper.displayName = `${name}(${Wrapped.displayName || Wrapped.name})`;
 

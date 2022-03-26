@@ -1,7 +1,7 @@
 import chalk from 'chalk';
 import { render } from 'ink-testing-library';
 
-import { List } from '../../src/components/List';
+import { List } from '../../src';
 
 // Constants
 const TEST_DATA = [

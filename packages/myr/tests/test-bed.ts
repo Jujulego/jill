@@ -1,5 +1,5 @@
 import { Arguments, Command, Exit } from '@jujulego/jill-common';
-import { ApplicationArgs } from '@jujulego/jill-common/src';
+import { ApplicationArgs } from '@jujulego/jill-common';
 
 // Types
 export type TestArgs<A> = A & Partial<Arguments<A>>;

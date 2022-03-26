@@ -1,3 +1,4 @@
+import { WorkspaceName } from '@jujulego/jill-common';
 import { Workspace } from '@jujulego/jill-core';
 import { Newline, Text, TextProps } from 'ink';
 import { FC, ReactElement, useEffect, useState } from 'react';
@@ -32,13 +33,12 @@ export const WorkspaceTree: FC<WorkspaceTreeProps> = (props) => {
     }
 
     setDeps(deps);
-  })(), [wks]);
+  })(), [dev, wks]);
 
   // Render
   return (
     <Text>
-      <Text {...style(dev)}>{ wks.name }</Text>
-      { wks.version && (<Text color="grey">@{ wks.version }</Text>) }
+      <WorkspaceName {...style(dev)} workspace={wks} />
       <Newline />
 
       { deps.map(([dep, isDev], idx) => (
