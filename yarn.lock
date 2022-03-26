@@ -2481,7 +2481,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jujulego/jill-common@^2.0.0-beta.1, @jujulego/jill-common@workspace:packages/common":
+"@jujulego/jill-common@^2.0.0-beta.2, @jujulego/jill-common@workspace:packages/common":
   version: 0.0.0-use.local
   resolution: "@jujulego/jill-common@workspace:packages/common"
   dependencies:
@@ -2664,7 +2664,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jujulego/jill@2.0.0-beta.1, @jujulego/jill@workspace:packages/cli":
+"@jujulego/jill@2.0.0-beta.2, @jujulego/jill@workspace:packages/cli":
   version: 0.0.0-use.local
   resolution: "@jujulego/jill@workspace:packages/cli"
   dependencies:
@@ -2673,7 +2673,7 @@ __metadata:
     "@babel/preset-env": 7.16.11
     "@babel/preset-react": 7.16.7
     "@babel/runtime": 7.17.8
-    "@jujulego/jill-common": ^2.0.0-beta.1
+    "@jujulego/jill-common": ^2.0.0-beta.2
     "@jujulego/jill-core": ^2.0.0-beta.1
     "@repeaterjs/repeater": ^3.0.4
     "@types/gulp": 4.0.9
@@ -9149,7 +9149,7 @@ fsevents@^1.2.7:
   version: 0.0.0-use.local
   resolution: "jill-e2e@workspace:e2e"
   dependencies:
-    "@jujulego/jill": 2.0.0-beta.1
+    "@jujulego/jill": 2.0.0-beta.2
     "@types/jest": 27.4.1
     "@types/node": 14.18.12
     "@typescript-eslint/eslint-plugin": 5.16.0
@@ -9185,7 +9185,7 @@ fsevents@^1.2.7:
   version: 0.0.0-use.local
   resolution: "jill@workspace:."
   dependencies:
-    "@jujulego/jill": 2.0.0-beta.1
+    "@jujulego/jill": 2.0.0-beta.2
     "@typescript-eslint/eslint-plugin": 5.16.0
     "@typescript-eslint/parser": 5.16.0
     eslint: 8.11.0
