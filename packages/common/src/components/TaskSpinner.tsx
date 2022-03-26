@@ -3,6 +3,7 @@ import { Text } from 'ink';
 import Spinner from 'ink-spinner';
 import logSymbols from 'log-symbols';
 import { FC, useEffect, useState } from 'react';
+import { WorkspaceName } from './WorkspaceName';
 
 // Types
 export interface TaskSpinnerProps {
@@ -31,7 +32,7 @@ export const TaskSpinner: FC<TaskSpinnerProps> = (props) => {
     return (
       <Text>
         { logSymbols.success }{' '}
-        { wks && <><Text color="grey">[{ wks.name }]</Text>{' '}</> }
+        { wks && <><Text color="grey">[<WorkspaceName workspace={wks} />]</Text>{' '}</> }
         { task.name } is { status }
       </Text>
     );
@@ -39,7 +40,7 @@ export const TaskSpinner: FC<TaskSpinnerProps> = (props) => {
     return (
       <Text>
         { logSymbols.error }{' '}
-        { wks && <><Text color="grey">[{ wks.name }]</Text>{' '}</> }
+        { wks && <><Text color="grey">[<WorkspaceName workspace={wks} />]</Text>{' '}</> }
         { task.name } is { status }
       </Text>
     );
@@ -48,7 +49,7 @@ export const TaskSpinner: FC<TaskSpinnerProps> = (props) => {
   return (
     <Text>
       <Spinner type={status === 'running' ? 'line' : 'simpleDotsScrolling'} />{' '}
-      { wks && <><Text color="grey">[{ wks.name }]</Text>{' '}</> }
+      { wks && <><Text color="grey">[<WorkspaceName workspace={wks} />]</Text>{' '}</> }
       { task.name } is { status }
     </Text>
   );

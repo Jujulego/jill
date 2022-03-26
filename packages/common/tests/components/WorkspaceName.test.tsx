@@ -11,7 +11,7 @@ chalk.level = 1;
 // Tests
 describe('WorkspaceName', () => {
   it('should render workspace name only', () => {
-    const wks = new Workspace('wks', pkg({ name: 'wks', version: '' }), new Project('/'));
+    const wks = new Workspace('wks', pkg({ name: 'wks' }), new Project('/'));
 
     // Render
     const { lastFrame } = render(
