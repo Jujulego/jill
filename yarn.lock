@@ -2495,6 +2495,7 @@ __metadata:
     "@types/gulp": 4.0.9
     "@types/jest": 27.4.1
     "@types/node": 14.18.12
+    "@types/normalize-package-data": 2.4.1
     "@types/react": 17.0.39
     "@types/yargs": 17.0.10
     "@typescript-eslint/eslint-plugin": 5.16.0
@@ -2513,6 +2514,8 @@ __metadata:
     ink-testing-library: 2.1.0
     jest: 27.5.1
     jill-tools: "workspace:*"
+    log-symbols: ^4.1.0
+    normalize-package-data: 4.0.0
     ora: ^5.4.1
     react: 17.0.2
     ts-jest: 27.1.4
@@ -10308,6 +10311,18 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"normalize-package-data@npm:4.0.0, normalize-package-data@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "normalize-package-data@npm:4.0.0"
+  dependencies:
+    hosted-git-info: ^5.0.0
+    is-core-module: ^2.8.1
+    semver: ^7.3.5
+    validate-npm-package-license: ^3.0.4
+  checksum: b0f47de4295a0f8499bd478e84b9f9592a29f65227c2b4446ae80f7dff6e7a5ec6ef25ea8f06f3dcb9b7b7d945c2daa274385925b3d85e77e34eaffa0b42e316
+  languageName: node
+  linkType: hard
+
 "normalize-package-data@npm:^2.3.2":
   version: 2.5.0
   resolution: "normalize-package-data@npm:2.5.0"
@@ -10317,18 +10332,6 @@ fsevents@^1.2.7:
     semver: 2 || 3 || 4 || 5
     validate-npm-package-license: ^3.0.1
   checksum: 7999112efc35a6259bc22db460540cae06564aa65d0271e3bdfa86876d08b0e578b7b5b0028ee61b23f1cae9fc0e7847e4edc0948d3068a39a2a82853efc8499
-  languageName: node
-  linkType: hard
-
-"normalize-package-data@npm:^4.0.0":
-  version: 4.0.0
-  resolution: "normalize-package-data@npm:4.0.0"
-  dependencies:
-    hosted-git-info: ^5.0.0
-    is-core-module: ^2.8.1
-    semver: ^7.3.5
-    validate-npm-package-license: ^3.0.4
-  checksum: b0f47de4295a0f8499bd478e84b9f9592a29f65227c2b4446ae80f7dff6e7a5ec6ef25ea8f06f3dcb9b7b7d945c2daa274385925b3d85e77e34eaffa0b42e316
   languageName: node
   linkType: hard
 

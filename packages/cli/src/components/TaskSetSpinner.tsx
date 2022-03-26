@@ -1,6 +1,6 @@
 import { Task, TaskSet } from '@jujulego/jill-core';
+import { TaskSpinner } from '@jujulego/jill-common';
 import { FC, useEffect, useState } from 'react';
-import { TaskSpinner } from './TaskSpinner';
 
 // Types
 export interface TaskSetSpinnerProps {

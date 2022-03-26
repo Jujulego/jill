@@ -1,13 +1,13 @@
 import { Project, Workspace } from '@jujulego/jill-core';
 import chalk from 'chalk';
 import { render, cleanup } from 'ink-testing-library';
+import logSymbols from 'log-symbols';
 
-import { TaskSpinner } from '../../src/components/TaskSpinner';
+import { TaskSpinner } from '../../src';
 
 import '../logger';
 import { pkg } from '../utils/package';
 import { TestTask } from '../utils/task';
-import logSymbols from 'log-symbols';
 
 // Setup
 chalk.level = 1;
