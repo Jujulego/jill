@@ -2553,7 +2553,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jujulego/jill-core@2.0.0-beta.1, @jujulego/jill-core@^2.0.0-beta.1, @jujulego/jill-core@workspace:packages/core":
+"@jujulego/jill-core@^2.0.0-beta.1, @jujulego/jill-core@workspace:packages/core":
   version: 0.0.0-use.local
   resolution: "@jujulego/jill-core@workspace:packages/core"
   dependencies:
@@ -2591,7 +2591,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jujulego/jill-core@npm:^1.2.0":
+"@jujulego/jill-core@npm:1.2.0, @jujulego/jill-core@npm:^1.2.0":
   version: 1.2.0
   resolution: "@jujulego/jill-core@npm:1.2.0"
   dependencies:
@@ -2606,7 +2606,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jujulego/jill-myr@1.2.1, @jujulego/jill-myr@workspace:packages/myr":
+"@jujulego/jill-myr@workspace:packages/myr":
   version: 0.0.0-use.local
   resolution: "@jujulego/jill-myr@workspace:packages/myr"
   dependencies:
@@ -2615,7 +2615,7 @@ __metadata:
     "@babel/preset-env": 7.16.11
     "@babel/runtime": 7.17.8
     "@jujulego/jill-common": ^1.2.0
-    "@jujulego/jill-core": 2.0.0-beta.1
+    "@jujulego/jill-core": 1.2.0
     "@jujulego/pid-file": ^1.0.3
     "@nestjs/apollo": ^10.0.4
     "@nestjs/common": ^8.2.3
@@ -9186,7 +9186,6 @@ fsevents@^1.2.7:
   resolution: "jill@workspace:."
   dependencies:
     "@jujulego/jill": 2.0.0-beta.1
-    "@jujulego/jill-myr": 1.2.1
     "@typescript-eslint/eslint-plugin": 5.16.0
     "@typescript-eslint/parser": 5.16.0
     eslint: 8.11.0

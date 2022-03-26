@@ -28,7 +28,7 @@ export class SpawnCommand extends WorkspaceCommand<SpawnArgs> {
     const client = new MyrClient(this.project);
 
     this.spinner.start('Spawning task');
-    const task = await client.spawn(this.workspace.cwd, args.command, args['--']?.map(arg => arg.toString()));
+    const task = await client.spawn(this.workspace.cwd, args.command, args['--']?.map((arg: string | number) => arg.toString()));
 
     this.spinner.succeed(`Task ${task.id} spawned`);
   }

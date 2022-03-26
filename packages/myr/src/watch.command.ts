@@ -70,7 +70,7 @@ export class WatchCommand extends WorkspaceCommand<WatchArgs> {
 
     // Spawn task
     this.spinner.start(`Spawning ${args.script} task`);
-    const tsk = await myr.spawnScript(this.workspace, args.script, args['--']?.map(arg => arg.toString()), { watchOn: deps.map(t => t.id) });
+    const tsk = await myr.spawnScript(this.workspace, args.script, args['--']?.map((arg: string | number) => arg.toString()), { watchOn: deps.map(t => t.id) });
     this.logger.log('info', `Task ${tsk.id} spawned`, { label: this.workspace.name });
     this.spinner.succeed(`${count + 1} watch tasks spawned`);
 
