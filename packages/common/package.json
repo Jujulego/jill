@@ -41,7 +41,7 @@
     "@jujulego/jill-core": "^1.2.0",
     "@repeaterjs/repeater": "^3.0.4",
     "chalk": "^4.1.1",
-    "ora": "^5.4.1",
+    "ora": "^6.0.0",
     "winston": "^3.3.3",
     "winston-transport": "^4.4.0",
     "yargs": "^17.0.1"

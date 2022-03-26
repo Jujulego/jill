@@ -41,7 +41,7 @@
     "graphql-request": "^4.0.0",
     "graphql-tag": "^2.12.6",
     "graphql-ws": "^5.5.5",
-    "ora": "^5.4.1",
+    "ora": "^6.0.0",
     "slugify": "^1.6.0",
     "winston": "^3.3.3",
     "winston-transport": "^4.4.0",
