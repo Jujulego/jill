@@ -2,8 +2,9 @@
   "presets": [
     ["@babel/preset-env", {
       "bugfixes": true,
-      "modules": "cjs"
-    }]
+      "modules": "auto"
+    }],
+    "@babel/preset-typescript"
   ],
   "plugins": [
     "@babel/proposal-class-properties"
