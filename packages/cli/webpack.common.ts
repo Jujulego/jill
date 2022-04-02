@@ -41,6 +41,10 @@ const config: webpack.Configuration = {
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
   },
+  externals: {
+    '@jujulego/jill-core': 'commonjs2 @jujulego/jill-core',
+    '@jujulego/jill-common': 'commonjs2 @jujulego/jill-common',
+  },
   plugins: [
     new ForkTsCheckerWebpackPlugin()
   ],

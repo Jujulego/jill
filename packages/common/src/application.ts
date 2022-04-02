@@ -52,7 +52,7 @@ export abstract class Application {
     this.corePlugin.setup(parser);
 
     for (const name of plugins) {
-      const { default: plugin } = await import(name);
+      const { default: plugin } = await import(/* webpackIgnore: true */ name);
 
       if (plugin instanceof Plugin) {
         plugin.setup(parser);

@@ -16,6 +16,7 @@
   "scripts": {
     "lint": "eslint {src,tests}/**/*.*",
     "build": "webpack --config webpack.prod.ts",
+    "build:dev": "webpack --config webpack.dev.ts",
     "start": "ts-node src/main.ts",
     "stats": "webpack --config webpack.stats.ts",
     "test": "jest"
@@ -24,7 +25,7 @@
     "node": "^14"
   },
   "peerDependencies": {
-    "@jujulego/jill-myr": "1.2.1"
+    "@jujulego/jill-myr": "^1.2.0"
   },
   "peerDependenciesMeta": {
     "@jujulego/jill-myr": {
