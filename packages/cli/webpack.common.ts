@@ -9,10 +9,8 @@ const config: webpack.Configuration = {
   },
   output: {
     clean: true,
-    publicPath: '/',
-    filename: '[name].[contenthash].js',
+    filename: '[name].js',
     path: path.resolve(__dirname, 'dist'),
-    assetModuleFilename: 'assets/[hash][ext][query]'
   },
   optimization: {
     runtimeChunk: 'single',
@@ -35,13 +33,13 @@ const config: webpack.Configuration = {
     rules: [
       {
         test: /\.(js|jsx|ts|tsx)$/,
-        exclude: /node_modules/,
+        exclude: /node_modules|mocks/,
         use: 'babel-loader',
       }
     ],
   },
   resolve: {
-    extensions: ['.js', '.jsx', '.ts', '.tsx'],
+    extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
   },
   plugins: [
     new ForkTsCheckerWebpackPlugin()
