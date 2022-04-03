@@ -2521,7 +2521,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jujulego/jill-core@^1.2.0, @jujulego/jill-core@workspace:packages/core":
+"@jujulego/jill-core@1.2.1, @jujulego/jill-core@^1.2.0, @jujulego/jill-core@workspace:packages/core":
   version: 0.0.0-use.local
   resolution: "@jujulego/jill-core@workspace:packages/core"
   dependencies:
@@ -2558,21 +2558,6 @@ __metadata:
     winston-transport: 4.5.0
   languageName: unknown
   linkType: soft
-
-"@jujulego/jill-core@npm:1.2.0":
-  version: 1.2.0
-  resolution: "@jujulego/jill-core@npm:1.2.0"
-  dependencies:
-    "@repeaterjs/repeater": ^3.0.4
-    async-lock: ^1.3.0
-    normalize-package-data: ^3.0.3
-    semver: ^7.3.5
-    tiny-glob: ^0.2.9
-    tree-kill: ^1.2.2
-    winston: ^3.3.3
-  checksum: e05d62468f1c57cbe4cf8e1a0c1a4e4039cc970de98a79d74ed8265caa6b59cdf843792f6166cb21688fa952c6378d19cf98ae142bbd21ff379b3c2e564eb4bc
-  languageName: node
-  linkType: hard
 
 "@jujulego/jill-myr@npm:1.2.1":
   version: 1.2.1
@@ -2617,7 +2602,7 @@ __metadata:
     "@babel/preset-env": 7.16.11
     "@babel/runtime": 7.17.8
     "@jujulego/jill-common": ^1.2.0
-    "@jujulego/jill-core": 1.2.0
+    "@jujulego/jill-core": 1.2.1
     "@jujulego/pid-file": ^1.0.4
     "@nestjs/apollo": ^10.0.8
     "@nestjs/common": ^8.4.3
@@ -4584,7 +4569,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"async-lock@npm:^1.3.0, async-lock@npm:^1.3.1":
+"async-lock@npm:^1.3.1":
   version: 1.3.1
   resolution: "async-lock@npm:1.3.1"
   checksum: b11aca6d74431a42f9a3010ce7e55ac18c208f389433f55c07249ccd69dc63bc77fade28957d2d36212811d80b9c067a010341fb1e3d6a819b4fb74a122c4c27
@@ -7819,15 +7804,6 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"hosted-git-info@npm:^4.0.1":
-  version: 4.1.0
-  resolution: "hosted-git-info@npm:4.1.0"
-  dependencies:
-    lru-cache: ^6.0.0
-  checksum: c3f87b3c2f7eb8c2748c8f49c0c2517c9a95f35d26f4bf54b2a8cba05d2e668f3753548b6ea366b18ec8dadb4e12066e19fa382a01496b0ffa0497eb23cbe461
-  languageName: node
-  linkType: hard
-
 "hosted-git-info@npm:^5.0.0":
   version: 5.0.0
   resolution: "hosted-git-info@npm:5.0.0"
@@ -8225,7 +8201,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"is-core-module@npm:^2.5.0, is-core-module@npm:^2.8.1":
+"is-core-module@npm:^2.8.1":
   version: 2.8.1
   resolution: "is-core-module@npm:2.8.1"
   dependencies:
@@ -10338,18 +10314,6 @@ fsevents@^1.2.7:
     semver: 2 || 3 || 4 || 5
     validate-npm-package-license: ^3.0.1
   checksum: 7999112efc35a6259bc22db460540cae06564aa65d0271e3bdfa86876d08b0e578b7b5b0028ee61b23f1cae9fc0e7847e4edc0948d3068a39a2a82853efc8499
-  languageName: node
-  linkType: hard
-
-"normalize-package-data@npm:^3.0.3":
-  version: 3.0.3
-  resolution: "normalize-package-data@npm:3.0.3"
-  dependencies:
-    hosted-git-info: ^4.0.1
-    is-core-module: ^2.5.0
-    semver: ^7.3.4
-    validate-npm-package-license: ^3.0.1
-  checksum: bbcee00339e7c26fdbc760f9b66d429258e2ceca41a5df41f5df06cc7652de8d82e8679ff188ca095cad8eff2b6118d7d866af2b68400f74602fbcbce39c160a
   languageName: node
   linkType: hard
 

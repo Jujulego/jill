@@ -57,7 +57,7 @@
     "@babel/plugin-proposal-class-properties": "7.16.7",
     "@babel/preset-env": "7.16.11",
     "@babel/runtime": "7.17.8",
-    "@jujulego/jill-core": "1.2.0",
+    "@jujulego/jill-core": "1.2.1",
     "@types/gulp": "4.0.9",
     "@types/jest": "27.4.1",
     "@types/node": "14.18.12",
