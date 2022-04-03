@@ -1,6 +1,7 @@
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import path from 'path';
 import webpack from 'webpack';
+import WebpackNodeExternals from 'webpack-node-externals';
 
 // Config
 const config: webpack.Configuration = {
@@ -13,17 +14,7 @@ const config: webpack.Configuration = {
     path: path.resolve(__dirname, 'dist'),
   },
   optimization: {
-    runtimeChunk: 'single',
     moduleIds: 'deterministic',
-    splitChunks: {
-      cacheGroups: {
-        vendor: {
-          test: /[\\/]node_modules[\\/]/,
-          name: 'vendors',
-          chunks: 'all',
-        },
-      },
-    },
   },
   performance: {
     maxAssetSize: 500000,
@@ -41,10 +32,18 @@ const config: webpack.Configuration = {
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
   },
-  externals: {
-    '@jujulego/jill-core': 'commonjs2 @jujulego/jill-core',
-    '@jujulego/jill-common': 'commonjs2 @jujulego/jill-common',
+  externalsPresets: {
+    node: true
   },
+  externals: [
+    WebpackNodeExternals({
+      modulesFromFile: {
+        fileName: path.join(__dirname, 'package.json'),
+        includeInBundle: ['devDependencies'],
+        excludeFromBundle: ['dependencies']
+      } as never
+    }),
+  ],
   plugins: [
     new ForkTsCheckerWebpackPlugin()
   ],
