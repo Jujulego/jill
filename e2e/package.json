@@ -8,12 +8,12 @@
     "start": "jest"
   },
   "engines": {
-    "node": "^14"
+    "node": "^16.0.0"
   },
   "devDependencies": {
     "@jujulego/jill": "1.2.0",
     "@types/jest": "27.4.1",
-    "@types/node": "14.18.12",
+    "@types/node": "16.11.26",
     "@typescript-eslint/eslint-plugin": "5.17.0",
     "@typescript-eslint/parser": "5.17.0",
     "chalk": "4.1.2",
