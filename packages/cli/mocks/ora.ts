@@ -1,4 +1,4 @@
-import ora from 'ora';
+import ora, { Ora, PersistOptions } from 'ora';
 
 // Mock
 jest.mock('ora');
@@ -22,25 +22,25 @@ export const mockedOra = {
     return this;
   },
 
-  succeed(text?: string): ora.Ora {
+  succeed(text?: string): Ora {
     this.isSpinning = false;
     this.text = text ?? this.text;
 
     return this;
   },
 
-  fail(text?: string): ora.Ora {
+  fail(text?: string): Ora {
     this.isSpinning = false;
     this.text = text ?? this.text;
 
     return this;
   },
 
-  clear(): ora.Ora {
+  clear(): Ora {
     return this;
   },
 
-  stopAndPersist(opts: ora.PersistOptions) {
+  stopAndPersist(opts: PersistOptions) {
     this.isSpinning = false;
     this.text = opts?.text ?? this.text;
 
@@ -49,4 +49,4 @@ export const mockedOra = {
 };
 
 (ora as jest.MockedFunction<typeof ora>)
-  .mockReturnValue(mockedOra as ora.Ora);
+  .mockReturnValue(mockedOra as Ora);
