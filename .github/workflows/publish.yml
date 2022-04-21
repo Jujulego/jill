@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3.0.0
+      - uses: actions/checkout@v3.0.2
 
       - name: Use Node.js 14.x
         uses: actions/setup-node@v3.1.0
@@ -44,7 +44,7 @@ jobs:
           - '@jujulego/jill-myr'
 
     steps:
-      - uses: actions/checkout@v3.0.0
+      - uses: actions/checkout@v3.0.2
 
       - name: Use Node.js 14.x
         uses: actions/setup-node@v3.1.0
@@ -84,7 +84,7 @@ jobs:
             workspace: 'packages/myr'
 
     steps:
-      - uses: actions/checkout@v3.0.0
+      - uses: actions/checkout@v3.0.2
 
       - name: Use Node.js 14.x
         uses: actions/setup-node@v3.1.0
@@ -121,7 +121,7 @@ jobs:
           - 'windows-latest'
 
     steps:
-      - uses: actions/checkout@v3.0.0
+      - uses: actions/checkout@v3.0.2
         with:
           fetch-depth: 0
 
@@ -160,7 +160,7 @@ jobs:
           all_but_latest: true
           access_token: ${{ github.token }}
 
-      - uses: actions/checkout@v3.0.0
+      - uses: actions/checkout@v3.0.2
         with:
           ref: master
 
@@ -253,7 +253,7 @@ jobs:
             workspace: 'packages/myr'
 
     steps:
-      - uses: actions/checkout@v3.0.0
+      - uses: actions/checkout@v3.0.2
         with:
           ref: master
           fetch-depth: 0
@@ -288,7 +288,7 @@ jobs:
       contents: write
 
     steps:
-      - uses: actions/checkout@v3.0.0
+      - uses: actions/checkout@v3.0.2
         with:
           ref: master
 
