@@ -2664,7 +2664,7 @@ __metadata:
     "@repeaterjs/repeater": ^3.0.4
     "@types/gulp": 4.0.9
     "@types/jest": 28.1.3
-    "@types/node": 14.18.16
+    "@types/node": 14.18.22
     "@types/yargs": 17.0.10
     "@typescript-eslint/eslint-plugin": 5.21.0
     "@typescript-eslint/parser": 5.21.0
@@ -2704,7 +2704,7 @@ __metadata:
     "@types/async-lock": 1.1.5
     "@types/gulp": 4.0.9
     "@types/jest": 28.1.3
-    "@types/node": 14.18.16
+    "@types/node": 14.18.22
     "@types/normalize-package-data": 2.4.1
     "@types/semver": 7.3.9
     "@typescript-eslint/eslint-plugin": 5.21.0
@@ -2783,7 +2783,7 @@ __metadata:
     "@repeaterjs/repeater": ^3.0.4
     "@types/gulp": 4.0.9
     "@types/jest": 28.1.3
-    "@types/node": 14.18.16
+    "@types/node": 14.18.22
     "@types/ws": 8.5.3
     "@typescript-eslint/eslint-plugin": 5.21.0
     "@typescript-eslint/parser": 5.21.0
@@ -2864,7 +2864,7 @@ __metadata:
     "@repeaterjs/repeater": ^3.0.4
     "@types/gulp": 4.0.9
     "@types/jest": 28.1.3
-    "@types/node": 14.18.16
+    "@types/node": 14.18.22
     "@types/ws": 8.5.3
     "@types/yargs": 17.0.10
     "@typescript-eslint/eslint-plugin": 5.21.0
@@ -3721,10 +3721,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:14.18.16":
-  version: 14.18.16
-  resolution: "@types/node@npm:14.18.16"
-  checksum: 1999799309dc8620a2adf9a5d5e48416af87321bae4c950b4aa8018fcef2c3b6c1fcf98c39eae06f6492c03a643a5a44e2bb3750cd2574d9cf7eac33bac50e24
+"@types/node@npm:14.18.22":
+  version: 14.18.22
+  resolution: "@types/node@npm:14.18.22"
+  checksum: 5cec8276b834b8988f0af69655423e816729a5757d2015a3199156bdc98ea55206338fad752b26236c55d431dce24eb973b4f5a8918f8e6b17056ffcc12edc08
   languageName: node
   linkType: hard
 
@@ -9132,7 +9132,7 @@ fsevents@^1.2.7:
   dependencies:
     "@jujulego/jill": 1.2.0
     "@types/jest": 28.1.3
-    "@types/node": 14.18.16
+    "@types/node": 14.18.22
     "@typescript-eslint/eslint-plugin": 5.21.0
     "@typescript-eslint/parser": 5.21.0
     chalk: 4.1.2
