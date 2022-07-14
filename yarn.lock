@@ -2671,7 +2671,7 @@ __metadata:
     chalk: ^4.1.2
     del: 6.1.1
     eslint: 8.14.0
-    eslint-plugin-jest: 26.1.5
+    eslint-plugin-jest: 26.6.0
     eslint-plugin-workspaces: 0.7.0
     gulp: 4.0.2
     gulp-cli: 2.3.0
@@ -2712,7 +2712,7 @@ __metadata:
     async-lock: ^1.3.1
     del: 6.1.1
     eslint: 8.14.0
-    eslint-plugin-jest: 26.1.5
+    eslint-plugin-jest: 26.6.0
     eslint-plugin-workspaces: 0.7.0
     gulp: 4.0.2
     gulp-cli: 2.3.0
@@ -2794,7 +2794,7 @@ __metadata:
     class-validator: ^0.13.2
     del: 6.1.1
     eslint: 8.14.0
-    eslint-plugin-jest: 26.1.5
+    eslint-plugin-jest: 26.6.0
     eslint-plugin-workspaces: 0.7.0
     express: ^4.17.3
     graphql: ^16.3.0
@@ -2872,7 +2872,7 @@ __metadata:
     chalk: ^4.1.2
     del: 6.1.1
     eslint: 8.14.0
-    eslint-plugin-jest: 26.1.5
+    eslint-plugin-jest: 26.6.0
     eslint-plugin-workspaces: 0.7.0
     gulp: 4.0.2
     gulp-cli: 2.3.0
@@ -6464,9 +6464,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-jest@npm:26.1.5":
-  version: 26.1.5
-  resolution: "eslint-plugin-jest@npm:26.1.5"
+"eslint-plugin-jest@npm:26.6.0":
+  version: 26.6.0
+  resolution: "eslint-plugin-jest@npm:26.6.0"
   dependencies:
     "@typescript-eslint/utils": ^5.10.0
   peerDependencies:
@@ -6477,7 +6477,7 @@ __metadata:
       optional: true
     jest:
       optional: true
-  checksum: 727487c6d0cc4aa66f8209fc187a2f4eb56ffea6569dacb04bb1e3272221d6238460fb967a12074acac50b0b545d2190c697bad64ebc6c8bdd4e8f3cc66d5a68
+  checksum: 5dd60820d5618175e7203b077788476a6f697316b53d77c4bb7037b32073f3d5d539a72dec910eb3f8eedc97c3b28600ba35c5d3bf8c687ade765bb2d0dc77d2
   languageName: node
   linkType: hard
 
@@ -9137,7 +9137,7 @@ fsevents@^1.2.7:
     "@typescript-eslint/parser": 5.21.0
     chalk: 4.1.2
     eslint: 8.14.0
-    eslint-plugin-jest: 26.1.5
+    eslint-plugin-jest: 26.6.0
     jest: 28.1.2
     ts-jest: 28.0.5
     typescript: 4.6.4
@@ -9171,7 +9171,7 @@ fsevents@^1.2.7:
     "@typescript-eslint/eslint-plugin": 5.21.0
     "@typescript-eslint/parser": 5.21.0
     eslint: 8.14.0
-    eslint-plugin-jest: 26.1.5
+    eslint-plugin-jest: 26.6.0
     eslint-plugin-workspaces: 0.7.0
     jest: 28.1.2
     typescript: 4.6.4
