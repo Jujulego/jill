@@ -1,5 +1,5 @@
 export { flow } from '@jujulego/flow';
 
-export * from './babel';
+export * from './swc';
 export * from './typescript';
 export * from './utils';

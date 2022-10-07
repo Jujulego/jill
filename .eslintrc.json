@@ -1,38 +1,27 @@
 {
   "parser": "@typescript-eslint/parser",
-  "parserOptions": {
-    "ecmaVersion": 12,
-    "sourceType": "module"
-  },
+  "root": true,
   "plugins": [
     "@typescript-eslint",
-    "jest",
     "workspaces"
   ],
-  "extends": [
-    "eslint:recommended",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:jest/recommended",
-    "plugin:jest/style",
-    "plugin:workspaces/recommended"
-  ],
-  "env": {
-    "node": true,
-    "jest/globals": true
-  },
-  "root": true,
-  "rules": {
-    "jsx-quotes": ["error", "prefer-double"],
-    "quotes": ["error", "single"],
-    "semi": ["error", "always"]
-  },
-
   "overrides": [
     {
-      "files": "*.json",
+      "files": "**/*.{js,jsx,ts,tsx}",
+      "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:workspaces/recommended"
+      ],
+      "env": {
+        "node": true
+      },
       "rules": {
-        "quotes": ["error", "double"],
-        "semi": ["error", "never"]
+        "quotes": ["error", "single"],
+        "semi": ["error", "always"],
+        "no-console": ["error", {
+          "allow": ["warn", "error"]
+        }]
       }
     }
   ]

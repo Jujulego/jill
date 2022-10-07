@@ -27,17 +27,12 @@ export class Pipeline {
 
   filter(workspaces: AsyncGenerator<Workspace>): Repeater<Workspace> {
     return new Repeater(async (push, stop) => {
-      const proms: Promise<unknown>[] = [];
-
       for await (const wks of workspaces) {
-        proms.push(this._test(wks)
-          .then((res) => {
-            if (res) push(wks);
-          })
-        );
+        if (await this._test(wks)) {
+          push(wks);
+        }
       }
 
-      await Promise.all(proms);
       stop();
     });
   }
