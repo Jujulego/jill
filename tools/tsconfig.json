@@ -3,7 +3,10 @@
   "compilerOptions": {
     "incremental": true,
     "module": "commonjs",
-    "rootDir": ".",
-    "isolatedModules": true
+    "rootDir": "src",
+    "outDir": "dist",
+    "tsBuildInfoFile": "dist/.tsbuildinfo",
+    "isolatedModules": true,
+    "composite": true
   }
 }
