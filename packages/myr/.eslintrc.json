@@ -1,21 +1,18 @@
 {
-  "extends": [
-    "../../.eslintrc.json"
+  "ignorePatterns": [
+    "coverage/**",
+    "dist/**"
   ],
-  "env": {
-    "node": true,
-    "jest/globals": true
-  },
-  "rules": {
-    "no-console": "error"
-  },
-
   "overrides": [
     {
-      "files": "*.js",
-      "rules": {
-        "@typescript-eslint/no-var-requires": "off"
-      }
+      "files": "tests/**/*.{js,jsx,ts,tsx}",
+      "globals": {
+        "jest/globals": true
+      },
+      "extends": [
+        "plugin:jest/recommended",
+        "plugin:jest/style"
+      ]
     }
   ]
 }
