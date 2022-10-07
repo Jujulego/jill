@@ -1533,6 +1533,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@jujulego/event-tree@npm:^1.1.0-rc.1":
+  version: 1.1.0-rc.1
+  resolution: "@jujulego/event-tree@npm:1.1.0-rc.1"
+  peerDependencies:
+    regenerator-runtime: 0.13.9
+  checksum: 17905d34bb4cb5a07eb14ee73d87018633e8abcef6481b57eabadaca3deef418285f7e888d8716f9fb67c148b1f9ebc217145bb9febb6fe2ac2b7922c2fce6da
+  languageName: node
+  linkType: hard
+
 "@jujulego/flow@npm:1.1.0":
   version: 1.1.0
   resolution: "@jujulego/flow@npm:1.1.0"
@@ -1583,6 +1592,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@jujulego/jill-core@workspace:packages/core"
   dependencies:
+    "@jujulego/event-tree": ^1.1.0-rc.1
+    "@jujulego/tasks": ^1.0.0-rc.1
     "@repeaterjs/repeater": ^3.0.4
     "@swc/core": 1.3.5
     "@swc/jest": 0.2.23
@@ -1825,6 +1836,18 @@ __metadata:
     debug: ^4.3.2
     proper-lockfile: ^4.1.2
   checksum: bf6e7311504d54da0e33e77e051946209f096e559e499089614022190c4afd419b8132545ff789c67744eb709b953fa6e9a081c093b39d1b1cd6f96cc243ac30
+  languageName: node
+  linkType: hard
+
+"@jujulego/tasks@npm:^1.0.0-rc.1":
+  version: 1.0.0-rc.1
+  resolution: "@jujulego/tasks@npm:1.0.0-rc.1"
+  dependencies:
+    "@jujulego/event-tree": ^1.1.0-rc.1
+    tree-kill: ^1.2.2
+  peerDependencies:
+    regenerator-runtime: 0.13.9
+  checksum: 18b0686bcda1e775481c6a7d64a2ad20e46f7cba7f9f34e60b1c7f63622c2ddd377cef2c6c95ffc2a697062682ca53ce611b70f627cab4d371ff00bc8dc1216c
   languageName: node
   linkType: hard
 

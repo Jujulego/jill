@@ -5,7 +5,6 @@ import { satisfies } from 'semver';
 import { git } from './git';
 import { logger } from './logger';
 import { Project } from './project';
-import { SpawnTask, SpawnTaskOption } from './tasks';
 import { combine } from './utils';
 
 // Types
