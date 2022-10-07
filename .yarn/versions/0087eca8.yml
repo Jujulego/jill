@@ -1,0 +1,5 @@
+declined:
+  - "@jujulego/jill"
+  - "@jujulego/jill-common"
+  - "@jujulego/jill-core"
+  - "@jujulego/jill-myr"
