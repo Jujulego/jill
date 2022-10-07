@@ -3,9 +3,6 @@ import { git, TaskManager, SpawnTask } from '../src';
 import './utils/logger';
 import { TestSpawnTask } from './utils/task';
 
-// Types
-type GitCommand = 'branch' | 'diff' | 'tag';
-
 // Setup
 const manager = new TaskManager();
 
@@ -41,7 +38,7 @@ describe('git.command', () => {
   });
 });
 
-for (const cmd of ['branch', 'diff', 'tag'] as GitCommand[]) {
+for (const cmd of ['branch', 'diff', 'tag'] as const) {
   describe(`git.${cmd}`, () => {
     let task: SpawnTask;
 
