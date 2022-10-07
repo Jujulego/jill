@@ -45,6 +45,7 @@
     "yargs": "^17.4.0"
   },
   "devDependencies": {
+    "@jujulego/jill-myr": "1.2.0",
     "@swc/core": "1.3.5",
     "@swc/jest": "0.2.23",
     "@types/gulp": "4.0.9",
