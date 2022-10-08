@@ -12,10 +12,12 @@ export interface GitContext extends TaskContext {
 // Git commands
 export class Git {
   // commons
-  static command(cmd: string, args: string[], opts: SpawnTaskOptions = {}): SpawnTask<GitContext> {
+  static command(cmd: string, args: string[], options: SpawnTaskOptions = {}): SpawnTask<GitContext> {
+    const opts = { logger, ...options };
+
     // Create task
-    const task = new SpawnTask('git', [cmd, ...args], { command: cmd }, { logger, ...opts });
-    task.subscribe('stream', ({ data }) => logger.debug(data.toString('utf-8')));
+    const task = new SpawnTask('git', [cmd, ...args], { command: cmd }, opts);
+    task.subscribe('stream', ({ data }) => opts.logger.debug(data.toString('utf-8')));
 
     manager.add(task);
 
@@ -23,22 +25,22 @@ export class Git {
   }
 
   // commands
-  static branch(args: string[], opts?: SpawnTaskOptions): SpawnTask<GitContext> {
-    return this.command('branch', args, opts);
+  static branch(args: string[], options?: SpawnTaskOptions): SpawnTask<GitContext> {
+    return this.command('branch', args, options);
   }
 
-  static diff(args: string[], opts?: SpawnTaskOptions): SpawnTask<GitContext> {
-    return this.command('diff', args, opts);
+  static diff(args: string[], options?: SpawnTaskOptions): SpawnTask<GitContext> {
+    return this.command('diff', args, options);
   }
 
-  static tag(args: string[], opts?: SpawnTaskOptions): SpawnTask<GitContext> {
-    return this.command('tag', args, opts);
+  static tag(args: string[], options?: SpawnTaskOptions): SpawnTask<GitContext> {
+    return this.command('tag', args, options);
   }
 
   // high level
-  static isAffected(base: string, args: string[] = [], opts?: SpawnTaskOptions): Promise<boolean> {
+  static isAffected(reference: string, args: string[] = [], opts?: SpawnTaskOptions): Promise<boolean> {
     return new Promise((resolve, reject) => {
-      const task = this.diff(['--quiet', base, ...args], opts);
+      const task = this.diff(['--quiet', reference, ...args], opts);
 
       task.subscribe('status.done', () => resolve(true));
       task.subscribe('status.failed', () => {
@@ -56,7 +58,7 @@ export class Git {
     const result: string[] = [];
 
     for await (const line of streamLines(task, 'stdout')) {
-      result.push(line);
+      result.push(line.replace(/^[ *] /, ''));
     }
 
     return result;
