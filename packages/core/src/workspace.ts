@@ -1,5 +1,5 @@
 import { SpawnTask, SpawnTaskOptions, TaskContext } from '@jujulego/tasks';
-import path from 'path';
+import path from 'node:path';
 import { Package } from 'normalize-package-data';
 import { satisfies } from 'semver';
 
@@ -36,11 +36,11 @@ export class Workspace {
   // Methods
   private _satisfies(from: Workspace, range: string): boolean {
     if (range.startsWith('file:')) {
-      return path.resolve(from.cwd, range.substr(5)) === this.cwd;
+      return path.resolve(from.cwd, range.substring(5)) === this.cwd;
     }
 
     if (range.startsWith('workspace:')) {
-      range = range.substr(10);
+      range = range.substring(10);
     }
 
     return !this.version || satisfies(this.version, range);
@@ -69,8 +69,8 @@ export class Workspace {
     }
   }
 
-  private async _isAffected(base: string): Promise<boolean> {
-    const isAffected = await Git.isAffected(base, ['--', this.cwd], {
+  private async _isAffected(reference: string): Promise<boolean> {
+    const isAffected = await Git.isAffected(reference, ['--', this.cwd], {
       cwd: this.project.root,
       logger: this._logger,
     });
@@ -83,19 +83,19 @@ export class Workspace {
     const proms: Promise<boolean>[] = [];
 
     for await (const dep of combine(this.dependencies(), this.devDependencies())) {
-      proms.push(dep.isAffected(base));
+      proms.push(dep.isAffected(reference));
     }
 
     const results = await Promise.all(proms);
     return results.some(r => r);
   }
 
-  async isAffected(base: string): Promise<boolean> {
-    let isAffected = this._affectedCache.get(base);
+  async isAffected(reference: string): Promise<boolean> {
+    let isAffected = this._affectedCache.get(reference);
 
     if (!isAffected) {
-      isAffected = this._isAffected(base);
-      this._affectedCache.set(base, isAffected);
+      isAffected = this._isAffected(reference);
+      this._affectedCache.set(reference, isAffected);
     }
 
     return await isAffected;
