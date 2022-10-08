@@ -2,7 +2,6 @@
   "name": "@jujulego/jill-core",
   "version": "1.2.1",
   "license": "MIT",
-  "sideEffects": false,
   "repository": {
     "type": "git",
     "url": "https://github.com/Jujulego/jill",

@@ -1,14 +1,10 @@
-import { SpawnTask, SpawnTaskOptions, TaskContext, TaskManager } from '@jujulego/tasks';
+import { SpawnTask, SpawnTaskOptions, TaskContext } from '@jujulego/tasks';
 
 import { logger } from './logger';
-import { globalTaskManager } from './tasks';
+import { manager } from './tasks';
 import { streamLines } from './utils';
 
 // Types
-export interface GitOptions extends SpawnTaskOptions {
-  manager?: TaskManager<GitContext>;
-}
-
 export interface GitContext extends TaskContext {
   command: string;
 }
@@ -16,11 +12,11 @@ export interface GitContext extends TaskContext {
 // Git commands
 export class Git {
   // commons
-  static command(cmd: string, args: string[], opts: GitOptions = {}): SpawnTask<GitContext> {
-    const { manager = globalTaskManager } = opts;
-
+  static command(cmd: string, args: string[], opts: SpawnTaskOptions = {}): SpawnTask<GitContext> {
     // Create task
     const task = new SpawnTask('git', [cmd, ...args], { command: cmd }, { logger, ...opts });
+    task.subscribe('stream', ({ data }) => logger.debug(data.toString('utf-8')));
+
     manager.add(task);
 
     return task;
@@ -40,6 +36,21 @@ export class Git {
   }
 
   // high level
+  static isAffected(base: string, args: string[] = [], opts?: SpawnTaskOptions): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      const task = this.diff(['--quiet', base, ...args], opts);
+
+      task.subscribe('status.done', () => resolve(true));
+      task.subscribe('status.failed', () => {
+        if (task.exitCode) {
+          resolve(false);
+        } else {
+          reject(new Error(`Task ${task.name} failed`));
+        }
+      });
+    });
+  }
+
   static async listBranches(args: string[] = [], opts?: SpawnTaskOptions): Promise<string[]> {
     const task = this.branch(['-l', ...args], opts);
     const result: string[] = [];

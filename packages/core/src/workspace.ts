@@ -1,8 +1,9 @@
+import { SpawnTask, SpawnTaskOptions, TaskContext } from '@jujulego/tasks';
 import path from 'path';
 import { Package } from 'normalize-package-data';
 import { satisfies } from 'semver';
 
-import { git } from './git';
+import { Git } from './git';
 import { logger } from './logger';
 import { Project } from './project';
 import { combine } from './utils';
@@ -10,7 +11,11 @@ import { combine } from './utils';
 // Types
 export type WorkspaceDepsMode = 'all' | 'prod' | 'none';
 
-export interface WorkspaceRunOptions extends Omit<SpawnTaskOption, 'cwd'> {
+export interface WorkspaceContext extends TaskContext {
+  workspace: Workspace;
+}
+
+export interface WorkspaceRunOptions extends Omit<SpawnTaskOptions, 'cwd'> {
   buildDeps?: WorkspaceDepsMode;
 }
 
@@ -18,8 +23,8 @@ export interface WorkspaceRunOptions extends Omit<SpawnTaskOption, 'cwd'> {
 export class Workspace {
   // Attributes
   private readonly _logger = logger.child({ label: this.manifest.name });
-  private readonly _isAffected = new Map<string, boolean | SpawnTask>();
-  private readonly _tasks = new Map<string, SpawnTask>();
+  private readonly _affectedCache = new Map<string, Promise<boolean>>();
+  private readonly _tasks = new Map<string, SpawnTask<WorkspaceContext>>();
 
   // Constructor
   constructor(
@@ -64,45 +69,36 @@ export class Workspace {
     }
   }
 
-  async isAffected(base: string): Promise<boolean> {
-    let isAffected = this._isAffected.get(base);
+  private async _isAffected(base: string): Promise<boolean> {
+    const isAffected = await Git.isAffected(base, ['--', this.cwd], {
+      cwd: this.project.root,
+      logger: this._logger,
+    });
 
-    if (typeof isAffected !== 'boolean') {
-      // Run git diff
-      if (!(isAffected instanceof SpawnTask)) {
-        isAffected = git.diff(['--quiet', base, '--', this.cwd], {
-          cwd: this.project.root,
-          logger: this._logger,
-          streamLogLevel: 'debug'
-        });
-
-        this._isAffected.set(base, isAffected);
-      }
-
-      // Wait for git diff to end and parse exit code
-      if (!['done', 'failed'].includes(isAffected.status)) {
-        await isAffected.waitFor('done', 'failed');
-      }
-
-      isAffected = isAffected.exitCode !== 0;
-
-      // If not affected check for workspaces
-      if (!isAffected) {
-        // Test it's dependencies
-        const proms: Promise<boolean>[] = [];
-
-        for await (const dep of combine(this.dependencies(), this.devDependencies())) {
-          proms.push(dep.isAffected(base));
-        }
-
-        const results = await Promise.all(proms);
-        isAffected = results.some(r => r);
-      }
-
-      this._isAffected.set(base, isAffected);
+    if (isAffected) {
+      return true;
     }
 
-    return isAffected;
+    // Test dependencies
+    const proms: Promise<boolean>[] = [];
+
+    for await (const dep of combine(this.dependencies(), this.devDependencies())) {
+      proms.push(dep.isAffected(base));
+    }
+
+    const results = await Promise.all(proms);
+    return results.some(r => r);
+  }
+
+  async isAffected(base: string): Promise<boolean> {
+    let isAffected = this._affectedCache.get(base);
+
+    if (!isAffected) {
+      isAffected = this._isAffected(base);
+      this._affectedCache.set(base, isAffected);
+    }
+
+    return await isAffected;
   }
 
   private async* _loadDependencies(dependencies: Record<string, string>, kind: string): AsyncGenerator<Workspace, void> {
@@ -141,11 +137,10 @@ export class Workspace {
     if (!task) {
       const pm = await this.project.packageManager();
 
-      task = new SpawnTask(pm, ['run', script, ...args], {
+      task = new SpawnTask(pm, ['run', script, ...args], { workspace: this }, {
         ...opts,
         cwd: this.cwd,
         logger: this._logger,
-        context: { workspace: this }
       });
       await this._buildDependencies(task, opts.buildDeps);
 
