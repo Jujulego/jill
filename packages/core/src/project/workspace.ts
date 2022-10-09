@@ -3,10 +3,10 @@ import path from 'node:path';
 import { Package } from 'normalize-package-data';
 import { satisfies } from 'semver';
 
-import { Git } from './git';
-import { logger } from './logger';
+import { Git } from '../git';
+import { logger } from '../logger';
 import { Project } from './project';
-import { combine } from './utils';
+import { combine } from '../utils';
 
 // Types
 export type WorkspaceDepsMode = 'all' | 'prod' | 'none';

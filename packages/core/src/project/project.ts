@@ -4,7 +4,7 @@ import path from 'node:path';
 import normalize, { Package } from 'normalize-package-data';
 import glob from 'tiny-glob';
 
-import { logger } from './logger';
+import { logger } from '../logger';
 import { Workspace } from './workspace';
 
 // Types
