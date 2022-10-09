@@ -144,6 +144,10 @@ export class Workspace {
         ...opts,
         cwd: this.cwd,
         logger: this._logger,
+        env: {
+          FORCE_COLOR: '1',
+          ...opts.env
+        }
       });
       await this._buildDependencies(task, opts.buildDeps);
 

@@ -1,9 +1,9 @@
 import { Workspace } from '../project';
 
-import { Filter } from './filter';
+import { PipelineFilter } from './pipeline';
 
 // Filter
-export class ScriptFilter implements Filter {
+export class ScriptsFilter implements PipelineFilter {
   // Constructor
   constructor(readonly scripts: string[]) {}
 

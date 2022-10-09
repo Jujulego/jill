@@ -2,10 +2,10 @@ import { Git } from '../git';
 import { logger } from '../logger';
 import { Workspace } from '../project';
 
-import { Filter } from './filter';
+import { PipelineFilter } from './pipeline';
 
 // Class
-export class AffectedFilter implements Filter {
+export class AffectedFilter implements PipelineFilter {
   // Constructor
   constructor(
     readonly format: string,

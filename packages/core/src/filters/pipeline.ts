@@ -1,14 +1,19 @@
 import { Workspace } from '../project';
+import { Awaitable } from '../types';
 
-import { Filter } from './filter';
+// Interface
+export interface PipelineFilter {
+  // Methods
+  test(workspace: Workspace): Awaitable<boolean>;
+}
 
 // Class
 export class Pipeline {
   // Attributes
-  private _filters: Filter[] = [];
+  private _filters: PipelineFilter[] = [];
 
   // Methods
-  add(filter: Filter): void {
+  add(filter: PipelineFilter): void {
     this._filters.push(filter);
   }
 
@@ -24,7 +29,7 @@ export class Pipeline {
     return true;
   }
 
-  async *filter(workspaces: AsyncGenerator<Workspace>): AsyncGenerator<Workspace> {
+  async *filter(workspaces: Iterable<Workspace> | AsyncIterable<Workspace>): AsyncGenerator<Workspace> {
     for await (const wks of workspaces) {
       if (await this._test(wks)) {
         yield wks;

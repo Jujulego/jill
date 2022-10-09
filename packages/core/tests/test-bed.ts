@@ -18,6 +18,6 @@ export class TestBed {
   }
 
   workspace(name: string, pkg: Partial<Package> = {}): Workspace {
-    return new Workspace(`${this.project.root}/${name}`, this.manifest(pkg), this.project);
+    return new Workspace(`${this.project.root}/${name}`, this.manifest({ name, ...pkg }), this.project);
   }
 }

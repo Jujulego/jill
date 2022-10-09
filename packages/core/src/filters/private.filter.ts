@@ -1,9 +1,9 @@
 import { Workspace } from '../project';
 
-import { Filter } from './filter';
+import { PipelineFilter } from './pipeline';
 
 // Filter
-export class PrivateFilter implements Filter {
+export class PrivateFilter implements PipelineFilter {
   // Constructor
   constructor(readonly value: boolean) {}
 
