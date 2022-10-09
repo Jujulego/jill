@@ -1,5 +1,5 @@
 import { Arguments, Builder, CliList, ProjectArgs, ProjectCommand } from '@jujulego/jill-common';
-import { TaskStatus } from '@jujulego/jill-core';
+import { TaskStatus } from '@jujulego/tasks';
 import chalk from 'chalk';
 import path from 'path';
 

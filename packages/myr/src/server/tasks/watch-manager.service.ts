@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 
 import { SpawnTaskMode } from '../../common';
 import { WatchTask } from './watch-task.model';
+import { waitForEvent } from '@jujulego/event-tree';
 
 // Class
 @Injectable()
@@ -30,8 +31,8 @@ export class WatchManager {
     }
 
     // Event handlers
-    task.once('done', () => this._handleTaskComplete(task));
-    task.once('failed', () => this._handleTaskComplete(task));
+    task.subscribe('status.done', () => this._handleTaskComplete(task));
+    task.subscribe('status.failed', () => this._handleTaskComplete(task));
 
     // Start task it self
     task.start();
@@ -92,7 +93,7 @@ export class WatchManager {
       task.stop();
       this._logger.info(`Killing task ${id}`);
 
-      await task.waitFor('done', 'failed');
+      await Promise.race([waitForEvent(task, 'status.done'), waitForEvent(task, 'status.failed')]);
       this._logger.info(`Task ${id} killed`);
     }
 
@@ -108,7 +109,7 @@ export class WatchManager {
         this._logger.info(`Killing task ${task.id}`);
 
         tasks.push((async () => {
-          await task.waitFor('done', 'failed');
+          await Promise.race([waitForEvent(task, 'status.done'), waitForEvent(task, 'status.failed')]);
           this._logger.info(`Task ${task.id} killed`);
         })());
       }

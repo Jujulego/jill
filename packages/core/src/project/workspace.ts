@@ -7,6 +7,7 @@ import { Git } from '../git';
 import { logger } from '../logger';
 import { Project } from './project';
 import { combine } from '../utils';
+import winston from 'winston';
 
 // Types
 export type WorkspaceDepsMode = 'all' | 'prod' | 'none';
@@ -22,7 +23,7 @@ export interface WorkspaceRunOptions extends Omit<SpawnTaskOptions, 'cwd'> {
 // Class
 export class Workspace {
   // Attributes
-  private readonly _logger = logger.child({ label: this.manifest.name });
+  private readonly _logger: winston.Logger;
   private readonly _affectedCache = new Map<string, Promise<boolean>>();
   private readonly _tasks = new Map<string, SpawnTask<WorkspaceContext>>();
 
@@ -31,7 +32,9 @@ export class Workspace {
     private readonly _cwd: string,
     readonly manifest: Package,
     readonly project: Project
-  ) {}
+  ) {
+    this._logger = logger.child({ label: this.manifest.name });
+  }
 
   // Methods
   private _satisfies(from: Workspace, range: string): boolean {
@@ -131,7 +134,7 @@ export class Workspace {
     }
   }
 
-  async run(script: string, args: string[] = [], opts: WorkspaceRunOptions = {}): Promise<SpawnTask> {
+  async run(script: string, args: string[] = [], opts: WorkspaceRunOptions = {}): Promise<SpawnTask<WorkspaceContext>> {
     let task = this._tasks.get(script);
 
     if (!task) {

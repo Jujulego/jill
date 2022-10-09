@@ -1,5 +1,7 @@
+import { waitForEvent } from '@jujulego/event-tree';
 import { Arguments, Builder, WorkspaceArgs, WorkspaceCommand } from '@jujulego/jill-common';
-import { TaskSet, WorkspaceDepsMode } from '@jujulego/jill-core';
+import { manager, WorkspaceContext, WorkspaceDepsMode } from '@jujulego/jill-core';
+import { TaskSet } from '@jujulego/tasks';
 
 import { TaskLogger } from '../task-logger';
 
@@ -35,7 +37,7 @@ export class RunCommand extends WorkspaceCommand<RunArgs> {
     this.spinner.stop();
 
     // Run build task
-    const set = new TaskSet();
+    const set = new TaskSet<WorkspaceContext>(manager);
     const task = await this.workspace.run(args.script, args['--']?.map(arg => arg.toString()), {
       buildDeps: args['deps-mode']
     });
@@ -48,7 +50,7 @@ export class RunCommand extends WorkspaceCommand<RunArgs> {
     tlogger.connect(set);
 
     set.start();
-    const [result] = await set.waitFor('finished');
+    const result = await waitForEvent(set, 'finished');
     return result.failed === 0 ? 0 : 1;
   }
 }

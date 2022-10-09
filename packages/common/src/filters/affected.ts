@@ -1,4 +1,4 @@
-import { git, logger, Workspace } from '@jujulego/jill-core';
+import { Git, logger, Workspace } from '@jujulego/jill-core';
 
 import { Filter } from './filter';
 
@@ -27,7 +27,7 @@ export class AffectedFilter extends Filter {
 
     // - search in branches
     if (result.includes('*')) {
-      const branches = await git.listBranches([...sortArgs, result], { cwd: wks.cwd, logger: log, streamLogLevel: 'debug' });
+      const branches = await Git.listBranches([...sortArgs, result], { cwd: wks.cwd, logger: log });
 
       if (branches.length > 0) {
         result = branches[branches.length - 1];
@@ -36,7 +36,7 @@ export class AffectedFilter extends Filter {
 
     // - search in tags
     if (result.includes('*')) {
-      const tags = await git.listTags([...sortArgs, result], { cwd: wks.cwd, logger: log, streamLogLevel: 'debug' });
+      const tags = await Git.listTags([...sortArgs, result], { cwd: wks.cwd, logger: log });
 
       if (tags.length > 0) {
         result = tags[tags.length - 1];
