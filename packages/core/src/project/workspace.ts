@@ -1,42 +1,49 @@
-import path from 'path';
+import { SpawnTask, SpawnTaskOptions, TaskContext } from '@jujulego/tasks';
+import path from 'node:path';
 import { Package } from 'normalize-package-data';
 import { satisfies } from 'semver';
 
-import { git } from './git';
-import { logger } from './logger';
+import { Git } from '../git';
+import { logger } from '../logger';
 import { Project } from './project';
-import { SpawnTask, SpawnTaskOption } from './tasks';
-import { combine } from './utils';
+import { combine } from '../utils';
+import winston from 'winston';
 
 // Types
 export type WorkspaceDepsMode = 'all' | 'prod' | 'none';
 
-export interface WorkspaceRunOptions extends Omit<SpawnTaskOption, 'cwd'> {
+export interface WorkspaceContext extends TaskContext {
+  workspace: Workspace;
+}
+
+export interface WorkspaceRunOptions extends Omit<SpawnTaskOptions, 'cwd'> {
   buildDeps?: WorkspaceDepsMode;
 }
 
 // Class
 export class Workspace {
   // Attributes
-  private readonly _logger = logger.child({ label: this.manifest.name });
-  private readonly _isAffected = new Map<string, boolean | SpawnTask>();
-  private readonly _tasks = new Map<string, SpawnTask>();
+  private readonly _logger: winston.Logger;
+  private readonly _affectedCache = new Map<string, Promise<boolean>>();
+  private readonly _tasks = new Map<string, SpawnTask<WorkspaceContext>>();
 
   // Constructor
   constructor(
     private readonly _cwd: string,
     readonly manifest: Package,
     readonly project: Project
-  ) {}
+  ) {
+    this._logger = logger.child({ label: this.manifest.name });
+  }
 
   // Methods
   private _satisfies(from: Workspace, range: string): boolean {
     if (range.startsWith('file:')) {
-      return path.resolve(from.cwd, range.substr(5)) === this.cwd;
+      return path.resolve(from.cwd, range.substring(5)) === this.cwd;
     }
 
     if (range.startsWith('workspace:')) {
-      range = range.substr(10);
+      range = range.substring(10);
     }
 
     return !this.version || satisfies(this.version, range);
@@ -65,45 +72,36 @@ export class Workspace {
     }
   }
 
-  async isAffected(base: string): Promise<boolean> {
-    let isAffected = this._isAffected.get(base);
+  private async _isAffected(reference: string): Promise<boolean> {
+    const isAffected = await Git.isAffected(reference, ['--', this.cwd], {
+      cwd: this.project.root,
+      logger: this._logger,
+    });
 
-    if (typeof isAffected !== 'boolean') {
-      // Run git diff
-      if (!(isAffected instanceof SpawnTask)) {
-        isAffected = git.diff(['--quiet', base, '--', this.cwd], {
-          cwd: this.project.root,
-          logger: this._logger,
-          streamLogLevel: 'debug'
-        });
-
-        this._isAffected.set(base, isAffected);
-      }
-
-      // Wait for git diff to end and parse exit code
-      if (!['done', 'failed'].includes(isAffected.status)) {
-        await isAffected.waitFor('done', 'failed');
-      }
-
-      isAffected = isAffected.exitCode !== 0;
-
-      // If not affected check for workspaces
-      if (!isAffected) {
-        // Test it's dependencies
-        const proms: Promise<boolean>[] = [];
-
-        for await (const dep of combine(this.dependencies(), this.devDependencies())) {
-          proms.push(dep.isAffected(base));
-        }
-
-        const results = await Promise.all(proms);
-        isAffected = results.some(r => r);
-      }
-
-      this._isAffected.set(base, isAffected);
+    if (isAffected) {
+      return true;
     }
 
-    return isAffected;
+    // Test dependencies
+    const proms: Promise<boolean>[] = [];
+
+    for await (const dep of combine(this.dependencies(), this.devDependencies())) {
+      proms.push(dep.isAffected(reference));
+    }
+
+    const results = await Promise.all(proms);
+    return results.some(r => r);
+  }
+
+  async isAffected(reference: string): Promise<boolean> {
+    let isAffected = this._affectedCache.get(reference);
+
+    if (!isAffected) {
+      isAffected = this._isAffected(reference);
+      this._affectedCache.set(reference, isAffected);
+    }
+
+    return await isAffected;
   }
 
   private async* _loadDependencies(dependencies: Record<string, string>, kind: string): AsyncGenerator<Workspace, void> {
@@ -136,17 +134,16 @@ export class Workspace {
     }
   }
 
-  async run(script: string, args: string[] = [], opts: WorkspaceRunOptions = {}): Promise<SpawnTask> {
+  async run(script: string, args: string[] = [], opts: WorkspaceRunOptions = {}): Promise<SpawnTask<WorkspaceContext>> {
     let task = this._tasks.get(script);
 
     if (!task) {
       const pm = await this.project.packageManager();
 
-      task = new SpawnTask(pm, ['run', script, ...args], {
+      task = new SpawnTask(pm, ['run', script, ...args], { workspace: this }, {
         ...opts,
         cwd: this.cwd,
         logger: this._logger,
-        context: { workspace: this }
       });
       await this._buildDependencies(task, opts.buildDeps);
 

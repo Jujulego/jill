@@ -1,10 +1,10 @@
 import AsyncLock from 'async-lock';
-import { promises as fs } from 'fs';
+import fs from 'node:fs/promises';
+import path from 'node:path';
 import normalize, { Package } from 'normalize-package-data';
-import path from 'path';
 import glob from 'tiny-glob';
 
-import { logger } from './logger';
+import { logger } from '../logger';
 import { Workspace } from './workspace';
 
 // Types

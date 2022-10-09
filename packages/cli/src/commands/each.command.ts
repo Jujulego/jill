@@ -1,5 +1,7 @@
+import { waitForEvent } from '@jujulego/event-tree';
 import { AffectedFilter, Arguments, Builder, Filter, Pipeline, ProjectArgs, ProjectCommand } from '@jujulego/jill-common';
-import { Task, TaskSet, Workspace, WorkspaceDepsMode } from '@jujulego/jill-core';
+import { manager, Workspace, WorkspaceContext, WorkspaceDepsMode } from '@jujulego/jill-core';
+import { Task, TaskSet } from '@jujulego/tasks';
 
 import { TaskLogger } from '../task-logger';
 
@@ -94,15 +96,15 @@ export class EachCommand extends ProjectCommand<EachArgs> {
     this.logger.verbose(`Will run ${args.script} in ${workspaces.map(wks => wks.name).join(', ')}`);
 
     // Run tasks
-    const set = new TaskSet();
-    const tasks: Task[] = [];
+    const set = new TaskSet<WorkspaceContext>(manager);
+    const tasks: Task<WorkspaceContext>[] = [];
 
     for (const wks of workspaces) {
       const task = await wks.run(args.script, args['--']?.map(arg => arg.toString()), {
         buildDeps: args['deps-mode']
       });
 
-      tasks.push(task);
+      tasks.push(task as Task<WorkspaceContext>);
       set.add(task);
     }
 
@@ -114,7 +116,7 @@ export class EachCommand extends ProjectCommand<EachArgs> {
     tlogger.connect(set);
 
     set.start();
-    const [result] = await set.waitFor('finished');
+    const result = await waitForEvent(set, 'finished');
     return result.failed === 0 ? 0 : 1;
   }
 }

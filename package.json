@@ -13,7 +13,7 @@
     "tools"
   ],
   "browserslist": [
-    "maintained node versions and node >= 14"
+    "maintained node versions and node >= 16"
   ],
   "jill": {
     "plugins": [
@@ -33,6 +33,6 @@
     "@typescript-eslint/parser": "5.39.0",
     "eslint": "8.24.0",
     "eslint-plugin-workspaces": "0.7.0",
-    "typescript": "4.6.4"
+    "typescript": "4.8.4"
   }
 }

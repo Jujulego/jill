@@ -1,5 +1,5 @@
+import { SpawnTask, type SpawnTaskOptions } from '@jujulego/tasks';
 import { Field, ID, ObjectType, registerEnumType } from '@nestjs/graphql';
-import { SpawnTask, SpawnTaskOption } from '@jujulego/jill-core';
 import { createHash } from 'crypto';
 import path from 'path';
 
@@ -36,13 +36,13 @@ export class WatchTask extends SpawnTask implements IWatchTask {
   id: string;
 
   @Field()
-  override cwd: string;
+  declare cwd: string;
 
   @Field()
-  override cmd: string;
+  declare cmd: string;
 
   @Field(() => [String])
-  override args: readonly string[];
+  declare args: readonly string[];
 
   @Field(() => SpawnTaskMode)
   readonly mode: SpawnTaskMode;
@@ -51,8 +51,8 @@ export class WatchTask extends SpawnTask implements IWatchTask {
   private readonly _watchedBy = new Set<WatchTask>();
 
   // Constructor
-  constructor(cwd: string, cmd: string, args: readonly string[], mode: SpawnTaskMode, opts?: SpawnTaskOption) {
-    super(cmd, args, { ...opts, cwd });
+  constructor(cwd: string, cmd: string, args: readonly string[], mode: SpawnTaskMode, opts?: SpawnTaskOptions) {
+    super(cmd, args, {}, { ...opts, cwd });
 
     // Generate task id
     this.id = WatchTask.generateId(cwd, cmd, args);
@@ -79,8 +79,8 @@ export class WatchTask extends SpawnTask implements IWatchTask {
 
       // Revert link
       task._watchedBy.add(this);
-      this.once('failed', () => task._watchedBy.delete(this));
-      this.once('done', () => task._watchedBy.delete(this));
+      this.subscribe('status.failed', () => task._watchedBy.delete(this));
+      this.subscribe('status.done', () => task._watchedBy.delete(this));
     } else {
       throw Error(`Cannot add a watch deps to a ${this.status} task`);
     }

@@ -1,57 +1,77 @@
-import { SpawnTask, SpawnTaskOption } from './tasks';
-import { TaskManager } from './task-manager';
+import { SpawnTask, SpawnTaskOptions, TaskContext } from '@jujulego/tasks';
+
+import { logger } from './logger';
+import { manager } from './tasks';
+import { streamLines } from './utils';
 
 // Types
-export interface GitOptions extends SpawnTaskOption {
-  manager?: TaskManager;
+export interface GitContext extends TaskContext {
+  command: string;
 }
 
 // Git commands
-export const git = {
+export class Git {
   // commons
-  command(cmd: string, args: string[], opts: GitOptions = {}): SpawnTask {
-    const { manager = TaskManager.global } = opts;
+  static command(cmd: string, args: string[], options: SpawnTaskOptions = {}): SpawnTask<GitContext> {
+    const opts = { logger, ...options };
 
     // Create task
-    const task = new SpawnTask('git', [cmd, ...args], opts);
+    const task = new SpawnTask('git', [cmd, ...args], { command: cmd }, opts);
+    task.subscribe('stream', ({ data }) => opts.logger.debug(data.toString('utf-8')));
+
     manager.add(task);
 
     return task;
-  },
+  }
 
   // commands
-  branch(args: string[], opts?: GitOptions): SpawnTask {
-    return this.command('branch', args, opts);
-  },
+  static branch(args: string[], options?: SpawnTaskOptions): SpawnTask<GitContext> {
+    return this.command('branch', args, options);
+  }
 
-  diff(args: string[], opts?: GitOptions): SpawnTask {
-    return this.command('diff', args, opts);
-  },
+  static diff(args: string[], options?: SpawnTaskOptions): SpawnTask<GitContext> {
+    return this.command('diff', args, options);
+  }
 
-  tag(args: string[], opts?: GitOptions): SpawnTask {
-    return this.command('tag', args, opts);
-  },
+  static tag(args: string[], options?: SpawnTaskOptions): SpawnTask<GitContext> {
+    return this.command('tag', args, options);
+  }
 
   // high level
-  async listBranches(args: string[] = [], opts?: GitOptions): Promise<string[]> {
+  static isAffected(reference: string, args: string[] = [], opts?: SpawnTaskOptions): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      const task = this.diff(['--quiet', reference, ...args], opts);
+
+      task.subscribe('status.done', () => resolve(true));
+      task.subscribe('status.failed', () => {
+        if (task.exitCode) {
+          resolve(false);
+        } else {
+          reject(new Error(`Task ${task.name} failed`));
+        }
+      });
+    });
+  }
+
+  static async listBranches(args: string[] = [], opts?: SpawnTaskOptions): Promise<string[]> {
     const task = this.branch(['-l', ...args], opts);
     const result: string[] = [];
 
-    for await (const line of task.stdout()) {
-      result.push(line);
+    for await (const line of streamLines(task, 'stdout')) {
+      result.push(line.replace(/^[ *] /, ''));
     }
 
     return result;
-  },
+  }
 
-  async listTags(args: string[] = [], opts?: GitOptions): Promise<string[]> {
+  static async listTags(args: string[] = [], opts?: SpawnTaskOptions): Promise<string[]> {
     const task = this.tag(['-l', ...args], opts);
     const result: string[] = [];
 
-    for await (const line of task.stdout()) {
+    for await (const line of streamLines(task, 'stdout')) {
       result.push(line);
     }
 
     return result;
   }
-};
+}

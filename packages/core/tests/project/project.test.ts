@@ -1,15 +1,14 @@
-import { promises as fs } from 'fs';
-import path from 'path';
+import fs from 'node:fs/promises';
+import path from 'node:path';
 import glob from 'tiny-glob';
 
-import { Project, Workspace } from '../src';
-import './utils/logger';
+import { Project, Workspace } from '../../src';
 
 // Mock
 jest.mock('tiny-glob');
 
 // Setup
-const root = path.resolve(__dirname, '../../../mock');
+const root = path.resolve(__dirname, '../../../../mock');
 let project: Project;
 
 beforeEach(() => {
@@ -20,8 +19,7 @@ beforeEach(() => {
   jest.spyOn(fs, 'readFile');
   jest.spyOn(fs, 'stat');
 
-  (glob as jest.MockedFunction<typeof glob>)
-    .mockResolvedValue(['workspaces/test-a', 'workspaces/test-b', 'workspaces/test-c', 'workspaces/test-d']);
+  jest.mocked(glob).mockResolvedValue(['workspaces/test-a', 'workspaces/test-b', 'workspaces/test-c', 'workspaces/test-d']);
 });
 
 // Test suites
@@ -139,8 +137,7 @@ describe('Project.workspace', () => {
   });
 
   it('should return named workspace', async () => {
-    (glob as jest.MockedFunction<typeof glob>)
-      .mockResolvedValue(['workspaces/test-a']);
+    jest.mocked(glob).mockResolvedValue(['workspaces/test-a']);
 
     await expect(project.workspace('mock-test-a'))
       .resolves.toEqual(expect.objectContaining({ name: 'mock-test-a' }));
@@ -166,8 +163,7 @@ describe('Project.workspace', () => {
   });
 
   it('should handle ENOENT erorr', async () => {
-    (glob as jest.MockedFunction<typeof glob>)
-      .mockResolvedValue(['workspaces/empty']); // existing directory without any package.json
+    jest.mocked(glob).mockResolvedValue(['workspaces/empty']); // existing directory without any package.json
 
     await expect(project.workspace('mock'))
       .resolves.toBeNull();
@@ -179,8 +175,7 @@ describe('Project.workspace', () => {
   });
 
   it('should ignore non directory glob returns', async () => {
-    (glob as jest.MockedFunction<typeof glob>)
-      .mockResolvedValue(['workspaces/just-a-file.txt']);
+    jest.mocked(glob).mockResolvedValue(['workspaces/just-a-file.txt']);
 
     await expect(project.workspace('mock'))
       .resolves.toBeNull();
@@ -199,8 +194,7 @@ describe('Project.packageManager', () => {
 
   // Test
   it('should return \'yarn\'', async () => {
-    (fs.readdir as jest.MockedFunction<any>)
-      .mockResolvedValue(['yarn.lock']);
+    jest.mocked(fs.readdir).mockResolvedValue(['yarn.lock'] as any[]);
 
     // Test
     await expect(project.packageManager())
@@ -210,8 +204,7 @@ describe('Project.packageManager', () => {
   });
 
   it('should return \'npm\'', async () => {
-    (fs.readdir as jest.MockedFunction<any>)
-      .mockResolvedValue(['package-lock.json']);
+    jest.mocked(fs.readdir).mockResolvedValue(['package-lock.json'] as any[]);
 
     // Test
     await expect(project.packageManager())
@@ -221,8 +214,7 @@ describe('Project.packageManager', () => {
   });
 
   it('should return \'npm\' (nothing recognized)', async () => {
-    (fs.readdir as jest.MockedFunction<any>)
-      .mockResolvedValue([]);
+    jest.mocked(fs.readdir).mockResolvedValue([]);
 
     // Test
     await expect(project.packageManager())
