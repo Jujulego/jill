@@ -1603,6 +1603,7 @@ __metadata:
     "@types/node": 16.11.64
     "@types/normalize-package-data": 2.4.1
     "@types/semver": 7.3.9
+    "@types/yargs": 17.0.13
     "@typescript-eslint/eslint-plugin": 5.39.0
     "@typescript-eslint/parser": 5.39.0
     async-lock: ^1.3.1
@@ -1622,6 +1623,7 @@ __metadata:
     typescript: 4.8.4
     winston: ^3.6.0
     winston-transport: 4.5.0
+    yargs: ^17.6.0
   languageName: unknown
   linkType: soft
 
@@ -3052,6 +3054,15 @@ __metadata:
   dependencies:
     "@types/yargs-parser": "*"
   checksum: f0673cbfc08e17239dc58952a88350d6c4db04a027a28a06fbad27d87b670e909f9cd9e66f9c64cebdd5071d1096261e33454a55868395f125297e5c50992ca8
+  languageName: node
+  linkType: hard
+
+"@types/yargs@npm:17.0.13":
+  version: 17.0.13
+  resolution: "@types/yargs@npm:17.0.13"
+  dependencies:
+    "@types/yargs-parser": "*"
+  checksum: 0ab269abc2da2223cf0a8c16d578850fbe327d40fb85724b5c3f9f6cf38d03656ef699518c05d4df3bc337339ec6d0aad7df01682a9dca4783ad1ccc7336cf12
   languageName: node
   linkType: hard
 
@@ -4748,6 +4759,17 @@ __metadata:
     strip-ansi: ^6.0.0
     wrap-ansi: ^7.0.0
   checksum: ce2e8f578a4813806788ac399b9e866297740eecd4ad1823c27fd344d78b22c5f8597d548adbcc46f0573e43e21e751f39446c5a5e804a12aace402b7a315d7f
+  languageName: node
+  linkType: hard
+
+"cliui@npm:^8.0.1":
+  version: 8.0.1
+  resolution: "cliui@npm:8.0.1"
+  dependencies:
+    string-width: ^4.2.0
+    strip-ansi: ^6.0.1
+    wrap-ansi: ^7.0.0
+  checksum: 79648b3b0045f2e285b76fb2e24e207c6db44323581e421c3acbd0e86454cba1b37aea976ab50195a49e7384b871e6dfb2247ad7dec53c02454ac6497394cb56
   languageName: node
   linkType: hard
 
@@ -12714,6 +12736,21 @@ fsevents@^1.2.7:
     y18n: ^5.0.5
     yargs-parser: ^21.0.0
   checksum: 63985bddddf1fb6b9c98744591e8b70f99839591521cb84eea60903d52ec0da35ab46c42c325d151f3ab5c41935f976c10da096b5a7067c217714a91c0bd4be3
+  languageName: node
+  linkType: hard
+
+"yargs@npm:^17.6.0":
+  version: 17.6.0
+  resolution: "yargs@npm:17.6.0"
+  dependencies:
+    cliui: ^8.0.1
+    escalade: ^3.1.1
+    get-caller-file: ^2.0.5
+    require-directory: ^2.1.1
+    string-width: ^4.2.3
+    y18n: ^5.0.5
+    yargs-parser: ^21.0.0
+  checksum: 604bdb4a6395a870540d2f3fea083c8e28441f12da8fd05b172b1e68480f00ed73d76be4a05fac19de9bf55ec7729b41e81cf555cccaed700aa192e4fff64872
   languageName: node
   linkType: hard
 
