@@ -14,8 +14,6 @@ export interface GlobalConfig {
 
 // Container
 export const container = new Container({
-  autoBindInjectable: true,
-  defaultScope: 'Singleton',
   skipBaseClassChecks: true,
 });
 

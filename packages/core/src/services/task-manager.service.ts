@@ -1,17 +1,14 @@
 import { TaskManager } from '@jujulego/tasks';
-import { inject, injectable } from 'inversify';
 
-import { type GlobalConfig, GLOBAL_CONFIG } from './inversify.config';
-import { LoggerService } from './logger.service';
+import { type GlobalConfig, GLOBAL_CONFIG, container } from './inversify.config';
+import { Logger } from './logger.service';
 
 // Service
-@injectable()
-export class TaskManagerService extends TaskManager<any> {
-  // Constructor
-  constructor(
-    @inject(GLOBAL_CONFIG) config: GlobalConfig,
-    @inject(LoggerService) logger: LoggerService,
-  ) {
-    super({ jobs: config.jobs, logger });
-  }
-}
+container.bind(TaskManager)
+  .toDynamicValue((context) => {
+    const config = context.container.get<GlobalConfig>(GLOBAL_CONFIG);
+    const logger = context.container.get(Logger);
+
+    return new TaskManager({ jobs: config.jobs, logger });
+  })
+  .inSingletonScope();

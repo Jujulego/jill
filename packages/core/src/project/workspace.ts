@@ -5,7 +5,7 @@ import { satisfies } from 'semver';
 import winston from 'winston';
 
 import { Git } from '../git';
-import { container, LoggerService } from '../services';
+import { container, Logger } from '../services';
 import { combine } from '../utils';
 import { Project } from './project';
 
@@ -33,7 +33,7 @@ export class Workspace {
     readonly manifest: Package,
     readonly project: Project
   ) {
-    const logger = container.get(LoggerService);
+    const logger = container.get(Logger);
     this._logger = logger.child({ label: this.manifest.name });
   }
 

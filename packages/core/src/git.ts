@@ -1,6 +1,6 @@
 import { SpawnTask, SpawnTaskOptions, TaskContext, TaskManager } from '@jujulego/tasks';
 
-import { lazyInject, LoggerService, TaskManagerService } from './services';
+import { lazyInject, Logger } from './services';
 import { streamLines } from './utils';
 
 // Types
@@ -11,11 +11,11 @@ export interface GitContext extends TaskContext {
 // Git commands
 export class Git {
   // Services
-  @lazyInject(TaskManagerService)
+  @lazyInject(TaskManager)
   static readonly manager: TaskManager<GitContext>;
 
-  @lazyInject(LoggerService)
-  static readonly logger: LoggerService;
+  @lazyInject(Logger)
+  static readonly logger: Logger;
 
   // commons
   static command(cmd: string, args: string[], options: SpawnTaskOptions = {}): SpawnTask<GitContext> {

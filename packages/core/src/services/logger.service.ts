@@ -12,14 +12,13 @@ const VERBOSITY_LEVEL: Record<number, string> = {
 
 // Types
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface LoggerService extends winston.Logger {}
+export interface Logger extends winston.Logger {}
 
 // Service
 @injectable()
-export class LoggerService {}
+export class Logger {}
 
-// Factory
-container.bind(LoggerService)
+container.bind(Logger)
   .toDynamicValue((context) => {
     const config = context.container.get<GlobalConfig>(GLOBAL_CONFIG);
 

@@ -4,7 +4,7 @@ import path from 'node:path';
 import normalize, { Package } from 'normalize-package-data';
 import glob from 'tiny-glob';
 
-import { container, lazyInject, LoggerService } from '../services';
+import { container, lazyInject, Logger } from '../services';
 import { Workspace } from './workspace';
 
 // Types
@@ -24,8 +24,8 @@ export class Project {
   private _isFullyLoaded = false;
   private _lock = new AsyncLock();
 
-  @lazyInject(LoggerService)
-  private readonly _logger: LoggerService;
+  @lazyInject(Logger)
+  private readonly _logger: Logger;
 
   // Constructor
   constructor(
@@ -40,7 +40,7 @@ export class Project {
 
   // Statics
   static async searchProjectRoot(dir: string): Promise<string> {
-    const logger = container.get(LoggerService);
+    const logger = container.get(Logger);
 
     // Will process directories from dir to root
     let found = false;

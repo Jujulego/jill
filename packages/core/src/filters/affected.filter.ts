@@ -1,5 +1,5 @@
 import { Git } from '../git';
-import { lazyInject, LoggerService } from '../services';
+import { lazyInject, Logger } from '../services';
 import { Workspace } from '../project';
 
 import { PipelineFilter } from './pipeline';
@@ -7,8 +7,8 @@ import { PipelineFilter } from './pipeline';
 // Class
 export class AffectedFilter implements PipelineFilter {
   // Properties
-  @lazyInject(LoggerService)
-  private readonly _logger: LoggerService;
+  @lazyInject(Logger)
+  private readonly _logger: Logger;
 
   // Constructor
   constructor(
