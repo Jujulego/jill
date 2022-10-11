@@ -1,37 +1,40 @@
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
+import 'reflect-metadata';
 
 import pkg from '../package.json';
-import { manager } from './tasks';
-import { logger } from './logger';
+import { container, TOKENS } from './inversify.config';
+import { TaskManagerService } from './task-manager.service';
+import './logger';
 
 try {
-  yargs(hideBin(process.argv))
+  // Setup yargs
+  let parser = yargs(hideBin(process.argv))
     .scriptName('jill')
     .completion('completion', 'Generate bash completion script')
     .help('help', 'Show help for a command')
-    .version('version', 'Show version', pkg.version)
+    .version('version', 'Show version', pkg.version);
+
+  // Global config
+  parser = parser
     .option('verbose', {
       alias: 'v',
       type: 'count',
       description: 'Set verbosity level',
-    })
-    .middleware(({ verbose }) => {
-      if (verbose === 1) {
-        logger.level = 'verbose';
-      } else if (verbose >= 2) {
-        logger.level = 'debug';
-      }
     })
     .option('jobs', {
       alias: 'j',
       type: 'number',
       description: 'Set maximum parallel job number',
     })
-    .middleware(({ jobs }) => {
-      if (jobs) {
-        manager.jobs = jobs;
-      }
+    .middleware((config) => {
+      container.bind(TOKENS.GlobalConfig).toConstantValue(config);
+    });
+
+  // Parse !
+  parser
+    .command('toto', 'toto', {}, () => {
+      container.get(TaskManagerService);
     })
     .demandCommand()
     .recommendCommands()

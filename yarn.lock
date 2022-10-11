@@ -1628,9 +1628,11 @@ __metadata:
     eslint-plugin-workspaces: 0.7.0
     gulp: 4.0.2
     gulp-cli: 2.3.0
+    inversify: ^6.0.1
     jest: 28.1.2
     jill-tools: "workspace:*"
     normalize-package-data: ^4.0.0
+    reflect-metadata: ^0.1.13
     semver: ^7.3.5
     tiny-glob: ^0.2.9
     tree-kill: ^1.2.2
@@ -7438,6 +7440,13 @@ fsevents@^1.2.7:
   version: 1.4.0
   resolution: "interpret@npm:1.4.0"
   checksum: 2e5f51268b5941e4a17e4ef0575bc91ed0ab5f8515e3cf77486f7c14d13f3010df9c0959f37063dcc96e78d12dc6b0bb1b9e111cdfe69771f4656d2993d36155
+  languageName: node
+  linkType: hard
+
+"inversify@npm:^6.0.1":
+  version: 6.0.1
+  resolution: "inversify@npm:6.0.1"
+  checksum: b6c9b56ef7817a71534b06101c2b0a0130b67c47a769f58794d9c0643591a83ac02be30a48c00cb729c0c83ece96dde369c419d48c32d0201c6cc7407629fbc5
   languageName: node
   linkType: hard
 

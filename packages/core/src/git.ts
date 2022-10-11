@@ -1,7 +1,7 @@
 import { SpawnTask, SpawnTaskOptions, TaskContext } from '@jujulego/tasks';
 
 import { logger } from './logger';
-import { manager } from './tasks';
+import { manager } from './task-manager.service';
 import { streamLines } from './utils';
 
 // Types
