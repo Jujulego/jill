@@ -1,10 +1,18 @@
-import { Git, GitContext, logger, manager } from '../src';
 import { SpawnTask } from '@jujulego/tasks';
 
+import { container, Git, GitContext, LoggerService, TaskManagerService } from '../src';
+
 // Setup
+let logger: LoggerService;
+let manager: TaskManagerService;
+
 beforeEach(() => {
   jest.resetAllMocks();
   jest.restoreAllMocks();
+
+  // Services
+  logger = container.get(LoggerService);
+  manager = container.get(TaskManagerService);
 
   // Mocks
   jest.spyOn(manager, 'add').mockImplementation();

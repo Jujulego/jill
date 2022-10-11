@@ -1,20 +1,8 @@
-import Transport from 'winston-transport';
+import { container, GLOBAL_CONFIG, GlobalConfig } from '../src/services/inversify.config';
 
-import { logger } from '../src/logger';
-
-// Add transport to logger
-class NoopTransport extends Transport {
-  // Methods
-  log(): void {
-    return;
-  }
-
-  logv(): void {
-    return;
-  }
-}
-
-logger.add(new NoopTransport());
+// Setup global config
+container.bind<GlobalConfig>(GLOBAL_CONFIG)
+  .toConstantValue({ verbose: 0, jobs: 1 });
 
 // Add custom matchers
 expect.extend({

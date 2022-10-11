@@ -1,11 +1,15 @@
 import { Git } from '../git';
-import { logger } from '../logger';
+import { lazyInject, LoggerService } from '../services';
 import { Workspace } from '../project';
 
 import { PipelineFilter } from './pipeline';
 
 // Class
 export class AffectedFilter implements PipelineFilter {
+  // Properties
+  @lazyInject(LoggerService)
+  private readonly _logger: LoggerService;
+
   // Constructor
   constructor(
     readonly format: string,
@@ -15,7 +19,7 @@ export class AffectedFilter implements PipelineFilter {
 
   // Methods
   private async _formatRevision(wks: Workspace): Promise<string> {
-    const log = logger.child({ label: wks.name });
+    const logger = this._logger.child({ label: wks.name });
 
     // Format revision
     let result = this.format;
@@ -27,7 +31,7 @@ export class AffectedFilter implements PipelineFilter {
 
     // - search in branches
     if (result.includes('*')) {
-      const branches = await Git.listBranches([...sortArgs, result], { cwd: wks.cwd, logger: log });
+      const branches = await Git.listBranches([...sortArgs, result], { cwd: wks.cwd, logger: logger });
 
       if (branches.length > 0) {
         result = branches[branches.length - 1];
@@ -36,7 +40,7 @@ export class AffectedFilter implements PipelineFilter {
 
     // - search in tags
     if (result.includes('*')) {
-      const tags = await Git.listTags([...sortArgs, result], { cwd: wks.cwd, logger: log });
+      const tags = await Git.listTags([...sortArgs, result], { cwd: wks.cwd, logger: logger });
 
       if (tags.length > 0) {
         result = tags[tags.length - 1];
@@ -44,11 +48,11 @@ export class AffectedFilter implements PipelineFilter {
     }
 
     if (result !== this.format) {
-      log.verbose(`Resolved ${this.format} into ${result}`);
+      logger.verbose(`Resolved ${this.format} into ${result}`);
     }
 
     if (result.includes('*')) {
-      log.warn(`No revision found matching ${result}, using fallback ${this.fallback}`);
+      logger.warn(`No revision found matching ${result}, using fallback ${this.fallback}`);
 
       return this.fallback;
     }

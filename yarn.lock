@@ -1629,6 +1629,7 @@ __metadata:
     gulp: 4.0.2
     gulp-cli: 2.3.0
     inversify: ^6.0.1
+    inversify-inject-decorators: ^3.1.0
     jest: 28.1.2
     jill-tools: "workspace:*"
     normalize-package-data: ^4.0.0
@@ -7440,6 +7441,13 @@ fsevents@^1.2.7:
   version: 1.4.0
   resolution: "interpret@npm:1.4.0"
   checksum: 2e5f51268b5941e4a17e4ef0575bc91ed0ab5f8515e3cf77486f7c14d13f3010df9c0959f37063dcc96e78d12dc6b0bb1b9e111cdfe69771f4656d2993d36155
+  languageName: node
+  linkType: hard
+
+"inversify-inject-decorators@npm:^3.1.0":
+  version: 3.1.0
+  resolution: "inversify-inject-decorators@npm:3.1.0"
+  checksum: 61fd6948c0914ec1c6f10a87903c949d3987903fdb2d23952a1257223f192d0386862974568044dd73d2fcf4f0f37d59eb4dc83124b1d143ed4852266e1585b6
   languageName: node
   linkType: hard
 

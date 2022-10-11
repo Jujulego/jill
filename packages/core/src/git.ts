@@ -1,7 +1,6 @@
-import { SpawnTask, SpawnTaskOptions, TaskContext } from '@jujulego/tasks';
+import { SpawnTask, SpawnTaskOptions, TaskContext, TaskManager } from '@jujulego/tasks';
 
-import { logger } from './logger';
-import { manager } from './task-manager.service';
+import { lazyInject, LoggerService, TaskManagerService } from './services';
 import { streamLines } from './utils';
 
 // Types
@@ -11,15 +10,22 @@ export interface GitContext extends TaskContext {
 
 // Git commands
 export class Git {
+  // Services
+  @lazyInject(TaskManagerService)
+  static readonly manager: TaskManager<GitContext>;
+
+  @lazyInject(LoggerService)
+  static readonly logger: LoggerService;
+
   // commons
   static command(cmd: string, args: string[], options: SpawnTaskOptions = {}): SpawnTask<GitContext> {
-    const opts = { logger, ...options };
+    const opts = { logger: this.logger, ...options };
 
     // Create task
     const task = new SpawnTask('git', [cmd, ...args], { command: cmd }, opts);
     task.subscribe('stream', ({ data }) => opts.logger.debug(data.toString('utf-8')));
 
-    manager.add(task);
+    this.manager.add(task);
 
     return task;
   }

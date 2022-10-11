@@ -2,12 +2,12 @@ import { SpawnTask, SpawnTaskOptions, TaskContext } from '@jujulego/tasks';
 import path from 'node:path';
 import { Package } from 'normalize-package-data';
 import { satisfies } from 'semver';
+import winston from 'winston';
 
 import { Git } from '../git';
-import { logger } from '../logger';
-import { Project } from './project';
+import { container, LoggerService } from '../services';
 import { combine } from '../utils';
-import winston from 'winston';
+import { Project } from './project';
 
 // Types
 export type WorkspaceDepsMode = 'all' | 'prod' | 'none';
@@ -33,6 +33,7 @@ export class Workspace {
     readonly manifest: Package,
     readonly project: Project
   ) {
+    const logger = container.get(LoggerService);
     this._logger = logger.child({ label: this.manifest.name });
   }
 

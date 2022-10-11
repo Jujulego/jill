@@ -4,7 +4,7 @@ import path from 'node:path';
 import normalize, { Package } from 'normalize-package-data';
 import glob from 'tiny-glob';
 
-import { logger } from '../logger';
+import { container, lazyInject, LoggerService } from '../services';
 import { Workspace } from './workspace';
 
 // Types
@@ -24,19 +24,24 @@ export class Project {
   private _isFullyLoaded = false;
   private _lock = new AsyncLock();
 
+  @lazyInject(LoggerService)
+  private readonly _logger: LoggerService;
+
   // Constructor
   constructor(
     private readonly _root: string,
     opts: ProjectOptions = {}
   ) {
     if (opts.packageManager) {
-      logger.debug(`Forced use of ${opts.packageManager} in ${path.relative(process.cwd(), this.root) || '.'}`);
+      this._logger.debug(`Forced use of ${opts.packageManager} in ${path.relative(process.cwd(), this.root) || '.'}`);
       this._packageManager = opts.packageManager;
     }
   }
 
   // Statics
   static async searchProjectRoot(dir: string): Promise<string> {
+    const logger = container.get(LoggerService);
+
     // Will process directories from dir to root
     let found = false;
     let last = dir;
@@ -70,7 +75,7 @@ export class Project {
   // Methods
   private async _loadManifest(dir: string): Promise<Package> {
     const file = path.resolve(this.root, dir, 'package.json');
-    const log = logger.child({ label: path.relative(process.cwd(), path.dirname(file)) });
+    const log = this._logger.child({ label: path.relative(process.cwd(), path.dirname(file)) });
     log.verbose('Loading package.json ...');
 
     const data = await fs.readFile(file, 'utf-8');
@@ -101,13 +106,13 @@ export class Project {
       const files = await fs.readdir(this.root);
 
       if (files.includes('yarn.lock')) {
-        logger.debug(`Detected yarn in ${path.relative(process.cwd(), this.root) || '.'}`);
+        this._logger.debug(`Detected yarn in ${path.relative(process.cwd(), this.root) || '.'}`);
         this._packageManager = 'yarn';
       } else if (files.includes('package-lock.json')) {
-        logger.debug(`Detected npm in ${path.relative(process.cwd(), this.root) || '.'}`);
+        this._logger.debug(`Detected npm in ${path.relative(process.cwd(), this.root) || '.'}`);
         this._packageManager = 'npm';
       } else {
-        logger.debug(`No package manager recognized in ${path.relative(process.cwd(), this.root) || '.'}, defaults to npm`);
+        this._logger.debug(`No package manager recognized in ${path.relative(process.cwd(), this.root) || '.'}, defaults to npm`);
         this._packageManager = 'npm';
       }
     }

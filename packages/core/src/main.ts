@@ -1,11 +1,9 @@
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
-import 'reflect-metadata';
 
 import pkg from '../package.json';
-import { container, TOKENS } from './inversify.config';
-import { TaskManagerService } from './task-manager.service';
-import './logger';
+import { container, GLOBAL_CONFIG } from './services';
+import { Git } from './git';
 
 try {
   // Setup yargs
@@ -28,13 +26,14 @@ try {
       description: 'Set maximum parallel job number',
     })
     .middleware((config) => {
-      container.bind(TOKENS.GlobalConfig).toConstantValue(config);
+      container.bind(GLOBAL_CONFIG).toConstantValue(config);
     });
 
   // Parse !
   parser
-    .command('toto', 'toto', {}, () => {
-      container.get(TaskManagerService);
+    .command('toto', 'toto', {}, async () => {
+      const branches = await Git.listBranches();
+      console.log(branches);
     })
     .demandCommand()
     .recommendCommands()
