@@ -4,9 +4,6 @@ on:
   push:
     branches: [ master ]
 
-  milestone:
-    types: [ closed ]
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -29,19 +26,11 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: build-artifacts
-          path: packages/*/dist/*
+          path: dist
 
   lint:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        package:
-          - 'jill-e2e'
-          - '@jujulego/jill'
-          - '@jujulego/jill-common'
-          - '@jujulego/jill-core'
-          - '@jujulego/jill-myr'
+    needs: [ build ]
 
     steps:
       - uses: actions/checkout@v3.0.2
@@ -56,33 +45,12 @@ jobs:
         run: yarn install --immutable
 
       - name: Lint
-        run: yarn workspace ${{ matrix.package }} lint
+        run: yarn lint
 
   tests:
     runs-on: ubuntu-latest
     needs: [ build ]
 
-    strategy:
-      fail-fast: false
-
-      matrix:
-        include:
-          - name: 'jill'
-            package: '@jujulego/jill'
-            workspace: 'packages/cli'
-
-          - name: 'jill-common'
-            package: '@jujulego/jill-common'
-            workspace: 'packages/common'
-
-          - name: 'jill-core'
-            package: '@jujulego/jill-core'
-            workspace: 'packages/core'
-
-          - name: 'jill-myr'
-            package: '@jujulego/jill-myr'
-            workspace: 'packages/myr'
-
     steps:
       - uses: actions/checkout@v3.0.2
 
@@ -98,71 +66,63 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: build-artifacts
-          path: packages
+          path: dist
 
       - name: Test
-        run: yarn workspace ${{ matrix.package }} test
+        run: yarn test
 
       - uses: actions/upload-artifact@v3
         with:
-          name: ${{ matrix.name }}-coverage
-          path: ${{ matrix.workspace }}/coverage
+          name: coverage-artifacts
+          path: coverage
 
-  e2e-tests:
-    runs-on: ${{ matrix.os }}
-    needs: [ build ]
-
-    strategy:
-      fail-fast: false
-
-      matrix:
-        os:
-          - 'ubuntu-latest'
-          - 'windows-latest'
-
-    steps:
-      - uses: actions/checkout@v3.0.2
-        with:
-          fetch-depth: 0
-
-      - name: Use Node.js 16.x
-        uses: actions/setup-node@v3.3.0
-        with:
-          node-version: 16
-          cache: yarn
-
-      - name: Install
-        run: yarn install --immutable
-
-      - uses: actions/download-artifact@v3
-        with:
-          name: build-artifacts
-          path: packages
-
-      - name: Test
-        run: yarn e2e
-        env:
-          FORCE_COLOR: 1
+#  e2e-tests:
+#    runs-on: ${{ matrix.os }}
+#    needs: [ build ]
+#
+#    strategy:
+#      fail-fast: false
+#
+#      matrix:
+#        os:
+#          - 'ubuntu-latest'
+#          - 'windows-latest'
+#
+#    steps:
+#      - uses: actions/checkout@v3.0.2
+#        with:
+#          fetch-depth: 0
+#
+#      - name: Use Node.js 16.x
+#        uses: actions/setup-node@v3.3.0
+#        with:
+#          node-version: 16
+#          cache: yarn
+#
+#      - name: Install
+#        run: yarn install --immutable
+#
+#      - uses: actions/download-artifact@v3
+#        with:
+#          name: build-artifacts
+#          path: packages
+#
+#      - name: Test
+#        run: yarn e2e
+#        env:
+#          FORCE_COLOR: 1
 
   publish:
     runs-on: ubuntu-latest
     environment: npm
-    needs: [ lint, tests, e2e-tests ]
+    needs: [ lint, tests ] #, e2e-tests ]
 
     permissions:
       actions: write
       contents: write
 
     steps:
-      - name: Publish only the latest commit
-        uses: styfle/cancel-workflow-action@0.9.1
-        with:
-          all_but_latest: true
-          access_token: ${{ github.token }}
-
       - uses: actions/checkout@v3.0.2
-        with:
-          ref: master
 
       - name: Use Node.js 16.x
         uses: actions/setup-node@v3.3.0
@@ -177,124 +137,101 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: build-artifacts
-          path: packages
+          path: dist
 
-      - name: Git setup
-        run: |
-          git config --global user.name 'Boobrie'
-          git config --global user.email 'boobrie@users.noreply.github.com'
-
-      - name: Apply version update
-        if: ${{ github.event_name == 'push' }}
-        run: |
-          yarn version apply --all
-
-          if `git diff --quiet --exit-code`
-          then
-            echo "::warning::Nothing changed !"
-          else
-            git commit -am "chore: update bundles & version numbers"
-          fi
-
-      - name: Apply milestone version
-        if: ${{ github.event_name == 'milestone' }}
-        run: |
-          yarn workspaces foreach version -i ${{ github.event.milestone.title }}
-
-          if `git diff --quiet --exit-code`
-          then
-            echo "::warning::Nothing changed !"
-          else
-            git commit -am "chore: update bundles & version numbers"
-            git tag ${{ github.event.milestone.title }}
-          fi
-
-      - name: Push
-        run: |
-          git push
-          git push --tags
+#      - name: Git setup
+#        run: |
+#          git config --global user.name 'Boobrie'
+#          git config --global user.email 'boobrie@users.noreply.github.com'
+#
+#      - name: Apply version update
+#        if: ${{ github.event_name == 'push' }}
+#        run: |
+#          yarn version apply --all
+#
+#          if `git diff --quiet --exit-code`
+#          then
+#            echo "::warning::Nothing changed !"
+#          else
+#            git commit -am "chore: update bundles & version numbers"
+#          fi
+#
+#      - name: Apply milestone version
+#        if: ${{ github.event_name == 'milestone' }}
+#        run: |
+#          yarn workspaces foreach version -i ${{ github.event.milestone.title }}
+#
+#          if `git diff --quiet --exit-code`
+#          then
+#            echo "::warning::Nothing changed !"
+#          else
+#            git commit -am "chore: update bundles & version numbers"
+#            git tag ${{ github.event.milestone.title }}
+#          fi
+#
+#      - name: Push
+#        run: |
+#          git push
+#          git push --tags
 
       - name: Publish
-        run: yarn workspaces foreach --no-private npm publish --access public --tolerate-republish
+        run: yarn npm publish --access public --tolerate-republish
         env:
           YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
   sonarcloud:
     if: ${{ !startsWith(github.head_ref, 'renovate/') }}
     runs-on: ubuntu-latest
-    needs: [tests, publish]
-
-    strategy:
-      fail-fast: false
-
-      matrix:
-        include:
-          - name: 'jill'
-            package: '@jujulego/jill'
-            workspace: 'packages/cli'
-
-          - name: 'jill-common'
-            package: '@jujulego/jill-common'
-            workspace: 'packages/common'
-
-          - name: 'jill-core'
-            package: '@jujulego/jill-core'
-            workspace: 'packages/core'
-
-          - name: 'jill-myr'
-            package: '@jujulego/jill-myr'
-            workspace: 'packages/myr'
+    needs: [ tests, publish ]
 
     steps:
       - uses: actions/checkout@v3.0.2
         with:
-          ref: master
           fetch-depth: 0
 
       - name: Download test coverage
         uses: actions/download-artifact@v3
         continue-on-error: true
         with:
-          name: ${{ matrix.name }}-coverage
-          path: ${{ matrix.workspace }}/coverage
+          name: coverage-artifacts
+          path: coverage
 
       - name: Load package.json
         id: info
-        run: 'echo ::set-output name=package::`cat ${{ matrix.workspace }}/package.json`'
+        run: 'echo ::set-output name=package::`cat package.json`'
 
       - name: Sonarcloud
         uses: sonarsource/sonarcloud-github-action@v1.6
         with:
-          projectBaseDir: ${{ matrix.workspace }}
           args: >
             -Dsonar.projectVersion=${{ fromJSON(steps.info.outputs.package).version }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-  release:
-    runs-on: ubuntu-latest
-    needs: [publish]
-    if: ${{ github.event_name == 'milestone' }}
-
-    permissions:
-      contents: write
-
-    steps:
-      - uses: actions/checkout@v3.0.2
-        with:
-          ref: master
-
-      - name: Use Node.js 16.x
-        uses: actions/setup-node@v3.3.0
-        with:
-          node-version: 16
-          cache: npm
-
-      - name: Setup gren
-        run: npm install -g github-release-notes
-
-      - name: 🤖 Generate release
-        run: gren release -t ${{ github.event.milestone.title }}
-        env:
-          GREN_GITHUB_TOKEN: ${{ github.token }}
+#  release:
+#    runs-on: ubuntu-latest
+#    needs: [publish]
+#    if: ${{ github.event_name == 'milestone' }}
+#
+#    permissions:
+#      contents: write
+#
+#    steps:
+#      - uses: actions/checkout@v3.0.2
+#        with:
+#          ref: master
+#
+#      - name: Use Node.js 16.x
+#        uses: actions/setup-node@v3.3.0
+#        with:
+#          node-version: 16
+#          cache: npm
+#
+#      - name: Setup gren
+#        run: npm install -g github-release-notes
+#
+#      - name: 🤖 Generate release
+#        run: gren release -t ${{ github.event.milestone.title }}
+#        env:
+#          GREN_GITHUB_TOKEN: ${{ github.token }}
