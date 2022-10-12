@@ -5,6 +5,10 @@
     "@typescript-eslint",
     "workspaces"
   ],
+  "ignorePatterns": [
+    "coverage/**",
+    "dist/**"
+  ],
   "overrides": [
     {
       "files": "**/*.{js,jsx,ts,tsx}",
@@ -23,6 +27,16 @@
           "allow": ["warn", "error"]
         }]
       }
+    },
+    {
+      "files": "tests/**/*.{js,jsx,ts,tsx}",
+      "globals": {
+        "jest/globals": true
+      },
+      "extends": [
+        "plugin:jest/recommended",
+        "plugin:jest/style"
+      ]
     }
   ]
 }
