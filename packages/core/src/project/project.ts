@@ -75,7 +75,7 @@ export class Project {
   // Methods
   private async _loadManifest(dir: string): Promise<Package> {
     const file = path.resolve(this.root, dir, 'package.json');
-    const log = this._logger.child({ label: path.relative(process.cwd(), path.dirname(file)) });
+    const log = this._logger.child({ label: path.relative(this.root, path.dirname(file)) || '.' });
     log.verbose('Loading package.json ...');
 
     const data = await fs.readFile(file, 'utf-8');

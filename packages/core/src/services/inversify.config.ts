@@ -5,6 +5,7 @@ import 'reflect-metadata';
 
 // Constants
 export const GLOBAL_CONFIG = Symbol.for('GlobalConfig');
+export const CURRENT_PROJECT = Symbol.for('CurrentProject');
 
 // Types
 export interface GlobalConfig {

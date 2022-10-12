@@ -4,7 +4,7 @@ import { Project, Workspace } from '../src';
 // Bed
 export class TestBed {
   // Attributes
-  readonly project = new Project('/test');
+  readonly project = new Project('./test');
 
   // Methods
   manifest(pkg: Partial<Package>): Package {

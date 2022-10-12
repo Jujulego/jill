@@ -41,6 +41,6 @@ export async function *streamLines(task: SpawnTask, stream: SpawnTaskStream): As
   }
 }
 
-export function defineCommand<T = unknown, U = unknown>(mod: CommandModule<T, U>): CommandModule<T, U> {
+export function defineCommand<T, U>(mod: CommandModule<T, U>): CommandModule<T, U> {
   return mod;
 }
