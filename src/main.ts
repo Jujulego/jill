@@ -1,8 +1,8 @@
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
+import { globalConfig } from './modifiers';
 import pkg from '../package.json';
-import { globalConfig } from './middlewares';
 
 // Bootstrap
 (async () => {

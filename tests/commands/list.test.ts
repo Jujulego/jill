@@ -2,11 +2,12 @@ import path from 'node:path';
 import yargs from 'yargs';
 
 import { TestBed } from '../test-bed';
-import { container, CURRENT_PROJECT, currentProject } from '../../src';
+import { container, CURRENT_PROJECT, loadProject } from '../../src';
 import listCommand from '../../src/commands/list';
 
 // Mocks
-jest.mock('../../src/middlewares/current-project.middleware');
+jest.mock('../../src/modifiers/setup-ink');
+jest.mock('../../src/modifiers/load-project');
 
 // Setup
 let bed: TestBed;
@@ -26,7 +27,7 @@ beforeEach(() => {
 
   // Project
   bed = new TestBed();
-  jest.mocked(currentProject).mockImplementation((yargs: yargs.Argv<any>) => {
+  jest.mocked(loadProject).mockImplementation((yargs: yargs.Argv<any>) => {
     container.bind(CURRENT_PROJECT).toConstantValue(bed.project);
 
     return yargs;

@@ -3,10 +3,10 @@ import path from 'node:path';
 import slugify from 'slugify';
 
 import { AffectedFilter, Pipeline, PrivateFilter, ScriptsFilter } from '../filters';
-import { currentProject } from '../middlewares';
+import { loadProject, setupInk } from '../modifiers';
 import { Project, Workspace } from '../project';
 import { container, CURRENT_PROJECT } from '../services';
-import { defineCommand } from '../utils';
+import { applyModifiers, defineCommand } from '../utils';
 import { CliList } from '../ui';
 
 // Types
@@ -44,7 +44,10 @@ function buildExtractor(attrs: Attribute[]): Extractor<Data> {
 export default defineCommand({
   command: ['list', 'ls'],
   describe: 'List workspaces',
-  builder: (yargs) => currentProject(yargs)
+  builder: (yargs) => applyModifiers(yargs, [
+    setupInk,
+    loadProject,
+  ])
     // Filters
     .option('private', {
       type: 'boolean',

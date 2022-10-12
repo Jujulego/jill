@@ -12,9 +12,9 @@
     }
   },
   "module": {
-    "type": "es6"
+    "type": "commonjs"
   },
   "env": {
-    "coreJs": "3.22"
+    "targets": "maintained node versions and node >= 16"
   }
 }

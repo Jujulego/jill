@@ -1,6 +1,6 @@
 export * from './filters';
 export * from './git';
-export * from './middlewares';
+export * from './modifiers';
 export * from './project';
 export * from './services';
 export * from './ui';
