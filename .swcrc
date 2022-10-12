@@ -1,0 +1,20 @@
+{
+  "jsc": {
+    "target": "es2022",
+    "parser": {
+      "syntax": "typescript",
+      "decorators": true
+    },
+    "transform": {
+      "react": {
+        "runtime": "automatic"
+      }
+    }
+  },
+  "module": {
+    "type": "es6"
+  },
+  "env": {
+    "coreJs": "3.22"
+  }
+}
