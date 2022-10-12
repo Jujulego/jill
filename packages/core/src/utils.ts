@@ -1,5 +1,6 @@
 import { streamEvents } from '@jujulego/event-tree';
 import { SpawnTask, SpawnTaskStream } from '@jujulego/tasks';
+import { CommandModule } from 'yargs';
 
 // Utils
 export async function* combine<T>(...generators: AsyncGenerator<T>[]): AsyncGenerator<T> {
@@ -38,4 +39,8 @@ export async function *streamLines(task: SpawnTask, stream: SpawnTaskStream): As
       yield current;
     }
   }
+}
+
+export function defineCommand<T = unknown, U = unknown>(mod: CommandModule<T, U>): CommandModule<T, U> {
+  return mod;
 }

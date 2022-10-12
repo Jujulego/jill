@@ -3,7 +3,6 @@ import { hideBin } from 'yargs/helpers';
 
 import pkg from '../package.json';
 import { container, GLOBAL_CONFIG } from './services';
-import { Git } from './git';
 
 try {
   // Setup yargs
@@ -31,9 +30,8 @@ try {
 
   // Parse !
   parser
-    .command('toto', 'toto', {}, async () => {
-      const branches = await Git.listBranches();
-      console.log(branches);
+    .commandDir('commands', {
+      visit: obj => obj.default
     })
     .demandCommand()
     .recommendCommands()
