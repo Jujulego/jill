@@ -3,7 +3,7 @@ import path from 'node:path';
 import { Project, Workspace, Git } from '../../src';
 
 // Setup
-const root = path.resolve(__dirname, '../../../../mock');
+const root = path.resolve(__dirname, '../../mock');
 let project: Project;
 let workspace: Workspace;
 
