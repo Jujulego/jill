@@ -23,6 +23,24 @@
       "rules": {
         "quotes": ["error", "single"],
         "semi": ["error", "always"],
+        "no-console": ["warn", {
+          "allow": ["warn", "error"]
+        }]
+      }
+    },
+    {
+      "files": "**/*.{jsx,tsx}",
+      "extends": [
+        "plugin:react/recommended",
+        "plugin:react/jsx-runtime",
+        "plugin:react-hooks/recommended"
+      ],
+      "env": {
+        "node": true
+      },
+      "rules": {
+        "jsx-quotes": ["error", "prefer-double"],
+        "react/prop-types": "off",
         "no-console": ["error", {
           "allow": ["warn", "error"]
         }]
