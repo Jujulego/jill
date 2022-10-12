@@ -1,2 +1,2 @@
-export * from './current-project.middleware';
-export * from './global-config.middleware';
+export * from './current-project';
+export * from './global-config';

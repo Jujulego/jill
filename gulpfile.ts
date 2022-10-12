@@ -7,7 +7,7 @@ import typescript from 'gulp-typescript';
 
 // Config
 const options = {
-  src: 'src/**/*.ts',
+  src: 'src/**/*.{ts,tsx}',
   output: 'dist',
   tsconfig: 'tsconfig.json',
   deps: [

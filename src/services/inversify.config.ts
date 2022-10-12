@@ -4,6 +4,7 @@ import getDecorators from 'inversify-inject-decorators';
 import 'reflect-metadata';
 
 // Constants
+export const INK_APP = Symbol.for('InkApp');
 export const GLOBAL_CONFIG = Symbol.for('GlobalConfig');
 export const CURRENT_PROJECT = Symbol.for('CurrentProject');
 
