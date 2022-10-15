@@ -17,7 +17,24 @@ export const consoleFormat = winston.format.combine(
     message: true,
     colors: { debug: 'grey', verbose: 'blue', info: 'white', error: 'red' }
   }),
-  winston.format.printf(({ label, message }) => message.split('\n').map(line => [label && chalk.grey(`[${label}]`), line].filter(p => p).join(' ')).join('\n')),
+  winston.format.printf(({ label, message, ms }) => {
+    const lines = message.split('\n');
+
+    // Format
+    let spaces = '';
+    let formatted = `${lines[0]} ${chalk.magenta(ms)}`;
+
+    if (label) {
+      spaces = ' '.repeat(label.length + 3);
+      formatted = `${chalk.grey(`[${label}]`)} ${lines[0]} ${chalk.magenta(ms)}`;
+    }
+
+    for (let i = 1; i < lines.length; ++i) {
+      formatted += `\n${spaces}${lines[i]}`;
+    }
+
+    return formatted;
+  }),
 );
 
 // Service
