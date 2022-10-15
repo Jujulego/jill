@@ -57,3 +57,8 @@ export function applyModifiers<T>(yargs: Argv<T>, modifiers: Modifier[]): Argv<T
 export function defineCommand<T, U>(command: CommandModule<T, U>): CommandModule<T, U> {
   return command;
 }
+
+// String utils
+export function capitalize(txt: string): string {
+  return txt.charAt(0).toUpperCase() + txt.substring(1).toLowerCase();
+}

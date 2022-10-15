@@ -4,9 +4,10 @@ import { GlobalSpinner } from './global-spinner';
 import { StaticLogs } from './static-logs';
 
 // Component
-export const Layout: FC = () => (
+export const Layout: FC = ({ children }) => (
   <>
     <StaticLogs />
     <GlobalSpinner />
+    { children }
   </>
 );

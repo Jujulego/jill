@@ -22,10 +22,7 @@
       },
       "rules": {
         "quotes": ["error", "single"],
-        "semi": ["error", "always"],
-        "no-console": ["warn", {
-          "allow": ["warn", "error"]
-        }]
+        "semi": ["error", "always"]
       }
     },
     {
@@ -40,10 +37,7 @@
       },
       "rules": {
         "jsx-quotes": ["error", "prefer-double"],
-        "react/prop-types": "off",
-        "no-console": ["error", {
-          "allow": ["warn", "error"]
-        }]
+        "react/prop-types": "off"
       }
     },
     {

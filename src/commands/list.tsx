@@ -1,13 +1,14 @@
 import chalk from 'chalk';
 import path from 'node:path';
+import ink from 'ink';
 import slugify from 'slugify';
 
 import { AffectedFilter, Pipeline, PrivateFilter, ScriptsFilter } from '../filters';
 import { loadProject, setupInk } from '../modifiers';
 import { Project, Workspace } from '../project';
-import { container, CURRENT_PROJECT } from '../services';
+import { container, CURRENT_PROJECT, INK_APP } from '../services';
+import { Layout, List } from '../ui';
 import { applyModifiers, defineCommand } from '../utils';
-import { CliList } from '../ui';
 
 // Types
 export type Attribute = 'name' | 'version' | 'root' | 'slug';
@@ -103,6 +104,7 @@ export default defineCommand({
       type: 'boolean',
       group: 'Format:',
       desc: 'Prints data as a JSON array',
+      default: !process.stdout.isTTY,
     }),
   async handler(args) {
     // Setup pipeline
@@ -155,23 +157,37 @@ export default defineCommand({
         console.log(JSON.stringify(data));
       }
     } else {
-      const list = new CliList();
-
-      if (args.headers ?? (attrs.length > 1)) {
-        list.setHeaders(attrs);
-      }
+      const app = container.get<ink.Instance>(INK_APP);
 
       for (const d of data) {
         if (d.root) {
-          d.root = path.relative(process.cwd(), d.root) || '.';
+          d.root = path.relative(process.cwd(), d.root) ?? '.';
         }
-
-        list.add(attrs.map(attr => d[attr] || ''));
       }
 
-      for (const d of list.lines()) {
-        console.log(d);
-      }
+      app.rerender(
+        <Layout>
+          <List items={data} headers={args.headers ?? (attrs.length > 1)} />
+        </Layout>
+      );
+
+      // const list = new CliList();
+      //
+      // if (args.headers ?? (attrs.length > 1)) {
+      //   list.setHeaders(attrs);
+      // }
+      //
+      // for (const d of data) {
+      //   if (d.root) {
+      //     d.root = path.relative(process.cwd(), d.root) || '.';
+      //   }
+      //
+      //   list.add(attrs.map(attr => d[attr] || ''));
+      // }
+      //
+      // for (const d of list.lines()) {
+      //   console.log(d);
+      // }
     }
   }
 });
