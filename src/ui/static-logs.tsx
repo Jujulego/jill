@@ -1,24 +1,21 @@
-import { Static, Text } from 'ink';
-import { FC, useLayoutEffect, useState } from 'react';
+import { useStderr } from 'ink';
+import { FC, useLayoutEffect, } from 'react';
 import Transport from 'winston-transport';
 
-import { container, Logger } from '../services';
+import { consoleFormat, container, Logger } from '../services';
 
 // Constants
-const COLORS: Record<string, string> = {
-  debug: 'grey',
-  verbose: 'blue',
-  warn: 'yellow',
-  error: 'red',
-};
+const MESSAGE = Symbol.for('message');
 
-// Utils
-let id = 0;
+// Types
+interface Info extends Record<string, unknown> {
+  [MESSAGE]: string;
+}
 
 // Component
 export const StaticLogs: FC = () => {
   // State
-  const [logs, setLogs] = useState<any[]>([]);
+  const { write } = useStderr();
 
   // Effect
   useLayoutEffect(() => {
@@ -27,13 +24,20 @@ export const StaticLogs: FC = () => {
 
     logger.clear();
     logger.add(new class extends Transport {
+      // Constructor
+      constructor() {
+        super({
+          format: consoleFormat
+        });
+      }
+
       // Methods
-      log(info: any, next: () => void): void {
+      log(info: Info, next: () => void): void {
         setTimeout(() => {
           this.emit('logged', info);
         }, 0);
 
-        setLogs((old) => [...old, { id: ++id, ...info }]);
+        write(info[MESSAGE] + '\n');
 
         next();
       }
@@ -46,16 +50,7 @@ export const StaticLogs: FC = () => {
         logger.add(transport);
       }
     };
-  }, []);
+  }, [write]);
 
-  return (
-    <Static items={logs}>
-      { (log) => (
-        <Text key={log.id} color={COLORS[log.level]}>
-          { log.label && <Text color="grey">[{ log.label }]{' '}</Text> }
-          { log.message }
-        </Text>
-      ) }
-    </Static>
-  );
+  return null;
 };

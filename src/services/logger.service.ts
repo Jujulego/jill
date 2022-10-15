@@ -10,13 +10,22 @@ const VERBOSITY_LEVEL: Record<number, string> = {
   2: 'debug',
 };
 
-// Types
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface Logger extends winston.Logger {}
+// Utils
+export const consoleFormat = winston.format.combine(
+  winston.format.errors(),
+  winston.format.colorize({
+    message: true,
+    colors: { debug: 'grey', verbose: 'blue', info: 'white', error: 'red' }
+  }),
+  winston.format.printf(({ label, message }) => message.split('\n').map(line => [label && chalk.grey(`[${label}]`), line].filter(p => p).join(' ')).join('\n')),
+);
 
 // Service
 @injectable()
 export class Logger {}
+
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface Logger extends winston.Logger {}
 
 container.bind(Logger)
   .toDynamicValue((context) => {
@@ -30,14 +39,7 @@ container.bind(Logger)
       ),
       transports: [
         new winston.transports.Console({
-          format: winston.format.combine(
-            winston.format.errors(),
-            winston.format.colorize({
-              message: true,
-              colors: { debug: 'grey', verbose: 'blue', info: 'white', error: 'red' }
-            }),
-            winston.format.printf(({ label, message }) => message.split('\n').map(line => [label && chalk.grey(`[${label}]`), line].filter(p => p).join(' ')).join('\n')),
-          )
+          format: consoleFormat
         })
       ]
     });
