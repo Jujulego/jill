@@ -3,6 +3,7 @@ import { FC, useLayoutEffect, } from 'react';
 import Transport from 'winston-transport';
 
 import { consoleFormat, container, Logger } from '../services';
+import winston from 'winston';
 
 // Constants
 const MESSAGE = Symbol.for('message');
@@ -20,10 +21,16 @@ export const StaticLogs: FC = () => {
   // Effect
   useLayoutEffect(() => {
     const logger = container.get(Logger);
-    const olds = logger.transports;
 
-    logger.clear();
-    logger.add(new class extends Transport {
+    // Remove Console transport
+    for (const transport of logger.transports) {
+      if (transport instanceof winston.transports.Console) {
+        logger.remove(transport);
+      }
+    }
+
+    // Add custom transport
+    const transport = new class extends Transport {
       // Constructor
       constructor() {
         super({
@@ -41,14 +48,15 @@ export const StaticLogs: FC = () => {
 
         next();
       }
-    });
+    };
+
+    logger.add(transport);
 
     return () => {
-      logger.clear();
-
-      for (const transport of olds) {
-        logger.add(transport);
-      }
+      logger.remove(transport);
+      logger.add(new winston.transports.Console({
+        format: consoleFormat
+      }));
     };
   }, [write]);
 
