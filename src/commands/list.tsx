@@ -6,7 +6,7 @@ import slugify from 'slugify';
 import { AffectedFilter, Pipeline, PrivateFilter, ScriptsFilter } from '../filters';
 import { loadProject, setupInk } from '../middlewares';
 import { Project, Workspace } from '../project';
-import { container, CURRENT_PROJECT, INK_APP } from '../services';
+import { container, CURRENT, INK_APP } from '../services';
 import { Layout, List } from '../ui';
 import { applyMiddlewares, defineCommand } from '../utils';
 
@@ -45,10 +45,11 @@ function buildExtractor(attrs: Attribute[]): Extractor<Data> {
 export default defineCommand({
   command: ['list', 'ls'],
   describe: 'List workspaces',
-  builder: (yargs) => applyMiddlewares(yargs, [
-    setupInk,
-    loadProject,
-  ])
+  builder: (yargs) =>
+    applyMiddlewares(yargs, [
+      setupInk,
+      loadProject,
+    ])
     // Filters
     .option('private', {
       type: 'boolean',
@@ -126,7 +127,7 @@ export default defineCommand({
     }
 
     // Load workspaces
-    const project = container.get<Project>(CURRENT_PROJECT);
+    const project = container.getNamed(Project, CURRENT);
     const workspaces: Workspace[] = [];
 
     for await (const wks of pipeline.filter(project.workspaces())) {

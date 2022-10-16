@@ -6,7 +6,7 @@ import 'reflect-metadata';
 // Constants
 export const INK_APP = Symbol.for('InkApp');
 export const GLOBAL_CONFIG = Symbol.for('GlobalConfig');
-export const CURRENT_PROJECT = Symbol.for('CurrentProject');
+export const CURRENT = Symbol.for('Current');
 
 // Types
 export interface GlobalConfig {

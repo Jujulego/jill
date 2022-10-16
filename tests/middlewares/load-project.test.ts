@@ -1,7 +1,7 @@
 import path from 'node:path';
 import yargs from 'yargs';
 
-import { applyMiddlewares, container, CURRENT_PROJECT, loadProject, Project, SpinnerService } from '../../src';
+import { applyMiddlewares, container, CURRENT, loadProject, Project, SpinnerService } from '../../src';
 
 // Setup
 let parser: yargs.Argv;
@@ -32,8 +32,8 @@ describe('loadProject', () => {
     expect(spinner.spin).toHaveBeenCalledWith('Loading project ...');
     expect(Project.searchProjectRoot).toHaveBeenCalledWith(process.cwd());
 
-    expect(container.isBound(CURRENT_PROJECT)).toBe(true);
-    expect(container.get<Project>(CURRENT_PROJECT).root).toBe(path.resolve('/test'));
+    expect(container.isBoundNamed(Project, CURRENT)).toBe(true);
+    expect(container.getNamed(Project, CURRENT).root).toBe(path.resolve('/test'));
 
     expect(spinner.stop).toHaveBeenCalled();
   });
@@ -47,8 +47,8 @@ describe('loadProject', () => {
   it('should set package manager using arguments', async () => {
     await parser.parse('--package-manager npm');
 
-    expect(container.isBound(CURRENT_PROJECT)).toBe(true);
-    await expect(container.get<Project>(CURRENT_PROJECT).packageManager())
+    expect(container.isBoundNamed(Project, CURRENT)).toBe(true);
+    await expect(container.getNamed(Project, CURRENT).packageManager())
       .resolves.toBe('npm');
   });
 });
