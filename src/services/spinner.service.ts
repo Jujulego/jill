@@ -1,4 +1,5 @@
 import { injectable } from 'inversify';
+
 import { container } from './inversify.config';
 
 // Interface
