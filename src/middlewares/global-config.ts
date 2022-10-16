@@ -15,6 +15,9 @@ export const globalConfig = defineMiddleware({
       description: 'Set maximum parallel job number',
     }),
   handler(args) {
-    container.bind(GLOBAL_CONFIG).toConstantValue(args);
+    container.bind(GLOBAL_CONFIG).toConstantValue({
+      verbose: args.verbose,
+      jobs: args.jobs,
+    });
   }
 });
