@@ -1,8 +1,9 @@
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
-import { globalConfig } from './modifiers';
 import pkg from '../package.json';
+import { globalConfig } from './middlewares';
+import { applyMiddlewares } from './utils';
 
 // Bootstrap
 (async () => {
@@ -15,7 +16,7 @@ import pkg from '../package.json';
     .wrap(yargs.terminalWidth());
 
   // Middlewares
-  globalConfig(parser);
+  applyMiddlewares(parser, [globalConfig]);
 
   // Parse !
   await parser

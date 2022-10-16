@@ -4,11 +4,11 @@ import ink from 'ink';
 import slugify from 'slugify';
 
 import { AffectedFilter, Pipeline, PrivateFilter, ScriptsFilter } from '../filters';
-import { loadProject, setupInk } from '../modifiers';
+import { loadProject, setupInk } from '../middlewares';
 import { Project, Workspace } from '../project';
 import { container, CURRENT_PROJECT, INK_APP } from '../services';
 import { Layout, List } from '../ui';
-import { applyModifiers, defineCommand } from '../utils';
+import { applyMiddlewares, defineCommand } from '../utils';
 
 // Types
 export type Attribute = 'name' | 'version' | 'root' | 'slug';
@@ -45,7 +45,7 @@ function buildExtractor(attrs: Attribute[]): Extractor<Data> {
 export default defineCommand({
   command: ['list', 'ls'],
   describe: 'List workspaces',
-  builder: (yargs) => applyModifiers(yargs, [
+  builder: (yargs) => applyMiddlewares(yargs, [
     setupInk,
     loadProject,
   ])
@@ -104,7 +104,6 @@ export default defineCommand({
       type: 'boolean',
       group: 'Format:',
       desc: 'Prints data as a JSON array',
-      default: !process.stdout.isTTY,
     }),
   async handler(args) {
     // Setup pipeline
@@ -170,24 +169,6 @@ export default defineCommand({
           <List items={data} headers={args.headers ?? (attrs.length > 1)} />
         </Layout>
       );
-
-      // const list = new CliList();
-      //
-      // if (args.headers ?? (attrs.length > 1)) {
-      //   list.setHeaders(attrs);
-      // }
-      //
-      // for (const d of data) {
-      //   if (d.root) {
-      //     d.root = path.relative(process.cwd(), d.root) || '.';
-      //   }
-      //
-      //   list.add(attrs.map(attr => d[attr] || ''));
-      // }
-      //
-      // for (const d of list.lines()) {
-      //   console.log(d);
-      // }
     }
   }
 });

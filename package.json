@@ -1,6 +1,6 @@
 {
   "name": "@jujulego/jill",
-  "version": "2.0.0-alpha.1",
+  "version": "2.0.0-alpha.2",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -76,6 +76,7 @@
     "gulp-sourcemaps": "3.0.0",
     "gulp-swc": "1.2.3",
     "gulp-typescript": "6.0.0-alpha.1",
+    "ink-testing-library": "2.1.0",
     "jest": "28.1.2",
     "ts-node": "10.9.1",
     "typescript": "4.8.4",

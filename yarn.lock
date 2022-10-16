@@ -1245,6 +1245,7 @@ __metadata:
     gulp-typescript: 6.0.0-alpha.1
     ink: ^3.2.0
     ink-spinner: ^4.0.3
+    ink-testing-library: 2.1.0
     inversify: ^6.0.1
     inversify-inject-decorators: ^3.1.0
     jest: 28.1.2
@@ -5164,6 +5165,18 @@ fsevents@^1.2.7:
     ink: ">=3.0.5"
     react: ">=16.8.2"
   checksum: d3785d688dd1ba19fb7a850b7a2c1dd8b2d06e4c77e6a7cc6c5bbd366a5a721e9ea45d036447016a9028f7519994077ce603a60a43a495e17b7b443b8a513ddc
+  languageName: node
+  linkType: hard
+
+"ink-testing-library@npm:2.1.0":
+  version: 2.1.0
+  resolution: "ink-testing-library@npm:2.1.0"
+  peerDependencies:
+    "@types/react": ">=16.8.0"
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+  checksum: 932bc3feed2d68e853f69c56b40610f50ea4366750400ee9597c0f5231acdfd29ac41d8c86924c7f85b7a0ab31cf0ad0726a9d29fdfe6ff82bc836177e7ff063
   languageName: node
   linkType: hard
 

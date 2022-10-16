@@ -1,10 +1,9 @@
-import { Argv } from 'yargs';
-
 import { container, GLOBAL_CONFIG } from '../services';
+import { defineMiddleware } from '../utils';
 
 // Middleware
-export function globalConfig<T>(yargs: Argv<T>) {
-  return yargs
+export const globalConfig = defineMiddleware({
+  builder: (yargs) => yargs
     .option('verbose', {
       alias: 'v',
       type: 'count',
@@ -14,8 +13,8 @@ export function globalConfig<T>(yargs: Argv<T>) {
       alias: 'j',
       type: 'number',
       description: 'Set maximum parallel job number',
-    })
-    .middleware((config) => {
-      container.bind(GLOBAL_CONFIG).toConstantValue(config);
-    });
-}
+    }),
+  handler(args) {
+    container.bind(GLOBAL_CONFIG).toConstantValue(args);
+  }
+});

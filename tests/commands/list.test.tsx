@@ -1,17 +1,14 @@
+import { render } from 'ink-testing-library';
 import path from 'node:path';
 import yargs from 'yargs';
 
 import { TestBed } from '../test-bed';
-import { container, CURRENT_PROJECT, loadProject } from '../../src';
+import { container, CURRENT_PROJECT, INK_APP, Layout, loadProject, setupInk } from '../../src';
 import listCommand from '../../src/commands/list';
 
-// Mocks
-jest.mock('../../src/modifiers/setup-ink');
-jest.mock('../../src/modifiers/load-project');
-
 // Setup
+let app: ReturnType<typeof render>;
 let bed: TestBed;
-let screen: string[];
 
 beforeEach(() => {
   container.snapshot();
@@ -19,18 +16,17 @@ beforeEach(() => {
   jest.resetAllMocks();
   jest.restoreAllMocks();
 
-  // Screen
-  screen = [];
-  jest.spyOn(console, 'log').mockImplementation((msg) => {
-    screen.push(msg.trim());
-  });
-
   // Project
   bed = new TestBed();
-  jest.mocked(loadProject).mockImplementation((yargs: yargs.Argv<any>) => {
-    container.bind(CURRENT_PROJECT).toConstantValue(bed.project);
 
-    return yargs;
+  // Mocks
+  jest.spyOn(console, 'log').mockImplementation();
+  jest.spyOn(setupInk, 'handler').mockImplementation(() => {
+    app = render(<Layout />);
+    container.bind(INK_APP).toConstantValue(app);
+  });
+  jest.spyOn(loadProject, 'handler').mockImplementation(() => {
+    container.bind(CURRENT_PROJECT).toConstantValue(bed.project);
   });
 });
 
@@ -56,7 +52,7 @@ describe('jill list', () => {
     await yargs.command(listCommand)
       .parse('list');
 
-    expect(screen).toEqual([
+    expect(app.lastFrame()).toEqualLines([
       'wks-1',
       'wks-2',
       'wks-3',
@@ -80,7 +76,7 @@ describe('jill list', () => {
       await yargs.command(listCommand)
         .parse('list --private');
 
-      expect(screen).toEqual([
+      expect(app.lastFrame()).toEqualLines([
         'wks-1',
       ]);
     });
@@ -101,7 +97,7 @@ describe('jill list', () => {
       await yargs.command(listCommand)
         .parse('list --no-private');
 
-      expect(screen).toEqual([
+      expect(app.lastFrame()).toEqualLines([
         'wks-2',
         'wks-3',
       ]);
@@ -129,7 +125,7 @@ describe('jill list', () => {
       await yargs.command(listCommand)
         .parse('list --affected test');
 
-      expect(screen).toEqual([
+      expect(app.lastFrame()).toEqualLines([
         'wks-2',
       ]);
     });
@@ -152,7 +148,7 @@ describe('jill list', () => {
       await yargs.command(listCommand)
         .parse('list --with-script test');
 
-      expect(screen).toEqual([
+      expect(app.lastFrame()).toEqualLines([
         'wks-2',
       ]);
     });
@@ -173,7 +169,7 @@ describe('jill list', () => {
       await yargs.command(listCommand)
         .parse('list --with-script test lint');
 
-      expect(screen).toEqual([
+      expect(app.lastFrame()).toEqualLines([
         'wks-2',
         'wks-3',
       ]);
@@ -197,7 +193,7 @@ describe('jill list', () => {
       await yargs.command(listCommand)
         .parse('list --headers');
 
-      expect(screen).toEqual([
+      expect(app.lastFrame()).toEqualLines([
         'Name',
         'wks-1',
         'wks-2',
@@ -221,7 +217,7 @@ describe('jill list', () => {
       await yargs.command(listCommand)
         .parse('list --long');
 
-      expect(screen).toEqual([
+      expect(app.lastFrame()).toEqualLines([
         'Name   Version  Root',
         `wks-1  1.0.0    ${path.join('test', 'wks-1')}`,
         `wks-2  1.0.0    ${path.join('test', 'wks-2')}`,
@@ -245,13 +241,13 @@ describe('jill list', () => {
       await yargs.command(listCommand)
         .parse('list --json');
 
-      expect(screen).toEqual([
+      expect(console.log).toHaveBeenCalledWith(
         expect.jsonMatching([
           { name: 'wks-1', version: '1.0.0', slug: 'wks-1', root: path.resolve('./test/wks-1'), },
           { name: 'wks-2', version: '1.0.0', slug: 'wks-2', root: path.resolve('./test/wks-2'), },
           { name: 'wks-3', version: '1.0.0', slug: 'wks-3', root: path.resolve('./test/wks-3'), },
         ]),
-      ]);
+      );
     });
   });
 });

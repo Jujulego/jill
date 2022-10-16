@@ -1,6 +1,7 @@
 import { streamEvents } from '@jujulego/event-tree';
 import { SpawnTask, SpawnTaskStream } from '@jujulego/tasks';
-import { Argv, CommandModule } from 'yargs';
+import { Arguments, Argv, CommandModule } from 'yargs';
+import { Awaitable } from './types';
 
 // Stream utils
 export async function* combine<T>(...generators: AsyncGenerator<T>[]): AsyncGenerator<T> {
@@ -42,13 +43,20 @@ export async function *streamLines(task: SpawnTask, stream: SpawnTaskStream): As
 }
 
 // Command utils
-export type Modifier<T = unknown, U = unknown> = (yargs: Argv<T>) => void | Argv<U>;
+export interface Middleware<T = unknown, U = unknown> {
+  builder?: (yargs: Argv<T>) => Argv<U>;
+  handler(args: Arguments<U>): Awaitable<void>;
+}
 
-export function applyModifiers<T>(yargs: Argv<T>, modifiers: Modifier[]): Argv<T> {
+export function applyMiddlewares<T>(yargs: Argv<T>, middlewares: Middleware[]): Argv<T> {
   let tmp: Argv<unknown> = yargs;
 
-  for (const modifier of modifiers) {
-    tmp = modifier(tmp) ?? tmp;
+  for (const middleware of middlewares) {
+    if (middleware.builder) {
+      tmp = middleware.builder(tmp);
+    }
+
+    tmp.middleware(middleware.handler);
   }
 
   return tmp as Argv<T>;
@@ -56,6 +64,10 @@ export function applyModifiers<T>(yargs: Argv<T>, modifiers: Modifier[]): Argv<T
 
 export function defineCommand<T, U>(command: CommandModule<T, U>): CommandModule<T, U> {
   return command;
+}
+
+export function defineMiddleware<T, U>(middleware: Middleware<T, U>): Middleware<T, U> {
+  return middleware;
 }
 
 // String utils
