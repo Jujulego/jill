@@ -1,3 +1,5 @@
+import yargs from 'yargs';
+
 import { container, CURRENT, SpinnerService } from '../services';
 import { Project, Workspace } from '../project';
 import { defineMiddleware } from '../utils';
@@ -20,7 +22,7 @@ export const loadWorkspace = defineMiddleware({
 
       if (!workspace) {
         spinner.failed(`Workspace "${args.workspace || '.'}" not found`);
-        process.exit(1);
+        yargs.exit(1, new Error('Workspace not found'));
       } else {
         container.bind(Workspace)
           .toConstantValue(workspace)

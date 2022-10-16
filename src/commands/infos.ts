@@ -1,7 +1,7 @@
 import { loadProject, loadWorkspace, setupInk } from '../middlewares';
+import { Workspace } from '../project';
 import { container, CURRENT } from '../services';
 import { applyMiddlewares, defineCommand } from '../utils';
-import { Workspace } from '../project';
 
 // Command
 export default defineCommand({
