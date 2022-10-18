@@ -1,3 +1,7 @@
 {
-  "name": "mock-test-d"
+  "name": "mock-test-d",
+  "scripts": {
+    "build": "node -e \"setTimeout(() => process.exit(0), 2000)\" --",
+    "watch": "node -e \"setInterval(() => console.log('hello i\\'m d'), 3000)\" --"
+  }
 }

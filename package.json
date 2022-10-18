@@ -4,8 +4,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Jujulego/jill",
-    "directory": "packages/core"
+    "url": "https://github.com/Jujulego/jill"
   },
   "files": [
     "bin",
