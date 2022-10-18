@@ -42,12 +42,6 @@ export async function *streamLines(task: SpawnTask, stream: SpawnTaskStream): As
   }
 }
 
-export async function each<T>(generator: AsyncGenerator<T>, callback: (val: T) => void): Promise<void> {
-  for await (const val of generator) {
-    callback(val);
-  }
-}
-
 // Command utils
 export interface Middleware<T = unknown, U = unknown> {
   builder?: (yargs: Argv<T>) => Argv<U>;

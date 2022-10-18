@@ -1,4 +1,4 @@
-import { SpawnTask, SpawnTaskOptions, TaskContext } from '@jujulego/tasks';
+import { SpawnTask, SpawnTaskOptions, SpawnTaskStream, TaskContext } from '@jujulego/tasks';
 import path from 'node:path';
 import { Package } from 'normalize-package-data';
 import { satisfies } from 'semver';
@@ -6,7 +6,7 @@ import winston from 'winston';
 
 import { Git } from '../git';
 import { container, Logger } from '../services';
-import { combine, each, streamLines } from '../utils';
+import { combine, streamLines } from '../utils';
 import { Project } from './project';
 
 // Types
@@ -135,6 +135,18 @@ export class Workspace {
     }
   }
 
+  private async _streamLogs(task: SpawnTask<WorkspaceContext>, stream: SpawnTaskStream, level: string) {
+    try {
+      for await (const line of streamLines(task, stream)) {
+        this._logger.log(level, line);
+      }
+    } catch (err) {
+      if (err) {
+        this._logger.warn(`Error while streaming task ${stream}`, err);
+      }
+    }
+  }
+
   async run(script: string, args: string[] = [], opts: WorkspaceRunOptions = {}): Promise<SpawnTask<WorkspaceContext>> {
     let task = this._tasks.get(script);
 
@@ -151,8 +163,8 @@ export class Workspace {
         }
       });
 
-      each(streamLines(task, 'stdout'), (line) => this._logger.info(line));
-      each(streamLines(task, 'stderr'), (line) => this._logger.warn(line));
+      this._streamLogs(task, 'stdout', 'info');
+      this._streamLogs(task, 'stderr', 'info');
 
       await this._buildDependencies(task, opts.buildDeps);
 

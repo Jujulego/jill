@@ -38,7 +38,7 @@ export default defineCommand({
       rest.splice(0, 1);
     }
 
-    // Run build task
+    // Run script in workspace
     const task = await workspace.run(args.script, rest, {
       buildDeps: args.depsMode,
     });

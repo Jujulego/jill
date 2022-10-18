@@ -61,7 +61,7 @@ export const TaskSpinner: FC<TaskSpinnerProps> = ({ task }) => {
 
         setTime(Date.now() - start);
       } catch (err) {
-        if (err.name !== 'AbortError') {
+        if (err) {
           throw err;
         }
       }
