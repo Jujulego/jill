@@ -3,5 +3,8 @@
   "scripts": {
     "build": "node -e \"setTimeout(() => process.exit(0), 3000)\" --",
     "watch": "node -e \"setInterval(() => console.log('hello i\\'m c'), 3000)\" --"
+  },
+  "devDependencies": {
+    "mock-test-d": "workspace:*"
   }
 }
