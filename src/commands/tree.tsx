@@ -1,12 +1,15 @@
+import ink from 'ink';
+
 import { loadProject, loadWorkspace, setupInk } from '../middlewares';
 import { Workspace } from '../project';
-import { container, CURRENT } from '../services';
+import { container, CURRENT, INK_APP } from '../services';
+import { Layout, WorkspaceTree } from '../ui';
 import { applyMiddlewares, defineCommand } from '../utils';
 
 // Command
 export default defineCommand({
-  command: 'infos',
-  describe: 'Describe a workspace',
+  command: 'tree',
+  describe: 'Print workspace dependency tree',
   builder: (yargs) =>
     applyMiddlewares(yargs, [
       setupInk,
@@ -14,8 +17,13 @@ export default defineCommand({
       loadWorkspace
     ]),
   handler: () => {
+    const app = container.get<ink.Instance>(INK_APP);
     const workspace = container.getNamed(Workspace, CURRENT);
 
-    console.log(workspace.name);
+    app.rerender(
+      <Layout>
+        <WorkspaceTree workspace={workspace} />
+      </Layout>
+    );
   }
 });
