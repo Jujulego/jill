@@ -1,7 +1,6 @@
 import path from 'node:path';
 
 import { Project, Workspace, Git } from '../../src';
-import { SpawnTask } from '@jujulego/tasks';
 
 // Setup
 const root = path.resolve(__dirname, '../../mock');
@@ -67,37 +66,36 @@ describe('Workspace.run', () => {
     (project.packageManager as jest.MockedFunction<typeof project.packageManager>)
       .mockResolvedValue('yarn');
 
-    const taskA = await workspace.run('test');
+    const task = await workspace.run('test');
 
     // Check up tree
-    expect(taskA).toEqual(expect.objectContaining({
+    expect(task).toEqual(expect.objectContaining({
       cmd: 'yarn',
       args: ['run', 'test'],
-      cwd: path.join(root, 'workspaces/test-a')
-    }));
-
-    expect(taskA.dependencies).toHaveLength(2);
-    expect(taskA.dependencies).toContainEqual(expect.objectContaining({
-      cmd: 'yarn',
-      args: ['run', 'build'],
-      cwd: path.join(root, 'workspaces/test-b')
-    }));
-    expect(taskA.dependencies).toContainEqual(expect.objectContaining({
-      cmd: 'yarn',
-      args: ['run', 'build'],
-      cwd: path.join(root, 'workspaces/test-c')
-    }));
-
-    const taskB = taskA.dependencies.find((tsk) => (tsk as any).cwd.endsWith('test-b'))!;
-    expect(taskB.dependencies).toHaveLength(1);
-    expect(taskB.dependencies).toContainEqual(expect.objectContaining({
-      cmd: 'yarn',
-      args: ['run', 'build'],
-      cwd: path.join(root, 'workspaces/test-c')
+      cwd: path.join(root, 'workspaces/test-a'),
+      dependencies: expect.arrayContaining([
+        expect.objectContaining({
+          cmd: 'yarn',
+          args: ['run', 'build'],
+          cwd: path.join(root, 'workspaces/test-b'),
+          dependencies: [
+            expect.objectContaining({
+              cmd: 'yarn',
+              args: ['run', 'build'],
+              cwd: path.join(root, 'workspaces/test-c')
+            })
+          ]
+        }),
+        expect.objectContaining({
+          cmd: 'yarn',
+          args: ['run', 'build'],
+          cwd: path.join(root, 'workspaces/test-c')
+        })
+      ])
     }));
 
     // Both workspace 'mock-test-c' task should be the same
-    expect(taskA.dependencies[1]).toBe(taskA.dependencies[0].dependencies[0]);
+    expect(task.dependencies[1]).toBe(task.dependencies[0].dependencies[0]);
     expect(project.packageManager).toHaveBeenCalled();
   });
 });
