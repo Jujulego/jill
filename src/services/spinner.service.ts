@@ -3,8 +3,9 @@ import { injectable } from 'inversify';
 import { container } from './inversify.config';
 
 // Interface
+export type SpinnerStatus = 'spin' | 'stop' | 'success' | 'failed';
 export interface SpinnerState {
-  spin: boolean;
+  status: SpinnerStatus;
   label: string;
 }
 
@@ -14,12 +15,18 @@ export type SpinnerStateListener = (state: SpinnerState) => void;
 @injectable()
 export class SpinnerService {
   // Attributes
-  private _spin = false;
+  private _status: SpinnerStatus = 'stop';
   private _label = '';
 
   private readonly _listeners = new Set<SpinnerStateListener>();
 
   // Methods
+  private _propagate() {
+    for (const listener of this._listeners) {
+      listener(this.state);
+    }
+  }
+
   subscribe(listener: SpinnerStateListener) {
     this._listeners.add(listener);
 
@@ -29,26 +36,38 @@ export class SpinnerService {
   }
 
   spin(label: string) {
-    this._spin = true;
+    this._status = 'spin';
     this._label = label;
 
-    for (const listener of this._listeners) {
-      listener(this.state);
-    }
+    this._propagate();
+  }
+
+  success(label: string) {
+    this._status = 'success';
+    this._label = label;
+
+    this._propagate();
+  }
+
+  failed(label: string) {
+    this._status = 'failed';
+    this._label = label;
+
+    this._propagate();
   }
 
   stop() {
-    this._spin = false;
+    if (this._status === 'spin') {
+      this._status = 'stop';
 
-    for (const listener of this._listeners) {
-      listener(this.state);
+      this._propagate();
     }
   }
 
   // Properties
   get state(): SpinnerState {
     return {
-      spin: this._spin,
+      status: this._status,
       label: this._label,
     };
   }

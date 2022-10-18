@@ -3,7 +3,7 @@ import path from 'node:path';
 import yargs from 'yargs';
 
 import { TestBed } from '../test-bed';
-import { container, CURRENT_PROJECT, INK_APP, Layout, loadProject, setupInk } from '../../src';
+import { container, CURRENT, INK_APP, Layout, loadProject, Project, setupInk } from '../../src';
 import listCommand from '../../src/commands/list';
 
 // Setup
@@ -26,7 +26,9 @@ beforeEach(() => {
     container.bind(INK_APP).toConstantValue(app);
   });
   jest.spyOn(loadProject, 'handler').mockImplementation(() => {
-    container.bind(CURRENT_PROJECT).toConstantValue(bed.project);
+    container.bind(Project)
+      .toConstantValue(bed.project)
+      .whenTargetNamed(CURRENT);
   });
 });
 

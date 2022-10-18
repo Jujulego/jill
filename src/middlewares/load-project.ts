@@ -1,4 +1,4 @@
-import { container, CURRENT_PROJECT, SpinnerService } from '../services';
+import { container, CURRENT, SpinnerService } from '../services';
 import { PackageManager, Project } from '../project';
 import { defineMiddleware } from '../utils';
 
@@ -24,10 +24,11 @@ export const loadProject = defineMiddleware({
       spinner.spin('Loading project ...');
       const root = args.project = await Project.searchProjectRoot(args.project);
 
-      container.bind(CURRENT_PROJECT)
+      container.bind(Project)
         .toDynamicValue(() => new Project(root, {
           packageManager: args['package-manager']
-        }));
+        }))
+        .whenTargetNamed(CURRENT);
     } finally {
       spinner.stop();
     }
