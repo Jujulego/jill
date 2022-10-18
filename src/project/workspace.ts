@@ -6,7 +6,7 @@ import winston from 'winston';
 
 import { Git } from '../git';
 import { container, Logger } from '../services';
-import { combine } from '../utils';
+import { combine, each, streamLines } from '../utils';
 import { Project } from './project';
 
 // Types
@@ -150,6 +150,10 @@ export class Workspace {
           ...opts.env
         }
       });
+
+      each(streamLines(task, 'stdout'), (line) => this._logger.info(line));
+      each(streamLines(task, 'stderr'), (line) => this._logger.warn(line));
+
       await this._buildDependencies(task, opts.buildDeps);
 
       this._tasks.set(script, task);
