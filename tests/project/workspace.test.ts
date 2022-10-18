@@ -73,7 +73,7 @@ describe('Workspace.run', () => {
       cmd: 'yarn',
       args: ['run', 'test'],
       cwd: path.join(root, 'workspaces/test-a'),
-      dependencies: [
+      dependencies: expect.arrayContaining([
         expect.objectContaining({
           cmd: 'yarn',
           args: ['run', 'build'],
@@ -91,7 +91,7 @@ describe('Workspace.run', () => {
           args: ['run', 'build'],
           cwd: path.join(root, 'workspaces/test-c')
         })
-      ]
+      ])
     }));
 
     // Both workspace 'mock-test-c' task should be the same
