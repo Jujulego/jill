@@ -239,11 +239,13 @@ describe('jill list', () => {
         yield* workspaces;
       });
 
+      jest.spyOn(process.stdout, 'write');
+
       // Run command
       await yargs.command(listCommand)
         .parse('list --json');
 
-      expect(console.log).toHaveBeenCalledWith(
+      expect(process.stdout.write).toHaveBeenCalledWith(
         expect.jsonMatching([
           { name: 'wks-1', version: '1.0.0', slug: 'wks-1', root: path.resolve('./test/wks-1'), },
           { name: 'wks-2', version: '1.0.0', slug: 'wks-2', root: path.resolve('./test/wks-2'), },
