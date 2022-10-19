@@ -154,7 +154,7 @@ export default defineCommand({
       if (process.stdout.isTTY) { // Pretty print for ttys
         console.log(JSON.stringify(data, null, 2));
       } else {
-        console.log(JSON.stringify(data));
+        process.stdout.write(JSON.stringify(data));
       }
     } else {
       const app = container.get<ink.Instance>(INK_APP);
