@@ -14,6 +14,7 @@ export type WorkspaceDepsMode = 'all' | 'prod' | 'none';
 
 export interface WorkspaceContext extends TaskContext {
   workspace: Workspace;
+  script: string;
 }
 
 export interface WorkspaceRunOptions extends Omit<SpawnTaskOptions, 'cwd'> {
@@ -153,7 +154,7 @@ export class Workspace {
     if (!task) {
       const pm = await this.project.packageManager();
 
-      task = new SpawnTask(pm, ['run', script, ...args], { workspace: this }, {
+      task = new SpawnTask(pm, ['run', script, ...args], { workspace: this, script }, {
         ...opts,
         cwd: this.cwd,
         logger: this._logger,
