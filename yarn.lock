@@ -1234,8 +1234,6 @@ __metadata:
     async-lock: ^1.3.1
     chalk: ^4.1.2
     del: 6.1.1
-    english-verbs-gerunds: ^2.2.5
-    english-verbs-helper: ^2.2.5
     eslint: 8.24.0
     eslint-plugin-jest: 27.0.4
     eslint-plugin-react: 7.31.10
@@ -3644,20 +3642,6 @@ __metadata:
   dependencies:
     once: ^1.4.0
   checksum: 530a5a5a1e517e962854a31693dbb5c0b2fc40b46dad2a56a2deec656ca040631124f4795823acc68238147805f8b021abbe221f4afed5ef3c8e8efc2024908b
-  languageName: node
-  linkType: hard
-
-"english-verbs-gerunds@npm:^2.2.5":
-  version: 2.2.5
-  resolution: "english-verbs-gerunds@npm:2.2.5"
-  checksum: b5cde218cc7228c8e2c831950a9c3bffbda763e5f4878c9e19f4e81c4a8e26f60a7ad2c85344875a5dad96cd9d0b1ca882e6782a245eb497969f408e05804449
-  languageName: node
-  linkType: hard
-
-"english-verbs-helper@npm:^2.2.5":
-  version: 2.2.5
-  resolution: "english-verbs-helper@npm:2.2.5"
-  checksum: 924bf8ade70bfc285a33474f4569f387276ca9a445b86b14740d8e1a809e0ff89cc5eaa35267325cfc7fe6c15d5ef66a1e30fff8f81a930b89ae52f7e397c27f
   languageName: node
   linkType: hard
 
