@@ -17,16 +17,16 @@ export const consoleFormat = winston.format.combine(
     message: true,
     colors: { debug: 'grey', verbose: 'blue', info: 'white', error: 'red' }
   }),
-  winston.format.printf(({ label, message, ms }) => {
+  winston.format.printf(({ label, message }) => {
     const lines = message.split('\n');
 
     // Format
     let spaces = '';
-    let formatted = `${lines[0]} ${chalk.magenta(ms)}`;
+    let formatted = lines[0];
 
     if (label) {
       spaces = ' '.repeat(label.length + 3);
-      formatted = `${chalk.grey(`[${label}]`)} ${lines[0]} ${chalk.magenta(ms)}`;
+      formatted = `${chalk.grey(`[${label}]`)} ${lines[0]}`;
     }
 
     for (let i = 1; i < lines.length; ++i) {
@@ -52,7 +52,6 @@ container.bind(Logger)
       level: VERBOSITY_LEVEL[Math.min(config.verbose, 2)],
       format: winston.format.combine(
         winston.format.timestamp(),
-        winston.format.ms(),
       ),
       transports: [
         new winston.transports.Console({

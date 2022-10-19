@@ -1,20 +1,16 @@
-import { Task, TaskContext } from '@jujulego/tasks';
+import { waitForEvent } from '@jujulego/event-tree';
+import { Task } from '@jujulego/tasks';
 import { Text } from 'ink';
 import Spinner from 'ink-spinner';
 import symbols from 'log-symbols';
-import { FC, useLayoutEffect, useMemo, useState } from 'react';
+import ms from 'ms';
+import { FC, useLayoutEffect, useState } from 'react';
 
-import { WorkspaceContext } from '../project';
-import { waitForEvent } from '@jujulego/event-tree';
+import { TaskName } from './task-name';
 
 // Types
 export interface TaskSpinnerProps {
   task: Task;
-}
-
-// Utils
-function isWorkspaceCtx(ctx: Readonly<TaskContext>): ctx is Readonly<WorkspaceContext> {
-  return 'workspace' in ctx;
 }
 
 // Components
@@ -22,17 +18,6 @@ export const TaskSpinner: FC<TaskSpinnerProps> = ({ task }) => {
   // State
   const [status, setStatus] = useState(task.status);
   const [time, setTime] = useState(0);
-
-  // Memos
-  const label = useMemo(() => {
-    const ctx = task.context;
-
-    if (isWorkspaceCtx(ctx)) {
-      return `in ${ctx.workspace.name}`;
-    }
-
-    return null;
-  }, [task]);
 
   // Effects
   useLayoutEffect(() => {
@@ -61,7 +46,7 @@ export const TaskSpinner: FC<TaskSpinnerProps> = ({ task }) => {
 
         setTime(Date.now() - start);
       } catch (err) {
-        if (err.name !== 'AbortError') {
+        if (err) {
           throw err;
         }
       }
@@ -76,34 +61,30 @@ export const TaskSpinner: FC<TaskSpinnerProps> = ({ task }) => {
     case 'ready':
       return (
         <Text color="grey">
-          <Spinner type="line2" />{ ' ' + task.name }
-          { label && <Text color="grey">{ ' ' + label }</Text> }
+          <Spinner type="line2" />{' '}<TaskName task={task} />
         </Text>
       );
 
     case 'running':
       return (
         <Text>
-          <Spinner />{ ' ' + task.name }
-          { label && <Text color="grey">{ ' ' + label }</Text> }
+          <Spinner />{' '}<TaskName task={task} />
         </Text>
       );
 
     case 'done':
       return (
         <Text>
-          <Text color="green">{ symbols.success } { task.name }</Text>
-          { label && <Text color="grey">{ ' ' + label }</Text> }
-          <Text color="magenta">{' '}took { time }ms</Text>
+          <Text color="green">{ symbols.success }{' '}<TaskName task={task} /></Text>
+          <Text color="magenta">{' '}took { ms(time) }</Text>
         </Text>
       );
 
     case 'failed':
       return (
         <Text>
-          <Text color="red">{ symbols.error } { task.name }</Text>
-          { label && <Text color="grey">{ ' ' + label }</Text> }
-          <Text color="magenta">{' '}took { time }ms</Text>
+          <Text color="red">{ symbols.error }{' '}<TaskName task={task} /></Text>
+          <Text color="magenta">{' '}took { ms(time) }</Text>
         </Text>
       );
   }
