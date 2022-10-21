@@ -14,8 +14,7 @@ export async function *streamLines(task: SpawnTask, stream: SpawnTaskStream): As
   // Abort
   const ctrl = new AbortController();
 
-  task.subscribe('status.done', () => ctrl.abort());
-  task.subscribe('status.failed', () => ctrl.abort());
+  task.subscribe('completed', () => ctrl.abort());
 
   // Stream
   let current = '';
