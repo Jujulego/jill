@@ -1213,7 +1213,7 @@ __metadata:
   dependencies:
     "@jujulego/event-tree": ^1.1.0-rc.2
     "@jujulego/flow": 1.1.0
-    "@jujulego/tasks": ^1.0.0-rc.3
+    "@jujulego/tasks": ^1.0.0-rc.5
     "@swc/core": 1.3.5
     "@swc/jest": 0.2.23
     "@types/async-lock": 1.1.5
@@ -1225,7 +1225,6 @@ __metadata:
     "@types/normalize-package-data": 2.4.1
     "@types/react": 17.0.50
     "@types/semver": 7.3.9
-    "@types/use-sync-external-store": ^0.0.3
     "@types/yargs": 17.0.13
     "@typescript-eslint/eslint-plugin": 5.39.0
     "@typescript-eslint/parser": 5.39.0
@@ -1256,10 +1255,8 @@ __metadata:
     semver: ^7.3.5
     slugify: ^1.6.5
     tiny-glob: ^0.2.9
-    tree-kill: ^1.2.2
     ts-node: 10.9.1
     typescript: 4.8.4
-    use-sync-external-store: ^1.2.0
     winston: ^3.6.0
     winston-transport: 4.5.0
     yargs: ^17.6.0
@@ -1268,13 +1265,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jujulego/tasks@npm:^1.0.0-rc.3":
-  version: 1.0.0-rc.3
-  resolution: "@jujulego/tasks@npm:1.0.0-rc.3"
+"@jujulego/tasks@npm:^1.0.0-rc.5":
+  version: 1.0.0-rc.5
+  resolution: "@jujulego/tasks@npm:1.0.0-rc.5"
   dependencies:
     "@jujulego/event-tree": ^1.1.0-rc.2
     tree-kill: ^1.2.2
-  checksum: f871d787eca006911e011ddc20f4e149a0d722c2a88d7bf0466233fc13fa980aaa43ceb6cdd400486d1a79ebbe8408464ba0c9e54f987443968be982f6874b3c
+  checksum: 3c399b2303815daedaa04a0d6af33f840f79fabbd27a1de3197c7f2ce1dbfbcbf49c14f555ead9c86f609c75102922a5326177d6e406df324053d3172f27b7a6
   languageName: node
   linkType: hard
 
@@ -1807,13 +1804,6 @@ __metadata:
     "@types/undertaker-registry": "*"
     async-done: ~1.3.2
   checksum: 7aac80fc81c8ebf0c5e6bc0c4395b7d6f67794ff7f82c9b0ff2776133da12e806598839a00e833fcf785da87f6064f46b8f12718dab1887f4647d05b6eee9b4a
-  languageName: node
-  linkType: hard
-
-"@types/use-sync-external-store@npm:^0.0.3":
-  version: 0.0.3
-  resolution: "@types/use-sync-external-store@npm:0.0.3"
-  checksum: 161ddb8eec5dbe7279ac971531217e9af6b99f7783213566d2b502e2e2378ea19cf5e5ea4595039d730aa79d3d35c6567d48599f69773a02ffcff1776ec2a44e
   languageName: node
   linkType: hard
 
@@ -9292,15 +9282,6 @@ fsevents@^1.2.7:
   version: 0.1.0
   resolution: "urix@npm:0.1.0"
   checksum: 4c076ecfbf3411e888547fe844e52378ab5ada2d2f27625139011eada79925e77f7fbf0e4016d45e6a9e9adb6b7e64981bd49b22700c7c401c5fc15f423303b3
-  languageName: node
-  linkType: hard
-
-"use-sync-external-store@npm:^1.2.0":
-  version: 1.2.0
-  resolution: "use-sync-external-store@npm:1.2.0"
-  peerDependencies:
-    react: ^16.8.0 || ^17.0.0 || ^18.0.0
-  checksum: 5c639e0f8da3521d605f59ce5be9e094ca772bd44a4ce7322b055a6f58eeed8dda3c94cabd90c7a41fb6fa852210092008afe48f7038792fd47501f33299116a
   languageName: node
   linkType: hard
 

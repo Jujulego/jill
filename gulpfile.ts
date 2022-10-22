@@ -11,7 +11,7 @@ const options = {
   output: 'dist',
   tsconfig: 'tsconfig.json',
   deps: [
-    '../../.pnp.*',
+    '.pnp.*',
   ]
 };
 

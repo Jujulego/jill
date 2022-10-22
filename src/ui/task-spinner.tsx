@@ -1,4 +1,3 @@
-import { waitForEvent } from '@jujulego/event-tree';
 import { Task } from '@jujulego/tasks';
 import { Text } from 'ink';
 import Spinner from 'ink-spinner';
@@ -27,32 +26,9 @@ export const TaskSpinner: FC<TaskSpinnerProps> = ({ task }) => {
   }, [task]);
 
   useLayoutEffect(() => {
-    const ctrl = new AbortController();
-
-    (async () => {
-      try {
-        if (['blocked', 'ready']?.includes(task.status)) {
-          await waitForEvent(task, 'status.running', { signal: ctrl.signal });
-        }
-
-        const start = Date.now();
-
-        if (task.status === 'running') {
-          await Promise.race([
-            waitForEvent(task, 'status.done', { signal: ctrl.signal }),
-            waitForEvent(task, 'status.failed', { signal: ctrl.signal })
-          ]);
-        }
-
-        setTime(Date.now() - start);
-      } catch (err) {
-        if (err) {
-          throw err;
-        }
-      }
-    })();
-
-    return () => ctrl.abort();
+    return task.subscribe('completed', ({ duration }) => {
+      setTime(duration);
+    });
   }, [task]);
 
   // Render

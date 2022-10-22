@@ -105,13 +105,15 @@ export default defineCommand({
 
       spinner.stop();
 
-      // Start and wait for result
-      tasks.start();
+      // Render
       app.rerender(
         <Layout>
           <TasksSpinner manager={manager} />
         </Layout>
       );
+
+      // Start and wait for result
+      tasks.start();
 
       const result = await waitForEvent(tasks, 'finished');
 
