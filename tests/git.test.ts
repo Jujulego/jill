@@ -132,7 +132,7 @@ describe('git.listBranches', () => {
     ) });
 
     jest.spyOn(task, 'exitCode', 'get').mockReturnValue(0);
-    setTimeout(() => task.emit('status.done', { status: 'done', previous: 'running' }), 0);
+    setTimeout(() => task.emit('completed', { status: 'done', duration: 1000 }), 0);
 
     await expect(prom).resolves.toEqual([
       'dev',
@@ -164,7 +164,7 @@ describe('git.listTags', () => {
     ) });
 
     jest.spyOn(task, 'exitCode', 'get').mockReturnValue(0);
-    setTimeout(() => task.emit('status.done', { status: 'done', previous: 'running' }), 0);
+    setTimeout(() => task.emit('completed', { status: 'done', duration: 1000 }), 0);
 
     await expect(prom).resolves.toEqual([
       '1.0.0',
