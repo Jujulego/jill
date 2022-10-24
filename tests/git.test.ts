@@ -67,7 +67,7 @@ describe('Git.isAffected', () => {
   });
 
   // Tests
-  it('should spawn git diff and return true if it exit with code 0', async () => {
+  it('should spawn git diff and return false if it exit with code 0', async () => {
     // Initiate task
     const prom = Git.isAffected('master');
 
@@ -77,10 +77,10 @@ describe('Git.isAffected', () => {
     const task = jest.mocked(Git.diff).mock.results[0].value as SpawnTask<GitContext>;
     setTimeout(() => task.emit('status.done', { status: 'done', previous: 'running' }), 0);
 
-    await expect(prom).resolves.toBe(true);
+    await expect(prom).resolves.toBe(false);
   });
 
-  it('should spawn git diff and return false if it exit with code 1', async () => {
+  it('should spawn git diff and return true if it exit with code 1', async () => {
     // Initiate task
     const prom = Git.isAffected('master');
 
@@ -92,7 +92,7 @@ describe('Git.isAffected', () => {
     jest.spyOn(task, 'exitCode', 'get').mockReturnValue(1);
     setTimeout(() => task.emit('status.failed', { status: 'failed', previous: 'running' }), 0);
 
-    await expect(prom).resolves.toBe(false);
+    await expect(prom).resolves.toBe(true);
   });
 
   it('should spawn git diff and reject if it fails', async () => {
