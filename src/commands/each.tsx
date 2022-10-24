@@ -90,7 +90,7 @@ export default defineCommand({
       }
 
       // Create script tasks
-      const tasks = new TaskSet<WorkspaceContext>(manager);
+      const tasks = new TaskSet(manager);
 
       for await (const wks of pipeline.filter(project.workspaces())) {
         tasks.add(await wks.run(args.script, rest, {
