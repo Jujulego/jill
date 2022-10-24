@@ -2,7 +2,7 @@ import { Task } from '@jujulego/tasks';
 import { Text } from 'ink';
 import Spinner from 'ink-spinner';
 import symbols from 'log-symbols';
-import ms from 'ms';
+import ms from 'pretty-ms';
 import { FC, useLayoutEffect, useState } from 'react';
 
 import { TaskName } from './task-name';
