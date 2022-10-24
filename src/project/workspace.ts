@@ -139,11 +139,11 @@ export class Workspace {
   private async _streamLogs(task: SpawnTask<WorkspaceContext>, stream: SpawnTaskStream, level: string) {
     try {
       for await (const line of streamLines(task, stream)) {
-        this._logger.log(level, line);
+        this._logger.log(level, line, { label: `${this.name}#${task.context.script}` });
       }
     } catch (err) {
       if (err) {
-        this._logger.warn(`Error while streaming task ${stream}`, err);
+        this._logger.warn(`Error while streaming task ${stream}`, err, { label: `${this.name}#${task.context.script}` });
       }
     }
   }
@@ -157,7 +157,7 @@ export class Workspace {
       task = new SpawnTask(pm, ['run', script, ...args], { workspace: this, script }, {
         ...opts,
         cwd: this.cwd,
-        logger: this._logger,
+        logger: this._logger.child({ label: `${this.name}#${script}`}),
         env: {
           FORCE_COLOR: '1',
           ...opts.env

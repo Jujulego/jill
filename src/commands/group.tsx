@@ -6,7 +6,7 @@ import yargs from 'yargs';
 import { loadProject, loadWorkspace, setupInk } from '../middlewares';
 import { Workspace, WorkspaceDepsMode } from '../project';
 import { container, CURRENT, INK_APP, Logger } from '../services';
-import { Layout, TasksSpinner } from '../ui';
+import { Layout, TaskManagerSpinner } from '../ui';
 import { applyMiddlewares, defineCommand } from '../utils';
 
 // Command
@@ -34,8 +34,8 @@ export default defineCommand({
     const manager = container.get(TaskManager);
 
     // Run script in workspace
-    const group = new ParallelGroup('test parallel group', {}, {
-    // const group = new SequenceGroup('test sequence group', {}, {
+    // const group = new ParallelGroup('test parallel group', {}, {
+    const group = new SequenceGroup('test sequence group', {}, {
       logger: container.get(Logger),
     });
 
@@ -52,7 +52,7 @@ export default defineCommand({
     // Render
     app.rerender(
       <Layout>
-        <TasksSpinner manager={manager} />
+        <TaskManagerSpinner manager={manager} />
       </Layout>
     );
 

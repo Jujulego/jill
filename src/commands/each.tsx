@@ -7,7 +7,7 @@ import { AffectedFilter, Pipeline, PrivateFilter, ScriptsFilter } from '../filte
 import { loadProject, setupInk } from '../middlewares';
 import { Project, WorkspaceContext, WorkspaceDepsMode } from '../project';
 import { container, CURRENT, INK_APP, SpinnerService } from '../services';
-import { Layout, TasksSpinner } from '../ui';
+import { Layout, TaskManagerSpinner } from '../ui';
 import { applyMiddlewares, defineCommand } from '../utils';
 
 // Command
@@ -108,7 +108,7 @@ export default defineCommand({
       // Render
       app.rerender(
         <Layout>
-          <TasksSpinner manager={manager} />
+          <TaskManagerSpinner manager={manager} />
         </Layout>
       );
 
