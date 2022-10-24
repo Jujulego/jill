@@ -48,10 +48,10 @@ export class Git {
     return new Promise((resolve, reject) => {
       const task = this.diff(['--quiet', reference, ...args], opts);
 
-      task.subscribe('status.done', () => resolve(true));
+      task.subscribe('status.done', () => resolve(false));
       task.subscribe('status.failed', () => {
         if (task.exitCode) {
-          resolve(false);
+          resolve(true);
         } else {
           reject(new Error(`Task ${task.name} failed`));
         }
