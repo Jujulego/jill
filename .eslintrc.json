@@ -5,6 +5,10 @@
     "@typescript-eslint",
     "workspaces"
   ],
+  "ignorePatterns": [
+    "coverage/**",
+    "dist/**"
+  ],
   "overrides": [
     {
       "files": "**/*.{js,jsx,ts,tsx}",
@@ -18,11 +22,33 @@
       },
       "rules": {
         "quotes": ["error", "single"],
-        "semi": ["error", "always"],
-        "no-console": ["error", {
-          "allow": ["warn", "error"]
-        }]
+        "semi": ["error", "always"]
       }
+    },
+    {
+      "files": "**/*.{jsx,tsx}",
+      "extends": [
+        "plugin:react/recommended",
+        "plugin:react/jsx-runtime",
+        "plugin:react-hooks/recommended"
+      ],
+      "env": {
+        "node": true
+      },
+      "rules": {
+        "jsx-quotes": ["error", "prefer-double"],
+        "react/prop-types": "off"
+      }
+    },
+    {
+      "files": "tests/**/*.{js,jsx,ts,tsx}",
+      "globals": {
+        "jest/globals": true
+      },
+      "extends": [
+        "plugin:jest/recommended",
+        "plugin:jest/style"
+      ]
     }
   ]
 }

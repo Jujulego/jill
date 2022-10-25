@@ -1,8 +1,8 @@
-name: 'Publish'
+name: 'Publish next'
 
 on:
   push:
-    branches: [ master ]
+    branches: [ next ]
 
 jobs:
   build:
@@ -175,7 +175,7 @@ jobs:
 #          git push --tags
 
       - name: Publish
-        run: yarn npm publish --access public --tolerate-republish
+        run: yarn npm publish --access public --tag next --tolerate-republish
         env:
           YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 

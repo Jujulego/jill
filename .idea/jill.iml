@@ -3,12 +3,12 @@
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/packages/cli/tests" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/packages/core/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/packages/yarn-plugin/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/e2e" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/packages/lutin/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/packages/myr/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/packages/common/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/tests" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/temp" />
       <excludeFolder url="file://$MODULE_DIR$/.tmp" />
       <excludeFolder url="file://$MODULE_DIR$/tmp" />
@@ -22,6 +22,7 @@
       <excludeFolder url="file://$MODULE_DIR$/packages/lutin/coverage" />
       <excludeFolder url="file://$MODULE_DIR$/packages/myr/coverage" />
       <excludeFolder url="file://$MODULE_DIR$/packages/common/coverage" />
+      <excludeFolder url="file://$MODULE_DIR$/dist" />
     </content>
     <content url="file://$MODULE_DIR$/.yarn" />
     <orderEntry type="inheritedJdk" />
