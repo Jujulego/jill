@@ -11,7 +11,7 @@
     "node": "^14"
   },
   "devDependencies": {
-    "@jujulego/jill": "1.2.0",
+    "@jujulego/jill": "1.2.1",
     "@swc/core": "1.3.10",
     "@swc/jest": "0.2.23",
     "@types/jest": "28.1.3",
