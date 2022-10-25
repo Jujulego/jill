@@ -65,7 +65,7 @@
     "@typescript-eslint/eslint-plugin": "5.41.0",
     "@typescript-eslint/parser": "5.41.0",
     "del": "6.1.1",
-    "eslint": "8.24.0",
+    "eslint": "8.26.0",
     "eslint-plugin-jest": "27.0.4",
     "eslint-plugin-react": "7.31.10",
     "eslint-plugin-react-hooks": "4.6.0",
