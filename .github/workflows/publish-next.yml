@@ -9,10 +9,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3.0.2
+      - uses: actions/checkout@v3.1.0
 
       - name: Use Node.js 16.x
-        uses: actions/setup-node@v3.3.0
+        uses: actions/setup-node@v3.5.0
         with:
           node-version: 16
           cache: yarn
@@ -33,10 +33,10 @@ jobs:
     needs: [ build ]
 
     steps:
-      - uses: actions/checkout@v3.0.2
+      - uses: actions/checkout@v3.1.0
 
       - name: Use Node.js 16.x
-        uses: actions/setup-node@v3.3.0
+        uses: actions/setup-node@v3.5.0
         with:
           node-version: 16
           cache: yarn
@@ -52,10 +52,10 @@ jobs:
     needs: [ build ]
 
     steps:
-      - uses: actions/checkout@v3.0.2
+      - uses: actions/checkout@v3.1.0
 
       - name: Use Node.js 16.x
-        uses: actions/setup-node@v3.3.0
+        uses: actions/setup-node@v3.5.0
         with:
           node-version: 16
           cache: yarn
@@ -89,12 +89,12 @@ jobs:
 #          - 'windows-latest'
 #
 #    steps:
-#      - uses: actions/checkout@v3.0.2
+#      - uses: actions/checkout@v3.1.0
 #        with:
 #          fetch-depth: 0
 #
 #      - name: Use Node.js 16.x
-#        uses: actions/setup-node@v3.3.0
+#        uses: actions/setup-node@v3.5.0
 #        with:
 #          node-version: 16
 #          cache: yarn
@@ -122,10 +122,10 @@ jobs:
       contents: write
 
     steps:
-      - uses: actions/checkout@v3.0.2
+      - uses: actions/checkout@v3.1.0
 
       - name: Use Node.js 16.x
-        uses: actions/setup-node@v3.3.0
+        uses: actions/setup-node@v3.5.0
         with:
           node-version: 16
           registry-url: https://registry.npmjs.org
@@ -185,7 +185,7 @@ jobs:
     needs: [ tests, publish ]
 
     steps:
-      - uses: actions/checkout@v3.0.2
+      - uses: actions/checkout@v3.1.0
         with:
           fetch-depth: 0
 
@@ -198,13 +198,13 @@ jobs:
 
       - name: Load package.json
         id: info
-        run: 'echo ::set-output name=package::`cat package.json`'
+        run: 'echo version=`jq ".version" package.json` >> $GITHUB_OUTPUT'
 
       - name: Sonarcloud
         uses: sonarsource/sonarcloud-github-action@v1.6
         with:
           args: >
-            -Dsonar.projectVersion=${{ fromJSON(steps.info.outputs.package).version }}
+            -Dsonar.projectVersion=${{ steps.info.outputs.version }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -218,12 +218,12 @@ jobs:
 #      contents: write
 #
 #    steps:
-#      - uses: actions/checkout@v3.0.2
+#      - uses: actions/checkout@v3.1.0
 #        with:
 #          ref: master
 #
 #      - name: Use Node.js 16.x
-#        uses: actions/setup-node@v3.3.0
+#        uses: actions/setup-node@v3.5.0
 #        with:
 #          node-version: 16
 #          cache: npm

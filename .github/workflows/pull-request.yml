@@ -89,12 +89,12 @@ jobs:
 #          - 'windows-latest'
 #
 #    steps:
-#      - uses: actions/checkout@v3.0.2
+#      - uses: actions/checkout@v3.1.0
 #        with:
 #          fetch-depth: 0
 #
 #      - name: Use Node.js 16.x
-#        uses: actions/setup-node@v3.3.0
+#        uses: actions/setup-node@v3.5.0
 #        with:
 #          node-version: 16
 #          cache: yarn
@@ -144,13 +144,13 @@ jobs:
 
       - name: Load package.json
         id: info
-        run: 'echo ::set-output name=package::`cat package.json`'
+        run: 'echo version=`jq ".version" package.json` >> $GITHUB_OUTPUT'
 
       - name: Sonarcloud
         uses: sonarsource/sonarcloud-github-action@v1.6
         with:
           args: >
-            -Dsonar.projectVersion=${{ fromJSON(steps.info.outputs.package).version }}
+            -Dsonar.projectVersion=${{ steps.info.outputs.version }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
