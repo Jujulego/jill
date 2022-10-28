@@ -1,6 +1,7 @@
 import yargs from 'yargs';
 
-import { applyMiddlewares, container, CURRENT, loadWorkspace, Project, SpinnerService, Workspace } from '../../src';
+import { container, CURRENT, loadWorkspace, Project, SpinnerService, Workspace } from '../../src';
+import { applyMiddlewares } from '../../src/utils';
 import { TestBed } from '../test-bed';
 
 // Setup

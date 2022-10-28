@@ -1,6 +1,7 @@
 import yargs from 'yargs';
 
-import { applyMiddlewares, container, GLOBAL_CONFIG, globalConfig } from '../../src';
+import { container, GLOBAL_CONFIG, globalConfig } from '../../src';
+import { applyMiddlewares } from '../../src/utils';
 
 // Setup
 let parser: yargs.Argv;
