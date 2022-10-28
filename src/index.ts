@@ -5,3 +5,4 @@ export * from './project';
 export * from './services';
 export * from './ui';
 export * from './utils';
+export { capitalize } from './utils/string';

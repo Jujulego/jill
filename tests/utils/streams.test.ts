@@ -3,6 +3,7 @@ import { SpawnTask } from '@jujulego/tasks';
 
 import { combine, streamLines } from '../../src/utils';
 
+// Mocks
 jest.mock('@jujulego/event-tree', () => {
   const actual = jest.requireActual('@jujulego/event-tree');
 
