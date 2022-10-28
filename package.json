@@ -59,7 +59,7 @@
     "@types/ms": "0.7.31",
     "@types/node": "16.18.2",
     "@types/normalize-package-data": "2.4.1",
-    "@types/react": "17.0.51",
+    "@types/react": "17.0.52",
     "@types/semver": "7.3.13",
     "@types/yargs": "17.0.13",
     "@typescript-eslint/eslint-plugin": "5.41.0",
