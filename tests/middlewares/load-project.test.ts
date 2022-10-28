@@ -1,7 +1,8 @@
 import path from 'node:path';
 import yargs from 'yargs';
 
-import { container, CURRENT, loadProject, Project, SpinnerService } from '../../src';
+import { loadProject, Project } from '../../src';
+import { container, CURRENT, SpinnerService } from '../../src/services';
 import { applyMiddlewares } from '../../src/utils';
 
 // Setup
