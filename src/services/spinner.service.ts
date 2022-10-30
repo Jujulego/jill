@@ -1,3 +1,4 @@
+import { EventSource } from '@jujulego/event-tree';
 import { injectable } from 'inversify';
 
 import { container } from './inversify.config';
@@ -9,58 +10,42 @@ export interface SpinnerState {
   label: string;
 }
 
-export type SpinnerStateListener = (state: SpinnerState) => void;
+export type SpinnerEventMap = Record<`update.${SpinnerStatus}`, SpinnerState>;
 
 // Service
 @injectable()
-export class SpinnerService {
+export class SpinnerService extends EventSource<SpinnerEventMap> {
   // Attributes
   private _status: SpinnerStatus = 'stop';
   private _label = '';
 
-  private readonly _listeners = new Set<SpinnerStateListener>();
-
   // Methods
-  private _propagate() {
-    for (const listener of this._listeners) {
-      listener(this.state);
-    }
-  }
-
-  subscribe(listener: SpinnerStateListener) {
-    this._listeners.add(listener);
-
-    return () => {
-      this._listeners.delete(listener);
-    };
-  }
-
   spin(label: string) {
     this._status = 'spin';
     this._label = label;
 
-    this._propagate();
+    this.emit('update.spin', this.state);
   }
 
   success(label: string) {
     this._status = 'success';
     this._label = label;
 
-    this._propagate();
+    this.emit('update.success', this.state);
   }
 
   failed(label: string) {
     this._status = 'failed';
     this._label = label;
 
-    this._propagate();
+    this.emit('update.failed', this.state);
   }
 
   stop() {
     if (this._status === 'spin') {
       this._status = 'stop';
 
-      this._propagate();
+      this.emit('update.stop', this.state);
     }
   }
 
