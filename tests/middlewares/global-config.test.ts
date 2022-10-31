@@ -1,6 +1,6 @@
 import yargs from 'yargs';
 
-import { globalConfig } from '../../src';
+import { globalConfig } from '../../src/middlewares';
 import { container, GLOBAL_CONFIG } from '../../src/services';
 import { applyMiddlewares } from '../../src/utils';
 
