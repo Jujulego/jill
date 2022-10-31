@@ -2,9 +2,10 @@ import { render } from 'ink-testing-library';
 import path from 'node:path';
 import yargs from 'yargs';
 
-import { Layout, loadProject, Project, setupInk } from '../../src';
+import { loadProject, Project, setupInk } from '../../src';
 import listCommand from '../../src/commands/list';
 import { container, CURRENT, INK_APP } from '../../src/services';
+import { Layout } from '../../src/ui';
 import { TestBed } from '../test-bed';
 
 // Setup
