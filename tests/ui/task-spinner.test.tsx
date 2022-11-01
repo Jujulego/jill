@@ -1,5 +1,6 @@
 import { SpawnTask } from '@jujulego/tasks';
 import { render, cleanup } from 'ink-testing-library';
+import symbols from 'log-symbols';
 
 import { TaskSpinner } from '../../src/ui';
 
@@ -41,7 +42,7 @@ describe('<TaskSpinner>', () => {
     task.emit('completed', { status: 'done', duration: 100 });
 
     // eslint-disable-next-line quotes
-    expect(lastFrame()).toMatchInlineSnapshot(`"√ cmd took 100ms"`);
+    expect(lastFrame()).toBe(`${symbols.success} cmd took 100ms`);
   });
 
   it('should print task name with error symbol', () => {
@@ -52,6 +53,6 @@ describe('<TaskSpinner>', () => {
     task.emit('completed', { status: 'failed', duration: 100 });
 
     // eslint-disable-next-line quotes
-    expect(lastFrame()).toMatchInlineSnapshot(`"× cmd took 100ms"`);
+    expect(lastFrame()).toBe(`${symbols.error} cmd took 100ms`);
   });
 });
