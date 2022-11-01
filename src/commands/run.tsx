@@ -6,7 +6,7 @@ import yargs from 'yargs';
 import { loadProject, loadWorkspace, setupInk } from '../middlewares';
 import { Workspace, WorkspaceDepsMode } from '../project';
 import { container, CURRENT, INK_APP } from '../services';
-import { Layout, TasksSpinner } from '../ui';
+import { Layout, TaskManagerSpinner } from '../ui';
 import { applyMiddlewares, defineCommand } from '../utils';
 
 // Command
@@ -49,7 +49,7 @@ export default defineCommand({
     // Render
     app.rerender(
       <Layout>
-        <TasksSpinner manager={manager} />
+        <TaskManagerSpinner manager={manager} />
       </Layout>
     );
 

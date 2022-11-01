@@ -7,7 +7,7 @@ import { AffectedFilter, Pipeline, PrivateFilter, ScriptsFilter } from '../filte
 import { loadProject, setupInk } from '../middlewares';
 import { Project, WorkspaceContext, WorkspaceDepsMode } from '../project';
 import { container, CURRENT, INK_APP, SpinnerService } from '../services';
-import { Layout, TasksSpinner } from '../ui';
+import { Layout, TaskManagerSpinner } from '../ui';
 import { applyMiddlewares, defineCommand } from '../utils';
 
 // Command
@@ -90,7 +90,7 @@ export default defineCommand({
       }
 
       // Create script tasks
-      const tasks = new TaskSet<WorkspaceContext>(manager);
+      const tasks = new TaskSet(manager);
 
       for await (const wks of pipeline.filter(project.workspaces())) {
         tasks.add(await wks.run(args.script, rest, {
@@ -108,7 +108,7 @@ export default defineCommand({
       // Render
       app.rerender(
         <Layout>
-          <TasksSpinner manager={manager} />
+          <TaskManagerSpinner manager={manager} />
         </Layout>
       );
 
