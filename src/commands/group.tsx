@@ -1,5 +1,5 @@
 import { waitForEvent } from '@jujulego/event-tree';
-import { ParallelGroup, SequenceGroup, TaskManager } from '@jujulego/tasks';
+import { GroupTask, ParallelGroup, SequenceGroup, TaskManager } from '@jujulego/tasks';
 import ink from 'ink';
 import yargs from 'yargs';
 
@@ -27,6 +27,22 @@ export default defineCommand({
           ' - all = dependencies AND devDependencies\n' +
           ' - prod = dependencies\n' +
           ' - none = nothing'
+      })
+      .option('parallel', {
+        type: 'boolean',
+        desc: 'Runs given scripts in parallel'
+      })
+      .option('sequence', {
+        type: 'boolean',
+        desc: 'Runs given scripts in sequence'
+      })
+      .conflicts('parallel', 'sequence')
+      .check((args) => {
+        if (!args.parallel && !args.sequence) {
+          throw new Error('You must at least set either --parallel or --sequence to select group management method');
+        }
+
+        return true;
       }),
   async handler(args) {
     const app = container.get<ink.Instance>(INK_APP);
@@ -34,10 +50,19 @@ export default defineCommand({
     const manager = container.get(TaskManager);
 
     // Run script in workspace
-    // const group = new ParallelGroup('test parallel group', {}, {
-    const group = new SequenceGroup('test sequence group', {}, {
-      logger: container.get(Logger),
-    });
+    let group: GroupTask;
+
+    if (args.sequence) {
+      group = new SequenceGroup('In sequence', {}, {
+        logger: container.get(Logger),
+      });
+    } else if (args.parallel) {
+      group = new ParallelGroup('In parallel', {}, {
+        logger: container.get(Logger),
+      });
+    } else {
+      throw new Error('You must at least set either --parallel or --sequence to select group management method');
+    }
 
     for (const script of args.scripts) {
       const task = await workspace.run(script, [], {
