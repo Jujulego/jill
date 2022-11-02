@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<TasksSpinner> should print added tasks while running 1`] = `
+"⠋ cmd-a
+⠋ cmd-b
+⠋ cmd-c"
+`;
+
+exports[`<TasksSpinner> should print every managed tasks 1`] = `
+"⠋ cmd-a
+⠋ cmd-b"
+`;
