@@ -1,5 +1,6 @@
 import { SpawnTask, TaskManager } from '@jujulego/tasks';
 import { render, cleanup } from 'ink-testing-library';
+import symbols from 'log-symbols';
 
 import { TasksSpinner } from '../../src/ui';
 import { spyLogger } from '../utils';
@@ -13,6 +14,10 @@ beforeEach(() => {
   taskA = new SpawnTask('cmd-a', [], {}, { logger: spyLogger });
   taskB = new SpawnTask('cmd-b', [], {}, { logger: spyLogger });
   taskC = new SpawnTask('cmd-c', [], {}, { logger: spyLogger });
+
+  jest.spyOn(taskA, 'status', 'get').mockReturnValue('done');
+  jest.spyOn(taskB, 'status', 'get').mockReturnValue('done');
+  jest.spyOn(taskC, 'status', 'get').mockReturnValue('done');
 });
 
 afterEach(() => {
@@ -28,7 +33,10 @@ describe('<TasksSpinner>', () => {
 
     const { lastFrame } = render(<TasksSpinner manager={manager} />);
 
-    expect(lastFrame()).toMatchSnapshot();
+    expect(lastFrame()).toEqualLines([
+      `${symbols.success} cmd-a took 0ms`,
+      `${symbols.success} cmd-b took 0ms`,
+    ]);
   });
 
   it('should print added tasks while running', async () => {
@@ -41,6 +49,10 @@ describe('<TasksSpinner>', () => {
     manager.add(taskC);
     await new Promise((resolve) => setTimeout(resolve, 0));
 
-    expect(lastFrame()).toMatchSnapshot();
+    expect(lastFrame()).toEqualLines([
+      `${symbols.success} cmd-a took 0ms`,
+      `${symbols.success} cmd-b took 0ms`,
+      `${symbols.success} cmd-c took 0ms`,
+    ]);
   });
 });
