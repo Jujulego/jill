@@ -7,3 +7,8 @@ export const spyLogger: ILogger = {
   warn: jest.fn(),
   error: jest.fn(),
 };
+
+// Utils
+export function flushPromises(timeout = 0): Promise<void> {
+  return new Promise<void>((resolve) => setTimeout(resolve, timeout));
+}
