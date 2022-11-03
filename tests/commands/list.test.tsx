@@ -1,4 +1,4 @@
-import { render } from 'ink-testing-library';
+import { cleanup, render } from 'ink-testing-library';
 import path from 'node:path';
 import yargs from 'yargs';
 
@@ -38,6 +38,7 @@ beforeEach(() => {
 
 afterEach(() => {
   container.restore();
+  cleanup();
 });
 
 // Tests
