@@ -71,7 +71,12 @@ describe('jill tree', () => {
     expect(wksA.devDependencies).toHaveBeenCalled();
 
     await flushPromises();
+    expect(wksB.dependencies).toHaveBeenCalled();
+    expect(wksB.devDependencies).toHaveBeenCalled();
+
     await flushPromises();
+    expect(wksC.dependencies).toHaveBeenCalled();
+    expect(wksC.devDependencies).toHaveBeenCalled();
 
     expect(app.lastFrame()).toEqualLines([
       'wks-a@1.0.0',
