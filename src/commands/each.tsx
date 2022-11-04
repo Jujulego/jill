@@ -118,7 +118,7 @@ export default defineCommand({
       const result = await waitForEvent(tasks, 'finished');
 
       if (result.failed > 0) {
-        return yargs.exit(1, new Error('A tasks failed !'));
+        return yargs.exit(1, new Error(`${result.failed} tasks failed !`));
       }
     } finally {
       spinner.stop();
