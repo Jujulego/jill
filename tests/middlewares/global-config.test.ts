@@ -1,3 +1,4 @@
+import os from 'node:os';
 import yargs from 'yargs';
 
 import { globalConfig } from '../../src/middlewares';
@@ -29,6 +30,7 @@ describe('globalConfig', () => {
 
     expect(container.isBound(GLOBAL_CONFIG)).toBe(true);
     expect(container.get(GLOBAL_CONFIG)).toEqual({
+      jobs: os.cpus().length - 1,
       verbose: 0,
     });
   });
