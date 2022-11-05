@@ -1,4 +1,4 @@
-import { ScriptsFilter } from '../../src';
+import { ScriptsFilter } from '../../src/filters';
 import { TestBed } from '../test-bed';
 
 // Setup

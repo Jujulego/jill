@@ -1,4 +1,4 @@
-import { PipelineFilter, Pipeline } from '../../src';
+import { PipelineFilter, Pipeline } from '../../src/filters';
 import { TestBed } from '../test-bed';
 
 // Setup

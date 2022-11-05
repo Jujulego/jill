@@ -12,7 +12,7 @@ export interface GitContext extends TaskContext {
 export class Git {
   // Services
   @lazyInject(TaskManager)
-  static readonly manager: TaskManager<GitContext>;
+  static readonly manager: TaskManager;
 
   @lazyInject(Logger)
   static readonly logger: Logger;

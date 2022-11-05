@@ -5,7 +5,7 @@ import yargs from 'yargs';
 
 import { AffectedFilter, Pipeline, PrivateFilter, ScriptsFilter } from '../filters';
 import { loadProject, setupInk } from '../middlewares';
-import { Project, WorkspaceContext, WorkspaceDepsMode } from '../project';
+import { Project, WorkspaceDepsMode } from '../project';
 import { container, CURRENT, INK_APP, SpinnerService } from '../services';
 import { Layout, TasksSpinner } from '../ui';
 import { applyMiddlewares, defineCommand } from '../utils';
@@ -90,7 +90,7 @@ export default defineCommand({
       }
 
       // Create script tasks
-      const tasks = new TaskSet<WorkspaceContext>(manager);
+      const tasks = new TaskSet(manager);
 
       for await (const wks of pipeline.filter(project.workspaces())) {
         tasks.add(await wks.run(args.script, rest, {
@@ -118,7 +118,7 @@ export default defineCommand({
       const result = await waitForEvent(tasks, 'finished');
 
       if (result.failed > 0) {
-        return yargs.exit(1, new Error('A tasks failed !'));
+        return yargs.exit(1, new Error(`${result.failed} tasks failed !`));
       }
     } finally {
       spinner.stop();

@@ -1,4 +1,4 @@
-import { PrivateFilter } from '../../src';
+import { PrivateFilter } from '../../src/filters';
 import { TestBed } from '../test-bed';
 
 // Setup

@@ -15,7 +15,7 @@ export const GlobalSpinner: FC = () => {
     const spinner = container.get(SpinnerService);
     setState(spinner.state);
 
-    return spinner.subscribe(setState);
+    return spinner.subscribe('update', setState);
   }, []);
 
   // Render

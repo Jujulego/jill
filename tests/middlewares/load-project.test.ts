@@ -1,7 +1,10 @@
 import path from 'node:path';
 import yargs from 'yargs';
 
-import { applyMiddlewares, container, CURRENT, loadProject, Project, SpinnerService } from '../../src';
+import { loadProject } from '../../src/middlewares';
+import { Project } from '../../src/project';
+import { container, CURRENT, SpinnerService } from '../../src/services';
+import { applyMiddlewares } from '../../src/utils';
 
 // Setup
 let parser: yargs.Argv;
