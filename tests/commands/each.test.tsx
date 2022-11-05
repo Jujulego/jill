@@ -213,4 +213,158 @@ describe('jill each', () => {
     ]);
     expect(yargs.exit).toHaveBeenCalledWith(1, new Error('1 tasks failed !'));
   });
+
+  describe('private filter', () => {
+    it('should run script only in private workspaces (--private)', async () => {
+      // Setup workspaces
+      const workspaces = [
+        bed.workspace('wks-1', { private: true, scripts: { cmd: 'cmd' } }),
+        bed.workspace('wks-2', { scripts: { cmd: 'cmd' } }),
+        bed.workspace('wks-3', { private: true }),
+      ];
+
+      jest.spyOn(bed.project, 'workspaces').mockImplementation(async function* () {
+        yield* workspaces;
+      });
+
+      // Setup tasks
+      const manager = container.get(TaskManager);
+
+      const tasks = [
+        new SpawnTask<WorkspaceContext>('cmd', ['--arg'], { workspace: workspaces[0], script: 'cmd' }, { logger: spyLogger, cwd: workspaces[0].cwd }),
+        new SpawnTask<WorkspaceContext>('cmd', ['--arg'], { workspace: workspaces[1], script: 'cmd' }, { logger: spyLogger, cwd: workspaces[1].cwd }),
+      ];
+
+      jest.spyOn(manager, 'add').mockImplementation();
+      jest.spyOn(manager, 'tasks', 'get').mockReturnValue(tasks);
+
+      jest.spyOn(workspaces[0], 'run').mockResolvedValue(tasks[0]);
+      jest.spyOn(workspaces[1], 'run').mockResolvedValue(tasks[1]);
+
+      // Run command
+      const prom = yargs.command(eachCommand)
+        .parse('each --private cmd -- --arg');
+
+      // should create script task than add it to manager
+      await flushPromises();
+      expect(workspaces[0].run).toHaveBeenCalledWith('cmd', ['--arg'], { buildDeps: 'all' });
+      expect(workspaces[1].run).not.toHaveBeenCalled();
+
+      await flushPromises();
+      expect(manager.add).toHaveBeenCalledWith(tasks[0]);
+      expect(manager.add).not.toHaveBeenCalledWith(tasks[1]);
+
+      // complete tasks
+      for (const task of tasks) {
+        jest.spyOn(task, 'status', 'get').mockReturnValue('done');
+        task.emit('status.done', { status: 'done', previous: 'running' });
+        task.emit('completed', { status: 'done', duration: 100 });
+      }
+
+      await prom;
+    });
+
+    it('should run script only in private workspaces (--no-private)', async () => {
+      // Setup workspaces
+      const workspaces = [
+        bed.workspace('wks-1', { private: true, scripts: { cmd: 'cmd' } }),
+        bed.workspace('wks-2', { scripts: { cmd: 'cmd' } }),
+        bed.workspace('wks-3', { private: true }),
+      ];
+
+      jest.spyOn(bed.project, 'workspaces').mockImplementation(async function* () {
+        yield* workspaces;
+      });
+
+      // Setup tasks
+      const manager = container.get(TaskManager);
+
+      const tasks = [
+        new SpawnTask<WorkspaceContext>('cmd', ['--arg'], { workspace: workspaces[0], script: 'cmd' }, { logger: spyLogger, cwd: workspaces[0].cwd }),
+        new SpawnTask<WorkspaceContext>('cmd', ['--arg'], { workspace: workspaces[1], script: 'cmd' }, { logger: spyLogger, cwd: workspaces[1].cwd }),
+      ];
+
+      jest.spyOn(manager, 'add').mockImplementation();
+      jest.spyOn(manager, 'tasks', 'get').mockReturnValue(tasks);
+
+      jest.spyOn(workspaces[0], 'run').mockResolvedValue(tasks[0]);
+      jest.spyOn(workspaces[1], 'run').mockResolvedValue(tasks[1]);
+
+      // Run command
+      const prom = yargs.command(eachCommand)
+        .parse('each --no-private cmd -- --arg');
+
+      // should create script task than add it to manager
+      await flushPromises();
+      expect(workspaces[0].run).not.toHaveBeenCalled();
+      expect(workspaces[1].run).toHaveBeenCalledWith('cmd', ['--arg'], { buildDeps: 'all' });
+
+      await flushPromises();
+      expect(manager.add).not.toHaveBeenCalledWith(tasks[0]);
+      expect(manager.add).toHaveBeenCalledWith(tasks[1]);
+
+      // complete tasks
+      for (const task of tasks) {
+        jest.spyOn(task, 'status', 'get').mockReturnValue('done');
+        task.emit('status.done', { status: 'done', previous: 'running' });
+        task.emit('completed', { status: 'done', duration: 100 });
+      }
+
+      await prom;
+    });
+  });
+
+  describe('affected filter', () => {
+    it('should run script only in affected workspaces (--affected test)', async () => {
+      // Setup workspaces
+      const workspaces = [
+        bed.workspace('wks-1', { scripts: { cmd: 'cmd' } }),
+        bed.workspace('wks-2', { scripts: { cmd: 'cmd' } }),
+        bed.workspace('wks-3'),
+      ];
+
+      jest.spyOn(bed.project, 'workspaces').mockImplementation(async function* () {
+        yield* workspaces;
+      });
+
+      // Setup tasks
+      const manager = container.get(TaskManager);
+
+      const tasks = [
+        new SpawnTask<WorkspaceContext>('cmd', ['--arg'], { workspace: workspaces[0], script: 'cmd' }, { logger: spyLogger, cwd: workspaces[0].cwd }),
+        new SpawnTask<WorkspaceContext>('cmd', ['--arg'], { workspace: workspaces[1], script: 'cmd' }, { logger: spyLogger, cwd: workspaces[1].cwd }),
+      ];
+
+      jest.spyOn(manager, 'add').mockImplementation();
+      jest.spyOn(manager, 'tasks', 'get').mockReturnValue(tasks);
+
+      jest.spyOn(workspaces[0], 'run').mockResolvedValue(tasks[0]);
+      jest.spyOn(workspaces[1], 'run').mockResolvedValue(tasks[1]);
+
+      jest.spyOn(workspaces[0], 'isAffected').mockResolvedValue(true);
+      jest.spyOn(workspaces[1], 'isAffected').mockResolvedValue(false);
+
+      // Run command
+      const prom = yargs.command(eachCommand)
+        .parse('each --affected test cmd -- --arg');
+
+      // should create script task than add it to manager
+      await flushPromises();
+      expect(workspaces[0].run).toHaveBeenCalledWith('cmd', ['--arg'], { buildDeps: 'all' });
+      expect(workspaces[1].run).not.toHaveBeenCalled();
+
+      await flushPromises();
+      expect(manager.add).toHaveBeenCalledWith(tasks[0]);
+      expect(manager.add).not.toHaveBeenCalledWith(tasks[1]);
+
+      // complete tasks
+      for (const task of tasks) {
+        jest.spyOn(task, 'status', 'get').mockReturnValue('done');
+        task.emit('status.done', { status: 'done', previous: 'running' });
+        task.emit('completed', { status: 'done', duration: 100 });
+      }
+
+      await prom;
+    });
+  });
 });
