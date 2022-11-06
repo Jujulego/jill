@@ -1,10 +1,10 @@
-import * as cp from 'child_process';
-import * as path from 'path';
+import cp from 'node:child_process';
+import path from 'node:path';
 
 // Constants
-export const MAIN = path.join(__filename, '../../packages/cli/bin/jill.js');
-export const MOCK = path.join(__filename, '../../mock');
-export const ROOT = path.join(__filename, '../../');
+export const MAIN = path.join(__dirname, '../bin/jill.js');
+export const MOCK = path.join(__dirname, '../mock');
+export const ROOT = path.join(__dirname, '../');
 
 // Type
 export interface SpawnResult {
@@ -20,7 +20,7 @@ export interface SpawnOptions {
 
 // Utils
 export function jill(args: ReadonlyArray<string>, opts: SpawnOptions = {}): Promise<SpawnResult> {
-  return new Promise<SpawnResult>((resolve) => {
+  return new Promise<SpawnResult>((resolve, reject) => {
     const proc = cp.spawn('node', [MAIN, ...args], {
       cwd: opts.cwd,
       shell: true,
@@ -48,5 +48,7 @@ export function jill(args: ReadonlyArray<string>, opts: SpawnOptions = {}): Prom
       res.code = code || 0;
       resolve(res);
     });
+
+    proc.on('error', reject);
   });
 }

@@ -17,7 +17,8 @@
     "clean": "gulp clean",
     "build": "gulp build",
     "watch": "gulp watch",
-    "test": "jest"
+    "test": "jest",
+    "test:e2e": "jest -c jest-e2e.config.ts"
   },
   "engines": {
     "node": "^16"
