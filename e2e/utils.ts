@@ -21,7 +21,7 @@ export interface SpawnOptions {
 // Utils
 export function jill(args: ReadonlyArray<string>, opts: SpawnOptions = {}): Promise<SpawnResult> {
   return new Promise<SpawnResult>((resolve, reject) => {
-    const proc = cp.spawn('node', [MAIN, ...args], {
+    const proc = cp.spawn('c8', ['node', MAIN, ...args], {
       cwd: opts.cwd,
       shell: true,
       stdio: 'pipe',

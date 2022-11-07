@@ -32,12 +32,10 @@ gulp.task('build:cjs', () => flow(
 
 gulp.task('build:types', () => flow(
   gulp.src(options.src, { since: gulp.lastRun('build:types') }),
-  sourcemaps.init(),
   typescript.createProject(options.tsconfig, {
     isolatedModules: false,
     emitDeclarationOnly: true
   })(),
-  sourcemaps.write('.'),
   gulp.dest(options.output),
 ));
 
