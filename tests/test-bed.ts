@@ -1,5 +1,6 @@
 import { Package } from 'normalize-package-data';
-import { Project, Workspace } from '../src';
+
+import { Project, Workspace } from '../src/project';
 
 // Bed
 export class TestBed {

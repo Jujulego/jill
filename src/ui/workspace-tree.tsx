@@ -39,8 +39,8 @@ export const WorkspaceTree: FC<WorkspaceTreeProps> = (props) => {
   return (
     <Text>
       <Text {...style(dev)}>{ wks.name }</Text>
-      { wks.version && (<Text color="grey">@{ wks.version }</Text>) }
-      <Newline />
+      { wks.version && <Text color="grey">@{ wks.version }</Text> }
+      { (deps.length > 0) && <Newline /> }
 
       { deps.map(([dep, isDev], idx) => (
         <Text key={dep.name}>
@@ -50,6 +50,7 @@ export const WorkspaceTree: FC<WorkspaceTreeProps> = (props) => {
             dev={isDev ?? dev}
             level={<>{ level }<Text {...style(dev)}>{ idx === deps.length - 1 ? ' ' : '│' }{'  '}</Text></>}
           />
+          { (idx < deps.length - 1) && <Newline /> }
         </Text>
       )) }
     </Text>

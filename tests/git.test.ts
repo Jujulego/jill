@@ -1,6 +1,7 @@
 import { SpawnTask, TaskManager } from '@jujulego/tasks';
 
-import { container, Git, GitContext, Logger } from '../src';
+import { Git, GitContext } from '../src/git';
+import { container, Logger } from '../src/services';
 
 // Setup
 let logger: Logger;

@@ -1,6 +1,9 @@
+import os from 'node:os';
 import yargs from 'yargs';
 
-import { applyMiddlewares, container, GLOBAL_CONFIG, globalConfig } from '../../src';
+import { globalConfig } from '../../src/middlewares';
+import { container, GLOBAL_CONFIG } from '../../src/services';
+import { applyMiddlewares } from '../../src/utils';
 
 // Setup
 let parser: yargs.Argv;
@@ -27,6 +30,7 @@ describe('globalConfig', () => {
 
     expect(container.isBound(GLOBAL_CONFIG)).toBe(true);
     expect(container.get(GLOBAL_CONFIG)).toEqual({
+      jobs: os.cpus().length - 1,
       verbose: 0,
     });
   });

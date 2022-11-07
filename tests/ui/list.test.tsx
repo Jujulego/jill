@@ -1,6 +1,6 @@
 import { render } from 'ink-testing-library';
 
-import { List } from '../../src';
+import { List } from '../../src/ui';
 
 // Constants
 const data = [

@@ -1,3 +1,5 @@
+import os from 'node:os';
+
 import { container, GLOBAL_CONFIG } from '../services';
 import { defineMiddleware } from '../utils';
 
@@ -12,6 +14,7 @@ export const globalConfig = defineMiddleware({
     .option('jobs', {
       alias: 'j',
       type: 'number',
+      default: os.cpus().length - 1,
       description: 'Set maximum parallel job number',
     }),
   handler(args) {

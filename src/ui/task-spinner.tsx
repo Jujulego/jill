@@ -52,7 +52,7 @@ export const TaskSpinner: FC<TaskSpinnerProps> = ({ task }) => {
       return (
         <Text>
           <Text color="green">{ symbols.success }{' '}<TaskName task={task} /></Text>
-          <Text color="magenta">{' '}took { ms(time) }</Text>
+          <Text color="magenta">{' '}(took { ms(time) })</Text>
         </Text>
       );
 
@@ -60,7 +60,7 @@ export const TaskSpinner: FC<TaskSpinnerProps> = ({ task }) => {
       return (
         <Text>
           <Text color="red">{ symbols.error }{' '}<TaskName task={task} /></Text>
-          <Text color="magenta">{' '}took { ms(time) }</Text>
+          <Text color="magenta">{' '}(took { ms(time) })</Text>
         </Text>
       );
   }

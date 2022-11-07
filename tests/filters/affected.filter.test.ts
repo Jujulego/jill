@@ -1,4 +1,6 @@
-import { AffectedFilter, Git, Workspace } from '../../src';
+import { AffectedFilter } from '../../src/filters';
+import { Git } from '../../src/git';
+import { Workspace } from '../../src/project';
 import { TestBed } from '../test-bed';
 
 // Setup
