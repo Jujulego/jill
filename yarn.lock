@@ -1254,6 +1254,7 @@ __metadata:
     "@types/gulp": 4.0.9
     "@types/gulp-sourcemaps": 0.0.35
     "@types/jest": 29.2.2
+    "@types/moo": 0.5.5
     "@types/ms": 0.7.31
     "@types/node": 16.18.3
     "@types/normalize-package-data": 2.4.1
@@ -1282,6 +1283,7 @@ __metadata:
     inversify-inject-decorators: ^3.1.0
     jest: 29.2.2
     log-symbols: ^4.1.0
+    moo: ^0.5.2
     normalize-package-data: ^5.0.0
     pretty-ms: ^7.0.1
     react: ^17.0.2
@@ -1690,6 +1692,13 @@ __metadata:
   version: 3.0.5
   resolution: "@types/minimatch@npm:3.0.5"
   checksum: c41d136f67231c3131cf1d4ca0b06687f4a322918a3a5adddc87ce90ed9dbd175a3610adee36b106ae68c0b92c637c35e02b58c8a56c424f71d30993ea220b92
+  languageName: node
+  linkType: hard
+
+"@types/moo@npm:0.5.5":
+  version: 0.5.5
+  resolution: "@types/moo@npm:0.5.5"
+  checksum: 3ade4daad004d2876b88b5d780390b8c08c0bfb57e84ddc3a25ace8147d44a4c9ea173e4abcdfec4f7b9204b408091287d3fabf0336de1cfbb6a07e3beedf372
   languageName: node
   linkType: hard
 
@@ -6868,6 +6877,13 @@ fsevents@^1.2.7:
   bin:
     mkdirp: bin/cmd.js
   checksum: a96865108c6c3b1b8e1d5e9f11843de1e077e57737602de1b82030815f311be11f96f09cce59bd5b903d0b29834733e5313f9301e3ed6d6f6fba2eae0df4298f
+  languageName: node
+  linkType: hard
+
+"moo@npm:^0.5.2":
+  version: 0.5.2
+  resolution: "moo@npm:0.5.2"
+  checksum: 5a41ddf1059fd0feb674d917c4774e41c877f1ca980253be4d3aae1a37f4bc513f88815041243f36f5cf67a62fb39324f3f997cf7fb17b6cb00767c165e7c499
   languageName: node
   linkType: hard
 
