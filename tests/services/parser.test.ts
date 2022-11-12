@@ -15,7 +15,23 @@ afterEach(() => {
 // Tests
 describe('ParserService.parse', () => {
   it('should return something', () => {
-    expect(service.parse('(toto -> \'ta\\\'ta\') // "tu\\"tu"'))
-      .toEqual(['(', 'toto', ' ', '->', ' ', 'ta\'ta', ')', ' ', '//', ' ', 'tu"tu']);
+    expect(service.parse('(toto -> \'tata\') // "tutu"'))
+      .toEqual({
+        roots: [
+          {
+            operator: '//',
+            tasks: [
+              {
+                operator: '->',
+                tasks: [
+                  { script: 'toto' },
+                  { script: 'tata' },
+                ]
+              },
+              { script: 'tutu' }
+            ]
+          }
+        ]
+      });
   });
 });
