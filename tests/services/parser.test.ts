@@ -14,15 +14,42 @@ afterEach(() => {
 
 // Tests
 describe('ParserService.parse', () => {
-  it('should return something', () => {
-    expect(service.parse('(toto -> \'tata\') // "tutu"'))
+  it('should return simple task (inline syntax)', () => {
+    expect(service.parse('toto:dev'))
+      .toEqual({
+        roots: [
+          { script: 'toto:dev' },
+        ]
+      });
+  });
+
+  it('should return simple task (single cote syntax)', () => {
+    expect(service.parse('\'\\\\single\\\'cote\\\\\''))
+      .toEqual({
+        roots: [
+          { script: '\\single\'cote\\' },
+        ]
+      });
+  });
+
+  it('should return simple task (double cote syntax)', () => {
+    expect(service.parse('"\\\\double\\"cote\\\\"'))
+      .toEqual({
+        roots: [
+          { script: '\\double"cote\\' },
+        ]
+      });
+  });
+
+  it('should return complex tree with 2 operators', () => {
+    expect(service.parse('(toto // tata) -> tutu'))
       .toEqual({
         roots: [
           {
-            operator: '//',
+            operator: '->',
             tasks: [
               {
-                operator: '->',
+                operator: '//',
                 tasks: [
                   { script: 'toto' },
                   { script: 'tata' },

@@ -38,13 +38,13 @@ export class ParserService {
           {
             match: /'(?:\\['\\]|[^\n'\\])+'/,
             push: 'operator',
-            value: x => x.slice(1, -1).replace(/\\'/g, '\'')
+            value: x => x.slice(1, -1).replace(/\\(['\\])/g, '$1')
           },
           // double cotted
           {
             match: /"(?:\\["\\]|[^\n"\\])+"/,
             push: 'operator',
-            value: x => x.slice(1, -1).replace(/\\"/g, '"')
+            value: x => x.slice(1, -1).replace(/\\(["\\])/g, '$1')
           }
         ],
       },
