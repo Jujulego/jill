@@ -1,7 +1,10 @@
+import { GroupTask, ParallelGroup, SequenceGroup, Task } from '@jujulego/tasks';
 import { injectable } from 'inversify';
 import moo from 'moo';
 
 import { container } from './inversify.config';
+import { Logger } from './logger.service';
+import { Workspace, WorkspaceRunOptions } from '../project';
 
 // Interfaces
 export interface TaskNode {
@@ -17,14 +20,14 @@ export interface TaskTree {
   roots: (TaskNode | GroupNode)[];
 }
 
-// Utils
-function isTaskNode(node: TaskNode | GroupNode): node is TaskNode {
-  return 'script' in node;
-}
-
 // Service
 @injectable()
-export class ParserService {
+export class TaskExprService {
+  // Statics
+  static isTaskNode(node: TaskNode | GroupNode): node is TaskNode {
+    return 'script' in node;
+  }
+
   // Methods
   private _lexer(): moo.Lexer {
     return moo.states({
@@ -76,7 +79,7 @@ export class ParserService {
 
         if (!node) {
           throw new Error(lexer.formatError(token, 'Unexpected operator'));
-        } else if (isTaskNode(node)) {
+        } else if (TaskExprService.isTaskNode(node)) {
           node = { operator, tasks: [node] };
 
           continue;
@@ -108,7 +111,7 @@ export class ParserService {
 
       if (!node) {
         node = child;
-      } else if (isTaskNode(node)) {
+      } else if (TaskExprService.isTaskNode(node)) {
         throw new Error(lexer.formatError(token, 'Unexpected token, expected an operator'));
       } else {
         node.tasks.push(child);
@@ -138,7 +141,31 @@ export class ParserService {
 
     return tree;
   }
+
+  async buildTask(node: TaskNode | GroupNode, workspace: Workspace, opts: WorkspaceRunOptions = {}): Promise<Task> {
+    if (TaskExprService.isTaskNode(node)) {
+      return workspace.run(node.script, [], opts);
+    } else {
+      let group: GroupTask;
+
+      if (node.operator === '//') {
+        group = new ParallelGroup('In parallel', {}, {
+          logger: container.get(Logger),
+        });
+      } else {
+        group = new SequenceGroup('In sequence', {}, {
+          logger: container.get(Logger),
+        });
+      }
+
+      for (const child of node.tasks) {
+        group.add(await this.buildTask(child, workspace, opts));
+      }
+
+      return group;
+    }
+  }
 }
 
-container.bind(ParserService)
+container.bind(TaskExprService)
   .toSelf();

@@ -1,11 +1,11 @@
-import { container, ParserService } from '../../src/services';
+import { container, TaskExprService } from '../../src/services';
 
 // Setup
-let service: ParserService;
+let service: TaskExprService;
 
 beforeEach(() => {
   container.snapshot();
-  service = container.get(ParserService);
+  service = container.get(TaskExprService);
 });
 
 afterEach(() => {

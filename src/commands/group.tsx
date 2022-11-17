@@ -1,17 +1,17 @@
 import { waitForEvent } from '@jujulego/event-tree';
-import { GroupTask, ParallelGroup, SequenceGroup, TaskManager } from '@jujulego/tasks';
+import { GroupTask, ParallelGroup, SequenceGroup, Task, TaskManager } from '@jujulego/tasks';
 import ink from 'ink';
 import yargs from 'yargs';
 
 import { loadProject, loadWorkspace, setupInk } from '../middlewares';
 import { Workspace, WorkspaceDepsMode } from '../project';
-import { container, CURRENT, INK_APP, Logger } from '../services';
+import { container, CURRENT, INK_APP, Logger, TaskExprService } from '../services';
 import { Layout, TaskManagerSpinner } from '../ui';
 import { applyMiddlewares, defineCommand } from '../utils';
 
 // Command
 export default defineCommand({
-  command: 'group <scripts..>',
+  command: 'group <script..>',
   describe: 'Run many scripts inside a workspace',
   builder: (yargs) =>
     applyMiddlewares(yargs, [
@@ -19,58 +19,31 @@ export default defineCommand({
       loadProject,
       loadWorkspace
     ])
-      .positional('scripts', { type: 'string', demandOption: true, array: true })
+      .positional('script', {
+        demandOption: true,
+        coerce(expr: string[]) {
+          const parser = container.get(TaskExprService);
+          return parser.parse(expr.join(' ')).roots[0];
+        }
+      })
       .option('deps-mode', {
-        choice: ['all', 'prod', 'none'],
+        choices: ['all', 'prod', 'none'],
         default: 'all' as WorkspaceDepsMode,
         desc: 'Dependency selection mode:\n' +
           ' - all = dependencies AND devDependencies\n' +
           ' - prod = dependencies\n' +
           ' - none = nothing'
-      })
-      .option('parallel', {
-        type: 'boolean',
-        desc: 'Runs given scripts in parallel'
-      })
-      .option('sequence', {
-        type: 'boolean',
-        desc: 'Runs given scripts in sequence'
-      })
-      .conflicts('parallel', 'sequence')
-      .check((args) => {
-        if (!args.parallel && !args.sequence) {
-          throw new Error('You must at least set either --parallel or --sequence to select group management method');
-        }
-
-        return true;
       }),
   async handler(args) {
     const app = container.get<ink.Instance>(INK_APP);
     const workspace = container.getNamed(Workspace, CURRENT);
     const manager = container.get(TaskManager);
+    const parser = container.get(TaskExprService);
 
     // Run script in workspace
-    let group: GroupTask;
-
-    if (args.sequence) {
-      group = new SequenceGroup('In sequence', {}, {
-        logger: container.get(Logger),
-      });
-    } else if (args.parallel) {
-      group = new ParallelGroup('In parallel', {}, {
-        logger: container.get(Logger),
-      });
-    } else {
-      throw new Error('You must at least set either --parallel or --sequence to select group management method');
-    }
-
-    for (const script of args.scripts) {
-      const task = await workspace.run(script, [], {
-        buildDeps: args.depsMode,
-      });
-
-      group.add(task);
-    }
+    const group = await parser.buildTask(args.script, workspace, {
+      buildDeps: args.depsMode,
+    });
 
     manager.add(group);
 

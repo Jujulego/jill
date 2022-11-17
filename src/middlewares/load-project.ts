@@ -14,7 +14,6 @@ export const loadProject = defineMiddleware({
     .option('package-manager', {
       choices: ['yarn', 'npm'],
       default: undefined as PackageManager | undefined,
-      type: 'string',
       description: 'Force package manager'
     }),
   async handler(args) {
