@@ -1,11 +1,11 @@
 import { waitForEvent } from '@jujulego/event-tree';
-import { GroupTask, ParallelGroup, SequenceGroup, Task, TaskManager } from '@jujulego/tasks';
+import { TaskManager } from '@jujulego/tasks';
 import ink from 'ink';
 import yargs from 'yargs';
 
 import { loadProject, loadWorkspace, setupInk } from '../middlewares';
 import { Workspace, WorkspaceDepsMode } from '../project';
-import { container, CURRENT, INK_APP, Logger, TaskExprService } from '../services';
+import { container, CURRENT, INK_APP, TaskExprService } from '../services';
 import { Layout, TaskManagerSpinner } from '../ui';
 import { applyMiddlewares, defineCommand } from '../utils';
 
