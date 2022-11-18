@@ -1,6 +1,6 @@
 import { GroupTask } from '@jujulego/tasks';
 import { Box } from 'ink';
-import { FC, useLayoutEffect, useState } from 'react';
+import { FC, Fragment, useLayoutEffect, useState } from 'react';
 
 import { TaskSpinner } from './task-spinner';
 
@@ -33,13 +33,13 @@ export const GroupTaskSpinner: FC<GroupTaskSpinnerProps> = ({ group }) => {
       <TaskSpinner task={group} />
       <Box flexDirection="column" marginLeft={2}>
         { tasks.map((task) => (
-          <Box key={task.id}>
+          <Fragment key={task.id}>
             { (task instanceof GroupTask) ? (
               <GroupTaskSpinner group={task} />
             ) : (
               <TaskSpinner task={task} />
             ) }
-          </Box>
+          </Fragment>
         )) }
       </Box>
     </>

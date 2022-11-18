@@ -1,6 +1,6 @@
 {
   "name": "@jujulego/jill",
-  "version": "2.1.0-alpha.2",
+  "version": "2.1.0-alpha.3",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -33,6 +33,7 @@
     "inversify": "^6.0.1",
     "inversify-inject-decorators": "^3.1.0",
     "log-symbols": "^4.1.0",
+    "moo": "^0.5.2",
     "normalize-package-data": "^5.0.0",
     "pretty-ms": "^7.0.1",
     "react": "^17.0.2",
@@ -52,6 +53,7 @@
     "@types/gulp": "4.0.9",
     "@types/gulp-sourcemaps": "0.0.35",
     "@types/jest": "29.2.2",
+    "@types/moo": "0.5.5",
     "@types/ms": "0.7.31",
     "@types/node": "16.18.3",
     "@types/normalize-package-data": "2.4.1",
