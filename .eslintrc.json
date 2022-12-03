@@ -48,10 +48,7 @@
       "extends": [
         "plugin:jest/recommended",
         "plugin:jest/style"
-      ],
-      "rules": {
-        "no-console": "error"
-      }
+      ]
     }
   ]
 }

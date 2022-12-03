@@ -111,7 +111,7 @@ export class InkScreen extends stream.Writable {
   }
 
   // Properties
-  get screen(): readonly string[] {
-    return this._screen;
+  get screen(): string {
+    return this._screen.join('\n').trimEnd();
   }
 }

@@ -4,6 +4,9 @@ const config: Config = {
   roots: [
     '<rootDir>/e2e'
   ],
+  setupFilesAfterEnv: [
+    '<rootDir>/e2e/setup.ts'
+  ],
   transform: {
     '^.+\\.(t|j)sx?$': '@swc/jest'
   },
