@@ -2,7 +2,7 @@ import { SpawnTask } from '@jujulego/tasks';
 import { render } from 'ink-testing-library';
 
 import { TaskName } from '../../src/ui';
-import { TestBed } from '../test-bed';
+import { TestBed } from '../../tools/test-bed';
 
 // Setup
 let bed: TestBed;

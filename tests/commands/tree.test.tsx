@@ -7,8 +7,8 @@ import { Project, Workspace } from '../../src/project';
 import { container, CURRENT, INK_APP } from '../../src/services';
 import { Layout } from '../../src/ui';
 
-import { TestBed } from '../test-bed';
-import { flushPromises } from '../utils';
+import { TestBed } from '../../tools/test-bed';
+import { flushPromises } from '../../tools/utils';
 
 // Setup
 let app: ReturnType<typeof render>;

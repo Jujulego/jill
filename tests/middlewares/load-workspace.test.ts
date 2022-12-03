@@ -4,7 +4,7 @@ import { loadWorkspace } from '../../src/middlewares';
 import { Project, Workspace } from '../../src/project';
 import { container, CURRENT, SpinnerService } from '../../src/services';
 import { applyMiddlewares } from '../../src/utils';
-import { TestBed } from '../test-bed';
+import { TestBed } from '../../tools/test-bed';
 
 // Setup
 let bed: TestBed;

@@ -9,8 +9,8 @@ import { Project, WorkspaceContext } from '../../src/project';
 import { container, CURRENT, INK_APP } from '../../src/services';
 import { Layout } from '../../src/ui';
 
-import { TestBed } from '../test-bed';
-import { flushPromises, spyLogger } from '../utils';
+import { TestBed } from '../../tools/test-bed';
+import { flushPromises, spyLogger } from '../../tools/utils';
 
 // Setup
 let app: ReturnType<typeof render>;
