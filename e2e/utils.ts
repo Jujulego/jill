@@ -1,6 +1,8 @@
 import cp from 'node:child_process';
 import path from 'node:path';
 
+import { InkScreen } from './ink-screen';
+
 // Constants
 export const MAIN = path.join(__dirname, '../bin/jill.js');
 export const MOCK = path.join(__dirname, '../mock');
@@ -9,7 +11,7 @@ export const ROOT = path.join(__dirname, '../');
 // Type
 export interface SpawnResult {
   stdout: string[];
-  stderr: string[];
+  screen: InkScreen;
   code: number;
 }
 
@@ -31,7 +33,7 @@ export function jill(args: ReadonlyArray<string>, opts: SpawnOptions = {}): Prom
     // Gather result
     const res: SpawnResult = {
       stdout: [],
-      stderr: [],
+      screen: new InkScreen(),
       code: 0
     };
 
@@ -39,9 +41,7 @@ export function jill(args: ReadonlyArray<string>, opts: SpawnOptions = {}): Prom
       res.stdout.push(...msg.toString('utf-8').replace(/\n$/, '').split('\n'));
     });
 
-    proc.stderr.on('data', (msg: Buffer) => {
-      res.stderr.push(...msg.toString('utf-8').replace(/\n$/, '').split('\n'));
-    });
+    proc.stderr.pipe(res.screen);
 
     // Emit result
     proc.on('close', (code) => {
