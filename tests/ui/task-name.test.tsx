@@ -23,7 +23,7 @@ describe('<TaskName>', () => {
   });
 
   it('should print running script and workspace name', () => {
-    const wks = bed.workspace('wks-a');
+    const wks = bed.addWorkspace('wks-a');
     const task = new SpawnTask('cmd', [], {
       script: 'test',
       workspace: wks,

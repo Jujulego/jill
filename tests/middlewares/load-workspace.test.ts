@@ -34,7 +34,7 @@ afterEach(() => {
 // Tests
 describe('loadWorkspace', () => {
   it('should search for current workspace', async () => {
-    const wks = bed.workspace('root');
+    const wks = bed.addWorkspace('root');
 
     jest.spyOn(bed.project, 'workspace')
       .mockResolvedValue(wks);
@@ -52,7 +52,7 @@ describe('loadWorkspace', () => {
 
   it('should search for named workspace', async () => {
     jest.spyOn(bed.project, 'workspace')
-      .mockResolvedValue(bed.workspace('test'));
+      .mockResolvedValue(bed.addWorkspace('test'));
 
     await parser.parse('-w test');
 

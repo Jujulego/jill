@@ -1,11 +1,12 @@
 import { Package } from 'normalize-package-data';
 
-import { Project, Workspace } from '../src/project';
+import { TestProject } from './test-project';
+import { TestWorkspace } from './test-workspace';
 
 // Bed
 export class TestBed {
   // Attributes
-  readonly project = new Project('./test');
+  readonly project = new TestProject('./test');
 
   // Methods
   manifest(pkg: Partial<Package>): Package {
@@ -18,7 +19,10 @@ export class TestBed {
     };
   }
 
-  workspace(name: string, pkg: Partial<Package> = {}): Workspace {
-    return new Workspace(`${this.project.root}/${name}`, this.manifest({ name, ...pkg }), this.project);
+  addWorkspace(name: string, pkg: Partial<Package> = {}): TestWorkspace {
+    const wks = new TestWorkspace(`${this.project.root}/${name}`, this.manifest({ name, ...pkg }), this.project);
+    this.project.addWorkspace(wks);
+
+    return wks;
   }
 }

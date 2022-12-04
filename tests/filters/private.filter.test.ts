@@ -12,39 +12,45 @@ beforeEach(() => {
 describe('PrivateFilter (value = true)', () => {
   it('should return false by default (public by default)', () => {
     const filter = new PrivateFilter(true);
+    const wks = bed.addWorkspace('wks-1');
 
-    expect(filter.test(bed.workspace('wks-1'))).toBe(false);
+    expect(filter.test(wks)).toBe(false);
   });
 
   it('should return true if workspace is private', () => {
     const filter = new PrivateFilter(true);
+    const wks = bed.addWorkspace('wks-1', { private: true });
 
-    expect(filter.test(bed.workspace('wks-1', { private: true }))).toBe(true);
+    expect(filter.test(wks)).toBe(true);
   });
 
   it('should return false only if workspace is explicitly public', () => {
     const filter = new PrivateFilter(true);
+    const wks = bed.addWorkspace('wks-1', { private: false });
 
-    expect(filter.test(bed.workspace('wks-1', { private: false }))).toBe(false);
+    expect(filter.test(wks)).toBe(false);
   });
 });
 
 describe('PrivateFilter (value = false)', () => {
   it('should return true by default (public by default)', () => {
     const filter = new PrivateFilter(false);
+    const wks = bed.addWorkspace('wks-1');
 
-    expect(filter.test(bed.workspace('wks-1'))).toBe(true);
+    expect(filter.test(wks)).toBe(true);
   });
 
   it('should return false if workspace is private', () => {
     const filter = new PrivateFilter(false);
+    const wks = bed.addWorkspace('wks-1', { private: true });
 
-    expect(filter.test(bed.workspace('wks-1', { private: true }))).toBe(false);
+    expect(filter.test(wks)).toBe(false);
   });
 
   it('should return true only if workspace is explicitly public', () => {
     const filter = new PrivateFilter(false);
+    const wks = bed.addWorkspace('wks-1', { private: false });
 
-    expect(filter.test(bed.workspace('wks-1', { private: false }))).toBe(true);
+    expect(filter.test(wks)).toBe(true);
   });
 });

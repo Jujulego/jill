@@ -1,6 +1,6 @@
 {
   "src": ["./"],
   "exclude": [".pnp.*"],
-  "reporter": ["lcovonly"],
+  "reporter": ["lcov"],
   "reportDir": "./coverage-e2e"
 }

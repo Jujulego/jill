@@ -24,7 +24,7 @@ beforeEach(() => {
 
   bed = new TestBed();
 
-  wks = bed.workspace('wks');
+  wks = bed.addWorkspace('wks');
   task = new SpawnTask('cmd', [], { workspace: wks, script: 'cmd' }, {
     logger: spyLogger,
   });

@@ -11,7 +11,7 @@ beforeEach(() => {
 // Tests
 describe('Pipeline.filter', () => {
   it('should call filter', async () => {
-    const wks = bed.workspace('wks');
+    const wks = bed.addWorkspace('wks');
     const filter: PipelineFilter = {
       test: jest.fn(),
     };
@@ -25,9 +25,9 @@ describe('Pipeline.filter', () => {
   });
 
   it('should keep only filtered workspaces', async () => {
-    const wks1 = bed.workspace('wks1');
-    const wks2 = bed.workspace('wks2');
-    const wks3 = bed.workspace('wks3');
+    const wks1 = bed.addWorkspace('wks1');
+    const wks2 = bed.addWorkspace('wks2');
+    const wks3 = bed.addWorkspace('wks3');
 
     const pipeline = new Pipeline();
     pipeline.add({ test: (wks) => wks.name === 'wks2' });

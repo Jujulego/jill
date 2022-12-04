@@ -9,7 +9,7 @@ let wks: Workspace;
 
 beforeEach(() => {
   bed = new TestBed();
-  wks = bed.workspace('wks');
+  wks = bed.addWorkspace('wks');
 
   jest.resetAllMocks();
   jest.restoreAllMocks();
