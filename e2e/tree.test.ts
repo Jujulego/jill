@@ -1,5 +1,3 @@
-import chalk from 'chalk';
-
 import { jill } from './utils';
 import { TestBed } from '../tools/test-bed';
 
@@ -25,7 +23,7 @@ describe('jill tree', () => {
     const res = await jill(['tree'], { cwd: prjDir });
 
     await expect(res.screen.screen).toEqualLines([
-      `main${chalk.gray('@1.0.0')}`,
+      expect.ignoreColor('main@1.0.0'),
     ]);
   });
 
@@ -33,10 +31,10 @@ describe('jill tree', () => {
     const res = await jill(['tree', '-w', 'wks-a'], { cwd: prjDir });
 
     await expect(res.screen.screen).toEqualLines([
-      `wks-a${chalk.gray('@1.0.0')}`,
-      `├─ wks-b${chalk.gray('@1.0.0')}`,
-      `│  └─ ${chalk.blue('wks-c')}${chalk.gray('@1.0.0')}`,
-      `└─ ${chalk.blue('wks-c')}${chalk.gray('@1.0.0')}`,
+      expect.ignoreColor('wks-a@1.0.0'),
+      expect.ignoreColor('├─ wks-b@1.0.0'),
+      expect.ignoreColor('│  └─ wks-c@1.0.0'),
+      expect.ignoreColor('└─ wks-c@1.0.0'),
     ]);
   });
 });

@@ -2,7 +2,7 @@ import { point } from '@jujulego/2d-maths';
 import stream from 'node:stream';
 
 // Constants
-const ESC = '\x1b';
+export const ESC = '\x1b';
 
 // Types
 type Callback = (error?: (Error | null)) => void;
