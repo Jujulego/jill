@@ -24,6 +24,7 @@
       <excludeFolder url="file://$MODULE_DIR$/packages/common/coverage" />
       <excludeFolder url="file://$MODULE_DIR$/dist" />
       <excludeFolder url="file://$MODULE_DIR$/coverage-e2e" />
+      <excludeFolder url="file://$MODULE_DIR$/trmp" />
     </content>
     <content url="file://$MODULE_DIR$/.yarn" />
     <orderEntry type="inheritedJdk" />

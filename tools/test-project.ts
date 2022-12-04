@@ -14,7 +14,7 @@ export class TestProject extends Project {
     this._testMainWorkspace = new TestWorkspace(root, {
       _id: 'main',
       name: 'main',
-      version: '',
+      version: '1.0.0',
       readme: '',
     }, this);
   }
@@ -22,6 +22,9 @@ export class TestProject extends Project {
   // Methods
   addWorkspace(wks: TestWorkspace): void {
     this._testWorkspaces.set(wks.name, wks);
+
+    this._testMainWorkspace.manifest.workspaces ??= [];
+    this._testMainWorkspace.manifest.workspaces.push(wks.name);
   }
 
   override async mainWorkspace(): Promise<TestWorkspace> {
