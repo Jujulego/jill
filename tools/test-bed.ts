@@ -61,9 +61,15 @@ export class TestBed {
         windowsHide: true
       });
 
+      let stderr = '';
+
+      proc.stderr.on('data', (msg: Buffer) => {
+        stderr = stderr + msg.toString('utf-8');
+      });
+
       proc.on('close', (code) => {
         if (code) {
-          reject(new Error(`yarn failed with code ${code}`));
+          reject(new Error(`yarn failed with code ${code}:\n${stderr}`));
         } else {
           resolve();
         }
