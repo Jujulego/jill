@@ -55,7 +55,7 @@ export class TestBed {
 
     // Run package manager
     await new Promise<void>((resolve, reject) => {
-      const proc = cp.spawn('yarn', ['install'], {
+      const proc = cp.spawn('yarn', ['install', '--no-immutable'], {
         cwd: prjDir,
         shell: true,
         windowsHide: true
