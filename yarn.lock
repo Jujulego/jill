@@ -1278,7 +1278,7 @@ __metadata:
     "@types/gulp-sourcemaps": 0.0.35
     "@types/jest": 29.2.4
     "@types/ms": 0.7.31
-    "@types/node": 16.18.5
+    "@types/node": 16.18.6
     "@types/normalize-package-data": 2.4.1
     "@types/react": 17.0.52
     "@types/semver": 7.3.13
@@ -1730,10 +1730,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:16.18.5":
-  version: 16.18.5
-  resolution: "@types/node@npm:16.18.5"
-  checksum: 575434112f1f2dbee87183608013f396bbb8f8ac848523036bb011cf3ed0427257609abe78af8a7312817fbf4a46a2f10ca070ed01895a5120dd309a957aecf4
+"@types/node@npm:16.18.6":
+  version: 16.18.6
+  resolution: "@types/node@npm:16.18.6"
+  checksum: 85b6a11c347e1edfe014eb2c520aec37117152c932b632f455d4e2a71a311fb25578602c7c25f825c6f1c3e4a912506857c1aa679717318296f5590ac0d33254
   languageName: node
   linkType: hard
 
