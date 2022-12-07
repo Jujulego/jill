@@ -1,3 +1,5 @@
+import fs from 'node:fs/promises';
+
 import { jill } from './utils';
 import { TestBed } from '../tools/test-bed';
 
@@ -12,6 +14,10 @@ beforeEach(async () => {
   bed.addWorkspace('wks-c');
 
   prjDir = await bed.createProjectDirectory();
+});
+
+afterEach(async () => {
+  await fs.rm(prjDir, { recursive: true });
 });
 
 // Tests

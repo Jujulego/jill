@@ -5,8 +5,6 @@ import { InkScreen } from '../tools/ink-screen';
 
 // Constants
 export const MAIN = path.join(__dirname, '../bin/jill.js');
-export const MOCK = path.join(__dirname, '../mock');
-export const ROOT = path.join(__dirname, '../');
 
 // Type
 export interface SpawnResult {
@@ -23,10 +21,9 @@ export interface SpawnOptions {
 // Utils
 export function jill(args: ReadonlyArray<string>, opts: SpawnOptions = {}): Promise<SpawnResult> {
   return new Promise<SpawnResult>((resolve, reject) => {
-    const proc = cp.spawn('c8', ['node', MAIN, ...args], {
+    const proc = cp.fork(MAIN, args, {
       cwd: opts.cwd,
-      shell: true,
-      stdio: 'pipe',
+      stdio: 'overlapped',
       env: process.env
     });
 
@@ -37,11 +34,11 @@ export function jill(args: ReadonlyArray<string>, opts: SpawnOptions = {}): Prom
       code: 0
     };
 
-    proc.stdout.on('data', (msg: Buffer) => {
+    proc.stdout?.on('data', (msg: Buffer) => {
       res.stdout.push(...msg.toString('utf-8').replace(/\n$/, '').split('\n'));
     });
 
-    proc.stderr.pipe(res.screen);
+    proc.stderr?.pipe(res.screen);
 
     // Emit result
     proc.on('close', (code) => {
