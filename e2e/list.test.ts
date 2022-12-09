@@ -1,4 +1,5 @@
 import fs from 'node:fs/promises';
+import path from 'path';
 
 import { jill } from './utils';
 import { TestBed } from '../tools/test-bed';
@@ -22,7 +23,7 @@ afterEach(async () => {
 
 // Tests
 describe('jill list', () => {
-  it('should print list of all workspaces', async () => {
+  it('should print a list of all workspaces', async () => {
     const res = await jill(['list'], { cwd: prjDir });
 
     await expect(res.screen.screen).toEqualLines([
@@ -33,7 +34,7 @@ describe('jill list', () => {
     ]);
   });
 
-  it('should print long list of all workspaces', async () => {
+  it('should print a long list of all workspaces', async () => {
     const res = await jill(['list', '-l'], { cwd: prjDir });
 
     await expect(res.screen.screen).toEqualLines([
@@ -42,6 +43,39 @@ describe('jill list', () => {
       expect.ignoreColor('wks-a  1.0.0    wks-a'),
       expect.ignoreColor('wks-b  1.0.0    wks-b'),
       expect.ignoreColor('wks-c  1.0.0    wks-c'),
+    ]);
+  });
+
+  it('should print a list of all workspaces in json', async () => {
+    const res = await jill(['list', '--json'], { cwd: prjDir });
+
+    await expect(res.stdout).toEqual([
+      expect.jsonMatching([
+        {
+          name: 'main',
+          version: '1.0.0',
+          slug: 'main',
+          root: prjDir,
+        },
+        {
+          name: 'wks-a',
+          version: '1.0.0',
+          slug: 'wks-a',
+          root: path.join(prjDir, 'wks-a'),
+        },
+        {
+          name: 'wks-b',
+          version: '1.0.0',
+          slug: 'wks-b',
+          root: path.join(prjDir, 'wks-b'),
+        },
+        {
+          name: 'wks-c',
+          version: '1.0.0',
+          slug: 'wks-c',
+          root: path.join(prjDir, 'wks-c'),
+        },
+      ])
     ]);
   });
 });
