@@ -22,7 +22,7 @@ afterEach(async () => {
 
 // Tests
 describe('jill list', () => {
-  it('should print list all workspaces', async () => {
+  it('should print list of all workspaces', async () => {
     const res = await jill(['list'], { cwd: prjDir });
 
     await expect(res.screen.screen).toEqualLines([
@@ -30,6 +30,18 @@ describe('jill list', () => {
       'wks-a',
       'wks-b',
       'wks-c'
+    ]);
+  });
+
+  it('should print long list of all workspaces', async () => {
+    const res = await jill(['list', '-l'], { cwd: prjDir });
+
+    await expect(res.screen.screen).toEqualLines([
+      expect.ignoreColor('Name   Version  Root'),
+      expect.ignoreColor('main   1.0.0    .'),
+      expect.ignoreColor('wks-a  1.0.0    wks-a'),
+      expect.ignoreColor('wks-b  1.0.0    wks-b'),
+      expect.ignoreColor('wks-c  1.0.0    wks-c'),
     ]);
   });
 });

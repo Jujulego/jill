@@ -19,7 +19,7 @@ export function List<T extends Record<string, unknown>>({ items, headers }: List
             <Text bold>{ capitalize(key) }</Text>
           ) }
           { items.map((item, idx) => (
-            <Text key={idx}>{ item[key] }</Text>
+            <Text key={idx}>{ item[key] || ' ' }</Text>
           )) }
         </Box>
       )) }

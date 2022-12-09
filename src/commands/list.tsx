@@ -161,7 +161,7 @@ export default defineCommand({
 
       for (const d of data) {
         if (d.root) {
-          d.root = path.relative(process.cwd(), d.root) ?? '.';
+          d.root = path.relative(process.cwd(), d.root) || '.';
         }
       }
 

@@ -28,4 +28,20 @@ describe('<List>', () => {
       'second  failed'
     ]);
   });
+
+  it('should render empty values', () => {
+    const empty = [
+      { test: 'first', result: 'success' },
+      { test: 'empty', result: '' },
+      { test: 'second', result: 'failed' },
+    ];
+
+    const { lastFrame } = render(<List items={empty} />);
+
+    expect(lastFrame()).toEqualLines([
+      'first   success',
+      'empty',
+      'second  failed'
+    ]);
+  });
 });
