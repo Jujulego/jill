@@ -37,7 +37,10 @@ export class TestBed {
   }
 
   async createProjectDirectory(): Promise<string> {
-    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), 'jill-test-'));
+    let tmp = await fs.mkdtemp(path.join(os.tmpdir(), 'jill-test-'));
+
+    // Corrects path on macOS => see https://github.com/nodejs/node/issues/11422
+    tmp = await fs.realpath(tmp);
 
     // Create project directory
     const prjDir = path.join(tmp, 'test');
