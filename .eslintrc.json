@@ -41,7 +41,7 @@
       }
     },
     {
-      "files": "tests/**/*.{js,jsx,ts,tsx}",
+      "files": "{tests,e2e}/**/*.{js,jsx,ts,tsx}",
       "globals": {
         "jest/globals": true
       },

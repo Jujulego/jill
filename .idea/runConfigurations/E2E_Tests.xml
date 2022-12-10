@@ -1,9 +1,10 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="E2E Tests" type="JavaScriptTestRunnerJest">
+    <config-file value="$PROJECT_DIR$/jest-e2e.config.ts" />
     <node-interpreter value="project" />
     <node-options value="" />
-    <jest-package value="yarn:e2e/package.json:jest" />
-    <working-dir value="$PROJECT_DIR$/e2e" />
+    <jest-package value="yarn:package.json:jest" />
+    <working-dir value="$PROJECT_DIR$" />
     <envs />
     <scope-kind value="ALL" />
     <method v="2" />
