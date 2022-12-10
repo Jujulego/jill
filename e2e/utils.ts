@@ -1,7 +1,7 @@
 import cp from 'node:child_process';
 import path from 'node:path';
 
-import { InkScreen } from '../tools/ink-screen';
+import { InkScreen } from '@/tools/ink-screen';
 
 // Constants
 export const MAIN = path.join(__dirname, '../bin/jill.js');

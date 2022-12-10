@@ -2,7 +2,7 @@ import fs from 'node:fs/promises';
 import path from 'path';
 
 import { jill } from './utils';
-import { TestBed } from '../tools/test-bed';
+import { TestBed } from '@/tools/test-bed';
 
 // Setup
 let prjDir: string;

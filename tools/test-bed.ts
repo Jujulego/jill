@@ -6,7 +6,7 @@ import path from 'node:path';
 
 import { TestProject } from './test-project';
 import { TestWorkspace } from './test-workspace';
-import { Workspace } from '../src/project';
+import { Workspace } from '@/src/project';
 
 // Bed
 export class TestBed {

@@ -1,7 +1,7 @@
 import { render } from 'ink-testing-library';
 
-import { container, SpinnerService } from '../../src/services';
-import { GlobalSpinner } from '../../src/ui';
+import { container, SpinnerService } from '@/src/services';
+import { GlobalSpinner } from '@/src/ui';
 
 // Setup
 let spinner: SpinnerService;

@@ -2,7 +2,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import glob from 'tiny-glob';
 
-import { Project, Workspace } from '../../src/project';
+import { Project, Workspace } from '@/src/project';
 
 // Mock
 jest.mock('tiny-glob');

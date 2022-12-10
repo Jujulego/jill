@@ -1,9 +1,9 @@
 import { render, cleanup } from 'ink-testing-library';
 
-import { Workspace } from '../../src/project';
-import { WorkspaceTree } from '../../src/ui';
-import { TestBed } from '../../tools/test-bed';
-import { flushPromises } from '../../tools/utils';
+import { Workspace } from '@/src/project';
+import { WorkspaceTree } from '@/src/ui';
+import { TestBed } from '@/tools/test-bed';
+import { flushPromises } from '@/tools/utils';
 
 // Setup
 let bed: TestBed;

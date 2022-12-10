@@ -1,7 +1,7 @@
-import { AffectedFilter } from '../../src/filters';
-import { Git } from '../../src/git';
-import { Workspace } from '../../src/project';
-import { TestBed } from '../../tools/test-bed';
+import { AffectedFilter } from '@/src/filters';
+import { Git } from '@/src/git';
+import { Workspace } from '@/src/project';
+import { TestBed } from '@/tools/test-bed';
 
 // Setup
 let bed: TestBed;

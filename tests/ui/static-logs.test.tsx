@@ -1,8 +1,8 @@
 import { render } from 'ink-testing-library';
 import winston from 'winston';
 
-import { container, Logger } from '../../src/services';
-import { StaticLogs } from '../../src/ui';
+import { container, Logger } from '@/src/services';
+import { StaticLogs } from '@/src/ui';
 
 // Setup
 let logger: Logger;

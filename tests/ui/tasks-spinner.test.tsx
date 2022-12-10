@@ -2,8 +2,8 @@ import { SpawnTask, TaskManager } from '@jujulego/tasks';
 import { render, cleanup } from 'ink-testing-library';
 import symbols from 'log-symbols';
 
-import { TasksSpinner } from '../../src/ui';
-import { spyLogger } from '../../tools/utils';
+import { TasksSpinner } from '@/src/ui';
+import { spyLogger } from '@/tools/utils';
 
 // Setup
 let taskA: SpawnTask;

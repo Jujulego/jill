@@ -1,7 +1,7 @@
 import { streamEvents } from '@jujulego/event-tree';
 import { SpawnTask } from '@jujulego/tasks';
 
-import { combine, streamLines } from '../../src/utils';
+import { combine, streamLines } from '@/src/utils';
 
 // Mocks
 jest.mock('@jujulego/event-tree', () => {

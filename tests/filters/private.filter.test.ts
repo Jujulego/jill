@@ -1,5 +1,5 @@
-import { PrivateFilter } from '../../src/filters';
-import { TestBed } from '../../tools/test-bed';
+import { PrivateFilter } from '@/src/filters';
+import { TestBed } from '@/tools/test-bed';
 
 // Setup
 let bed: TestBed;

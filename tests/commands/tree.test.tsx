@@ -1,14 +1,14 @@
 import { cleanup, render } from 'ink-testing-library';
 import yargs from 'yargs';
 
-import treeCommand from '../../src/commands/tree';
-import { loadProject, loadWorkspace, setupInk } from '../../src/middlewares';
-import { Project, Workspace } from '../../src/project';
-import { container, CURRENT, INK_APP } from '../../src/services';
-import { Layout } from '../../src/ui';
+import treeCommand from '@/src/commands/tree';
+import { loadProject, loadWorkspace, setupInk } from '@/src/middlewares';
+import { Project, Workspace } from '@/src/project';
+import { container, CURRENT, INK_APP } from '@/src/services';
+import { Layout } from '@/src/ui';
 
-import { TestBed } from '../../tools/test-bed';
-import { flushPromises } from '../../tools/utils';
+import { TestBed } from '@/tools/test-bed';
+import { flushPromises } from '@/tools/utils';
 
 // Setup
 let app: ReturnType<typeof render>;

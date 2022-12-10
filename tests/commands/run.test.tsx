@@ -3,14 +3,14 @@ import { cleanup, render } from 'ink-testing-library';
 import symbols from 'log-symbols';
 import yargs from 'yargs';
 
-import runCommand from '../../src/commands/run';
-import { loadProject, loadWorkspace, setupInk } from '../../src/middlewares';
-import { Project, Workspace, WorkspaceContext } from '../../src/project';
-import { container, CURRENT, INK_APP } from '../../src/services';
-import { Layout } from '../../src/ui';
+import runCommand from '@/src/commands/run';
+import { loadProject, loadWorkspace, setupInk } from '@/src/middlewares';
+import { Project, Workspace, WorkspaceContext } from '@/src/project';
+import { container, CURRENT, INK_APP } from '@/src/services';
+import { Layout } from '@/src/ui';
 
-import { TestBed } from '../../tools/test-bed';
-import { flushPromises, spyLogger } from '../../tools/utils';
+import { TestBed } from '@/tools/test-bed';
+import { flushPromises, spyLogger } from '@/tools/utils';
 
 // Setup
 let app: ReturnType<typeof render>;

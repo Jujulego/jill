@@ -1,7 +1,5 @@
 import { ESC } from './ink-screen';
 
-export {};
-
 // Add custom matchers
 expect.extend({
   ignoreColor(received: string, expected: string) {
@@ -12,7 +10,6 @@ expect.extend({
     };
 
     received = received.replace(new RegExp(`${ESC}\\[(\\d{1,2};)*\\d{1,2}m`, 'g'), '');
-
 
     return {
       pass: this.equals(received, expected),

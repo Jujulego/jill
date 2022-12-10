@@ -1,4 +1,4 @@
-import { container, SpinnerService, SpinnerState } from '../../src/services';
+import { container, SpinnerService, SpinnerState } from '@/src/services';
 
 // Setup
 let service: SpinnerService;

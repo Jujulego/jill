@@ -1,7 +1,7 @@
 import path from 'node:path';
 
-import { Project, Workspace } from '../../src/project';
-import { Git } from '../../src/git';
+import { Project, Workspace } from '@/src/project';
+import { Git } from '@/src/git';
 
 // Setup
 const root = path.resolve(__dirname, '../../mock');

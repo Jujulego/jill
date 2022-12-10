@@ -1,5 +1,5 @@
-import { PipelineFilter, Pipeline } from '../../src/filters';
-import { TestBed } from '../../tools/test-bed';
+import { PipelineFilter, Pipeline } from '@/src/filters';
+import { TestBed } from '@/tools/test-bed';
 
 // Setup
 let bed: TestBed;
