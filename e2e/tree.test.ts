@@ -16,7 +16,7 @@ beforeEach(async () => {
     .addDependency(wksB)
     .addDependency(wksC, true);
 
-  prjDir = await bed.createProjectDirectory();
+  prjDir = await bed.createProjectPackage();
 });
 
 afterEach(async () => {
