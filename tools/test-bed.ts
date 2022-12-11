@@ -4,9 +4,10 @@ import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 
+import { Workspace } from '@/src/project';
+
 import { TestProject } from './test-project';
 import { TestWorkspace } from './test-workspace';
-import { Workspace } from '@/src/project';
 
 // Bed
 export class TestBed {
@@ -37,6 +38,9 @@ export class TestBed {
   }
 
   async createProjectDirectory(): Promise<string> {
+    // Ensure tmp dir exists (for mocked fs)
+    await fs.mkdir(os.tmpdir(), { recursive: true });
+
     let tmp = await fs.mkdtemp(path.join(os.tmpdir(), 'jill-test-'));
 
     // Corrects path on macOS => see https://github.com/nodejs/node/issues/11422
@@ -55,6 +59,12 @@ export class TestBed {
       await fs.mkdir(wksDir);
       await this.writeManifest(path.join(wksDir, 'package.json'), wks);
     }
+
+    return prjDir;
+  }
+
+  async createProjectPackage(): Promise<string> {
+    const prjDir = await this.createProjectDirectory();
 
     // Run package manager
     await new Promise<void>((resolve, reject) => {

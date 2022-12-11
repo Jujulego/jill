@@ -14,7 +14,7 @@ beforeEach(async () => {
   bed.addWorkspace('wks-b');
   bed.addWorkspace('wks-c');
 
-  prjDir = await bed.createProjectDirectory();
+  prjDir = await bed.createProjectPackage();
 });
 
 afterEach(async () => {
