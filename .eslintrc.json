@@ -5,6 +5,11 @@
     "@typescript-eslint",
     "workspaces"
   ],
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
   "ignorePatterns": [
     "coverage/**",
     "dist/**"

@@ -1,5 +1,4 @@
 import { Package } from 'normalize-package-data';
-import cp from 'node:child_process';
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
@@ -8,6 +7,7 @@ import { Workspace } from '@/src/project';
 
 import { TestProject } from './test-project';
 import { TestWorkspace } from './test-workspace';
+import { shell } from './utils';
 
 // Bed
 export class TestBed {
@@ -37,6 +37,9 @@ export class TestBed {
     await fs.writeFile(path, JSON.stringify(manifest, null, 2));
   }
 
+  /**
+   * Create project's structure inside a temporary directory
+   */
   async createProjectDirectory(): Promise<string> {
     // Ensure tmp dir exists (for mocked fs)
     await fs.mkdir(os.tmpdir(), { recursive: true });
@@ -63,33 +66,14 @@ export class TestBed {
     return prjDir;
   }
 
+  /**
+   * Create project's structure inside a temporary directory and generates the lock file
+   */
   async createProjectPackage(): Promise<string> {
     const prjDir = await this.createProjectDirectory();
 
     // Run package manager
-    await new Promise<void>((resolve, reject) => {
-      const proc = cp.spawn('yarn', ['install', '--no-immutable'], {
-        cwd: prjDir,
-        shell: true,
-        windowsHide: true
-      });
-
-      let stdout = '';
-
-      proc.stdout.on('data', (msg: Buffer) => {
-        stdout = stdout + msg.toString('utf-8');
-      });
-
-      proc.on('close', (code) => {
-        if (code) {
-          reject(new Error(`yarn failed with code ${code}:\n${stdout}`));
-        } else {
-          resolve();
-        }
-      });
-
-      proc.on('error', reject);
-    });
+    await shell('yarn', ['install', '--no-immutable'], { cwd: prjDir });
 
     return prjDir;
   }
