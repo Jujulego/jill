@@ -27,14 +27,19 @@ export function shell(cmd: string, args: string[], opts: ShellOptions = {}): Pro
     });
 
     let stdout = '';
+    let stderr = '';
 
     proc.stdout.on('data', (msg: Buffer) => {
       stdout = stdout + msg.toString('utf-8');
     });
 
+    proc.stderr.on('data', (msg: Buffer) => {
+      stderr = stderr + msg.toString('utf-8');
+    });
+
     proc.on('close', (code) => {
       if (code) {
-        reject(new Error(`yarn failed with code ${code}:\n${stdout}`));
+        reject(new Error(`${cmd} failed with code ${code}:\n${stdout}\n${stderr}`));
       } else {
         resolve();
       }
