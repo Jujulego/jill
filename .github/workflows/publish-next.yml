@@ -108,6 +108,11 @@ jobs:
           name: build-artifacts
           path: dist
 
+      - name: Git setup
+        run: |
+          git config --global user.name 'Boobrie'
+          git config --global user.email 'boobrie@users.noreply.github.com'
+
       - name: Test
         run: yarn test:e2e
 
