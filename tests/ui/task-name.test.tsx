@@ -1,8 +1,8 @@
 import { SpawnTask } from '@jujulego/tasks';
 import { render } from 'ink-testing-library';
 
-import { TaskName } from '../../src/ui';
-import { TestBed } from '../test-bed';
+import { TaskName } from '@/src/ui';
+import { TestBed } from '@/tools/test-bed';
 
 // Setup
 let bed: TestBed;
@@ -23,7 +23,7 @@ describe('<TaskName>', () => {
   });
 
   it('should print running script and workspace name', () => {
-    const wks = bed.workspace('wks-a');
+    const wks = bed.addWorkspace('wks-a');
     const task = new SpawnTask('cmd', [], {
       script: 'test',
       workspace: wks,

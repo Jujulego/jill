@@ -80,46 +80,46 @@ jobs:
           name: coverage-artifacts
           path: coverage
 
-#  e2e-tests:
-#    runs-on: ${{ matrix.os }}
-#    needs: [ build ]
-#
-#    strategy:
-#      fail-fast: false
-#
-#      matrix:
-#        os:
-#          - 'ubuntu-latest'
-#          - 'windows-latest'
-#
-#    steps:
-#      - uses: actions/checkout@v3.1.0
-#        with:
-#          fetch-depth: 0
-#
-#      - name: Use Node.js 16.x
-#        uses: actions/setup-node@v3.5.0
-#        with:
-#          node-version: 16
-#          cache: yarn
-#
-#      - name: Install
-#        run: yarn install --immutable
-#
-#      - uses: actions/download-artifact@v3
-#        with:
-#          name: build-artifacts
-#          path: packages
-#
-#      - name: Test
-#        run: yarn e2e
-#        env:
-#          FORCE_COLOR: 1
+  e2e-tests:
+    runs-on: ${{ matrix.os }}
+    needs: [ build ]
+
+    strategy:
+      matrix:
+        os:
+          - 'ubuntu-latest'
+          - 'windows-latest'
+          - 'macos-latest'
+
+    steps:
+      - uses: actions/checkout@v3.1.0
+
+      - name: Use Node.js 16.x
+        uses: actions/setup-node@v3.5.1
+        with:
+          node-version: 16
+          cache: yarn
+
+      - name: Install
+        run: yarn install --immutable
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: build-artifacts
+          path: dist
+
+      - name: Git setup
+        run: |
+          git config --global user.name 'Boobrie'
+          git config --global user.email 'boobrie@users.noreply.github.com'
+
+      - name: Test
+        run: yarn test:e2e
 
   publish:
     runs-on: ubuntu-latest
     environment: npm
-    needs: [ lint, tests ] #, e2e-tests ]
+    needs: [ lint, tests, e2e-tests ]
 
     permissions:
       actions: write
@@ -205,7 +205,7 @@ jobs:
         run: 'echo version=`jq ".version" package.json` >> $GITHUB_OUTPUT'
 
       - name: Sonarcloud
-        uses: sonarsource/sonarcloud-github-action@v1.7
+        uses: sonarsource/sonarcloud-github-action@v1.8
         with:
           args: >
             -Dsonar.projectVersion=${{ steps.info.outputs.version }}

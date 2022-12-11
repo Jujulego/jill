@@ -1,14 +1,14 @@
 import { cleanup, render } from 'ink-testing-library';
 import yargs from 'yargs';
 
-import treeCommand from '../../src/commands/tree';
-import { loadProject, loadWorkspace, setupInk } from '../../src/middlewares';
-import { Project, Workspace } from '../../src/project';
-import { container, CURRENT, INK_APP } from '../../src/services';
-import { Layout } from '../../src/ui';
+import treeCommand from '@/src/commands/tree';
+import { loadProject, loadWorkspace, setupInk } from '@/src/middlewares';
+import { Project, Workspace } from '@/src/project';
+import { container, CURRENT, INK_APP } from '@/src/services';
+import { Layout } from '@/src/ui';
 
-import { TestBed } from '../test-bed';
-import { flushPromises } from '../utils';
+import { TestBed } from '@/tools/test-bed';
+import { flushPromises } from '@/tools/utils';
 
 // Setup
 let app: ReturnType<typeof render>;
@@ -23,9 +23,12 @@ beforeEach(() => {
 
   bed = new TestBed();
 
-  wksA = bed.workspace('wks-a');
-  wksB = bed.workspace('wks-b');
-  wksC = bed.workspace('wks-c');
+  wksC = bed.addWorkspace('wks-c');
+  wksB = bed.addWorkspace('wks-b')
+    .addDependency(wksC, true);
+  wksA = bed.addWorkspace('wks-a')
+    .addDependency(wksB)
+    .addDependency(wksC, true);
 
   // Mocks
   jest.resetAllMocks();
@@ -46,10 +49,10 @@ beforeEach(() => {
       .whenTargetNamed(CURRENT);
   });
 
-  jest.spyOn(wksA, 'dependencies').mockImplementation(async function* () { yield wksB; });
-  jest.spyOn(wksA, 'devDependencies').mockImplementation(async function* () { yield wksC; });
+  jest.spyOn(wksA, 'dependencies');
+  jest.spyOn(wksA, 'devDependencies');
   jest.spyOn(wksB, 'dependencies');
-  jest.spyOn(wksB, 'devDependencies').mockImplementation(async function* () { yield wksC; });
+  jest.spyOn(wksB, 'devDependencies');
   jest.spyOn(wksC, 'dependencies');
   jest.spyOn(wksC, 'devDependencies');
 });

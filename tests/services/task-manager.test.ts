@@ -1,6 +1,6 @@
 import { TaskManager } from '@jujulego/tasks';
 
-import { container, GLOBAL_CONFIG } from '../../src/services';
+import { container, GLOBAL_CONFIG } from '@/src/services';
 
 // Tests
 describe('TaskManager', () => {

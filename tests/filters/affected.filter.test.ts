@@ -1,7 +1,7 @@
-import { AffectedFilter } from '../../src/filters';
-import { Git } from '../../src/git';
-import { Workspace } from '../../src/project';
-import { TestBed } from '../test-bed';
+import { AffectedFilter } from '@/src/filters';
+import { Git } from '@/src/git';
+import { Workspace } from '@/src/project';
+import { TestBed } from '@/tools/test-bed';
 
 // Setup
 let bed: TestBed;
@@ -9,7 +9,7 @@ let wks: Workspace;
 
 beforeEach(() => {
   bed = new TestBed();
-  wks = bed.workspace('wks');
+  wks = bed.addWorkspace('wks');
 
   jest.resetAllMocks();
   jest.restoreAllMocks();

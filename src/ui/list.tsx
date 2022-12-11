@@ -1,5 +1,4 @@
 import { Box, Text } from 'ink';
-import { ReactElement } from 'react';
 
 import { capitalize } from '../utils';
 
@@ -10,7 +9,11 @@ export interface ListProps<T extends Record<string, unknown>> {
 }
 
 // Component
-export function List<T extends Record<string, unknown>>({ items, headers }: ListProps<T>): ReactElement {
+export function List<T extends Record<string, unknown>>({ items, headers }: ListProps<T>) {
+  if (items.length === 0) {
+    return null;
+  }
+
   return (
     <Box>
       { Object.keys(items[0]).map((key) => (
@@ -19,7 +22,7 @@ export function List<T extends Record<string, unknown>>({ items, headers }: List
             <Text bold>{ capitalize(key) }</Text>
           ) }
           { items.map((item, idx) => (
-            <Text key={idx}>{ item[key] }</Text>
+            <Text key={idx}>{ item[key] || ' ' }</Text>
           )) }
         </Box>
       )) }

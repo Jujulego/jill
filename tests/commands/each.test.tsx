@@ -3,14 +3,14 @@ import { cleanup, render } from 'ink-testing-library';
 import symbols from 'log-symbols';
 import yargs from 'yargs';
 
-import eachCommand from '../../src/commands/each';
-import { loadProject, setupInk } from '../../src/middlewares';
-import { Project, WorkspaceContext } from '../../src/project';
-import { container, CURRENT, INK_APP } from '../../src/services';
-import { Layout } from '../../src/ui';
+import eachCommand from '@/src/commands/each';
+import { loadProject, setupInk } from '@/src/middlewares';
+import { Project, WorkspaceContext } from '@/src/project';
+import { container, CURRENT, INK_APP } from '@/src/services';
+import { Layout } from '@/src/ui';
 
-import { TestBed } from '../test-bed';
-import { flushPromises, spyLogger } from '../utils';
+import { TestBed } from '@/tools/test-bed';
+import { flushPromises, spyLogger } from '@/tools/utils';
 
 // Setup
 let app: ReturnType<typeof render>;
@@ -48,14 +48,10 @@ describe('jill each', () => {
   it('should run script in all workspaces having that script', async () => {
     // Setup workspaces
     const workspaces = [
-      bed.workspace('wks-1', { scripts: { cmd: 'cmd' } }),
-      bed.workspace('wks-2', { scripts: { cmd: 'cmd' } }),
-      bed.workspace('wks-3'),
+      bed.addWorkspace('wks-1', { scripts: { cmd: 'cmd' } }),
+      bed.addWorkspace('wks-2', { scripts: { cmd: 'cmd' } }),
+      bed.addWorkspace('wks-3'),
     ];
-
-    jest.spyOn(bed.project, 'workspaces').mockImplementation(async function* () {
-      yield* workspaces;
-    });
 
     // Setup tasks
     const manager = container.get(TaskManager);
@@ -109,12 +105,8 @@ describe('jill each', () => {
   it('should use given dependency selection mode', async () => {
     // Setup workspaces
     const workspaces = [
-      bed.workspace('wks', { scripts: { cmd: 'cmd' } }),
+      bed.addWorkspace('wks', { scripts: { cmd: 'cmd' } }),
     ];
-
-    jest.spyOn(bed.project, 'workspaces').mockImplementation(async function* () {
-      yield* workspaces;
-    });
 
     // Setup tasks
     const manager = container.get(TaskManager);
@@ -153,14 +145,10 @@ describe('jill each', () => {
 
     // Setup workspaces
     const workspaces = [
-      bed.workspace('wks-1', { scripts: { cmd: 'cmd' } }),
-      bed.workspace('wks-2', { scripts: { cmd: 'cmd' } }),
-      bed.workspace('wks-3'),
+      bed.addWorkspace('wks-1', { scripts: { cmd: 'cmd' } }),
+      bed.addWorkspace('wks-2', { scripts: { cmd: 'cmd' } }),
+      bed.addWorkspace('wks-3'),
     ];
-
-    jest.spyOn(bed.project, 'workspaces').mockImplementation(async function* () {
-      yield* workspaces;
-    });
 
     // Setup tasks
     const manager = container.get(TaskManager);
@@ -218,14 +206,10 @@ describe('jill each', () => {
     it('should run script only in private workspaces (--private)', async () => {
       // Setup workspaces
       const workspaces = [
-        bed.workspace('wks-1', { private: true, scripts: { cmd: 'cmd' } }),
-        bed.workspace('wks-2', { scripts: { cmd: 'cmd' } }),
-        bed.workspace('wks-3', { private: true }),
+        bed.addWorkspace('wks-1', { private: true, scripts: { cmd: 'cmd' } }),
+        bed.addWorkspace('wks-2', { scripts: { cmd: 'cmd' } }),
+        bed.addWorkspace('wks-3', { private: true }),
       ];
-
-      jest.spyOn(bed.project, 'workspaces').mockImplementation(async function* () {
-        yield* workspaces;
-      });
 
       // Setup tasks
       const manager = container.get(TaskManager);
@@ -267,14 +251,10 @@ describe('jill each', () => {
     it('should run script only in private workspaces (--no-private)', async () => {
       // Setup workspaces
       const workspaces = [
-        bed.workspace('wks-1', { private: true, scripts: { cmd: 'cmd' } }),
-        bed.workspace('wks-2', { scripts: { cmd: 'cmd' } }),
-        bed.workspace('wks-3', { private: true }),
+        bed.addWorkspace('wks-1', { private: true, scripts: { cmd: 'cmd' } }),
+        bed.addWorkspace('wks-2', { scripts: { cmd: 'cmd' } }),
+        bed.addWorkspace('wks-3', { private: true }),
       ];
-
-      jest.spyOn(bed.project, 'workspaces').mockImplementation(async function* () {
-        yield* workspaces;
-      });
 
       // Setup tasks
       const manager = container.get(TaskManager);
@@ -318,14 +298,10 @@ describe('jill each', () => {
     it('should run script only in affected workspaces (--affected test)', async () => {
       // Setup workspaces
       const workspaces = [
-        bed.workspace('wks-1', { scripts: { cmd: 'cmd' } }),
-        bed.workspace('wks-2', { scripts: { cmd: 'cmd' } }),
-        bed.workspace('wks-3'),
+        bed.addWorkspace('wks-1', { scripts: { cmd: 'cmd' } }),
+        bed.addWorkspace('wks-2', { scripts: { cmd: 'cmd' } }),
+        bed.addWorkspace('wks-3'),
       ];
-
-      jest.spyOn(bed.project, 'workspaces').mockImplementation(async function* () {
-        yield* workspaces;
-      });
 
       // Setup tasks
       const manager = container.get(TaskManager);

@@ -9,11 +9,17 @@
       "react": {
         "runtime": "automatic"
       }
+    },
+    "baseUrl": "./",
+    "paths": {
+      "@/src/*": ["src/*"],
+      "@/tools/*": ["tools/*"]
     }
   },
   "module": {
     "type": "commonjs"
   },
+  "sourceMaps": true,
   "env": {
     "targets": "node 16"
   }
