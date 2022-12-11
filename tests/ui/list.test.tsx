@@ -44,4 +44,12 @@ describe('<List>', () => {
       'second  failed'
     ]);
   });
+
+  it('should render nothing for empty list', () => {
+    const { lastFrame } = render(<List items={[]} />);
+
+    expect(lastFrame()).toEqualLines([
+      ''
+    ]);
+  });
 });
