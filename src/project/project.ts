@@ -133,10 +133,10 @@ export class Project {
 
   async currentWorkspace(cwd = process.cwd()): Promise<Workspace | null> {
     let workspace: Workspace | null = null;
-    cwd = path.normalize(cwd);
+    cwd = path.resolve(cwd);
 
     for await (const wks of this.workspaces()) {
-      if (cwd.startsWith(path.normalize(wks.cwd))) {
+      if (cwd.startsWith(wks.cwd)) {
         workspace = wks;
 
         if (wks.cwd !== this.root) return wks;

@@ -1,4 +1,4 @@
-import { fs } from 'memfs';
+import { fs, vol } from 'memfs';
 import path from 'node:path';
 
 import { Git } from '@/src/git';
@@ -28,6 +28,10 @@ beforeEach(async () => {
     .addDependency(wksC, true);
 
   prjDir = await bed.createProjectDirectory();
+});
+
+afterEach(() => {
+  vol.reset();
 });
 
 // Test suites
