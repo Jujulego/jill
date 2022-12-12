@@ -1,32 +1,10 @@
-import { ignoreColor, jsonMatching } from './matchers';
+import { ignoreColor, jsonMatching, toEqualLines } from './matchers';
 
 // Add custom matchers
 expect.extend({
   ignoreColor,
   jsonMatching,
-  toEqualLines(received: any, expected: any[]) {
-    try {
-      const options = {
-        isNot: this.isNot,
-        promise: this.promise,
-      };
-
-      const lines = typeof received === 'string' ? received.split('\n') : received;
-
-      return {
-        pass: this.equals(lines, expected),
-        message: () => this.utils.matcherHint(
-          'toEqualLines',
-          this.utils.printReceived(lines),
-          this.utils.printExpected(expected),
-          options,
-        )
-      };
-    } catch (e) {
-      console.error(e);
-      throw e;
-    }
-  },
+  toEqualLines,
   toMatchLines(received: any, expected: (string | RegExp)[]) {
     try {
       const options = {
@@ -98,7 +76,6 @@ declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace jest {
     interface Matchers<R> {
-      toEqualLines(expected: any[]): R;
       toMatchLines(expected: (string | RegExp)[]): R;
       toYield(expected: any[]): Promise<R>;
     }
