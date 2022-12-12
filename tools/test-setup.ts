@@ -1,34 +1,9 @@
-import { ignoreColor } from './matchers';
+import { ignoreColor, jsonMatching } from './matchers';
 
 // Add custom matchers
 expect.extend({
   ignoreColor,
-  jsonMatching(received: string, expected: any) {
-    const options = {
-      comment: 'JSON matching',
-      isNot: this.isNot,
-      promise: this.promise,
-    };
-
-    const parse = (received: string): unknown => {
-      try {
-        return JSON.parse(received);
-      } catch (err) {
-        throw new Error(
-          this.utils.matcherErrorMessage(
-            this.utils.matcherHint('jsonMatching', undefined, undefined, options),
-            `${this.utils.printExpected('received')} value must be a valid json string: ${err.message}`,
-            this.utils.printWithType('Received', received, this.utils.printReceived)
-          )
-        );
-      }
-    };
-
-    return {
-      pass: this.equals(parse(received), expected),
-      message: () => this.utils.matcherHint('jsonMatching', this.utils.printReceived(received), this.utils.printExpected(expected), options)
-    };
-  },
+  jsonMatching,
   toEqualLines(received: any, expected: any[]) {
     try {
       const options = {
@@ -122,12 +97,6 @@ expect.extend({
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace jest {
-    interface Expect {
-      jsonMatching(obj: unknown): unknown;
-    }
-    interface InverseAsymmetricMatchers {
-      jsonMatching(obj: unknown): unknown;
-    }
     interface Matchers<R> {
       toEqualLines(expected: any[]): R;
       toMatchLines(expected: (string | RegExp)[]): R;

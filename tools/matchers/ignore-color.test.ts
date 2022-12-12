@@ -1,5 +1,5 @@
+import { ESC } from '../ink-screen';
 import { ignoreColor } from './ignore-color';
-import { ESC } from '@/tools/ink-screen';
 
 // Tests
 describe('ignoreColor', () => {
