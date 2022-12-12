@@ -2,7 +2,8 @@ import type { Config } from 'jest';
 
 const config: Config = {
   roots: [
-    '<rootDir>/tests'
+    '<rootDir>/tests',
+    '<rootDir>/tools',
   ],
   setupFilesAfterEnv: [
     '<rootDir>/tests/setup.ts'
