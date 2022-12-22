@@ -1,5 +1,5 @@
 // Matcher
-export function toMatchLines(this: jest.MatcherContext, received: unknown, expected: (string | RegExp)[]) {
+export function toMatchLines(this: jest.MatcherContext, received: unknown, expected: unknown[]) {
   try {
     const options = {
       isNot: this.isNot,
@@ -15,10 +15,10 @@ export function toMatchLines(this: jest.MatcherContext, received: unknown, expec
       for (let i = 0; i < lines.length; ++i) {
         const exp = expected[i];
 
-        if (typeof exp === 'string') {
-          pass = this.equals(lines[i], exp);
-        } else {
+        if (exp instanceof RegExp) {
           pass = !!lines[i].match(exp);
+        } else {
+          pass = this.equals(lines[i], exp);
         }
 
         if (!pass) {
@@ -47,7 +47,7 @@ declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace jest {
     interface Matchers<R> {
-      toMatchLines(expected: (string | RegExp)[]): R;
+      toMatchLines(expected: (unknown | RegExp)[]): R;
     }
   }
 }
