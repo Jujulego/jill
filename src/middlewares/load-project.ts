@@ -1,5 +1,5 @@
 import { container, CURRENT, SpinnerService } from '../services';
-import { PackageManager, Project } from '../project';
+import { Project } from '../project';
 import { defineMiddleware } from '../utils';
 
 // Middleware
@@ -12,8 +12,7 @@ export const loadProject = defineMiddleware({
       description: 'Project root directory'
     })
     .option('package-manager', {
-      choices: ['yarn', 'npm'],
-      default: undefined as PackageManager | undefined,
+      choices: ['yarn', 'npm'] as const,
       type: 'string',
       description: 'Force package manager'
     }),
