@@ -1,7 +1,7 @@
 import chalk from 'chalk';
 
-import '@/tools/matchers';
 import { container, GLOBAL_CONFIG, GlobalConfig } from '@/src/services/inversify.config';
+import '@/tools/matchers/setup';
 
 // Chalk config
 chalk.level = 0;

@@ -85,8 +85,8 @@ export default defineCommand({
     })
     .option('attrs', {
       type: 'array',
-      choices: ['name', 'version', 'root', 'slug'],
-      default: [] as Attribute[],
+      choices: ['name', 'version', 'root', 'slug'] as const,
+      default: [],
       group: 'Format:',
       desc: 'Select printed attributes'
     })
@@ -135,9 +135,9 @@ export default defineCommand({
     }
 
     // Build data
-    let attrs = args.attrs;
+    let attrs = args.attrs as Attribute[];
 
-    if (args.attrs.length === 0) {
+    if (attrs.length === 0) {
       if (args.long) {
         attrs = LONG_ATTRIBUTES;
       } else if (args.json) {
