@@ -27,7 +27,7 @@ export default defineCommand({
         }
       })
       .option('deps-mode', {
-        choices: ['all', 'prod', 'none'],
+        choices: ['all', 'prod', 'none'] as const,
         default: 'all' as WorkspaceDepsMode,
         desc: 'Dependency selection mode:\n' +
           ' - all = dependencies AND devDependencies\n' +
