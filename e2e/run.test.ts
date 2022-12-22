@@ -47,7 +47,7 @@ describe('jill run', () => {
     // Check jill output
     expect(res.code).toBe(0);
     expect(res.screen.screen).toMatchLines([
-      expect.ignoreColor(/. Running start in wks-c \(took [0-9]+ms\)/),
+      expect.ignoreColor(/. Running start in wks-c \(took [0-9]+m?s\)/),
     ]);
 
     // Check script result
@@ -61,7 +61,7 @@ describe('jill run', () => {
     // Check jill output
     expect(res.code).toBe(1);
     expect(res.screen.screen).toMatchLines([
-      expect.ignoreColor(/. Running fails in wks-c \(took [0-9]+ms\)/),
+      expect.ignoreColor(/. Running fails in wks-c \(took [0-9]+m?s\)/),
     ]);
   });
 
@@ -71,8 +71,8 @@ describe('jill run', () => {
     // Check jill output
     expect(res.code).toBe(0);
     expect(res.screen.screen).toMatchLines([
-      expect.ignoreColor(/. Running build in wks-c \(took [0-9]+ms\)/),
-      expect.ignoreColor(/. Running start in wks-b \(took [0-9]+ms\)/),
+      expect.ignoreColor(/. Running build in wks-c \(took [0-9]+m?s\)/),
+      expect.ignoreColor(/. Running start in wks-b \(took [0-9]+m?s\)/),
     ]);
 
     // Check scripts result

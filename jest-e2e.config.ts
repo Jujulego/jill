@@ -7,6 +7,7 @@ const config: Config = {
   setupFilesAfterEnv: [
     '<rootDir>/e2e/setup.ts'
   ],
+  testTimeout: 10000,
   transform: {
     '^.+\\.(t|j)sx?$': '@swc/jest'
   },
