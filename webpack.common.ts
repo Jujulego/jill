@@ -38,14 +38,21 @@ const commonConfig: Configuration = {
     runtimeChunk: 'single',
     moduleIds: 'deterministic',
     splitChunks: {
-      chunks: 'all'
+      chunks: 'all',
+      cacheGroups: {
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendors',
+          chunks: 'all'
+        }
+      }
     }
   },
   module: {
     rules: [
       {
         test: /\.(js|jsx|ts|tsx)$/,
-        exclude: /node_modules/,
+        exclude: /[\\/]node_modules[\\/]/,
         use: 'swc-loader',
       }
     ]
@@ -55,7 +62,10 @@ const commonConfig: Configuration = {
   },
   externals: [
     nodeExternals({
-      modulesFromFile: true
+      modulesFromFile: {
+        includeInBundle: 'devDependencies',
+        excludeFromBundle: 'dependencies',
+      } as any
     }),
   ],
   plugins: [
