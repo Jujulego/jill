@@ -1,5 +1,5 @@
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
-import type { Configuration, Entry } from 'webpack';
+import { Configuration, Entry } from 'webpack';
 import nodeExternals from 'webpack-node-externals';
 import fs from 'node:fs/promises';
 import path from 'node:path';
@@ -61,6 +61,7 @@ const commonConfig: Configuration = {
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
   },
   externals: [
+    'ws', // used by ink for devtools
     nodeExternals({
       modulesFromFile: {
         includeInBundle: 'devDependencies',
