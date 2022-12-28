@@ -24,9 +24,6 @@
   "engines": {
     "node": "^16"
   },
-  "dependencies": {
-    "yargs": "^17.6.0"
-  },
   "devDependencies": {
     "@jujulego/2d-maths": "1.5.1",
     "@jujulego/event-tree": "1.1.0",
@@ -75,9 +72,9 @@
     "webpack": "5.75.0",
     "webpack-cli": "5.0.1",
     "webpack-merge": "5.8.0",
-    "webpack-node-externals": "3.0.0",
     "winston": "3.8.2",
-    "winston-transport": "4.5.0"
+    "winston-transport": "4.5.0",
+    "yargs": "17.6.2"
   },
   "packageManager": "yarn@3.3.1"
 }
