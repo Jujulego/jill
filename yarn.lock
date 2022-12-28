@@ -1293,7 +1293,7 @@ __metadata:
     jest: 29.3.1
     log-symbols: 4.1.0
     memfs: 3.4.12
-    moo: ^0.5.2
+    moo: 0.5.2
     normalize-package-data: 5.0.0
     pretty-ms: 7.0.1
     react: 17.0.2
@@ -6607,7 +6607,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"moo@npm:^0.5.2":
+"moo@npm:0.5.2":
   version: 0.5.2
   resolution: "moo@npm:0.5.2"
   checksum: 5a41ddf1059fd0feb674d917c4774e41c877f1ca980253be4d3aae1a37f4bc513f88815041243f36f5cf67a62fb39324f3f997cf7fb17b6cb00767c165e7c499
