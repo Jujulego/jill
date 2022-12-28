@@ -2,6 +2,7 @@ import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
 import pkg from '../package.json';
+import { commands } from './commands';
 import { globalConfig } from './middlewares';
 import { applyMiddlewares } from './utils';
 
@@ -13,16 +14,14 @@ import { applyMiddlewares } from './utils';
     .completion('completion', 'Generate bash completion script')
     .help('help', 'Show help for a command')
     .version('version', 'Show version', pkg.version)
-    .wrap(yargs.terminalWidth());
+    .wrap(process.stdout.columns);
 
   // Middlewares
   applyMiddlewares(parser, [globalConfig]);
 
   // Parse !
   await parser
-    .commandDir('commands', {
-      visit: obj => obj.default
-    })
+    .command(commands as any)
     .demandCommand()
     .recommendCommands()
     .strict()
