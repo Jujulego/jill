@@ -62,7 +62,7 @@
     "pretty-ms": "7.0.1",
     "react": "17.0.2",
     "reflect-metadata": "0.1.13",
-    "semver": "7.3.5",
+    "semver": "7.3.8",
     "shx": "0.3.4",
     "slugify": "1.6.5",
     "swc-loader": "0.2.3",
