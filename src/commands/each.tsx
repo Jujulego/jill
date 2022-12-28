@@ -1,7 +1,6 @@
 import { waitForEvent } from '@jujulego/event-tree';
 import { TaskManager, TaskSet } from '@jujulego/tasks';
 import ink from 'ink';
-import yargs from 'yargs';
 
 import { AffectedFilter, Pipeline, PrivateFilter, ScriptsFilter } from '../filters';
 import { loadProject, setupInk } from '../middlewares';
@@ -100,7 +99,7 @@ export default defineCommand({
 
       if (tasks.tasks.length === 0) {
         spinner.failed('No workspace found !');
-        return yargs.exit(1, new Error('No workspace found !'));
+        return process.exit(1);
       }
 
       spinner.stop();
@@ -118,7 +117,7 @@ export default defineCommand({
       const result = await waitForEvent(tasks, 'finished');
 
       if (result.failed > 0) {
-        return yargs.exit(1, new Error(`${result.failed} tasks failed !`));
+        return process.exit(1);
       }
     } finally {
       spinner.stop();

@@ -117,7 +117,7 @@ describe('jill run', () => {
     jest.spyOn(manager, 'add').mockImplementation();
     jest.spyOn(manager, 'tasks', 'get').mockReturnValue([task]);
 
-    jest.spyOn(yargs, 'exit').mockImplementation();
+    jest.spyOn(process, 'exit').mockImplementation();
 
     // Run command
     const prom = yargs.command(runCommand)
@@ -137,6 +137,6 @@ describe('jill run', () => {
 
     // should print task completed
     expect(app.lastFrame()).toBe(`${symbols.error} Running cmd in wks (took 100ms)`);
-    expect(yargs.exit).toHaveBeenCalledWith(1, new Error('Task failed !'));
+    expect(process.exit).toHaveBeenCalledWith(1);
   });
 });

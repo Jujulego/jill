@@ -1,7 +1,6 @@
 import { waitForEvent } from '@jujulego/event-tree';
 import { TaskManager } from '@jujulego/tasks';
 import ink from 'ink';
-import yargs from 'yargs';
 
 import { loadProject, loadWorkspace, setupInk } from '../middlewares';
 import { Workspace, WorkspaceDepsMode } from '../project';
@@ -57,7 +56,7 @@ export default defineCommand({
     const result = await waitForEvent(task, 'completed');
 
     if (result.status === 'failed') {
-      return yargs.exit(1, new Error('Task failed !'));
+      return process.exit(1);
     }
   }
 });
