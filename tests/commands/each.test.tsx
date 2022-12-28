@@ -141,7 +141,7 @@ describe('jill each', () => {
   });
 
   it('should exit 1 if one task fails', async () => {
-    jest.spyOn(yargs, 'exit').mockImplementation();
+    jest.spyOn(process, 'exit').mockImplementation();
 
     // Setup workspaces
     const workspaces = [
@@ -199,7 +199,7 @@ describe('jill each', () => {
       `${symbols.success} Running cmd in wks-1 (took 100ms)`,
       `${symbols.error} Running cmd in wks-2 (took 100ms)`,
     ]);
-    expect(yargs.exit).toHaveBeenCalledWith(1, new Error('1 tasks failed !'));
+    expect(process.exit).toHaveBeenCalledWith(1);
   });
 
   describe('private filter', () => {

@@ -15,14 +15,7 @@ const commonConfig: Configuration = {
     runtimeChunk: 'single',
     moduleIds: 'deterministic',
     splitChunks: {
-      chunks: 'all',
-      cacheGroups: {
-        vendor: {
-          test: /[\\/]node_modules[\\/]/,
-          name: 'vendors',
-          chunks: 'all'
-        }
-      }
+      chunks: 'all'
     }
   },
   module: {
