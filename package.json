@@ -26,8 +26,6 @@
   },
   "dependencies": {
     "normalize-package-data": "^5.0.0",
-    "winston": "^3.6.0",
-    "winston-transport": "^4.5.0",
     "yargs": "^17.6.0"
   },
   "devDependencies": {
@@ -78,6 +76,7 @@
     "webpack-cli": "5.0.1",
     "webpack-merge": "5.8.0",
     "webpack-node-externals": "3.0.0",
+    "winston": "3.8.2",
     "winston-transport": "4.5.0"
   },
   "packageManager": "yarn@3.3.1"
