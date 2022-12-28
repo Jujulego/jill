@@ -61,7 +61,7 @@ const commonConfig: Configuration = {
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
   },
   externals: [
-    'ws', // used by ink for devtools
+    'ws', // used only by ink for devtools
     nodeExternals({
       modulesFromFile: {
         includeInBundle: 'devDependencies',
