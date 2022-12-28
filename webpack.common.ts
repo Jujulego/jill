@@ -54,11 +54,15 @@ const commonConfig: Configuration = {
         test: /\.(js|jsx|ts|tsx)$/,
         exclude: /[\\/]node_modules[\\/]/,
         use: 'swc-loader',
+      },
+      {
+        test: /\.json$/,
+        type: 'json'
       }
     ]
   },
   resolve: {
-    extensions: ['.js', '.jsx', '.ts', '.tsx'],
+    extensions: ['.js', '.json', '.jsx', '.ts', '.tsx'],
   },
   externals: [
     'ws', // used only by ink for devtools

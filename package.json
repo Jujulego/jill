@@ -25,7 +25,6 @@
     "node": "^16"
   },
   "dependencies": {
-    "normalize-package-data": "^5.0.0",
     "yargs": "^17.6.0"
   },
   "devDependencies": {
@@ -62,6 +61,7 @@
     "jest": "29.3.1",
     "log-symbols": "4.1.0",
     "memfs": "3.4.12",
+    "normalize-package-data": "5.0.0",
     "pretty-ms": "7.0.1",
     "react": "17.0.2",
     "reflect-metadata": "0.1.13",
