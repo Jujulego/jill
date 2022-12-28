@@ -35,6 +35,7 @@ const commonConfig: Configuration = {
     extensions: ['.js', '.json', '.jsx', '.ts', '.tsx'],
   },
   externals: [
+    'react-devtools-core',
     'ws', // used only by ink for devtools
   ],
   plugins: [
