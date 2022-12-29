@@ -1,10 +1,12 @@
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
-import pkg from '../package.json';
 import { commands } from './commands';
 import { globalConfig } from './middlewares';
 import { applyMiddlewares } from './utils';
+
+// @ts-ignore: Outside of typescript's rootDir in build
+import pkg from '../package.json';
 
 // Bootstrap
 (async () => {
@@ -18,10 +20,6 @@ import { applyMiddlewares } from './utils';
 
   // Middlewares
   applyMiddlewares(parser, [globalConfig]);
-
-  parser.middleware(() => {
-    parser.command('test', 'test', {}, () => console.log('test'));
-  });
 
   // Parse !
   await parser

@@ -26,6 +26,9 @@
         "node": true
       },
       "rules": {
+        "@typescript-eslint/ban-ts-comment": ["error", {
+          "ts-ignore": "allow-with-description"
+        }],
         "quotes": ["error", "single"],
         "semi": ["error", "always"]
       }

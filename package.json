@@ -11,7 +11,8 @@
     "dist"
   ],
   "bin": "./bin/jill.js",
-  "main": "./dist/main.js",
+  "main": "./dist/index.js",
+  "exports": "./dist/index.js",
   "scripts": {
     "lint": "eslint .",
     "clean": "shx rm -rf dist",
