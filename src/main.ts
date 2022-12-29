@@ -19,6 +19,10 @@ import { applyMiddlewares } from './utils';
   // Middlewares
   applyMiddlewares(parser, [globalConfig]);
 
+  parser.middleware(() => {
+    parser.command('test', 'test', {}, () => console.log('test'));
+  });
+
   // Parse !
   await parser
     .command(commands as any)
