@@ -2,7 +2,7 @@ import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
 import { commands } from './commands';
-import { globalConfig } from './middlewares';
+import { configOptions } from './middlewares';
 import { applyMiddlewares } from './utils';
 
 // @ts-ignore: Outside of typescript's rootDir in build
@@ -19,7 +19,7 @@ import pkg from '../package.json';
     .wrap(process.stdout.columns);
 
   // Middlewares
-  applyMiddlewares(parser, [globalConfig]);
+  applyMiddlewares(parser, [configOptions]);
 
   // Parse !
   await parser

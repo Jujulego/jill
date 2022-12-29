@@ -1,6 +1,5 @@
 import { waitForEvent } from '@jujulego/event-tree';
 import { TaskManager } from '@jujulego/tasks';
-import ink from 'ink';
 
 import { loadProject, loadWorkspace, setupInk } from '../middlewares';
 import { Workspace, WorkspaceDepsMode } from '../project';
@@ -28,7 +27,7 @@ export default defineCommand({
           ' - none = nothing'
       }),
   async handler(args) {
-    const app = container.get<ink.Instance>(INK_APP);
+    const app = container.get(INK_APP);
     const workspace = container.getNamed(Workspace, CURRENT);
     const manager = container.get(TaskManager);
 

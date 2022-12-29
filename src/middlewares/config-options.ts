@@ -1,10 +1,10 @@
 import os from 'node:os';
 
-import { container, GLOBAL_CONFIG } from '../services';
+import { container, SERVICES_CONFIG } from '../services';
 import { defineMiddleware } from '../utils';
 
 // Middleware
-export const globalConfig = defineMiddleware({
+export const configOptions = defineMiddleware({
   builder: (yargs) => yargs
     .option('verbose', {
       alias: 'v',
@@ -18,7 +18,7 @@ export const globalConfig = defineMiddleware({
       description: 'Set maximum parallel job number',
     }),
   handler(args) {
-    container.bind(GLOBAL_CONFIG).toConstantValue({
+    container.bind(SERVICES_CONFIG).toConstantValue({
       verbose: args.verbose,
       jobs: args.jobs,
     });

@@ -1,6 +1,5 @@
 import { waitForEvent } from '@jujulego/event-tree';
 import { TaskManager, TaskSet } from '@jujulego/tasks';
-import ink from 'ink';
 
 import { AffectedFilter, Pipeline, PrivateFilter, ScriptsFilter } from '../filters';
 import { loadProject, setupInk } from '../middlewares';
@@ -57,7 +56,7 @@ export default defineCommand({
       desc: 'Fallback revision, used if no revision matching the given format is found',
     }),
   async handler(args) {
-    const app = container.get<ink.Instance>(INK_APP);
+    const app = container.get(INK_APP);
     const project = container.getNamed(Project, CURRENT);
     const manager = container.get(TaskManager);
     const spinner = container.get(SpinnerService);

@@ -1,8 +1,8 @@
 import os from 'node:os';
 import yargs from 'yargs';
 
-import { globalConfig } from '@/src/middlewares';
-import { container, GLOBAL_CONFIG } from '@/src/services';
+import { configOptions } from '@/src/middlewares';
+import { container, SERVICES_CONFIG } from '@/src/services';
 import { applyMiddlewares } from '@/src/utils';
 
 // Setup
@@ -10,13 +10,13 @@ let parser: yargs.Argv;
 
 beforeAll(() => {
   // Removes config bound in setup
-  container.unbind(GLOBAL_CONFIG);
+  container.unbind(SERVICES_CONFIG);
 });
 
 beforeEach(() => {
   container.snapshot();
 
-  parser = applyMiddlewares(yargs(), [globalConfig]);
+  parser = applyMiddlewares(yargs(), [configOptions]);
 });
 
 afterEach(() => {
@@ -28,8 +28,8 @@ describe('globalConfig', () => {
   it('should set GLOBAL_CONFIG with defaults', () => {
     parser.parse(''); // <= no args
 
-    expect(container.isBound(GLOBAL_CONFIG)).toBe(true);
-    expect(container.get(GLOBAL_CONFIG)).toEqual({
+    expect(container.isBound(SERVICES_CONFIG)).toBe(true);
+    expect(container.get(SERVICES_CONFIG)).toEqual({
       jobs: os.cpus().length - 1,
       verbose: 0,
     });
@@ -38,8 +38,8 @@ describe('globalConfig', () => {
   it('should set GLOBAL_CONFIG with given options', () => {
     parser.parse('-v --jobs 5');
 
-    expect(container.isBound(GLOBAL_CONFIG)).toBe(true);
-    expect(container.get(GLOBAL_CONFIG)).toEqual({
+    expect(container.isBound(SERVICES_CONFIG)).toBe(true);
+    expect(container.get(SERVICES_CONFIG)).toEqual({
       verbose: 1,
       jobs: 5
     });

@@ -1,15 +1,16 @@
-import { Container } from 'inversify';
+import ink from 'ink';
+import { Container, interfaces } from 'inversify';
 import getDecorators from 'inversify-inject-decorators';
 
 import 'reflect-metadata';
 
 // Constants
-export const INK_APP = Symbol.for('InkApp');
-export const GLOBAL_CONFIG = Symbol.for('GlobalConfig');
-export const CURRENT = Symbol.for('Current');
+export const INK_APP: interfaces.ServiceIdentifier<ink.Instance> = Symbol.for('jujulego:jill:InkApp');
+export const SERVICES_CONFIG: interfaces.ServiceIdentifier<ServicesConfig> = Symbol.for('jujulego:jill:ServicesConfig');
+export const CURRENT = Symbol.for('jujulego:jill:Current');
 
 // Types
-export interface GlobalConfig {
+export interface ServicesConfig {
   jobs?: number;
   verbose: number;
 }

@@ -1,5 +1,3 @@
-import ink from 'ink';
-
 import { loadProject, loadWorkspace, setupInk } from '../middlewares';
 import { Workspace } from '../project';
 import { container, CURRENT, INK_APP } from '../services';
@@ -17,7 +15,7 @@ export default defineCommand({
       loadWorkspace
     ]),
   handler: () => {
-    const app = container.get<ink.Instance>(INK_APP);
+    const app = container.get(INK_APP);
     const workspace = container.getNamed(Workspace, CURRENT);
 
     app.rerender(

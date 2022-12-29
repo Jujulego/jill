@@ -2,7 +2,7 @@ import chalk from 'chalk';
 import { injectable } from 'inversify';
 import winston from 'winston';
 
-import { type GlobalConfig, GLOBAL_CONFIG, container } from './inversify.config';
+import { type ServicesConfig, SERVICES_CONFIG, container } from './inversify.config';
 
 // Constants
 const VERBOSITY_LEVEL: Record<number, string> = {
@@ -46,7 +46,7 @@ export interface Logger extends winston.Logger {}
 
 container.bind(Logger)
   .toDynamicValue((context) => {
-    const config = context.container.get<GlobalConfig>(GLOBAL_CONFIG);
+    const config = context.container.get<ServicesConfig>(SERVICES_CONFIG);
 
     return winston.createLogger({
       level: VERBOSITY_LEVEL[Math.min(config.verbose, 2)],

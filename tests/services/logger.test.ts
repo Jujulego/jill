@@ -1,7 +1,7 @@
 import chalk from 'chalk';
 import winston from 'winston';
 
-import { consoleFormat, container, GLOBAL_CONFIG, Logger } from '@/src/services';
+import { consoleFormat, container, SERVICES_CONFIG, Logger } from '@/src/services';
 
 // Setup
 chalk.level = 1;
@@ -54,7 +54,7 @@ describe('Logger', () => {
   it('should set level from GLOBAL_CONFIG', () => {
     jest.spyOn(winston, 'createLogger');
 
-    container.rebind(GLOBAL_CONFIG)
+    container.rebind(SERVICES_CONFIG)
       .toConstantValue({ verbose: 1, jobs: 1 });
 
     container.get(Logger);
@@ -70,7 +70,7 @@ describe('Logger', () => {
   it('should set maximum level (2 => debug)', () => {
     jest.spyOn(winston, 'createLogger');
 
-    container.rebind(GLOBAL_CONFIG)
+    container.rebind(SERVICES_CONFIG)
       .toConstantValue({ verbose: 5, jobs: 1 });
 
     container.get(Logger);

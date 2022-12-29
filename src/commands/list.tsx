@@ -1,6 +1,5 @@
 import chalk from 'chalk';
 import path from 'node:path';
-import ink from 'ink';
 import slugify from 'slugify';
 
 import { AffectedFilter, Pipeline, PrivateFilter, ScriptsFilter } from '../filters';
@@ -157,7 +156,7 @@ export default defineCommand({
         process.stdout.write(JSON.stringify(data));
       }
     } else {
-      const app = container.get<ink.Instance>(INK_APP);
+      const app = container.get(INK_APP);
 
       for (const d of data) {
         if (d.root) {

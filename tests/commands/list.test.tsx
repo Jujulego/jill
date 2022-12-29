@@ -27,7 +27,7 @@ beforeEach(() => {
   jest.spyOn(console, 'log').mockImplementation();
   jest.spyOn(setupInk, 'handler').mockImplementation(() => {
     app = render(<Layout />);
-    container.bind(INK_APP).toConstantValue(app);
+    container.bind(INK_APP).toConstantValue(app as any);
   });
   jest.spyOn(loadProject, 'handler').mockImplementation(() => {
     container.bind(Project)
