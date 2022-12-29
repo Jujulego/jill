@@ -16,9 +16,7 @@ export interface ServicesConfig {
 }
 
 // Container
-export const container = new Container({
-  skipBaseClassChecks: true,
-});
+export const container = new Container();
 
 // Utilities
 export const { lazyInject } = getDecorators(container);
