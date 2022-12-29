@@ -4,7 +4,7 @@ import ink from 'ink';
 
 import { AffectedFilter, Pipeline, PrivateFilter, ScriptsFilter } from '../filters';
 import { loadProject, setupInk } from '../middlewares';
-import { Project, WorkspaceDepsMode } from '../project';
+import { Project } from '../project';
 import { container, CURRENT, INK_APP, SpinnerService } from '../services';
 import { Layout, TasksSpinner } from '../ui';
 import { applyMiddlewares, defineCommand } from '../utils';
@@ -22,7 +22,7 @@ export default defineCommand({
     .positional('script', { type: 'string', demandOption: true })
     .option('deps-mode', {
       choice: ['all', 'prod', 'none'],
-      default: 'all' as WorkspaceDepsMode,
+      default: 'all' as const,
       desc: 'Dependency selection mode:\n' +
         ' - all = dependencies AND devDependencies\n' +
         ' - prod = dependencies\n' +

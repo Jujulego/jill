@@ -135,7 +135,7 @@ export default defineCommand({
     }
 
     // Build data
-    let attrs = args.attrs as Attribute[];
+    let attrs = args.attrs;
 
     if (attrs.length === 0) {
       if (args.long) {
