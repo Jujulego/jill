@@ -44,11 +44,11 @@ function buildExtractor(attrs: Attribute[]): Extractor<Data> {
 export default defineCommand({
   command: ['list', 'ls'],
   describe: 'List workspaces',
-  builder: (yargs) =>
-    applyMiddlewares(yargs, [
+  builder: async (yargs) =>
+    (await applyMiddlewares(yargs, [
       setupInk,
       loadProject,
-    ])
+    ]))
     // Filters
     .option('private', {
       type: 'boolean',

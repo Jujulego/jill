@@ -19,7 +19,7 @@ import pkg from '../package.json';
     .wrap(process.stdout.columns);
 
   // Middlewares
-  applyMiddlewares(parser, [configOptions]);
+  await applyMiddlewares(parser, [configOptions]);
 
   // Parse !
   await parser

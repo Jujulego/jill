@@ -68,10 +68,10 @@ describe('jill run', () => {
     const prom = yargs.command(runCommand)
       .parse('run -w wks cmd -- --arg');
 
+    await flushPromises();
+
     // should create script task than add it to manager
     expect(wks.run).toHaveBeenCalledWith('cmd', ['--arg'], { buildDeps: 'all' });
-
-    await flushPromises();
     expect(manager.add).toHaveBeenCalledWith(task);
 
     // should print task spinner
@@ -98,10 +98,10 @@ describe('jill run', () => {
     const prom = yargs.command(runCommand)
       .parse('run -w wks --deps-mode prod cmd -- --arg');
 
+    await flushPromises();
+
     // should create script task than add it to manager
     expect(wks.run).toHaveBeenCalledWith('cmd', ['--arg'], { buildDeps: 'prod' });
-
-    await flushPromises();
 
     // complete task
     jest.spyOn(task, 'status', 'get').mockReturnValue('done');

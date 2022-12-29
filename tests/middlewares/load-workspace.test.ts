@@ -11,7 +11,7 @@ let bed: TestBed;
 let parser: yargs.Argv;
 let spinner: SpinnerService;
 
-beforeEach(() => {
+beforeEach(async () => {
   container.snapshot();
 
   spinner = container.get(SpinnerService);
@@ -24,7 +24,7 @@ beforeEach(() => {
     .toConstantValue(bed.project)
     .whenTargetNamed(CURRENT);
 
-  parser = applyMiddlewares(yargs(), [loadWorkspace]);
+  parser = await applyMiddlewares(yargs(), [loadWorkspace]);
 });
 
 afterEach(() => {

@@ -4,7 +4,7 @@ import { Awaitable } from '../types';
 
 // Types
 export interface Middleware<T = unknown, U = unknown> {
-  builder?: (yargs: Argv<T>) => Argv<U>;
+  builder?: (yargs: Argv<T>) => Awaitable<Argv<U>>;
   handler(args: Arguments<U>): Awaitable<void>;
 }
 
@@ -18,12 +18,12 @@ export function defineMiddleware<T, U>(middleware: Middleware<T, U>): Middleware
   return middleware;
 }
 
-export function applyMiddlewares<T>(yargs: Argv<T>, middlewares: Middleware[]): Argv<T> {
+export async function applyMiddlewares<T>(yargs: Argv<T>, middlewares: Middleware[]): Promise<Argv<T>> {
   let tmp: Argv<unknown> = yargs;
 
   for (const middleware of middlewares) {
     if (middleware.builder) {
-      tmp = middleware.builder(tmp);
+      tmp = await middleware.builder(tmp);
     }
 
     tmp.middleware(middleware.handler);

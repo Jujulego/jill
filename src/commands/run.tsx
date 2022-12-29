@@ -11,12 +11,12 @@ import { applyMiddlewares, defineCommand } from '../utils';
 export default defineCommand({
   command: 'run <script>',
   describe: 'Run script inside workspace',
-  builder: (yargs) =>
-    applyMiddlewares(yargs, [
+  builder: async (yargs) =>
+    (await applyMiddlewares(yargs, [
       setupInk,
       loadProject,
       loadWorkspace
-    ])
+    ]))
       .positional('script', { type: 'string', demandOption: true })
       .option('deps-mode', {
         choice: ['all', 'prod', 'none'],

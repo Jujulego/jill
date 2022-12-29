@@ -12,12 +12,12 @@ import { applyMiddlewares, defineCommand } from '../utils';
 export default defineCommand({
   command: 'group <script..>',
   describe: 'Run many scripts inside a workspace',
-  builder: (yargs) =>
-    applyMiddlewares(yargs, [
+  builder: async (yargs) =>
+    (await applyMiddlewares(yargs, [
       setupInk,
       loadProject,
       loadWorkspace
-    ])
+    ]))
       .positional('script', {
         demandOption: true,
         coerce(expr: string[]) {

@@ -10,7 +10,7 @@ import { applyMiddlewares } from '@/src/utils';
 let parser: yargs.Argv;
 let spinner: SpinnerService;
 
-beforeEach(() => {
+beforeEach(async () => {
   container.snapshot();
 
   spinner = container.get(SpinnerService);
@@ -20,7 +20,7 @@ beforeEach(() => {
   jest.spyOn(Project, 'searchProjectRoot')
     .mockResolvedValue('/test');
 
-  parser = applyMiddlewares(yargs(), [loadProject]);
+  parser = await applyMiddlewares(yargs(), [loadProject]);
 });
 
 afterEach(() => {

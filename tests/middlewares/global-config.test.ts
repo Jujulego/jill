@@ -13,10 +13,10 @@ beforeAll(() => {
   container.unbind(SERVICES_CONFIG);
 });
 
-beforeEach(() => {
+beforeEach(async () => {
   container.snapshot();
 
-  parser = applyMiddlewares(yargs(), [configOptions]);
+  parser = await applyMiddlewares(yargs(), [configOptions]);
 });
 
 afterEach(() => {
