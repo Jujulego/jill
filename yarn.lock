@@ -1272,7 +1272,7 @@ __metadata:
     "@types/react": 17.0.52
     "@types/semver": 7.3.13
     "@types/webpack-bundle-analyzer": 4.6.0
-    "@types/yargs": 17.0.17
+    "@types/yargs": 17.0.18
     "@typescript-eslint/eslint-plugin": 5.47.1
     "@typescript-eslint/parser": 5.47.1
     async-lock: 1.4.0
@@ -1800,12 +1800,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/yargs@npm:17.0.17":
-  version: 17.0.17
-  resolution: "@types/yargs@npm:17.0.17"
+"@types/yargs@npm:17.0.18":
+  version: 17.0.18
+  resolution: "@types/yargs@npm:17.0.18"
   dependencies:
     "@types/yargs-parser": "*"
-  checksum: 4f1b5149e794c8960652b4339dc96655e53b48fdbe1b847fcb0db95e72e760724a4c5c616a7fccb3c0ae8beb0e57e06e37391d492e916e3ff179aafeb890e426
+  checksum: 9b6143730e1e12c0b871b5abfb0fcd5409fd498379b7a043b54a1d6168a754cb1058fe4b98251fa6e220a90e5a5e57ce252b8d2e2db026b6e3ea8257d354830b
   languageName: node
   linkType: hard
 
