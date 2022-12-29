@@ -2,7 +2,7 @@ import os from 'node:os';
 import yargs from 'yargs';
 
 import { configOptions } from '@/src/middlewares';
-import { container, SERVICES_CONFIG } from '@/src/services';
+import { CONFIG, container, SERVICES_CONFIG } from '@/src/services';
 import { applyMiddlewares } from '@/src/utils';
 
 // Setup
@@ -25,7 +25,7 @@ afterEach(() => {
 
 // Tests
 describe('globalConfig', () => {
-  it('should set GLOBAL_CONFIG with defaults', () => {
+  it('should set SERVICES_CONFIG with defaults', () => {
     parser.parse(''); // <= no args
 
     expect(container.isBound(SERVICES_CONFIG)).toBe(true);
@@ -35,7 +35,20 @@ describe('globalConfig', () => {
     });
   });
 
-  it('should set GLOBAL_CONFIG with given options', () => {
+  it('should set SERVICES_CONFIG with loaded configuration', async () => {
+    container.rebind(CONFIG).toConstantValue({ verbose: 2, jobs: 8 });
+
+    parser = await applyMiddlewares(yargs(), [configOptions]);
+    parser.parse(''); // <= no args
+
+    expect(container.isBound(SERVICES_CONFIG)).toBe(true);
+    expect(container.get(SERVICES_CONFIG)).toEqual({
+      jobs: 8,
+      verbose: 2,
+    });
+  });
+
+  it('should set SERVICES_CONFIG with given options', () => {
     parser.parse('-v --jobs 5');
 
     expect(container.isBound(SERVICES_CONFIG)).toBe(true);

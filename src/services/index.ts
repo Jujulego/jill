@@ -1,3 +1,4 @@
+export * from './config.service';
 export * from './inversify.config';
 export * from './logger.service';
 export * from './task-expr.service';
