@@ -12,7 +12,6 @@ export const CURRENT = Symbol.for('jujulego:jill:Current');
 // Types
 export interface ServicesConfig {
   jobs?: number;
-  verbose: number;
 }
 
 // Container

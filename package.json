@@ -7,8 +7,8 @@
     "url": "https://github.com/Jujulego/jill"
   },
   "files": [
-    "bin",
-    "dist"
+    "./bin",
+    "./dist"
   ],
   "bin": "./bin/jill.js",
   "main": "./dist/index.js",
@@ -43,6 +43,7 @@
     "@types/yargs": "17.0.17",
     "@typescript-eslint/eslint-plugin": "5.47.1",
     "@typescript-eslint/parser": "5.47.1",
+    "ajv": "8.11.2",
     "async-lock": "1.4.0",
     "chalk": "4.1.2",
     "cosmiconfig": "8.0.0",

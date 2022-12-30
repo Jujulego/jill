@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "jobs": {
+      "type": "number"
+    },
+    "verbose": {
+      "type": "string",
+      "enum": ["info", "verbose", "debug"]
+    }
+  }
+}

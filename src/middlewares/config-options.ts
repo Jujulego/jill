@@ -1,7 +1,13 @@
 import os from 'node:os';
 
-import { CONFIG, container, SERVICES_CONFIG } from '../services';
+import { CONFIG, container, Logger, SERVICES_CONFIG } from '../services';
 import { defineMiddleware } from '../utils';
+
+// Constants
+const VERBOSITY_LEVEL: Record<number, string> = {
+  1: 'verbose',
+  2: 'debug',
+};
 
 // Middleware
 export const configOptions = defineMiddleware({
@@ -9,7 +15,6 @@ export const configOptions = defineMiddleware({
     .option('verbose', {
       alias: 'v',
       type: 'count',
-      default: (await container.getAsync(CONFIG)).verbose ?? 0,
       description: 'Set verbosity level',
     })
     .option('jobs', {
@@ -19,8 +24,12 @@ export const configOptions = defineMiddleware({
       description: 'Set maximum parallel job number',
     }),
   handler(args) {
+    if (args.verbose) {
+      const logger = container.get(Logger);
+      logger.level = VERBOSITY_LEVEL[Math.min(args.verbose, 2)];
+    }
+
     container.bind(SERVICES_CONFIG).toConstantValue({
-      verbose: args.verbose,
       jobs: args.jobs,
     });
   }
