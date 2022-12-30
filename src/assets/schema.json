@@ -6,6 +6,12 @@
     "jobs": {
       "type": "number"
     },
+    "plugins": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
     "verbose": {
       "type": "string",
       "enum": ["info", "verbose", "debug"]

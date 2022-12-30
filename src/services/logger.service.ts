@@ -6,12 +6,12 @@ import { container } from './inversify.config';
 
 // Utils
 export const consoleFormat = winston.format.combine(
-  winston.format.errors(),
   winston.format.colorize({
     message: true,
     colors: { debug: 'grey', verbose: 'blue', info: 'white', error: 'red' }
   }),
-  winston.format.printf(({ label, message }) => {
+  winston.format.printf(({ label, message, stack }) => {
+    if (stack) message = chalk.red(stack);
     const lines = message.split('\n');
 
     // Format
@@ -43,6 +43,9 @@ container.bind(Logger)
     return winston.createLogger({
       format: winston.format.combine(
         winston.format.timestamp(),
+        winston.format.errors({
+          stack: process.env.NODE_ENV === 'development'
+        }),
       ),
       transports: [
         new winston.transports.Console({

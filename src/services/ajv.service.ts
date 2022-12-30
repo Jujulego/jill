@@ -10,7 +10,6 @@ container.bind(Ajv).toDynamicValue(() => {
     allErrors: true,
     logger: logger.child({ label: 'ajv' }),
     strict: process.env.NODE_ENV === 'development' ? 'log' : true,
-    verbose: true,
   });
 }).inSingletonScope();
 

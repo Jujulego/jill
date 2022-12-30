@@ -1,16 +1,19 @@
-import ajv, { ValidateFunction } from 'ajv';
+import { ValidateFunction } from 'ajv';
 import { cosmiconfig } from 'cosmiconfig';
 import { interfaces } from 'inversify';
+import path from 'node:path';
 
 import schema from '../assets/schema.json';
 
 import { Ajv } from './ajv.service';
 import { container } from './inversify.config';
 import { Logger } from './logger.service';
+import * as process from 'process';
 
 // Types
 export interface Config {
   jobs?: number;
+  plugins?: string[];
   verbose?: 'info' | 'verbose' | 'debug';
 }
 
@@ -25,6 +28,7 @@ container.bind(CONFIG_VALIDATOR).toDynamicValue(() => {
 });
 
 container.bind(CONFIG).toDynamicValue(async () => {
+  const logger = container.get(Logger).child({ label: 'config' });
   // Load config
   const explorer = cosmiconfig('jill');
   const loaded = await explorer.search();
@@ -35,8 +39,6 @@ container.bind(CONFIG).toDynamicValue(async () => {
   const validator = container.get<ValidateFunction<Config>>(CONFIG_VALIDATOR);
 
   if (!validator(config)) {
-    const logger = container.get(Logger);
-
     const errors = ajv.errorsText(validator.errors, {
       separator: '\n- ',
       dataVar: 'config'
@@ -49,14 +51,19 @@ container.bind(CONFIG).toDynamicValue(async () => {
     process.exit(1);
   }
 
+  // Compute paths relative to config file
+  if (loaded) {
+    const base = path.dirname(loaded.filepath);
+
+    config.plugins = config.plugins?.map((plugin) => path.resolve(base, plugin));
+  }
+
   // Apply on logger
   if (config.verbose) {
-    const logger = container.get(Logger);
-    logger.level = config.verbose;
+    container.get(Logger).level = config.verbose;
   }
 
   if (loaded) {
-    const logger = container.get(Logger);
     logger.verbose(`Loaded ${loaded.filepath} config file`);
   }
 

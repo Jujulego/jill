@@ -1,1 +1,4 @@
 jobs: 2
+
+plugins:
+  - './plugin.js'
