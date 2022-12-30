@@ -25,10 +25,14 @@ export class PluginLoaderService {
   private async _importPlugin(filepath: string): Promise<Plugin> {
     this._logger.verbose(`Loading plugin ${filepath}`);
 
-    const { default: module } = await dynamicImport(filepath);
-    assertPlugin(module, filepath);
+    let plugin = await dynamicImport(filepath);
+    while ('default' in plugin) {
+      plugin = plugin.default;
+    }
 
-    return module;
+    assertPlugin(plugin, filepath);
+
+    return plugin;
   }
 
   async loadPlugins(parser: Argv): Promise<void> {

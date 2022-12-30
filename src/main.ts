@@ -3,8 +3,8 @@ import { hideBin } from 'yargs/helpers';
 
 import { commands } from './commands';
 import { configOptions } from './middlewares';
-import { CONFIG, container, Logger } from './services';
-import { applyMiddlewares, assertPlugin } from './utils';
+import { container, Logger } from './services';
+import { applyMiddlewares } from './utils';
 
 // @ts-ignore: Outside of typescript's rootDir in build
 import pkg from '../package.json';
