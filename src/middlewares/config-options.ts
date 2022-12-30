@@ -1,7 +1,9 @@
 import os from 'node:os';
 
-import { CONFIG, container, Logger, SERVICES_CONFIG } from '../services';
-import { defineMiddleware } from '../utils';
+import { container, SERVICES_CONFIG } from '@/src/services/inversify.config';
+import { CONFIG } from '@/src/services/config/loader';
+import { Logger } from '@/src/services/logger.service';
+import { defineMiddleware } from '@/src/utils';
 
 // Constants
 const VERBOSITY_LEVEL: Record<number, string> = {

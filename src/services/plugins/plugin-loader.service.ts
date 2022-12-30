@@ -1,11 +1,14 @@
 import { inject, injectable } from 'inversify';
 import { type Argv } from 'yargs';
 
-import { assertPlugin, dynamicImport, type Plugin } from '../utils';
+import { CONFIG } from '@/src/services/config/loader';
+import { type Config } from '@/src/services/config/types';
+import { container } from '@/src/services/inversify.config';
+import { Logger } from '@/src/services/logger.service';
+import { dynamicImport } from '@/src/utils/import';
 
-import { type Config, CONFIG } from './config.service';
-import { container } from './inversify.config';
-import { Logger } from './logger.service';
+import { type Plugin } from './types';
+import { assertPlugin } from './utils';
 
 // Class
 @injectable()

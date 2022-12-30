@@ -1,6 +1,8 @@
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
+import { PluginLoaderService } from '@/src/services/plugins/plugin-loader.service';
+
 import { commands } from './commands';
 import { configOptions } from './middlewares';
 import { container, Logger } from './services';
@@ -8,7 +10,6 @@ import { applyMiddlewares } from './utils';
 
 // @ts-ignore: Outside of typescript's rootDir in build
 import pkg from '../package.json';
-import { PluginLoaderService } from '@/src/services/plugin-loader.service';
 
 // Bootstrap
 (async () => {
