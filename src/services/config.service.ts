@@ -1,14 +1,14 @@
 import { ValidateFunction } from 'ajv';
-import { cosmiconfig } from 'cosmiconfig';
+import { cosmiconfig, defaultLoaders } from 'cosmiconfig';
 import { interfaces } from 'inversify';
 import path from 'node:path';
 
 import schema from '../assets/schema.json';
+import { dynamicImport } from '../utils';
 
 import { Ajv } from './ajv.service';
 import { container } from './inversify.config';
 import { Logger } from './logger.service';
-import * as process from 'process';
 
 // Types
 export interface Config {
@@ -29,8 +29,19 @@ container.bind(CONFIG_VALIDATOR).toDynamicValue(() => {
 
 container.bind(CONFIG).toDynamicValue(async () => {
   const logger = container.get(Logger).child({ label: 'config' });
+
   // Load config
-  const explorer = cosmiconfig('jill');
+  const explorer = cosmiconfig('jill', {
+    loaders: {
+      '.cjs': (filepath) => dynamicImport(filepath).then((mod) => mod.default),
+      '.js': (filepath) => dynamicImport(filepath).then((mod) => mod.default),
+      '.json': defaultLoaders['.json'],
+      '.yaml': defaultLoaders['.yaml'],
+      '.yml': defaultLoaders['.yml'],
+      noExt: defaultLoaders.noExt,
+    }
+  });
+
   const loaded = await explorer.search();
   const config = loaded?.config ?? {};
 

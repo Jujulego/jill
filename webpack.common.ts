@@ -1,5 +1,5 @@
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
-import { Configuration } from 'webpack';
+import { Configuration, IgnorePlugin } from 'webpack';
 import path from 'node:path';
 
 // Config
@@ -58,6 +58,9 @@ const commonConfig: Configuration = {
         mode: 'write-dts'
       }
     }),
+    new IgnorePlugin({
+      resourceRegExp: /^import-fresh$/
+    })
   ]
 };
 

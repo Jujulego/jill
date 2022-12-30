@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify';
 import { type Argv } from 'yargs';
 
-import { assertPlugin, type Plugin } from '../utils';
+import { assertPlugin, dynamicImport, type Plugin } from '../utils';
 
 import { type Config, CONFIG } from './config.service';
 import { container } from './inversify.config';
@@ -22,10 +22,11 @@ export class PluginLoaderService {
   }
 
   // Methods
-  private async _importPlugin(path: string): Promise<Plugin> {
-    this._logger.verbose(`Loading plugin ${path}`);
-    const { default: module } = await import(/* webpackIgnore: true */ process.platform === 'win32' ? `file://${path}` : path);
-    assertPlugin(module, path);
+  private async _importPlugin(filepath: string): Promise<Plugin> {
+    this._logger.verbose(`Loading plugin ${filepath}`);
+
+    const { default: module } = await dynamicImport(filepath);
+    assertPlugin(module, filepath);
 
     return module;
   }
