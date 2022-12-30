@@ -15,7 +15,7 @@ describe('TaskManager', () => {
   // Tests
   it('should set jobs from GLOBAL_CONFIG', () => {
     container.rebind(SERVICES_CONFIG)
-      .toConstantValue({ verbose: 0, jobs: 5 });
+      .toConstantValue({ jobs: 5 });
 
     const manager = container.get(TaskManager);
 
