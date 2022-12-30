@@ -2,7 +2,7 @@ import os from 'node:os';
 import yargs from 'yargs';
 
 import { configOptions } from '@/src/middlewares';
-import { CONFIG, container, SERVICES_CONFIG } from '@/src/services';
+import { CONFIG, container, Logger, SERVICES_CONFIG } from '@/src/services';
 import { applyMiddlewares } from '@/src/utils';
 
 // Setup
@@ -31,12 +31,11 @@ describe('globalConfig', () => {
     expect(container.isBound(SERVICES_CONFIG)).toBe(true);
     expect(container.get(SERVICES_CONFIG)).toEqual({
       jobs: os.cpus().length - 1,
-      verbose: 0,
     });
   });
 
   it('should set SERVICES_CONFIG with loaded configuration', async () => {
-    container.rebind(CONFIG).toConstantValue({ verbose: 2, jobs: 8 });
+    container.rebind(CONFIG).toConstantValue({ jobs: 8 });
 
     parser = await applyMiddlewares(yargs(), [configOptions]);
     parser.parse(''); // <= no args
@@ -44,17 +43,29 @@ describe('globalConfig', () => {
     expect(container.isBound(SERVICES_CONFIG)).toBe(true);
     expect(container.get(SERVICES_CONFIG)).toEqual({
       jobs: 8,
-      verbose: 2,
     });
   });
 
   it('should set SERVICES_CONFIG with given options', () => {
-    parser.parse('-v --jobs 5');
+    parser.parse('--jobs 5');
 
     expect(container.isBound(SERVICES_CONFIG)).toBe(true);
     expect(container.get(SERVICES_CONFIG)).toEqual({
-      verbose: 1,
       jobs: 5
     });
+  });
+
+  it('should set logger level to verbose', () => {
+    parser.parse('-v');
+
+    expect(container.isBound(SERVICES_CONFIG)).toBe(true);
+    expect(container.get(Logger).level).toBe('verbose');
+  });
+
+  it('should set logger level to debug', () => {
+    parser.parse('-vv');
+
+    expect(container.isBound(SERVICES_CONFIG)).toBe(true);
+    expect(container.get(Logger).level).toBe('debug');
   });
 });

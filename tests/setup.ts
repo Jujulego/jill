@@ -8,5 +8,5 @@ import '@/tools/matchers/setup';
 chalk.level = 0;
 
 // Setup global config
-container.bind(SERVICES_CONFIG).toConstantValue({ verbose: 0, jobs: 1 });
+container.bind(SERVICES_CONFIG).toConstantValue({ jobs: 1 });
 container.rebind(CONFIG).toConstantValue({});
