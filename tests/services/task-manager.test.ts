@@ -1,6 +1,5 @@
-import { TaskManager } from '@jujulego/tasks';
-
-import { container, SERVICES_CONFIG } from '@/src/services';
+import { container, SERVICES_CONFIG } from '@/src/services/inversify.config';
+import { TASK_MANAGER } from '@/src/services/task-manager.config';
 
 // Tests
 describe('TaskManager', () => {
@@ -17,7 +16,7 @@ describe('TaskManager', () => {
     container.rebind(SERVICES_CONFIG)
       .toConstantValue({ jobs: 5 });
 
-    const manager = container.get(TaskManager);
+    const manager = container.get(TASK_MANAGER);
 
     expect(manager.jobs).toBe(5);
   });

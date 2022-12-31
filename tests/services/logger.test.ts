@@ -1,7 +1,6 @@
 import chalk from 'chalk';
-import winston from 'winston';
 
-import { consoleFormat, container, SERVICES_CONFIG, Logger } from '@/src/services';
+import { consoleFormat } from '@/src/services/logger.service';
 
 // Setup
 chalk.level = 1;

@@ -3,7 +3,7 @@ import yargs from 'yargs';
 import { Project, Workspace } from '@/src/project';
 import { container, CURRENT } from '@/src/services/inversify.config';
 import { SpinnerService } from '@/src/services/spinner.service';
-import { defineMiddleware } from '@/src/utils';
+import { defineMiddleware } from '@/src/utils/yargs';
 
 // Middleware
 export const loadWorkspace = defineMiddleware({

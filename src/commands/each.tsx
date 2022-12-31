@@ -1,13 +1,14 @@
 import { waitForEvent } from '@jujulego/event-tree';
-import { TaskManager, TaskSet } from '@jujulego/tasks';
+import { TaskSet } from '@jujulego/tasks';
 
 import { AffectedFilter, Pipeline, PrivateFilter, ScriptsFilter } from '@/src/filters';
 import { loadProject, setupInk } from '@/src/middlewares';
 import { Project, WorkspaceDepsMode } from '@/src/project';
 import { container, CURRENT, INK_APP } from '@/src/services/inversify.config';
 import { SpinnerService } from '@/src/services/spinner.service';
+import { TASK_MANAGER } from '@/src/services/task-manager.config';
 import { Layout, TaskManagerSpinner } from '@/src/ui';
-import { applyMiddlewares, defineCommand } from '@/src/utils';
+import { applyMiddlewares, defineCommand } from '@/src/utils/yargs';
 
 // Command
 export default defineCommand({
@@ -59,7 +60,7 @@ export default defineCommand({
   async handler(args) {
     const app = container.get(INK_APP);
     const project = container.getNamed(Project, CURRENT);
-    const manager = container.get(TaskManager);
+    const manager = container.get(TASK_MANAGER);
     const spinner = container.get(SpinnerService);
 
     try {

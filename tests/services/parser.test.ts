@@ -1,4 +1,5 @@
-import { container, TaskExprService } from '../../src/services';
+import { container } from '@/src/services/inversify.config';
+import { TaskExprService } from '@/src/services/task-expr.service';
 
 // Setup
 let service: TaskExprService;

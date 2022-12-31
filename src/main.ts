@@ -7,7 +7,7 @@ import { PluginLoaderService } from '@/src/services/plugins/plugin-loader.servic
 
 import { commands } from './commands';
 import { configOptions } from './middlewares';
-import { applyMiddlewares } from './utils';
+import { applyMiddlewares } from './utils/yargs';
 
 // @ts-ignore: Outside of typescript's rootDir in build
 import pkg from '../package.json';

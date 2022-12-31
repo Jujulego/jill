@@ -1,7 +1,8 @@
 import { render } from 'ink-testing-library';
 import winston from 'winston';
 
-import { container, Logger } from '@/src/services';
+import { container } from '@/src/services/inversify.config';
+import { Logger } from '@/src/services/logger.service';
 import { StaticLogs } from '@/src/ui';
 
 // Setup

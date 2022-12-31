@@ -2,7 +2,7 @@ import { loadProject, loadWorkspace, setupInk } from '@/src/middlewares';
 import { Workspace } from '@/src/project';
 import { container, CURRENT, INK_APP } from '@/src/services/inversify.config';
 import { Layout, WorkspaceTree } from '@/src/ui';
-import { applyMiddlewares, defineCommand } from '@/src/utils';
+import { applyMiddlewares, defineCommand } from '@/src/utils/yargs';
 
 // Command
 export default defineCommand({

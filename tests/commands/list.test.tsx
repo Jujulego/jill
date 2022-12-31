@@ -5,7 +5,7 @@ import yargs from 'yargs';
 import listCommand from '@/src/commands/list';
 import { loadProject, setupInk } from '@/src/middlewares';
 import { Project } from '@/src/project';
-import { container, CURRENT, INK_APP } from '@/src/services';
+import { container, CURRENT, INK_APP } from '@/src/services/inversify.config';
 import { Layout } from '@/src/ui';
 
 import { TestBed } from '@/tools/test-bed';

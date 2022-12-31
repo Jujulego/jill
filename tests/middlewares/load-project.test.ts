@@ -3,8 +3,9 @@ import yargs from 'yargs';
 
 import { loadProject } from '@/src/middlewares';
 import { Project } from '@/src/project';
-import { container, CURRENT, SpinnerService } from '@/src/services';
-import { applyMiddlewares } from '@/src/utils';
+import { container, CURRENT } from '@/src/services/inversify.config';
+import { SpinnerService } from '@/src/services/spinner.service';
+import { applyMiddlewares } from '@/src/utils/yargs';
 
 // Setup
 let parser: yargs.Argv;

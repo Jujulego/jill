@@ -1,13 +1,13 @@
 import { waitForEvent } from '@jujulego/event-tree';
-import { TaskManager } from '@jujulego/tasks';
 import yargs from 'yargs';
 
 import { loadProject, loadWorkspace, setupInk } from '@/src/middlewares';
 import { Workspace, WorkspaceDepsMode } from '@/src/project';
 import { container, CURRENT, INK_APP } from '@/src/services/inversify.config';
 import { TaskExprService } from '@/src/services/task-expr.service';
+import { TASK_MANAGER } from '@/src/services/task-manager.config';
 import { Layout, TaskManagerSpinner } from '@/src/ui';
-import { applyMiddlewares, defineCommand } from '@/src/utils';
+import { applyMiddlewares, defineCommand } from '@/src/utils/yargs';
 
 // Command
 export default defineCommand({
@@ -37,7 +37,7 @@ export default defineCommand({
   async handler(args) {
     const app = container.get(INK_APP);
     const workspace = container.getNamed(Workspace, CURRENT);
-    const manager = container.get(TaskManager);
+    const manager = container.get(TASK_MANAGER);
     const parser = container.get(TaskExprService);
 
     // Run script in workspace

@@ -1,4 +1,4 @@
-import { SpawnTask, TaskManager } from '@jujulego/tasks';
+import { SpawnTask } from '@jujulego/tasks';
 import { cleanup, render } from 'ink-testing-library';
 import symbols from 'log-symbols';
 import yargs from 'yargs';
@@ -6,7 +6,8 @@ import yargs from 'yargs';
 import runCommand from '@/src/commands/run';
 import { loadProject, loadWorkspace, setupInk } from '@/src/middlewares';
 import { Project, Workspace, WorkspaceContext } from '@/src/project';
-import { container, CURRENT, INK_APP } from '@/src/services';
+import { container, CURRENT, INK_APP } from '@/src/services/inversify.config';
+import { TASK_MANAGER } from '@/src/services/task-manager.config';
 import { Layout } from '@/src/ui';
 
 import { TestBed } from '@/tools/test-bed';
@@ -59,7 +60,7 @@ afterEach(() => {
 // Tests
 describe('jill run', () => {
   it('should run command in current workspace', async () => {
-    const manager = container.get(TaskManager);
+    const manager = container.get(TASK_MANAGER);
 
     jest.spyOn(manager, 'add').mockImplementation();
     jest.spyOn(manager, 'tasks', 'get').mockReturnValue([task]);
@@ -89,7 +90,7 @@ describe('jill run', () => {
   });
 
   it('should use given dependency selection mode', async () => {
-    const manager = container.get(TaskManager);
+    const manager = container.get(TASK_MANAGER);
 
     jest.spyOn(manager, 'add').mockImplementation();
     jest.spyOn(manager, 'tasks', 'get').mockReturnValue([task]);
@@ -112,7 +113,7 @@ describe('jill run', () => {
   });
 
   it('should exit 1 if script fails', async () => {
-    const manager = container.get(TaskManager);
+    const manager = container.get(TASK_MANAGER);
 
     jest.spyOn(manager, 'add').mockImplementation();
     jest.spyOn(manager, 'tasks', 'get').mockReturnValue([task]);

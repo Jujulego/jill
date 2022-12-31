@@ -2,7 +2,7 @@ import { render } from 'ink';
 
 import { container, INK_APP } from '@/src/services/inversify.config';
 import { Layout } from '@/src/ui';
-import { defineMiddleware } from '@/src/utils';
+import { defineMiddleware } from '@/src/utils/yargs';
 
 // Middleware
 export const setupInk = defineMiddleware({

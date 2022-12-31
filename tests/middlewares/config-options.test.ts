@@ -2,8 +2,10 @@ import os from 'node:os';
 import yargs from 'yargs';
 
 import { configOptions } from '@/src/middlewares';
-import { CONFIG, container, Logger, SERVICES_CONFIG } from '@/src/services';
-import { applyMiddlewares } from '@/src/utils';
+import { CONFIG } from '@/src/services/config/loader';
+import { container, SERVICES_CONFIG } from '@/src/services/inversify.config';
+import { Logger } from '@/src/services/logger.service';
+import { applyMiddlewares } from '@/src/utils/yargs';
 
 // Setup
 let parser: yargs.Argv;

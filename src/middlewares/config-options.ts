@@ -3,7 +3,7 @@ import os from 'node:os';
 import { container, SERVICES_CONFIG } from '@/src/services/inversify.config';
 import { CONFIG } from '@/src/services/config/loader';
 import { Logger } from '@/src/services/logger.service';
-import { defineMiddleware } from '@/src/utils';
+import { defineMiddleware } from '@/src/utils/yargs';
 
 // Constants
 const VERBOSITY_LEVEL: Record<number, string> = {

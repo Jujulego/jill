@@ -2,7 +2,7 @@ import { cosmiconfig, defaultLoaders } from 'cosmiconfig';
 import { interfaces as int } from 'inversify';
 
 import { container } from '@/src/services/inversify.config';
-import { dynamicImport } from '@/src/utils';
+import { dynamicImport } from '@/src/utils/import';
 
 // Types
 export type ConfigExplorer = ReturnType<typeof cosmiconfig>;

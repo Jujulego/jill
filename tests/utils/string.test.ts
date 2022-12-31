@@ -1,4 +1,4 @@
-import { capitalize } from '@/src/utils';
+import { capitalize } from '@/src/utils/string';
 
 // Tests
 describe('capitalize', () => {

@@ -6,7 +6,7 @@ import { satisfies } from 'semver';
 import { Git } from '@/src/git';
 import { container } from '@/src/services/inversify.config';
 import { Logger } from '@/src/services/logger.service';
-import { combine, streamLines } from '@/src/utils';
+import { combine, streamLines } from '@/src/utils/streams';
 
 import { Project } from './project';
 

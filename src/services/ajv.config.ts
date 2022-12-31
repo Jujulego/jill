@@ -1,11 +1,11 @@
 import Ajv from 'ajv';
-import { interfaces } from 'inversify';
+import { interfaces as int } from 'inversify';
 
 import { container } from './inversify.config';
 import { Logger } from './logger.service';
 
 // Symbols
-export const AJV: interfaces.ServiceIdentifier<Ajv> = Symbol('jujulego:jill:Ajv');
+export const AJV: int.ServiceIdentifier<Ajv> = Symbol('jujulego:jill:Ajv');
 
 // Setup
 container

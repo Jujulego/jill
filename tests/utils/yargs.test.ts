@@ -1,6 +1,6 @@
 import yargs from 'yargs';
 
-import { applyMiddlewares, defineMiddleware } from '@/src/utils';
+import { applyMiddlewares, defineMiddleware } from '@/src/utils/yargs';
 
 // Tests
 describe('applyMiddlewares', () => {

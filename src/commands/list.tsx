@@ -7,7 +7,7 @@ import { loadProject, setupInk } from '@/src/middlewares';
 import { Project, Workspace } from '@/src/project';
 import { container, CURRENT, INK_APP } from '@/src/services/inversify.config';
 import { Layout, List } from '@/src/ui';
-import { applyMiddlewares, defineCommand } from '@/src/utils';
+import { applyMiddlewares, defineCommand } from '@/src/utils/yargs';
 
 // Types
 export type Attribute = 'name' | 'version' | 'root' | 'slug';

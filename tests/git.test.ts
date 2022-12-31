@@ -1,7 +1,9 @@
 import { SpawnTask, TaskManager } from '@jujulego/tasks';
 
 import { Git, GitContext } from '@/src/git';
-import { container, Logger } from '@/src/services';
+import { container } from '@/src/services/inversify.config';
+import { Logger } from '@/src/services/logger.service';
+import { TASK_MANAGER } from '@/src/services/task-manager.config';
 
 // Setup
 let logger: Logger;
@@ -13,7 +15,7 @@ beforeEach(() => {
 
   // Services
   logger = container.get(Logger);
-  manager = container.get(TaskManager);
+  manager = container.get(TASK_MANAGER);
 
   // Mocks
   jest.spyOn(manager, 'add').mockImplementation();

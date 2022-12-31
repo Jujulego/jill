@@ -1,4 +1,4 @@
-import { SpawnTask, TaskManager } from '@jujulego/tasks';
+import { SpawnTask } from '@jujulego/tasks';
 import { cleanup, render } from 'ink-testing-library';
 import symbols from 'log-symbols';
 import yargs from 'yargs';
@@ -6,7 +6,8 @@ import yargs from 'yargs';
 import eachCommand from '@/src/commands/each';
 import { loadProject, setupInk } from '@/src/middlewares';
 import { Project, WorkspaceContext } from '@/src/project';
-import { container, CURRENT, INK_APP } from '@/src/services';
+import { container, CURRENT, INK_APP } from '@/src/services/inversify.config';
+import { TASK_MANAGER } from '@/src/services/task-manager.config';
 import { Layout } from '@/src/ui';
 
 import { TestBed } from '@/tools/test-bed';
@@ -54,7 +55,7 @@ describe('jill each', () => {
     ];
 
     // Setup tasks
-    const manager = container.get(TaskManager);
+    const manager = container.get(TASK_MANAGER);
 
     const tasks = [
       new SpawnTask<WorkspaceContext>('cmd', ['--arg'], { workspace: workspaces[0], script: 'cmd' }, { logger: spyLogger, cwd: workspaces[0].cwd }),
@@ -109,7 +110,7 @@ describe('jill each', () => {
     ];
 
     // Setup tasks
-    const manager = container.get(TaskManager);
+    const manager = container.get(TASK_MANAGER);
 
     const tasks = [
       new SpawnTask<WorkspaceContext>('cmd', ['--arg'], { workspace: workspaces[0], script: 'cmd' }, { logger: spyLogger, cwd: workspaces[0].cwd }),
@@ -151,7 +152,7 @@ describe('jill each', () => {
     ];
 
     // Setup tasks
-    const manager = container.get(TaskManager);
+    const manager = container.get(TASK_MANAGER);
 
     const tasks = [
       new SpawnTask<WorkspaceContext>('cmd', ['--arg'], { workspace: workspaces[0], script: 'cmd' }, { logger: spyLogger, cwd: workspaces[0].cwd }),
@@ -212,7 +213,7 @@ describe('jill each', () => {
       ];
 
       // Setup tasks
-      const manager = container.get(TaskManager);
+      const manager = container.get(TASK_MANAGER);
 
       const tasks = [
         new SpawnTask<WorkspaceContext>('cmd', ['--arg'], { workspace: workspaces[0], script: 'cmd' }, { logger: spyLogger, cwd: workspaces[0].cwd }),
@@ -257,7 +258,7 @@ describe('jill each', () => {
       ];
 
       // Setup tasks
-      const manager = container.get(TaskManager);
+      const manager = container.get(TASK_MANAGER);
 
       const tasks = [
         new SpawnTask<WorkspaceContext>('cmd', ['--arg'], { workspace: workspaces[0], script: 'cmd' }, { logger: spyLogger, cwd: workspaces[0].cwd }),
@@ -304,7 +305,7 @@ describe('jill each', () => {
       ];
 
       // Setup tasks
-      const manager = container.get(TaskManager);
+      const manager = container.get(TASK_MANAGER);
 
       const tasks = [
         new SpawnTask<WorkspaceContext>('cmd', ['--arg'], { workspace: workspaces[0], script: 'cmd' }, { logger: spyLogger, cwd: workspaces[0].cwd }),
