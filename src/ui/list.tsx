@@ -9,7 +9,7 @@ export interface ListProps<T extends Record<string, unknown>> {
 }
 
 // Component
-export function List<T extends Record<string, unknown>>({ items, headers }: ListProps<T>) {
+export default function List<T extends Record<string, unknown>>({ items, headers }: ListProps<T>) {
   if (items.length === 0) {
     return null;
   }

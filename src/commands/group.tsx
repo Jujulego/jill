@@ -8,7 +8,8 @@ import { Workspace, WorkspaceDepsMode } from '@/src/project/workspace';
 import { container, CURRENT, INK_APP } from '@/src/services/inversify.config';
 import { TaskExprService } from '@/src/services/task-expr.service';
 import { TASK_MANAGER } from '@/src/services/task-manager.config';
-import { Layout, TaskManagerSpinner } from '@/src/ui';
+import Layout from '@/src/ui/layout';
+import TaskManagerSpinner from '@/src/ui/task-manager-spinner';
 import { applyMiddlewares, defineCommand } from '@/src/utils/yargs';
 
 // Command

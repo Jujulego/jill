@@ -14,7 +14,7 @@ export interface WorkspaceTreeProps {
 const style = (dev: boolean): TextProps => ({ color: dev ? 'blue' : '' });
 
 // Component
-export const WorkspaceTree: FC<WorkspaceTreeProps> = (props) => {
+export default function WorkspaceTree(props: WorkspaceTreeProps) {
   const { workspace: wks, dev = false, level = '' } = props;
 
   // State
@@ -38,21 +38,21 @@ export const WorkspaceTree: FC<WorkspaceTreeProps> = (props) => {
   // Render
   return (
     <Text>
-      <Text {...style(dev)}>{ wks.name }</Text>
-      { wks.version && <Text color="grey">@{ wks.version }</Text> }
-      { (deps.length > 0) && <Newline /> }
+      <Text {...style(dev)}>{wks.name}</Text>
+      {wks.version && <Text color="grey">@{wks.version}</Text>}
+      {(deps.length > 0) && <Newline/>}
 
-      { deps.map(([dep, isDev], idx) => (
+      {deps.map(([dep, isDev], idx) => (
         <Text key={dep.name}>
-          { level }<Text {...style(dev)}>{ idx === deps.length - 1 ? '└' : '├'}─{' '}</Text>
+          {level}<Text {...style(dev)}>{idx === deps.length - 1 ? '└' : '├'}─{' '}</Text>
           <WorkspaceTree
             workspace={dep}
             dev={isDev ?? dev}
-            level={<>{ level }<Text {...style(dev)}>{ idx === deps.length - 1 ? ' ' : '│' }{'  '}</Text></>}
+            level={<>{level}<Text {...style(dev)}>{idx === deps.length - 1 ? ' ' : '│'}{'  '}</Text></>}
           />
-          { (idx < deps.length - 1) && <Newline /> }
+          {(idx < deps.length - 1) && <Newline/>}
         </Text>
-      )) }
+      ))}
     </Text>
   );
-};
+}

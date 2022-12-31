@@ -15,7 +15,7 @@ interface Info extends Record<string, unknown> {
 }
 
 // Component
-export const StaticLogs: FC = () => {
+export default function StaticLogs() {
   // State
   const { write } = useStderr();
 
@@ -62,4 +62,4 @@ export const StaticLogs: FC = () => {
   }, [write]);
 
   return null;
-};
+}

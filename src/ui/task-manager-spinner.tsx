@@ -1,8 +1,8 @@
 import { GroupTask, TaskManager } from '@jujulego/tasks';
-import { FC, useLayoutEffect, useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 
-import { TaskSpinner } from './task-spinner';
-import { GroupTaskSpinner } from './group-task-spinner';
+import GroupTaskSpinner from './group-task-spinner';
+import TaskSpinner from './task-spinner';
 
 // Types
 export interface TasksSpinnerProps {
@@ -10,7 +10,7 @@ export interface TasksSpinnerProps {
 }
 
 // Components
-export const TaskManagerSpinner: FC<TasksSpinnerProps> = ({ manager }) => {
+export default function TaskManagerSpinner({ manager }: TasksSpinnerProps) {
   const [tasks, setTasks] = useState(manager.tasks.filter((tsk) => !tsk.context.groupTask));
 
   useLayoutEffect(() => {
@@ -30,13 +30,13 @@ export const TaskManagerSpinner: FC<TasksSpinnerProps> = ({ manager }) => {
 
   return (
     <>
-      { tasks.map((task) =>
+      {tasks.map((task) =>
         (task instanceof GroupTask) ? (
-          <GroupTaskSpinner key={task.id} group={task} />
+          <GroupTaskSpinner key={task.id} group={task}/>
         ) : (
-          <TaskSpinner key={task.id} task={task} />
+          <TaskSpinner key={task.id} task={task}/>
         )
-      ) }
+      )}
     </>
   );
-};
+}

@@ -3,7 +3,8 @@ import { loadWorkspace } from '@/src/middlewares/load-workspace';
 import { setupInk } from '@/src/middlewares/setup-ink';
 import { Workspace } from '@/src/project/workspace';
 import { container, CURRENT, INK_APP } from '@/src/services/inversify.config';
-import { Layout, WorkspaceTree } from '@/src/ui';
+import Layout from '@/src/ui/layout';
+import WorkspaceTree from '@/src/ui/workspace-tree';
 import { applyMiddlewares, defineCommand } from '@/src/utils/yargs';
 
 // Command

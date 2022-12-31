@@ -1,6 +1,5 @@
 export * from './git';
 export * from './types';
-export * from './ui';
 
 // Filters
 export * from './filters/affected.filter';
@@ -31,6 +30,15 @@ export { Logger } from './services/logger.service';
 export { PluginLoaderService } from './services/plugins/plugin-loader.service';
 export { type Plugin } from './services/plugins/types';
 export { definePlugin } from './services/plugins/utils';
+
+// Ui
+export * from './ui/group-task-spinner';
+export * from './ui/layout';
+export * from './ui/list';
+export * from './ui/task-manager-spinner';
+export * from './ui/task-name';
+export * from './ui/task-spinner';
+export * from './ui/workspace-tree';
 
 // Utils
 export * from './utils/import';
