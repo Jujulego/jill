@@ -1,9 +1,14 @@
-export * from './filters';
 export * from './git';
 export * from './middlewares';
 export * from './project';
 export * from './types';
 export * from './ui';
+
+// Filters
+export * from './filters/affected.filter';
+export * from './filters/pipeline';
+export * from './filters/private.filter';
+export * from './filters/scripts.filter';
 
 // Services
 export * from './services/inversify.config';

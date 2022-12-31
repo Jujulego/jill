@@ -2,7 +2,10 @@ import chalk from 'chalk';
 import path from 'node:path';
 import slugify from 'slugify';
 
-import { AffectedFilter, Pipeline, PrivateFilter, ScriptsFilter } from '@/src/filters';
+import { AffectedFilter } from '@/src/filters/affected.filter';
+import { Pipeline } from '@/src/filters/pipeline';
+import { PrivateFilter } from '@/src/filters/private.filter';
+import { ScriptsFilter } from '@/src/filters/scripts.filter';
 import { loadProject, setupInk } from '@/src/middlewares';
 import { Project, Workspace } from '@/src/project';
 import { container, CURRENT, INK_APP } from '@/src/services/inversify.config';

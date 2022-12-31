@@ -1,4 +1,5 @@
-import { PipelineFilter, Pipeline } from '@/src/filters';
+import { PipelineFilter, Pipeline } from '@/src/filters/pipeline';
+
 import { TestBed } from '@/tools/test-bed';
 
 // Setup
