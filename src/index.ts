@@ -1,5 +1,4 @@
 export * from './git';
-export * from './middlewares';
 export * from './types';
 export * from './ui';
 
@@ -8,6 +7,11 @@ export * from './filters/affected.filter';
 export * from './filters/pipeline';
 export * from './filters/private.filter';
 export * from './filters/scripts.filter';
+
+// Middlewares
+export * from './middlewares/load-project';
+export * from './middlewares/load-workspace';
+export * from './middlewares/setup-ink';
 
 // Project
 export * from './project/project';

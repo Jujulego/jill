@@ -2,7 +2,9 @@ import { cleanup, render } from 'ink-testing-library';
 import yargs from 'yargs';
 
 import treeCommand from '@/src/commands/tree';
-import { loadProject, loadWorkspace, setupInk } from '@/src/middlewares';
+import { loadProject } from '@/src/middlewares/load-project';
+import { loadWorkspace } from '@/src/middlewares/load-workspace';
+import { setupInk } from '@/src/middlewares/setup-ink';
 import { Project } from '@/src/project/project';
 import { Workspace } from '@/src/project/workspace';
 import { container, CURRENT, INK_APP } from '@/src/services/inversify.config';

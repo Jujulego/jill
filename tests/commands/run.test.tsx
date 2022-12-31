@@ -4,7 +4,9 @@ import symbols from 'log-symbols';
 import yargs from 'yargs';
 
 import runCommand from '@/src/commands/run';
-import { loadProject, loadWorkspace, setupInk } from '@/src/middlewares';
+import { loadProject } from '@/src/middlewares/load-project';
+import { loadWorkspace } from '@/src/middlewares/load-workspace';
+import { setupInk } from '@/src/middlewares/setup-ink';
 import { Project } from '@/src/project/project';
 import { Workspace, WorkspaceContext } from '@/src/project/workspace';
 import { container, CURRENT, INK_APP } from '@/src/services/inversify.config';

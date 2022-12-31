@@ -6,7 +6,7 @@ import { Logger } from '@/src/services/logger.service';
 import { PluginLoaderService } from '@/src/services/plugins/plugin-loader.service';
 
 import { commands } from './commands';
-import { configOptions } from './middlewares';
+import { configOptions } from './middlewares/config-options';
 import { applyMiddlewares } from './utils/yargs';
 
 // @ts-ignore: Outside of typescript's rootDir in build

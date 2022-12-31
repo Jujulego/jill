@@ -1,7 +1,7 @@
 import path from 'node:path';
 import yargs from 'yargs';
 
-import { loadProject } from '@/src/middlewares';
+import { loadProject } from '@/src/middlewares/load-project';
 import { Project } from '@/src/project/project';
 import { container, CURRENT } from '@/src/services/inversify.config';
 import { SpinnerService } from '@/src/services/spinner.service';

@@ -1,6 +1,6 @@
 import yargs from 'yargs';
 
-import { loadWorkspace } from '@/src/middlewares';
+import { loadWorkspace } from '@/src/middlewares/load-workspace';
 import { Project } from '@/src/project/project';
 import { Workspace } from '@/src/project/workspace';
 import { container, CURRENT } from '@/src/services/inversify.config';
