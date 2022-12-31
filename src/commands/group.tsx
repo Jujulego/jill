@@ -2,7 +2,7 @@ import { waitForEvent } from '@jujulego/event-tree';
 import yargs from 'yargs';
 
 import { loadProject, loadWorkspace, setupInk } from '@/src/middlewares';
-import { Workspace, WorkspaceDepsMode } from '@/src/project';
+import { Workspace, WorkspaceDepsMode } from '@/src/project/workspace';
 import { container, CURRENT, INK_APP } from '@/src/services/inversify.config';
 import { TaskExprService } from '@/src/services/task-expr.service';
 import { TASK_MANAGER } from '@/src/services/task-manager.config';

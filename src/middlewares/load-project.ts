@@ -1,4 +1,4 @@
-import { Project } from '@/src/project';
+import { Project } from '@/src/project/project';
 import { container, CURRENT } from '@/src/services/inversify.config';
 import { SpinnerService } from '@/src/services/spinner.service';
 import { defineMiddleware } from '@/src/utils/yargs';

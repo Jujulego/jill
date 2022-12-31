@@ -1,6 +1,5 @@
 export * from './git';
 export * from './middlewares';
-export * from './project';
 export * from './types';
 export * from './ui';
 
@@ -9,6 +8,10 @@ export * from './filters/affected.filter';
 export * from './filters/pipeline';
 export * from './filters/private.filter';
 export * from './filters/scripts.filter';
+
+// Project
+export * from './project/project';
+export * from './project/workspace';
 
 // Services
 export * from './services/inversify.config';

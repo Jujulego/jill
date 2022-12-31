@@ -2,7 +2,7 @@ import { Task, TaskContext } from '@jujulego/tasks';
 import { Text } from 'ink';
 import { FC } from 'react';
 
-import { WorkspaceContext } from '../project';
+import { WorkspaceContext } from '@/src/project/workspace';
 
 // Types
 export interface TaskNameProps {

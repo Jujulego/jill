@@ -3,7 +3,7 @@ import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 
-import { Workspace } from '@/src/project';
+import { Workspace } from '@/src/project/workspace';
 
 import { TestProject } from './test-project';
 import { TestWorkspace } from './test-workspace';

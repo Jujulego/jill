@@ -1,7 +1,7 @@
 import { waitForEvent } from '@jujulego/event-tree';
 
 import { loadProject, loadWorkspace, setupInk } from '@/src/middlewares';
-import { Workspace, WorkspaceDepsMode } from '@/src/project';
+import { Workspace, WorkspaceDepsMode } from '@/src/project/workspace';
 import { container, CURRENT, INK_APP } from '@/src/services/inversify.config';
 import { TASK_MANAGER } from '@/src/services/task-manager.config';
 import { Layout, TaskManagerSpinner } from '@/src/ui';

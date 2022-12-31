@@ -1,6 +1,6 @@
 import { AffectedFilter } from '@/src/filters/affected.filter';
 import { Git } from '@/src/git';
-import { Workspace } from '@/src/project';
+import { Workspace } from '@/src/project/workspace';
 
 import { TestBed } from '@/tools/test-bed';
 

@@ -5,7 +5,8 @@ import yargs from 'yargs';
 
 import runCommand from '@/src/commands/run';
 import { loadProject, loadWorkspace, setupInk } from '@/src/middlewares';
-import { Project, Workspace, WorkspaceContext } from '@/src/project';
+import { Project } from '@/src/project/project';
+import { Workspace, WorkspaceContext } from '@/src/project/workspace';
 import { container, CURRENT, INK_APP } from '@/src/services/inversify.config';
 import { TASK_MANAGER } from '@/src/services/task-manager.config';
 import { Layout } from '@/src/ui';

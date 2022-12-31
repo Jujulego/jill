@@ -1,4 +1,4 @@
-import { Workspace } from '../project';
+import { Workspace } from '@/src/project/workspace';
 
 import { PipelineFilter } from './pipeline';
 

@@ -1,5 +1,5 @@
-import { Workspace } from '../project';
-import { Awaitable } from '../types';
+import { Workspace } from '@/src/project/workspace';
+import { Awaitable } from '@/src/types';
 
 // Interface
 export interface PipelineFilter {

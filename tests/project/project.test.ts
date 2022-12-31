@@ -1,7 +1,8 @@
 import { fs, vol } from 'memfs';
 import path from 'node:path';
 
-import { Project, Workspace } from '@/src/project';
+import { Project } from '@/src/project/project';
+import { Workspace } from '@/src/project/workspace';
 
 // Mocks
 jest.mock('fs', () => fs);

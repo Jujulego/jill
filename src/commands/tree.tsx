@@ -1,5 +1,5 @@
 import { loadProject, loadWorkspace, setupInk } from '@/src/middlewares';
-import { Workspace } from '@/src/project';
+import { Workspace } from '@/src/project/workspace';
 import { container, CURRENT, INK_APP } from '@/src/services/inversify.config';
 import { Layout, WorkspaceTree } from '@/src/ui';
 import { applyMiddlewares, defineCommand } from '@/src/utils/yargs';

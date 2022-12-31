@@ -3,7 +3,8 @@ import yargs from 'yargs';
 
 import treeCommand from '@/src/commands/tree';
 import { loadProject, loadWorkspace, setupInk } from '@/src/middlewares';
-import { Project, Workspace } from '@/src/project';
+import { Project } from '@/src/project/project';
+import { Workspace } from '@/src/project/workspace';
 import { container, CURRENT, INK_APP } from '@/src/services/inversify.config';
 import { Layout } from '@/src/ui';
 
