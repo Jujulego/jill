@@ -2,11 +2,12 @@ import { waitForEvent } from '@jujulego/event-tree';
 import { TaskManager } from '@jujulego/tasks';
 import yargs from 'yargs';
 
-import { loadProject, loadWorkspace, setupInk } from '../middlewares';
-import { Workspace, WorkspaceDepsMode } from '../project';
-import { container, CURRENT, INK_APP, TaskExprService } from '../services';
-import { Layout, TaskManagerSpinner } from '../ui';
-import { applyMiddlewares, defineCommand } from '../utils';
+import { loadProject, loadWorkspace, setupInk } from '@/src/middlewares';
+import { Workspace, WorkspaceDepsMode } from '@/src/project';
+import { container, CURRENT, INK_APP } from '@/src/services/inversify.config';
+import { TaskExprService } from '@/src/services/task-expr.service';
+import { Layout, TaskManagerSpinner } from '@/src/ui';
+import { applyMiddlewares, defineCommand } from '@/src/utils';
 
 // Command
 export default defineCommand({

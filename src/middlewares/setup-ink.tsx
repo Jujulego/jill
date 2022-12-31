@@ -1,8 +1,8 @@
 import { render } from 'ink';
 
-import { container, INK_APP } from '../services';
-import { Layout } from '../ui';
-import { defineMiddleware } from '../utils';
+import { container, INK_APP } from '@/src/services/inversify.config';
+import { Layout } from '@/src/ui';
+import { defineMiddleware } from '@/src/utils';
 
 // Middleware
 export const setupInk = defineMiddleware({

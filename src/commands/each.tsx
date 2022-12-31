@@ -1,12 +1,13 @@
 import { waitForEvent } from '@jujulego/event-tree';
 import { TaskManager, TaskSet } from '@jujulego/tasks';
 
-import { AffectedFilter, Pipeline, PrivateFilter, ScriptsFilter } from '../filters';
-import { loadProject, setupInk } from '../middlewares';
-import { Project, WorkspaceDepsMode } from '../project';
-import { container, CURRENT, INK_APP, SpinnerService } from '../services';
-import { Layout, TaskManagerSpinner } from '../ui';
-import { applyMiddlewares, defineCommand } from '../utils';
+import { AffectedFilter, Pipeline, PrivateFilter, ScriptsFilter } from '@/src/filters';
+import { loadProject, setupInk } from '@/src/middlewares';
+import { Project, WorkspaceDepsMode } from '@/src/project';
+import { container, CURRENT, INK_APP } from '@/src/services/inversify.config';
+import { SpinnerService } from '@/src/services/spinner.service';
+import { Layout, TaskManagerSpinner } from '@/src/ui';
+import { applyMiddlewares, defineCommand } from '@/src/utils';
 
 // Command
 export default defineCommand({

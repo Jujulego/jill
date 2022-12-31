@@ -2,12 +2,12 @@ import chalk from 'chalk';
 import path from 'node:path';
 import slugify from 'slugify';
 
-import { AffectedFilter, Pipeline, PrivateFilter, ScriptsFilter } from '../filters';
-import { loadProject, setupInk } from '../middlewares';
-import { Project, Workspace } from '../project';
-import { container, CURRENT, INK_APP } from '../services';
-import { Layout, List } from '../ui';
-import { applyMiddlewares, defineCommand } from '../utils';
+import { AffectedFilter, Pipeline, PrivateFilter, ScriptsFilter } from '@/src/filters';
+import { loadProject, setupInk } from '@/src/middlewares';
+import { Project, Workspace } from '@/src/project';
+import { container, CURRENT, INK_APP } from '@/src/services/inversify.config';
+import { Layout, List } from '@/src/ui';
+import { applyMiddlewares, defineCommand } from '@/src/utils';
 
 // Types
 export type Attribute = 'name' | 'version' | 'root' | 'slug';

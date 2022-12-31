@@ -1,8 +1,8 @@
-import { loadProject, loadWorkspace, setupInk } from '../middlewares';
-import { Workspace } from '../project';
-import { container, CURRENT, INK_APP } from '../services';
-import { Layout, WorkspaceTree } from '../ui';
-import { applyMiddlewares, defineCommand } from '../utils';
+import { loadProject, loadWorkspace, setupInk } from '@/src/middlewares';
+import { Workspace } from '@/src/project';
+import { container, CURRENT, INK_APP } from '@/src/services/inversify.config';
+import { Layout, WorkspaceTree } from '@/src/ui';
+import { applyMiddlewares, defineCommand } from '@/src/utils';
 
 // Command
 export default defineCommand({

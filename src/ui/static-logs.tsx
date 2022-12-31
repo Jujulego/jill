@@ -1,9 +1,10 @@
 import { useStderr } from 'ink';
 import { FC, useLayoutEffect, } from 'react';
+import winston from 'winston';
 import Transport from 'winston-transport';
 
-import { consoleFormat, container, Logger } from '../services';
-import winston from 'winston';
+import { container } from '@/src/services/inversify.config';
+import { consoleFormat, Logger } from '@/src/services/logger.service';
 
 // Constants
 const MESSAGE = Symbol.for('message');

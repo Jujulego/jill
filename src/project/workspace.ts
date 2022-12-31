@@ -1,12 +1,13 @@
 import { SpawnTask, SpawnTaskOptions, SpawnTaskStream, TaskContext } from '@jujulego/tasks';
 import path from 'node:path';
-import { Package } from 'normalize-package-data';
+import { type Package } from 'normalize-package-data';
 import { satisfies } from 'semver';
-import winston from 'winston';
 
-import { Git } from '../git';
-import { container, Logger } from '../services';
-import { combine, streamLines } from '../utils';
+import { Git } from '@/src/git';
+import { container } from '@/src/services/inversify.config';
+import { Logger } from '@/src/services/logger.service';
+import { combine, streamLines } from '@/src/utils';
+
 import { Project } from './project';
 
 // Types
@@ -24,7 +25,7 @@ export interface WorkspaceRunOptions extends Omit<SpawnTaskOptions, 'cwd'> {
 // Class
 export class Workspace {
   // Attributes
-  private readonly _logger: winston.Logger;
+  private readonly _logger: Logger;
   private readonly _affectedCache = new Map<string, Promise<boolean>>();
   private readonly _tasks = new Map<string, SpawnTask<WorkspaceContext>>();
 

@@ -1,8 +1,9 @@
 import yargs from 'yargs';
 
-import { container, CURRENT, SpinnerService } from '../services';
-import { Project, Workspace } from '../project';
-import { defineMiddleware } from '../utils';
+import { Project, Workspace } from '@/src/project';
+import { container, CURRENT } from '@/src/services/inversify.config';
+import { SpinnerService } from '@/src/services/spinner.service';
+import { defineMiddleware } from '@/src/utils';
 
 // Middleware
 export const loadWorkspace = defineMiddleware({
