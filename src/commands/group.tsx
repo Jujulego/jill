@@ -15,7 +15,7 @@ import { applyMiddlewares, defineCommand } from '@/src/utils/yargs';
 // Command
 export default defineCommand({
   command: 'group <script..>',
-  describe: 'Run many scripts inside a workspace',
+  describe: 'Run many scripts inside a workspace (experimental)',
   builder: async (yargs) =>
     (await applyMiddlewares(yargs, [
       setupInk,
