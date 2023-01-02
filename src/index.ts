@@ -32,12 +32,25 @@ export { type Plugin } from './services/plugins/types';
 export { definePlugin } from './services/plugins/utils';
 
 // Ui
+export { default as GroupTaskSpinner } from './ui/group-task-spinner';
 export * from './ui/group-task-spinner';
+
+export { default as Layout } from './ui/layout';
 export * from './ui/layout';
+
+export { default as List } from './ui/list';
 export * from './ui/list';
+
+export { default as TaskManagerSpinner } from './ui/task-manager-spinner';
 export * from './ui/task-manager-spinner';
+
+export { default as TaskName } from './ui/task-name';
 export * from './ui/task-name';
+
+export { default as TaskSpinner } from './ui/task-spinner';
 export * from './ui/task-spinner';
+
+export { default as WorkspaceTree } from './ui/workspace-tree';
 export * from './ui/workspace-tree';
 
 // Utils
