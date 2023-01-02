@@ -3,7 +3,7 @@ import { waitForEvent } from '@jujulego/event-tree';
 import { loadProject } from '@/src/middlewares/load-project';
 import { loadWorkspace } from '@/src/middlewares/load-workspace';
 import { setupInk } from '@/src/middlewares/setup-ink';
-import { Workspace, WorkspaceDepsMode } from '@/src/project/workspace';
+import { Workspace } from '@/src/project/workspace';
 import { container, CURRENT, INK_APP } from '@/src/services/inversify.config';
 import { TASK_MANAGER } from '@/src/services/task-manager.config';
 import Layout from '@/src/ui/layout';
@@ -23,7 +23,7 @@ export default defineCommand({
       .positional('script', { type: 'string', demandOption: true })
       .option('deps-mode', {
         choice: ['all', 'prod', 'none'],
-        default: 'all' as WorkspaceDepsMode,
+        default: 'all' as const,
         desc: 'Dependency selection mode:\n' +
           ' - all = dependencies AND devDependencies\n' +
           ' - prod = dependencies\n' +

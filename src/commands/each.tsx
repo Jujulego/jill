@@ -8,7 +8,6 @@ import { ScriptsFilter } from '@/src/filters/scripts.filter';
 import { loadProject } from '@/src/middlewares/load-project';
 import { setupInk } from '@/src/middlewares/setup-ink';
 import { Project } from '@/src/project/project';
-import { WorkspaceDepsMode } from '@/src/project/workspace';
 import { container, CURRENT, INK_APP } from '@/src/services/inversify.config';
 import { SpinnerService } from '@/src/services/spinner.service';
 import { TASK_MANAGER } from '@/src/services/task-manager.config';
@@ -29,7 +28,7 @@ export default defineCommand({
     .positional('script', { type: 'string', demandOption: true })
     .option('deps-mode', {
       choice: ['all', 'prod', 'none'],
-      default: 'all' as WorkspaceDepsMode,
+      default: 'all' as const,
       desc: 'Dependency selection mode:\n' +
         ' - all = dependencies AND devDependencies\n' +
         ' - prod = dependencies\n' +
