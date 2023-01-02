@@ -2,10 +2,13 @@ import { cleanup, render } from 'ink-testing-library';
 import yargs from 'yargs';
 
 import treeCommand from '@/src/commands/tree';
-import { loadProject, loadWorkspace, setupInk } from '@/src/middlewares';
-import { Project, Workspace } from '@/src/project';
-import { container, CURRENT, INK_APP } from '@/src/services';
-import { Layout } from '@/src/ui';
+import { loadProject } from '@/src/middlewares/load-project';
+import { loadWorkspace } from '@/src/middlewares/load-workspace';
+import { setupInk } from '@/src/middlewares/setup-ink';
+import { Project } from '@/src/project/project';
+import { Workspace } from '@/src/project/workspace';
+import { container, CURRENT, INK_APP } from '@/src/services/inversify.config';
+import Layout from '@/src/ui/layout';
 
 import { TestBed } from '@/tools/test-bed';
 import { flushPromises } from '@/tools/utils';
@@ -36,7 +39,7 @@ beforeEach(() => {
 
   jest.spyOn(setupInk, 'handler').mockImplementation(() => {
     app = render(<Layout />);
-    container.bind(INK_APP).toConstantValue(app);
+    container.bind(INK_APP).toConstantValue(app as any);
   });
   jest.spyOn(loadProject, 'handler').mockImplementation(() => {
     container.bind(Project)

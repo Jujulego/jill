@@ -1,12 +1,13 @@
 import { Text } from 'ink';
 import Spinner from 'ink-spinner';
 import symbols from 'log-symbols';
-import { FC, useLayoutEffect, useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 
-import { container, SpinnerService, SpinnerState } from '../services';
+import { container } from '@/src/services/inversify.config';
+import { SpinnerService, SpinnerState } from '@/src/services/spinner.service';
 
 // Components
-export const GlobalSpinner: FC = () => {
+export default function GlobalSpinner() {
   // State
   const [state, setState] = useState<SpinnerState>({ status: 'stop', label: '' });
 
@@ -45,4 +46,4 @@ export const GlobalSpinner: FC = () => {
     default:
       return null;
   }
-};
+}

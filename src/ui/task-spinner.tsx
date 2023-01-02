@@ -3,9 +3,9 @@ import { Text } from 'ink';
 import Spinner from 'ink-spinner';
 import symbols from 'log-symbols';
 import ms from 'pretty-ms';
-import { FC, useLayoutEffect, useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 
-import { TaskName } from './task-name';
+import TaskName from './task-name';
 
 // Types
 export interface TaskSpinnerProps {
@@ -13,7 +13,7 @@ export interface TaskSpinnerProps {
 }
 
 // Components
-export const TaskSpinner: FC<TaskSpinnerProps> = ({ task }) => {
+export default function TaskSpinner({ task }: TaskSpinnerProps) {
   // State
   const [status, setStatus] = useState(task.status);
   const [time, setTime] = useState(0);
@@ -37,31 +37,31 @@ export const TaskSpinner: FC<TaskSpinnerProps> = ({ task }) => {
     case 'ready':
       return (
         <Text color="grey">
-          <Spinner type="line2" />{' '}<TaskName task={task} />
+          <Spinner type="line2"/>{' '}<TaskName task={task}/>
         </Text>
       );
 
     case 'running':
       return (
         <Text>
-          <Spinner />{' '}<TaskName task={task} />
+          <Spinner/>{' '}<TaskName task={task}/>
         </Text>
       );
 
     case 'done':
       return (
         <Text>
-          <Text color="green">{ symbols.success }{' '}<TaskName task={task} /></Text>
-          <Text color="magenta">{' '}(took { ms(time) })</Text>
+          <Text color="green">{symbols.success}{' '}<TaskName task={task}/></Text>
+          <Text color="magenta">{' '}(took {ms(time)})</Text>
         </Text>
       );
 
     case 'failed':
       return (
         <Text>
-          <Text color="red">{ symbols.error }{' '}<TaskName task={task} /></Text>
-          <Text color="magenta">{' '}(took { ms(time) })</Text>
+          <Text color="red">{symbols.error}{' '}<TaskName task={task}/></Text>
+          <Text color="magenta">{' '}(took {ms(time)})</Text>
         </Text>
       );
   }
-};
+}

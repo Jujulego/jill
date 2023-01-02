@@ -3,7 +3,10 @@ import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 
-import { Workspace } from '@/src/project';
+import { CONFIG } from '@/src/services/config/loader';
+import { Config } from '@/src/services/config/types';
+import { container } from '@/src/services/inversify.config';
+import { Workspace } from '@/src/project/workspace';
 
 import { TestProject } from './test-project';
 import { TestWorkspace } from './test-workspace';
@@ -12,6 +15,8 @@ import { shell } from './utils';
 // Bed
 export class TestBed {
   // Attributes
+  private _config: Config = {};
+
   readonly project = new TestProject('./test');
 
   // Methods
@@ -34,7 +39,7 @@ export class TestBed {
 
   async writeManifest(path: string, wks: Workspace): Promise<void> {
     const { _id: _, ...manifest } = wks.manifest;
-    await fs.writeFile(path, JSON.stringify(manifest, null, 2));
+    await fs.writeFile(path, JSON.stringify(manifest));
   }
 
   /**
@@ -54,6 +59,9 @@ export class TestBed {
 
     await fs.mkdir(prjDir);
     await this.writeManifest(path.join(prjDir, 'package.json'), await this.project.mainWorkspace());
+
+    // Add config file
+    await fs.writeFile(path.join(prjDir, '.jillrc.json'), JSON.stringify(this._config));
 
     // Create workspaces
     for await (const wks of this.project.workspaces()) {
@@ -76,5 +84,16 @@ export class TestBed {
     await shell('yarn', ['install', '--no-immutable'], { cwd: prjDir });
 
     return prjDir;
+  }
+
+  // Properties
+  get config(): Readonly<Config> {
+    return this._config;
+  }
+
+  set config(config) {
+    this._config = config;
+
+    container.rebind(CONFIG).toConstantValue(config);
   }
 }

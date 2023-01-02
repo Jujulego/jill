@@ -1,4 +1,5 @@
-import { container, SpinnerService, SpinnerState } from '@/src/services';
+import { container } from '@/src/services/inversify.config';
+import { SpinnerService, SpinnerState } from '@/src/services/spinner.service';
 
 // Setup
 let service: SpinnerService;

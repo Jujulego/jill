@@ -1,4 +1,4 @@
-import { Workspace } from '@/src/project';
+import { Workspace } from '@/src/project/workspace';
 
 // Class
 export class TestWorkspace extends Workspace {

@@ -1,5 +1,5 @@
 import { EventSource } from '@jujulego/event-tree';
-import { injectable } from 'inversify';
+import { decorate, injectable } from 'inversify';
 
 import { container } from './inversify.config';
 
@@ -57,6 +57,8 @@ export class SpinnerService extends EventSource<SpinnerEventMap> {
     };
   }
 }
+
+decorate(injectable(), EventSource);
 
 container.bind(SpinnerService)
   .toSelf()

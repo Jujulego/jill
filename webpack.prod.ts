@@ -8,7 +8,7 @@ const prodConfig = merge(commonConfig, {
   mode: 'production',
   plugins: [
     new EnvironmentPlugin({
-      DEV: false
+      DEV: false, // enforce remove of ink devtools
     })
   ]
 });

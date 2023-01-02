@@ -1,8 +1,8 @@
 import { GroupTask } from '@jujulego/tasks';
 import { Box } from 'ink';
-import { FC, Fragment, useLayoutEffect, useState } from 'react';
+import { Fragment, useLayoutEffect, useState } from 'react';
 
-import { TaskSpinner } from './task-spinner';
+import TaskSpinner from './task-spinner';
 
 // Types
 export interface GroupTaskSpinnerProps {
@@ -10,7 +10,7 @@ export interface GroupTaskSpinnerProps {
 }
 
 // Components
-export const GroupTaskSpinner: FC<GroupTaskSpinnerProps> = ({ group }) => {
+export default function GroupTaskSpinner({ group }: GroupTaskSpinnerProps) {
   const [tasks, setTasks] = useState([...group.tasks]);
 
   useLayoutEffect(() => {
@@ -44,4 +44,4 @@ export const GroupTaskSpinner: FC<GroupTaskSpinnerProps> = ({ group }) => {
       </Box>
     </>
   );
-};
+}

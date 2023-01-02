@@ -2,22 +2,16 @@ import chalk from 'chalk';
 import { injectable } from 'inversify';
 import winston from 'winston';
 
-import { type GlobalConfig, GLOBAL_CONFIG, container } from './inversify.config';
-
-// Constants
-const VERBOSITY_LEVEL: Record<number, string> = {
-  1: 'verbose',
-  2: 'debug',
-};
+import { container } from './inversify.config';
 
 // Utils
 export const consoleFormat = winston.format.combine(
-  winston.format.errors(),
   winston.format.colorize({
     message: true,
     colors: { debug: 'grey', verbose: 'blue', info: 'white', error: 'red' }
   }),
-  winston.format.printf(({ label, message }) => {
+  winston.format.printf(({ label, message, stack }) => {
+    if (stack) message = chalk.red(stack);
     const lines = message.split('\n');
 
     // Format
@@ -45,13 +39,13 @@ export class Logger {}
 export interface Logger extends winston.Logger {}
 
 container.bind(Logger)
-  .toDynamicValue((context) => {
-    const config = context.container.get<GlobalConfig>(GLOBAL_CONFIG);
-
+  .toDynamicValue(() => {
     return winston.createLogger({
-      level: VERBOSITY_LEVEL[Math.min(config.verbose, 2)],
       format: winston.format.combine(
         winston.format.timestamp(),
+        winston.format.errors({
+          stack: process.env.NODE_ENV === 'development'
+        }),
       ),
       transports: [
         new winston.transports.Console({

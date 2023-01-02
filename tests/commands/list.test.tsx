@@ -3,10 +3,11 @@ import path from 'node:path';
 import yargs from 'yargs';
 
 import listCommand from '@/src/commands/list';
-import { loadProject, setupInk } from '@/src/middlewares';
-import { Project } from '@/src/project';
-import { container, CURRENT, INK_APP } from '@/src/services';
-import { Layout } from '@/src/ui';
+import { loadProject } from '@/src/middlewares/load-project';
+import { setupInk } from '@/src/middlewares/setup-ink';
+import { Project } from '@/src/project/project';
+import { container, CURRENT, INK_APP } from '@/src/services/inversify.config';
+import Layout from '@/src/ui/layout';
 
 import { TestBed } from '@/tools/test-bed';
 
@@ -27,7 +28,7 @@ beforeEach(() => {
   jest.spyOn(console, 'log').mockImplementation();
   jest.spyOn(setupInk, 'handler').mockImplementation(() => {
     app = render(<Layout />);
-    container.bind(INK_APP).toConstantValue(app);
+    container.bind(INK_APP).toConstantValue(app as any);
   });
   jest.spyOn(loadProject, 'handler').mockImplementation(() => {
     container.bind(Project)

@@ -1,17 +1,18 @@
 {
   "name": "@jujulego/jill",
-  "version": "2.1.0-alpha.4",
+  "version": "2.1.0-alpha.5",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/Jujulego/jill"
   },
   "files": [
-    "bin",
-    "dist"
+    "./bin",
+    "./dist"
   ],
   "bin": "./bin/jill.js",
-  "main": "./dist/main.js",
+  "main": "./dist/index.js",
+  "exports": "./dist/index.js",
   "scripts": {
     "lint": "eslint .",
     "clean": "shx rm -rf dist",
@@ -42,8 +43,10 @@
     "@types/yargs": "17.0.17",
     "@typescript-eslint/eslint-plugin": "5.47.1",
     "@typescript-eslint/parser": "5.47.1",
+    "ajv": "8.11.2",
     "async-lock": "1.4.0",
     "chalk": "4.1.2",
+    "cosmiconfig": "8.0.0",
     "eslint": "8.30.0",
     "eslint-plugin-jest": "27.1.7",
     "eslint-plugin-react": "7.31.11",

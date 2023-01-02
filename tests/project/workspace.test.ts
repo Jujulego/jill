@@ -2,7 +2,9 @@ import { fs, vol } from 'memfs';
 import path from 'node:path';
 
 import { Git } from '@/src/git';
-import { Project, Workspace } from '@/src/project';
+import { Project } from '@/src/project/project';
+import { Workspace } from '@/src/project/workspace';
+
 import { TestBed } from '@/tools/test-bed';
 
 // Mocks

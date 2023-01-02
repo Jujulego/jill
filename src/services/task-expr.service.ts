@@ -2,9 +2,10 @@ import { GroupTask, ParallelGroup, SequenceGroup, Task } from '@jujulego/tasks';
 import { injectable } from 'inversify';
 import moo from 'moo';
 
+import { Workspace, WorkspaceRunOptions } from '@/src/project/workspace';
+
 import { container } from './inversify.config';
 import { Logger } from './logger.service';
-import { Workspace, WorkspaceRunOptions } from '../project';
 
 // Interfaces
 export interface TaskNode {
