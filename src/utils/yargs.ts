@@ -1,11 +1,11 @@
-import { Arguments, Argv, CommandModule } from 'yargs';
+import { ArgumentsCamelCase, Argv, CommandModule } from 'yargs';
 
 import { Awaitable } from '../types';
 
 // Types
 export interface Middleware<T = unknown, U = T> {
   builder?: (yargs: Argv<T>) => Awaitable<Argv<U>>;
-  handler(args: Arguments<U>): Awaitable<void>;
+  handler(args: ArgumentsCamelCase<U>): Awaitable<void>;
 }
 
 // Command utils

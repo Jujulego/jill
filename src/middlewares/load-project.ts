@@ -26,7 +26,7 @@ export const loadProject = defineMiddleware({
 
       container.bind(Project)
         .toDynamicValue(() => new Project(root, {
-          packageManager: args['package-manager']
+          packageManager: args.packageManager
         }))
         .whenTargetNamed(CURRENT);
     } finally {
