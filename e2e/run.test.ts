@@ -41,7 +41,7 @@ afterEach(async () => {
 
 // Tests
 describe('jill run', () => {
-  it('should run wks-c build script', async () => {
+  it('should run wks-c start script', async () => {
     const res = await jill(['run', '-w', 'wks-c', 'start'], { cwd: prjDir });
 
     // Check jill output
