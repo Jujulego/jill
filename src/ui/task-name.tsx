@@ -1,8 +1,7 @@
 import { Task, TaskContext } from '@jujulego/tasks';
 import { Text } from 'ink';
-import { FC } from 'react';
 
-import { WorkspaceContext } from '../project';
+import { WorkspaceContext } from '@/src/project/workspace';
 
 // Types
 export interface TaskNameProps {
@@ -15,7 +14,7 @@ function isWorkspaceCtx(ctx: Readonly<TaskContext>): ctx is Readonly<WorkspaceCo
 }
 
 // Components
-export const TaskName: FC<TaskNameProps> = ({ task }) => {
+export default function TaskName({ task }: TaskNameProps) {
   if (isWorkspaceCtx(task.context)) {
     return (
       <Text>
@@ -25,4 +24,4 @@ export const TaskName: FC<TaskNameProps> = ({ task }) => {
   } else {
     return <Text>{ task.name }</Text>;
   }
-};
+}

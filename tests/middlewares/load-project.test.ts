@@ -1,16 +1,17 @@
 import path from 'node:path';
 import yargs from 'yargs';
 
-import { loadProject } from '@/src/middlewares';
-import { Project } from '@/src/project';
-import { container, CURRENT, SpinnerService } from '@/src/services';
-import { applyMiddlewares } from '@/src/utils';
+import { loadProject } from '@/src/middlewares/load-project';
+import { Project } from '@/src/project/project';
+import { container, CURRENT } from '@/src/services/inversify.config';
+import { SpinnerService } from '@/src/services/spinner.service';
+import { applyMiddlewares } from '@/src/utils/yargs';
 
 // Setup
 let parser: yargs.Argv;
 let spinner: SpinnerService;
 
-beforeEach(() => {
+beforeEach(async () => {
   container.snapshot();
 
   spinner = container.get(SpinnerService);
@@ -20,7 +21,7 @@ beforeEach(() => {
   jest.spyOn(Project, 'searchProjectRoot')
     .mockResolvedValue('/test');
 
-  parser = applyMiddlewares(yargs(), [loadProject]);
+  parser = await applyMiddlewares(yargs(), [loadProject]);
 });
 
 afterEach(() => {

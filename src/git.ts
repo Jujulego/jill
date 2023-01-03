@@ -1,7 +1,9 @@
 import { SpawnTask, SpawnTaskOptions, TaskContext, TaskManager } from '@jujulego/tasks';
 
-import { lazyInject, Logger } from './services';
-import { streamLines } from './utils';
+import { lazyInject } from '@/src/services/inversify.config';
+import { Logger } from '@/src/services/logger.service';
+import { TASK_MANAGER } from '@/src/services/task-manager.config';
+import { streamLines } from '@/src/utils/streams';
 
 // Types
 export interface GitContext extends TaskContext {
@@ -11,7 +13,7 @@ export interface GitContext extends TaskContext {
 // Git commands
 export class Git {
   // Services
-  @lazyInject(TaskManager)
+  @lazyInject(TASK_MANAGER)
   static readonly manager: TaskManager;
 
   @lazyInject(Logger)

@@ -1,7 +1,7 @@
 import { SpawnTask } from '@jujulego/tasks';
 import { render } from 'ink-testing-library';
 
-import { TaskName } from '@/src/ui';
+import TaskName from '@/src/ui/task-name';
 import { TestBed } from '@/tools/test-bed';
 
 // Setup

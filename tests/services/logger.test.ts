@@ -1,7 +1,6 @@
 import chalk from 'chalk';
-import winston from 'winston';
 
-import { consoleFormat, container, GLOBAL_CONFIG, Logger } from '@/src/services';
+import { consoleFormat } from '@/src/services/logger.service';
 
 // Setup
 chalk.level = 1;
@@ -38,48 +37,5 @@ describe('consoleFormat', () => {
         [37mmultiline[39m
         [37mlog[39m"
 `);
-  });
-});
-
-describe('Logger', () => {
-  beforeEach(() => {
-    container.snapshot();
-  });
-
-  afterEach(() => {
-    container.restore();
-  });
-
-  // Tests
-  it('should set level from GLOBAL_CONFIG', () => {
-    jest.spyOn(winston, 'createLogger');
-
-    container.rebind(GLOBAL_CONFIG)
-      .toConstantValue({ verbose: 1, jobs: 1 });
-
-    container.get(Logger);
-
-    expect(winston.createLogger).toHaveBeenCalledWith(expect.objectContaining({
-      level: 'verbose',
-      transports: [
-        expect.any(winston.transports.Console)
-      ]
-    }));
-  });
-
-  it('should set maximum level (2 => debug)', () => {
-    jest.spyOn(winston, 'createLogger');
-
-    container.rebind(GLOBAL_CONFIG)
-      .toConstantValue({ verbose: 5, jobs: 1 });
-
-    container.get(Logger);
-
-    expect(winston.createLogger).toHaveBeenCalledWith(expect.objectContaining({
-      level: 'debug',
-      transports: [
-        expect.any(winston.transports.Console)
-      ]
-    }));
   });
 });

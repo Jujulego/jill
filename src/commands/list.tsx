@@ -1,14 +1,19 @@
 import chalk from 'chalk';
 import path from 'node:path';
-import ink from 'ink';
 import slugify from 'slugify';
 
-import { AffectedFilter, Pipeline, PrivateFilter, ScriptsFilter } from '../filters';
-import { loadProject, setupInk } from '../middlewares';
-import { Project, Workspace } from '../project';
-import { container, CURRENT, INK_APP } from '../services';
-import { Layout, List } from '../ui';
-import { applyMiddlewares, defineCommand } from '../utils';
+import { AffectedFilter } from '@/src/filters/affected.filter';
+import { Pipeline } from '@/src/filters/pipeline';
+import { PrivateFilter } from '@/src/filters/private.filter';
+import { ScriptsFilter } from '@/src/filters/scripts.filter';
+import { loadProject } from '@/src/middlewares/load-project';
+import { setupInk } from '@/src/middlewares/setup-ink';
+import { Project } from '@/src/project/project';
+import { Workspace } from '@/src/project/workspace';
+import { container, CURRENT, INK_APP } from '@/src/services/inversify.config';
+import Layout from '@/src/ui/layout';
+import List from '@/src/ui/list';
+import { applyMiddlewares, defineCommand } from '@/src/utils/yargs';
 
 // Types
 export type Attribute = 'name' | 'version' | 'root' | 'slug';
@@ -45,11 +50,11 @@ function buildExtractor(attrs: Attribute[]): Extractor<Data> {
 export default defineCommand({
   command: ['list', 'ls'],
   describe: 'List workspaces',
-  builder: (yargs) =>
-    applyMiddlewares(yargs, [
+  builder: async (yargs) =>
+    (await applyMiddlewares(yargs, [
       setupInk,
       loadProject,
-    ])
+    ]))
     // Filters
     .option('private', {
       type: 'boolean',
@@ -157,7 +162,7 @@ export default defineCommand({
         process.stdout.write(JSON.stringify(data));
       }
     } else {
-      const app = container.get<ink.Instance>(INK_APP);
+      const app = container.get(INK_APP);
 
       for (const d of data) {
         if (d.root) {

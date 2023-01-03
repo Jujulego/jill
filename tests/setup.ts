@@ -1,11 +1,12 @@
 import chalk from 'chalk';
 
-import { container, GLOBAL_CONFIG, GlobalConfig } from '@/src/services/inversify.config';
+import { container, SERVICES_CONFIG } from '@/src/services/inversify.config';
+import { CONFIG } from '@/src/services/config/loader';
 import '@/tools/matchers/setup';
 
 // Chalk config
 chalk.level = 0;
 
 // Setup global config
-container.bind<GlobalConfig>(GLOBAL_CONFIG)
-  .toConstantValue({ verbose: 0, jobs: 1 });
+container.bind(SERVICES_CONFIG).toConstantValue({ jobs: 1 });
+container.rebind(CONFIG).toConstantValue({});

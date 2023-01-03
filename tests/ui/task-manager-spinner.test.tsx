@@ -2,7 +2,7 @@ import { SpawnTask, TaskManager } from '@jujulego/tasks';
 import { render, cleanup } from 'ink-testing-library';
 import symbols from 'log-symbols';
 
-import { TasksSpinner } from '@/src/ui';
+import TaskManagerSpinner from '@/src/ui/task-manager-spinner';
 import { spyLogger } from '@/tools/utils';
 
 // Setup
@@ -25,13 +25,13 @@ afterEach(() => {
 });
 
 // Tests
-describe('<TasksSpinner>', () => {
+describe('<TaskManagerSpinner>', () => {
   it('should print every managed tasks', () => {
     const manager = new TaskManager({ jobs: 0, logger: spyLogger });
     manager.add(taskA);
     manager.add(taskB);
 
-    const { lastFrame } = render(<TasksSpinner manager={manager} />);
+    const { lastFrame } = render(<TaskManagerSpinner manager={manager} />);
 
     expect(lastFrame()).toEqualLines([
       `${symbols.success} cmd-a (took 0ms)`,
@@ -44,7 +44,7 @@ describe('<TasksSpinner>', () => {
     manager.add(taskA);
     manager.add(taskB);
 
-    const { lastFrame } = render(<TasksSpinner manager={manager} />);
+    const { lastFrame } = render(<TaskManagerSpinner manager={manager} />);
 
     manager.add(taskC);
     await new Promise((resolve) => setTimeout(resolve, 0));

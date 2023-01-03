@@ -1,7 +1,8 @@
 import { render, cleanup } from 'ink-testing-library';
 
-import { Workspace } from '@/src/project';
-import { WorkspaceTree } from '@/src/ui';
+import { Workspace } from '@/src/project/workspace';
+import WorkspaceTree from '@/src/ui/workspace-tree';
+
 import { TestBed } from '@/tools/test-bed';
 import { flushPromises } from '@/tools/utils';
 

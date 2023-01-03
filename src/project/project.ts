@@ -1,10 +1,12 @@
 import AsyncLock from 'async-lock';
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import normalize, { Package } from 'normalize-package-data';
+import normalize, { type Package } from 'normalize-package-data';
 import glob from 'tiny-glob';
 
-import { container, lazyInject, Logger } from '../services';
+import { container, lazyInject } from '@/src/services/inversify.config';
+import { Logger } from '@/src/services/logger.service';
+
 import { Workspace } from './workspace';
 
 // Types
@@ -75,12 +77,15 @@ export class Project {
   // Methods
   private async _loadManifest(dir: string): Promise<Package> {
     const file = path.resolve(this.root, dir, 'package.json');
-    const log = this._logger.child({ label: path.relative(this.root, path.dirname(file)) || '.' });
-    log.verbose('Loading package.json ...');
+
+    const relative = path.relative(this.root, path.dirname(file));
+    const logger = this._logger.child({ label: relative ? `project@${relative}` : 'project' });
+
+    logger.verbose('Loading package.json ...');
 
     const data = await fs.readFile(file, 'utf-8');
     const mnf = JSON.parse(data);
-    normalize(mnf, (msg) => log.verbose(msg));
+    normalize(mnf, (msg) => logger.verbose(msg));
 
     return mnf;
   }

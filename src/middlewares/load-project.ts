@@ -1,6 +1,7 @@
-import { container, CURRENT, SpinnerService } from '../services';
-import { Project } from '../project';
-import { defineMiddleware } from '../utils';
+import { Project } from '@/src/project/project';
+import { container, CURRENT } from '@/src/services/inversify.config';
+import { SpinnerService } from '@/src/services/spinner.service';
+import { defineMiddleware } from '@/src/utils/yargs';
 
 // Middleware
 export const loadProject = defineMiddleware({

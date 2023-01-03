@@ -1,9 +1,11 @@
 import yargs from 'yargs';
 
-import { loadWorkspace } from '@/src/middlewares';
-import { Project, Workspace } from '@/src/project';
-import { container, CURRENT, SpinnerService } from '@/src/services';
-import { applyMiddlewares } from '@/src/utils';
+import { loadWorkspace } from '@/src/middlewares/load-workspace';
+import { Project } from '@/src/project/project';
+import { Workspace } from '@/src/project/workspace';
+import { container, CURRENT } from '@/src/services/inversify.config';
+import { SpinnerService } from '@/src/services/spinner.service';
+import { applyMiddlewares } from '@/src/utils/yargs';
 import { TestBed } from '@/tools/test-bed';
 
 // Setup
@@ -11,7 +13,7 @@ let bed: TestBed;
 let parser: yargs.Argv;
 let spinner: SpinnerService;
 
-beforeEach(() => {
+beforeEach(async () => {
   container.snapshot();
 
   spinner = container.get(SpinnerService);
@@ -24,7 +26,7 @@ beforeEach(() => {
     .toConstantValue(bed.project)
     .whenTargetNamed(CURRENT);
 
-  parser = applyMiddlewares(yargs(), [loadWorkspace]);
+  parser = await applyMiddlewares(yargs(), [loadWorkspace]);
 });
 
 afterEach(() => {

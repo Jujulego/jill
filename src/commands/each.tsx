@@ -1,23 +1,29 @@
 import { waitForEvent } from '@jujulego/event-tree';
-import { TaskManager, TaskSet } from '@jujulego/tasks';
-import ink from 'ink';
+import { TaskSet } from '@jujulego/tasks';
 
-import { AffectedFilter, Pipeline, PrivateFilter, ScriptsFilter } from '../filters';
-import { loadProject, setupInk } from '../middlewares';
-import { Project } from '../project';
-import { container, CURRENT, INK_APP, SpinnerService } from '../services';
-import { Layout, TasksSpinner } from '../ui';
-import { applyMiddlewares, defineCommand } from '../utils';
+import { AffectedFilter } from '@/src/filters/affected.filter';
+import { Pipeline } from '@/src/filters/pipeline';
+import { PrivateFilter } from '@/src/filters/private.filter';
+import { ScriptsFilter } from '@/src/filters/scripts.filter';
+import { loadProject } from '@/src/middlewares/load-project';
+import { setupInk } from '@/src/middlewares/setup-ink';
+import { Project } from '@/src/project/project';
+import { container, CURRENT, INK_APP } from '@/src/services/inversify.config';
+import { SpinnerService } from '@/src/services/spinner.service';
+import { TASK_MANAGER } from '@/src/services/task-manager.config';
+import Layout from '@/src/ui/layout';
+import TaskManagerSpinner from '@/src/ui/task-manager-spinner';
+import { applyMiddlewares, defineCommand } from '@/src/utils/yargs';
 
 // Command
 export default defineCommand({
   command: 'each <script>',
   describe: 'Run script on many workspaces',
-  builder: (yargs) =>
-    applyMiddlewares(yargs, [
+  builder: async (yargs) =>
+    (await applyMiddlewares(yargs, [
       setupInk,
       loadProject,
-    ])
+    ]))
     // Run options
     .positional('script', { type: 'string', demandOption: true })
     .option('deps-mode', {
@@ -57,9 +63,9 @@ export default defineCommand({
       desc: 'Fallback revision, used if no revision matching the given format is found',
     }),
   async handler(args) {
-    const app = container.get<ink.Instance>(INK_APP);
+    const app = container.get(INK_APP);
     const project = container.getNamed(Project, CURRENT);
-    const manager = container.get(TaskManager);
+    const manager = container.get(TASK_MANAGER);
     const spinner = container.get(SpinnerService);
 
     try {
@@ -107,7 +113,7 @@ export default defineCommand({
       // Render
       app.rerender(
         <Layout>
-          <TasksSpinner manager={manager} />
+          <TaskManagerSpinner manager={manager} />
         </Layout>
       );
 

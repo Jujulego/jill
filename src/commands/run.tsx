@@ -1,23 +1,25 @@
 import { waitForEvent } from '@jujulego/event-tree';
-import { TaskManager } from '@jujulego/tasks';
-import ink from 'ink';
 
-import { loadProject, loadWorkspace, setupInk } from '../middlewares';
-import { Workspace } from '../project';
-import { container, CURRENT, INK_APP } from '../services';
-import { Layout, TasksSpinner } from '../ui';
-import { applyMiddlewares, defineCommand } from '../utils';
+import { loadProject } from '@/src/middlewares/load-project';
+import { loadWorkspace } from '@/src/middlewares/load-workspace';
+import { setupInk } from '@/src/middlewares/setup-ink';
+import { Workspace } from '@/src/project/workspace';
+import { container, CURRENT, INK_APP } from '@/src/services/inversify.config';
+import { TASK_MANAGER } from '@/src/services/task-manager.config';
+import Layout from '@/src/ui/layout';
+import TaskManagerSpinner from '@/src/ui/task-manager-spinner';
+import { applyMiddlewares, defineCommand } from '@/src/utils/yargs';
 
 // Command
 export default defineCommand({
   command: 'run <script>',
   describe: 'Run script inside workspace',
-  builder: (yargs) =>
-    applyMiddlewares(yargs, [
+  builder: async (yargs) =>
+    (await applyMiddlewares(yargs, [
       setupInk,
       loadProject,
       loadWorkspace
-    ])
+    ]))
       .positional('script', { type: 'string', demandOption: true })
       .option('deps-mode', {
         choice: ['all', 'prod', 'none'],
@@ -28,9 +30,9 @@ export default defineCommand({
           ' - none = nothing'
       }),
   async handler(args) {
-    const app = container.get<ink.Instance>(INK_APP);
+    const app = container.get(INK_APP);
     const workspace = container.getNamed(Workspace, CURRENT);
-    const manager = container.get(TaskManager);
+    const manager = container.get(TASK_MANAGER);
 
     // Extract arguments
     const rest = args._.map(arg => arg.toString());
@@ -48,7 +50,7 @@ export default defineCommand({
     // Render
     app.rerender(
       <Layout>
-        <TasksSpinner manager={manager} />
+        <TaskManagerSpinner manager={manager} />
       </Layout>
     );
 

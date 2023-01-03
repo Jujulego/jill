@@ -1,13 +1,17 @@
-import { SpawnTask, TaskManager } from '@jujulego/tasks';
+import { SpawnTask } from '@jujulego/tasks';
 import { cleanup, render } from 'ink-testing-library';
 import symbols from 'log-symbols';
 import yargs from 'yargs';
 
 import runCommand from '@/src/commands/run';
-import { loadProject, loadWorkspace, setupInk } from '@/src/middlewares';
-import { Project, Workspace, WorkspaceContext } from '@/src/project';
-import { container, CURRENT, INK_APP } from '@/src/services';
-import { Layout } from '@/src/ui';
+import { loadProject } from '@/src/middlewares/load-project';
+import { loadWorkspace } from '@/src/middlewares/load-workspace';
+import { setupInk } from '@/src/middlewares/setup-ink';
+import { Project } from '@/src/project/project';
+import { Workspace, WorkspaceContext } from '@/src/project/workspace';
+import { container, CURRENT, INK_APP } from '@/src/services/inversify.config';
+import { TASK_MANAGER } from '@/src/services/task-manager.config';
+import Layout from '@/src/ui/layout';
 
 import { TestBed } from '@/tools/test-bed';
 import { flushPromises, spyLogger } from '@/tools/utils';
@@ -37,7 +41,7 @@ beforeEach(() => {
 
   jest.spyOn(setupInk, 'handler').mockImplementation(() => {
     app = render(<Layout />);
-    container.bind(INK_APP).toConstantValue(app);
+    container.bind(INK_APP).toConstantValue(app as any);
   });
   jest.spyOn(loadProject, 'handler').mockImplementation(() => {
     container.bind(Project)
@@ -59,7 +63,7 @@ afterEach(() => {
 // Tests
 describe('jill run', () => {
   it('should run command in current workspace', async () => {
-    const manager = container.get(TaskManager);
+    const manager = container.get(TASK_MANAGER);
 
     jest.spyOn(manager, 'add').mockImplementation();
     jest.spyOn(manager, 'tasks', 'get').mockReturnValue([task]);
@@ -68,10 +72,10 @@ describe('jill run', () => {
     const prom = yargs.command(runCommand)
       .parse('run -w wks cmd -- --arg');
 
+    await flushPromises();
+
     // should create script task than add it to manager
     expect(wks.run).toHaveBeenCalledWith('cmd', ['--arg'], { buildDeps: 'all' });
-
-    await flushPromises();
     expect(manager.add).toHaveBeenCalledWith(task);
 
     // should print task spinner
@@ -89,7 +93,7 @@ describe('jill run', () => {
   });
 
   it('should use given dependency selection mode', async () => {
-    const manager = container.get(TaskManager);
+    const manager = container.get(TASK_MANAGER);
 
     jest.spyOn(manager, 'add').mockImplementation();
     jest.spyOn(manager, 'tasks', 'get').mockReturnValue([task]);
@@ -98,10 +102,10 @@ describe('jill run', () => {
     const prom = yargs.command(runCommand)
       .parse('run -w wks --deps-mode prod cmd -- --arg');
 
+    await flushPromises();
+
     // should create script task than add it to manager
     expect(wks.run).toHaveBeenCalledWith('cmd', ['--arg'], { buildDeps: 'prod' });
-
-    await flushPromises();
 
     // complete task
     jest.spyOn(task, 'status', 'get').mockReturnValue('done');
@@ -112,7 +116,7 @@ describe('jill run', () => {
   });
 
   it('should exit 1 if script fails', async () => {
-    const manager = container.get(TaskManager);
+    const manager = container.get(TASK_MANAGER);
 
     jest.spyOn(manager, 'add').mockImplementation();
     jest.spyOn(manager, 'tasks', 'get').mockReturnValue([task]);
