@@ -1,5 +1,4 @@
 import { waitForEvent } from '@jujulego/event-tree';
-import yargs from 'yargs';
 
 import { loadProject } from '@/src/middlewares/load-project';
 import { loadWorkspace } from '@/src/middlewares/load-workspace';
@@ -61,7 +60,7 @@ export default defineCommand({
     const result = await waitForEvent(group, 'completed');
 
     if (result.status === 'failed') {
-      return yargs.exit(1, new Error('Task failed !'));
+      return process.exit(1);
     }
   }
 });

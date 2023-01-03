@@ -12,7 +12,7 @@ describe('TaskManager', () => {
   });
 
   // Tests
-  it('should set jobs from GLOBAL_CONFIG', () => {
+  it('should set jobs from SERVICES_CONFIG', () => {
     container.rebind(SERVICES_CONFIG)
       .toConstantValue({ jobs: 5 });
 
