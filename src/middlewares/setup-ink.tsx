@@ -1,6 +1,6 @@
 import { render } from 'ink';
 
-import { container, INK_APP } from '@/src/services/inversify.config';
+import { container, INK_APP } from '@/src/inversify.config';
 import Layout from '@/src/ui/layout';
 import { defineMiddleware } from '@/src/utils/yargs';
 

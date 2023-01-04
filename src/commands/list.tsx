@@ -10,7 +10,7 @@ import { loadProject } from '@/src/middlewares/load-project';
 import { setupInk } from '@/src/middlewares/setup-ink';
 import { Project } from '@/src/project/project';
 import { Workspace } from '@/src/project/workspace';
-import { container, CURRENT, INK_APP } from '@/src/services/inversify.config';
+import { container, CURRENT, INK_APP } from '@/src/inversify.config';
 import Layout from '@/src/ui/layout';
 import List from '@/src/ui/list';
 import { applyMiddlewares, defineCommand } from '@/src/utils/yargs';

@@ -1,7 +1,7 @@
 import { EventSource } from '@jujulego/event-tree';
 import { decorate, injectable } from 'inversify';
 
-import { container } from './inversify.config';
+import { container } from '../inversify.config';
 
 // Interface
 export type SpinnerStatus = 'spin' | 'stop' | 'success' | 'failed';

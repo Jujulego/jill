@@ -1,4 +1,4 @@
-import { assertPlugin } from '@/src/services/plugins/utils';
+import { assertPlugin } from '@/src/plugins/utils';
 
 // Tests
 describe('assertPlugin', () => {

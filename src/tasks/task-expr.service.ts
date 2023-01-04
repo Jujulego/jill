@@ -4,8 +4,8 @@ import moo from 'moo';
 
 import { Workspace, WorkspaceRunOptions } from '@/src/project/workspace';
 
-import { container } from './inversify.config';
-import { Logger } from './logger.service';
+import { container } from '../inversify.config';
+import { Logger } from '../logger.service';
 
 // Interfaces
 export interface TaskNode {

@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 
-import { consoleFormat } from '@/src/services/logger.service';
+import { consoleFormat } from '@/src/logger.service';
 
 // Setup
 chalk.level = 1;

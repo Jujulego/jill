@@ -1,8 +1,8 @@
 import { SpawnTask, SpawnTaskOptions, TaskContext, TaskManager } from '@jujulego/tasks';
 
-import { lazyInject } from '@/src/services/inversify.config';
-import { Logger } from '@/src/services/logger.service';
-import { TASK_MANAGER } from '@/src/services/task-manager.config';
+import { lazyInject } from '@/src/inversify.config';
+import { Logger } from '@/src/logger.service';
+import { TASK_MANAGER } from '@/src/tasks/task-manager.config';
 import { streamLines } from '@/src/utils/streams';
 
 // Types

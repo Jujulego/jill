@@ -3,9 +3,9 @@ import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 
-import { CONFIG } from '@/src/services/config/loader';
-import { Config } from '@/src/services/config/types';
-import { container } from '@/src/services/inversify.config';
+import { CONFIG } from '@/src/config/loader';
+import { Config } from '@/src/config/types';
+import { container } from '@/src/inversify.config';
 import { Workspace } from '@/src/project/workspace';
 
 import { TestProject } from './test-project';

@@ -2,9 +2,9 @@ import os from 'node:os';
 import yargs from 'yargs';
 
 import { configOptions } from '@/src/middlewares/config-options';
-import { CONFIG } from '@/src/services/config/loader';
-import { container, SERVICES_CONFIG } from '@/src/services/inversify.config';
-import { Logger } from '@/src/services/logger.service';
+import { CONFIG } from '@/src/config/loader';
+import { container, SERVICES_CONFIG } from '@/src/inversify.config';
+import { Logger } from '@/src/logger.service';
 import { applyMiddlewares } from '@/src/utils/yargs';
 
 // Setup

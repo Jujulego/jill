@@ -9,8 +9,8 @@ import { loadWorkspace } from '@/src/middlewares/load-workspace';
 import { setupInk } from '@/src/middlewares/setup-ink';
 import { Project } from '@/src/project/project';
 import { Workspace, WorkspaceContext } from '@/src/project/workspace';
-import { container, CURRENT, INK_APP } from '@/src/services/inversify.config';
-import { TASK_MANAGER } from '@/src/services/task-manager.config';
+import { container, CURRENT, INK_APP } from '@/src/inversify.config';
+import { TASK_MANAGER } from '@/src/tasks/task-manager.config';
 import Layout from '@/src/ui/layout';
 
 import { TestBed } from '@/tools/test-bed';

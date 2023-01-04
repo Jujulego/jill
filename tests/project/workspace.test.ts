@@ -1,7 +1,7 @@
 import { fs, vol } from 'memfs';
 import path from 'node:path';
 
-import { Git } from '@/src/git';
+import { Git } from '@/src/commons/git.service';
 import { Project } from '@/src/project/project';
 import { Workspace } from '@/src/project/workspace';
 

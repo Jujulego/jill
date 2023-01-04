@@ -3,8 +3,8 @@ import Spinner from 'ink-spinner';
 import symbols from 'log-symbols';
 import { useLayoutEffect, useState } from 'react';
 
-import { container } from '@/src/services/inversify.config';
-import { SpinnerService, SpinnerState } from '@/src/services/spinner.service';
+import { container } from '@/src/inversify.config';
+import { SpinnerService, SpinnerState } from '@/src/commons/spinner.service';
 
 // Components
 export default function GlobalSpinner() {

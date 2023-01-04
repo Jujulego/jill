@@ -1,9 +1,9 @@
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
-import { container } from '@/src/services/inversify.config';
-import { Logger } from '@/src/services/logger.service';
-import { PluginLoaderService } from '@/src/services/plugins/plugin-loader.service';
+import { container } from '@/src/inversify.config';
+import { Logger } from '@/src/logger.service';
+import { PluginLoaderService } from '@/src/plugins/plugin-loader.service';
 
 import { commands } from './commands';
 import { configOptions } from './middlewares/config-options';

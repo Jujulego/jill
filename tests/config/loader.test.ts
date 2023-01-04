@@ -1,11 +1,11 @@
 import path from 'node:path';
 
-import { configLoader } from '@/src/services/config/loader';
-import { CONFIG_EXPLORER } from '@/src/services/config/explorer';
-import { Config } from '@/src/services/config/types';
-import { CONFIG_VALIDATOR } from '@/src/services/config/validator';
-import { container } from '@/src/services/inversify.config';
-import { Logger } from '@/src/services/logger.service';
+import { configLoader } from '@/src/config/loader';
+import { CONFIG_EXPLORER } from '@/src/config/explorer';
+import { Config } from '@/src/config/types';
+import { CONFIG_VALIDATOR } from '@/src/config/validator';
+import { container } from '@/src/inversify.config';
+import { Logger } from '@/src/logger.service';
 
 // Setup
 let logger: Logger;

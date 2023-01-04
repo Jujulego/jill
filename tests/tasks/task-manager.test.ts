@@ -1,5 +1,5 @@
-import { container, SERVICES_CONFIG } from '@/src/services/inversify.config';
-import { TASK_MANAGER } from '@/src/services/task-manager.config';
+import { container, SERVICES_CONFIG } from '@/src/inversify.config';
+import { TASK_MANAGER } from '@/src/tasks/task-manager.config';
 
 // Tests
 describe('TaskManager', () => {

@@ -1,9 +1,9 @@
 import { SpawnTask, TaskManager } from '@jujulego/tasks';
 
 import { Git, GitContext } from '@/src/git';
-import { container } from '@/src/services/inversify.config';
-import { Logger } from '@/src/services/logger.service';
-import { TASK_MANAGER } from '@/src/services/task-manager.config';
+import { container } from '@/src/inversify.config';
+import { Logger } from '@/src/logger.service';
+import { TASK_MANAGER } from '@/src/tasks/task-manager.config';
 
 // Setup
 let logger: Logger;

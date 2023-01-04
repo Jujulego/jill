@@ -1,10 +1,10 @@
 import { inject, injectable } from 'inversify';
 import { type Argv } from 'yargs';
 
-import { CONFIG } from '@/src/services/config/loader';
-import { type Config } from '@/src/services/config/types';
-import { container } from '@/src/services/inversify.config';
-import { Logger } from '@/src/services/logger.service';
+import { CONFIG } from '@/src/config/loader';
+import { type Config } from '@/src/config/types';
+import { container } from '@/src/inversify.config';
+import { Logger } from '@/src/logger.service';
 import { dynamicImport } from '@/src/utils/import';
 
 import { type Plugin } from './types';

@@ -4,8 +4,8 @@ import { type Package } from 'normalize-package-data';
 import { satisfies } from 'semver';
 
 import { Git } from '@/src/git';
-import { container } from '@/src/services/inversify.config';
-import { Logger } from '@/src/services/logger.service';
+import { container } from '@/src/inversify.config';
+import { Logger } from '@/src/logger.service';
 import { combine, streamLines } from '@/src/utils/streams';
 
 import { Project } from './project';

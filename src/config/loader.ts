@@ -1,9 +1,9 @@
 import { interfaces as int } from 'inversify';
 import path from 'node:path';
 
-import { AJV } from '@/src/services/ajv.config';
-import { container } from '@/src/services/inversify.config';
-import { Logger } from '@/src/services/logger.service';
+import { AJV } from '@/src/ajv.config';
+import { container } from '@/src/inversify.config';
+import { Logger } from '@/src/logger.service';
 
 import { CONFIG_EXPLORER } from './explorer';
 import { CONFIG_VALIDATOR } from './validator';
@@ -50,5 +50,6 @@ export async function configLoader() {
 }
 
 container
-  .bind(CONFIG).toDynamicValue(configLoader)
+  .bind(CONFIG)
+  .toDynamicValue(configLoader)
   .inSingletonScope();

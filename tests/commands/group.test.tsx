@@ -9,13 +9,13 @@ import { loadWorkspace } from '@/src/middlewares/load-workspace';
 import { setupInk } from '@/src/middlewares/setup-ink';
 import { Project } from '@/src/project/project';
 import { Workspace } from '@/src/project/workspace';
-import { container, CURRENT, INK_APP } from '@/src/services/inversify.config';
+import { container, CURRENT, INK_APP } from '@/src/inversify.config';
 import Layout from '@/src/ui/layout';
 
 import { TestBed } from '@/tools/test-bed';
 import { flushPromises, spyLogger } from '@/tools/utils';
-import { TaskExprService } from '@/src/services/task-expr.service';
-import { TASK_MANAGER } from '@/src/services/task-manager.config';
+import { TaskExprService } from '@/src/tasks/task-expr.service';
+import { TASK_MANAGER } from '@/src/tasks/task-manager.config';
 
 // Setup
 let app: ReturnType<typeof render>;

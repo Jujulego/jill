@@ -1,7 +1,7 @@
 import chalk from 'chalk';
 
-import { container, SERVICES_CONFIG } from '@/src/services/inversify.config';
-import { CONFIG } from '@/src/services/config/loader';
+import { container, SERVICES_CONFIG } from '@/src/inversify.config';
+import { CONFIG } from '@/src/config/loader';
 import '@/tools/matchers/setup';
 
 // Chalk config

@@ -17,19 +17,19 @@ export * from './project/project';
 export * from './project/workspace';
 
 // Services
-export * from './services/inversify.config';
-export * from './services/spinner.service';
-export * from './services/task-expr.service';
-export * from './services/task-manager.config';
+export * from './inversify.config';
+export * from './commons/spinner.service';
+export * from './tasks/task-expr.service';
+export * from './tasks/task-manager.config';
 
-export { CONFIG } from './services/config/loader';
-export { type Config } from './services/config/types';
+export { CONFIG } from './config/loader';
+export { type Config } from './config/types';
 
-export { Logger } from './services/logger.service';
+export { Logger } from './logger.service';
 
-export { PluginLoaderService } from './services/plugins/plugin-loader.service';
-export { type Plugin } from './services/plugins/types';
-export { definePlugin } from './services/plugins/utils';
+export { PluginLoaderService } from './plugins/plugin-loader.service';
+export { type Plugin } from './plugins/types';
+export { definePlugin } from './plugins/utils';
 
 // Ui
 export { default as GroupTaskSpinner } from './ui/group-task-spinner';

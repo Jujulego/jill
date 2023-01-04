@@ -1,6 +1,6 @@
 import { Workspace } from '@/src/project/workspace';
-import { container } from '@/src/services/inversify.config';
-import { GroupNode, TaskExprService, TaskNode } from '@/src/services/task-expr.service';
+import { container } from '@/src/inversify.config';
+import { GroupNode, TaskExprService, TaskNode } from '@/src/tasks/task-expr.service';
 
 import { TestBed } from '@/tools/test-bed';
 import { ParallelGroup, SequenceGroup, SpawnTask } from '@jujulego/tasks';
