@@ -4,7 +4,7 @@ import yargs from 'yargs';
 import { configOptions } from '@/src/middlewares/config-options';
 import { CONFIG } from '@/src/config/loader';
 import { container, SERVICES_CONFIG } from '@/src/inversify.config';
-import { Logger } from '@/src/logger.service';
+import { Logger } from '@/src/commons/logger.service';
 import { applyMiddlewares } from '@/src/utils/yargs';
 
 // Setup

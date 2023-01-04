@@ -1,8 +1,7 @@
 import chalk from 'chalk';
-import { injectable } from 'inversify';
 import winston from 'winston';
 
-import { container } from './inversify.config';
+import { container } from '../inversify.config';
 
 // Utils
 export const consoleFormat = winston.format.combine(
@@ -32,7 +31,6 @@ export const consoleFormat = winston.format.combine(
 );
 
 // Service
-@injectable()
 export class Logger {}
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface

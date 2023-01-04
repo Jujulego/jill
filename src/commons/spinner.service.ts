@@ -1,7 +1,10 @@
 import { EventSource } from '@jujulego/event-tree';
 import { decorate, injectable } from 'inversify';
 
-import { container } from '../inversify.config';
+import { Service } from '../inversify.config';
+
+// Setup
+decorate(injectable(), EventSource);
 
 // Interface
 export type SpinnerStatus = 'spin' | 'stop' | 'success' | 'failed';
@@ -13,7 +16,7 @@ export interface SpinnerState {
 export type SpinnerEventMap = Record<`update.${SpinnerStatus}`, SpinnerState>;
 
 // Service
-@injectable()
+@Service()
 export class SpinnerService extends EventSource<SpinnerEventMap> {
   // Attributes
   private _status: SpinnerStatus = 'stop';
@@ -57,9 +60,3 @@ export class SpinnerService extends EventSource<SpinnerEventMap> {
     };
   }
 }
-
-decorate(injectable(), EventSource);
-
-container.bind(SpinnerService)
-  .toSelf()
-  .inSingletonScope();

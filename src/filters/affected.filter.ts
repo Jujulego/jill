@@ -1,7 +1,7 @@
 import { GitService } from '@/src/commons/git.service';
 import { Workspace } from '@/src/project/workspace';
 import { lazyInject } from '@/src/inversify.config';
-import { Logger } from '@/src/logger.service';
+import { Logger } from '@/src/commons/logger.service';
 
 import { PipelineFilter } from './pipeline';
 

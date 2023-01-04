@@ -1,8 +1,8 @@
 import { SpawnTask, SpawnTaskOptions, TaskContext, TaskManager } from '@jujulego/tasks';
-import { inject, injectable } from 'inversify';
+import { inject } from 'inversify';
 
-import { container } from '@/src/inversify.config';
-import { Logger } from '@/src/logger.service';
+import { Service } from '@/src/inversify.config';
+import { Logger } from '@/src/commons/logger.service';
 import { TASK_MANAGER } from '@/src/tasks/task-manager.config';
 import { streamLines } from '@/src/utils/streams';
 
@@ -12,7 +12,7 @@ export interface GitContext extends TaskContext {
 }
 
 // Git commands
-@injectable()
+@Service()
 export class GitService {
   // Constructor
   constructor(
@@ -128,5 +128,3 @@ export class GitService {
     return result;
   }
 }
-
-container.bind(GitService).toSelf().inSingletonScope();

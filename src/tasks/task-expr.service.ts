@@ -1,11 +1,10 @@
 import { GroupTask, ParallelGroup, SequenceGroup, Task } from '@jujulego/tasks';
-import { injectable } from 'inversify';
 import moo from 'moo';
 
+import { Service } from '@/src/inversify.config';
+import { Logger } from '@/src/commons/logger.service';
 import { Workspace, WorkspaceRunOptions } from '@/src/project/workspace';
-
-import { container } from '../inversify.config';
-import { Logger } from '../logger.service';
+import { inject } from 'inversify';
 
 // Interfaces
 export interface TaskNode {
@@ -22,12 +21,18 @@ export interface TaskTree {
 }
 
 // Service
-@injectable()
+@Service()
 export class TaskExprService {
   // Statics
   static isTaskNode(node: TaskNode | GroupNode): node is TaskNode {
     return 'script' in node;
   }
+
+  // Constructor
+  constructor(
+    @inject(Logger)
+    private readonly _logger: Logger
+  ) {}
 
   // Methods
   private _lexer(): moo.Lexer {
@@ -151,11 +156,11 @@ export class TaskExprService {
 
       if (node.operator === '//') {
         group = new ParallelGroup('In parallel', {}, {
-          logger: container.get(Logger),
+          logger: this._logger,
         });
       } else {
         group = new SequenceGroup('In sequence', {}, {
-          logger: container.get(Logger),
+          logger: this._logger,
         });
       }
 
@@ -167,5 +172,3 @@ export class TaskExprService {
     }
   }
 }
-
-container.bind(TaskExprService).toSelf().inSingletonScope();

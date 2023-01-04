@@ -5,7 +5,7 @@ import { CONFIG_EXPLORER } from '@/src/config/explorer';
 import { Config } from '@/src/config/types';
 import { CONFIG_VALIDATOR } from '@/src/config/validator';
 import { container } from '@/src/inversify.config';
-import { Logger } from '@/src/logger.service';
+import { Logger } from '@/src/commons/logger.service';
 
 // Setup
 let logger: Logger;

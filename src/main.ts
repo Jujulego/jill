@@ -2,7 +2,7 @@ import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
 import { container } from '@/src/inversify.config';
-import { Logger } from '@/src/logger.service';
+import { Logger } from '@/src/commons/logger.service';
 import { PluginLoaderService } from '@/src/plugins/plugin-loader.service';
 
 import { commands } from './commands';

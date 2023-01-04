@@ -2,7 +2,7 @@ import os from 'node:os';
 
 import { container, SERVICES_CONFIG } from '@/src/inversify.config';
 import { CONFIG } from '@/src/config/loader';
-import { Logger } from '@/src/logger.service';
+import { Logger } from '@/src/commons/logger.service';
 import { defineMiddleware } from '@/src/utils/yargs';
 
 // Constants

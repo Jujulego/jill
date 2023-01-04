@@ -25,7 +25,7 @@ export * from './tasks/task-manager.config';
 export { CONFIG } from './config/loader';
 export { type Config } from './config/types';
 
-export { Logger } from './logger.service';
+export { Logger } from './commons/logger.service';
 
 export { PluginLoaderService } from './plugins/plugin-loader.service';
 export { type Plugin } from './plugins/types';

@@ -2,7 +2,7 @@ import Ajv from 'ajv';
 import { interfaces as int } from 'inversify';
 
 import { container } from './inversify.config';
-import { Logger } from './logger.service';
+import { Logger } from './commons/logger.service';
 
 // Symbols
 export const AJV: int.ServiceIdentifier<Ajv> = Symbol('jujulego:jill:Ajv');

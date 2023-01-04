@@ -5,7 +5,7 @@ import normalize, { type Package } from 'normalize-package-data';
 import glob from 'tiny-glob';
 
 import { container, lazyInject } from '@/src/inversify.config';
-import { Logger } from '@/src/logger.service';
+import { Logger } from '@/src/commons/logger.service';
 
 import { Workspace } from './workspace';
 

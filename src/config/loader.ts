@@ -3,7 +3,7 @@ import path from 'node:path';
 
 import { AJV } from '@/src/ajv.config';
 import { container } from '@/src/inversify.config';
-import { Logger } from '@/src/logger.service';
+import { Logger } from '@/src/commons/logger.service';
 
 import { CONFIG_EXPLORER } from './explorer';
 import { CONFIG_VALIDATOR } from './validator';

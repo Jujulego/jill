@@ -1,17 +1,17 @@
-import { inject, injectable } from 'inversify';
+import { inject } from 'inversify';
 import { type Argv } from 'yargs';
 
 import { CONFIG } from '@/src/config/loader';
 import { type Config } from '@/src/config/types';
-import { container } from '@/src/inversify.config';
-import { Logger } from '@/src/logger.service';
+import { Service } from '@/src/inversify.config';
+import { Logger } from '@/src/commons/logger.service';
 import { dynamicImport } from '@/src/utils/import';
 
 import { type Plugin } from './types';
 import { assertPlugin } from './utils';
 
 // Class
-@injectable()
+@Service()
 export class PluginLoaderService {
   // Attributes
   private readonly _logger: Logger;
@@ -47,5 +47,3 @@ export class PluginLoaderService {
     }
   }
 }
-
-container.bind(PluginLoaderService).toSelf().inSingletonScope();

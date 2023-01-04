@@ -4,7 +4,7 @@ import winston from 'winston';
 import Transport from 'winston-transport';
 
 import { container } from '@/src/inversify.config';
-import { consoleFormat, Logger } from '@/src/logger.service';
+import { consoleFormat, Logger } from '@/src/commons/logger.service';
 
 // Constants
 const MESSAGE = Symbol.for('message');

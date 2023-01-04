@@ -5,7 +5,7 @@ import { satisfies } from 'semver';
 
 import { GitService } from '@/src/commons/git.service';
 import { container, lazyInject } from '@/src/inversify.config';
-import { Logger } from '@/src/logger.service';
+import { Logger } from '@/src/commons/logger.service';
 import { combine, streamLines } from '@/src/utils/streams';
 
 import { Project } from './project';
