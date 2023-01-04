@@ -1,4 +1,4 @@
-export * from './git';
+export * from './commons/git.service';
 export * from './types';
 
 // Filters

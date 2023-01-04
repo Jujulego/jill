@@ -3,8 +3,8 @@ import path from 'node:path';
 import { type Package } from 'normalize-package-data';
 import { satisfies } from 'semver';
 
-import { Git } from '@/src/git';
-import { container } from '@/src/inversify.config';
+import { GitService } from '@/src/commons/git.service';
+import { container, lazyInject } from '@/src/inversify.config';
 import { Logger } from '@/src/logger.service';
 import { combine, streamLines } from '@/src/utils/streams';
 
@@ -28,6 +28,9 @@ export class Workspace {
   private readonly _logger: Logger;
   private readonly _affectedCache = new Map<string, Promise<boolean>>();
   private readonly _tasks = new Map<string, SpawnTask<WorkspaceContext>>();
+
+  @lazyInject(GitService)
+  private readonly _git: GitService;
 
   // Constructor
   constructor(
@@ -76,7 +79,7 @@ export class Workspace {
   }
 
   private async _isAffected(reference: string): Promise<boolean> {
-    const isAffected = await Git.isAffected(reference, ['--', this.cwd], {
+    const isAffected = await this._git.isAffected(reference, [this.cwd], {
       cwd: this.project.root,
       logger: this._logger,
     });

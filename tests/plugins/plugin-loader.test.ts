@@ -6,7 +6,7 @@ import { PluginLoaderService } from '@/src/plugins/plugin-loader.service';
 import { dynamicImport } from '@/src/utils/import';
 
 // Mocks
-jest.mock('../../../src/utils/import');
+jest.mock('@/src/utils/import');
 
 // Setup
 let service: PluginLoaderService;
