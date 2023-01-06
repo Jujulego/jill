@@ -3,10 +3,11 @@ import yargs from 'yargs';
 import { loadWorkspace } from '@/src/middlewares/load-workspace';
 import { Project } from '@/src/project/project';
 import { Workspace } from '@/src/project/workspace';
-import { container, CURRENT } from '@/src/inversify.config';
+import { container } from '@/src/inversify.config';
 import { SpinnerService } from '@/src/commons/spinner.service';
 import { applyMiddlewares } from '@/src/utils/yargs';
 import { TestBed } from '@/tools/test-bed';
+import { CURRENT } from '@/src/project/constants';
 
 // Setup
 let bed: TestBed;

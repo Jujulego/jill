@@ -11,6 +11,7 @@ import { applyMiddlewares } from './utils/yargs';
 
 // @ts-ignore: Outside of typescript's rootDir in build
 import pkg from '../package.json';
+import { COMMAND } from '@/src/bases/command';
 
 // Bootstrap
 (async () => {
@@ -31,8 +32,11 @@ import pkg from '../package.json';
     await pluginLoader.loadPlugins(parser);
 
     // Commands
+    const cmds = await container.getAllAsync(COMMAND);
+
     await parser
       .command(commands as any)
+      .command(cmds as any)
       .demandCommand()
       .recommendCommands()
       .strict()

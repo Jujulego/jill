@@ -6,10 +6,11 @@ import listCommand from '@/src/commands/list';
 import { loadProject } from '@/src/middlewares/load-project';
 import { setupInk } from '@/src/middlewares/setup-ink';
 import { Project } from '@/src/project/project';
-import { container, CURRENT, INK_APP } from '@/src/inversify.config';
+import { container, INK_APP } from '@/src/inversify.config';
 import Layout from '@/src/ui/layout';
 
 import { TestBed } from '@/tools/test-bed';
+import { CURRENT } from '@/src/project/constants';
 
 // Setup
 let app: ReturnType<typeof render>;

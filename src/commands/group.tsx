@@ -4,12 +4,13 @@ import { loadProject } from '@/src/middlewares/load-project';
 import { loadWorkspace } from '@/src/middlewares/load-workspace';
 import { setupInk } from '@/src/middlewares/setup-ink';
 import { Workspace, WorkspaceDepsMode } from '@/src/project/workspace';
-import { container, CURRENT, INK_APP } from '@/src/inversify.config';
+import { container, INK_APP } from '@/src/inversify.config';
 import { TaskExprService } from '@/src/tasks/task-expr.service';
 import { TASK_MANAGER } from '@/src/tasks/task-manager.config';
 import Layout from '@/src/ui/layout';
 import TaskManagerSpinner from '@/src/ui/task-manager-spinner';
 import { applyMiddlewares, defineCommand } from '@/src/utils/yargs';
+import { CURRENT } from '@/src/project/constants';
 
 // Command
 export default defineCommand({

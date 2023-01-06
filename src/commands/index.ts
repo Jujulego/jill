@@ -2,7 +2,7 @@ import each from './each';
 import group from './group';
 import list from './list';
 import run from './run';
-import tree from './tree';
+import './tree';
 
 // Commands
-export const commands = [each, group, list, run, tree];
+export const commands = [each, group, list, run];

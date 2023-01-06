@@ -8,12 +8,13 @@ import { ScriptsFilter } from '@/src/filters/scripts.filter';
 import { loadProject } from '@/src/middlewares/load-project';
 import { setupInk } from '@/src/middlewares/setup-ink';
 import { Project } from '@/src/project/project';
-import { container, CURRENT, INK_APP } from '@/src/inversify.config';
+import { container, INK_APP } from '@/src/inversify.config';
 import { SpinnerService } from '@/src/commons/spinner.service';
 import { TASK_MANAGER } from '@/src/tasks/task-manager.config';
 import Layout from '@/src/ui/layout';
 import TaskManagerSpinner from '@/src/ui/task-manager-spinner';
 import { applyMiddlewares, defineCommand } from '@/src/utils/yargs';
+import { CURRENT } from '@/src/project/constants';
 
 // Command
 export default defineCommand({

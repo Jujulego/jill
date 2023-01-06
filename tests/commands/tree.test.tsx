@@ -7,11 +7,12 @@ import { loadWorkspace } from '@/src/middlewares/load-workspace';
 import { setupInk } from '@/src/middlewares/setup-ink';
 import { Project } from '@/src/project/project';
 import { Workspace } from '@/src/project/workspace';
-import { container, CURRENT, INK_APP } from '@/src/inversify.config';
+import { container, INK_APP } from '@/src/inversify.config';
 import Layout from '@/src/ui/layout';
 
 import { TestBed } from '@/tools/test-bed';
 import { flushPromises } from '@/tools/utils';
+import { CURRENT } from '@/src/project/constants';
 
 // Setup
 let app: ReturnType<typeof render>;

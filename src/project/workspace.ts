@@ -1,14 +1,16 @@
 import { SpawnTask, SpawnTaskOptions, SpawnTaskStream, TaskContext } from '@jujulego/tasks';
+import { injectable, named } from 'inversify';
 import path from 'node:path';
 import { type Package } from 'normalize-package-data';
 import { satisfies } from 'semver';
 
 import { GitService } from '@/src/commons/git.service';
-import { container, lazyInject } from '@/src/inversify.config';
+import { container, lazyInject, lazyInjectNamed } from '@/src/inversify.config';
 import { Logger } from '@/src/commons/logger.service';
 import { combine, streamLines } from '@/src/utils/streams';
 
 import { Project } from './project';
+import { CURRENT } from '@/src/project/constants';
 
 // Types
 export type WorkspaceDepsMode = 'all' | 'prod' | 'none';
@@ -23,6 +25,7 @@ export interface WorkspaceRunOptions extends Omit<SpawnTaskOptions, 'cwd'> {
 }
 
 // Class
+@injectable()
 export class Workspace {
   // Attributes
   private readonly _logger: Logger;
@@ -206,4 +209,9 @@ export class Workspace {
   get cwd(): string {
     return path.resolve(this.project.root, this._cwd);
   }
+}
+
+// Decorators
+export function lazyCurrentWorkspace() {
+  return lazyInjectNamed(Workspace, CURRENT);
 }

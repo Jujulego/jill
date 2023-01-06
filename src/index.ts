@@ -13,6 +13,7 @@ export * from './middlewares/load-workspace';
 export * from './middlewares/setup-ink';
 
 // Project
+export * from './project/constants';
 export * from './project/project';
 export * from './project/workspace';
 

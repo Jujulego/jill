@@ -3,9 +3,10 @@ import yargs from 'yargs';
 
 import { loadProject } from '@/src/middlewares/load-project';
 import { Project } from '@/src/project/project';
-import { container, CURRENT } from '@/src/inversify.config';
+import { container } from '@/src/inversify.config';
 import { SpinnerService } from '@/src/commons/spinner.service';
 import { applyMiddlewares } from '@/src/utils/yargs';
+import { CURRENT } from '@/src/project/constants';
 
 // Setup
 let parser: yargs.Argv;

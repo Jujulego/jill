@@ -7,7 +7,6 @@ import 'reflect-metadata';
 // Constants
 export const INK_APP: interfaces.ServiceIdentifier<ink.Instance> = Symbol.for('jujulego:jill:InkApp');
 export const SERVICES_CONFIG: interfaces.ServiceIdentifier<ServicesConfig> = Symbol.for('jujulego:jill:ServicesConfig');
-export const CURRENT = Symbol.for('jujulego:jill:Current');
 
 // Types
 export interface ServicesConfig {
@@ -18,7 +17,7 @@ export interface ServicesConfig {
 export const container = new Container();
 
 // Utilities
-export const { lazyInject } = getDecorators(container);
+export const { lazyInject, lazyInjectNamed } = getDecorators(container);
 
 /**
  * Register class as a service
