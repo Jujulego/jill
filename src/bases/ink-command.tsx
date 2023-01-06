@@ -17,16 +17,16 @@ export abstract class InkCommand<A = unknown> implements ICommand<A> {
   readonly app: ink.Instance;
 
   // Methods
-  abstract render(args: ArgumentsCamelCase<A>): ReactNode;
+  abstract render(args: ArgumentsCamelCase<A>): Awaitable<ReactNode>;
 
   builder(yargs: Argv): Awaitable<Argv<A>> {
     return yargs as Argv<A>;
   }
 
-  handler(args: ArgumentsCamelCase<A>): Promise<void> {
+  async handler(args: ArgumentsCamelCase<A>): Promise<void> {
     this.app.rerender(
       <Layout>
-        { this.render(args) }
+        { await this.render(args) }
       </Layout>
     );
 

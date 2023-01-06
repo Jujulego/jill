@@ -1,26 +1,38 @@
 import { waitForEvent } from '@jujulego/event-tree';
+import { type ArgumentsCamelCase, type Argv } from 'yargs';
 
-import { loadProject } from '@/src/middlewares/load-project';
-import { loadWorkspace } from '@/src/middlewares/load-workspace';
-import { setupInk } from '@/src/middlewares/setup-ink';
-import { Workspace } from '@/src/project/workspace';
-import { container, INK_APP } from '@/src/inversify.config';
+import { Command } from '@/src/bases/command';
+import { InkCommand } from '@/src/bases/ink-command';
+import { container } from '@/src/inversify.config';
+import { LoadProject } from '@/src/middlewares/load-project';
+import { LoadWorkspace } from '@/src/middlewares/load-workspace';
+import { lazyCurrentWorkspace, Workspace, type WorkspaceDepsMode } from '@/src/project/workspace';
 import { TASK_MANAGER } from '@/src/tasks/task-manager.config';
-import Layout from '@/src/ui/layout';
 import TaskManagerSpinner from '@/src/ui/task-manager-spinner';
-import { applyMiddlewares, defineCommand } from '@/src/utils/yargs';
-import { CURRENT } from '@/src/project/constants';
+
+// Types
+export interface IRunCommandArgs {
+  script: string;
+  'deps-mode': WorkspaceDepsMode;
+}
 
 // Command
-export default defineCommand({
+@Command({
   command: 'run <script>',
   describe: 'Run script inside workspace',
-  builder: async (yargs) =>
-    (await applyMiddlewares(yargs, [
-      setupInk,
-      loadProject,
-      loadWorkspace
-    ]))
+  middlewares: [
+    LoadProject,
+    LoadWorkspace
+  ]
+})
+export class RunCommand extends InkCommand<IRunCommandArgs> {
+  // Lazy injections
+  @lazyCurrentWorkspace()
+  readonly workspace: Workspace;
+
+  // Methods
+  builder(yargs: Argv) {
+    return yargs
       .positional('script', { type: 'string', demandOption: true })
       .option('deps-mode', {
         choice: ['all', 'prod', 'none'],
@@ -29,11 +41,11 @@ export default defineCommand({
           ' - all = dependencies AND devDependencies\n' +
           ' - prod = dependencies\n' +
           ' - none = nothing'
-      }),
-  async handler(args) {
-    const app = container.get(INK_APP);
-    const workspace = container.getNamed(Workspace, CURRENT);
-    const manager = container.get(TASK_MANAGER);
+      });
+  }
+
+  async render(args: ArgumentsCamelCase<IRunCommandArgs>) {
+    const manager = await container.getAsync(TASK_MANAGER);
 
     // Extract arguments
     const rest = args._.map(arg => arg.toString());
@@ -43,23 +55,19 @@ export default defineCommand({
     }
 
     // Run script in workspace
-    const task = await workspace.run(args.script, rest, {
+    const task = await this.workspace.run(args.script, rest, {
       buildDeps: args.depsMode,
     });
     manager.add(task);
 
+    // Handle result
+    waitForEvent(task, 'completed').then((result) => {
+      if (result.status === 'failed') {
+        return process.exit(1);
+      }
+    });
+
     // Render
-    app.rerender(
-      <Layout>
-        <TaskManagerSpinner manager={manager} />
-      </Layout>
-    );
-
-    // Wait for result
-    const result = await waitForEvent(task, 'completed');
-
-    if (result.status === 'failed') {
-      return process.exit(1);
-    }
+    return <TaskManagerSpinner manager={manager} />;
   }
-});
+}

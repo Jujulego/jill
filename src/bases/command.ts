@@ -41,7 +41,7 @@ export function Command(opts: ICommandOpts) {
           describe: opts.describe,
           deprecated: opts.deprecated,
 
-          builder: (yargs: Argv) => cmd.builder(applyMiddlewares(yargs, opts.middlewares ?? [])),
+          builder: async (yargs: Argv) => cmd.builder(await applyMiddlewares(yargs, opts.middlewares ?? [])),
           handler: (...args) => cmd.handler(...args),
         };
       })
