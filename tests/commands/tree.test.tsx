@@ -2,18 +2,18 @@ import { cleanup, render } from 'ink-testing-library';
 import yargs from 'yargs';
 
 import '@/src/commands/tree';
+import { COMMAND } from '@/src/bases/command';
+import { INK_APP } from '@/src/ink.config';
 import { loadProject } from '@/src/middlewares/load-project';
 import { loadWorkspace } from '@/src/middlewares/load-workspace';
 import { Project } from '@/src/project/project';
+import { CURRENT } from '@/src/project/constants';
 import { Workspace } from '@/src/project/workspace';
 import { container } from '@/src/inversify.config';
 import Layout from '@/src/ui/layout';
 
 import { TestBed } from '@/tools/test-bed';
-import { flushPromises } from '@/tools/utils';
-import { CURRENT } from '@/src/project/constants';
-import { INK_APP } from '@/src/ink.config';
-import { COMMAND } from '@/src/bases/command';
+import { flushPromises, wrapInkTestApp } from '@/tools/utils';
 
 // Setup
 let app: ReturnType<typeof render>;
@@ -36,7 +36,7 @@ beforeEach(() => {
     .addDependency(wksC, true);
 
   app = render(<Layout />);
-  container.rebind(INK_APP).toConstantValue(app as any);
+  container.rebind(INK_APP).toConstantValue(wrapInkTestApp(app));
 
   // Mocks
   jest.resetAllMocks();

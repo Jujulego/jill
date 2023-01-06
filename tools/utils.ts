@@ -1,4 +1,6 @@
 import { ILogger } from '@jujulego/tasks';
+import ink from 'ink';
+import { render } from 'ink-testing-library';
 import cp from 'node:child_process';
 
 // Logger
@@ -8,6 +10,14 @@ export const spyLogger: ILogger = {
   warn: jest.fn(),
   error: jest.fn(),
 };
+
+// Ink
+export function wrapInkTestApp(app: ReturnType<typeof render>): ink.Instance {
+  return {
+    ...app,
+    waitUntilExit: jest.fn()
+  } as any;
+}
 
 // Utils
 export function flushPromises(timeout = 0): Promise<void> {
