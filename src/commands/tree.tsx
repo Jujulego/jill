@@ -12,12 +12,11 @@ import WorkspaceTree from '@/src/ui/workspace-tree';
 import { applyMiddlewares } from '@/src/utils/yargs';
 
 // Command
-@Command()
+@Command({
+  command: 'tree',
+  describe: 'Print workspace dependency tree'
+})
 export class TreeCommand implements ICommand {
-  // Attributes
-  readonly command = 'tree';
-  readonly describe = 'Print workspace dependency tree';
-
   // Lazy injections
   @lazyCurrentWorkspace()
   readonly workspace: Workspace;

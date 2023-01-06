@@ -1,18 +1,19 @@
 import { cleanup, render } from 'ink-testing-library';
 import yargs from 'yargs';
 
-import treeCommand from '@/src/commands/tree';
+import '@/src/commands/tree';
 import { loadProject } from '@/src/middlewares/load-project';
 import { loadWorkspace } from '@/src/middlewares/load-workspace';
-import { setupInk } from '@/src/middlewares/setup-ink';
 import { Project } from '@/src/project/project';
 import { Workspace } from '@/src/project/workspace';
-import { container, INK_APP } from '@/src/inversify.config';
+import { container } from '@/src/inversify.config';
 import Layout from '@/src/ui/layout';
 
 import { TestBed } from '@/tools/test-bed';
 import { flushPromises } from '@/tools/utils';
 import { CURRENT } from '@/src/project/constants';
+import { INK_APP } from '@/src/ink.config';
+import { COMMAND } from '@/src/bases/command';
 
 // Setup
 let app: ReturnType<typeof render>;
@@ -34,21 +35,22 @@ beforeEach(() => {
     .addDependency(wksB)
     .addDependency(wksC, true);
 
+  app = render(<Layout />);
+  container.rebind(INK_APP).toConstantValue(app as any);
+
   // Mocks
   jest.resetAllMocks();
   jest.restoreAllMocks();
 
-  jest.spyOn(setupInk, 'handler').mockImplementation(() => {
-    app = render(<Layout />);
-    container.bind(INK_APP).toConstantValue(app as any);
-  });
   jest.spyOn(loadProject, 'handler').mockImplementation(() => {
-    container.bind(Project)
+    container
+      .bind(Project)
       .toConstantValue(bed.project)
       .whenTargetNamed(CURRENT);
   });
   jest.spyOn(loadWorkspace, 'handler').mockImplementation(() => {
-    container.bind(Workspace)
+    container
+      .bind(Workspace)
       .toConstantValue(wksA)
       .whenTargetNamed(CURRENT);
   });
@@ -70,7 +72,7 @@ afterEach(() => {
 describe('jill tree', () => {
   it('should print current workspace', async () => {
     // Run command
-    await yargs.command(treeCommand)
+    await yargs.command(await container.getNamedAsync(COMMAND, 'tree'))
       .parse('tree -w wks-a');
 
     await flushPromises();

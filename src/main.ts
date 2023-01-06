@@ -35,8 +35,7 @@ import { COMMAND } from '@/src/bases/command';
     const cmds = await container.getAllAsync(COMMAND);
 
     await parser
-      .command(commands as any)
-      .command(cmds as any)
+      .command([...commands, ...cmds] as any)
       .demandCommand()
       .recommendCommands()
       .strict()
