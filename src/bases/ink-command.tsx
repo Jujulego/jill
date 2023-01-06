@@ -1,7 +1,7 @@
 import ink from 'ink';
 import { inject, injectable } from 'inversify';
 import { type ReactNode } from 'react';
-import { ArgumentsCamelCase, type Argv } from 'yargs';
+import { type ArgumentsCamelCase, type Argv } from 'yargs';
 
 import { INK_APP } from '@/src/ink.config';
 import { type Awaitable } from '@/src/types';

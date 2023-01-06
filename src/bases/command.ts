@@ -1,8 +1,10 @@
 import { decorate, injectable, interfaces as int } from 'inversify';
-import { ArgumentsCamelCase, Argv, CommandModule } from 'yargs';
+import { type ArgumentsCamelCase, type Argv, type CommandModule } from 'yargs';
 
 import { container } from '@/src/inversify.config';
-import { Awaitable, Type } from '@/src/types';
+import { type Awaitable, type Type } from '@/src/types';
+
+import { applyMiddlewares, type IMiddleware } from './middleware';
 
 // Symbols
 export const COMMAND: int.ServiceIdentifier<CommandModule> = Symbol('jujulego:jill:command');
@@ -18,6 +20,7 @@ export interface ICommandOpts {
   readonly aliases?: string | readonly string[];
   readonly describe?: string;
   readonly deprecated?: boolean;
+  readonly middlewares?: Type<IMiddleware>[];
 }
 
 // Decorator
@@ -30,6 +33,7 @@ export function Command(opts: ICommandOpts) {
       .bind(COMMAND)
       .toDynamicValue(async ({ container }) => {
         const cmd = await container.getAsync(target);
+        cmd.builder ??= (yargs: Argv) => yargs;
 
         return {
           command: opts.command,
@@ -37,7 +41,7 @@ export function Command(opts: ICommandOpts) {
           describe: opts.describe,
           deprecated: opts.deprecated,
 
-          builder: cmd.builder && ((...args) => cmd.builder(...args)),
+          builder: (yargs: Argv) => cmd.builder(applyMiddlewares(yargs, opts.middlewares ?? [])),
           handler: (...args) => cmd.handler(...args),
         };
       })

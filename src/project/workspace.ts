@@ -1,5 +1,5 @@
 import { SpawnTask, SpawnTaskOptions, SpawnTaskStream, TaskContext } from '@jujulego/tasks';
-import { injectable, named } from 'inversify';
+import { injectable } from 'inversify';
 import path from 'node:path';
 import { type Package } from 'normalize-package-data';
 import { satisfies } from 'semver';
@@ -9,8 +9,8 @@ import { container, lazyInject, lazyInjectNamed } from '@/src/inversify.config';
 import { Logger } from '@/src/commons/logger.service';
 import { combine, streamLines } from '@/src/utils/streams';
 
+import { CURRENT } from './constants';
 import { Project } from './project';
-import { CURRENT } from '@/src/project/constants';
 
 // Types
 export type WorkspaceDepsMode = 'all' | 'prod' | 'none';
