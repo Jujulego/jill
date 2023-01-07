@@ -1,17 +1,15 @@
 import yargs, { Argv } from 'yargs';
 import { interfaces as int } from 'inversify';
-import os from 'node:os';
+import { hideBin } from 'yargs/helpers';
 
 import { type IConfig } from '@/src/config/types';
 import { container } from '@/src/inversify.config';
-import { hideBin } from 'yargs/helpers';
 
 // Symbols
 export const CONFIG_OPTIONS: int.ServiceIdentifier<IConfig> = Symbol('jujulego:jill:config-options');
 
 // Constants
 const VERBOSITY_LEVEL: Record<number, IConfig['verbose']> = {
-  0: 'info',
   1: 'verbose',
   2: 'debug',
 };
@@ -28,7 +26,6 @@ export function applyConfigOptions(yargs: Argv): Argv<Omit<IConfig, 'plugins'>> 
     .option('jobs', {
       alias: 'j',
       type: 'number',
-      default: os.cpus().length - 1,
       description: 'Set maximum parallel job number',
     });
 }
@@ -40,6 +37,8 @@ container
       .help(false)
       .version(false);
 
-    return applyConfigOptions(parser).parse();
+    applyConfigOptions(parser);
+
+    return parser.parse();
   })
   .inSingletonScope();

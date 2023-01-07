@@ -1,4 +1,5 @@
 import { interfaces as int } from 'inversify';
+import os from 'node:os';
 import path from 'node:path';
 
 import { AJV } from '@/src/ajv.config';
@@ -25,8 +26,11 @@ export async function configLoader() {
   const config = loaded?.config ?? {};
 
   // Apply options from cli
-  config.jobs = options.jobs;
-  config.verbose = options.verbose;
+  if (options.jobs) config.jobs = options.jobs;
+  if (options.verbose) config.verbose = options.verbose;
+
+  // Apply default
+  config.jobs ??= (os.cpus().length - 1);
 
   // Validate
   if (!validator(config)) {
@@ -51,6 +55,8 @@ export async function configLoader() {
 
     logger.verbose(`Loaded ${loaded.filepath} config file`);
   }
+
+  logger.debug(`Loaded config:\n${JSON.stringify(config, null, 2)}`);
 
   return config;
 }
