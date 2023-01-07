@@ -19,8 +19,8 @@ export abstract class InkCommand<A = unknown> implements ICommand<A> {
   // Methods
   abstract render(args: ArgumentsCamelCase<A>): AwaitableGenerator<ReactNode>;
 
-  builder(yargs: Argv): Awaitable<Argv<A>> {
-    return yargs as Argv<A>;
+  builder(parser: Argv): Awaitable<Argv<A>> {
+    return parser as Argv<A>;
   }
 
   async handler(args: ArgumentsCamelCase<A>): Promise<void> {

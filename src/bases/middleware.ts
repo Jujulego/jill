@@ -6,7 +6,7 @@ import { type Awaitable, Type } from '@/src/types';
 
 // Types
 export interface IMiddleware<A = unknown> {
-  builder?: (yargs: Argv) => Awaitable<Argv<A>>;
+  builder?: (parser: Argv) => Argv<A>;
   handler(args: ArgumentsCamelCase<A>): Awaitable<void>;
 }
 
@@ -18,17 +18,17 @@ export function Middleware() {
 }
 
 // Utils
-export async function applyMiddlewares(yargs: Argv, middlewares: Type<IMiddleware>[]): Promise<Argv> {
-  let tmp: Argv<unknown> = yargs;
+export function applyMiddlewares(parser: Argv, middlewares: Type<IMiddleware>[]): Argv {
+  let tmp = parser;
 
   for (const cls of middlewares) {
     const middleware = container.resolve(cls);
 
     if (middleware.builder) {
-      tmp = await middleware.builder(tmp);
+      tmp = middleware.builder(tmp);
     }
 
-    tmp.middleware((yargs) => middleware.handler(yargs));
+    tmp.middleware((args) => middleware.handler(args));
   }
 
   return tmp;

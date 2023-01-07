@@ -40,8 +40,8 @@ export class RunCommand extends InkCommand<IRunCommandArgs> {
   }
 
   // Methods
-  builder(yargs: Argv) {
-    return yargs
+  builder(parser: Argv) {
+    return parser
       .positional('script', { type: 'string', demandOption: true })
       .option('deps-mode', {
         choice: ['all', 'prod', 'none'],

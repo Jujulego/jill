@@ -15,8 +15,8 @@ const VERBOSITY_LEVEL: Record<number, IConfig['verbose']> = {
 };
 
 // Options
-export function applyConfigOptions(yargs: Argv): Argv<Omit<IConfig, 'plugins'>> {
-  return yargs
+export function applyConfigOptions(parser: Argv): Argv<Omit<IConfig, 'plugins'>> {
+  return parser
     .option('verbose', {
       alias: 'v',
       type: 'count',

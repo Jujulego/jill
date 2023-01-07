@@ -11,7 +11,7 @@ export const COMMAND: int.ServiceIdentifier<CommandModule> = Symbol('jujulego:ji
 
 // Types
 export interface ICommand<A = unknown> {
-  builder?: (yargs: Argv) => Awaitable<Argv<A>>;
+  builder?: (parser: Argv) => Awaitable<Argv<A>>;
   handler(args: ArgumentsCamelCase<A>): Awaitable<void>;
 }
 
@@ -33,7 +33,7 @@ export function Command(opts: ICommandOpts) {
       .bind(COMMAND)
       .toDynamicValue(async ({ container }) => {
         const cmd = await container.getAsync(target);
-        cmd.builder ??= (yargs: Argv) => yargs;
+        cmd.builder ??= (parser: Argv) => parser;
 
         return {
           command: opts.command,
@@ -41,7 +41,7 @@ export function Command(opts: ICommandOpts) {
           describe: opts.describe,
           deprecated: opts.deprecated,
 
-          builder: async (yargs: Argv) => cmd.builder(await applyMiddlewares(yargs, opts.middlewares ?? [])),
+          builder: (parser: Argv) => cmd.builder(applyMiddlewares(parser, opts.middlewares ?? [])),
           handler: (...args) => cmd.handler(...args),
         };
       })

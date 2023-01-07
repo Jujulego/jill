@@ -27,8 +27,8 @@ export class LoadWorkspace implements IMiddleware<ILoadWorkspaceArgs> {
   ) {}
 
   // Methods
-  builder(yargs: Argv) {
-    return yargs
+  builder(parser: Argv) {
+    return parser
       .option('workspace', {
         alias: 'w',
         type: 'string',

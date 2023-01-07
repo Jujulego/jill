@@ -23,8 +23,8 @@ export class LoadProject implements IMiddleware<ILoadProjectArgs> {
   ) {}
 
   // Methods
-  builder(yargs: Argv) {
-    return yargs
+  builder(parser: Argv) {
+    return parser
       .option('project', {
         alias: 'p',
         type: 'string',
