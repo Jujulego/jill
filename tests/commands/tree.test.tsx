@@ -1,11 +1,9 @@
 import { cleanup, render } from 'ink-testing-library';
-import yargs from 'yargs';
+import yargs, { type CommandModule } from 'yargs';
 
 import '@/src/commands/tree';
 import { COMMAND } from '@/src/bases/command';
 import { INK_APP } from '@/src/ink.config';
-import { loadProject } from '@/src/middlewares/load-project';
-import { loadWorkspace } from '@/src/middlewares/load-workspace';
 import { Project } from '@/src/project/project';
 import { CURRENT } from '@/src/project/constants';
 import { Workspace } from '@/src/project/workspace';
@@ -14,16 +12,19 @@ import Layout from '@/src/ui/layout';
 
 import { TestBed } from '@/tools/test-bed';
 import { flushPromises, wrapInkTestApp } from '@/tools/utils';
+import { LoadProject } from '@/src/middlewares/load-project';
+import { LoadWorkspace } from '@/src/middlewares/load-workspace';
 
 // Setup
 let app: ReturnType<typeof render>;
+let command: CommandModule;
 
 let bed: TestBed;
 let wksA: Workspace;
 let wksB: Workspace;
 let wksC: Workspace;
 
-beforeEach(() => {
+beforeEach(async () => {
   container.snapshot();
 
   bed = new TestBed();
@@ -38,17 +39,20 @@ beforeEach(() => {
   app = render(<Layout />);
   container.rebind(INK_APP).toConstantValue(wrapInkTestApp(app));
 
+  command = await container.getNamedAsync(COMMAND, 'tree');
+
   // Mocks
   jest.resetAllMocks();
   jest.restoreAllMocks();
 
-  jest.spyOn(loadProject, 'handler').mockImplementation(() => {
+  jest.spyOn(LoadProject.prototype, 'handler').mockImplementation(async () => {
     container
       .bind(Project)
       .toConstantValue(bed.project)
       .whenTargetNamed(CURRENT);
   });
-  jest.spyOn(loadWorkspace, 'handler').mockImplementation(() => {
+
+  jest.spyOn(LoadWorkspace.prototype, 'handler').mockImplementation(async () => {
     container
       .bind(Workspace)
       .toConstantValue(wksA)
@@ -72,7 +76,7 @@ afterEach(() => {
 describe('jill tree', () => {
   it('should print current workspace', async () => {
     // Run command
-    await yargs.command(await container.getNamedAsync(COMMAND, 'tree'))
+    await yargs.command(command)
       .parse('tree -w wks-a');
 
     await flushPromises();
