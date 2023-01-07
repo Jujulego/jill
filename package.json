@@ -60,7 +60,7 @@
     "inversify-inject-decorators": "3.1.0",
     "jest": "29.3.1",
     "log-symbols": "4.1.0",
-    "memfs": "3.4.12",
+    "memfs": "3.4.13",
     "moo": "0.5.2",
     "normalize-package-data": "5.0.0",
     "pretty-ms": "7.0.1",
