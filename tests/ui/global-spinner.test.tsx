@@ -1,7 +1,7 @@
 import { render } from 'ink-testing-library';
 
-import { container } from '@/src/services/inversify.config';
-import { SpinnerService } from '@/src/services/spinner.service';
+import { container } from '@/src/inversify.config';
+import { SpinnerService } from '@/src/commons/spinner.service';
 import GlobalSpinner from '@/src/ui/global-spinner';
 
 // Setup

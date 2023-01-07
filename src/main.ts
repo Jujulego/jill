@@ -1,13 +1,17 @@
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
-import { container } from '@/src/services/inversify.config';
-import { Logger } from '@/src/services/logger.service';
-import { PluginLoaderService } from '@/src/services/plugins/plugin-loader.service';
+import { COMMAND } from '@/src/bases/command';
+import { Logger } from '@/src/commons/logger.service';
+import { applyConfigOptions } from '@/src/config/config-options';
+import { container } from '@/src/inversify.config';
+import { PluginLoaderService } from '@/src/plugins/plugin-loader.service';
 
-import { commands } from './commands';
-import { configOptions } from './middlewares/config-options';
-import { applyMiddlewares } from './utils/yargs';
+import '@/src/commands/each';
+import '@/src/commands/group';
+import '@/src/commands/list';
+import '@/src/commands/run';
+import '@/src/commands/tree';
 
 // @ts-ignore: Outside of typescript's rootDir in build
 import pkg from '../package.json';
@@ -23,8 +27,8 @@ import pkg from '../package.json';
       .version('version', 'Show version', pkg.version)
       .wrap(process.stdout.columns);
 
-    // Middlewares
-    await applyMiddlewares(parser, [configOptions]);
+    // Options (for doc)
+    applyConfigOptions(parser);
 
     // Load plugins
     const pluginLoader = await container.getAsync(PluginLoaderService);
@@ -32,7 +36,7 @@ import pkg from '../package.json';
 
     // Commands
     await parser
-      .command(commands as any)
+      .command(await container.getAllAsync(COMMAND) as any)
       .demandCommand()
       .recommendCommands()
       .strict()

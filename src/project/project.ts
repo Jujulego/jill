@@ -1,12 +1,14 @@
 import AsyncLock from 'async-lock';
+import { injectable } from 'inversify';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import normalize, { type Package } from 'normalize-package-data';
 import glob from 'tiny-glob';
 
-import { container, lazyInject } from '@/src/services/inversify.config';
-import { Logger } from '@/src/services/logger.service';
+import { container, lazyInject, lazyInjectNamed } from '@/src/inversify.config';
+import { Logger } from '@/src/commons/logger.service';
 
+import { CURRENT } from './constants';
 import { Workspace } from './workspace';
 
 // Types
@@ -16,6 +18,7 @@ export interface ProjectOptions {
 }
 
 // Class
+@injectable()
 export class Project {
   // Attributes
   private _mainWorkspace?: Workspace;
@@ -218,4 +221,9 @@ export class Project {
   get root(): string {
     return path.resolve(this._root);
   }
+}
+
+// Decorators
+export function lazyCurrentProject() {
+  return lazyInjectNamed(Project, CURRENT);
 }

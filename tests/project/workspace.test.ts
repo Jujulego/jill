@@ -1,7 +1,8 @@
 import { fs, vol } from 'memfs';
 import path from 'node:path';
 
-import { Git } from '@/src/git';
+import { GitService } from '@/src/commons/git.service';
+import { container } from '@/src/inversify.config';
 import { Project } from '@/src/project/project';
 import { Workspace } from '@/src/project/workspace';
 
@@ -16,8 +17,10 @@ let bed: TestBed;
 let wksA: Workspace;
 let prjDir: string;
 
+let git: GitService;
+
 beforeEach(async () => {
-  jest.resetAllMocks();
+  container.snapshot();
 
   // Build fake project
   bed = new TestBed();
@@ -30,9 +33,15 @@ beforeEach(async () => {
     .addDependency(wksC, true);
 
   prjDir = await bed.createProjectDirectory();
+
+  // Mocks
+  jest.resetAllMocks();
+
+  git = container.get(GitService);
 });
 
 afterEach(() => {
+  container.restore();
   vol.reset();
 });
 
@@ -126,41 +135,41 @@ describe('Workspace.run', () => {
 
 describe('Workspace.isAffected', () => {
   it('should return true', async () => {
-    jest.spyOn(Git, 'isAffected').mockResolvedValue(true);
+    jest.spyOn(git, 'isAffected').mockResolvedValue(true);
 
     await expect(wksA.isAffected('test'))
         .resolves.toBe(true);
 
     // Checks
-    expect(Git.isAffected).toHaveBeenCalledTimes(1);
-    expect(Git.isAffected).toHaveBeenCalledWith(
+    expect(git.isAffected).toHaveBeenCalledTimes(1);
+    expect(git.isAffected).toHaveBeenCalledWith(
       'test',
-      ['--', path.resolve('test/wks-a')],
+      [path.resolve('test/wks-a')],
       expect.objectContaining({ cwd: path.resolve('test') })
     );
   });
 
   it('should return false', async () => {
-    jest.spyOn(Git, 'isAffected').mockResolvedValue(false);
+    jest.spyOn(git, 'isAffected').mockResolvedValue(false);
 
     await expect(wksA.isAffected('test'))
       .resolves.toBe(false);
 
     // Checks
-    expect(Git.isAffected).toHaveBeenCalledTimes(3);
-    expect(Git.isAffected).toHaveBeenCalledWith(
+    expect(git.isAffected).toHaveBeenCalledTimes(3);
+    expect(git.isAffected).toHaveBeenCalledWith(
       'test',
-      ['--', path.resolve('test/wks-a')],
+      [path.resolve('test/wks-a')],
       expect.objectContaining({ cwd: path.resolve('test') })
     );
-    expect(Git.isAffected).toHaveBeenCalledWith(
+    expect(git.isAffected).toHaveBeenCalledWith(
       'test',
-      ['--', path.resolve('test/wks-b')],
+      [path.resolve('test/wks-b')],
       expect.objectContaining({ cwd: path.resolve('test') })
     );
-    expect(Git.isAffected).toHaveBeenCalledWith(
+    expect(git.isAffected).toHaveBeenCalledWith(
       'test',
-      ['--', path.resolve('test/wks-c')],
+      [path.resolve('test/wks-c')],
       expect.objectContaining({ cwd: path.resolve('test') })
     );
   });

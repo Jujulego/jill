@@ -1,27 +1,46 @@
-import { Project } from '@/src/project/project';
-import { container, CURRENT } from '@/src/services/inversify.config';
-import { SpinnerService } from '@/src/services/spinner.service';
-import { defineMiddleware } from '@/src/utils/yargs';
+import { inject } from 'inversify';
+import { type ArgumentsCamelCase, type Argv } from 'yargs';
+
+import { type IMiddleware, Middleware } from '@/src/bases/middleware';
+import { SpinnerService } from '@/src/commons/spinner.service';
+import { container } from '@/src/inversify.config';
+import { CURRENT } from '@/src/project/constants';
+import { Project, type PackageManager } from '@/src/project/project';
+
+// Types
+export interface ILoadProjectArgs {
+  project: string;
+  'package-manager'?: PackageManager;
+}
 
 // Middleware
-export const loadProject = defineMiddleware({
-  builder: (yargs) => yargs
-    .option('project', {
-      alias: 'p',
-      type: 'string',
-      default: process.cwd(),
-      description: 'Project root directory'
-    })
-    .option('package-manager', {
-      choices: ['yarn', 'npm'] as const,
-      type: 'string',
-      description: 'Force package manager'
-    }),
-  async handler(args) {
-    const spinner = container.get(SpinnerService);
+@Middleware()
+export class LoadProject implements IMiddleware<ILoadProjectArgs> {
+  // Constructor
+  constructor(
+    @inject(SpinnerService)
+    private readonly spinner: SpinnerService
+  ) {}
 
+  // Methods
+  builder(parser: Argv) {
+    return parser
+      .option('project', {
+        alias: 'p',
+        type: 'string',
+        default: process.cwd(),
+        description: 'Project root directory'
+      })
+      .option('package-manager', {
+        choices: ['yarn', 'npm'] as const,
+        type: 'string',
+        description: 'Force package manager'
+      });
+  }
+
+  async handler(args: ArgumentsCamelCase<ILoadProjectArgs>): Promise<void> {
     try {
-      spinner.spin('Loading project ...');
+      this.spinner.spin('Loading project ...');
       const root = args.project = await Project.searchProjectRoot(args.project);
 
       container.bind(Project)
@@ -30,7 +49,7 @@ export const loadProject = defineMiddleware({
         }))
         .whenTargetNamed(CURRENT);
     } finally {
-      spinner.stop();
+      this.spinner.stop();
     }
   }
-});
+}

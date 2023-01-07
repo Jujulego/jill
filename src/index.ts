@@ -1,4 +1,7 @@
-export * from './git';
+export * from './bases/command';
+export * from './bases/ink-command';
+export * from './bases/middleware';
+export * from './commons/git.service';
 export * from './types';
 
 // Filters
@@ -10,26 +13,26 @@ export * from './filters/scripts.filter';
 // Middlewares
 export * from './middlewares/load-project';
 export * from './middlewares/load-workspace';
-export * from './middlewares/setup-ink';
 
 // Project
+export * from './project/constants';
 export * from './project/project';
 export * from './project/workspace';
 
 // Services
-export * from './services/inversify.config';
-export * from './services/spinner.service';
-export * from './services/task-expr.service';
-export * from './services/task-manager.config';
+export * from './inversify.config';
+export * from './commons/spinner.service';
+export * from './tasks/task-expr.service';
+export * from './tasks/task-manager.config';
 
-export { CONFIG } from './services/config/loader';
-export { type Config } from './services/config/types';
+export { CONFIG } from './config/config-loader';
+export { type IConfig } from './config/types';
 
-export { Logger } from './services/logger.service';
+export { Logger } from './commons/logger.service';
 
-export { PluginLoaderService } from './services/plugins/plugin-loader.service';
-export { type Plugin } from './services/plugins/types';
-export { definePlugin } from './services/plugins/utils';
+export { PluginLoaderService } from './plugins/plugin-loader.service';
+export { type Plugin } from './plugins/types';
+export { definePlugin } from './plugins/utils';
 
 // Ui
 export { default as GroupTaskSpinner } from './ui/group-task-spinner';
@@ -57,4 +60,3 @@ export * from './ui/workspace-tree';
 export * from './utils/import';
 export * from './utils/streams';
 export * from './utils/string';
-export * from './utils/yargs';

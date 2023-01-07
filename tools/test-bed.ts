@@ -3,9 +3,9 @@ import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 
-import { CONFIG } from '@/src/services/config/loader';
-import { Config } from '@/src/services/config/types';
-import { container } from '@/src/services/inversify.config';
+import { CONFIG } from '@/src/config/config-loader';
+import { IConfig } from '@/src/config/types';
+import { container } from '@/src/inversify.config';
 import { Workspace } from '@/src/project/workspace';
 
 import { TestProject } from './test-project';
@@ -15,7 +15,7 @@ import { shell } from './utils';
 // Bed
 export class TestBed {
   // Attributes
-  private _config: Config = {};
+  private _config: IConfig = {};
 
   readonly project = new TestProject('./test');
 
@@ -87,7 +87,7 @@ export class TestBed {
   }
 
   // Properties
-  get config(): Readonly<Config> {
+  get config(): Readonly<IConfig> {
     return this._config;
   }
 

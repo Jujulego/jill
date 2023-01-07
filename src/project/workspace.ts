@@ -1,13 +1,15 @@
 import { SpawnTask, SpawnTaskOptions, SpawnTaskStream, TaskContext } from '@jujulego/tasks';
+import { injectable } from 'inversify';
 import path from 'node:path';
 import { type Package } from 'normalize-package-data';
 import { satisfies } from 'semver';
 
-import { Git } from '@/src/git';
-import { container } from '@/src/services/inversify.config';
-import { Logger } from '@/src/services/logger.service';
+import { GitService } from '@/src/commons/git.service';
+import { container, lazyInject, lazyInjectNamed } from '@/src/inversify.config';
+import { Logger } from '@/src/commons/logger.service';
 import { combine, streamLines } from '@/src/utils/streams';
 
+import { CURRENT } from './constants';
 import { Project } from './project';
 
 // Types
@@ -23,11 +25,15 @@ export interface WorkspaceRunOptions extends Omit<SpawnTaskOptions, 'cwd'> {
 }
 
 // Class
+@injectable()
 export class Workspace {
   // Attributes
   private readonly _logger: Logger;
   private readonly _affectedCache = new Map<string, Promise<boolean>>();
   private readonly _tasks = new Map<string, SpawnTask<WorkspaceContext>>();
+
+  @lazyInject(GitService)
+  private readonly _git: GitService;
 
   // Constructor
   constructor(
@@ -76,7 +82,7 @@ export class Workspace {
   }
 
   private async _isAffected(reference: string): Promise<boolean> {
-    const isAffected = await Git.isAffected(reference, ['--', this.cwd], {
+    const isAffected = await this._git.isAffected(reference, [this.cwd], {
       cwd: this.project.root,
       logger: this._logger,
     });
@@ -203,4 +209,9 @@ export class Workspace {
   get cwd(): string {
     return path.resolve(this.project.root, this._cwd);
   }
+}
+
+// Decorators
+export function lazyCurrentWorkspace() {
+  return lazyInjectNamed(Workspace, CURRENT);
 }

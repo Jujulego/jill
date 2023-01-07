@@ -1,11 +1,13 @@
 import yargs from 'yargs';
 
-import { loadWorkspace } from '@/src/middlewares/load-workspace';
+import { applyMiddlewares } from '@/src/bases/middleware';
+import { SpinnerService } from '@/src/commons/spinner.service';
+import { container } from '@/src/inversify.config';
+import { LoadWorkspace } from '@/src/middlewares/load-workspace';
+import { CURRENT } from '@/src/project/constants';
 import { Project } from '@/src/project/project';
 import { Workspace } from '@/src/project/workspace';
-import { container, CURRENT } from '@/src/services/inversify.config';
-import { SpinnerService } from '@/src/services/spinner.service';
-import { applyMiddlewares } from '@/src/utils/yargs';
+
 import { TestBed } from '@/tools/test-bed';
 
 // Setup
@@ -13,7 +15,7 @@ let bed: TestBed;
 let parser: yargs.Argv;
 let spinner: SpinnerService;
 
-beforeEach(async () => {
+beforeEach(() => {
   container.snapshot();
 
   spinner = container.get(SpinnerService);
@@ -26,7 +28,7 @@ beforeEach(async () => {
     .toConstantValue(bed.project)
     .whenTargetNamed(CURRENT);
 
-  parser = await applyMiddlewares(yargs(), [loadWorkspace]);
+  parser = applyMiddlewares(yargs(), [LoadWorkspace]);
 });
 
 afterEach(() => {
@@ -34,7 +36,7 @@ afterEach(() => {
 });
 
 // Tests
-describe('loadWorkspace', () => {
+describe('LoadWorkspace', () => {
   it('should search for current workspace', async () => {
     const wks = bed.addWorkspace('root');
 

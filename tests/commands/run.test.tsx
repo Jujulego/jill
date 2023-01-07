@@ -1,29 +1,32 @@
 import { SpawnTask } from '@jujulego/tasks';
 import { cleanup, render } from 'ink-testing-library';
 import symbols from 'log-symbols';
-import yargs from 'yargs';
+import yargs, { type CommandModule } from 'yargs';
 
-import runCommand from '@/src/commands/run';
-import { loadProject } from '@/src/middlewares/load-project';
-import { loadWorkspace } from '@/src/middlewares/load-workspace';
-import { setupInk } from '@/src/middlewares/setup-ink';
+import '@/src/commands/run';
+import { COMMAND } from '@/src/bases/command';
+import { INK_APP } from '@/src/ink.config';
+import { container } from '@/src/inversify.config';
+import { LoadProject } from '@/src/middlewares/load-project';
+import { LoadWorkspace } from '@/src/middlewares/load-workspace';
+import { CURRENT } from '@/src/project/constants';
 import { Project } from '@/src/project/project';
 import { Workspace, WorkspaceContext } from '@/src/project/workspace';
-import { container, CURRENT, INK_APP } from '@/src/services/inversify.config';
-import { TASK_MANAGER } from '@/src/services/task-manager.config';
+import { TASK_MANAGER } from '@/src/tasks/task-manager.config';
 import Layout from '@/src/ui/layout';
 
 import { TestBed } from '@/tools/test-bed';
-import { flushPromises, spyLogger } from '@/tools/utils';
+import { flushPromises, spyLogger, wrapInkTestApp } from '@/tools/utils';
 
 // Setup
 let app: ReturnType<typeof render>;
+let command: CommandModule;
 
 let bed: TestBed;
 let wks: Workspace;
 let task: SpawnTask<WorkspaceContext>;
 
-beforeEach(() => {
+beforeEach(async () => {
   container.snapshot();
 
   bed = new TestBed();
@@ -33,25 +36,22 @@ beforeEach(() => {
     logger: spyLogger,
   });
 
+  app = render(<Layout />);
+  container.rebind(INK_APP).toConstantValue(wrapInkTestApp(app));
+
+  command = await container.getNamedAsync(COMMAND, 'run');
+
   // Mocks
   jest.resetAllMocks();
   jest.restoreAllMocks();
 
   jest.spyOn(wks, 'run').mockResolvedValue(task);
 
-  jest.spyOn(setupInk, 'handler').mockImplementation(() => {
-    app = render(<Layout />);
-    container.bind(INK_APP).toConstantValue(app as any);
+  jest.spyOn(LoadProject.prototype, 'handler').mockImplementation(async () => {
+    container.bind(Project).toConstantValue(bed.project).whenTargetNamed(CURRENT);
   });
-  jest.spyOn(loadProject, 'handler').mockImplementation(() => {
-    container.bind(Project)
-      .toConstantValue(bed.project)
-      .whenTargetNamed(CURRENT);
-  });
-  jest.spyOn(loadWorkspace, 'handler').mockImplementation(() => {
-    container.bind(Workspace)
-      .toConstantValue(wks)
-      .whenTargetNamed(CURRENT);
+  jest.spyOn(LoadWorkspace.prototype, 'handler').mockImplementation(async () => {
+    container.bind(Workspace).toConstantValue(wks).whenTargetNamed(CURRENT);
   });
 });
 
@@ -69,7 +69,7 @@ describe('jill run', () => {
     jest.spyOn(manager, 'tasks', 'get').mockReturnValue([task]);
 
     // Run command
-    const prom = yargs.command(runCommand)
+    const prom = yargs.command(command)
       .parse('run -w wks cmd -- --arg');
 
     await flushPromises();
@@ -99,7 +99,7 @@ describe('jill run', () => {
     jest.spyOn(manager, 'tasks', 'get').mockReturnValue([task]);
 
     // Run command
-    const prom = yargs.command(runCommand)
+    const prom = yargs.command(command)
       .parse('run -w wks --deps-mode prod cmd -- --arg');
 
     await flushPromises();
@@ -124,7 +124,7 @@ describe('jill run', () => {
     jest.spyOn(process, 'exit').mockImplementation();
 
     // Run command
-    const prom = yargs.command(runCommand)
+    const prom = yargs.command(command)
       .parse('run -w wks cmd -- --arg');
 
     await flushPromises();

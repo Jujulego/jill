@@ -22,8 +22,8 @@ beforeEach(async () => {
     // language=javascript
     `
 module.exports = {
-  builder(yargs) {
-    yargs.command('test', 'toto', {}, () => console.log('this is a test plugin !'));
+  builder(parser) {
+    parser.command('test', 'toto', {}, () => console.log('this is a test plugin !'));
   }
 };
 `);
@@ -38,7 +38,7 @@ describe('jill test (command from plugin)', () => {
   it('should run command loaded from plugin file', async () => {
     const res = await jill(['test'], { cwd: prjDir });
 
-    expect(res.stdout).toEqual([
+    expect(res.screen.screen).toEqualLines([
       'this is a test plugin !'
     ]);
   });

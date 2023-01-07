@@ -1,75 +1,102 @@
 import { waitForEvent } from '@jujulego/event-tree';
-import { TaskSet } from '@jujulego/tasks';
+import { TaskManager, TaskSet } from '@jujulego/tasks';
+import { inject } from 'inversify';
+import { type ArgumentsCamelCase, type Argv } from 'yargs';
 
+import { Command } from '@/src/bases/command';
+import { InkCommand } from '@/src/bases/ink-command';
+import { SpinnerService } from '@/src/commons/spinner.service';
 import { AffectedFilter } from '@/src/filters/affected.filter';
 import { Pipeline } from '@/src/filters/pipeline';
 import { PrivateFilter } from '@/src/filters/private.filter';
 import { ScriptsFilter } from '@/src/filters/scripts.filter';
-import { loadProject } from '@/src/middlewares/load-project';
-import { setupInk } from '@/src/middlewares/setup-ink';
-import { Project } from '@/src/project/project';
-import { container, CURRENT, INK_APP } from '@/src/services/inversify.config';
-import { SpinnerService } from '@/src/services/spinner.service';
-import { TASK_MANAGER } from '@/src/services/task-manager.config';
-import Layout from '@/src/ui/layout';
+import { LoadProject } from '@/src/middlewares/load-project';
+import { lazyCurrentProject, Project } from '@/src/project/project';
+import { type WorkspaceDepsMode } from '@/src/project/workspace';
+import { TASK_MANAGER } from '@/src/tasks/task-manager.config';
 import TaskManagerSpinner from '@/src/ui/task-manager-spinner';
-import { applyMiddlewares, defineCommand } from '@/src/utils/yargs';
+
+// Types
+export interface IEachCommandArgs {
+  script: string;
+  'deps-mode': WorkspaceDepsMode;
+
+  // Filters
+  private?: boolean;
+
+  // Affected filter
+  affected: string;
+  'affected-rev-fallback': string;
+  'affected-rev-sort'?: string;
+}
+
 
 // Command
-export default defineCommand({
+@Command({
   command: 'each <script>',
   describe: 'Run script on many workspaces',
-  builder: async (yargs) =>
-    (await applyMiddlewares(yargs, [
-      setupInk,
-      loadProject,
-    ]))
-    // Run options
-    .positional('script', { type: 'string', demandOption: true })
-    .option('deps-mode', {
-      choice: ['all', 'prod', 'none'],
-      default: 'all' as const,
-      desc: 'Dependency selection mode:\n' +
-        ' - all = dependencies AND devDependencies\n' +
-        ' - prod = dependencies\n' +
-        ' - none = nothing'
-    })
+  middlewares: [
+    LoadProject
+  ]
+})
+export class EachCommand extends InkCommand<IEachCommandArgs> {
+  // Lazy injections
+  @lazyCurrentProject()
+  readonly project: Project;
 
-    // Filters
-    .option('private', {
-      type: 'boolean',
-      group: 'Filters:',
-      desc: 'Print only private workspaces',
-    })
+  // Constructor
+  constructor(
+    @inject(SpinnerService)
+    private readonly spinner: SpinnerService,
+    @inject(TASK_MANAGER)
+    private readonly manager: TaskManager,
+  ) {
+    super();
+  }
 
-    // Affected filter
-    .option('affected', {
-      alias: 'a',
-      type: 'string',
-      coerce: (rev: string) => rev === '' ? 'master' : rev,
-      group: 'Affected:',
-      desc: 'Print only affected workspaces towards given git revision. If no revision is given, it will check towards master.\n' +
-        'Replaces %name by workspace name.',
-    })
-    .option('affected-rev-sort', {
-      type: 'string',
-      group: 'Affected:',
-      desc: 'Sort applied to git tag / git branch command',
-    })
-    .option('affected-rev-fallback', {
-      type: 'string',
-      default: 'master',
-      group: 'Affected:',
-      desc: 'Fallback revision, used if no revision matching the given format is found',
-    }),
-  async handler(args) {
-    const app = container.get(INK_APP);
-    const project = container.getNamed(Project, CURRENT);
-    const manager = container.get(TASK_MANAGER);
-    const spinner = container.get(SpinnerService);
+  // Methods
+  builder(parser: Argv): Argv<IEachCommandArgs> {
+    return parser
+      // Run options
+      .positional('script', { type: 'string', demandOption: true })
+      .option('deps-mode', {
+        choice: ['all', 'prod', 'none'],
+        default: 'all' as const,
+        desc: 'Dependency selection mode:\n' +
+          ' - all = dependencies AND devDependencies\n' +
+          ' - prod = dependencies\n' +
+          ' - none = nothing'
+      })
 
+      // Filters
+      .option('private', {
+        type: 'boolean',
+        group: 'Filters:',
+        desc: 'Print only private workspaces',
+      })
+      .option('affected', {
+        alias: 'a',
+        type: 'string',
+        coerce: (rev) => rev === '' ? 'master' : rev,
+        group: 'Filters:',
+        desc: 'Print only affected workspaces towards given git revision. If no revision is given, it will check towards master. Replaces %name by workspace name.',
+      })
+      .option('affected-rev-sort', {
+        type: 'string',
+        group: 'Filters:',
+        desc: 'Sort applied to git tag / git branch command',
+      })
+      .option('affected-rev-fallback', {
+        type: 'string',
+        default: 'master',
+        group: 'Filters:',
+        desc: 'Fallback revision, used if no revision matching the given format is found',
+      });
+  }
+
+  async *render(args: ArgumentsCamelCase<IEachCommandArgs>) {
     try {
-      spinner.spin('Loading workspaces ...');
+      this.spinner.spin('Loading workspaces ...');
 
       // Setup pipeline
       const pipeline = new Pipeline();
@@ -95,27 +122,23 @@ export default defineCommand({
       }
 
       // Create script tasks
-      const tasks = new TaskSet(manager);
+      const tasks = new TaskSet(this.manager);
 
-      for await (const wks of pipeline.filter(project.workspaces())) {
+      for await (const wks of pipeline.filter(this.project.workspaces())) {
         tasks.add(await wks.run(args.script, rest, {
           buildDeps: args.depsMode,
         }));
       }
 
       if (tasks.tasks.length === 0) {
-        spinner.failed('No workspace found !');
+        this.spinner.failed('No workspace found !');
         return process.exit(1);
       }
 
-      spinner.stop();
+      this.spinner.stop();
 
       // Render
-      app.rerender(
-        <Layout>
-          <TaskManagerSpinner manager={manager} />
-        </Layout>
-      );
+      yield <TaskManagerSpinner manager={this.manager} />;
 
       // Start and wait for result
       tasks.start();
@@ -126,7 +149,7 @@ export default defineCommand({
         return process.exit(1);
       }
     } finally {
-      spinner.stop();
+      this.spinner.stop();
     }
   }
-});
+}
