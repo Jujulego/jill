@@ -1293,7 +1293,7 @@ __metadata:
     inversify-inject-decorators: 3.1.0
     jest: 29.3.1
     log-symbols: 4.1.0
-    memfs: 3.4.12
+    memfs: 3.4.13
     moo: 0.5.2
     normalize-package-data: 5.0.0
     pretty-ms: 7.0.1
@@ -5794,7 +5794,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"memfs@npm:3.4.12, memfs@npm:^3.4.1":
+"memfs@npm:3.4.13":
+  version: 3.4.13
+  resolution: "memfs@npm:3.4.13"
+  dependencies:
+    fs-monkey: ^1.0.3
+  checksum: 3f9717d6f060919d53f211acb6096a0ea2f566a8cbcc4ef7e1f2561e31e33dc456053fdf951c90a49c8ec55402de7f01b006b81683ab7bd4bdbbd8c9b9cdae5f
+  languageName: node
+  linkType: hard
+
+"memfs@npm:^3.4.1":
   version: 3.4.12
   resolution: "memfs@npm:3.4.12"
   dependencies:
