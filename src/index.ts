@@ -1,3 +1,6 @@
+export * from './bases/command';
+export * from './bases/ink-command';
+export * from './bases/middleware';
 export * from './commons/git.service';
 export * from './types';
 
@@ -10,7 +13,6 @@ export * from './filters/scripts.filter';
 // Middlewares
 export * from './middlewares/load-project';
 export * from './middlewares/load-workspace';
-export * from './middlewares/setup-ink';
 
 // Project
 export * from './project/constants';
@@ -58,4 +60,3 @@ export * from './ui/workspace-tree';
 export * from './utils/import';
 export * from './utils/streams';
 export * from './utils/string';
-export * from './utils/yargs';

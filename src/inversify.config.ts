@@ -1,12 +1,7 @@
-import ink from 'ink';
-import { Container, decorate, injectable, interfaces } from 'inversify';
+import { Container, decorate, injectable } from 'inversify';
 import getDecorators from 'inversify-inject-decorators';
 
 import 'reflect-metadata';
-
-// Constants
-/** @deprecated */
-export const INK_APP: interfaces.ServiceIdentifier<ink.Instance> = Symbol.for('jujulego:jill:InkApp');
 
 // Container
 export const container = new Container();

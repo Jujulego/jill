@@ -1,12 +1,12 @@
 import path from 'node:path';
 import yargs from 'yargs';
 
-import { loadProject } from '@/src/middlewares/load-project';
-import { Project } from '@/src/project/project';
-import { container } from '@/src/inversify.config';
+import { applyMiddlewares } from '@/src/bases/middleware';
 import { SpinnerService } from '@/src/commons/spinner.service';
-import { applyMiddlewares } from '@/src/utils/yargs';
+import { container } from '@/src/inversify.config';
+import { LoadProject } from '@/src/middlewares/load-project';
 import { CURRENT } from '@/src/project/constants';
+import { Project } from '@/src/project/project';
 
 // Setup
 let parser: yargs.Argv;
@@ -22,7 +22,7 @@ beforeEach(async () => {
   jest.spyOn(Project, 'searchProjectRoot')
     .mockResolvedValue('/test');
 
-  parser = await applyMiddlewares(yargs(), [loadProject]);
+  parser = await applyMiddlewares(yargs(), [LoadProject]);
 });
 
 afterEach(() => {
@@ -30,8 +30,8 @@ afterEach(() => {
 });
 
 // Tests
-describe('loadProject', () => {
-  it('should search project root using cwd and bind CURRENT_PROJECT', async () => {
+describe('LoadProject', () => {
+  it('should search project root using cwd', async () => {
     await parser.parse(''); // <= no args
 
     expect(spinner.spin).toHaveBeenCalledWith('Loading project ...');

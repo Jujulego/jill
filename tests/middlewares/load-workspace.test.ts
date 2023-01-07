@@ -1,13 +1,14 @@
 import yargs from 'yargs';
 
-import { loadWorkspace } from '@/src/middlewares/load-workspace';
+import { applyMiddlewares } from '@/src/bases/middleware';
+import { SpinnerService } from '@/src/commons/spinner.service';
+import { container } from '@/src/inversify.config';
+import { LoadWorkspace } from '@/src/middlewares/load-workspace';
+import { CURRENT } from '@/src/project/constants';
 import { Project } from '@/src/project/project';
 import { Workspace } from '@/src/project/workspace';
-import { container } from '@/src/inversify.config';
-import { SpinnerService } from '@/src/commons/spinner.service';
-import { applyMiddlewares } from '@/src/utils/yargs';
+
 import { TestBed } from '@/tools/test-bed';
-import { CURRENT } from '@/src/project/constants';
 
 // Setup
 let bed: TestBed;
@@ -27,7 +28,7 @@ beforeEach(async () => {
     .toConstantValue(bed.project)
     .whenTargetNamed(CURRENT);
 
-  parser = await applyMiddlewares(yargs(), [loadWorkspace]);
+  parser = await applyMiddlewares(yargs(), [LoadWorkspace]);
 });
 
 afterEach(() => {
@@ -35,7 +36,7 @@ afterEach(() => {
 });
 
 // Tests
-describe('loadWorkspace', () => {
+describe('LoadWorkspace', () => {
   it('should search for current workspace', async () => {
     const wks = bed.addWorkspace('root');
 
