@@ -1,8 +1,8 @@
 import { inject } from 'inversify';
 import { type Argv } from 'yargs';
 
-import { CONFIG } from '@/src/config/loader';
-import { type Config } from '@/src/config/types';
+import { CONFIG } from '@/src/config/config-loader';
+import { type IConfig } from '@/src/config/types';
 import { Service } from '@/src/inversify.config';
 import { Logger } from '@/src/commons/logger.service';
 import { dynamicImport } from '@/src/utils/import';
@@ -18,7 +18,7 @@ export class PluginLoaderService {
 
   // Constructor
   constructor(
-    @inject(CONFIG) private readonly _config: Config,
+    @inject(CONFIG) private readonly _config: IConfig,
     @inject(Logger) logger: Logger,
   ) {
     this._logger = logger.child({ label: 'plugin' });

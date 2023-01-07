@@ -7,12 +7,6 @@ import 'reflect-metadata';
 // Constants
 /** @deprecated */
 export const INK_APP: interfaces.ServiceIdentifier<ink.Instance> = Symbol.for('jujulego:jill:InkApp');
-export const SERVICES_CONFIG: interfaces.ServiceIdentifier<ServicesConfig> = Symbol.for('jujulego:jill:ServicesConfig');
-
-// Types
-export interface ServicesConfig {
-  jobs?: number;
-}
 
 // Container
 export const container = new Container();

@@ -1,0 +1,45 @@
+import yargs, { Argv } from 'yargs';
+import { interfaces as int } from 'inversify';
+import os from 'node:os';
+
+import { type IConfig } from '@/src/config/types';
+import { container } from '@/src/inversify.config';
+import { hideBin } from 'yargs/helpers';
+
+// Symbols
+export const CONFIG_OPTIONS: int.ServiceIdentifier<IConfig> = Symbol('jujulego:jill:config-options');
+
+// Constants
+const VERBOSITY_LEVEL: Record<number, IConfig['verbose']> = {
+  0: 'info',
+  1: 'verbose',
+  2: 'debug',
+};
+
+// Options
+export function applyConfigOptions(yargs: Argv): Argv<Omit<IConfig, 'plugins'>> {
+  return yargs
+    .option('verbose', {
+      alias: 'v',
+      type: 'count',
+      description: 'Set verbosity level',
+      coerce: (cnt) => VERBOSITY_LEVEL[Math.min(cnt, 2)]
+    })
+    .option('jobs', {
+      alias: 'j',
+      type: 'number',
+      default: os.cpus().length - 1,
+      description: 'Set maximum parallel job number',
+    });
+}
+
+container
+  .bind(CONFIG_OPTIONS)
+  .toDynamicValue(() => {
+    const parser = yargs(hideBin(process.argv))
+      .help(false)
+      .version(false);
+
+    return applyConfigOptions(parser).parse();
+  })
+  .inSingletonScope();

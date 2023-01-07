@@ -1,9 +1,10 @@
 import { waitForEvent } from '@jujulego/event-tree';
+import { TaskManager } from '@jujulego/tasks';
+import { inject } from 'inversify';
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
 
 import { Command } from '@/src/bases/command';
 import { InkCommand } from '@/src/bases/ink-command';
-import { container } from '@/src/inversify.config';
 import { LoadProject } from '@/src/middlewares/load-project';
 import { LoadWorkspace } from '@/src/middlewares/load-workspace';
 import { lazyCurrentWorkspace, Workspace, type WorkspaceDepsMode } from '@/src/project/workspace';
@@ -30,6 +31,14 @@ export class RunCommand extends InkCommand<IRunCommandArgs> {
   @lazyCurrentWorkspace()
   readonly workspace: Workspace;
 
+  // Constructor
+  constructor(
+    @inject(TASK_MANAGER)
+    private readonly manager: TaskManager,
+  ) {
+    super();
+  }
+
   // Methods
   builder(yargs: Argv) {
     return yargs
@@ -45,8 +54,6 @@ export class RunCommand extends InkCommand<IRunCommandArgs> {
   }
 
   async render(args: ArgumentsCamelCase<IRunCommandArgs>) {
-    const manager = await container.getAsync(TASK_MANAGER);
-
     // Extract arguments
     const rest = args._.map(arg => arg.toString());
 
@@ -58,7 +65,7 @@ export class RunCommand extends InkCommand<IRunCommandArgs> {
     const task = await this.workspace.run(args.script, rest, {
       buildDeps: args.depsMode,
     });
-    manager.add(task);
+    this.manager.add(task);
 
     // Handle result
     waitForEvent(task, 'completed').then((result) => {
@@ -68,6 +75,6 @@ export class RunCommand extends InkCommand<IRunCommandArgs> {
     });
 
     // Render
-    return <TaskManagerSpinner manager={manager} />;
+    return <TaskManagerSpinner manager={this.manager} />;
   }
 }

@@ -1,6 +1,6 @@
 import yargs from 'yargs';
 
-import { CONFIG } from '@/src/config/loader';
+import { CONFIG } from '@/src/config/config-loader';
 import { container } from '@/src/inversify.config';
 import { PluginLoaderService } from '@/src/plugins/plugin-loader.service';
 import { dynamicImport } from '@/src/utils/import';

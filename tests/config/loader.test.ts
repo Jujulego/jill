@@ -1,9 +1,8 @@
 import path from 'node:path';
 
-import { configLoader } from '@/src/config/loader';
-import { CONFIG_EXPLORER } from '@/src/config/explorer';
-import { Config } from '@/src/config/types';
-import { CONFIG_VALIDATOR } from '@/src/config/validator';
+import { configLoader } from '@/src/config/config-loader';
+import { IConfig } from '@/src/config/types';
+import { CONFIG_EXPLORER, CONFIG_VALIDATOR } from '@/src/config/utils';
 import { container } from '@/src/inversify.config';
 import { Logger } from '@/src/commons/logger.service';
 
@@ -24,7 +23,7 @@ afterEach(() => {
 describe('configLoader', () => {
   it('should validate loaded config', async () => {
     // Mock explorer
-    const config: Config = {};
+    const config: IConfig = {};
     const explorer = {
       search: jest.fn().mockResolvedValue({
         config,
@@ -46,7 +45,7 @@ describe('configLoader', () => {
 
   it('should compute path based on config file', async () => {
     // Mock explorer
-    const config: Config = {
+    const config: IConfig = {
       plugins: ['plugin.js']
     };
 
@@ -71,7 +70,7 @@ describe('configLoader', () => {
 
   it('should update logger level', async () => {
     // Mock explorer
-    const config: Config = {
+    const config: IConfig = {
       verbose: 'verbose',
     };
 

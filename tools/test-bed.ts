@@ -3,8 +3,8 @@ import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 
-import { CONFIG } from '@/src/config/loader';
-import { Config } from '@/src/config/types';
+import { CONFIG } from '@/src/config/config-loader';
+import { IConfig } from '@/src/config/types';
 import { container } from '@/src/inversify.config';
 import { Workspace } from '@/src/project/workspace';
 
@@ -15,7 +15,7 @@ import { shell } from './utils';
 // Bed
 export class TestBed {
   // Attributes
-  private _config: Config = {};
+  private _config: IConfig = {};
 
   readonly project = new TestProject('./test');
 
@@ -87,7 +87,7 @@ export class TestBed {
   }
 
   // Properties
-  get config(): Readonly<Config> {
+  get config(): Readonly<IConfig> {
     return this._config;
   }
 

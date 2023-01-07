@@ -1,4 +1,5 @@
-import { container, SERVICES_CONFIG } from '@/src/inversify.config';
+import { container } from '@/src/inversify.config';
+import { CONFIG } from '@/src/config/config-loader';
 import { TASK_MANAGER } from '@/src/tasks/task-manager.config';
 
 // Tests
@@ -12,8 +13,8 @@ describe('TaskManager', () => {
   });
 
   // Tests
-  it('should set jobs from SERVICES_CONFIG', () => {
-    container.rebind(SERVICES_CONFIG)
+  it('should set jobs from CONFIG', () => {
+    container.rebind(CONFIG)
       .toConstantValue({ jobs: 5 });
 
     const manager = container.get(TASK_MANAGER);

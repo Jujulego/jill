@@ -1,8 +1,9 @@
 import { TaskManager } from '@jujulego/tasks';
 import { interfaces as int } from 'inversify';
 
-import { type ServicesConfig, SERVICES_CONFIG, container } from '../inversify.config';
-import { Logger } from '../commons/logger.service';
+import { Logger } from '@/src/commons/logger.service';
+import { CONFIG } from '@/src/config/config-loader';
+import { container } from '@/src/inversify.config';
 
 // Symbols
 export const TASK_MANAGER: int.ServiceIdentifier<TaskManager> = Symbol('jujulego:jill:TaskManager');
@@ -10,7 +11,7 @@ export const TASK_MANAGER: int.ServiceIdentifier<TaskManager> = Symbol('jujulego
 // Service
 container.bind(TASK_MANAGER)
   .toDynamicValue((context) => {
-    const config = context.container.get<ServicesConfig>(SERVICES_CONFIG);
+    const config = context.container.get(CONFIG);
     const logger = context.container.get(Logger);
 
     return new TaskManager({ jobs: config.jobs, logger });

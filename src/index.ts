@@ -23,8 +23,8 @@ export * from './commons/spinner.service';
 export * from './tasks/task-expr.service';
 export * from './tasks/task-manager.config';
 
-export { CONFIG } from './config/loader';
-export { type Config } from './config/types';
+export { CONFIG } from './config/config-loader';
+export { type IConfig } from './config/types';
 
 export { Logger } from './commons/logger.service';
 

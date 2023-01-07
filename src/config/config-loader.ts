@@ -5,22 +5,28 @@ import { AJV } from '@/src/ajv.config';
 import { container } from '@/src/inversify.config';
 import { Logger } from '@/src/commons/logger.service';
 
-import { CONFIG_EXPLORER } from './explorer';
-import { CONFIG_VALIDATOR } from './validator';
-import { Config } from './types';
+import { CONFIG_OPTIONS } from './config-options';
+import { type IConfig } from './types';
+import { CONFIG_EXPLORER, CONFIG_VALIDATOR } from './utils';
 
 // Symbols
-export const CONFIG: int.ServiceIdentifier<Config> = Symbol('jujulego:jill:Config');
+export const CONFIG: int.ServiceIdentifier<IConfig> = Symbol('jujulego:jill:config');
 
 // Loader
 export async function configLoader() {
   const logger = container.get(Logger).child({ label: 'config' });
+
+  const options = container.get(CONFIG_OPTIONS);
   const explorer = container.get(CONFIG_EXPLORER);
   const validator = container.get(CONFIG_VALIDATOR);
 
   // Load file
   const loaded = await explorer.search();
   const config = loaded?.config ?? {};
+
+  // Apply options from cli
+  config.jobs = options.jobs;
+  config.verbose = options.verbose;
 
   // Validate
   if (!validator(config)) {
