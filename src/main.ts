@@ -7,7 +7,11 @@ import { applyConfigOptions } from '@/src/config/config-options';
 import { container } from '@/src/inversify.config';
 import { PluginLoaderService } from '@/src/plugins/plugin-loader.service';
 
-import { commands } from './commands';
+import '@/src/commands/each';
+import '@/src/commands/group';
+import '@/src/commands/list';
+import '@/src/commands/run';
+import '@/src/commands/tree';
 
 // @ts-ignore: Outside of typescript's rootDir in build
 import pkg from '../package.json';
@@ -31,10 +35,8 @@ import pkg from '../package.json';
     await pluginLoader.loadPlugins(parser);
 
     // Commands
-    const cmds = await container.getAllAsync(COMMAND);
-
     await parser
-      .command([...commands, ...cmds] as any)
+      .command(await container.getAllAsync(COMMAND) as any)
       .demandCommand()
       .recommendCommands()
       .strict()

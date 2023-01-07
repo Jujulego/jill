@@ -1,26 +1,29 @@
 import { SpawnTask } from '@jujulego/tasks';
 import { cleanup, render } from 'ink-testing-library';
 import symbols from 'log-symbols';
-import yargs from 'yargs';
+import yargs, { type CommandModule } from 'yargs';
 
-import eachCommand from '@/src/commands/each';
-import { loadProject } from '@/src/middlewares/load-project';
-import { setupInk } from '@/src/middlewares/setup-ink';
+import '@/src/commands/each';
+import { COMMAND } from '@/src/bases/command';
+import { INK_APP } from '@/src/ink.config';
+import { container } from '@/src/inversify.config';
+import { LoadProject } from '@/src/middlewares/load-project';
+import { CURRENT } from '@/src/project/constants';
 import { Project } from '@/src/project/project';
 import { WorkspaceContext } from '@/src/project/workspace';
-import { container, INK_APP } from '@/src/inversify.config';
 import { TASK_MANAGER } from '@/src/tasks/task-manager.config';
 import Layout from '@/src/ui/layout';
 
 import { TestBed } from '@/tools/test-bed';
-import { flushPromises, spyLogger } from '@/tools/utils';
-import { CURRENT } from '@/src/project/constants';
+import { flushPromises, spyLogger, wrapInkTestApp } from '@/tools/utils';
 
 // Setup
 let app: ReturnType<typeof render>;
+let command: CommandModule;
+
 let bed: TestBed;
 
-beforeEach(() => {
+beforeEach(async () => {
   container.snapshot();
 
   jest.resetAllMocks();
@@ -29,16 +32,16 @@ beforeEach(() => {
   // Project
   bed = new TestBed();
 
+  app = render(<Layout />);
+  container.rebind(INK_APP).toConstantValue(wrapInkTestApp(app));
+
+  command = await container.getNamedAsync(COMMAND, 'each');
+
   // Mocks
   jest.spyOn(console, 'log').mockImplementation();
-  jest.spyOn(setupInk, 'handler').mockImplementation(() => {
-    app = render(<Layout />);
-    container.bind(INK_APP).toConstantValue(app as any);
-  });
-  jest.spyOn(loadProject, 'handler').mockImplementation(() => {
-    container.bind(Project)
-      .toConstantValue(bed.project)
-      .whenTargetNamed(CURRENT);
+
+  jest.spyOn(LoadProject.prototype, 'handler').mockImplementation(async () => {
+    container.bind(Project).toConstantValue(bed.project).whenTargetNamed(CURRENT);
   });
 });
 
@@ -72,7 +75,7 @@ describe('jill each', () => {
     jest.spyOn(workspaces[1], 'run').mockResolvedValue(tasks[1]);
 
     // Run command
-    const prom = yargs.command(eachCommand)
+    const prom = yargs.command(command)
       .parse('each cmd -- --arg');
 
     // should create script task than add it to manager
@@ -125,7 +128,7 @@ describe('jill each', () => {
     jest.spyOn(workspaces[0], 'run').mockResolvedValue(tasks[0]);
 
     // Run command
-    const prom = yargs.command(eachCommand)
+    const prom = yargs.command(command)
       .parse('each --deps-mode prod cmd -- --arg');
 
     // should create script task than add it to manager
@@ -169,7 +172,7 @@ describe('jill each', () => {
     jest.spyOn(workspaces[1], 'run').mockResolvedValue(tasks[1]);
 
     // Run command
-    const prom = yargs.command(eachCommand)
+    const prom = yargs.command(command)
       .parse('each cmd -- --arg');
 
     // should create script task than add it to manager
@@ -230,7 +233,7 @@ describe('jill each', () => {
       jest.spyOn(workspaces[1], 'run').mockResolvedValue(tasks[1]);
 
       // Run command
-      const prom = yargs.command(eachCommand)
+      const prom = yargs.command(command)
         .parse('each --private cmd -- --arg');
 
       // should create script task than add it to manager
@@ -275,7 +278,7 @@ describe('jill each', () => {
       jest.spyOn(workspaces[1], 'run').mockResolvedValue(tasks[1]);
 
       // Run command
-      const prom = yargs.command(eachCommand)
+      const prom = yargs.command(command)
         .parse('each --no-private cmd -- --arg');
 
       // should create script task than add it to manager
@@ -325,7 +328,7 @@ describe('jill each', () => {
       jest.spyOn(workspaces[1], 'isAffected').mockResolvedValue(false);
 
       // Run command
-      const prom = yargs.command(eachCommand)
+      const prom = yargs.command(command)
         .parse('each --affected test cmd -- --arg');
 
       // should create script task than add it to manager
