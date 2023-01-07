@@ -11,7 +11,7 @@ import { defineMiddleware } from '@/src/utils/yargs';
 // Types
 export interface ILoadProjectArgs {
   project: string;
-  ['package-manager']?: PackageManager;
+  'package-manager'?: PackageManager;
 }
 
 // Middleware

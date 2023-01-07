@@ -1,22 +1,26 @@
 import { cleanup, render } from 'ink-testing-library';
 import path from 'node:path';
-import yargs from 'yargs';
+import yargs, { CommandModule } from 'yargs';
 
-import listCommand from '@/src/commands/list';
-import { loadProject } from '@/src/middlewares/load-project';
-import { setupInk } from '@/src/middlewares/setup-ink';
+import '@/src/commands/list';
+import { COMMAND } from '@/src/bases/command';
+import { INK_APP } from '@/src/ink.config';
+import { container } from '@/src/inversify.config';
+import { LoadProject } from '@/src/middlewares/load-project';
 import { Project } from '@/src/project/project';
-import { container, INK_APP } from '@/src/inversify.config';
+import { CURRENT } from '@/src/project/constants';
 import Layout from '@/src/ui/layout';
 
 import { TestBed } from '@/tools/test-bed';
-import { CURRENT } from '@/src/project/constants';
+import { wrapInkTestApp } from '@/tools/utils';
 
 // Setup
 let app: ReturnType<typeof render>;
+let command: CommandModule;
+
 let bed: TestBed;
 
-beforeEach(() => {
+beforeEach(async () => {
   container.snapshot();
 
   jest.resetAllMocks();
@@ -25,16 +29,16 @@ beforeEach(() => {
   // Project
   bed = new TestBed();
 
+  app = render(<Layout />);
+  container.rebind(INK_APP).toConstantValue(wrapInkTestApp(app));
+
+  command = await container.getNamedAsync(COMMAND, 'list');
+
   // Mocks
   jest.spyOn(console, 'log').mockImplementation();
-  jest.spyOn(setupInk, 'handler').mockImplementation(() => {
-    app = render(<Layout />);
-    container.bind(INK_APP).toConstantValue(app as any);
-  });
-  jest.spyOn(loadProject, 'handler').mockImplementation(() => {
-    container.bind(Project)
-      .toConstantValue(bed.project)
-      .whenTargetNamed(CURRENT);
+
+  jest.spyOn(LoadProject.prototype, 'handler').mockImplementation(async () => {
+    container.bind(Project).toConstantValue(bed.project).whenTargetNamed(CURRENT);
   });
 });
 
@@ -52,7 +56,7 @@ describe('jill list', () => {
     bed.addWorkspace('wks-3');
 
     // Run command
-    await yargs.command(listCommand)
+    await yargs.command(command)
       .parse('list');
 
     expect(app.lastFrame()).toEqualLines([
@@ -70,7 +74,7 @@ describe('jill list', () => {
       bed.addWorkspace('wks-3');
 
       // Run command
-      await yargs.command(listCommand)
+      await yargs.command(command)
         .parse('list --private');
 
       expect(app.lastFrame()).toEqualLines([
@@ -85,7 +89,7 @@ describe('jill list', () => {
       bed.addWorkspace('wks-3');
 
       // Run command
-      await yargs.command(listCommand)
+      await yargs.command(command)
         .parse('list --no-private');
 
       expect(app.lastFrame()).toEqualLines([
@@ -109,7 +113,7 @@ describe('jill list', () => {
       jest.spyOn(workspaces[2], 'isAffected').mockResolvedValue(false);
 
       // Run command
-      await yargs.command(listCommand)
+      await yargs.command(command)
         .parse('list --affected test');
 
       expect(app.lastFrame()).toEqualLines([
@@ -126,7 +130,7 @@ describe('jill list', () => {
       bed.addWorkspace('wks-3', { scripts: { lint: 'lint' }});
 
       // Run command
-      await yargs.command(listCommand)
+      await yargs.command(command)
         .parse('list --with-script test');
 
       expect(app.lastFrame()).toEqualLines([
@@ -141,7 +145,7 @@ describe('jill list', () => {
       bed.addWorkspace('wks-3', { scripts: { lint: 'lint' }});
 
       // Run command
-      await yargs.command(listCommand)
+      await yargs.command(command)
         .parse('list --with-script test lint');
 
       expect(app.lastFrame()).toEqualLines([
@@ -159,7 +163,7 @@ describe('jill list', () => {
       bed.addWorkspace('wks-3');
 
       // Run command
-      await yargs.command(listCommand)
+      await yargs.command(command)
         .parse('list --headers');
 
       expect(app.lastFrame()).toEqualLines([
@@ -177,7 +181,7 @@ describe('jill list', () => {
       bed.addWorkspace('wks-3');
 
       // Run command
-      await yargs.command(listCommand)
+      await yargs.command(command)
         .parse('list --long');
 
       expect(app.lastFrame()).toEqualLines([
@@ -197,7 +201,7 @@ describe('jill list', () => {
       jest.spyOn(process.stdout, 'write').mockImplementation();
 
       // Run command
-      await yargs.command(listCommand)
+      await yargs.command(command)
         .parse('list --json');
 
       expect(process.stdout.write).toHaveBeenCalledWith(
