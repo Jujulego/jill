@@ -53,7 +53,7 @@ export class RunCommand extends InkCommand<IRunCommandArgs> {
       });
   }
 
-  async render(args: ArgumentsCamelCase<IRunCommandArgs>) {
+  async *render(args: ArgumentsCamelCase<IRunCommandArgs>) {
     // Extract arguments
     const rest = args._.map(arg => arg.toString());
 
@@ -67,14 +67,14 @@ export class RunCommand extends InkCommand<IRunCommandArgs> {
     });
     this.manager.add(task);
 
-    // Handle result
-    waitForEvent(task, 'completed').then((result) => {
-      if (result.status === 'failed') {
-        return process.exit(1);
-      }
-    });
-
     // Render
-    return <TaskManagerSpinner manager={this.manager} />;
+    yield <TaskManagerSpinner manager={this.manager} />;
+
+    // Handle result
+    const result = await waitForEvent(task, 'completed');
+
+    if (result.status === 'failed') {
+      return process.exit(1);
+    }
   }
 }

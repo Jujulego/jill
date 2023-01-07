@@ -4,7 +4,7 @@ import { type ReactNode } from 'react';
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
 
 import { INK_APP } from '@/src/ink.config';
-import { type Awaitable } from '@/src/types';
+import { type Awaitable, type AwaitableGenerator } from '@/src/types';
 import Layout from '@/src/ui/layout';
 
 import { type ICommand } from './command';
@@ -17,18 +17,20 @@ export abstract class InkCommand<A = unknown> implements ICommand<A> {
   readonly app: ink.Instance;
 
   // Methods
-  abstract render(args: ArgumentsCamelCase<A>): Awaitable<ReactNode>;
+  abstract render(args: ArgumentsCamelCase<A>): AwaitableGenerator<ReactNode>;
 
   builder(yargs: Argv): Awaitable<Argv<A>> {
     return yargs as Argv<A>;
   }
 
   async handler(args: ArgumentsCamelCase<A>): Promise<void> {
-    this.app.rerender(
-      <Layout>
-        { await this.render(args) }
-      </Layout>
-    );
+    for await (const children of this.render(args)) {
+      this.app.rerender(
+        <Layout>
+          { children }
+        </Layout>
+      );
+    }
 
     return this.app.waitUntilExit();
   }

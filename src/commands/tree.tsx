@@ -20,9 +20,7 @@ export class TreeCommand extends InkCommand {
   readonly workspace: Workspace;
 
   // Methods
-  render() {
-    return (
-      <WorkspaceTree workspace={this.workspace} />
-    );
+  *render() {
+    yield <WorkspaceTree workspace={this.workspace} />;
   }
 }
