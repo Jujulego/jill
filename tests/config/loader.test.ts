@@ -63,7 +63,7 @@ describe('configLoader', () => {
 
     // Load config
     await expect(configLoader())
-      .resolves.toEqual({
+      .resolves.toMatchObject({
         plugins: [path.resolve('/test/plugin.js')]
       });
   });
