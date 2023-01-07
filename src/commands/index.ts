@@ -1,8 +1,8 @@
 import each from './each';
-import group from './group';
+import './group';
 import './list';
 import './run';
 import './tree';
 
 // Commands
-export const commands = [each, group];
+export const commands = [each];
