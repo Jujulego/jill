@@ -1249,10 +1249,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jujulego/event-tree@npm:1.1.0, @jujulego/event-tree@npm:^1.1.0":
+"@jujulego/event-tree@npm:1.1.0":
   version: 1.1.0
   resolution: "@jujulego/event-tree@npm:1.1.0"
   checksum: ff72181a20cccce2baa0b216388340e8134969279825471d4dbea21e995d5fc6d8c754786b40c221d9d9b9fd70834ea284f6dfb8c275d3cac68f5a716baafdd9
+  languageName: node
+  linkType: hard
+
+"@jujulego/event-tree@npm:^1.1.1":
+  version: 1.1.1
+  resolution: "@jujulego/event-tree@npm:1.1.1"
+  checksum: f252bf1d3c04a892374efd0d4950e878bed617cce201c1d5d5d9aa67f3f5633a979decdb72ae0602b640aadbc1f4003ab2c04aa8da202184827d025f2395d8b9
   languageName: node
   linkType: hard
 
@@ -1262,7 +1269,7 @@ __metadata:
   dependencies:
     "@jujulego/2d-maths": 1.6.0
     "@jujulego/event-tree": 1.1.0
-    "@jujulego/tasks": 1.1.3
+    "@jujulego/tasks": 1.1.4
     "@swc/core": 1.3.25
     "@swc/jest": 0.2.24
     "@types/async-lock": 1.3.0
@@ -1318,13 +1325,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jujulego/tasks@npm:1.1.3":
-  version: 1.1.3
-  resolution: "@jujulego/tasks@npm:1.1.3"
+"@jujulego/tasks@npm:1.1.4":
+  version: 1.1.4
+  resolution: "@jujulego/tasks@npm:1.1.4"
   dependencies:
-    "@jujulego/event-tree": ^1.1.0
+    "@jujulego/event-tree": ^1.1.1
     tree-kill: ^1.2.2
-  checksum: 9b0aefca5264da85d63743e46d8c3b94237b80382e11b59ef54a2114f08c7d3b943db98c263635067f40a1901a1ba1d36328aac98b989de549986de129e28bee
+  checksum: bacbaa089f7eb5afe99abba9688be57a74b43f4386ce03122868e25ae24a1c08871b2e474c9420f033c21149700939742ad81c1b793ca66f8bc4bb8935f85318
   languageName: node
   linkType: hard
 
