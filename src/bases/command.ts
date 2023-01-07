@@ -45,6 +45,6 @@ export function Command(opts: ICommandOpts) {
           handler: (...args) => cmd.handler(...args),
         };
       })
-      .whenTargetNamed(opts.command);
+      .whenTargetNamed(opts.command.split(' ')[0]);
   };
 }

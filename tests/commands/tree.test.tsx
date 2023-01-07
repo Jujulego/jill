@@ -4,6 +4,8 @@ import yargs, { type CommandModule } from 'yargs';
 import '@/src/commands/tree';
 import { COMMAND } from '@/src/bases/command';
 import { INK_APP } from '@/src/ink.config';
+import { LoadProject } from '@/src/middlewares/load-project';
+import { LoadWorkspace } from '@/src/middlewares/load-workspace';
 import { Project } from '@/src/project/project';
 import { CURRENT } from '@/src/project/constants';
 import { Workspace } from '@/src/project/workspace';
@@ -12,8 +14,6 @@ import Layout from '@/src/ui/layout';
 
 import { TestBed } from '@/tools/test-bed';
 import { flushPromises, wrapInkTestApp } from '@/tools/utils';
-import { LoadProject } from '@/src/middlewares/load-project';
-import { LoadWorkspace } from '@/src/middlewares/load-workspace';
 
 // Setup
 let app: ReturnType<typeof render>;
@@ -46,17 +46,11 @@ beforeEach(async () => {
   jest.restoreAllMocks();
 
   jest.spyOn(LoadProject.prototype, 'handler').mockImplementation(async () => {
-    container
-      .bind(Project)
-      .toConstantValue(bed.project)
-      .whenTargetNamed(CURRENT);
+    container.bind(Project).toConstantValue(bed.project).whenTargetNamed(CURRENT);
   });
 
   jest.spyOn(LoadWorkspace.prototype, 'handler').mockImplementation(async () => {
-    container
-      .bind(Workspace)
-      .toConstantValue(wksA)
-      .whenTargetNamed(CURRENT);
+    container.bind(Workspace).toConstantValue(wksA).whenTargetNamed(CURRENT);
   });
 
   jest.spyOn(wksA, 'dependencies');
