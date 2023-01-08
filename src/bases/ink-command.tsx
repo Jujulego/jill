@@ -1,4 +1,4 @@
-import ink from 'ink';
+import type ink from 'ink';
 import { inject, injectable } from 'inversify';
 import { type ReactNode } from 'react';
 import { type ArgumentsCamelCase, type Argv } from 'yargs';

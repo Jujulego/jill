@@ -1,4 +1,4 @@
-import { Task } from '@jujulego/tasks';
+import { type Task } from '@jujulego/tasks';
 import { Text } from 'ink';
 import Spinner from 'ink-spinner';
 import symbols from 'log-symbols';

@@ -4,7 +4,7 @@ import yargs, { type ArgumentsCamelCase, type Argv } from 'yargs';
 import { type IMiddleware, Middleware } from '@/src/bases/middleware';
 import { SpinnerService } from '@/src/commons/spinner.service';
 import { container } from '@/src/inversify.config';
-import { lazyCurrentProject, Project } from '@/src/project/project';
+import { lazyCurrentProject, type Project } from '@/src/project/project';
 import { CURRENT } from '@/src/project/constants';
 import { Workspace } from '@/src/project/workspace';
 

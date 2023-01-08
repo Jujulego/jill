@@ -1,6 +1,6 @@
-import { ILogger } from '@jujulego/tasks';
-import ink from 'ink';
-import { render } from 'ink-testing-library';
+import { type ILogger } from '@jujulego/tasks';
+import type ink from 'ink';
+import { type render } from 'ink-testing-library';
 import cp from 'node:child_process';
 
 // Logger

@@ -10,7 +10,7 @@ import { container } from '@/src/inversify.config';
 import { LoadProject } from '@/src/middlewares/load-project';
 import { CURRENT } from '@/src/project/constants';
 import { Project } from '@/src/project/project';
-import { WorkspaceContext } from '@/src/project/workspace';
+import { type WorkspaceContext } from '@/src/project/workspace';
 import { TASK_MANAGER } from '@/src/tasks/task-manager.config';
 import Layout from '@/src/ui/layout';
 

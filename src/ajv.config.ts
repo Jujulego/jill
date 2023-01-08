@@ -1,5 +1,5 @@
 import Ajv from 'ajv';
-import { interfaces as int } from 'inversify';
+import { type interfaces as int } from 'inversify';
 
 import { container } from './inversify.config';
 import { Logger } from './commons/logger.service';

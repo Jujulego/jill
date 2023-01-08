@@ -1,4 +1,4 @@
-import { cosmiconfig } from 'cosmiconfig';
+import { type cosmiconfig } from 'cosmiconfig';
 
 // Types
 export interface IConfig {

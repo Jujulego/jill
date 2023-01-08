@@ -1,4 +1,4 @@
-import { SpawnTask, SpawnTaskStream } from '@jujulego/tasks';
+import { type SpawnTask, type SpawnTaskStream } from '@jujulego/tasks';
 import { streamEvents } from '@jujulego/event-tree';
 
 // Utils

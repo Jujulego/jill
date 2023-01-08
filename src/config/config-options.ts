@@ -1,5 +1,5 @@
-import yargs, { Argv } from 'yargs';
-import { interfaces as int } from 'inversify';
+import yargs, { type Argv } from 'yargs';
+import { type interfaces as int } from 'inversify';
 import { hideBin } from 'yargs/helpers';
 
 import { type IConfig } from '@/src/config/types';

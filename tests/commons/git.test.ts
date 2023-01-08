@@ -1,6 +1,6 @@
-import { SpawnTask, TaskManager } from '@jujulego/tasks';
+import { type SpawnTask, type TaskManager } from '@jujulego/tasks';
 
-import { GitService, GitContext } from '@/src/commons/git.service';
+import { GitService, type GitContext } from '@/src/commons/git.service';
 import { container } from '@/src/inversify.config';
 import { Logger } from '@/src/commons/logger.service';
 import { TASK_MANAGER } from '@/src/tasks/task-manager.config';

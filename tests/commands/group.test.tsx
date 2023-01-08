@@ -1,7 +1,7 @@
 import { ParallelGroup, SpawnTask } from '@jujulego/tasks';
 import { cleanup, render } from 'ink-testing-library';
 import symbols from 'log-symbols';
-import yargs, { CommandModule } from 'yargs';
+import yargs, { type CommandModule } from 'yargs';
 
 import '@/src/commands/group';
 import { COMMAND } from '@/src/bases/command';

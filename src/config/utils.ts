@@ -1,5 +1,5 @@
-import { interfaces as int } from 'inversify';
-import { ValidateFunction } from 'ajv';
+import { type interfaces as int } from 'inversify';
+import { type ValidateFunction } from 'ajv';
 import { cosmiconfig, defaultLoaders } from 'cosmiconfig';
 
 import { AJV } from '@/src/ajv.config';

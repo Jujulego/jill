@@ -1,5 +1,5 @@
 import { waitForEvent } from '@jujulego/event-tree';
-import { TaskManager } from '@jujulego/tasks';
+import { type TaskManager } from '@jujulego/tasks';
 import { inject } from 'inversify';
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
 
@@ -7,7 +7,7 @@ import { Command } from '@/src/bases/command';
 import { InkCommand } from '@/src/bases/ink-command';
 import { LoadProject } from '@/src/middlewares/load-project';
 import { LoadWorkspace } from '@/src/middlewares/load-workspace';
-import { lazyCurrentWorkspace, Workspace, type WorkspaceDepsMode } from '@/src/project/workspace';
+import { lazyCurrentWorkspace, type Workspace, type WorkspaceDepsMode } from '@/src/project/workspace';
 import { TASK_MANAGER } from '@/src/tasks/task-manager.config';
 import TaskManagerSpinner from '@/src/ui/task-manager-spinner';
 

@@ -1,7 +1,7 @@
 import path from 'node:path';
 
 import { configLoader } from '@/src/config/config-loader';
-import { IConfig } from '@/src/config/types';
+import { type IConfig } from '@/src/config/types';
 import { CONFIG_EXPLORER, CONFIG_VALIDATOR } from '@/src/config/utils';
 import { container } from '@/src/inversify.config';
 import { Logger } from '@/src/commons/logger.service';

@@ -1,7 +1,7 @@
 import { GitService } from '@/src/commons/git.service';
 import { AffectedFilter } from '@/src/filters/affected.filter';
 import { container } from '@/src/inversify.config';
-import { Workspace } from '@/src/project/workspace';
+import { type Workspace } from '@/src/project/workspace';
 
 import { TestBed } from '@/tools/test-bed';
 

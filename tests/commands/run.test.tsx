@@ -11,7 +11,7 @@ import { LoadProject } from '@/src/middlewares/load-project';
 import { LoadWorkspace } from '@/src/middlewares/load-workspace';
 import { CURRENT } from '@/src/project/constants';
 import { Project } from '@/src/project/project';
-import { Workspace, WorkspaceContext } from '@/src/project/workspace';
+import { Workspace, type WorkspaceContext } from '@/src/project/workspace';
 import { TASK_MANAGER } from '@/src/tasks/task-manager.config';
 import Layout from '@/src/ui/layout';
 

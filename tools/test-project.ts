@@ -1,4 +1,4 @@
-import { Project, ProjectOptions } from '@/src/project/project';
+import { Project, type ProjectOptions } from '@/src/project/project';
 
 import { TestWorkspace } from './test-workspace';
 

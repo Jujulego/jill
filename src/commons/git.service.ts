@@ -1,4 +1,4 @@
-import { SpawnTask, SpawnTaskOptions, TaskContext, TaskManager } from '@jujulego/tasks';
+import { SpawnTask, type SpawnTaskOptions, type TaskContext, type TaskManager } from '@jujulego/tasks';
 import { inject } from 'inversify';
 
 import { Service } from '@/src/inversify.config';

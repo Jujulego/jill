@@ -1,6 +1,6 @@
 import { cleanup, render } from 'ink-testing-library';
 import path from 'node:path';
-import yargs, { CommandModule } from 'yargs';
+import yargs, { type CommandModule } from 'yargs';
 
 import '@/src/commands/list';
 import { COMMAND } from '@/src/bases/command';

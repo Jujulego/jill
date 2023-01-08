@@ -1,4 +1,4 @@
-import { decorate, injectable, interfaces as int } from 'inversify';
+import { decorate, injectable, type interfaces as int } from 'inversify';
 import { type ArgumentsCamelCase, type Argv, type CommandModule } from 'yargs';
 
 import { container } from '@/src/inversify.config';

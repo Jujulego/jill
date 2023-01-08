@@ -1,5 +1,5 @@
 import { TaskManager } from '@jujulego/tasks';
-import { interfaces as int } from 'inversify';
+import { type interfaces as int } from 'inversify';
 
 import { Logger } from '@/src/commons/logger.service';
 import { CONFIG } from '@/src/config/config-loader';

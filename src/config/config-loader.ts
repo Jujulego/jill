@@ -1,4 +1,4 @@
-import { interfaces as int } from 'inversify';
+import { type interfaces as int } from 'inversify';
 import os from 'node:os';
 import path from 'node:path';
 

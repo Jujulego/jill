@@ -1,9 +1,9 @@
-import { GroupTask, ParallelGroup, SequenceGroup, Task } from '@jujulego/tasks';
+import { type GroupTask, ParallelGroup, SequenceGroup, type Task } from '@jujulego/tasks';
 import moo from 'moo';
 
 import { Service } from '@/src/inversify.config';
 import { Logger } from '@/src/commons/logger.service';
-import { Workspace, WorkspaceRunOptions } from '@/src/project/workspace';
+import { type Workspace, type WorkspaceRunOptions } from '@/src/project/workspace';
 import { inject } from 'inversify';
 
 // Interfaces

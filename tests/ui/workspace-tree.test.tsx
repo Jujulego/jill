@@ -1,6 +1,6 @@
 import { render, cleanup } from 'ink-testing-library';
 
-import { Workspace } from '@/src/project/workspace';
+import { type Workspace } from '@/src/project/workspace';
 import WorkspaceTree from '@/src/ui/workspace-tree';
 
 import { TestBed } from '@/tools/test-bed';

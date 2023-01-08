@@ -1,7 +1,7 @@
 import chalk from 'chalk';
 import path from 'node:path';
 import slugify from 'slugify';
-import { ArgumentsCamelCase, type Argv } from 'yargs';
+import { type ArgumentsCamelCase, type Argv } from 'yargs';
 
 import { Command } from '@/src/bases/command';
 import { InkCommand } from '@/src/bases/ink-command';
@@ -10,8 +10,8 @@ import { Pipeline } from '@/src/filters/pipeline';
 import { PrivateFilter } from '@/src/filters/private.filter';
 import { ScriptsFilter } from '@/src/filters/scripts.filter';
 import { LoadProject } from '@/src/middlewares/load-project';
-import { lazyCurrentProject, Project } from '@/src/project/project';
-import { Workspace } from '@/src/project/workspace';
+import { lazyCurrentProject, type Project } from '@/src/project/project';
+import { type Workspace } from '@/src/project/workspace';
 import List from '@/src/ui/list';
 
 // Types

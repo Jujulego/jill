@@ -1,4 +1,4 @@
-import { SpawnTask, SpawnTaskOptions, SpawnTaskStream, TaskContext } from '@jujulego/tasks';
+import { SpawnTask, type SpawnTaskOptions, type SpawnTaskStream, type TaskContext } from '@jujulego/tasks';
 import { injectable } from 'inversify';
 import path from 'node:path';
 import { type Package } from 'normalize-package-data';
@@ -10,7 +10,7 @@ import { Logger } from '@/src/commons/logger.service';
 import { combine, streamLines } from '@/src/utils/streams';
 
 import { CURRENT } from './constants';
-import { Project } from './project';
+import { type Project } from './project';
 
 // Types
 export type WorkspaceDepsMode = 'all' | 'prod' | 'none';

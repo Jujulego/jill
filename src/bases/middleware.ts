@@ -2,7 +2,7 @@ import { decorate, injectable } from 'inversify';
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
 
 import { container } from '@/src/inversify.config';
-import { type Awaitable, Type } from '@/src/types';
+import { type Awaitable, type Type } from '@/src/types';
 
 // Types
 export interface IMiddleware<A = unknown> {
@@ -14,6 +14,7 @@ export interface IMiddleware<A = unknown> {
 export function Middleware() {
   return (target: Type<IMiddleware>) => {
     decorate(injectable(), target);
+    container.bind(target).toSelf().inSingletonScope();
   };
 }
 
@@ -22,7 +23,7 @@ export function applyMiddlewares(parser: Argv, middlewares: Type<IMiddleware>[])
   let tmp = parser;
 
   for (const cls of middlewares) {
-    const middleware = container.resolve(cls);
+    const middleware = container.get(cls);
 
     if (middleware.builder) {
       tmp = middleware.builder(tmp);

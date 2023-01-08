@@ -4,7 +4,7 @@ import symbols from 'log-symbols';
 import { useLayoutEffect, useState } from 'react';
 
 import { container } from '@/src/inversify.config';
-import { SpinnerService, SpinnerState } from '@/src/commons/spinner.service';
+import { SpinnerService, type SpinnerState } from '@/src/commons/spinner.service';
 
 // Components
 export default function GlobalSpinner() {

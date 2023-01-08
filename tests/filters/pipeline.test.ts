@@ -1,4 +1,4 @@
-import { PipelineFilter, Pipeline } from '@/src/filters/pipeline';
+import { type PipelineFilter, Pipeline } from '@/src/filters/pipeline';
 
 import { TestBed } from '@/tools/test-bed';
 

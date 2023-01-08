@@ -1,5 +1,6 @@
-import ink, { render } from 'ink';
-import { interfaces as int } from 'inversify';
+import type ink from 'ink';
+import { render } from 'ink';
+import { type interfaces as int } from 'inversify';
 
 import { container } from '@/src/inversify.config';
 import Layout from '@/src/ui/layout';

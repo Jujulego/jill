@@ -1,6 +1,6 @@
-import { Argv } from 'yargs';
+import { type Argv } from 'yargs';
 
-import { Awaitable } from '@/src/types';
+import { type Awaitable } from '@/src/types';
 
 // Types
 export interface Plugin<T = unknown, U = T> {

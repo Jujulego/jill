@@ -1,5 +1,5 @@
 import { waitForEvent } from '@jujulego/event-tree';
-import { TaskManager, TaskSet } from '@jujulego/tasks';
+import { type TaskManager, TaskSet } from '@jujulego/tasks';
 import { inject } from 'inversify';
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
 
@@ -11,7 +11,7 @@ import { Pipeline } from '@/src/filters/pipeline';
 import { PrivateFilter } from '@/src/filters/private.filter';
 import { ScriptsFilter } from '@/src/filters/scripts.filter';
 import { LoadProject } from '@/src/middlewares/load-project';
-import { lazyCurrentProject, Project } from '@/src/project/project';
+import { lazyCurrentProject, type Project } from '@/src/project/project';
 import { type WorkspaceDepsMode } from '@/src/project/workspace';
 import { TASK_MANAGER } from '@/src/tasks/task-manager.config';
 import TaskManagerSpinner from '@/src/ui/task-manager-spinner';
