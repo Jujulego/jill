@@ -1,7 +1,7 @@
 import { EventSource } from '@jujulego/event-tree';
 import { decorate, injectable } from 'inversify';
 
-import { Service } from '../inversify.config';
+import { Service } from '@/src/modules/service';
 
 // Setup
 decorate(injectable(), EventSource);

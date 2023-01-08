@@ -3,7 +3,7 @@ import path from 'node:path';
 import yargs, { type CommandModule } from 'yargs';
 
 import '@/src/commands/list';
-import { COMMAND } from '@/src/bases/command';
+import { COMMAND } from '@/src/modules/command';
 import { INK_APP } from '@/src/ink.config';
 import { container } from '@/src/inversify.config';
 import { LoadProject } from '@/src/middlewares/load-project';

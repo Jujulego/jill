@@ -2,7 +2,7 @@ import { cleanup, render } from 'ink-testing-library';
 import yargs, { type CommandModule } from 'yargs';
 
 import '@/src/commands/tree';
-import { COMMAND } from '@/src/bases/command';
+import { COMMAND } from '@/src/modules/command';
 import { INK_APP } from '@/src/ink.config';
 import { LoadProject } from '@/src/middlewares/load-project';
 import { LoadWorkspace } from '@/src/middlewares/load-workspace';

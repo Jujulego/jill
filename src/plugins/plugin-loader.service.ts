@@ -3,12 +3,12 @@ import { type Argv } from 'yargs';
 
 import { CONFIG } from '@/src/config/config-loader';
 import { type IConfig } from '@/src/config/types';
-import { Service } from '@/src/inversify.config';
 import { Logger } from '@/src/commons/logger.service';
 import { dynamicImport } from '@/src/utils/import';
 
 import { type Plugin } from './types';
 import { assertPlugin } from './utils';
+import { Service } from '@/src/modules/service';
 
 // Class
 @Service()

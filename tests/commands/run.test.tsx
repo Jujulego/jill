@@ -4,7 +4,7 @@ import symbols from 'log-symbols';
 import yargs, { type CommandModule } from 'yargs';
 
 import '@/src/commands/run';
-import { COMMAND } from '@/src/bases/command';
+import { COMMAND } from '@/src/modules/command';
 import { INK_APP } from '@/src/ink.config';
 import { container } from '@/src/inversify.config';
 import { LoadProject } from '@/src/middlewares/load-project';

@@ -1,7 +1,8 @@
-export * from './bases/command';
-export * from './bases/ink-command';
-export * from './bases/middleware';
 export * from './commons/git.service';
+export * from './modules/command';
+export * from './modules/ink-command';
+export * from './modules/middleware';
+export * from './modules/service';
 export * from './types';
 
 // Filters
@@ -60,3 +61,4 @@ export * from './ui/workspace-tree';
 export * from './utils/import';
 export * from './utils/streams';
 export * from './utils/string';
+export { Service } from '@/src/modules/service';

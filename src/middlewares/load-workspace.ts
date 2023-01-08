@@ -1,7 +1,7 @@
 import { inject } from 'inversify';
 import yargs, { type ArgumentsCamelCase, type Argv } from 'yargs';
 
-import { type IMiddleware, Middleware } from '@/src/bases/middleware';
+import { type IMiddleware, Middleware } from '@/src/modules/middleware';
 import { SpinnerService } from '@/src/commons/spinner.service';
 import { container } from '@/src/inversify.config';
 import { lazyCurrentProject, type Project } from '@/src/project/project';

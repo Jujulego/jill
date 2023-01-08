@@ -1,7 +1,7 @@
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
-import { COMMAND } from '@/src/bases/command';
+import { COMMAND } from '@/src/modules/command';
 import { Logger } from '@/src/commons/logger.service';
 import { applyConfigOptions } from '@/src/config/config-options';
 import { container } from '@/src/inversify.config';
