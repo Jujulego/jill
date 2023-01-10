@@ -52,7 +52,7 @@
     "eslint-plugin-react": "7.31.11",
     "eslint-plugin-react-hooks": "4.6.0",
     "eslint-plugin-workspaces": "0.7.0",
-    "fork-ts-checker-webpack-plugin": "7.2.14",
+    "fork-ts-checker-webpack-plugin": "7.3.0",
     "ink": "3.2.0",
     "ink-spinner": "4.0.3",
     "ink-testing-library": "2.1.0",
