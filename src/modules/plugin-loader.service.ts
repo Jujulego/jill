@@ -1,14 +1,13 @@
-import { inject } from 'inversify';
-import { type Argv } from 'yargs';
+import { type ContainerModule, inject } from 'inversify';
 
 import { CONFIG } from '@/src/config/config-loader';
 import { type IConfig } from '@/src/config/types';
 import { Logger } from '@/src/commons/logger.service';
+import { container } from '@/src/inversify.config';
 import { dynamicImport } from '@/src/utils/import';
 
-import { type Plugin } from './types';
-import { assertPlugin } from './utils';
-import { Service } from '@/src/modules/service';
+import { getModule } from './module';
+import { Service } from './service';
 
 // Class
 @Service()
@@ -25,7 +24,7 @@ export class PluginLoaderService {
   }
 
   // Methods
-  private async _importPlugin(filepath: string): Promise<Plugin> {
+  private async _importPlugin(filepath: string): Promise<ContainerModule> {
     this._logger.verbose(`Loading plugin ${filepath}`);
 
     let plugin = await dynamicImport(filepath);
@@ -33,17 +32,21 @@ export class PluginLoaderService {
       plugin = plugin.default;
     }
 
-    assertPlugin(plugin, filepath);
+    const module = getModule(plugin);
 
-    return plugin;
+    if (!module) {
+      throw new Error(`Invalid plugin ${filepath}`);
+    }
+
+    return module;
   }
 
-  async loadPlugins(parser: Argv): Promise<void> {
+  async loadPlugins(): Promise<void> {
     if (!this._config.plugins) return;
 
     for (const path of this._config.plugins) {
       const plugin = await this._importPlugin(path);
-      await plugin.builder(parser);
+      container.load(plugin);
     }
   }
 }

@@ -1,8 +1,4 @@
 export * from './commons/git.service';
-export * from './modules/command';
-export * from './modules/ink-command';
-export * from './modules/middleware';
-export * from './modules/service';
 export * from './types';
 
 // Filters
@@ -14,6 +10,15 @@ export * from './filters/scripts.filter';
 // Middlewares
 export * from './middlewares/load-project';
 export * from './middlewares/load-workspace';
+
+// Modules
+export * from './modules/command';
+export * from './modules/ink-command';
+export * from './modules/middleware';
+export * from './modules/module';
+export * from './modules/plugin';
+export * from './modules/plugin-loader.service';
+export * from './modules/service';
 
 // Project
 export * from './project/constants';
@@ -30,10 +35,6 @@ export { CONFIG } from './config/config-loader';
 export { type IConfig } from './config/types';
 
 export { Logger } from './commons/logger.service';
-
-export { PluginLoaderService } from './plugins/plugin-loader.service';
-export { type Plugin } from './plugins/types';
-export { definePlugin } from './plugins/utils';
 
 // Ui
 export { default as GroupTaskSpinner } from './ui/group-task-spinner';
