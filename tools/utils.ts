@@ -1,6 +1,8 @@
 import { ILogger } from '@jujulego/tasks';
 import cp from 'node:child_process';
 
+import { ESC } from './ink-screen';
+
 // Logger
 export const spyLogger: ILogger = {
   debug: jest.fn(),
@@ -10,6 +12,10 @@ export const spyLogger: ILogger = {
 };
 
 // Utils
+export function noColor(str = ''): string {
+  return str.replace(new RegExp(`${ESC}\\[(\\d{1,2};)*\\d{1,2}m`, 'g'), '');
+}
+
 export function flushPromises(timeout = 0): Promise<void> {
   return new Promise<void>((resolve) => setTimeout(resolve, timeout));
 }

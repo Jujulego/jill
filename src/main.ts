@@ -1,12 +1,11 @@
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
-import { container } from '@/src/services/inversify.config';
-import { Logger } from '@/src/services/logger.service';
-import { PluginLoaderService } from '@/src/services/plugins/plugin-loader.service';
-
 import { commands } from './commands';
 import { configOptions } from './middlewares/config-options';
+import { container } from './services/inversify.config';
+import { Logger } from './services/logger.service';
+import { PluginLoaderService } from './services/plugins/plugin-loader.service';
 import { applyMiddlewares } from './utils/yargs';
 
 // @ts-ignore: Outside of typescript's rootDir in build

@@ -31,6 +31,6 @@ describe('<TaskName>', () => {
 
     const { lastFrame } = render(<TaskName task={task} />);
 
-    expect(lastFrame()).toBe('Running test in wks-a');
+    expect(lastFrame()).toEqual(expect.ignoreColor('Running test in wks-a'));
   });
 });

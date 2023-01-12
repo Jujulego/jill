@@ -34,8 +34,8 @@ describe('<TaskManagerSpinner>', () => {
     const { lastFrame } = render(<TaskManagerSpinner manager={manager} />);
 
     expect(lastFrame()).toEqualLines([
-      `${symbols.success} cmd-a (took 0ms)`,
-      `${symbols.success} cmd-b (took 0ms)`,
+      expect.ignoreColor(`${symbols.success} cmd-a (took 0ms)`),
+      expect.ignoreColor(`${symbols.success} cmd-b (took 0ms)`),
     ]);
   });
 
@@ -50,9 +50,9 @@ describe('<TaskManagerSpinner>', () => {
     await new Promise((resolve) => setTimeout(resolve, 0));
 
     expect(lastFrame()).toEqualLines([
-      `${symbols.success} cmd-a (took 0ms)`,
-      `${symbols.success} cmd-b (took 0ms)`,
-      `${symbols.success} cmd-c (took 0ms)`,
+      expect.ignoreColor(`${symbols.success} cmd-a (took 0ms)`),
+      expect.ignoreColor(`${symbols.success} cmd-b (took 0ms)`),
+      expect.ignoreColor(`${symbols.success} cmd-c (took 0ms)`),
     ]);
   });
 });

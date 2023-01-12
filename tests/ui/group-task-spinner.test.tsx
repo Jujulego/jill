@@ -38,9 +38,9 @@ describe('<GroupTaskSpinner>', () => {
     const { lastFrame } = render(<GroupTaskSpinner group={group} />);
 
     expect(lastFrame()).toEqualLines([
-      `${symbols.success} Test group (took 0ms)`,
-      `  ${symbols.success} cmd-a (took 0ms)`,
-      `  ${symbols.success} cmd-b (took 0ms)`,
+      expect.ignoreColor(`${symbols.success} Test group (took 0ms)`),
+      expect.ignoreColor(`  ${symbols.success} cmd-a (took 0ms)`),
+      expect.ignoreColor(`  ${symbols.success} cmd-b (took 0ms)`),
     ]);
 
     // Latter added dependency
@@ -48,10 +48,10 @@ describe('<GroupTaskSpinner>', () => {
     await flushPromises();
 
     expect(lastFrame()).toEqualLines([
-      `${symbols.success} Test group (took 0ms)`,
-      `  ${symbols.success} cmd-a (took 0ms)`,
-      `  ${symbols.success} cmd-b (took 0ms)`,
-      `  ${symbols.success} cmd-c (took 0ms)`,
+      expect.ignoreColor(`${symbols.success} Test group (took 0ms)`),
+      expect.ignoreColor(`  ${symbols.success} cmd-a (took 0ms)`),
+      expect.ignoreColor(`  ${symbols.success} cmd-b (took 0ms)`),
+      expect.ignoreColor(`  ${symbols.success} cmd-c (took 0ms)`),
     ]);
   });
 
@@ -66,11 +66,11 @@ describe('<GroupTaskSpinner>', () => {
     const { lastFrame } = render(<GroupTaskSpinner group={root} />);
 
     expect(lastFrame()).toEqualLines([
-      `${symbols.success} Root (took 0ms)`,
-      `  ${symbols.success} Test group (took 0ms)`,
-      `    ${symbols.success} cmd-a (took 0ms)`,
-      `    ${symbols.success} cmd-b (took 0ms)`,
-      `  ${symbols.success} cmd-c (took 0ms)`,
+      expect.ignoreColor(`${symbols.success} Root (took 0ms)`),
+      expect.ignoreColor(`  ${symbols.success} Test group (took 0ms)`),
+      expect.ignoreColor(`    ${symbols.success} cmd-a (took 0ms)`),
+      expect.ignoreColor(`    ${symbols.success} cmd-b (took 0ms)`),
+      expect.ignoreColor(`  ${symbols.success} cmd-c (took 0ms)`),
     ]);
   });
 });
