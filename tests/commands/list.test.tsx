@@ -167,7 +167,7 @@ describe('jill list', () => {
         .parse('list --headers');
 
       expect(app.lastFrame()).toEqualLines([
-        'Name',
+        expect.ignoreColor('Name'),
         'wks-1',
         'wks-2',
         'wks-3',
@@ -185,7 +185,7 @@ describe('jill list', () => {
         .parse('list --long');
 
       expect(app.lastFrame()).toEqualLines([
-        'Name   Version  Root',
+        expect.ignoreColor('Name   Version  Root'),
         `wks-1  1.0.0    ${path.join('test', 'wks-1')}`,
         `wks-2  1.0.0    ${path.join('test', 'wks-2')}`,
         `wks-3  1.0.0    ${path.join('test', 'wks-3')}`,

@@ -89,8 +89,8 @@ describe('jill each', () => {
 
     // should print task spinners
     expect(app.lastFrame()).toMatchLines([
-      /^. Running cmd in wks-1$/,
-      /^. Running cmd in wks-2$/,
+      expect.ignoreColor(/^. Running cmd in wks-1$/),
+      expect.ignoreColor(/^. Running cmd in wks-2$/),
     ]);
 
     // complete tasks
@@ -104,8 +104,8 @@ describe('jill each', () => {
 
     // should print all tasks completed
     expect(app.lastFrame()).toEqualLines([
-      `${symbols.success} Running cmd in wks-1 (took 100ms)`,
-      `${symbols.success} Running cmd in wks-2 (took 100ms)`,
+      expect.ignoreColor(`${symbols.success} Running cmd in wks-1 (took 100ms)`),
+      expect.ignoreColor(`${symbols.success} Running cmd in wks-2 (took 100ms)`),
     ]);
   });
 
@@ -186,8 +186,8 @@ describe('jill each', () => {
 
     // should print task spinners
     expect(app.lastFrame()).toMatchLines([
-      /^. Running cmd in wks-1$/,
-      /^. Running cmd in wks-2$/,
+      expect.ignoreColor(/^. Running cmd in wks-1$/),
+      expect.ignoreColor(/^. Running cmd in wks-2$/),
     ]);
 
     // complete tasks
@@ -202,9 +202,9 @@ describe('jill each', () => {
     await prom;
 
     // should print all tasks completed
-    expect(app.lastFrame()).toEqualLines([
-      `${symbols.success} Running cmd in wks-1 (took 100ms)`,
-      `${symbols.error} Running cmd in wks-2 (took 100ms)`,
+    expect(app.lastFrame()).toMatchLines([
+      expect.ignoreColor(`${symbols.success} Running cmd in wks-1 (took 100ms)`),
+      expect.ignoreColor(`${symbols.error} Running cmd in wks-2 (took 100ms)`),
     ]);
     expect(process.exit).toHaveBeenCalledWith(1);
   });
