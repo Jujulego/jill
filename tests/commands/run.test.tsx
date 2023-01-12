@@ -79,7 +79,7 @@ describe('jill run', () => {
     expect(manager.add).toHaveBeenCalledWith(task);
 
     // should print task spinner
-    expect(app.lastFrame()).toMatch(/^. Running cmd in wks$/);
+    expect(app.lastFrame()).toEqual(expect.ignoreColor(/^. Running cmd in wks$/));
 
     // complete task
     jest.spyOn(task, 'status', 'get').mockReturnValue('done');
@@ -89,7 +89,7 @@ describe('jill run', () => {
     await prom;
 
     // should print task completed
-    expect(app.lastFrame()).toBe(`${symbols.success} Running cmd in wks (took 100ms)`);
+    expect(app.lastFrame()).toEqual(expect.ignoreColor(`${symbols.success} Running cmd in wks (took 100ms)`));
   });
 
   it('should use given dependency selection mode', async () => {
@@ -130,7 +130,7 @@ describe('jill run', () => {
     await flushPromises();
 
     // should print task spinner
-    expect(app.lastFrame()).toMatch(/^. Running cmd in wks$/);
+    expect(app.lastFrame()).toEqual(expect.ignoreColor(/^. Running cmd in wks$/));
 
     // complete task
     jest.spyOn(task, 'status', 'get').mockReturnValue('failed');
@@ -140,7 +140,7 @@ describe('jill run', () => {
     await prom;
 
     // should print task completed
-    expect(app.lastFrame()).toBe(`${symbols.error} Running cmd in wks (took 100ms)`);
+    expect(app.lastFrame()).toEqual(expect.ignoreColor(`${symbols.error} Running cmd in wks (took 100ms)`));
     expect(process.exit).toHaveBeenCalledWith(1);
   });
 });

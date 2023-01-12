@@ -85,10 +85,10 @@ describe('jill tree', () => {
     expect(wksC.devDependencies).toHaveBeenCalled();
 
     expect(app.lastFrame()).toEqualLines([
-      'wks-a@1.0.0',
-      '├─ wks-b@1.0.0',
-      '│  └─ wks-c@1.0.0',
-      '└─ wks-c@1.0.0'
+      expect.ignoreColor('wks-a@1.0.0'),
+      expect.ignoreColor('├─ wks-b@1.0.0'),
+      expect.ignoreColor('│  └─ wks-c@1.0.0'),
+      expect.ignoreColor('└─ wks-c@1.0.0')
     ]);
   });
 });

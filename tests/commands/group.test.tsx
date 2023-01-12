@@ -107,9 +107,9 @@ describe('jill group', () => {
 
     // Should print all tasks
     expect(app.lastFrame()).toEqualLines([
-      `${symbols.success} Test group (took 100ms)`,
-      `  ${symbols.success} Running test1 in wks (took 100ms)`,
-      `  ${symbols.success} Running test2 in wks (took 100ms)`,
+      expect.ignoreColor(`${symbols.success} Test group (took 100ms)`),
+      expect.ignoreColor(`  ${symbols.success} Running test1 in wks (took 100ms)`),
+      expect.ignoreColor(`  ${symbols.success} Running test2 in wks (took 100ms)`),
     ]);
   });
 
@@ -196,9 +196,9 @@ describe('jill group', () => {
 
     // Should print all tasks
     expect(app.lastFrame()).toEqualLines([
-      `${symbols.error} Test group (took 100ms)`,
-      `  ${symbols.success} Running test1 in wks (took 100ms)`,
-      `  ${symbols.success} Running test2 in wks (took 100ms)`,
+      expect.ignoreColor(`${symbols.error} Test group (took 100ms)`),
+      expect.ignoreColor(`  ${symbols.success} Running test1 in wks (took 100ms)`),
+      expect.ignoreColor(`  ${symbols.success} Running test2 in wks (took 100ms)`),
     ]);
     expect(process.exit).toHaveBeenCalledWith(1);
   });

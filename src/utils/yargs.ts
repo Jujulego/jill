@@ -1,6 +1,6 @@
 import { ArgumentsCamelCase, Argv, CommandModule } from 'yargs';
 
-import { Awaitable } from '../types';
+import { type Awaitable } from '../types';
 
 // Types
 export interface Middleware<T = unknown, U = T> {

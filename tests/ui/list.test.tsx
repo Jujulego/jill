@@ -23,7 +23,7 @@ describe('<List>', () => {
     const { lastFrame } = render(<List items={data} headers />);
 
     expect(lastFrame()).toEqualLines([
-      'Test    Result',
+      expect.ignoreColor('Test    Result'),
       'first   success',
       'second  failed'
     ]);

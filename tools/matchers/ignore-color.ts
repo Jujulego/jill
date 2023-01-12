@@ -1,4 +1,4 @@
-import { ESC } from '../ink-screen';
+import { noColor } from '@/tools/utils';
 
 // Matcher
 export function ignoreColor(this: jest.MatcherContext, received: string, expected: unknown): jest.CustomMatcherResult {
@@ -8,12 +8,14 @@ export function ignoreColor(this: jest.MatcherContext, received: string, expecte
     promise: this.promise,
   };
 
-  received = received.replace(new RegExp(`${ESC}\\[(\\d{1,2};)*\\d{1,2}m`, 'g'), '');
+  received = noColor(received);
 
   let pass: boolean;
 
   if (expected instanceof RegExp) {
     pass = !!received.match(expected);
+  } else if (typeof expected === 'string') {
+    pass = this.equals(received, noColor(expected));
   } else {
     pass = this.equals(received, expected);
   }
