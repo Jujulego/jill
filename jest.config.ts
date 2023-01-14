@@ -1,9 +1,6 @@
 import type { Config } from 'jest';
 
 const config: Config = {
-  moduleNameMapper: {
-    '^@/(.*)$': '<rootDir>/$1'
-  },
   roots: [
     '<rootDir>/tests',
     '<rootDir>/tools',
@@ -12,6 +9,7 @@ const config: Config = {
     '<rootDir>/tests/setup.ts'
   ],
   moduleNameMapper: {
+    '^@/(.*)$': '<rootDir>/$1',
     '#ansi-styles': 'ansi-styles',
     '#supports-color': 'supports-color'
   },
