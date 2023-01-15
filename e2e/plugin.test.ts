@@ -21,11 +21,31 @@ beforeEach(async () => {
   await fs.writeFile(path.join(prjDir, 'plugin.js'),
     // language=javascript
     `
-module.exports = {
-  builder(parser) {
-    parser.command('test', 'toto', {}, () => console.log('this is a test plugin !'));
+const { Command, Plugin } = require(${JSON.stringify(path.resolve(__dirname, '../dist'))}); // require('jill');
+
+// Command
+class TestCommand {
+  handler() {
+    console.log('this is a test plugin !');
   }
-};
+}
+
+Command({
+  command: 'test',
+  describe: 'Plugin test command',
+})(TestCommand);
+
+// Plugin
+class TestPlugin {}
+
+Plugin({
+  name: 'test',
+  commands: [
+    TestCommand
+  ]
+})(TestPlugin);
+
+module.exports = { default: TestPlugin };
 `);
 });
 
