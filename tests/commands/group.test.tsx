@@ -3,15 +3,10 @@ import { cleanup, render } from 'ink-testing-library';
 import symbols from 'log-symbols';
 import yargs, { type CommandModule } from 'yargs';
 
-import '@/src/commands/group';
-import { COMMAND } from '@/src/modules/command';
+import { GroupCommand } from '@/src/commands/group';
 import { INK_APP } from '@/src/ink.config';
 import { container } from '@/src/inversify.config';
-import { LoadProject } from '@/src/middlewares/load-project';
-import { LoadWorkspace } from '@/src/middlewares/load-workspace';
-import { CURRENT } from '@/src/project/constants';
-import { Project } from '@/src/project/project';
-import { Workspace } from '@/src/project/workspace';
+import { type Workspace } from '@/src/project/workspace';
 import { TaskExprService } from '@/src/tasks/task-expr.service';
 import { TASK_MANAGER } from '@/src/tasks/task-manager.config';
 import Layout from '@/src/ui/layout';
@@ -41,19 +36,11 @@ beforeEach(async () => {
   app = render(<Layout />);
   container.rebind(INK_APP).toConstantValue(wrapInkTestApp(app));
 
-  command = await container.getNamedAsync(COMMAND, 'group');
+  command = await bed.prepareCommand(GroupCommand, wks);
 
   // Mocks
   jest.resetAllMocks();
   jest.restoreAllMocks();
-
-  jest.spyOn(LoadProject.prototype, 'handler').mockImplementation(async () => {
-    container.bind(Project).toConstantValue(bed.project).whenTargetNamed(CURRENT);
-  });
-
-  jest.spyOn(LoadWorkspace.prototype, 'handler').mockImplementation(async () => {
-    container.bind(Workspace).toConstantValue(wks).whenTargetNamed(CURRENT);
-  });
 
   taskExpr = container.get(TaskExprService);
   jest.spyOn(taskExpr, 'buildTask').mockResolvedValue(task);

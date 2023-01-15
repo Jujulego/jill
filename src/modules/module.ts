@@ -11,7 +11,7 @@ export function getRegistry(target: Class): int.ContainerModuleCallBack {
   const registry = Reflect.getMetadata(REGISTRY, target);
 
   if (typeof registry !== 'function') {
-    throw new Error('No registry found');
+    throw new Error(`No registry found in ${target.name}`);
   }
 
   return registry;

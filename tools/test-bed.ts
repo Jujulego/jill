@@ -1,4 +1,6 @@
 import { type Package } from 'normalize-package-data';
+import { ContainerModule } from 'inversify';
+import { type CommandModule } from 'yargs';
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
@@ -6,7 +8,15 @@ import path from 'node:path';
 import { CONFIG } from '@/src/config/config-loader';
 import { type IConfig } from '@/src/config/types';
 import { container } from '@/src/inversify.config';
-import { type Workspace } from '@/src/project/workspace';
+import { buildCommandModule, getCommandOpts, type ICommand } from '@/src/modules/command';
+import { type IMiddleware } from '@/src/modules/middleware';
+import { getRegistry } from '@/src/modules/module';
+import { LoadProject } from '@/src/middlewares/load-project';
+import { LoadWorkspace } from '@/src/middlewares/load-workspace';
+import { CURRENT } from '@/src/project/constants';
+import { Project } from '@/src/project/project';
+import { Workspace } from '@/src/project/workspace';
+import { type Class } from '@/src/types';
 
 import { TestProject } from './test-project';
 import { TestWorkspace } from './test-workspace';
@@ -40,6 +50,40 @@ export class TestBed {
   async writeManifest(path: string, wks: Workspace): Promise<void> {
     const { _id: _, ...manifest } = wks.manifest;
     await fs.writeFile(path, JSON.stringify(manifest));
+  }
+
+  /**
+   * Loads command, and mock LoadProject & LoadWorkspace middlewares
+   *
+   * @param command Command to prepare
+   * @param within project or workspace where the comme will be run
+   */
+  async prepareCommand(command: Class<ICommand>, within: Project | Workspace = this.project): Promise<CommandModule> {
+    // Load metadata
+    const opts = getCommandOpts(command);
+    const registry = getRegistry(command);
+
+    // Create command
+    container.load(new ContainerModule(registry));
+    const cmd = await container.getAsync<ICommand>(command);
+
+    // Inject mocks
+    const prj = within instanceof Workspace ? within.project : within;
+    const wks = within instanceof Workspace ? within : await within.mainWorkspace();
+
+    container.rebind<IMiddleware>(LoadProject).toConstantValue({
+      handler() {
+        container.bind(Project).toConstantValue(prj).whenTargetNamed(CURRENT);
+      }
+    });
+
+    container.rebind<IMiddleware>(LoadWorkspace).toConstantValue({
+      handler() {
+        container.bind(Workspace).toConstantValue(wks).whenTargetNamed(CURRENT);
+      }
+    });
+
+    return buildCommandModule(cmd, opts);
   }
 
   /**
