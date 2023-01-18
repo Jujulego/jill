@@ -27,15 +27,22 @@ export class PluginLoaderService {
   private async _importPlugin(filepath: string): Promise<ContainerModule> {
     this._logger.verbose(`Loading plugin ${filepath}`);
 
+    // Load plugin
     let plugin = await dynamicImport(filepath);
-    while ('default' in plugin) {
+
+    while (plugin && typeof plugin === 'object' && 'default' in plugin) {
       plugin = plugin.default;
     }
 
+    if (!plugin) {
+      throw new Error(`Invalid plugin ${filepath}: no plugin class found`);
+    }
+
+    // Load module from plugin
     const module = getModule(plugin);
 
     if (!module) {
-      throw new Error(`Invalid plugin ${filepath}`);
+      throw new Error(`Invalid plugin ${filepath}: invalid plugin class`);
     }
 
     return module;
