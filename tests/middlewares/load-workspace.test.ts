@@ -1,6 +1,6 @@
 import yargs from 'yargs';
 
-import { applyMiddlewares } from '@/src/bases/middleware';
+import { applyMiddlewares } from '@/src/modules/middleware';
 import { SpinnerService } from '@/src/commons/spinner.service';
 import { container } from '@/src/inversify.config';
 import { LoadWorkspace } from '@/src/middlewares/load-workspace';

@@ -1,17 +1,13 @@
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
-import { COMMAND } from '@/src/bases/command';
+import { COMMAND } from '@/src/modules/command';
 import { Logger } from '@/src/commons/logger.service';
 import { applyConfigOptions } from '@/src/config/config-options';
+import { CorePlugin } from '@/src/core.plugin';
 import { container } from '@/src/inversify.config';
-import { PluginLoaderService } from '@/src/plugins/plugin-loader.service';
-
-import '@/src/commands/each';
-import '@/src/commands/group';
-import '@/src/commands/list';
-import '@/src/commands/run';
-import '@/src/commands/tree';
+import { getModule } from '@/src/modules/module';
+import { PluginLoaderService } from '@/src/modules/plugin-loader.service';
 
 // @ts-ignore: Outside of typescript's rootDir in build
 import pkg from '../package.json';
@@ -31,8 +27,10 @@ import pkg from '../package.json';
     applyConfigOptions(parser);
 
     // Load plugins
+    container.load(getModule(CorePlugin, true));
+
     const pluginLoader = await container.getAsync(PluginLoaderService);
-    await pluginLoader.loadPlugins(parser);
+    await pluginLoader.loadPlugins();
 
     // Commands
     await parser

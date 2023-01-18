@@ -3,8 +3,8 @@ import { type TaskManager } from '@jujulego/tasks';
 import { inject } from 'inversify';
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
 
-import { Command } from '@/src/bases/command';
-import { InkCommand } from '@/src/bases/ink-command';
+import { Command } from '@/src/modules/command';
+import { InkCommand } from '@/src/modules/ink-command';
 import { LoadProject } from '@/src/middlewares/load-project';
 import { LoadWorkspace } from '@/src/middlewares/load-workspace';
 import { lazyCurrentWorkspace, type Workspace, type WorkspaceDepsMode } from '@/src/project/workspace';

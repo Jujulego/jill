@@ -3,8 +3,8 @@ import path from 'node:path';
 import slugify from 'slugify';
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
 
-import { Command } from '@/src/bases/command';
-import { InkCommand } from '@/src/bases/ink-command';
+import { Command } from '@/src/modules/command';
+import { InkCommand } from '@/src/modules/ink-command';
 import { AffectedFilter } from '@/src/filters/affected.filter';
 import { Pipeline } from '@/src/filters/pipeline';
 import { PrivateFilter } from '@/src/filters/private.filter';

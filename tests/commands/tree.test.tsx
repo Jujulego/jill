@@ -1,14 +1,9 @@
 import { cleanup, render } from 'ink-testing-library';
 import yargs, { type CommandModule } from 'yargs';
 
-import '@/src/commands/tree';
-import { COMMAND } from '@/src/bases/command';
+import { TreeCommand } from '@/src/commands/tree';
 import { INK_APP } from '@/src/ink.config';
-import { LoadProject } from '@/src/middlewares/load-project';
-import { LoadWorkspace } from '@/src/middlewares/load-workspace';
-import { Project } from '@/src/project/project';
-import { CURRENT } from '@/src/project/constants';
-import { Workspace } from '@/src/project/workspace';
+import { type Workspace } from '@/src/project/workspace';
 import { container } from '@/src/inversify.config';
 import Layout from '@/src/ui/layout';
 
@@ -39,19 +34,11 @@ beforeEach(async () => {
   app = render(<Layout />);
   container.rebind(INK_APP).toConstantValue(wrapInkTestApp(app));
 
-  command = await container.getNamedAsync(COMMAND, 'tree');
+  command = await bed.prepareCommand(TreeCommand, wksA);
 
   // Mocks
   jest.resetAllMocks();
   jest.restoreAllMocks();
-
-  jest.spyOn(LoadProject.prototype, 'handler').mockImplementation(async () => {
-    container.bind(Project).toConstantValue(bed.project).whenTargetNamed(CURRENT);
-  });
-
-  jest.spyOn(LoadWorkspace.prototype, 'handler').mockImplementation(async () => {
-    container.bind(Workspace).toConstantValue(wksA).whenTargetNamed(CURRENT);
-  });
 
   jest.spyOn(wksA, 'dependencies');
   jest.spyOn(wksA, 'devDependencies');

@@ -3,13 +3,9 @@ import { cleanup, render } from 'ink-testing-library';
 import symbols from 'log-symbols';
 import yargs, { type CommandModule } from 'yargs';
 
-import '@/src/commands/each';
-import { COMMAND } from '@/src/bases/command';
+import { EachCommand } from '@/src/commands/each';
 import { INK_APP } from '@/src/ink.config';
 import { container } from '@/src/inversify.config';
-import { LoadProject } from '@/src/middlewares/load-project';
-import { CURRENT } from '@/src/project/constants';
-import { Project } from '@/src/project/project';
 import { type WorkspaceContext } from '@/src/project/workspace';
 import { TASK_MANAGER } from '@/src/tasks/task-manager.config';
 import Layout from '@/src/ui/layout';
@@ -35,14 +31,7 @@ beforeEach(async () => {
   app = render(<Layout />);
   container.rebind(INK_APP).toConstantValue(wrapInkTestApp(app));
 
-  command = await container.getNamedAsync(COMMAND, 'each');
-
-  // Mocks
-  jest.spyOn(console, 'log').mockImplementation();
-
-  jest.spyOn(LoadProject.prototype, 'handler').mockImplementation(async () => {
-    container.bind(Project).toConstantValue(bed.project).whenTargetNamed(CURRENT);
-  });
+  command = await bed.prepareCommand(EachCommand);
 });
 
 afterEach(() => {

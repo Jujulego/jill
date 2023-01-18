@@ -3,8 +3,8 @@ import { type TaskManager, TaskSet } from '@jujulego/tasks';
 import { inject } from 'inversify';
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
 
-import { Command } from '@/src/bases/command';
-import { InkCommand } from '@/src/bases/ink-command';
+import { Command } from '@/src/modules/command';
+import { InkCommand } from '@/src/modules/ink-command';
 import { SpinnerService } from '@/src/commons/spinner.service';
 import { AffectedFilter } from '@/src/filters/affected.filter';
 import { Pipeline } from '@/src/filters/pipeline';
