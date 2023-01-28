@@ -1,10 +1,9 @@
-import { waitForEvent } from '@jujulego/event-tree';
-import { type TaskManager, TaskSet } from '@jujulego/tasks';
+import { type TaskManager } from '@jujulego/tasks';
 import { inject } from 'inversify';
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
 
 import { Command } from '@/src/modules/command';
-import { InkCommand } from '@/src/modules/ink-command';
+import { TaskCommand } from '@/src/modules/task-command';
 import { SpinnerService } from '@/src/commons/spinner.service';
 import { AffectedFilter } from '@/src/filters/affected.filter';
 import { Pipeline } from '@/src/filters/pipeline';
@@ -14,7 +13,6 @@ import { LoadProject } from '@/src/middlewares/load-project';
 import { lazyCurrentProject, type Project } from '@/src/project/project';
 import { type WorkspaceDepsMode } from '@/src/project/workspace';
 import { TASK_MANAGER } from '@/src/tasks/task-manager.config';
-import TaskManagerSpinner from '@/src/ui/task-manager-spinner';
 
 // Types
 export interface IEachCommandArgs {
@@ -39,7 +37,7 @@ export interface IEachCommandArgs {
     LoadProject
   ]
 })
-export class EachCommand extends InkCommand<IEachCommandArgs> {
+export class EachCommand extends TaskCommand<IEachCommandArgs> {
   // Lazy injections
   @lazyCurrentProject()
   readonly project: Project;
@@ -49,9 +47,9 @@ export class EachCommand extends InkCommand<IEachCommandArgs> {
     @inject(SpinnerService)
     private readonly spinner: SpinnerService,
     @inject(TASK_MANAGER)
-    private readonly manager: TaskManager,
+    manager: TaskManager,
   ) {
-    super();
+    super(manager);
   }
 
   // Methods
@@ -94,7 +92,7 @@ export class EachCommand extends InkCommand<IEachCommandArgs> {
       });
   }
 
-  async *render(args: ArgumentsCamelCase<IEachCommandArgs>) {
+  async *prepare(args: ArgumentsCamelCase<IEachCommandArgs>) {
     try {
       this.spinner.spin('Loading workspaces ...');
 
@@ -122,30 +120,19 @@ export class EachCommand extends InkCommand<IEachCommandArgs> {
       }
 
       // Create script tasks
-      const tasks = new TaskSet(this.manager);
+      let empty = true;
 
       for await (const wks of pipeline.filter(this.project.workspaces())) {
-        tasks.add(await wks.run(args.script, rest, {
+        const task = await wks.run(args.script, rest, {
           buildDeps: args.depsMode,
-        }));
+        });
+
+        yield task;
+        empty = false;
       }
 
-      if (tasks.tasks.length === 0) {
+      if (empty) {
         this.spinner.failed('No workspace found !');
-        return process.exit(1);
-      }
-
-      this.spinner.stop();
-
-      // Render
-      yield <TaskManagerSpinner manager={this.manager} />;
-
-      // Start and wait for result
-      tasks.start();
-
-      const result = await waitForEvent(tasks, 'finished');
-
-      if (result.failed > 0) {
         return process.exit(1);
       }
     } finally {
