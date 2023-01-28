@@ -28,7 +28,7 @@ export class RunCommand extends TaskCommand<IRunCommandArgs> {
 
   // Methods
   builder(parser: Argv) {
-    return parser
+    return super.builder(parser)
       .positional('script', { type: 'string', demandOption: true })
       .option('deps-mode', {
         choice: ['all', 'prod', 'none'],

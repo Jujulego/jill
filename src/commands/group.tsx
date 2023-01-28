@@ -42,7 +42,7 @@ export class GroupCommand extends TaskCommand<IGroupCommandArgs> {
 
   // Methods
   builder(parser: Argv): Argv<IGroupCommandArgs> {
-    return parser
+    return super.builder(parser)
       .positional('script', {
         demandOption: true,
         coerce: (expr: string[]) => {

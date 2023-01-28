@@ -13,7 +13,7 @@ export const COMMAND: int.ServiceIdentifier<CommandModule> = Symbol('jujulego:ji
 
 // Types
 export interface ICommand<A = unknown> {
-  builder?: (parser: Argv) => Awaitable<Argv<A>>;
+  builder?: (parser: Argv) => Argv<A>;
   handler(args: ArgumentsCamelCase<A>): Awaitable<void>;
 }
 
@@ -43,13 +43,13 @@ export function buildCommandModule(cmd: ICommand, opts: ICommandOpts): CommandMo
     describe: opts.describe,
     deprecated: opts.deprecated,
 
-    builder: async (parser: Argv) => {
+    builder(parser: Argv) {
       if (opts.middlewares) {
         parser = applyMiddlewares(parser, opts.middlewares);
       }
 
       if (cmd.builder) {
-        parser = await cmd.builder(parser);
+        parser = cmd.builder(parser);
       }
 
       return parser;
