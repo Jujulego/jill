@@ -5,6 +5,7 @@ import { type ArgumentsCamelCase, type Argv } from 'yargs';
 
 import { Command } from '@/src/modules/command';
 import { InkCommand } from '@/src/modules/ink-command';
+import { lazyInject } from '@/src/inversify.config';
 import { SpinnerService } from '@/src/commons/spinner.service';
 import { AffectedFilter } from '@/src/filters/affected.filter';
 import { Pipeline } from '@/src/filters/pipeline';
@@ -44,12 +45,13 @@ export class EachCommand extends InkCommand<IEachCommandArgs> {
   @lazyCurrentProject()
   readonly project: Project;
 
+  @lazyInject(TASK_MANAGER)
+  readonly manager: TaskManager;
+
   // Constructor
   constructor(
     @inject(SpinnerService)
     private readonly spinner: SpinnerService,
-    @inject(TASK_MANAGER)
-    private readonly manager: TaskManager,
   ) {
     super();
   }

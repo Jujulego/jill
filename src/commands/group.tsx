@@ -11,6 +11,7 @@ import { lazyCurrentWorkspace, type Workspace, type WorkspaceDepsMode } from '@/
 import { TaskExprService, type TaskTree } from '@/src/tasks/task-expr.service';
 import { TASK_MANAGER } from '@/src/tasks/task-manager.config';
 import TaskManagerSpinner from '@/src/ui/task-manager-spinner';
+import { lazyInject } from '@/src/inversify.config';
 
 // Types
 export interface IGroupCommandArgs {
@@ -32,12 +33,13 @@ export class GroupCommand extends InkCommand<IGroupCommandArgs> {
   @lazyCurrentWorkspace()
   readonly workspace: Workspace;
 
+  @lazyInject(TASK_MANAGER)
+  readonly manager: TaskManager;
+
   // Constructor
   constructor(
     @inject(TaskExprService)
     private readonly taskExpr: TaskExprService,
-    @inject(TASK_MANAGER)
-    private readonly manager: TaskManager,
   ) {
     super();
   }
