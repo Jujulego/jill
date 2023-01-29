@@ -54,7 +54,7 @@ export class EachCommand extends TaskCommand<IEachCommandArgs> {
 
   // Methods
   builder(parser: Argv): Argv<IEachCommandArgs> {
-    return super.builder(parser)
+    return this.addTaskOptions(parser)
       // Run options
       .positional('script', { type: 'string', demandOption: true })
       .option('deps-mode', {

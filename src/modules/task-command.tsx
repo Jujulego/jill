@@ -28,8 +28,8 @@ export abstract class TaskCommand<A = unknown> extends InkCommand<A> {
   // Methods
   abstract prepare(args: ArgumentsCamelCase<A>): AwaitableGenerator<Task>;
 
-  builder(parser: Argv): Argv<A & ITaskCommandArgs> {
-    return (parser as Argv<A>)
+  protected addTaskOptions(parser: Argv): Argv<ITaskCommandArgs> {
+    return parser
       .option('plan', {
         type: 'boolean',
         desc: 'Only prints tasks to be run',
