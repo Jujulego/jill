@@ -7,7 +7,7 @@ import { Command } from '@/src/modules/command';
 import { InkCommand } from '@/src/modules/ink-command';
 import { LoadProject } from '@/src/middlewares/load-project';
 import { LoadWorkspace } from '@/src/middlewares/load-workspace';
-import { lazyCurrentWorkspace, type Workspace, type WorkspaceDepsMode } from '@/src/project/workspace';
+import { LazyCurrentWorkspace, type Workspace, type WorkspaceDepsMode } from '@/src/project/workspace';
 import { TaskExprService, type TaskTree } from '@/src/tasks/task-expr.service';
 import { TASK_MANAGER } from '@/src/tasks/task-manager.config';
 import TaskManagerSpinner from '@/src/ui/task-manager-spinner';
@@ -30,7 +30,7 @@ export interface IGroupCommandArgs {
 })
 export class GroupCommand extends InkCommand<IGroupCommandArgs> {
   // Lazy injections
-  @lazyCurrentWorkspace()
+  @LazyCurrentWorkspace()
   readonly workspace: Workspace;
 
   @lazyInject(TASK_MANAGER)

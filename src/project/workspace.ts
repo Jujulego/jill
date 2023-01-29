@@ -212,6 +212,6 @@ export class Workspace {
 }
 
 // Decorators
-export function lazyCurrentWorkspace() {
+export function LazyCurrentWorkspace() {
   return lazyInjectNamed(Workspace, CURRENT);
 }

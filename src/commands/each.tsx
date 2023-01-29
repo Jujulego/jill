@@ -12,7 +12,7 @@ import { Pipeline } from '@/src/filters/pipeline';
 import { PrivateFilter } from '@/src/filters/private.filter';
 import { ScriptsFilter } from '@/src/filters/scripts.filter';
 import { LoadProject } from '@/src/middlewares/load-project';
-import { lazyCurrentProject, type Project } from '@/src/project/project';
+import { LazyCurrentProject, type Project } from '@/src/project/project';
 import { type WorkspaceDepsMode } from '@/src/project/workspace';
 import { TASK_MANAGER } from '@/src/tasks/task-manager.config';
 import TaskManagerSpinner from '@/src/ui/task-manager-spinner';
@@ -42,7 +42,7 @@ export interface IEachCommandArgs {
 })
 export class EachCommand extends InkCommand<IEachCommandArgs> {
   // Lazy injections
-  @lazyCurrentProject()
+  @LazyCurrentProject()
   readonly project: Project;
 
   @lazyInject(TASK_MANAGER)
