@@ -9,6 +9,8 @@ import { type AwaitableGenerator } from '@/src/types';
 import TaskManagerSpinner from '@/src/ui/task-manager-spinner';
 
 import { InkCommand } from './ink-command';
+import { extractAllTasks } from '@/src/utils/tasks';
+import TaskGraph from '@/src/modules/task-graph';
 
 // Types
 export interface ITaskCommandArgs {
@@ -43,13 +45,10 @@ export abstract class TaskCommand<A = unknown> extends InkCommand<A> {
     }
 
     if (args.plan) {
-      // TODO: print all tasks to be run
-      for (const task of tasks.tasks) {
-        console.log(task.name);
-      }
+      yield <TaskGraph set={tasks} />;
     } else {
       // Render
-      yield <TaskManagerSpinner manager={this.manager}/>;
+      yield <TaskManagerSpinner manager={this.manager} />;
 
       // Start tasks
       tasks.start();
