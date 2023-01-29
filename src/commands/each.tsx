@@ -5,13 +5,14 @@ import { type ArgumentsCamelCase, type Argv } from 'yargs';
 
 import { Command } from '@/src/modules/command';
 import { InkCommand } from '@/src/modules/ink-command';
+import { lazyInject } from '@/src/inversify.config';
 import { SpinnerService } from '@/src/commons/spinner.service';
 import { AffectedFilter } from '@/src/filters/affected.filter';
 import { Pipeline } from '@/src/filters/pipeline';
 import { PrivateFilter } from '@/src/filters/private.filter';
 import { ScriptsFilter } from '@/src/filters/scripts.filter';
 import { LoadProject } from '@/src/middlewares/load-project';
-import { lazyCurrentProject, type Project } from '@/src/project/project';
+import { LazyCurrentProject, type Project } from '@/src/project/project';
 import { type WorkspaceDepsMode } from '@/src/project/workspace';
 import { TASK_MANAGER } from '@/src/tasks/task-manager.config';
 import TaskManagerSpinner from '@/src/ui/task-manager-spinner';
@@ -41,15 +42,16 @@ export interface IEachCommandArgs {
 })
 export class EachCommand extends InkCommand<IEachCommandArgs> {
   // Lazy injections
-  @lazyCurrentProject()
+  @LazyCurrentProject()
   readonly project: Project;
+
+  @lazyInject(TASK_MANAGER)
+  readonly manager: TaskManager;
 
   // Constructor
   constructor(
     @inject(SpinnerService)
     private readonly spinner: SpinnerService,
-    @inject(TASK_MANAGER)
-    private readonly manager: TaskManager,
   ) {
     super();
   }
