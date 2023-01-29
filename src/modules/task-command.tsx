@@ -10,7 +10,7 @@ import TaskManagerSpinner from '@/src/ui/task-manager-spinner';
 
 import { InkCommand } from './ink-command';
 import { extractAllTasks } from '@/src/utils/tasks';
-import TaskGraph from '@/src/modules/task-graph';
+import TaskGraph from '@/src/ui/task-graph';
 
 // Types
 export interface ITaskCommandArgs {
