@@ -1,11 +1,12 @@
 import { waitForEvent } from '@jujulego/event-tree';
 import { type Task, type TaskManager, TaskSet } from '@jujulego/tasks';
-import { inject, injectable } from 'inversify';
+import { injectable } from 'inversify';
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
 
+import { lazyInject } from '@/src/inversify.config';
 import { TASK_MANAGER } from '@/src/tasks/task-manager.config';
-import TaskManagerSpinner from '@/src/ui/task-manager-spinner';
 import { type AwaitableGenerator } from '@/src/types';
+import TaskManagerSpinner from '@/src/ui/task-manager-spinner';
 
 import { InkCommand } from './ink-command';
 
@@ -17,13 +18,9 @@ export interface ITaskCommandArgs {
 // Class
 @injectable()
 export abstract class TaskCommand<A = unknown> extends InkCommand<A> {
-  // Constructor
-  constructor(
-    @inject(TASK_MANAGER)
-    private readonly manager: TaskManager,
-  ) {
-    super();
-  }
+  // Attributes
+  @lazyInject(TASK_MANAGER)
+  readonly manager: TaskManager;
 
   // Methods
   abstract prepare(args: ArgumentsCamelCase<A>): AwaitableGenerator<Task>;
