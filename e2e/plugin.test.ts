@@ -58,7 +58,7 @@ describe('jill test (command from plugin)', () => {
   it('should run command loaded from plugin file', async () => {
     const res = await jill(['test'], { cwd: prjDir });
 
-    expect(res.screen.screen).toEqualLines([
+    expect(res.stdout).toEqual([
       'this is a test plugin !'
     ]);
   });

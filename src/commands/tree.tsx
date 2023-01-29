@@ -2,7 +2,7 @@ import { Command } from '@/src/modules/command';
 import { InkCommand } from '@/src/modules/ink-command';
 import { LoadProject } from '@/src/middlewares/load-project';
 import { LoadWorkspace } from '@/src/middlewares/load-workspace';
-import { lazyCurrentWorkspace, type Workspace } from '@/src/project/workspace';
+import { LazyCurrentWorkspace, type Workspace } from '@/src/project/workspace';
 import WorkspaceTree from '@/src/ui/workspace-tree';
 
 // Command
@@ -16,7 +16,7 @@ import WorkspaceTree from '@/src/ui/workspace-tree';
 })
 export class TreeCommand extends InkCommand {
   // Lazy injections
-  @lazyCurrentWorkspace()
+  @LazyCurrentWorkspace()
   readonly workspace: Workspace;
 
   // Methods

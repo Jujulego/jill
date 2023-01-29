@@ -6,7 +6,7 @@ import { Command } from '@/src/modules/command';
 import { TaskCommand } from '@/src/modules/task-command';
 import { LoadProject } from '@/src/middlewares/load-project';
 import { LoadWorkspace } from '@/src/middlewares/load-workspace';
-import { lazyCurrentWorkspace, type Workspace, type WorkspaceDepsMode } from '@/src/project/workspace';
+import { LazyCurrentWorkspace, type Workspace, type WorkspaceDepsMode } from '@/src/project/workspace';
 import { TaskExprService, type TaskTree } from '@/src/tasks/task-expr.service';
 import { TASK_MANAGER } from '@/src/tasks/task-manager.config';
 
@@ -27,17 +27,15 @@ export interface IGroupCommandArgs {
 })
 export class GroupCommand extends TaskCommand<IGroupCommandArgs> {
   // Lazy injections
-  @lazyCurrentWorkspace()
+  @LazyCurrentWorkspace()
   readonly workspace: Workspace;
 
   // Constructor
   constructor(
     @inject(TaskExprService)
     private readonly taskExpr: TaskExprService,
-    @inject(TASK_MANAGER)
-    manager: TaskManager,
   ) {
-    super(manager);
+    super();
   }
 
   // Methods

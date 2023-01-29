@@ -10,7 +10,7 @@ import { Pipeline } from '@/src/filters/pipeline';
 import { PrivateFilter } from '@/src/filters/private.filter';
 import { ScriptsFilter } from '@/src/filters/scripts.filter';
 import { LoadProject } from '@/src/middlewares/load-project';
-import { lazyCurrentProject, type Project } from '@/src/project/project';
+import { LazyCurrentProject, type Project } from '@/src/project/project';
 import { type Workspace } from '@/src/project/workspace';
 import List from '@/src/ui/list';
 
@@ -73,7 +73,7 @@ function buildExtractor(attrs: Attribute[]): Extractor<Data> {
 })
 export class ListCommand extends InkCommand<IListCommandArgs> {
   // Lazy injections
-  @lazyCurrentProject()
+  @LazyCurrentProject()
   readonly project: Project;
 
   // Methods

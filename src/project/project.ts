@@ -224,6 +224,6 @@ export class Project {
 }
 
 // Decorators
-export function lazyCurrentProject() {
+export function LazyCurrentProject() {
   return lazyInjectNamed(Project, CURRENT);
 }

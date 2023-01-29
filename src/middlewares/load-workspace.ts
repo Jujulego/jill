@@ -4,7 +4,7 @@ import yargs, { type ArgumentsCamelCase, type Argv } from 'yargs';
 import { type IMiddleware, Middleware } from '@/src/modules/middleware';
 import { SpinnerService } from '@/src/commons/spinner.service';
 import { container } from '@/src/inversify.config';
-import { lazyCurrentProject, type Project } from '@/src/project/project';
+import { LazyCurrentProject, type Project } from '@/src/project/project';
 import { CURRENT } from '@/src/project/constants';
 import { Workspace } from '@/src/project/workspace';
 
@@ -17,7 +17,7 @@ export interface ILoadWorkspaceArgs {
 @Middleware()
 export class LoadWorkspace implements IMiddleware<ILoadWorkspaceArgs> {
   // Lazy injections
-  @lazyCurrentProject()
+  @LazyCurrentProject()
   readonly project: Project;
 
   // Constructor

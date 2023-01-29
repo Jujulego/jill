@@ -4,7 +4,7 @@ import { Command } from '@/src/modules/command';
 import { TaskCommand } from '@/src/modules/task-command';
 import { LoadProject } from '@/src/middlewares/load-project';
 import { LoadWorkspace } from '@/src/middlewares/load-workspace';
-import { lazyCurrentWorkspace, type Workspace, type WorkspaceDepsMode } from '@/src/project/workspace';
+import { LazyCurrentWorkspace, type Workspace, type WorkspaceDepsMode } from '@/src/project/workspace';
 
 // Types
 export interface IRunCommandArgs {
@@ -23,7 +23,7 @@ export interface IRunCommandArgs {
 })
 export class RunCommand extends TaskCommand<IRunCommandArgs> {
   // Lazy injections
-  @lazyCurrentWorkspace()
+  @LazyCurrentWorkspace()
   readonly workspace: Workspace;
 
   // Methods
