@@ -6,11 +6,10 @@ import { type ArgumentsCamelCase, type Argv } from 'yargs';
 import { lazyInject } from '@/src/inversify.config';
 import { TASK_MANAGER } from '@/src/tasks/task-manager.config';
 import { type AwaitableGenerator } from '@/src/types';
+import TaskGraph from '@/src/ui/task-graph';
 import TaskManagerSpinner from '@/src/ui/task-manager-spinner';
 
 import { InkCommand } from './ink-command';
-import { extractAllTasks } from '@/src/utils/tasks';
-import TaskGraph from '@/src/ui/task-graph';
 
 // Types
 export interface ITaskCommandArgs {

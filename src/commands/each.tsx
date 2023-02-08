@@ -1,4 +1,3 @@
-import { type TaskManager } from '@jujulego/tasks';
 import { inject } from 'inversify';
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
 
@@ -12,7 +11,6 @@ import { ScriptsFilter } from '@/src/filters/scripts.filter';
 import { LoadProject } from '@/src/middlewares/load-project';
 import { LazyCurrentProject, type Project } from '@/src/project/project';
 import { type WorkspaceDepsMode } from '@/src/project/workspace';
-import { TASK_MANAGER } from '@/src/tasks/task-manager.config';
 
 // Types
 export interface IEachCommandArgs {
