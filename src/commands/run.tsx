@@ -1,6 +1,5 @@
 import { waitForEvent } from '@jujulego/event-tree';
 import { type TaskManager } from '@jujulego/tasks';
-import { inject } from 'inversify';
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
 
 import { Command } from '@/src/modules/command';
