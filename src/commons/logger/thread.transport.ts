@@ -1,6 +1,6 @@
 import Transport from 'winston-transport';
 import { BroadcastChannel } from 'node:worker_threads';
-import type { LogEntry } from 'winston';
+import { type LogEntry } from 'winston';
 
 // Transport
 export class ThreadTransport extends Transport {
@@ -9,7 +9,9 @@ export class ThreadTransport extends Transport {
 
   // Constructor
   constructor(channel: string) {
-    super();
+    super({
+      level: 'debug',
+    });
 
     this.channel = new BroadcastChannel(channel);
     this.channel.onmessageerror = (err) => {

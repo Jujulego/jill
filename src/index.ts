@@ -62,4 +62,4 @@ export * from './ui/workspace-tree';
 export * from './utils/import';
 export * from './utils/streams';
 export * from './utils/string';
-export { Service } from '@/src/modules/service';
+export * from './utils/worker-cache';

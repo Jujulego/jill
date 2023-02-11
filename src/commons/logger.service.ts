@@ -59,7 +59,7 @@ container.bind(Logger)
       );
 
       const channel = new BroadcastChannel('jujulego:jill:logger');
-      channel.onmessage = (entry) => logger.log(entry as LogEntry);
+      channel.onmessage = (entry) => logger.log((entry as MessageEvent<LogEntry>).data);
       channel.unref();
     } else {
       logger.add(new ThreadTransport('jujulego:jill:logger'));
