@@ -1271,7 +1271,7 @@ __metadata:
   dependencies:
     "@jujulego/2d-maths": 1.6.0
     "@jujulego/event-tree": 1.1.1
-    "@jujulego/tasks": 1.2.0
+    "@jujulego/tasks": 1.3.0
     "@swc/core": 1.3.24
     "@swc/jest": 0.2.24
     "@types/async-lock": 1.4.0
@@ -1329,14 +1329,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jujulego/tasks@npm:1.2.0":
-  version: 1.2.0
-  resolution: "@jujulego/tasks@npm:1.2.0"
+"@jujulego/tasks@npm:1.3.0":
+  version: 1.3.0
+  resolution: "@jujulego/tasks@npm:1.3.0"
   dependencies:
     "@jujulego/event-tree": ^1.1.1
     "@jujulego/utils": ^1.0.1
     tree-kill: ^1.2.2
-  checksum: ba76fd9f1ad0754096e48d0fca2df6a99641ccace26464bb836e3ec9f21d63efd741aafd3eea84e29fa0f9265632903bc40c4208e870d844886aa69b9206c99e
+  checksum: 2dc18614742de207d748bdef1381e96b79714fb6b0e0cd52c109eb0f46d50e92322a43028ca218dd7fcafee5830634c84a1eaf018a299f9d07fe9d61f0e20b36
   languageName: node
   linkType: hard
 
