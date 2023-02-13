@@ -10,10 +10,9 @@
         "runtime": "automatic"
       }
     },
-    "baseUrl": "./",
     "paths": {
-      "@/src/*": ["src/*"],
-      "@/tools/*": ["tools/*"]
+      "@/src/*": ["./src/*"],
+      "@/tools/*": ["./tools/*"]
     }
   },
   "module": {
