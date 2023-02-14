@@ -1,5 +1,5 @@
 import { waitForEvent } from '@jujulego/event-tree';
-import { type Task, type TaskManager, TaskSet } from '@jujulego/tasks';
+import { plan as extractPlan, type Task, type TaskManager, TaskSet } from '@jujulego/tasks';
 import { injectable } from 'inversify';
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
 
@@ -14,6 +14,7 @@ import { InkCommand } from './ink-command';
 // Types
 export interface ITaskCommandArgs {
   plan: boolean;
+  'plan-mode': 'json';
 }
 
 // Class
@@ -32,6 +33,12 @@ export abstract class TaskCommand<A = unknown> extends InkCommand<A> {
         type: 'boolean',
         desc: 'Only prints tasks to be run',
         default: false,
+      })
+      .option('plan-mode', {
+        type: 'string',
+        desc: 'Plan output mode',
+        choices: ['json'] as const,
+        default: 'json' as const
       });
   }
 
@@ -44,7 +51,13 @@ export abstract class TaskCommand<A = unknown> extends InkCommand<A> {
     }
 
     if (args.plan) {
-      yield <TaskGraph set={tasks} />;
+      const plan = Array.from(extractPlan(tasks));
+
+      if (process.stdout.isTTY) { // Pretty print for ttys
+        console.log(JSON.stringify(plan, null, 2));
+      } else {
+        process.stdout.write(JSON.stringify(plan));
+      }
     } else {
       // Render
       yield <TaskManagerSpinner manager={this.manager} />;

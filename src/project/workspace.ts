@@ -193,6 +193,14 @@ export class Workspace {
     return await this.run('build', [], opts);
   }
 
+  toJSON() {
+    return {
+      name: this.name,
+      version: this.version,
+      cwd: this.cwd,
+    };
+  }
+
   // Properties
   get name(): string {
     return this.manifest.name;
