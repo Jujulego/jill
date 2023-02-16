@@ -10,6 +10,7 @@ import TaskGraph from '@/src/ui/task-graph';
 import TaskManagerSpinner from '@/src/ui/task-manager-spinner';
 
 import { InkCommand } from './ink-command';
+import { printJson } from '@/src/utils/json';
 
 // Types
 export interface ITaskCommandArgs {
@@ -52,12 +53,7 @@ export abstract class TaskCommand<A = unknown> extends InkCommand<A> {
 
     if (args.plan) {
       const plan = Array.from(extractPlan(tasks));
-
-      if (process.stdout.isTTY) { // Pretty print for ttys
-        console.log(JSON.stringify(plan, null, 2));
-      } else {
-        process.stdout.write(JSON.stringify(plan));
-      }
+      printJson(plan);
     } else {
       // Render
       yield <TaskManagerSpinner manager={this.manager} />;
