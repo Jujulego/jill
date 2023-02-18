@@ -17,8 +17,9 @@ export const spyLogger: ILogger = {
 export function wrapInkTestApp(app: ReturnType<typeof render>): ink.Instance {
   return {
     ...app,
-    waitUntilExit: jest.fn()
-  } as any;
+    waitUntilExit: jest.fn() as ink.Instance['waitUntilExit'],
+    clear: jest.fn() as ink.Instance['clear'],
+  } as ink.Instance;
 }
 
 // Utils
