@@ -6,15 +6,16 @@ import { type ArgumentsCamelCase, type Argv } from 'yargs';
 import { lazyInject } from '@/src/inversify.config';
 import { TASK_MANAGER } from '@/src/tasks/task-manager.config';
 import { type AwaitableGenerator } from '@/src/types';
+import List from '@/src/ui/list';
 import TaskManagerSpinner from '@/src/ui/task-manager-spinner';
+import { printJson } from '@/src/utils/json';
 
 import { InkCommand } from './ink-command';
-import { printJson } from '@/src/utils/json';
 
 // Types
 export interface ITaskCommandArgs {
   plan: boolean;
-  'plan-mode': 'json';
+  'plan-mode': 'json' | 'list';
 }
 
 // Class
@@ -37,12 +38,12 @@ export abstract class TaskCommand<A = unknown> extends InkCommand<A> {
       .option('plan-mode', {
         type: 'string',
         desc: 'Plan output mode',
-        choices: ['json'] as const,
-        default: 'json' as const
+        choices: ['json', 'list'] as const,
+        default: 'list' as const
       });
   }
 
-  async *render(args: ArgumentsCamelCase<A & ITaskCommandArgs>) {
+  async* render(args: ArgumentsCamelCase<A & ITaskCommandArgs>) {
     // Prepare tasks
     const tasks = new TaskSet(this.manager);
 
@@ -52,10 +53,22 @@ export abstract class TaskCommand<A = unknown> extends InkCommand<A> {
 
     if (args.plan) {
       const plan = Array.from(extractPlan(tasks));
-      printJson(plan);
+
+      if (args.planMode === 'json') {
+        printJson(plan);
+      } else {
+        const data = plan.map((tsk) => ({
+          id: tsk.id.substring(0, 6),
+          name: tsk.name,
+          workspace: tsk.context.workspace.name,
+          'depends on': tsk.dependenciesIds.map(id => id.substring(0, 6)).join(', ')
+        }));
+
+        yield <List items={data} headers/>;
+      }
     } else {
       // Render
-      yield <TaskManagerSpinner manager={this.manager} />;
+      yield <TaskManagerSpinner manager={this.manager}/>;
 
       // Start tasks
       tasks.start();
