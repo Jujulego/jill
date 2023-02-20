@@ -4,6 +4,7 @@ import path from 'node:path';
 import { TestBed } from '@/tools/test-bed';
 
 import { jill } from './utils';
+import { fileExists } from '@/tools/utils';
 
 // Setup
 let prjDir: string;
@@ -81,5 +82,20 @@ describe('jill run', () => {
 
     await expect(fs.readFile(path.join(prjDir, 'wks-b', 'script.txt'), 'utf8'))
       .resolves.toBe('start');
+  });
+
+  it('should print task plan and do not run any script', async () => {
+    const res = await jill(['run', '-w', 'wks-b', '--plan', 'start'], { cwd: prjDir });
+
+    // Check jill output
+    expect(res.code).toBe(0);
+    expect(res.screen.screen).toMatchLines([
+      expect.ignoreColor('Id      Name            Workspace  Depends on'),
+      expect.ignoreColor(/[a-f0-9]{6} {2}yarn run build {2}wks-c/),
+      expect.ignoreColor(/[a-f0-9]{6} {2}yarn run start {2}wks-b {6}[a-f0-9]{6}/),
+    ]);
+
+    await expect(fileExists(path.join(prjDir, 'wks-c', 'script.txt'))).resolves.toBe(false);
+    await expect(fileExists(path.join(prjDir, 'wks-b', 'script.txt'))).resolves.toBe(false);
   });
 });
