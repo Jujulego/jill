@@ -11,6 +11,7 @@ import TaskManagerSpinner from '@/src/ui/task-manager-spinner';
 import { printJson } from '@/src/utils/json';
 
 import { InkCommand } from './ink-command';
+import chalk from 'chalk';
 
 // Types
 export interface ITaskCommandArgs {
@@ -60,7 +61,8 @@ export abstract class TaskCommand<A = unknown> extends InkCommand<A> {
         const data = plan.map((tsk) => ({
           id: tsk.id.substring(0, 6),
           name: tsk.name,
-          workspace: tsk.context.workspace.name,
+          workspace: tsk.isGroup ? chalk.grey('group') : tsk.context.workspace?.name,
+          group: tsk.groupId?.substring(0, 6),
           'depends on': tsk.dependenciesIds.map(id => id.substring(0, 6)).join(', ')
         }));
 

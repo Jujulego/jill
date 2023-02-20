@@ -94,11 +94,11 @@ describe('jill each', () => {
     // Check jill output
     expect(res.code).toBe(0);
     expect(res.screen.screen).toMatchLines([
-      expect.ignoreColor('Id      Name            Workspace  Depends on'),
+      expect.ignoreColor('Id      Name            Workspace  Group  Depends on'),
       expect.ignoreColor(/[a-f0-9]{6} {2}yarn run build {2}wks-c/),
-      expect.ignoreColor(/[a-f0-9]{6} {2}yarn run start {2}wks-b {6}[a-f0-9]{6}/),
-      expect.ignoreColor(/[a-f0-9]{6} {2}yarn run build {2}wks-b {6}[a-f0-9]{6}/),
-      expect.ignoreColor(/[a-f0-9]{6} {2}yarn run start {2}wks-a {6}[a-f0-9]{6}, [a-f0-9]{6}/),
+      expect.ignoreColor(/[a-f0-9]{6} {2}yarn run start {2}wks-b {13}[a-f0-9]{6}/),
+      expect.ignoreColor(/[a-f0-9]{6} {2}yarn run build {2}wks-b {13}[a-f0-9]{6}/),
+      expect.ignoreColor(/[a-f0-9]{6} {2}yarn run start {2}wks-a {13}[a-f0-9]{6}, [a-f0-9]{6}/),
     ]);
 
     await expect(fileExists(path.join(prjDir, 'wks-c', 'script.txt'))).resolves.toBe(false);
