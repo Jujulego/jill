@@ -68,9 +68,9 @@ export abstract class TaskCommand<A = unknown> extends InkCommand<A> {
 
         yield <List items={data} headers/>;
       }
-    } else {
+    } else if (tasks.tasks.length > 0) {
       // Render
-      yield <TaskManagerSpinner manager={this.manager}/>;
+      yield <TaskManagerSpinner manager={this.manager} />;
 
       // Start tasks
       tasks.start();

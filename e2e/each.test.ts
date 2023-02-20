@@ -88,6 +88,16 @@ describe('jill each', () => {
       .resolves.toBe('built');
   });
 
+  it('should exit 1 if no workspace is found', async () => {
+    const res = await jill(['each', 'toto'], { cwd: prjDir });
+
+    // Check jill output
+    expect(res.code).toBe(1);
+    expect(res.screen.screen).toMatchLines([
+      expect.ignoreColor(/. No workspace found !/),
+    ]);
+  });
+
   it('should print task plan and do not run any script', async () => {
     const res = await jill(['each', '--plan', 'start'], { cwd: prjDir });
 

@@ -4,6 +4,7 @@ import symbols from 'log-symbols';
 import yargs, { type CommandModule } from 'yargs';
 
 import { EachCommand } from '@/src/commands/each';
+import { SpinnerService } from '@/src/commons/spinner.service';
 import { INK_APP } from '@/src/ink.config';
 import { container } from '@/src/inversify.config';
 import { type WorkspaceContext } from '@/src/project/workspace';
@@ -16,6 +17,7 @@ import { flushPromises, spyLogger, wrapInkTestApp } from '@/tools/utils';
 // Setup
 let app: ReturnType<typeof render>;
 let command: CommandModule;
+let spinner: SpinnerService;
 
 let bed: TestBed;
 
@@ -32,11 +34,12 @@ beforeEach(async () => {
   container.rebind(INK_APP).toConstantValue(wrapInkTestApp(app));
 
   command = await bed.prepareCommand(EachCommand);
+  spinner = container.get(SpinnerService);
 });
 
 afterEach(() => {
-  container.restore();
   cleanup();
+  container.restore();
 });
 
 // Tests
@@ -134,6 +137,24 @@ describe('jill each', () => {
     }
 
     await prom;
+  });
+
+  it('should exit 1 if no matching workspace is found', async () => {
+    jest.spyOn(process, 'exit').mockImplementation();
+    jest.spyOn(spinner, 'failed');
+
+    // Setup tasks
+    const manager = container.get(TASK_MANAGER);
+
+    jest.spyOn(manager, 'add').mockImplementation();
+    jest.spyOn(manager, 'tasks', 'get').mockReturnValue([]);
+
+    // Run command
+    await yargs.command(command)
+      .parse('each --deps-mode prod cmd -- --arg');
+
+    expect(spinner.failed).toHaveBeenCalledWith('No workspace found !');
+    expect(process.exit).toHaveBeenCalledWith(1);
   });
 
   it('should exit 1 if one task fails', async () => {
