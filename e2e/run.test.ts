@@ -2,9 +2,9 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 
 import { TestBed } from '@/tools/test-bed';
+import { fileExists } from '@/tools/utils';
 
 import { jill } from './utils';
-import { fileExists } from '@/tools/utils';
 
 // Setup
 let prjDir: string;
