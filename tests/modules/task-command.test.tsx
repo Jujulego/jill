@@ -48,8 +48,8 @@ beforeEach(async () => {
   app = render(<Layout/>);
   container.rebind(INK_APP).toConstantValue(wrapInkTestApp(app));
 
-  manager = container.get(TASK_MANAGER);
   command = container.resolve(TestTaskCommand);
+  manager = container.get(TASK_MANAGER);
 
   // Mocks
   jest.resetAllMocks();

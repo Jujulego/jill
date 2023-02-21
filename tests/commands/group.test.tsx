@@ -1,4 +1,4 @@
-import { ParallelGroup, SpawnTask } from '@jujulego/tasks';
+import { ParallelGroup, SpawnTask, type TaskManager } from '@jujulego/tasks';
 import { cleanup, render } from 'ink-testing-library';
 import symbols from 'log-symbols';
 import yargs, { type CommandModule } from 'yargs';
@@ -17,6 +17,7 @@ import { flushPromises, spyLogger, wrapInkTestApp } from '@/tools/utils';
 // Setup
 let app: ReturnType<typeof render>;
 let command: CommandModule;
+let manager: TaskManager;
 let taskExpr: TaskExprService;
 
 let bed: TestBed;
@@ -37,13 +38,17 @@ beforeEach(async () => {
   container.rebind(INK_APP).toConstantValue(wrapInkTestApp(app));
 
   command = await bed.prepareCommand(GroupCommand, wks);
+  manager = container.get(TASK_MANAGER);
+  taskExpr = container.get(TaskExprService);
 
   // Mocks
   jest.resetAllMocks();
   jest.restoreAllMocks();
 
-  taskExpr = container.get(TaskExprService);
   jest.spyOn(taskExpr, 'buildTask').mockResolvedValue(task);
+
+  jest.spyOn(manager, 'add').mockImplementation();
+  jest.spyOn(manager, 'tasks', 'get').mockReturnValue([task]);
 });
 
 afterEach(() => {
@@ -54,11 +59,6 @@ afterEach(() => {
 // Tests
 describe('jill group', () => {
   it('should run all tasks in current workspace', async () => {
-    const manager = container.get(TASK_MANAGER);
-
-    jest.spyOn(manager, 'add').mockImplementation();
-    jest.spyOn(manager, 'tasks', 'get').mockReturnValue([task]);
-
     // Run command
     const prom = yargs.command(command)
       .parse('group -w wks test1 // test2');
@@ -76,7 +76,6 @@ describe('jill group', () => {
       wks,
       { buildDeps: 'all' }
     );
-    expect(manager.add).toHaveBeenCalledWith(task);
 
     // Complete tasks
     jest.spyOn(task, 'status', 'get').mockReturnValue('done');
@@ -102,11 +101,6 @@ describe('jill group', () => {
   });
 
   it('should use given dependency mode', async () => {
-    const manager = container.get(TASK_MANAGER);
-
-    jest.spyOn(manager, 'add').mockImplementation();
-    jest.spyOn(manager, 'tasks', 'get').mockReturnValue([task]);
-
     // Run command
     const prom = yargs.command(command)
       .parse('group -w wks --deps-mode prod test1 // test2');
@@ -139,55 +133,5 @@ describe('jill group', () => {
     task.emit('completed', { status: 'done', duration: 100 });
 
     await prom;
-  });
-
-  it('should exit 1 if group task fails', async () => {
-    const manager = container.get(TASK_MANAGER);
-
-    jest.spyOn(manager, 'add').mockImplementation();
-    jest.spyOn(manager, 'tasks', 'get').mockReturnValue([task]);
-
-    jest.spyOn(process, 'exit').mockImplementation();
-
-    // Run command
-    const prom = yargs.command(command)
-      .parse('group -w wks --deps-mode prod test1 // test2');
-
-    await flushPromises();
-
-    expect(taskExpr.buildTask).toHaveBeenCalledWith(
-      {
-        operator: '//',
-        tasks: [
-          { script: 'test1' },
-          { script: 'test2' }
-        ]
-      },
-      wks,
-      { buildDeps: 'prod' }
-    );
-
-    // Complete tasks
-    jest.spyOn(task, 'status', 'get').mockReturnValue('failed');
-
-    for (const child of task.tasks) {
-      jest.spyOn(child, 'status', 'get').mockReturnValue('done');
-
-      child.emit('status.done', { status: 'done', previous: 'running' });
-      child.emit('completed', { status: 'done', duration: 100 });
-    }
-
-    task.emit('status.failed', { status: 'failed', previous: 'running' });
-    task.emit('completed', { status: 'failed', duration: 100 });
-
-    await prom;
-
-    // Should print all tasks
-    expect(app.lastFrame()).toEqualLines([
-      expect.ignoreColor(`${symbols.error} Test group (took 100ms)`),
-      expect.ignoreColor(`  ${symbols.success} Running test1 in wks (took 100ms)`),
-      expect.ignoreColor(`  ${symbols.success} Running test2 in wks (took 100ms)`),
-    ]);
-    expect(process.exit).toHaveBeenCalledWith(1);
   });
 });
