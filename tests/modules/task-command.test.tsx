@@ -1,4 +1,4 @@
-import { SpawnTask, type Task, type TaskManager } from '@jujulego/tasks';
+import { ParallelGroup, SpawnTask, type Task, type TaskManager } from '@jujulego/tasks';
 import { cleanup, render } from 'ink-testing-library';
 import { injectable } from 'inversify';
 import symbols from 'log-symbols';
@@ -20,7 +20,7 @@ import { TASK_MANAGER } from '@/src/tasks/task-manager.config';
 class TestTaskCommand extends TaskCommand {
   // Methods
   // eslint-disable-next-line require-yield
-  * prepare(args: ArgumentsCamelCase<unknown>): Generator<Task> {
+  *prepare(): Generator<Task> {
     return;
   }
 }
@@ -121,6 +121,58 @@ describe('TaskCommand', () => {
       expect(app.lastFrame()).toEqualLines([
         expect.ignoreColor('Id      Name  Workspace  Group  Depends on'),
         expect.ignoreColor(`${task.id.substring(0, 6)}  ${task.name}   ${wks.name}`),
+      ]);
+    });
+
+    it('should print plan with dependent tasks as list', async () => {
+      // Create tasks
+      const tsk1 = new SpawnTask('test1', [], { workspace: wks, script: 'test1' }, { logger: spyLogger });
+      const tsk2 = new SpawnTask('test2', [], { workspace: wks, script: 'test2' }, { logger: spyLogger });
+
+      task.dependsOn(tsk1);
+      task.dependsOn(tsk2);
+      tsk1.dependsOn(tsk2);
+
+      jest.spyOn(manager, 'tasks', 'get').mockReturnValue([task, tsk1, tsk2]);
+      jest.spyOn(command, 'prepare').mockImplementation(function* () {
+        yield task;
+        yield tsk1;
+        yield tsk2;
+      });
+
+      // Run command
+      await command.handler({ $0: 'jill', _: [], plan: true, planMode: 'list' });
+
+      expect(app.lastFrame()).toEqualLines([
+        expect.ignoreColor('Id      Name   Workspace  Group  Depends on'),
+        expect.ignoreColor(`${tsk2.id.substring(0, 6)}  ${tsk2.name}  ${wks.name}`),
+        expect.ignoreColor(`${tsk1.id.substring(0, 6)}  ${tsk1.name}  ${wks.name}               ${tsk2.id.substring(0, 6)}`),
+        expect.ignoreColor(`${task.id.substring(0, 6)}  ${task.name}    ${wks.name}               ${tsk1.id.substring(0, 6)}, ${tsk2.id.substring(0, 6)}`),
+      ]);
+    });
+
+    it('should print plan with group task as list', async () => {
+      // Create group
+      const tsk1 = new SpawnTask('test1', [], { workspace: wks, script: 'test1' }, { logger: spyLogger });
+      const tsk2 = new SpawnTask('test2', [], { workspace: wks, script: 'test2' }, { logger: spyLogger });
+
+      const group = new ParallelGroup('Test group', {}, { logger: spyLogger });
+      group.add(tsk1);
+      group.add(tsk2);
+
+      jest.spyOn(manager, 'tasks', 'get').mockReturnValue([group]);
+      jest.spyOn(command, 'prepare').mockImplementation(function* () {
+        yield group;
+      });
+
+      // Run command
+      await command.handler({ $0: 'jill', _: [], plan: true, planMode: 'list' });
+
+      expect(app.lastFrame()).toEqualLines([
+        expect.ignoreColor('Id      Name        Workspace  Group   Depends on'),
+        expect.ignoreColor(`${group.id.substring(0, 6)}  ${group.name}  group`),
+        expect.ignoreColor(`${tsk1.id.substring(0, 6)}  ${tsk1.name}       ${wks.name}        ${group.id.substring(0, 6)}`),
+        expect.ignoreColor(`${tsk2.id.substring(0, 6)}  ${tsk2.name}       ${wks.name}        ${group.id.substring(0, 6)}`),
       ]);
     });
 

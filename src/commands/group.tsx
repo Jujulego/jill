@@ -1,4 +1,3 @@
-import { type TaskManager } from '@jujulego/tasks';
 import { inject } from 'inversify';
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
 
@@ -8,7 +7,6 @@ import { LoadProject } from '@/src/middlewares/load-project';
 import { LoadWorkspace } from '@/src/middlewares/load-workspace';
 import { LazyCurrentWorkspace, type Workspace, type WorkspaceDepsMode } from '@/src/project/workspace';
 import { TaskExprService, type TaskTree } from '@/src/tasks/task-expr.service';
-import { TASK_MANAGER } from '@/src/tasks/task-manager.config';
 
 // Types
 export interface IGroupCommandArgs {
