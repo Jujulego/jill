@@ -1,4 +1,4 @@
-import AsyncLock from 'async-lock';
+import { Lock } from '@jujulego/utils';
 import { injectable } from 'inversify';
 import fs from 'node:fs/promises';
 import path from 'node:path';
@@ -27,7 +27,7 @@ export class Project {
 
   private _packageManager?: PackageManager;
   private _isFullyLoaded = false;
-  private _lock = new AsyncLock();
+  private _lock = new Lock();
 
   @lazyInject(Logger)
   private readonly _logger: Logger;
@@ -94,7 +94,7 @@ export class Project {
   }
 
   private async _loadWorkspace(dir: string): Promise<Workspace> {
-    return await this._lock.acquire('workspaces', async () => {
+    return await this._lock.with(async () => {
       let wks = this._workspaces.get(dir);
 
       if (!wks) {
