@@ -1,17 +1,12 @@
-import { waitForEvent } from '@jujulego/event-tree';
-import { type TaskManager } from '@jujulego/tasks';
 import { inject } from 'inversify';
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
 
 import { Command } from '@/src/modules/command';
-import { InkCommand } from '@/src/modules/ink-command';
+import { TaskCommand } from '@/src/modules/task-command';
 import { LoadProject } from '@/src/middlewares/load-project';
 import { LoadWorkspace } from '@/src/middlewares/load-workspace';
 import { LazyCurrentWorkspace, type Workspace, type WorkspaceDepsMode } from '@/src/project/workspace';
 import { TaskExprService, type TaskTree } from '@/src/tasks/task-expr.service';
-import { TASK_MANAGER } from '@/src/tasks/task-manager.config';
-import TaskManagerSpinner from '@/src/ui/task-manager-spinner';
-import { lazyInject } from '@/src/inversify.config';
 
 // Types
 export interface IGroupCommandArgs {
@@ -28,13 +23,10 @@ export interface IGroupCommandArgs {
     LoadWorkspace
   ]
 })
-export class GroupCommand extends InkCommand<IGroupCommandArgs> {
+export class GroupCommand extends TaskCommand<IGroupCommandArgs> {
   // Lazy injections
   @LazyCurrentWorkspace()
   readonly workspace: Workspace;
-
-  @lazyInject(TASK_MANAGER)
-  readonly manager: TaskManager;
 
   // Constructor
   constructor(
@@ -46,7 +38,7 @@ export class GroupCommand extends InkCommand<IGroupCommandArgs> {
 
   // Methods
   builder(parser: Argv): Argv<IGroupCommandArgs> {
-    return parser
+    return this.addTaskOptions(parser)
       .positional('script', {
         demandOption: true,
         coerce: (expr: string[]) => {
@@ -63,22 +55,12 @@ export class GroupCommand extends InkCommand<IGroupCommandArgs> {
       });
   }
 
-  async *render(args: ArgumentsCamelCase<IGroupCommandArgs>) {
+  async *prepare(args: ArgumentsCamelCase<IGroupCommandArgs>) {
     // Run script in workspace
     const group = await this.taskExpr.buildTask(args.script.roots[0], this.workspace, {
       buildDeps: args.depsMode,
     });
 
-    this.manager.add(group);
-
-    // Render
-    yield <TaskManagerSpinner manager={this.manager} />;
-
-    // Wait for result
-    const result = await waitForEvent(group, 'completed');
-
-    if (result.status === 'failed') {
-      return process.exit(1);
-    }
+    yield group;
   }
 }

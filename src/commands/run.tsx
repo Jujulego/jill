@@ -1,16 +1,10 @@
-import { waitForEvent } from '@jujulego/event-tree';
-import { type TaskManager } from '@jujulego/tasks';
-import { inject } from 'inversify';
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
 
 import { Command } from '@/src/modules/command';
-import { InkCommand } from '@/src/modules/ink-command';
+import { TaskCommand } from '@/src/modules/task-command';
 import { LoadProject } from '@/src/middlewares/load-project';
 import { LoadWorkspace } from '@/src/middlewares/load-workspace';
 import { LazyCurrentWorkspace, type Workspace, type WorkspaceDepsMode } from '@/src/project/workspace';
-import { TASK_MANAGER } from '@/src/tasks/task-manager.config';
-import TaskManagerSpinner from '@/src/ui/task-manager-spinner';
-import { lazyInject } from '@/src/inversify.config';
 
 // Types
 export interface IRunCommandArgs {
@@ -27,17 +21,14 @@ export interface IRunCommandArgs {
     LoadWorkspace
   ]
 })
-export class RunCommand extends InkCommand<IRunCommandArgs> {
+export class RunCommand extends TaskCommand<IRunCommandArgs> {
   // Lazy injections
   @LazyCurrentWorkspace()
   readonly workspace: Workspace;
 
-  @lazyInject(TASK_MANAGER)
-  readonly manager: TaskManager;
-
   // Methods
   builder(parser: Argv) {
-    return parser
+    return this.addTaskOptions(parser)
       .positional('script', { type: 'string', demandOption: true })
       .option('deps-mode', {
         choice: ['all', 'prod', 'none'],
@@ -49,7 +40,7 @@ export class RunCommand extends InkCommand<IRunCommandArgs> {
       });
   }
 
-  async *render(args: ArgumentsCamelCase<IRunCommandArgs>) {
+  async *prepare(args: ArgumentsCamelCase<IRunCommandArgs>) {
     // Extract arguments
     const rest = args._.map(arg => arg.toString());
 
@@ -61,16 +52,7 @@ export class RunCommand extends InkCommand<IRunCommandArgs> {
     const task = await this.workspace.run(args.script, rest, {
       buildDeps: args.depsMode,
     });
-    this.manager.add(task);
 
-    // Render
-    yield <TaskManagerSpinner manager={this.manager} />;
-
-    // Handle result
-    const result = await waitForEvent(task, 'completed');
-
-    if (result.status === 'failed') {
-      return process.exit(1);
-    }
+    yield task;
   }
 }

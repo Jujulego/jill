@@ -13,7 +13,7 @@ container
   .bind(INK_APP)
   .toDynamicValue(() => {
     return render(
-      <Layout/>,
+      <Layout />,
       {
         stdout: process.stdout.isTTY ? process.stdout : process.stderr,
       }

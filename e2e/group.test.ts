@@ -2,6 +2,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 
 import { TestBed } from '@/tools/test-bed';
+import { fileExists } from '@/tools/utils';
 
 import { jill } from './utils';
 
@@ -151,5 +152,20 @@ describe('jill group', () => {
       await expect(fs.readFile(path.join(prjDir, 'wks-b', 'script.txt'), 'utf8'))
         .resolves.toBe('test2');
     });
+  });
+
+  it('should print task plan and do not run any script', async () => {
+    const res = await jill(['group', '-w', 'wks-c', '--plan', 'test1 -> test2'], { cwd: prjDir });
+
+    // Check jill output
+    expect(res.code).toBe(0);
+    expect(res.screen.screen).toMatchLines([
+      expect.ignoreColor('Id      Name            Workspace  Group   Depends on'),
+      expect.ignoreColor(/[a-f0-9]{6} {2}In sequence {5}group/),
+      expect.ignoreColor(/[a-f0-9]{6} {2}yarn run test1 {2}wks-c {6}[a-f0-9]{6}/),
+      expect.ignoreColor(/[a-f0-9]{6} {2}yarn run test2 {2}wks-c {6}[a-f0-9]{6}/),
+    ]);
+
+    await expect(fileExists(path.join(prjDir, 'wks-c', 'script.txt'))).resolves.toBe(false);
   });
 });

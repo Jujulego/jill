@@ -2,6 +2,8 @@ import { EventSource } from '@jujulego/event-tree';
 import { decorate, injectable } from 'inversify';
 
 import { Service } from '@/src/modules/service';
+import { container } from '@/src/inversify.config';
+import { INK_APP } from '@/src/ink.config';
 
 // Setup
 decorate(injectable(), EventSource);
@@ -23,11 +25,17 @@ export class SpinnerService extends EventSource<SpinnerEventMap> {
   private _label = '';
 
   // Methods
+  private _awakeInk() {
+    // Ensure ink is instanced => spinner is printed
+    container.get(INK_APP);
+  }
+
   spin(label: string) {
     this._status = 'spin';
     this._label = label;
 
     this.emit('update.spin', this.state);
+    this._awakeInk();
   }
 
   success(label: string) {
@@ -35,6 +43,7 @@ export class SpinnerService extends EventSource<SpinnerEventMap> {
     this._label = label;
 
     this.emit('update.success', this.state);
+    this._awakeInk();
   }
 
   failed(label: string) {
@@ -42,6 +51,7 @@ export class SpinnerService extends EventSource<SpinnerEventMap> {
     this._label = label;
 
     this.emit('update.failed', this.state);
+    this._awakeInk();
   }
 
   stop() {

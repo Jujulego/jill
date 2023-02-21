@@ -68,7 +68,7 @@ describe('getCommandOpts', () => {
 });
 
 describe('buildCommandModule', () => {
-  it('should return a yargs command module', async () => {
+  it('should return a yargs command module', () => {
     const opts: ICommandOpts = {
       command: 'test',
       describe: 'test',
@@ -93,14 +93,14 @@ describe('buildCommandModule', () => {
     const args: ArgumentsCamelCase = { $0: 'jill', _: [] };
 
     // eslint-disable-next-line @typescript-eslint/ban-types
-    await expect((mdl.builder as Extract<CommandBuilder, Function>)(parser))
-      .resolves.toBe(parser);
+    expect((mdl.builder as Extract<CommandBuilder, Function>)(parser))
+      .toBe(parser);
 
     mdl.handler(args);
     expect(cmd.handler).toHaveBeenCalledWith(args);
   });
 
-  it('should call command builder in module builder', async () => {
+  it('should call command builder in module builder', () => {
     const opts: ICommandOpts = {
       command: 'test',
       describe: 'test',
@@ -118,13 +118,13 @@ describe('buildCommandModule', () => {
     const parser = yargs();
 
     // eslint-disable-next-line @typescript-eslint/ban-types
-    await expect((mdl.builder as Extract<CommandBuilder, Function>)(parser))
-      .resolves.toBe(parser);
+    expect((mdl.builder as Extract<CommandBuilder, Function>)(parser))
+      .toBe(parser);
 
     expect(cmd.builder).toHaveBeenCalledWith(parser);
   });
 
-  it('should call middleware builder in module builder', async () => {
+  it('should call middleware builder in module builder', () => {
     const opts: ICommandOpts = {
       command: 'test',
       describe: 'test',
@@ -143,8 +143,8 @@ describe('buildCommandModule', () => {
     const parser = yargs();
 
     // eslint-disable-next-line @typescript-eslint/ban-types
-    await expect((mdl.builder as Extract<CommandBuilder, Function>)(parser))
-      .resolves.toBe(parser);
+    expect((mdl.builder as Extract<CommandBuilder, Function>)(parser))
+      .toBe(parser);
 
     expect(cmd.builder).toHaveBeenCalledWith(parser);
     expect(applyMiddlewares).toHaveBeenCalledWith(parser, [TestMiddleware]);

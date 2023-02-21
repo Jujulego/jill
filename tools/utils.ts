@@ -2,6 +2,7 @@ import { type ILogger } from '@jujulego/tasks';
 import type ink from 'ink';
 import { type render } from 'ink-testing-library';
 import cp from 'node:child_process';
+import fs from 'node:fs/promises';
 
 import { ESC } from './ink-screen';
 
@@ -29,6 +30,19 @@ export function noColor(str = ''): string {
 
 export function flushPromises(timeout = 0): Promise<void> {
   return new Promise<void>((resolve) => setTimeout(resolve, timeout));
+}
+
+export async function fileExists(file: string): Promise<boolean> {
+  try {
+    await fs.access(file);
+    return true;
+  } catch (err) {
+    if (err.code === 'ENOENT') {
+      return false;
+    }
+
+    throw err;
+  }
 }
 
 export interface ShellOptions {

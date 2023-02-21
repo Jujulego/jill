@@ -2,6 +2,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 
 import { TestBed } from '@/tools/test-bed';
+import { fileExists } from '@/tools/utils';
 
 import { jill } from './utils';
 
@@ -85,5 +86,34 @@ describe('jill each', () => {
     // Check script result
     await expect(fs.readFile(path.join(prjDir, 'wks-c', 'build.txt'), 'utf8'))
       .resolves.toBe('built');
+  });
+
+  it('should exit 1 if no workspace is found', async () => {
+    const res = await jill(['each', 'toto'], { cwd: prjDir });
+
+    // Check jill output
+    expect(res.code).toBe(1);
+    expect(res.screen.screen).toMatchLines([
+      expect.ignoreColor(/. No workspace found !/),
+    ]);
+  });
+
+  it('should print task plan and do not run any script', async () => {
+    const res = await jill(['each', '--plan', 'start'], { cwd: prjDir });
+
+    // Check jill output
+    expect(res.code).toBe(0);
+    expect(res.screen.screen).toMatchLines([
+      expect.ignoreColor('Id      Name            Workspace  Group  Depends on'),
+      expect.ignoreColor(/[a-f0-9]{6} {2}yarn run build {2}wks-c/),
+      expect.ignoreColor(/[a-f0-9]{6} {2}yarn run start {2}wks-b {13}[a-f0-9]{6}/),
+      expect.ignoreColor(/[a-f0-9]{6} {2}yarn run build {2}wks-b {13}[a-f0-9]{6}/),
+      expect.ignoreColor(/[a-f0-9]{6} {2}yarn run start {2}wks-a {13}[a-f0-9]{6}, [a-f0-9]{6}/),
+    ]);
+
+    await expect(fileExists(path.join(prjDir, 'wks-c', 'script.txt'))).resolves.toBe(false);
+    await expect(fileExists(path.join(prjDir, 'wks-b', 'script.txt'))).resolves.toBe(false);
+    await expect(fileExists(path.join(prjDir, 'wks-b', 'start.txt'))).resolves.toBe(false);
+    await expect(fileExists(path.join(prjDir, 'wks-a', 'start.txt'))).resolves.toBe(false);
   });
 });

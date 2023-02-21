@@ -5,7 +5,7 @@ import { type ArgumentsCamelCase, type Argv } from 'yargs';
 
 import { INK_APP } from '@/src/ink.config';
 import { lazyInject } from '@/src/inversify.config';
-import { type Awaitable, type AwaitableGenerator } from '@/src/types';
+import { type AwaitableGenerator } from '@/src/types';
 import Layout from '@/src/ui/layout';
 
 import { type ICommand } from './command';
@@ -20,7 +20,7 @@ export abstract class InkCommand<A = unknown> implements ICommand<A> {
   // Methods
   abstract render(args: ArgumentsCamelCase<A>): AwaitableGenerator<ReactNode>;
 
-  builder(parser: Argv): Awaitable<Argv<A>> {
+  builder(parser: Argv): Argv<A> {
     return parser as Argv<A>;
   }
 
