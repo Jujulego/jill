@@ -75,12 +75,14 @@ describe('jill each', () => {
     const prom = yargs.command(command)
       .parse('each cmd -- --arg');
 
-    // should create script task
+    // should create script task then add it to manager
     await flushPromises();
     expect(workspaces[0].run).toHaveBeenCalledWith('cmd', ['--arg'], { buildDeps: 'all' });
     expect(workspaces[1].run).toHaveBeenCalledWith('cmd', ['--arg'], { buildDeps: 'all' });
 
     await flushPromises();
+    expect(manager.add).toHaveBeenCalledWith(tasks[0]);
+    expect(manager.add).toHaveBeenCalledWith(tasks[1]);
 
     // should print task spinners
     expect(app.lastFrame()).toMatchLines([

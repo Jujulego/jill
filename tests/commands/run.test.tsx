@@ -61,8 +61,9 @@ describe('jill run', () => {
 
     await flushPromises();
 
-    // should create script task
+    // should create script task then add it to manager
     expect(wks.run).toHaveBeenCalledWith('cmd', ['--arg'], { buildDeps: 'all' });
+    expect(manager.add).toHaveBeenCalledWith(task);
 
     // should print task spinner
     expect(app.lastFrame()).toEqual(expect.ignoreColor(/^. Running cmd in wks$/));

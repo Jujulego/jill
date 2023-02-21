@@ -76,6 +76,7 @@ describe('jill group', () => {
       wks,
       { buildDeps: 'all' }
     );
+    expect(manager.add).toHaveBeenCalledWith(task);
 
     // Complete tasks
     jest.spyOn(task, 'status', 'get').mockReturnValue('done');
