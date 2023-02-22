@@ -1,7 +1,7 @@
 import type ink from 'ink';
 import { render } from 'ink';
 import { type interfaces as int } from 'inversify';
-import wt from 'worker_threads';
+import wt from 'node:worker_threads';
 
 import { container } from '@/src/inversify.config';
 import Layout from '@/src/ui/layout';
