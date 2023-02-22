@@ -18,7 +18,7 @@ container
     }
 
     return render(
-      <Layout/>,
+      <Layout />,
       {
         stdout: process.stdout.isTTY ? process.stdout : process.stderr,
       }

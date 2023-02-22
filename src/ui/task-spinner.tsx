@@ -37,21 +37,21 @@ export default function TaskSpinner({ task }: TaskSpinnerProps) {
     case 'ready':
       return (
         <Text color="grey">
-          <Spinner type="line2"/>{' '}<TaskName task={task}/>
+          <Spinner type="line2" />{' '}<TaskName task={task} />
         </Text>
       );
 
     case 'running':
       return (
         <Text>
-          <Spinner/>{' '}<TaskName task={task}/>
+          <Spinner />{' '}<TaskName task={task}/>
         </Text>
       );
 
     case 'done':
       return (
         <Text>
-          <Text color="green">{symbols.success}{' '}<TaskName task={task}/></Text>
+          <Text color="green">{symbols.success}{' '}<TaskName task={task} /></Text>
           <Text color="magenta">{' '}(took {ms(time)})</Text>
         </Text>
       );
@@ -59,7 +59,7 @@ export default function TaskSpinner({ task }: TaskSpinnerProps) {
     case 'failed':
       return (
         <Text>
-          <Text color="red">{symbols.error}{' '}<TaskName task={task}/></Text>
+          <Text color="red">{symbols.error}{' '}<TaskName task={task} /></Text>
           <Text color="magenta">{' '}(took {ms(time)})</Text>
         </Text>
       );

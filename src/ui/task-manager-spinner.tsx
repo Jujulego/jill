@@ -11,7 +11,7 @@ export interface TasksSpinnerProps {
 
 // Components
 export default function TaskManagerSpinner({ manager }: TasksSpinnerProps) {
-  const [tasks, setTasks] = useState(manager.tasks.filter((tsk) => !tsk.context.groupTask));
+  const [tasks, setTasks] = useState(manager.tasks.filter((tsk) => !tsk.group));
 
   useLayoutEffect(() => {
     let dirty = false;
@@ -21,7 +21,7 @@ export default function TaskManagerSpinner({ manager }: TasksSpinnerProps) {
         dirty = true;
 
         queueMicrotask(() => {
-          setTasks(manager.tasks.filter((tsk) => !tsk.context.groupTask));
+          setTasks(manager.tasks.filter((tsk) => !tsk.group));
           dirty = false;
         });
       }

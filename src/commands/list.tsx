@@ -13,6 +13,7 @@ import { LoadProject } from '@/src/middlewares/load-project';
 import { LazyCurrentProject, type Project } from '@/src/project/project';
 import { type Workspace } from '@/src/project/workspace';
 import List from '@/src/ui/list';
+import { printJson } from '@/src/utils/json';
 
 // Types
 export type Attribute = 'name' | 'version' | 'root' | 'slug';
@@ -180,11 +181,7 @@ export class ListCommand extends InkCommand<IListCommandArgs> {
 
     // Print list
     if (args.json) {
-      if (process.stdout.isTTY) { // Pretty print for ttys
-        console.log(JSON.stringify(data, null, 2));
-      } else {
-        process.stdout.write(JSON.stringify(data));
-      }
+      printJson(data);
     } else {
       for (const d of data) {
         if (d.root) {

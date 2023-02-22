@@ -1,12 +1,15 @@
+import { INK_APP } from '@/src/ink.config';
 import { container } from '@/src/inversify.config';
 import { SpinnerService, type SpinnerState } from '@/src/commons/spinner.service';
 
 // Setup
 let service: SpinnerService;
+const createInkSpy = jest.fn();
 const updateEventSpy = jest.fn<void, [SpinnerState]>();
 
 beforeEach(() => {
   container.snapshot();
+  container.rebind(INK_APP).toDynamicValue(createInkSpy);
   service = container.get(SpinnerService);
 
   updateEventSpy.mockReset();
@@ -36,6 +39,7 @@ describe('SpinnerService.spin', () => {
         origin: service
       }
     );
+    expect(createInkSpy).toHaveBeenCalled();
   });
 });
 
@@ -57,6 +61,7 @@ describe('SpinnerService.success', () => {
         origin: service
       }
     );
+    expect(createInkSpy).toHaveBeenCalled();
   });
 });
 
@@ -78,6 +83,7 @@ describe('SpinnerService.failed', () => {
         origin: service
       }
     );
+    expect(createInkSpy).toHaveBeenCalled();
   });
 });
 

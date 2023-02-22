@@ -60,6 +60,7 @@ export * from './ui/workspace-tree';
 
 // Utils
 export * from './utils/import';
+export * from './utils/json';
 export * from './utils/streams';
 export * from './utils/string';
 export * from './utils/worker-cache';
