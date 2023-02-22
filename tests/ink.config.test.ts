@@ -12,12 +12,12 @@ beforeEach(() => {
 
   jest.resetAllMocks();
   jest.restoreAllMocks();
-
-  Object.assign(wt, { isMainThread: true });
 });
 
 afterEach(() => {
   container.restore();
+
+  Object.assign(wt, { isMainThread: true });
 });
 
 // Tests

@@ -14,12 +14,12 @@ const MESSAGE = Symbol.for('message');
 
 beforeEach(() => {
   container.snapshot();
-
-  Object.assign(wt, { isMainThread: true });
 });
 
 afterEach(() => {
   container.restore();
+
+  Object.assign(wt, { isMainThread: true });
 });
 
 // Types
