@@ -6,10 +6,6 @@ import { container } from '@/src/inversify.config';
 
 // Setup
 jest.mock('ink');
-jest.mock('node:worker_threads', () => ({
-  isMainThread: true,
-}));
-
 
 beforeEach(() => {
   container.snapshot();

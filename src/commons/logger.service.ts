@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 import winston, { type LogEntry } from 'winston';
-import { BroadcastChannel, isMainThread } from 'node:worker_threads';
+import wt from 'node:worker_threads';
 
 import { container } from '@/src/inversify.config';
 
@@ -51,14 +51,14 @@ container.bind(Logger)
       transports: []
     });
 
-    if (isMainThread) {
+    if (wt.isMainThread) {
       logger.add(
         new winston.transports.Console({
           format: consoleFormat
         })
       );
 
-      const channel = new BroadcastChannel('jujulego:jill:logger');
+      const channel = new wt.BroadcastChannel('jujulego:jill:logger');
       channel.onmessage = (entry) => logger.log((entry as MessageEvent<LogEntry>).data);
       channel.unref();
     } else {
