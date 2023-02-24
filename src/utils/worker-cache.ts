@@ -16,9 +16,11 @@ function isCacheUpdate(msg: unknown): msg is CacheUpdate {
 const channel = new BroadcastChannel('jujulego:jill:worker-cache');
 channel.unref();
 
-channel.onmessage = (msg) => {
-  if (isCacheUpdate(msg)) {
-    setEnvironmentData(msg.key, msg.value);
+channel.onmessage = (arg) => {
+  const msg = arg as MessageEvent;
+
+  if (isCacheUpdate(msg.data)) {
+    setEnvironmentData(msg.data.key, msg.data.value);
   }
 };
 
