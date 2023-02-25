@@ -1,7 +1,10 @@
 import chalk from 'chalk';
-import winston from 'winston';
+import winston, { type LogEntry } from 'winston';
+import wt from 'node:worker_threads';
 
-import { container } from '../inversify.config';
+import { container } from '@/src/inversify.config';
+
+import { ThreadTransport } from './logger/thread.transport';
 
 // Utils
 export const consoleFormat = winston.format.combine(
@@ -38,18 +41,30 @@ export interface Logger extends winston.Logger {}
 
 container.bind(Logger)
   .toDynamicValue(() => {
-    return winston.createLogger({
+    const logger = winston.createLogger({
       format: winston.format.combine(
         winston.format.timestamp(),
         winston.format.errors({
           stack: process.env.NODE_ENV === 'development'
         }),
       ),
-      transports: [
+      transports: []
+    });
+
+    if (wt.isMainThread) {
+      logger.add(
         new winston.transports.Console({
           format: consoleFormat
         })
-      ]
-    });
+      );
+
+      const channel = new wt.BroadcastChannel('jujulego:jill:logger');
+      channel.onmessage = (entry) => logger.log((entry as MessageEvent<LogEntry>).data);
+      channel.unref();
+    } else {
+      logger.add(new ThreadTransport('jujulego:jill:logger'));
+    }
+
+    return logger;
   })
   .inSingletonScope();

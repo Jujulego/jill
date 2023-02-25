@@ -3,8 +3,9 @@ import os from 'node:os';
 import path from 'node:path';
 
 import { AJV } from '@/src/ajv.config';
-import { container } from '@/src/inversify.config';
 import { Logger } from '@/src/commons/logger.service';
+import { container } from '@/src/inversify.config';
+import { workerCache } from '@/src/utils/worker-cache';
 
 import { CONFIG_OPTIONS } from './config-options';
 import { type IConfig } from './types';
@@ -63,5 +64,5 @@ export async function configLoader() {
 
 container
   .bind(CONFIG)
-  .toDynamicValue(configLoader)
+  .toDynamicValue(async () => await workerCache('jujulego:jill:config', configLoader))
   .inSingletonScope();
