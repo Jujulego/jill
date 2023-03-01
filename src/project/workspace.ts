@@ -194,6 +194,7 @@ export class Workspace {
         ...opts,
         loggerLabel: `${this.name}#${script}`
       });
+      task.context.script = script;
 
       this._tasks.set(script, task);
     }
