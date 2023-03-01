@@ -45,7 +45,7 @@ export class ExecCommand extends TaskCommand<IExecCommandArgs> {
     // Extract arguments
     const rest = args._.map(arg => arg.toString());
 
-    if (rest[0] === 'run') {
+    if (rest[0] === 'exec') {
       rest.splice(0, 1);
     }
 

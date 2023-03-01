@@ -94,6 +94,45 @@ describe('Workspace.devDependencies', () => {
   });
 });
 
+describe('Workspace.exec', () => {
+  it('should return task with all build tree', async () => {
+    jest.spyOn(bed.project, 'packageManager')
+      .mockResolvedValue('yarn');
+
+    const task = await wksA.exec('test');
+
+    // Check up tree
+    expect(task).toEqual(expect.objectContaining({
+      cmd: 'test',
+      args: [],
+      cwd: path.resolve('test/wks-a'),
+      dependencies: expect.arrayContaining([
+        expect.objectContaining({
+          cmd: 'yarn',
+          args: ['run', 'build'],
+          cwd: path.resolve('test/wks-b'),
+          dependencies: [
+            expect.objectContaining({
+              cmd: 'yarn',
+              args: ['run', 'build'],
+              cwd: path.resolve('test/wks-c')
+            })
+          ]
+        }),
+        expect.objectContaining({
+          cmd: 'yarn',
+          args: ['run', 'build'],
+          cwd: path.resolve('test/wks-c')
+        })
+      ])
+    }));
+
+    // Both workspace 'wks-c' task should be the same
+    expect(task.dependencies[1]).toBe(task.dependencies[0].dependencies[0]);
+    expect(bed.project.packageManager).toHaveBeenCalled();
+  });
+});
+
 describe('Workspace.run', () => {
   it('should return task with all build tree', async () => {
     jest.spyOn(bed.project, 'packageManager')

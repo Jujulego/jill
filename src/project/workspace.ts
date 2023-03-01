@@ -17,11 +17,12 @@ export type WorkspaceDepsMode = 'all' | 'prod' | 'none';
 
 export interface WorkspaceContext extends TaskContext {
   workspace: Workspace;
-  script?: string;
+  script: string;
 }
 
 export interface WorkspaceRunOptions extends Omit<SpawnTaskOptions, 'cwd'> {
   buildDeps?: WorkspaceDepsMode;
+  loggerLabel?: string;
 }
 
 // Class
@@ -159,7 +160,7 @@ export class Workspace {
     const task = new SpawnTask(command, args, { workspace: this, script: command }, {
       ...opts,
       cwd: this.cwd,
-      logger: this._logger.child({ label: `${this.name}$${command}`}),
+      logger: this._logger.child({ label: opts.loggerLabel ?? `${this.name}$${command}`}),
       env: {
         FORCE_COLOR: '1',
         ...opts.env
@@ -171,8 +172,6 @@ export class Workspace {
 
     await this._buildDependencies(task, opts.buildDeps);
 
-    this._tasks.set(command, task);
-
     return task;
   }
 
@@ -182,20 +181,10 @@ export class Workspace {
     if (!task) {
       const pm = await this.project.packageManager();
 
-      task = new SpawnTask(pm, ['run', script, ...args], { workspace: this, script }, {
+      task = await this.exec(pm, ['run', script, ...args], {
         ...opts,
-        cwd: this.cwd,
-        logger: this._logger.child({ label: `${this.name}#${script}`}),
-        env: {
-          FORCE_COLOR: '1',
-          ...opts.env
-        }
+        loggerLabel: `${this.name}#${script}`
       });
-
-      this._streamLogs(task, 'stdout', 'info');
-      this._streamLogs(task, 'stderr', 'info');
-
-      await this._buildDependencies(task, opts.buildDeps);
 
       this._tasks.set(script, task);
     }
