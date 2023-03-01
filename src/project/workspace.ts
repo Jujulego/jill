@@ -11,6 +11,7 @@ import { combine, streamLines } from '@/src/utils/streams';
 
 import { CURRENT } from './constants';
 import { type Project } from './project';
+import { log } from 'winston';
 
 // Types
 export type WorkspaceDepsMode = 'all' | 'prod' | 'none';
@@ -23,6 +24,12 @@ export interface WorkspaceContext extends TaskContext {
 export interface WorkspaceRunOptions extends Omit<SpawnTaskOptions, 'cwd'> {
   buildDeps?: WorkspaceDepsMode;
   loggerLabel?: string;
+}
+
+interface StreamLogsOpts {
+  stream: SpawnTaskStream;
+  level: string;
+  label: string;
 }
 
 // Class
@@ -144,31 +151,33 @@ export class Workspace {
     }
   }
 
-  private async _streamLogs(task: SpawnTask<WorkspaceContext>, stream: SpawnTaskStream, level: string) {
+  private async _streamLogs(task: SpawnTask<WorkspaceContext>, { stream, level, label }: StreamLogsOpts) {
     try {
       for await (const line of streamLines(task, stream)) {
-        this._logger.log(level, line, { label: `${this.name}#${task.context.script}` });
+        this._logger.log(level, line, { label });
       }
     } catch (err) {
       if (err) {
-        this._logger.warn(`Error while streaming task ${stream}`, err, { label: `${this.name}#${task.context.script}` });
+        this._logger.warn(`Error while streaming task ${stream}`, err, { label });
       }
     }
   }
 
   async exec(command: string, args: string[] = [], opts: WorkspaceRunOptions = {}): Promise<SpawnTask<WorkspaceContext>> {
+    const { loggerLabel: label = `${this.name}$${command}` } = opts;
+
     const task = new SpawnTask(command, args, { workspace: this, script: command }, {
       ...opts,
       cwd: this.cwd,
-      logger: this._logger.child({ label: opts.loggerLabel ?? `${this.name}$${command}`}),
+      logger: this._logger.child({ label }),
       env: {
         FORCE_COLOR: '1',
         ...opts.env
       }
     });
 
-    this._streamLogs(task, 'stdout', 'info');
-    this._streamLogs(task, 'stderr', 'info');
+    this._streamLogs(task, { stream: 'stdout', level: 'info', label });
+    this._streamLogs(task, { stream: 'stderr', level: 'info', label });
 
     await this._buildDependencies(task, opts.buildDeps);
 
