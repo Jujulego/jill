@@ -17,7 +17,7 @@ export type WorkspaceDepsMode = 'all' | 'prod' | 'none';
 
 export interface WorkspaceContext extends TaskContext {
   workspace: Workspace;
-  script: string;
+  script?: string;
 }
 
 export interface WorkspaceRunOptions extends Omit<SpawnTaskOptions, 'cwd'> {
@@ -153,6 +153,27 @@ export class Workspace {
         this._logger.warn(`Error while streaming task ${stream}`, err, { label: `${this.name}#${task.context.script}` });
       }
     }
+  }
+
+  async exec(command: string, args: string[] = [], opts: WorkspaceRunOptions = {}): Promise<SpawnTask<WorkspaceContext>> {
+    const task = new SpawnTask(command, args, { workspace: this, script: command }, {
+      ...opts,
+      cwd: this.cwd,
+      logger: this._logger.child({ label: `${this.name}$${command}`}),
+      env: {
+        FORCE_COLOR: '1',
+        ...opts.env
+      }
+    });
+
+    this._streamLogs(task, 'stdout', 'info');
+    this._streamLogs(task, 'stderr', 'info');
+
+    await this._buildDependencies(task, opts.buildDeps);
+
+    this._tasks.set(command, task);
+
+    return task;
   }
 
   async run(script: string, args: string[] = [], opts: WorkspaceRunOptions = {}): Promise<SpawnTask<WorkspaceContext>> {
