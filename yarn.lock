@@ -1304,7 +1304,7 @@ __metadata:
     eslint-plugin-workspaces: 0.7.0
     fork-ts-checker-webpack-plugin: 7.3.0
     ink: 3.2.0
-    ink-spinner: 4.0.3
+    ink-spinner: 5.0.0
     ink-testing-library: 2.1.0
     inversify: 6.0.1
     inversify-inject-decorators: 3.1.0
@@ -2976,7 +2976,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cli-spinners@npm:^2.3.0":
+"cli-spinners@npm:^2.7.0":
   version: 2.7.0
   resolution: "cli-spinners@npm:2.7.0"
   checksum: a9afaf73f58d1f951fb23742f503631b3cf513f43f4c7acb1b640100eb76bfa16efbcd1994d149ffc6603a6d75dd3d4a516a76f125f90dce437de9b16fd0ee6f
@@ -4566,15 +4566,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ink-spinner@npm:4.0.3":
-  version: 4.0.3
-  resolution: "ink-spinner@npm:4.0.3"
+"ink-spinner@npm:5.0.0":
+  version: 5.0.0
+  resolution: "ink-spinner@npm:5.0.0"
   dependencies:
-    cli-spinners: ^2.3.0
+    cli-spinners: ^2.7.0
   peerDependencies:
-    ink: ">=3.0.5"
-    react: ">=16.8.2"
-  checksum: d3785d688dd1ba19fb7a850b7a2c1dd8b2d06e4c77e6a7cc6c5bbd366a5a721e9ea45d036447016a9028f7519994077ce603a60a43a495e17b7b443b8a513ddc
+    ink: ">=4.0.0"
+    react: ">=18.0.0"
+  checksum: 88e547ff56ac8ee31239daef43b03ca2797eb20cc338ad25aba8e8fbe2cb322ea212494f8c545f327d345051be50542e1a27fdee3758a32a1b4a5db5308cad63
   languageName: node
   linkType: hard
 
