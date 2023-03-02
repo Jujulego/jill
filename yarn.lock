@@ -1305,7 +1305,7 @@ __metadata:
     fork-ts-checker-webpack-plugin: 7.3.0
     ink: 3.2.0
     ink-spinner: 4.0.3
-    ink-testing-library: 2.1.0
+    ink-testing-library: 3.0.0
     inversify: 6.0.1
     inversify-inject-decorators: 3.1.0
     jest: 29.4.3
@@ -4578,15 +4578,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ink-testing-library@npm:2.1.0":
-  version: 2.1.0
-  resolution: "ink-testing-library@npm:2.1.0"
+"ink-testing-library@npm:3.0.0":
+  version: 3.0.0
+  resolution: "ink-testing-library@npm:3.0.0"
   peerDependencies:
-    "@types/react": ">=16.8.0"
+    "@types/react": ">=18.0.0"
   peerDependenciesMeta:
     "@types/react":
       optional: true
-  checksum: 932bc3feed2d68e853f69c56b40610f50ea4366750400ee9597c0f5231acdfd29ac41d8c86924c7f85b7a0ab31cf0ad0726a9d29fdfe6ff82bc836177e7ff063
+  checksum: 8fe9c42203c4523da42c53ee7927fd770611092770ad41343f757a061d36a3809452b89e8b320b4c3557210931fe96db2d7f379fcfb8cac5dde29ca09af9d342
   languageName: node
   linkType: hard
 
