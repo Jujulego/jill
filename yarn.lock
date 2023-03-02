@@ -1331,7 +1331,7 @@ __metadata:
     winston-transport: 4.5.0
     yargs: 17.7.1
   bin:
-    jill: ./bin/jill.cjs
+    jill: ./bin/jill.js
   languageName: unknown
   linkType: soft
 
