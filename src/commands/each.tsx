@@ -1,16 +1,16 @@
 import { inject } from 'inversify';
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
 
-import { Command } from '@/src/modules/command';
-import { TaskCommand } from '@/src/modules/task-command';
-import { SpinnerService } from '@/src/commons/spinner.service';
-import { AffectedFilter } from '@/src/filters/affected.filter';
-import { Pipeline } from '@/src/filters/pipeline';
-import { PrivateFilter } from '@/src/filters/private.filter';
-import { ScriptsFilter } from '@/src/filters/scripts.filter';
-import { LoadProject } from '@/src/middlewares/load-project';
-import { LazyCurrentProject, type Project } from '@/src/project/project';
-import { type WorkspaceDepsMode } from '@/src/project/workspace';
+import { Command } from '@/src/modules/command.js';
+import { TaskCommand } from '@/src/modules/task-command.jsx';
+import { SpinnerService } from '@/src/commons/spinner.service.js';
+import { AffectedFilter } from '@/src/filters/affected.filter.js';
+import { Pipeline } from '@/src/filters/pipeline.js';
+import { PrivateFilter } from '@/src/filters/private.filter.js';
+import { ScriptsFilter } from '@/src/filters/scripts.filter.js';
+import { LoadProject } from '@/src/middlewares/load-project.js';
+import { LazyCurrentProject, type Project } from '@/src/project/project.js';
+import { type WorkspaceDepsMode } from '@/src/project/workspace.js';
 
 // Types
 export interface IEachCommandArgs {

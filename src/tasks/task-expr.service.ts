@@ -1,10 +1,10 @@
 import { type GroupTask, ParallelGroup, SequenceGroup, type Task } from '@jujulego/tasks';
+import { inject } from 'inversify';
 import moo from 'moo';
 
-import { Logger } from '@/src/commons/logger.service';
-import { type Workspace, type WorkspaceRunOptions } from '@/src/project/workspace';
-import { inject } from 'inversify';
-import { Service } from '@/src/modules/service';
+import { Logger } from '@/src/commons/logger.service.js';
+import { Service } from '@/src/modules/service.js';
+import { type Workspace, type WorkspaceRunOptions } from '@/src/project/workspace.js';
 
 // Interfaces
 export interface TaskNode {

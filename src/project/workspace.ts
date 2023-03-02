@@ -4,13 +4,13 @@ import path from 'node:path';
 import { type Package } from 'normalize-package-data';
 import { satisfies } from 'semver';
 
-import { GitService } from '@/src/commons/git.service';
-import { container, lazyInject, lazyInjectNamed } from '@/src/inversify.config';
-import { Logger } from '@/src/commons/logger.service';
-import { combine, streamLines } from '@/src/utils/streams';
+import { GitService } from '@/src/commons/git.service.js';
+import { container, lazyInject, lazyInjectNamed } from '@/src/inversify.config.js';
+import { Logger } from '@/src/commons/logger.service.js';
+import { combine, streamLines } from '@/src/utils/streams.js';
 
-import { CURRENT } from './constants';
-import { type Project } from './project';
+import { CURRENT } from './constants.js';
+import { type Project } from './project.js';
 
 // Types
 export type WorkspaceDepsMode = 'all' | 'prod' | 'none';

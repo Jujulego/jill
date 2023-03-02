@@ -10,15 +10,15 @@
     "./bin",
     "./dist"
   ],
+  "type": "module",
   "bin": "./bin/jill.js",
-  "main": "./dist/index.js",
   "exports": "./dist/index.js",
   "scripts": {
     "lint": "eslint .",
     "clean": "shx rm -rf dist",
     "build": "webpack",
-    "build:prod": "webpack --config webpack.prod.ts",
-    "stats": "webpack --config webpack.stats.ts",
+    "build:prod": "webpack --config webpack.prod.js",
+    "stats": "webpack --config webpack.stats.js",
     "watch": "webpack --watch",
     "test": "jest",
     "test:e2e": "jest -c jest-e2e.config.ts"

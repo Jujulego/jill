@@ -2,9 +2,9 @@ import chalk from 'chalk';
 import winston, { type LogEntry } from 'winston';
 import wt from 'node:worker_threads';
 
-import { container } from '@/src/inversify.config';
+import { container } from '@/src/inversify.config.js';
 
-import { ThreadTransport } from './logger/thread.transport';
+import { ThreadTransport } from './logger/thread.transport.js';
 
 // Utils
 export const consoleFormat = winston.format.combine(

@@ -3,17 +3,17 @@ import path from 'node:path';
 import slugify from 'slugify';
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
 
-import { Command } from '@/src/modules/command';
-import { InkCommand } from '@/src/modules/ink-command';
-import { AffectedFilter } from '@/src/filters/affected.filter';
-import { Pipeline } from '@/src/filters/pipeline';
-import { PrivateFilter } from '@/src/filters/private.filter';
-import { ScriptsFilter } from '@/src/filters/scripts.filter';
-import { LoadProject } from '@/src/middlewares/load-project';
-import { LazyCurrentProject, type Project } from '@/src/project/project';
-import { type Workspace } from '@/src/project/workspace';
-import List from '@/src/ui/list';
-import { printJson } from '@/src/utils/json';
+import { Command } from '@/src/modules/command.js';
+import { InkCommand } from '@/src/modules/ink-command.jsx';
+import { AffectedFilter } from '@/src/filters/affected.filter.js';
+import { Pipeline } from '@/src/filters/pipeline.js';
+import { PrivateFilter } from '@/src/filters/private.filter.js';
+import { ScriptsFilter } from '@/src/filters/scripts.filter.js';
+import { LoadProject } from '@/src/middlewares/load-project.js';
+import { LazyCurrentProject, type Project } from '@/src/project/project.js';
+import { type Workspace } from '@/src/project/workspace.js';
+import List from '@/src/ui/list.jsx';
+import { printJson } from '@/src/utils/json.js';
 
 // Types
 export type Attribute = 'name' | 'version' | 'root' | 'slug';
@@ -47,7 +47,7 @@ const EXTRACTORS = {
   name: wks => wks.name,
   version: (wks, json) => wks.manifest.version || (json ? undefined : chalk.grey('unset')),
   root: wks => wks.cwd,
-  slug: wks => slugify(wks.name)
+  slug: wks => slugify.default(wks.name)
 } satisfies Record<Attribute, Extractor<string | undefined>>;
 
 // Utils

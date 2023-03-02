@@ -1,17 +1,17 @@
 import { waitForEvent } from '@jujulego/event-tree';
 import { plan as extractPlan, type Task, type TaskManager, TaskSet } from '@jujulego/tasks';
+import chalk from 'chalk';
 import { injectable } from 'inversify';
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
 
-import { lazyInject } from '@/src/inversify.config';
-import { TASK_MANAGER } from '@/src/tasks/task-manager.config';
-import { type AwaitableGenerator } from '@/src/types';
-import List from '@/src/ui/list';
-import TaskManagerSpinner from '@/src/ui/task-manager-spinner';
-import { printJson } from '@/src/utils/json';
+import { lazyInject } from '@/src/inversify.config.js';
+import { TASK_MANAGER } from '@/src/tasks/task-manager.config.js';
+import { type AwaitableGenerator } from '@/src/types.js';
+import List from '@/src/ui/list.jsx';
+import TaskManagerSpinner from '@/src/ui/task-manager-spinner.jsx';
+import { printJson } from '@/src/utils/json.js';
 
-import { InkCommand } from './ink-command';
-import chalk from 'chalk';
+import { InkCommand } from './ink-command.jsx';
 
 // Types
 export interface ITaskCommandArgs {

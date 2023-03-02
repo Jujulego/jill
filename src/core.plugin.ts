@@ -1,9 +1,9 @@
-import { EachCommand } from '@/src/commands/each';
-import { GroupCommand } from '@/src/commands/group';
-import { ListCommand } from '@/src/commands/list';
-import { RunCommand } from '@/src/commands/run';
-import { TreeCommand } from '@/src/commands/tree';
-import { Plugin } from '@/src/modules/plugin';
+import { EachCommand } from '@/src/commands/each.jsx';
+import { GroupCommand } from '@/src/commands/group.jsx';
+import { ListCommand } from '@/src/commands/list.jsx';
+import { RunCommand } from '@/src/commands/run.jsx';
+import { TreeCommand } from '@/src/commands/tree.jsx';
+import { Plugin } from '@/src/modules/plugin.js';
 
 // Plugin
 @Plugin({

@@ -1,6 +1,6 @@
 import { Box, Text } from 'ink';
 
-import { capitalize } from '@/src/utils/string';
+import { capitalize } from '@/src/utils/string.js';
 
 // Types
 export interface ListProps<T extends Record<string, unknown>> {
@@ -22,7 +22,7 @@ export default function List<T extends Record<string, unknown>>({ items, headers
             <Text bold>{ capitalize(key) }</Text>
           ) }
           { items.map((item, idx) => (
-            <Text key={idx}>{ item[key] || ' ' }</Text>
+            <Text key={idx}>{ item[key] as string || ' ' }</Text>
           )) }
         </Box>
       )) }

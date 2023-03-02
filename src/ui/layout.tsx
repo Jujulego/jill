@@ -1,7 +1,7 @@
 import { type ReactNode } from 'react';
 
-import GlobalSpinner from './global-spinner';
-import StaticLogs from './static-logs';
+import GlobalSpinner from './global-spinner.jsx';
+import StaticLogs from './static-logs.jsx';
 
 // Types
 export interface LayoutProps {

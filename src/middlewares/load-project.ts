@@ -1,11 +1,11 @@
 import { inject } from 'inversify';
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
 
-import { type IMiddleware, Middleware } from '@/src/modules/middleware';
-import { SpinnerService } from '@/src/commons/spinner.service';
-import { container } from '@/src/inversify.config';
-import { CURRENT } from '@/src/project/constants';
-import { Project, type PackageManager } from '@/src/project/project';
+import { type IMiddleware, Middleware } from '@/src/modules/middleware.js';
+import { SpinnerService } from '@/src/commons/spinner.service.js';
+import { container } from '@/src/inversify.config.js';
+import { CURRENT } from '@/src/project/constants.js';
+import { Project, type PackageManager } from '@/src/project/project.js';
 
 // Types
 export interface ILoadProjectArgs {

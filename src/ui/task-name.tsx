@@ -1,7 +1,7 @@
 import { type Task, type TaskContext } from '@jujulego/tasks';
 import { Text } from 'ink';
 
-import { type WorkspaceContext } from '@/src/project/workspace';
+import { type WorkspaceContext } from '@/src/project/workspace.js';
 
 // Types
 export interface TaskNameProps {

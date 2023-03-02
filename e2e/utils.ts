@@ -4,7 +4,7 @@ import path from 'node:path';
 import { InkScreen } from '@/tools/ink-screen';
 
 // Constants
-export const MAIN = path.join(__dirname, '../bin/jill.js');
+export const MAIN = path.join(__dirname, '../bin/jill.cjs');
 
 // Type
 export interface SpawnResult {

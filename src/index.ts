@@ -1,66 +1,67 @@
-export * from './commons/git.service';
-export * from './types';
+export * from './types.js';
 
 // Filters
-export * from './filters/affected.filter';
-export * from './filters/pipeline';
-export * from './filters/private.filter';
-export * from './filters/scripts.filter';
+export * from './filters/affected.filter.js';
+export * from './filters/pipeline.js';
+export * from './filters/private.filter.js';
+export * from './filters/scripts.filter.js';
 
 // Middlewares
-export * from './middlewares/load-project';
-export * from './middlewares/load-workspace';
+export * from './middlewares/load-project.js';
+export * from './middlewares/load-workspace.js';
 
 // Modules
-export * from './modules/command';
-export * from './modules/ink-command';
-export * from './modules/middleware';
-export * from './modules/module';
-export * from './modules/plugin';
-export * from './modules/plugin-loader.service';
-export * from './modules/service';
+export * from './modules/command.js';
+export * from './modules/ink-command.jsx';
+export * from './modules/middleware.js';
+export * from './modules/module.js';
+export * from './modules/plugin.js';
+export * from './modules/plugin-loader.service.js';
+export * from './modules/service.js';
+export * from './modules/task-command.jsx';
 
 // Project
-export * from './project/constants';
-export * from './project/project';
-export * from './project/workspace';
+export * from './project/constants.js';
+export * from './project/project.js';
+export * from './project/workspace.js';
 
 // Services
-export * from './inversify.config';
-export * from './commons/spinner.service';
-export * from './tasks/task-expr.service';
-export * from './tasks/task-manager.config';
+export * from './inversify.config.js';
+export * from './commons/git.service.js';
+export * from './commons/spinner.service.js';
+export * from './tasks/task-expr.service.js';
+export * from './tasks/task-manager.config.js';
 
-export { CONFIG } from './config/config-loader';
-export { type IConfig } from './config/types';
+export { CONFIG } from './config/config-loader.js';
+export { type IConfig } from './config/types.js';
 
-export { Logger } from './commons/logger.service';
+export { Logger } from './commons/logger.service.js';
 
 // Ui
-export { default as GroupTaskSpinner } from './ui/group-task-spinner';
-export * from './ui/group-task-spinner';
+export { default as GroupTaskSpinner } from './ui/group-task-spinner.jsx';
+export * from './ui/group-task-spinner.jsx';
 
-export { default as Layout } from './ui/layout';
-export * from './ui/layout';
+export { default as Layout } from './ui/layout.jsx';
+export * from './ui/layout.jsx';
 
-export { default as List } from './ui/list';
-export * from './ui/list';
+export { default as List } from './ui/list.jsx';
+export * from './ui/list.jsx';
 
-export { default as TaskManagerSpinner } from './ui/task-manager-spinner';
-export * from './ui/task-manager-spinner';
+export { default as TaskManagerSpinner } from './ui/task-manager-spinner.jsx';
+export * from './ui/task-manager-spinner.jsx';
 
-export { default as TaskName } from './ui/task-name';
-export * from './ui/task-name';
+export { default as TaskName } from './ui/task-name.jsx';
+export * from './ui/task-name.jsx';
 
-export { default as TaskSpinner } from './ui/task-spinner';
-export * from './ui/task-spinner';
+export { default as TaskSpinner } from './ui/task-spinner.jsx';
+export * from './ui/task-spinner.jsx';
 
-export { default as WorkspaceTree } from './ui/workspace-tree';
-export * from './ui/workspace-tree';
+export { default as WorkspaceTree } from './ui/workspace-tree.jsx';
+export * from './ui/workspace-tree.jsx';
 
 // Utils
-export * from './utils/import';
-export * from './utils/json';
-export * from './utils/streams';
-export * from './utils/string';
-export * from './utils/worker-cache';
+export * from './utils/import.js';
+export * from './utils/json.js';
+export * from './utils/streams.js';
+export * from './utils/string.js';
+export * from './utils/worker-cache.js';

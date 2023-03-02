@@ -1,13 +1,13 @@
 import { type ContainerModule, inject } from 'inversify';
 
-import { CONFIG } from '@/src/config/config-loader';
-import { type IConfig } from '@/src/config/types';
-import { Logger } from '@/src/commons/logger.service';
-import { container } from '@/src/inversify.config';
-import { dynamicImport } from '@/src/utils/import';
+import { CONFIG } from '@/src/config/config-loader.js';
+import { type IConfig } from '@/src/config/types.js';
+import { Logger } from '@/src/commons/logger.service.js';
+import { container } from '@/src/inversify.config.js';
+import { dynamicImport } from '@/src/utils/import.js';
 
-import { getModule } from './module';
-import { Service } from './service';
+import { getModule } from './module.js';
+import { Service } from './service.js';
 
 // Class
 @Service()

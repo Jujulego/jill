@@ -1,9 +1,9 @@
 import { EventSource } from '@jujulego/event-tree';
 import { decorate, injectable } from 'inversify';
 
-import { Service } from '@/src/modules/service';
-import { container } from '@/src/inversify.config';
-import { INK_APP } from '@/src/ink.config';
+import { Service } from '@/src/modules/service.js';
+import { container } from '@/src/inversify.config.js';
+import { INK_APP } from '@/src/ink.config.jsx';
 
 // Setup
 decorate(injectable(), EventSource);

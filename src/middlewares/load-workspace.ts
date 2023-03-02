@@ -1,12 +1,12 @@
 import { inject } from 'inversify';
 import yargs, { type ArgumentsCamelCase, type Argv } from 'yargs';
 
-import { type IMiddleware, Middleware } from '@/src/modules/middleware';
-import { SpinnerService } from '@/src/commons/spinner.service';
-import { container } from '@/src/inversify.config';
-import { LazyCurrentProject, type Project } from '@/src/project/project';
-import { CURRENT } from '@/src/project/constants';
-import { Workspace } from '@/src/project/workspace';
+import { type IMiddleware, Middleware } from '@/src/modules/middleware.js';
+import { SpinnerService } from '@/src/commons/spinner.service.js';
+import { container } from '@/src/inversify.config.js';
+import { LazyCurrentProject, type Project } from '@/src/project/project.js';
+import { CURRENT } from '@/src/project/constants.js';
+import { Workspace } from '@/src/project/workspace.js';
 
 // Types
 export interface ILoadWorkspaceArgs {
@@ -43,7 +43,7 @@ export class LoadWorkspace implements IMiddleware<ILoadWorkspaceArgs> {
 
       if (!workspace) {
         this.spinner.failed(`Workspace "${args.workspace || '.'}" not found`);
-        yargs.exit(1, new Error('Workspace not found'));
+        (yargs as any).exit(1, new Error('Workspace not found'));
       } else {
         container
           .bind(Workspace)

@@ -17,7 +17,7 @@ const config: Config = {
     '^.+\\.(t|j)sx?$': '@swc/jest'
   },
   transformIgnorePatterns: [
-    '/node_modules/(?!(ansi-styles|chalk|is-unicode-supported|log-symbols|parse-ms|pretty-ms|supports-color))'
+    '/node_modules/(?!(ansi-escapes|ansi-styles|auto-bind|chalk|ink|ink-spinner|ink-testing-library|is-unicode-supported|lodash-es|log-symbols|parse-ms|patch-console|pretty-ms|supports-color))'
   ],
 
   // Coverage

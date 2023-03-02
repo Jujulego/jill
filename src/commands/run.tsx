@@ -1,10 +1,10 @@
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
 
-import { Command } from '@/src/modules/command';
-import { TaskCommand } from '@/src/modules/task-command';
-import { LoadProject } from '@/src/middlewares/load-project';
-import { LoadWorkspace } from '@/src/middlewares/load-workspace';
-import { LazyCurrentWorkspace, type Workspace, type WorkspaceDepsMode } from '@/src/project/workspace';
+import { Command } from '@/src/modules/command.js';
+import { TaskCommand } from '@/src/modules/task-command.jsx';
+import { LoadProject } from '@/src/middlewares/load-project.js';
+import { LoadWorkspace } from '@/src/middlewares/load-workspace.js';
+import { LazyCurrentWorkspace, type Workspace, type WorkspaceDepsMode } from '@/src/project/workspace.js';
 
 // Types
 export interface IRunCommandArgs {

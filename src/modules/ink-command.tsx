@@ -1,21 +1,21 @@
-import type ink from 'ink';
+import { type Instance } from 'ink';
 import { injectable } from 'inversify';
 import { type ReactNode } from 'react';
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
 
-import { INK_APP } from '@/src/ink.config';
-import { lazyInject } from '@/src/inversify.config';
-import { type AwaitableGenerator } from '@/src/types';
-import Layout from '@/src/ui/layout';
+import { INK_APP } from '@/src/ink.config.jsx';
+import { lazyInject } from '@/src/inversify.config.js';
+import { type AwaitableGenerator } from '@/src/types.js';
+import Layout from '@/src/ui/layout.jsx';
 
-import { type ICommand } from './command';
+import { type ICommand } from './command.js';
 
 // Class
 @injectable()
 export abstract class InkCommand<A = unknown> implements ICommand<A> {
   // Lazy injections
   @lazyInject(INK_APP)
-  readonly app: ink.Instance;
+  readonly app: Instance;
 
   // Methods
   abstract render(args: ArgumentsCamelCase<A>): AwaitableGenerator<ReactNode>;

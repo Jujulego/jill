@@ -5,11 +5,11 @@ import path from 'node:path';
 import normalize, { type Package } from 'normalize-package-data';
 import glob from 'tiny-glob';
 
-import { container, lazyInject, lazyInjectNamed } from '@/src/inversify.config';
-import { Logger } from '@/src/commons/logger.service';
+import { container, lazyInject, lazyInjectNamed } from '@/src/inversify.config.js';
+import { Logger } from '@/src/commons/logger.service.js';
 
-import { CURRENT } from './constants';
-import { Workspace } from './workspace';
+import { CURRENT } from './constants.js';
+import { Workspace } from './workspace.js';
 
 // Types
 export type PackageManager = 'npm' | 'yarn';
