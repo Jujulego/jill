@@ -4,7 +4,7 @@ import path from 'node:path';
 import { TestBed } from '@/tools/test-bed';
 import { fileExists } from '@/tools/utils';
 
-import { jill } from './utils';
+import { getPackageManager, jill } from './utils';
 
 // Setup
 let prjDir: string;
@@ -33,7 +33,7 @@ beforeEach(async () => {
     .addDependency(wksB)
     .addDependency(wksC, true);
 
-  prjDir = await bed.createProjectPackage();
+  prjDir = await bed.createProjectPackage(getPackageManager());
 });
 
 afterEach(async () => {

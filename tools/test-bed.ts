@@ -21,6 +21,7 @@ import { type Class } from '@/src/types';
 import { TestProject } from './test-project';
 import { TestWorkspace } from './test-workspace';
 import { shell } from './utils';
+import { PackageManager } from 'webpack-cli';
 
 // Bed
 export class TestBed {
@@ -121,11 +122,19 @@ export class TestBed {
   /**
    * Create project's structure inside a temporary directory and generates the lock file
    */
-  async createProjectPackage(): Promise<string> {
+  async createProjectPackage(pm: PackageManager): Promise<string> {
     const prjDir = await this.createProjectDirectory();
 
     // Run package manager
-    await shell('yarn', ['install', '--no-immutable'], { cwd: prjDir });
+    switch (pm) {
+      case 'npm':
+        await shell('npm', ['install'], { cwd: prjDir });
+        break;
+
+      case 'yarn':
+        await shell('yarn', ['install', '--no-immutable'], { cwd: prjDir });
+        break;
+    }
 
     return prjDir;
   }

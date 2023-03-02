@@ -3,7 +3,7 @@ import path from 'node:path';
 
 import { TestBed } from '@/tools/test-bed';
 
-import { jill } from './utils';
+import { getPackageManager, jill } from './utils';
 
 // Setup
 let prjDir: string;
@@ -15,7 +15,7 @@ beforeEach(async () => {
     plugins: ['./plugin.js']
   };
 
-  prjDir = await bed.createProjectPackage();
+  prjDir = await bed.createProjectPackage(getPackageManager());
 
   // Add plugin code
   await fs.writeFile(path.join(prjDir, 'plugin.js'),

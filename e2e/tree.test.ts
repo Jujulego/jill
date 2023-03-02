@@ -1,6 +1,6 @@
 import fs from 'node:fs/promises';
 
-import { jill } from './utils';
+import { getPackageManager, jill } from './utils';
 import { TestBed } from '@/tools/test-bed';
 
 // Setup
@@ -16,7 +16,7 @@ beforeEach(async () => {
     .addDependency(wksB)
     .addDependency(wksC, true);
 
-  prjDir = await bed.createProjectPackage();
+  prjDir = await bed.createProjectPackage(getPackageManager());
 });
 
 afterEach(async () => {
