@@ -4,9 +4,9 @@ import path from 'node:path';
 import { TestBed } from '@/tools/test-bed';
 import { fileExists, noColor } from '@/tools/utils';
 
-import { usePackageManager, jill } from './utils';
+import { withPackageManager, jill } from './utils';
 
-describe('jill run', () => void usePackageManager((packageManager) => {
+describe('jill run', () => void withPackageManager((packageManager) => {
   // Setup
   let prjDir: string;
 

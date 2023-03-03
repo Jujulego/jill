@@ -1,10 +1,10 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
-import { jill, usePackageManager } from './utils';
+import { jill, withPackageManager } from './utils';
 import { TestBed } from '@/tools/test-bed';
 
-describe('jill test (command from plugin)', () => void usePackageManager((packageManager) => {
+describe('jill test (command from plugin)', () => void withPackageManager((packageManager) => {
   // Setup
   let prjDir: string;
 

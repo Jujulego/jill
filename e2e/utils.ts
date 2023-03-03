@@ -52,17 +52,7 @@ export function jill(args: ReadonlyArray<string>, opts: SpawnOptions = {}): Prom
   });
 }
 
-export function getPackageManager(): PackageManager {
-  const val = process.env.USE_PACKAGE_MANAGER;
-
-  if (val !== 'npm' && val !== 'yarn') {
-    throw new Error('Invalid value in USE_PACKAGE_MANAGER env var');
-  }
-
-  return val;
-}
-
-export function usePackageManager(cb: (pm: PackageManager) => void) {
+export function withPackageManager(cb: (pm: PackageManager) => void) {
   let managers: PackageManager[] = ['npm', 'yarn'];
 
   if (process.env.USE_PACKAGE_MANAGER) {

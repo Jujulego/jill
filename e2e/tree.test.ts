@@ -1,9 +1,9 @@
 import fs from 'node:fs/promises';
 
-import { jill, usePackageManager } from './utils';
+import { jill, withPackageManager } from './utils';
 import { TestBed } from '@/tools/test-bed';
 
-describe('jill tree', () => void usePackageManager((packageManager) => {
+describe('jill tree', () => void withPackageManager((packageManager) => {
   // Setup
   let prjDir: string;
 

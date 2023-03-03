@@ -4,9 +4,9 @@ import path from 'path';
 import { TestBed } from '@/tools/test-bed';
 import { shell } from '@/tools/utils';
 
-import { jill, usePackageManager } from './utils';
+import { jill, withPackageManager } from './utils';
 
-describe('jill list', () => void usePackageManager((packageManager) => {
+describe('jill list', () => void withPackageManager((packageManager) => {
   // Setup
   let prjDir: string;
 
