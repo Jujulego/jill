@@ -1,13 +1,85 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`jill run using npm should print task plan and do not run any script 1`] = `
-"[1mId[22m      [1mName[22m           [1mWorkspace[22m  [1mGroup[22m  [1mDepends on[22m
-4bbdcd  npm run build  wks-c
-1f291e  npm run start  wks-b             4bbdcd"
+{
+  "completed": false,
+  "context": {
+    "script": "build",
+    "workspace": {
+      "cwd": Any<String>,
+      "name": "wks-c",
+      "version": "1.0.0",
+    },
+  },
+  "dependenciesIds": [],
+  "duration": 0,
+  "id": StringMatching /\\[0-9a-f\\]\\{32\\}/,
+  "isGroup": false,
+  "name": "npm run build",
+  "status": "ready",
+}
+`;
+
+exports[`jill run using npm should print task plan and do not run any script 2`] = `
+{
+  "completed": false,
+  "context": {
+    "script": "start",
+    "workspace": {
+      "cwd": Any<String>,
+      "name": "wks-b",
+      "version": "1.0.0",
+    },
+  },
+  "dependenciesIds": [
+    StringMatching /\\[0-9a-f\\]\\{32\\}/,
+  ],
+  "duration": 0,
+  "id": StringMatching /\\[0-9a-f\\]\\{32\\}/,
+  "isGroup": false,
+  "name": "npm run start",
+  "status": "blocked",
+}
 `;
 
 exports[`jill run using yarn should print task plan and do not run any script 1`] = `
-"[1mId[22m      [1mName[22m            [1mWorkspace[22m  [1mGroup[22m  [1mDepends on[22m
-8f3501  yarn run build  wks-c
-4a3158  yarn run start  wks-b             8f3501"
+{
+  "completed": false,
+  "context": {
+    "script": "build",
+    "workspace": {
+      "cwd": Any<String>,
+      "name": "wks-c",
+      "version": "1.0.0",
+    },
+  },
+  "dependenciesIds": [],
+  "duration": 0,
+  "id": StringMatching /\\[0-9a-f\\]\\{32\\}/,
+  "isGroup": false,
+  "name": "yarn run build",
+  "status": "ready",
+}
+`;
+
+exports[`jill run using yarn should print task plan and do not run any script 2`] = `
+{
+  "completed": false,
+  "context": {
+    "script": "start",
+    "workspace": {
+      "cwd": Any<String>,
+      "name": "wks-b",
+      "version": "1.0.0",
+    },
+  },
+  "dependenciesIds": [
+    StringMatching /\\[0-9a-f\\]\\{32\\}/,
+  ],
+  "duration": 0,
+  "id": StringMatching /\\[0-9a-f\\]\\{32\\}/,
+  "isGroup": false,
+  "name": "yarn run start",
+  "status": "blocked",
+}
 `;
