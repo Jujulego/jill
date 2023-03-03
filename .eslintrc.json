@@ -61,6 +61,12 @@
         "plugin:jest/recommended",
         "plugin:jest/style"
       ]
+    },
+    {
+      "files": "e2e/**/*.{js,jsx,ts,tsx}",
+      "rules": {
+        "jest/no-conditional-expect": "off"
+      }
     }
   ]
 }

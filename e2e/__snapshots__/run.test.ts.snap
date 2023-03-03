@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`jill run using npm should print task plan and do not run any script 1`] = `
+"[1mId[22m      [1mName[22m           [1mWorkspace[22m  [1mGroup[22m  [1mDepends on[22m
+4bbdcd  npm run build  wks-c
+1f291e  npm run start  wks-b             4bbdcd"
+`;
+
+exports[`jill run using yarn should print task plan and do not run any script 1`] = `
+"[1mId[22m      [1mName[22m            [1mWorkspace[22m  [1mGroup[22m  [1mDepends on[22m
+8f3501  yarn run build  wks-c
+4a3158  yarn run start  wks-b             8f3501"
+`;
