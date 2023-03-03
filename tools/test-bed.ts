@@ -14,14 +14,13 @@ import { getRegistry } from '@/src/modules/module';
 import { LoadProject } from '@/src/middlewares/load-project';
 import { LoadWorkspace } from '@/src/middlewares/load-workspace';
 import { CURRENT } from '@/src/project/constants';
-import { Project } from '@/src/project/project';
+import { type PackageManager, Project } from '@/src/project/project';
 import { Workspace } from '@/src/project/workspace';
 import { type Class } from '@/src/types';
 
 import { TestProject } from './test-project';
 import { TestWorkspace } from './test-workspace';
 import { shell } from './utils';
-import { PackageManager } from 'webpack-cli';
 
 // Bed
 export class TestBed {
