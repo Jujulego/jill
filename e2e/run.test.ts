@@ -107,29 +107,30 @@ describe('jill run', () => void usePackageManager((packageManager) => {
     const plan = JSON.parse(res.stdout[0]);
     expect(plan).toHaveLength(2);
 
-    expect(plan[0]).toMatchSnapshot({
+    expect(plan[0]).toMatchObject({
       id: expect.stringMatching(/[0-9a-f]{32}/),
       context: {
+        script: 'build',
         workspace: {
-          cwd: expect.any(String)
+          name: 'wks-c',
+          cwd: path.join(prjDir, 'wks-c')
         }
       }
     });
-    expect(plan[0].context.workspace.cwd).toBe(path.join(prjDir, 'wks-c'));
 
-    expect(plan[1]).toMatchSnapshot({
+    expect(plan[1]).toMatchObject({
       id: expect.stringMatching(/[0-9a-f]{32}/),
       dependenciesIds: [
-        expect.stringMatching(/[0-9a-f]{32}/)
+        plan[0].id
       ],
       context: {
+        script: 'start',
         workspace: {
-          cwd: expect.any(String)
+          name: 'wks-b',
+          cwd: path.join(prjDir, 'wks-b')
         }
       }
     });
-    expect(plan[1].dependenciesIds).toEqual([plan[0].id]);
-    expect(plan[1].context.workspace.cwd).toBe(path.join(prjDir, 'wks-b'));
 
     await expect(fileExists(path.join(prjDir, 'wks-c', 'script.txt'))).resolves.toBe(false);
     await expect(fileExists(path.join(prjDir, 'wks-b', 'script.txt'))).resolves.toBe(false);
