@@ -1,30 +1,30 @@
 import fs from 'node:fs/promises';
 
-import { getPackageManager, jill } from './utils';
+import { jill, usePackageManager } from './utils';
 import { TestBed } from '@/tools/test-bed';
 
-// Setup
-let prjDir: string;
+describe('jill tree', () => void usePackageManager((packageManager) => {
+  // Setup
+  let prjDir: string;
 
-beforeEach(async () => {
-  const bed = new TestBed();
+  beforeEach(async () => {
+    const bed = new TestBed();
 
-  const wksC = bed.addWorkspace('wks-c');
-  const wksB = bed.addWorkspace('wks-b')
-    .addDependency(wksC, true);
-  bed.addWorkspace('wks-a')
-    .addDependency(wksB)
-    .addDependency(wksC, true);
+    const wksC = bed.addWorkspace('wks-c');
+    const wksB = bed.addWorkspace('wks-b')
+      .addDependency(wksC, true);
+    bed.addWorkspace('wks-a')
+      .addDependency(wksB)
+      .addDependency(wksC, true);
 
-  prjDir = await bed.createProjectPackage(getPackageManager());
-});
+    prjDir = await bed.createProjectPackage(packageManager);
+  });
 
-afterEach(async () => {
-  await fs.rm(prjDir, { recursive: true });
-});
+  afterEach(async () => {
+    await fs.rm(prjDir, { recursive: true });
+  });
 
-// Tests
-describe('jill tree', () => {
+  // Tests
   it('should print current workspace dependency tree', async () => {
     const res = await jill(['tree'], { cwd: prjDir });
 
@@ -43,4 +43,4 @@ describe('jill tree', () => {
       expect.ignoreColor('└─ wks-c@1.0.0'),
     ]);
   });
-});
+}));
