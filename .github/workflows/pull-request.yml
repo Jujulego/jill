@@ -89,6 +89,9 @@ jobs:
         node:
           - 16
           - 18
+        packageManager:
+          - npm
+          - yarn
 
     steps:
       - uses: actions/checkout@v3.3.0
@@ -113,7 +116,9 @@ jobs:
           git config --global user.email 'boobrie@users.noreply.github.com'
 
       - name: Test
-        run: yarn test:e2e --verbose
+        run: yarn e2e --verbose
+        env:
+          USE_PACKAGE_MANAGER: ${{ matrix.packageManager }}
 
   complete:
     runs-on: ubuntu-latest
