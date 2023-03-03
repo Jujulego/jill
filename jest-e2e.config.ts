@@ -7,7 +7,7 @@ const config: Config = {
   setupFilesAfterEnv: [
     '<rootDir>/e2e/setup.ts'
   ],
-  testTimeout: 10000,
+  testTimeout: 20000,
   moduleNameMapper: {
     '#ansi-styles': 'ansi-styles',
     '#supports-color': 'supports-color'

@@ -2,57 +2,64 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 
 import { TestBed } from '@/tools/test-bed';
-import { fileExists } from '@/tools/utils';
+import { fileExists, noColor } from '@/tools/utils';
 
-import { getPackageManager, jill } from './utils';
+import { jill, usePackageManager } from './utils';
 
-// Setup
-let prjDir: string;
+describe('jill each', () => void usePackageManager((packageManager) => {
+  // Setup
+  let prjDir: string;
 
-beforeEach(async () => {
-  const bed = new TestBed();
+  beforeEach(async () => {
+    const bed = new TestBed();
 
-  const wksC = bed.addWorkspace('wks-c', {
-    scripts: {
-      // language=bash
-      build: 'node -e "require(\'node:fs\').writeFileSync(\'build.txt\', \'built\')"',
-    }
+    const wksC = bed.addWorkspace('wks-c', {
+      scripts: {
+        // language=bash
+        build: 'node -e "require(\'node:fs\').writeFileSync(\'build.txt\', \'built\')"',
+      }
+    });
+    const wksB = bed.addWorkspace('wks-b', {
+      scripts: {
+        // language=bash
+        build: 'node -e "require(\'node:fs\').writeFileSync(\'build.txt\', \'built\')"',
+        // language=bash
+        start: 'node -e "require(\'node:fs\').writeFileSync(\'start.txt\', \'started\')"',
+        // language=bash
+        fails: 'node -e "process.exit(1)"',
+      }
+    })
+      .addDependency(wksC, true);
+    bed.addWorkspace('wks-a', {
+      scripts: {
+        // language=bash
+        start: 'node -e "require(\'node:fs\').writeFileSync(\'start.txt\', \'started\')"'
+      }
+    })
+      .addDependency(wksB)
+      .addDependency(wksC, true);
+
+    prjDir = await bed.createProjectPackage(packageManager);
   });
-  const wksB = bed.addWorkspace('wks-b', {
-    scripts: {
-      // language=bash
-      build: 'node -e "require(\'node:fs\').writeFileSync(\'build.txt\', \'built\')"',
-      // language=bash
-      start: 'node -e "require(\'node:fs\').writeFileSync(\'start.txt\', \'started\')"',
-      // language=bash
-      fails: 'node -e "process.exit(1)"',
-    }
-  })
-    .addDependency(wksC, true);
-  bed.addWorkspace('wks-a', {
-    scripts: {
-      // language=bash
-      start: 'node -e "require(\'node:fs\').writeFileSync(\'start.txt\', \'started\')"'
-    }
-  })
-    .addDependency(wksB)
-    .addDependency(wksC, true);
 
-  prjDir = await bed.createProjectPackage(getPackageManager());
-});
+  afterEach(async () => {
+    await fs.rm(prjDir, { recursive: true });
+  });
 
-afterEach(async () => {
-  await fs.rm(prjDir, { recursive: true });
-});
-
-// Tests
-describe('jill each', () => {
+  // Tests
   it('should run start script on each workspace (and build dependencies)', async () => {
     const res = await jill(['each', 'start'], { cwd: prjDir });
 
     // Check jill output
     expect(res.code).toBe(0);
-    expect(res.screen.screen).toMatchLines([
+
+    const screen = res.screen.screen.split('\n')
+      .filter((line) => !noColor(line).startsWith('[wks-c#build]'))
+      .filter((line) => !noColor(line).startsWith('[wks-b#build]'))
+      .filter((line) => !noColor(line).startsWith('[wks-b#start]'))
+      .filter((line) => !noColor(line).startsWith('[wks-a#start]'));
+
+    expect(screen).toMatchLines([
       expect.ignoreColor(/. Running build in wks-c \(took [0-9.]+m?s\)/),
       expect.ignoreColor(/. Running start in wks-b \(took [0-9.]+m?s\)/),
       expect.ignoreColor(/. Running build in wks-b \(took [0-9.]+m?s\)/),
@@ -78,7 +85,12 @@ describe('jill each', () => {
 
     // Check jill output
     expect(res.code).toBe(1);
-    expect(res.screen.screen).toMatchLines([
+
+    const screen = res.screen.screen.split('\n')
+      .filter((line) => !noColor(line).startsWith('[wks-c#build]'))
+      .filter((line) => !noColor(line).startsWith('[wks-b#fails]'));
+
+    expect(screen).toMatchLines([
       expect.ignoreColor(/. Running build in wks-c \(took [0-9.]+m?s\)/),
       expect.ignoreColor(/. Running fails in wks-b \(took [0-9.]+m?s\)/),
     ]);
@@ -99,21 +111,72 @@ describe('jill each', () => {
   });
 
   it('should print task plan and do not run any script', async () => {
-    const res = await jill(['each', '--plan', 'start'], { cwd: prjDir });
+    const res = await jill(['each', '--plan', '--planMode', 'json', 'start'], { cwd: prjDir });
 
     // Check jill output
     expect(res.code).toBe(0);
-    expect(res.screen.screen).toMatchLines([
-      expect.ignoreColor('Id      Name            Workspace  Group  Depends on'),
-      expect.ignoreColor(/[a-f0-9]{6} {2}yarn run build {2}wks-c/),
-      expect.ignoreColor(/[a-f0-9]{6} {2}yarn run start {2}wks-b {13}[a-f0-9]{6}/),
-      expect.ignoreColor(/[a-f0-9]{6} {2}yarn run build {2}wks-b {13}[a-f0-9]{6}/),
-      expect.ignoreColor(/[a-f0-9]{6} {2}yarn run start {2}wks-a {13}[a-f0-9]{6}, [a-f0-9]{6}/),
-    ]);
+    expect(res.stdout).toHaveLength(1);
+
+    const plan = JSON.parse(res.stdout[0]);
+    expect(plan).toHaveLength(4);
+
+    expect(plan[0]).toMatchObject({
+      id: expect.stringMatching(/[0-9a-f]{32}/),
+      context: {
+        script: 'build',
+        workspace: {
+          name: 'wks-c',
+          cwd: path.join(prjDir, 'wks-c')
+        }
+      }
+    });
+
+    expect(plan[1]).toMatchObject({
+      id: expect.stringMatching(/[0-9a-f]{32}/),
+      dependenciesIds: [
+        plan[0].id
+      ],
+      context: {
+        script: 'start',
+        workspace: {
+          name: 'wks-b',
+          cwd: path.join(prjDir, 'wks-b')
+        }
+      }
+    });
+
+    expect(plan[2]).toMatchObject({
+      id: expect.stringMatching(/[0-9a-f]{32}/),
+      dependenciesIds: [
+        plan[0].id
+      ],
+      context: {
+        script: 'build',
+        workspace: {
+          name: 'wks-b',
+          cwd: path.join(prjDir, 'wks-b')
+        }
+      }
+    });
+
+    expect(plan[3]).toMatchObject({
+      id: expect.stringMatching(/[0-9a-f]{32}/),
+      dependenciesIds: [
+        plan[2].id,
+        plan[0].id
+      ],
+      context: {
+        script: 'start',
+        workspace: {
+          name: 'wks-a',
+          cwd: path.join(prjDir, 'wks-a')
+        }
+      }
+    });
 
     await expect(fileExists(path.join(prjDir, 'wks-c', 'script.txt'))).resolves.toBe(false);
     await expect(fileExists(path.join(prjDir, 'wks-b', 'script.txt'))).resolves.toBe(false);
     await expect(fileExists(path.join(prjDir, 'wks-b', 'start.txt'))).resolves.toBe(false);
     await expect(fileExists(path.join(prjDir, 'wks-a', 'start.txt'))).resolves.toBe(false);
   });
-});
+}));
