@@ -1,26 +1,26 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
+import { jill, withPackageManager } from './utils';
 import { TestBed } from '@/tools/test-bed';
 
-import { jill } from './utils';
+describe('jill test (command from plugin)', () => void withPackageManager((packageManager) => {
+  // Setup
+  let prjDir: string;
 
-// Setup
-let prjDir: string;
+  beforeEach(async () => {
+    // Create project directory
+    const bed = new TestBed();
+    bed.config = {
+      plugins: ['./plugin.js']
+    };
 
-beforeEach(async () => {
-  // Create project directory
-  const bed = new TestBed();
-  bed.config = {
-    plugins: ['./plugin.js']
-  };
+    prjDir = await bed.createProjectPackage(packageManager);
 
-  prjDir = await bed.createProjectPackage();
-
-  // Add plugin code
-  await fs.writeFile(path.join(prjDir, 'plugin.js'),
-    // language=javascript
-    `
+    // Add plugin code
+    await fs.writeFile(path.join(prjDir, 'plugin.js'),
+      // language=javascript
+      `
 const { Command, Plugin } = require(${JSON.stringify(path.resolve(__dirname, '../dist'))}); // require('jill');
 
 // Command
@@ -47,14 +47,13 @@ Plugin({
 
 module.exports = { default: TestPlugin };
 `);
-});
+  });
 
-afterEach(async () => {
-  await fs.rm(prjDir, { recursive: true });
-});
+  afterEach(async () => {
+    await fs.rm(prjDir, { recursive: true });
+  });
 
-// Tests
-describe('jill test (command from plugin)', () => {
+  // Tests
   it('should run command loaded from plugin file', async () => {
     const res = await jill(['test'], { cwd: prjDir });
 
@@ -62,4 +61,4 @@ describe('jill test (command from plugin)', () => {
       'this is a test plugin !'
     ]);
   });
-});
+}));

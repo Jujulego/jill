@@ -14,7 +14,7 @@ import { getRegistry } from '@/src/modules/module';
 import { LoadProject } from '@/src/middlewares/load-project';
 import { LoadWorkspace } from '@/src/middlewares/load-workspace';
 import { CURRENT } from '@/src/project/constants';
-import { Project } from '@/src/project/project';
+import { type PackageManager, Project } from '@/src/project/project';
 import { Workspace } from '@/src/project/workspace';
 import { type Class } from '@/src/types';
 
@@ -121,11 +121,19 @@ export class TestBed {
   /**
    * Create project's structure inside a temporary directory and generates the lock file
    */
-  async createProjectPackage(): Promise<string> {
+  async createProjectPackage(pm: PackageManager): Promise<string> {
     const prjDir = await this.createProjectDirectory();
 
     // Run package manager
-    await shell('yarn', ['install', '--no-immutable'], { cwd: prjDir });
+    switch (pm) {
+      case 'npm':
+        await shell('npm', ['install'], { cwd: prjDir });
+        break;
+
+      case 'yarn':
+        await shell('yarn', ['install', '--no-immutable'], { cwd: prjDir });
+        break;
+    }
 
     return prjDir;
   }

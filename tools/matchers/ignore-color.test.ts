@@ -2,7 +2,7 @@ import { ESC } from '../ink-screen';
 import { ignoreColor } from './ignore-color';
 
 // Tests
-describe('ignoreColor', () => {
+describe('expect.ignoreColor', () => {
   it('should remove all style escape codes before using equals', () => {
     const context = {
       isNot: false,

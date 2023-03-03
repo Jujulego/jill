@@ -1,6 +1,8 @@
 import cp from 'node:child_process';
 import path from 'node:path';
 
+import { type PackageManager } from '@/src/project/project';
+
 import { InkScreen } from '@/tools/ink-screen';
 
 // Constants
@@ -48,4 +50,19 @@ export function jill(args: ReadonlyArray<string>, opts: SpawnOptions = {}): Prom
 
     proc.on('error', reject);
   });
+}
+
+export function withPackageManager(cb: (pm: PackageManager) => void) {
+  let managers: PackageManager[] = ['npm', 'yarn'];
+
+  if (process.env.USE_PACKAGE_MANAGER) {
+    const toUse = process.env.USE_PACKAGE_MANAGER.split(/, ?/g);
+    managers = managers.filter((pm) => toUse.includes(pm));
+  }
+
+  for (const pm of managers) {
+    describe(`using ${pm}`, () => {
+      cb(pm);
+    });
+  }
 }
