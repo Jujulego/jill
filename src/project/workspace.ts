@@ -11,7 +11,6 @@ import { combine, streamLines } from '@/src/utils/streams';
 
 import { CURRENT } from './constants';
 import { type Project } from './project';
-import { log } from 'winston';
 
 // Types
 export type WorkspaceDepsMode = 'all' | 'prod' | 'none';
