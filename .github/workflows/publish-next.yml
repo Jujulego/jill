@@ -61,7 +61,7 @@ jobs:
           name: coverage-artifacts
           path: coverage
 
-  e2e-tests:
+  e2e:
     runs-on: ${{ matrix.os }}
     needs: [ build ]
 
@@ -108,7 +108,7 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     environment: npm
-    needs: [ tests, e2e-tests ]
+    needs: [ tests, e2e ]
 
     permissions:
       actions: write
