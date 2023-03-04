@@ -42,7 +42,6 @@ describe('<TaskSpinner>', () => {
     task.emit('status.done', { status: 'done', previous: 'running' });
     task.emit('completed', { status: 'done', duration: 100 });
 
-    // eslint-disable-next-line quotes
     expect(lastFrame()).toEqual(expect.ignoreColor(`${symbols.success} cmd (took 100ms)`));
   });
 
@@ -53,7 +52,6 @@ describe('<TaskSpinner>', () => {
     task.emit('status.failed', { status: 'failed', previous: 'running' });
     task.emit('completed', { status: 'failed', duration: 100 });
 
-    // eslint-disable-next-line quotes
     expect(lastFrame()).toEqual(expect.ignoreColor(`${symbols.error} cmd (took 100ms)`));
   });
 });

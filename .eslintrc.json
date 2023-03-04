@@ -10,6 +10,7 @@
       "version": "detect"
     }
   },
+  "reportUnusedDisableDirectives": true,
   "ignorePatterns": [
     "coverage/**",
     "dist/**"

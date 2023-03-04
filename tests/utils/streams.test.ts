@@ -70,7 +70,6 @@ describe('streamLines', () => {
       // eslint-disable-next-line require-yield
       .mockImplementation(async function* () { throw new Error('aborted'); });
 
-    // eslint-disable-next-line no-empty
     await expect(
       (async function () {
         for await (const line of streamLines(task, 'stdout')) {
