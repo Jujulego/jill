@@ -1,12 +1,8 @@
-import { EventSource } from '@jujulego/event-tree';
-import { decorate, injectable } from 'inversify';
+import { multiplexer, source } from '@jujulego/event-tree';
 
 import { Service } from '@/src/modules/service';
 import { container } from '@/src/inversify.config';
 import { INK_APP } from '@/src/ink.config';
-
-// Setup
-decorate(injectable(), EventSource);
 
 // Interface
 export type SpinnerStatus = 'spin' | 'stop' | 'success' | 'failed';
@@ -15,14 +11,15 @@ export interface SpinnerState {
   label: string;
 }
 
-export type SpinnerEventMap = Record<`update.${SpinnerStatus}`, SpinnerState>;
-
 // Service
 @Service()
-export class SpinnerService extends EventSource<SpinnerEventMap> {
+export class SpinnerService {
   // Attributes
   private _status: SpinnerStatus = 'stop';
   private _label = '';
+  private _events = multiplexer({
+    state: source<SpinnerState>(),
+  });
 
   // Methods
   private _awakeInk() {
@@ -34,7 +31,7 @@ export class SpinnerService extends EventSource<SpinnerEventMap> {
     this._status = 'spin';
     this._label = label;
 
-    this.emit('update.spin', this.state);
+    this._events.emit('state', this.state);
     this._awakeInk();
   }
 
@@ -42,7 +39,7 @@ export class SpinnerService extends EventSource<SpinnerEventMap> {
     this._status = 'success';
     this._label = label;
 
-    this.emit('update.success', this.state);
+    this._events.emit('state', this.state);
     this._awakeInk();
   }
 
@@ -50,7 +47,7 @@ export class SpinnerService extends EventSource<SpinnerEventMap> {
     this._status = 'failed';
     this._label = label;
 
-    this.emit('update.failed', this.state);
+    this._events.emit('state', this.state);
     this._awakeInk();
   }
 
@@ -58,11 +55,19 @@ export class SpinnerService extends EventSource<SpinnerEventMap> {
     if (this._status === 'spin') {
       this._status = 'stop';
 
-      this.emit('update.stop', this.state);
+      this._events.emit('state', this.state);
     }
   }
 
   // Properties
+  get on() {
+    return this._events.on;
+  }
+
+  get off() {
+    return this._events.off;
+  }
+
   get state(): SpinnerState {
     return {
       status: this._status,
