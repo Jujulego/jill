@@ -1,5 +1,6 @@
-import { waitForEvent } from '@jujulego/event-tree';
+import { waitFor } from '@jujulego/event-tree';
 import { plan as extractPlan, type Task, type TaskManager, TaskSet } from '@jujulego/tasks';
+import chalk from 'chalk';
 import { injectable } from 'inversify';
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
 
@@ -11,7 +12,6 @@ import TaskManagerSpinner from '@/src/ui/task-manager-spinner';
 import { printJson } from '@/src/utils/json';
 
 import { InkCommand } from './ink-command';
-import chalk from 'chalk';
 
 // Types
 export interface ITaskCommandArgs {
@@ -75,7 +75,7 @@ export abstract class TaskCommand<A = unknown> extends InkCommand<A> {
       // Start tasks
       tasks.start();
 
-      const result = await waitForEvent(tasks, 'finished');
+      const result = await waitFor(tasks, 'finished');
 
       if (result.failed > 0) {
         return process.exit(1);
