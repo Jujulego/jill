@@ -1,15 +1,16 @@
-import { SpawnTask } from '@jujulego/tasks';
 import { render, cleanup } from 'ink-testing-library';
 import symbols from 'log-symbols';
 
 import TaskSpinner from '@/src/ui/task-spinner';
+
+import { TestSpawnTask } from '@/tools/test-tasks';
 import { noColor } from '@/tools/utils';
 
 // Setup
-let task: SpawnTask;
+let task: TestSpawnTask;
 
 beforeEach(() => {
-  task = new SpawnTask('cmd', [], {});
+  task = new TestSpawnTask('cmd', [], {});
 });
 
 afterEach(() => {

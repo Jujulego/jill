@@ -1,4 +1,4 @@
-import { ParallelGroup, SpawnTask, type TaskManager } from '@jujulego/tasks';
+import { type TaskManager } from '@jujulego/tasks';
 import { cleanup, render } from 'ink-testing-library';
 import symbols from 'log-symbols';
 import yargs, { type CommandModule } from 'yargs';
@@ -12,6 +12,7 @@ import { TASK_MANAGER } from '@/src/tasks/task-manager.config';
 import Layout from '@/src/ui/layout';
 
 import { TestBed } from '@/tools/test-bed';
+import { TestParallelGroup, TestSpawnTask } from '@/tools/test-tasks';
 import { flushPromises, spyLogger, wrapInkTestApp } from '@/tools/utils';
 
 // Setup
@@ -22,7 +23,7 @@ let taskExpr: TaskExprService;
 
 let bed: TestBed;
 let wks: Workspace;
-let task: ParallelGroup;
+let task: TestParallelGroup;
 
 beforeEach(async () => {
   container.snapshot();
@@ -30,9 +31,9 @@ beforeEach(async () => {
   bed = new TestBed();
   wks = bed.addWorkspace('wks');
 
-  task = new ParallelGroup('Test group', {}, { logger: spyLogger });
-  task.add(new SpawnTask('test1', [], { workspace: wks, script: 'test1' }, { logger: spyLogger }));
-  task.add(new SpawnTask('test2', [], { workspace: wks, script: 'test2' }, { logger: spyLogger }));
+  task = new TestParallelGroup('Test group', {}, { logger: spyLogger });
+  task.add(new TestSpawnTask('test1', [], { workspace: wks, script: 'test1' }, { logger: spyLogger }));
+  task.add(new TestSpawnTask('test2', [], { workspace: wks, script: 'test2' }, { logger: spyLogger }));
 
   app = render(<Layout />);
   container.rebind(INK_APP).toConstantValue(wrapInkTestApp(app));
@@ -81,7 +82,7 @@ describe('jill group', () => {
     // Complete tasks
     jest.spyOn(task, 'status', 'get').mockReturnValue('done');
 
-    for (const child of task.tasks) {
+    for (const child of task.tasks as TestSpawnTask[]) {
       jest.spyOn(child, 'status', 'get').mockReturnValue('done');
 
       child.emit('status.done', { status: 'done', previous: 'running' });
@@ -123,7 +124,7 @@ describe('jill group', () => {
     // Complete tasks
     jest.spyOn(task, 'status', 'get').mockReturnValue('done');
 
-    for (const child of task.tasks) {
+    for (const child of task.tasks as TestSpawnTask[]) {
       jest.spyOn(child, 'status', 'get').mockReturnValue('done');
 
       child.emit('status.done', { status: 'done', previous: 'running' });

@@ -29,16 +29,10 @@ describe('SpinnerService.spin', () => {
       status: 'spin',
       label: 'test'
     });
-    expect(stateEventSpy).toHaveBeenCalledWith(
-      {
-        status: 'spin',
-        label: 'test',
-      },
-      {
-        key: 'update.spin',
-        origin: service
-      }
-    );
+    expect(stateEventSpy).toHaveBeenCalledWith({
+      status: 'spin',
+      label: 'test',
+    });
     expect(createInkSpy).toHaveBeenCalled();
   });
 });
@@ -51,16 +45,10 @@ describe('SpinnerService.success', () => {
       status: 'success',
       label: 'youhou !'
     });
-    expect(stateEventSpy).toHaveBeenCalledWith(
-      {
-        status: 'success',
-        label: 'youhou !',
-      },
-      {
-        key: 'update.success',
-        origin: service
-      }
-    );
+    expect(stateEventSpy).toHaveBeenCalledWith({
+      status: 'success',
+      label: 'youhou !',
+    });
     expect(createInkSpy).toHaveBeenCalled();
   });
 });
@@ -73,16 +61,10 @@ describe('SpinnerService.failed', () => {
       status: 'failed',
       label: 'oooooh ...'
     });
-    expect(stateEventSpy).toHaveBeenCalledWith(
-      {
-        status: 'failed',
-        label: 'oooooh ...',
-      },
-      {
-        key: 'update.failed',
-        origin: service
-      }
-    );
+    expect(stateEventSpy).toHaveBeenCalledWith({
+      status: 'failed',
+      label: 'oooooh ...',
+    });
     expect(createInkSpy).toHaveBeenCalled();
   });
 });
@@ -106,15 +88,9 @@ describe('SpinnerService.stop', () => {
       status: 'stop',
       label: 'test'
     });
-    expect(stateEventSpy).toHaveBeenCalledWith(
-      {
-        status: 'stop',
-        label: 'test',
-      },
-      {
-        key: 'update.stop',
-        origin: service
-      }
-    );
+    expect(stateEventSpy).toHaveBeenCalledWith({
+      status: 'stop',
+      label: 'test',
+    });
   });
 });
