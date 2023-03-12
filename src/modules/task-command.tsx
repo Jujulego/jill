@@ -1,10 +1,11 @@
 import { waitFor } from '@jujulego/event-tree';
-import { plan as extractPlan, type Task, type TaskManager, TaskSet } from '@jujulego/tasks';
+import { plan as extractPlan, type Task, type TaskManager, TaskSet, type TaskSummary } from '@jujulego/tasks';
 import chalk from 'chalk';
 import { injectable } from 'inversify';
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
 
 import { lazyInject } from '@/src/inversify.config';
+import { type WorkspaceContext } from '@/src/project/workspace';
 import { TASK_MANAGER } from '@/src/tasks/task-manager.config';
 import { type AwaitableGenerator } from '@/src/types';
 import List from '@/src/ui/list';
@@ -53,7 +54,7 @@ export abstract class TaskCommand<A = unknown> extends InkCommand<A> {
     }
 
     if (args.plan) {
-      const plan = Array.from(extractPlan(tasks));
+      const plan: TaskSummary<Partial<WorkspaceContext>>[] = Array.from(extractPlan(tasks));
 
       if (args.planMode === 'json') {
         printJson(plan);
