@@ -16,7 +16,7 @@ export default function GlobalSpinner() {
     const spinner = container.get(SpinnerService);
     setState(spinner.state);
 
-    return spinner.subscribe('update', setState);
+    return spinner.on('state', setState);
   }, []);
 
   // Render

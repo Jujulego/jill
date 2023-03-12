@@ -2,18 +2,18 @@ import { ParallelGroup, SpawnTask, type Task, type TaskManager } from '@jujulego
 import { cleanup, render } from 'ink-testing-library';
 import { injectable } from 'inversify';
 import symbols from 'log-symbols';
-import { type ArgumentsCamelCase } from 'yargs';
 
 import { INK_APP } from '@/src/ink.config';
 import { container } from '@/src/inversify.config';
 import { TaskCommand } from '@/src/modules/task-command';
 import { type Workspace, type WorkspaceContext } from '@/src/project/workspace';
+import { TASK_MANAGER } from '@/src/tasks/task-manager.config';
 import Layout from '@/src/ui/layout';
 import { printJson } from '@/src/utils/json';
 
 import { TestBed } from '@/tools/test-bed';
+import { TestSpawnTask } from '@/tools/test-tasks';
 import { flushPromises, spyLogger, wrapInkTestApp } from '@/tools/utils';
-import { TASK_MANAGER } from '@/src/tasks/task-manager.config';
 
 // Class
 @injectable()
@@ -32,7 +32,7 @@ let command: TaskCommand;
 
 let bed: TestBed;
 let wks: Workspace;
-let task: SpawnTask<WorkspaceContext>;
+let task: TestSpawnTask<WorkspaceContext>;
 
 jest.mock('@/src/utils/json');
 
@@ -41,7 +41,7 @@ beforeEach(async () => {
 
   bed = new TestBed();
   wks = bed.addWorkspace('wks');
-  task = new SpawnTask('cmd', [], { workspace: wks, script: 'cmd' }, {
+  task = new TestSpawnTask('cmd', [], { workspace: wks, script: 'cmd' }, {
     logger: spyLogger,
   });
 

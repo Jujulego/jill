@@ -16,7 +16,7 @@ export default function TaskManagerSpinner({ manager }: TasksSpinnerProps) {
   useLayoutEffect(() => {
     let dirty = false;
 
-    return manager.subscribe('added', () => {
+    return manager.on('added', () => {
       if (!dirty) {
         dirty = true;
 

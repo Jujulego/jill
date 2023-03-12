@@ -1,3 +1,4 @@
+import { once } from '@jujulego/event-tree';
 import { SpawnTask, type SpawnTaskOptions, type TaskContext, type TaskManager } from '@jujulego/tasks';
 import { inject } from 'inversify';
 
@@ -35,7 +36,7 @@ export class GitService {
 
     // Create task
     const task = new SpawnTask('git', [cmd, ...args], { command: cmd }, opts);
-    task.subscribe('stream', ({ data }) => opts.logger.debug(data.toString('utf-8')));
+    task.on('stream', ({ data }) => opts.logger.debug(data.toString('utf-8')));
 
     this.manager.add(task);
 
@@ -83,8 +84,8 @@ export class GitService {
     return new Promise((resolve, reject) => {
       const task = this.diff(['--quiet', reference, '--', ...files], opts);
 
-      task.subscribe('status.done', () => resolve(false));
-      task.subscribe('status.failed', () => {
+      once(task, 'status.done', () => resolve(false));
+      once(task, 'status.failed', () => {
         if (task.exitCode) {
           resolve(true);
         } else {

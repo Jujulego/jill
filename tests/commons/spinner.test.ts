@@ -5,15 +5,15 @@ import { SpinnerService, type SpinnerState } from '@/src/commons/spinner.service
 // Setup
 let service: SpinnerService;
 const createInkSpy = jest.fn();
-const updateEventSpy = jest.fn<void, [SpinnerState]>();
+const stateEventSpy = jest.fn<void, [SpinnerState]>();
 
 beforeEach(() => {
   container.snapshot();
   container.rebind(INK_APP).toDynamicValue(createInkSpy);
   service = container.get(SpinnerService);
 
-  updateEventSpy.mockReset();
-  service.subscribe('update', updateEventSpy);
+  stateEventSpy.mockReset();
+  service.on('state', stateEventSpy);
 });
 
 afterEach(() => {
@@ -29,16 +29,10 @@ describe('SpinnerService.spin', () => {
       status: 'spin',
       label: 'test'
     });
-    expect(updateEventSpy).toHaveBeenCalledWith(
-      {
-        status: 'spin',
-        label: 'test',
-      },
-      {
-        key: 'update.spin',
-        origin: service
-      }
-    );
+    expect(stateEventSpy).toHaveBeenCalledWith({
+      status: 'spin',
+      label: 'test',
+    });
     expect(createInkSpy).toHaveBeenCalled();
   });
 });
@@ -51,16 +45,10 @@ describe('SpinnerService.success', () => {
       status: 'success',
       label: 'youhou !'
     });
-    expect(updateEventSpy).toHaveBeenCalledWith(
-      {
-        status: 'success',
-        label: 'youhou !',
-      },
-      {
-        key: 'update.success',
-        origin: service
-      }
-    );
+    expect(stateEventSpy).toHaveBeenCalledWith({
+      status: 'success',
+      label: 'youhou !',
+    });
     expect(createInkSpy).toHaveBeenCalled();
   });
 });
@@ -73,16 +61,10 @@ describe('SpinnerService.failed', () => {
       status: 'failed',
       label: 'oooooh ...'
     });
-    expect(updateEventSpy).toHaveBeenCalledWith(
-      {
-        status: 'failed',
-        label: 'oooooh ...',
-      },
-      {
-        key: 'update.failed',
-        origin: service
-      }
-    );
+    expect(stateEventSpy).toHaveBeenCalledWith({
+      status: 'failed',
+      label: 'oooooh ...',
+    });
     expect(createInkSpy).toHaveBeenCalled();
   });
 });
@@ -95,7 +77,7 @@ describe('SpinnerService.stop', () => {
       status: 'stop',
       label: expect.any(String)
     });
-    expect(updateEventSpy).not.toHaveBeenCalled();
+    expect(stateEventSpy).not.toHaveBeenCalled();
   });
 
   it('should update service state and emit an update event', () => {
@@ -106,15 +88,9 @@ describe('SpinnerService.stop', () => {
       status: 'stop',
       label: 'test'
     });
-    expect(updateEventSpy).toHaveBeenCalledWith(
-      {
-        status: 'stop',
-        label: 'test',
-      },
-      {
-        key: 'update.stop',
-        origin: service
-      }
-    );
+    expect(stateEventSpy).toHaveBeenCalledWith({
+      status: 'stop',
+      label: 'test',
+    });
   });
 });

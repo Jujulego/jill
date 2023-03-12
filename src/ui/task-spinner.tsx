@@ -20,13 +20,13 @@ export default function TaskSpinner({ task }: TaskSpinnerProps) {
 
   // Effects
   useLayoutEffect(() => {
-    return task.subscribe('status', (event) => {
+    return task.on('status', (event) => {
       setStatus(event.status);
     });
   }, [task]);
 
   useLayoutEffect(() => {
-    return task.subscribe('completed', ({ duration }) => {
+    return task.on('completed', ({ duration }) => {
       setTime(duration);
     });
   }, [task]);

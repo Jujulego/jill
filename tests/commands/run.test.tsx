@@ -1,4 +1,4 @@
-import { SpawnTask, type TaskManager } from '@jujulego/tasks';
+import { type TaskManager } from '@jujulego/tasks';
 import { cleanup, render } from 'ink-testing-library';
 import symbols from 'log-symbols';
 import yargs, { type CommandModule } from 'yargs';
@@ -11,6 +11,7 @@ import { TASK_MANAGER } from '@/src/tasks/task-manager.config';
 import Layout from '@/src/ui/layout';
 
 import { TestBed } from '@/tools/test-bed';
+import { TestSpawnTask } from '@/tools/test-tasks';
 import { flushPromises, spyLogger, wrapInkTestApp } from '@/tools/utils';
 
 // Setup
@@ -20,14 +21,14 @@ let manager: TaskManager;
 
 let bed: TestBed;
 let wks: Workspace;
-let task: SpawnTask<WorkspaceContext>;
+let task: TestSpawnTask<WorkspaceContext>;
 
 beforeEach(async () => {
   container.snapshot();
 
   bed = new TestBed();
   wks = bed.addWorkspace('wks');
-  task = new SpawnTask('cmd', [], { workspace: wks, script: 'cmd' }, {
+  task = new TestSpawnTask('cmd', [], { workspace: wks, script: 'cmd' }, {
     logger: spyLogger,
   });
 
