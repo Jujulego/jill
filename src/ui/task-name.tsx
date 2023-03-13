@@ -1,7 +1,7 @@
 import { type Task, type TaskContext } from '@jujulego/tasks';
 import { Text } from 'ink';
 
-import { type WorkspaceContext } from '@/src/project/workspace';
+import type { CommandContext } from '@/src/tasks/command-task';
 
 // Types
 export interface TaskNameProps {
@@ -9,7 +9,7 @@ export interface TaskNameProps {
 }
 
 // Utils
-function isWorkspaceCtx(ctx: Readonly<TaskContext>): ctx is Readonly<WorkspaceContext> {
+function isWorkspaceCtx(ctx: Readonly<TaskContext>): ctx is Readonly<CommandContext> {
   return 'workspace' in ctx;
 }
 

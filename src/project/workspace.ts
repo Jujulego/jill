@@ -1,4 +1,3 @@
-import { SpawnTask, type SpawnTaskOptions, type SpawnTaskStream, type TaskContext } from '@jujulego/tasks';
 import { injectable } from 'inversify';
 import path from 'node:path';
 import { type Package } from 'normalize-package-data';
@@ -7,7 +6,8 @@ import { satisfies } from 'semver';
 import { GitService } from '@/src/commons/git.service';
 import { container, lazyInject, lazyInjectNamed } from '@/src/inversify.config';
 import { Logger } from '@/src/commons/logger.service';
-import { combine, streamLines } from '@/src/utils/streams';
+import { CommandTask, type CommandOptions } from '@/src/tasks/command-task';
+import { combine } from '@/src/utils/streams';
 
 import { CURRENT } from './constants';
 import { type Project } from './project';
@@ -15,20 +15,9 @@ import { type Project } from './project';
 // Types
 export type WorkspaceDepsMode = 'all' | 'prod' | 'none';
 
-export interface WorkspaceContext extends TaskContext {
-  workspace: Workspace;
-  script: string;
-}
-
-export interface WorkspaceRunOptions extends Omit<SpawnTaskOptions, 'cwd'> {
+export interface WorkspaceRunOptions extends Omit<CommandOptions, 'logger'> {
   buildDeps?: WorkspaceDepsMode;
   loggerLabel?: string;
-}
-
-interface StreamLogsOpts {
-  stream: SpawnTaskStream;
-  level: string;
-  label: string;
 }
 
 // Class
@@ -37,7 +26,7 @@ export class Workspace {
   // Attributes
   private readonly _logger: Logger;
   private readonly _affectedCache = new Map<string, Promise<boolean>>();
-  private readonly _tasks = new Map<string, SpawnTask<WorkspaceContext>>();
+  private readonly _tasks = new Map<string, CommandTask>();
 
   @lazyInject(GitService)
   private readonly _git: GitService;
@@ -65,7 +54,7 @@ export class Workspace {
     return !this.version || satisfies(this.version, range);
   }
 
-  private async _buildDependencies(task: SpawnTask, deps: WorkspaceDepsMode = 'all') {
+  private async _buildDependencies(task: CommandTask, deps: WorkspaceDepsMode = 'all') {
     // Generators
     const generators: AsyncGenerator<Workspace, void>[] = [];
 
@@ -150,40 +139,20 @@ export class Workspace {
     }
   }
 
-  private async _streamLogs(task: SpawnTask<WorkspaceContext>, { stream, level, label }: StreamLogsOpts) {
-    try {
-      for await (const line of streamLines(task, stream)) {
-        this._logger.log(level, line, { label });
-      }
-    } catch (err) {
-      if (err) {
-        this._logger.warn(`Error while streaming task ${stream}`, err, { label });
-      }
-    }
-  }
-
-  async exec(command: string, args: string[] = [], opts: WorkspaceRunOptions = {}): Promise<SpawnTask<WorkspaceContext>> {
+  async exec(command: string, args: string[] = [], opts: WorkspaceRunOptions = {}): Promise<CommandTask> {
     const { loggerLabel: label = `${this.name}$${command}` } = opts;
 
-    const task = new SpawnTask(command, args, { workspace: this, script: command }, {
+    const task = new CommandTask(this, { command, args }, {
       ...opts,
-      cwd: this.cwd,
       logger: this._logger.child({ label }),
-      env: {
-        FORCE_COLOR: '1',
-        ...opts.env
-      }
     });
-
-    this._streamLogs(task, { stream: 'stdout', level: 'info', label });
-    this._streamLogs(task, { stream: 'stderr', level: 'info', label });
 
     await this._buildDependencies(task, opts.buildDeps);
 
     return task;
   }
 
-  async run(script: string, args: string[] = [], opts: WorkspaceRunOptions = {}): Promise<SpawnTask<WorkspaceContext>> {
+  async run(script: string, args: string[] = [], opts: WorkspaceRunOptions = {}): Promise<CommandTask> {
     let task = this._tasks.get(script);
 
     if (!task) {
@@ -201,7 +170,7 @@ export class Workspace {
     return task;
   }
 
-  async build(opts?: WorkspaceRunOptions): Promise<SpawnTask | null> {
+  async build(opts?: WorkspaceRunOptions): Promise<CommandTask | null> {
     const { scripts = {} } = this.manifest;
 
     if (!scripts.build) {

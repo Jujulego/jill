@@ -5,7 +5,7 @@ import { injectable } from 'inversify';
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
 
 import { lazyInject } from '@/src/inversify.config';
-import { type WorkspaceContext } from '@/src/project/workspace';
+import { type CommandContext } from '@/src/tasks/command-task';
 import { TASK_MANAGER } from '@/src/tasks/task-manager.config';
 import { type AwaitableGenerator } from '@/src/types';
 import List from '@/src/ui/list';
@@ -54,7 +54,7 @@ export abstract class TaskCommand<A = unknown> extends InkCommand<A> {
     }
 
     if (args.plan) {
-      const plan: TaskSummary<Partial<WorkspaceContext>>[] = Array.from(extractPlan(tasks));
+      const plan: TaskSummary<Partial<CommandContext>>[] = Array.from(extractPlan(tasks));
 
       if (args.planMode === 'json') {
         printJson(plan);
