@@ -1,7 +1,9 @@
 import { SpawnTask } from '@jujulego/tasks';
 import { render } from 'ink-testing-library';
 
+import { CommandTask } from '@/src/tasks/command-task';
 import TaskName from '@/src/ui/task-name';
+
 import { TestBed } from '@/tools/test-bed';
 
 // Setup
@@ -24,13 +26,10 @@ describe('<TaskName>', () => {
 
   it('should print running script and workspace name', () => {
     const wks = bed.addWorkspace('wks-a');
-    const task = new SpawnTask('cmd', [], {
-      script: 'test',
-      workspace: wks,
-    });
+    const task = new CommandTask(wks, { command: 'cmd', args: [] });
 
     const { lastFrame } = render(<TaskName task={task} />);
 
-    expect(lastFrame()).toEqual(expect.ignoreColor('Running test in wks-a'));
+    expect(lastFrame()).toEqual(expect.ignoreColor('Running cmd in wks-a'));
   });
 });

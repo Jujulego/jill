@@ -18,7 +18,7 @@ export default function TaskName({ task }: TaskNameProps) {
   if (isWorkspaceCtx(task.context)) {
     return (
       <Text>
-        Running <Text bold>{ task.context.script }</Text> in { task.context.workspace.name }
+        Running <Text bold>{ task.context.command }</Text> in { task.context.workspace.name }
       </Text>
     );
   } else {

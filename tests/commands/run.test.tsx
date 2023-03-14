@@ -6,12 +6,12 @@ import yargs, { type CommandModule } from 'yargs';
 import { RunCommand } from '@/src/commands/run';
 import { INK_APP } from '@/src/ink.config';
 import { container } from '@/src/inversify.config';
-import { type Workspace, type WorkspaceContext } from '@/src/project/workspace';
+import { type Workspace } from '@/src/project/workspace';
 import { TASK_MANAGER } from '@/src/tasks/task-manager.config';
 import Layout from '@/src/ui/layout';
 
 import { TestBed } from '@/tools/test-bed';
-import { TestSpawnTask } from '@/tools/test-tasks';
+import { TestCommandTask } from '@/tools/test-tasks';
 import { flushPromises, spyLogger, wrapInkTestApp } from '@/tools/utils';
 
 // Setup
@@ -21,16 +21,14 @@ let manager: TaskManager;
 
 let bed: TestBed;
 let wks: Workspace;
-let task: TestSpawnTask<WorkspaceContext>;
+let task: TestCommandTask;
 
 beforeEach(async () => {
   container.snapshot();
 
   bed = new TestBed();
   wks = bed.addWorkspace('wks');
-  task = new TestSpawnTask('cmd', [], { workspace: wks, script: 'cmd' }, {
-    logger: spyLogger,
-  });
+  task = new TestCommandTask(wks, { command: 'cmd', args: [] }, { logger: spyLogger });
 
   app = render(<Layout />);
   container.rebind(INK_APP).toConstantValue(wrapInkTestApp(app));

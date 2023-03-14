@@ -12,7 +12,7 @@ import { TASK_MANAGER } from '@/src/tasks/task-manager.config';
 import Layout from '@/src/ui/layout';
 
 import { TestBed } from '@/tools/test-bed';
-import { TestParallelGroup, TestSpawnTask } from '@/tools/test-tasks';
+import { TestParallelGroup, TestCommandTask } from '@/tools/test-tasks';
 import { flushPromises, spyLogger, wrapInkTestApp } from '@/tools/utils';
 
 // Setup
@@ -32,8 +32,8 @@ beforeEach(async () => {
   wks = bed.addWorkspace('wks');
 
   task = new TestParallelGroup('Test group', {}, { logger: spyLogger });
-  task.add(new TestSpawnTask('test1', [], { workspace: wks, script: 'test1' }, { logger: spyLogger }));
-  task.add(new TestSpawnTask('test2', [], { workspace: wks, script: 'test2' }, { logger: spyLogger }));
+  task.add(new TestCommandTask(wks, { command: 'test1', args: [] }, { logger: spyLogger }));
+  task.add(new TestCommandTask(wks, { command: 'test2', args: [] }, { logger: spyLogger }));
 
   app = render(<Layout />);
   container.rebind(INK_APP).toConstantValue(wrapInkTestApp(app));
@@ -82,7 +82,7 @@ describe('jill group', () => {
     // Complete tasks
     jest.spyOn(task, 'status', 'get').mockReturnValue('done');
 
-    for (const child of task.tasks as TestSpawnTask[]) {
+    for (const child of task.tasks as TestCommandTask[]) {
       jest.spyOn(child, 'status', 'get').mockReturnValue('done');
 
       child.emit('status.done', { status: 'done', previous: 'running' });
@@ -124,7 +124,7 @@ describe('jill group', () => {
     // Complete tasks
     jest.spyOn(task, 'status', 'get').mockReturnValue('done');
 
-    for (const child of task.tasks as TestSpawnTask[]) {
+    for (const child of task.tasks as TestCommandTask[]) {
       jest.spyOn(child, 'status', 'get').mockReturnValue('done');
 
       child.emit('status.done', { status: 'done', previous: 'running' });

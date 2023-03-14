@@ -7,12 +7,11 @@ import { EachCommand } from '@/src/commands/each';
 import { SpinnerService } from '@/src/commons/spinner.service';
 import { INK_APP } from '@/src/ink.config';
 import { container } from '@/src/inversify.config';
-import { type WorkspaceContext } from '@/src/project/workspace';
 import { TASK_MANAGER } from '@/src/tasks/task-manager.config';
 import Layout from '@/src/ui/layout';
 
 import { TestBed } from '@/tools/test-bed';
-import { TestSpawnTask } from '@/tools/test-tasks';
+import { TestCommandTask } from '@/tools/test-tasks';
 import { flushPromises, spyLogger, wrapInkTestApp } from '@/tools/utils';
 
 // Setup
@@ -63,8 +62,8 @@ describe('jill each', () => {
 
     // Setup tasks
     const tasks = [
-      new TestSpawnTask<WorkspaceContext>('cmd', ['--arg'], { workspace: workspaces[0], script: 'cmd' }, { logger: spyLogger, cwd: workspaces[0].cwd }),
-      new TestSpawnTask<WorkspaceContext>('cmd', ['--arg'], { workspace: workspaces[1], script: 'cmd' }, { logger: spyLogger, cwd: workspaces[1].cwd }),
+      new TestCommandTask(workspaces[0], { command: 'cmd', args: ['--arg'] }, { logger: spyLogger }),
+      new TestCommandTask(workspaces[1], { command: 'cmd', args: ['--arg'] }, { logger: spyLogger }),
     ];
 
     jest.spyOn(manager, 'tasks', 'get').mockReturnValue(tasks);
@@ -115,7 +114,7 @@ describe('jill each', () => {
 
     // Setup tasks
     const tasks = [
-      new TestSpawnTask<WorkspaceContext>('cmd', ['--arg'], { workspace: workspaces[0], script: 'cmd' }, { logger: spyLogger, cwd: workspaces[0].cwd }),
+      new TestCommandTask(workspaces[0], { command: 'cmd', args: ['--arg'] }, { logger: spyLogger }),
     ];
 
     jest.spyOn(manager, 'tasks', 'get').mockReturnValue(tasks);
@@ -168,8 +167,8 @@ describe('jill each', () => {
 
       // Setup tasks
       const tasks = [
-        new TestSpawnTask<WorkspaceContext>('cmd', ['--arg'], { workspace: workspaces[0], script: 'cmd' }, { logger: spyLogger, cwd: workspaces[0].cwd }),
-        new TestSpawnTask<WorkspaceContext>('cmd', ['--arg'], { workspace: workspaces[1], script: 'cmd' }, { logger: spyLogger, cwd: workspaces[1].cwd }),
+        new TestCommandTask(workspaces[0], { command: 'cmd', args: ['--arg'] }, { logger: spyLogger }),
+        new TestCommandTask(workspaces[1], { command: 'cmd', args: ['--arg'] }, { logger: spyLogger }),
       ];
 
       jest.spyOn(manager, 'tasks', 'get').mockReturnValue(tasks);
@@ -210,8 +209,8 @@ describe('jill each', () => {
 
       // Setup tasks
       const tasks = [
-        new TestSpawnTask<WorkspaceContext>('cmd', ['--arg'], { workspace: workspaces[0], script: 'cmd' }, { logger: spyLogger, cwd: workspaces[0].cwd }),
-        new TestSpawnTask<WorkspaceContext>('cmd', ['--arg'], { workspace: workspaces[1], script: 'cmd' }, { logger: spyLogger, cwd: workspaces[1].cwd }),
+        new TestCommandTask(workspaces[0], { command: 'cmd', args: ['--arg'] }, { logger: spyLogger }),
+        new TestCommandTask(workspaces[1], { command: 'cmd', args: ['--arg'] }, { logger: spyLogger }),
       ];
 
       jest.spyOn(manager, 'tasks', 'get').mockReturnValue(tasks);
@@ -254,8 +253,8 @@ describe('jill each', () => {
 
       // Setup tasks
       const tasks = [
-        new TestSpawnTask<WorkspaceContext>('cmd', ['--arg'], { workspace: workspaces[0], script: 'cmd' }, { logger: spyLogger, cwd: workspaces[0].cwd }),
-        new TestSpawnTask<WorkspaceContext>('cmd', ['--arg'], { workspace: workspaces[1], script: 'cmd' }, { logger: spyLogger, cwd: workspaces[1].cwd }),
+        new TestCommandTask(workspaces[0], { command: 'cmd', args: ['--arg'] }, { logger: spyLogger }),
+        new TestCommandTask(workspaces[1], { command: 'cmd', args: ['--arg'] }, { logger: spyLogger }),
       ];
 
       jest.spyOn(manager, 'tasks', 'get').mockReturnValue(tasks);
