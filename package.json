@@ -35,7 +35,7 @@
     "@types/async-lock": "1.4.0",
     "@types/jest": "29.4.0",
     "@types/moo": "0.5.5",
-    "@types/node": "16.18.14",
+    "@types/node": "16.18.16",
     "@types/normalize-package-data": "2.4.1",
     "@types/react": "17.0.53",
     "@types/semver": "7.3.13",
