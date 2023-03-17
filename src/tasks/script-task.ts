@@ -1,9 +1,9 @@
+import { waitFor } from '@jujulego/event-tree';
 import { GroupTask, type Task, type TaskContext, type TaskOptions } from '@jujulego/tasks';
 
 import { type Workspace } from '@/src/project/workspace';
 import { splitCommandLine } from '@/src/utils/string';
 import { CommandTask } from '@/src/tasks/command-task';
-import { waitFor } from '@jujulego/event-tree';
 
 // Types
 export interface ScriptContext extends TaskContext {
@@ -11,8 +11,16 @@ export interface ScriptContext extends TaskContext {
   script: string;
 }
 
+// Utils
+export function isScriptCtx(ctx: Readonly<TaskContext>): ctx is Readonly<ScriptContext> {
+  return 'workspace' in ctx && 'script' in ctx;
+}
+
 // Class
 export class ScriptTask extends GroupTask<ScriptContext> {
+  // Attributes
+  private _script: CommandTask;
+
   // Constructor
   constructor(
     readonly workspace: Workspace,
@@ -20,7 +28,7 @@ export class ScriptTask extends GroupTask<ScriptContext> {
     readonly args: string[],
     opts?: TaskOptions
   ) {
-    super(`${script} ${workspace.name}`, { workspace, script }, opts);
+    super(script, { workspace, script }, opts);
   }
 
   // Methods
@@ -40,17 +48,26 @@ export class ScriptTask extends GroupTask<ScriptContext> {
     });
   }
 
-  protected async *_orchestrate(): AsyncGenerator<Task> {
+  prepare(): void {
     const script = this._runScript(this.script, this.args);
 
     if (!script) {
       throw new Error(`No script ${this.script} in ${this.workspace}`);
     }
 
-    yield script;
+    this.add(script);
+    this._script = script;
+  }
 
-    await waitFor(script, 'completed');
-    this.status = script.status;
+  protected async *_orchestrate(): AsyncGenerator<Task> {
+    if (!this._script) {
+      throw new Error('ScriptTask needs to be prepared. Call prepare before starting it');
+    }
+
+    yield this._script;
+
+    await waitFor(this._script, 'completed');
+    this.status = this._script.status;
   }
 
   protected _stop(): void {

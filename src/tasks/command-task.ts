@@ -12,6 +12,11 @@ export interface CommandContext extends TaskContext {
 
 export type CommandOptions = Omit<SpawnTaskOptions, 'cwd'>;
 
+// Utils
+export function isCommandCtx(ctx: Readonly<TaskContext>): ctx is Readonly<CommandContext> {
+  return 'workspace' in ctx && 'command' in ctx;
+}
+
 // Class
 export class CommandTask extends SpawnTask<CommandContext> {
   // Constructor
