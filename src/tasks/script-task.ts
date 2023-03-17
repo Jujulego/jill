@@ -32,7 +32,7 @@ export class ScriptTask extends GroupTask<ScriptContext> {
   }
 
   // Methods
-  private _runScript(script: string, args: string[]): CommandTask | null {
+  private async _runScript(script: string, args: string[]): Promise<CommandTask | null> {
     const line = this.workspace.getScript(script);
 
     if (!line) {
@@ -40,16 +40,25 @@ export class ScriptTask extends GroupTask<ScriptContext> {
     }
 
     // Create command task for script
-    const command = splitCommandLine(line);
+    const pm = await this.workspace.project.packageManager();
+
+    let command = splitCommandLine(line);
     command.args.push(...args);
+
+    if (pm === 'yarn') {
+      command = {
+        command: 'yarn',
+        args: [command.command, ...command.args]
+      };
+    }
 
     return new CommandTask(this.workspace, command, {
       logger: this._logger
     });
   }
 
-  prepare(): void {
-    const script = this._runScript(this.script, this.args);
+  async prepare(): Promise<void> {
+    const script = await this._runScript(this.script, this.args);
 
     if (!script) {
       throw new Error(`No script ${this.script} in ${this.workspace}`);
@@ -74,5 +83,19 @@ export class ScriptTask extends GroupTask<ScriptContext> {
     for (const tsk of this.tasks) {
       tsk.stop();
     }
+  }
+
+  complexity(cache = new Map<string, number>()): number {
+    let complexity = super.complexity(cache);
+
+    complexity += this._script.complexity(cache);
+    cache.set(this.id, complexity);
+
+    return complexity;
+  }
+
+  // Properties
+  get project() {
+    return this.workspace.project;
   }
 }

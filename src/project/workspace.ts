@@ -166,7 +166,7 @@ export class Workspace {
         logger: this._logger.child({ label: `${this.name}#${script}` }),
       });
 
-      task.prepare();
+      await task.prepare();
       await this._buildDependencies(task, opts.buildDeps);
 
       this._tasks.set(script, task);
