@@ -2,13 +2,9 @@ import { SpawnTask, type SpawnTaskOptions, type TaskContext } from '@jujulego/ta
 
 import { type Workspace } from '@/src/project/workspace';
 import { linesFrom } from '@/src/utils/events';
+import { type CommandLine } from '@/src/utils/string';
 
 // Types
-export interface CommandArgs {
-  command: string;
-  args: string[];
-}
-
 export interface CommandContext extends TaskContext {
   workspace: Workspace;
   command: string;
@@ -19,7 +15,7 @@ export type CommandOptions = Omit<SpawnTaskOptions, 'cwd'>;
 // Class
 export class CommandTask extends SpawnTask<CommandContext> {
   // Constructor
-  constructor(readonly workspace: Workspace, { command, args }: CommandArgs, opts: CommandOptions = {}) {
+  constructor(readonly workspace: Workspace, { command, args }: CommandLine, opts: CommandOptions = {}) {
     super(command, args, { workspace, command }, {
       ...opts,
       cwd: workspace.cwd,
