@@ -48,11 +48,9 @@ describe('jill run', () => void withPackageManager((packageManager) => {
     // Check jill output
     expect(res.code).toBe(0);
 
-    const screen = res.screen.screen.split('\n')
-      .filter((line) => !noColor(line).startsWith('[wks-c#start]'));
-
-    expect(screen).toMatchLines([
+    expect(res.screen.screen).toMatchLines([
       expect.ignoreColor(/. Running start in wks-c \(took [0-9.]+m?s\)/),
+      expect.ignoreColor(/ {2}. node -e "require\('node:fs'\)\.writeFileSync\('script\.txt', 'start. \(took [0-9.]+m?s\)/),
     ]);
 
     // Check script result
@@ -66,11 +64,9 @@ describe('jill run', () => void withPackageManager((packageManager) => {
     // Check jill output
     expect(res.code).toBe(1);
 
-    const screen = res.screen.screen.split('\n')
-      .filter((line) => !noColor(line).startsWith('[wks-c#fails]'));
-
-    expect(screen).toMatchLines([
+    expect(res.screen.screen).toMatchLines([
       expect.ignoreColor(/. Running fails in wks-c \(took [0-9.]+m?s\)/),
+      expect.ignoreColor(/. node -e "require\('node:fs'\)\.writeFileSync\('script\.txt', 'start. \(took [0-9.]+m?s\)/),
     ]);
   });
 
@@ -86,7 +82,9 @@ describe('jill run', () => void withPackageManager((packageManager) => {
 
     expect(screen).toMatchLines([
       expect.ignoreColor(/. Running build in wks-c \(took [0-9.]+m?s\)/),
+      expect.ignoreColor(/ {2}. node -e "require\('node:fs'\)\.writeFileSync\('script\.txt', 'build. \(took [0-9.]+m?s\)/),
       expect.ignoreColor(/. Running start in wks-b \(took [0-9.]+m?s\)/),
+      expect.ignoreColor(/ {2}. node -e "require\('node:fs'\)\.writeFileSync\('script\.txt', 'start. \(took [0-9.]+m?s\)/),
     ]);
 
     // Check scripts result

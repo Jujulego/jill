@@ -28,7 +28,7 @@ describe('splitCommandLine', () => {
     expect(splitCommandLine('cmd arg1 "long arg"'))
       .toEqual({
         command: 'cmd',
-        args: ['arg1', 'long arg']
+        args: ['arg1', '"long arg"']
       });
   });
 
@@ -36,7 +36,7 @@ describe('splitCommandLine', () => {
     expect(splitCommandLine('cmd arg1 \'long arg\''))
       .toEqual({
         command: 'cmd',
-        args: ['arg1', 'long arg']
+        args: ['arg1', '\'long arg\'']
       });
   });
 });
