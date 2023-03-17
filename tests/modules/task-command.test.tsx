@@ -9,10 +9,11 @@ import { TaskCommand } from '@/src/modules/task-command';
 import { type Workspace } from '@/src/project/workspace';
 import { TASK_MANAGER } from '@/src/tasks/task-manager.config';
 import Layout from '@/src/ui/layout';
+import { ExitException } from '@/src/utils/exit';
 import { printJson } from '@/src/utils/json';
 
 import { TestBed } from '@/tools/test-bed';
-import { TestCommandTask } from '@/tools/test-tasks';
+import { TestScriptTask } from '@/tools/test-tasks';
 import { flushPromises, spyLogger, wrapInkTestApp } from '@/tools/utils';
 
 // Class
@@ -32,7 +33,7 @@ let command: TaskCommand;
 
 let bed: TestBed;
 let wks: Workspace;
-let task: TestCommandTask;
+let task: TestScriptTask;
 
 jest.mock('@/src/utils/json');
 
@@ -41,7 +42,7 @@ beforeEach(async () => {
 
   bed = new TestBed();
   wks = bed.addWorkspace('wks');
-  task = new TestCommandTask(wks, { command: 'cmd', args: [] }, { logger: spyLogger });
+  task = new TestScriptTask(wks, 'cmd', [], { logger: spyLogger });
 
   app = render(<Layout/>);
   container.rebind(INK_APP).toConstantValue(wrapInkTestApp(app));
@@ -103,11 +104,10 @@ describe('TaskCommand', () => {
       task.emit('status.failed', { status: 'failed', previous: 'running' });
       task.emit('completed', { status: 'failed', duration: 100 });
 
-      await prom;
+      await expect(prom).rejects.toEqual(new ExitException(1));
 
       // should print task failed
       expect(app.lastFrame()).toEqual(expect.ignoreColor(`${symbols.error} Running cmd in wks (took 100ms)`));
-      expect(process.exit).toHaveBeenCalledWith(1);
     });
   });
 
@@ -168,7 +168,7 @@ describe('TaskCommand', () => {
 
       expect(app.lastFrame()).toEqualLines([
         expect.ignoreColor('Id      Name        Workspace  Group   Depends on'),
-        expect.ignoreColor(`${group.id.substring(0, 6)}  ${group.name}  group`),
+        expect.ignoreColor(`${group.id.substring(0, 6)}  ${group.name}`),
         expect.ignoreColor(`${tsk1.id.substring(0, 6)}  ${tsk1.name}       ${wks.name}        ${group.id.substring(0, 6)}`),
         expect.ignoreColor(`${tsk2.id.substring(0, 6)}  ${tsk2.name}       ${wks.name}        ${group.id.substring(0, 6)}`),
       ]);
