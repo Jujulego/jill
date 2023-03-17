@@ -1,3 +1,4 @@
+import { type Task, type TaskOptions } from '@jujulego/tasks';
 import { injectable } from 'inversify';
 import path from 'node:path';
 import { type Package } from 'normalize-package-data';
@@ -6,7 +7,8 @@ import { satisfies } from 'semver';
 import { GitService } from '@/src/commons/git.service';
 import { container, lazyInject, lazyInjectNamed } from '@/src/inversify.config';
 import { Logger } from '@/src/commons/logger.service';
-import { CommandTask, type CommandOptions } from '@/src/tasks/command-task';
+import { CommandTask } from '@/src/tasks/command-task';
+import { ScriptTask } from '@/src/tasks/script-task';
 import { combine } from '@/src/utils/streams';
 
 import { CURRENT } from './constants';
@@ -15,9 +17,8 @@ import { type Project } from './project';
 // Types
 export type WorkspaceDepsMode = 'all' | 'prod' | 'none';
 
-export interface WorkspaceRunOptions extends Omit<CommandOptions, 'logger'> {
+export interface WorkspaceRunOptions extends Omit<TaskOptions, 'logger'> {
   buildDeps?: WorkspaceDepsMode;
-  loggerLabel?: string;
 }
 
 // Class
@@ -26,7 +27,7 @@ export class Workspace {
   // Attributes
   private readonly _logger: Logger;
   private readonly _affectedCache = new Map<string, Promise<boolean>>();
-  private readonly _tasks = new Map<string, CommandTask>();
+  private readonly _tasks = new Map<string, ScriptTask>();
 
   @lazyInject(GitService)
   private readonly _git: GitService;
@@ -54,7 +55,7 @@ export class Workspace {
     return !this.version || satisfies(this.version, range);
   }
 
-  private async _buildDependencies(task: CommandTask, deps: WorkspaceDepsMode = 'all') {
+  private async _buildDependencies(task: Task, deps: WorkspaceDepsMode = 'all') {
     // Generators
     const generators: AsyncGenerator<Workspace, void>[] = [];
 
@@ -140,11 +141,9 @@ export class Workspace {
   }
 
   async exec(command: string, args: string[] = [], opts: WorkspaceRunOptions = {}): Promise<CommandTask> {
-    const { loggerLabel: label = `${this.name}$${command}` } = opts;
-
     const task = new CommandTask(this, { command, args }, {
       ...opts,
-      logger: this._logger.child({ label }),
+      logger: this._logger.child({ label: `${this.name}$${command}` }),
     });
 
     await this._buildDependencies(task, opts.buildDeps);
@@ -152,17 +151,22 @@ export class Workspace {
     return task;
   }
 
-  async run(script: string, args: string[] = [], opts: WorkspaceRunOptions = {}): Promise<CommandTask> {
+  async run(script: string, args: string[] = [], opts: WorkspaceRunOptions = {}): Promise<ScriptTask | null> {
+    // Script not found
+    if (!this.getScript(script)) {
+      return null;
+    }
+
+    // Create task if it doesn't exist yet
     let task = this._tasks.get(script);
 
     if (!task) {
-      const pm = await this.project.packageManager();
-
-      task = await this.exec(pm, ['run', script, ...args], {
+      task = new ScriptTask(this, script, args, {
         ...opts,
-        loggerLabel: `${this.name}#${script}`
+        logger: this._logger.child({ label: `${this.name}#${script}` }),
       });
-      task.context.script = script;
+
+      await this._buildDependencies(task, opts.buildDeps);
 
       this._tasks.set(script, task);
     }
@@ -170,15 +174,19 @@ export class Workspace {
     return task;
   }
 
-  async build(opts?: WorkspaceRunOptions): Promise<CommandTask | null> {
-    const { scripts = {} } = this.manifest;
+  async build(opts?: WorkspaceRunOptions): Promise<ScriptTask | null> {
+    const task = await this.run('build', [], opts);
 
-    if (!scripts.build) {
+    if (!task) {
       this._logger.warn('Will not be built (no build script)');
-      return null;
     }
 
-    return await this.run('build', [], opts);
+    return task;
+  }
+
+  getScript(script: string): string | null {
+    const { scripts = {} } = this.manifest;
+    return scripts[script] || null;
   }
 
   toJSON() {
