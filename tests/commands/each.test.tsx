@@ -78,6 +78,7 @@ describe('jill each', () => {
 
     // Run command
     const prom = yargs.command(command)
+      .fail(false)
       .parse('each cmd -- --arg');
 
     // should create script task then add it to manager
@@ -127,6 +128,7 @@ describe('jill each', () => {
 
     // Run command
     const prom = yargs.command(command)
+      .fail(false)
       .parse('each --deps-mode prod cmd -- --arg');
 
     // should create script task than add it to manager
@@ -183,6 +185,7 @@ describe('jill each', () => {
 
       // Run command
       const prom = yargs.command(command)
+        .fail(false)
         .parse('each --private cmd -- --arg');
 
       // should create script task than add it to manager
@@ -225,6 +228,7 @@ describe('jill each', () => {
 
       // Run command
       const prom = yargs.command(command)
+        .fail(false)
         .parse('each --no-private cmd -- --arg');
 
       // should create script task than add it to manager
@@ -272,6 +276,7 @@ describe('jill each', () => {
 
       // Run command
       const prom = yargs.command(command)
+        .fail(false)
         .parse('each --affected test cmd -- --arg');
 
       // should create script task than add it to manager

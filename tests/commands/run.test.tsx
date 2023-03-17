@@ -61,6 +61,7 @@ describe('jill run', () => {
   it('should run command in current workspace', async () => {
     // Run command
     const prom = yargs.command(command)
+      .fail(false)
       .parse('run -w wks cmd -- --arg');
 
     await flushPromises();
@@ -86,6 +87,7 @@ describe('jill run', () => {
   it('should use given dependency selection mode', async () => {
     // Run command
     const prom = yargs.command(command)
+      .fail(false)
       .parse('run -w wks --deps-mode prod cmd -- --arg');
 
     await flushPromises();

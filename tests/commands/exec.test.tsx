@@ -23,12 +23,17 @@ let bed: TestBed;
 let wks: Workspace;
 let task: TestCommandTask;
 
+beforeAll(() => {
+  container.snapshot();
+});
+
 beforeEach(async () => {
+  container.restore();
   container.snapshot();
 
   bed = new TestBed();
   wks = bed.addWorkspace('wks');
-  task = new TestCommandTask(wks, { command: 'cmd', args: [] }, { logger: spyLogger });
+  task = new TestCommandTask(wks, { command: 'cmd', args: ['--arg'] }, { logger: spyLogger });
 
   app = render(<Layout />);
   container.rebind(INK_APP).toConstantValue(wrapInkTestApp(app));
@@ -47,7 +52,6 @@ beforeEach(async () => {
 });
 
 afterEach(() => {
-  container.restore();
   cleanup();
 });
 
@@ -56,6 +60,7 @@ describe('jill exec', () => {
   it('should run command in current workspace', async () => {
     // Run command
     const prom = yargs.command(command)
+      .fail(false)
       .parse('-w wks cmd -- --arg');
 
     await flushPromises();
@@ -65,7 +70,7 @@ describe('jill exec', () => {
     expect(manager.add).toHaveBeenCalledWith(task);
 
     // should print task spinner
-    expect(app.lastFrame()).toEqual(expect.ignoreColor(/^. Running cmd in wks$/));
+    expect(app.lastFrame()).toEqual(expect.ignoreColor(/^. cmd --arg/));
 
     // complete task
     jest.spyOn(task, 'status', 'get').mockReturnValue('done');
@@ -75,12 +80,13 @@ describe('jill exec', () => {
     await prom;
 
     // should print task completed
-    expect(app.lastFrame()).toEqual(expect.ignoreColor(`${symbols.success} Running cmd in wks (took 100ms)`));
+    expect(app.lastFrame()).toEqual(expect.ignoreColor(`${symbols.success} cmd --arg (took 100ms)`));
   });
 
   it('should use given dependency selection mode', async () => {
     // Run command
     const prom = yargs.command(command)
+      .fail(false)
       .parse('exec -w wks --deps-mode prod cmd -- --arg');
 
     await flushPromises();
