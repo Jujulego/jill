@@ -10,6 +10,7 @@ import { ESC } from './ink-screen';
 export const spyLogger: ILogger = {
   debug: jest.fn(),
   verbose: jest.fn(),
+  info: jest.fn(),
   warn: jest.fn(),
   error: jest.fn(),
 };

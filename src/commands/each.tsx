@@ -123,12 +123,14 @@ export class EachCommand extends TaskCommand<IEachCommandArgs> {
           buildDeps: args.depsMode,
         });
 
-        yield task;
-        empty = false;
+        if (task) {
+          yield task;
+          empty = false;
+        }
       }
 
       if (empty) {
-        this.spinner.failed('No workspace found !');
+        this.spinner.failed('No matching workspace found !');
         return process.exit(1);
       }
     } finally {
