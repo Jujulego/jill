@@ -61,6 +61,7 @@ export * from './ui/workspace-tree';
 
 // Utils
 export * from './utils/events';
+export * from './utils/exit';
 export * from './utils/import';
 export * from './utils/json';
 export * from './utils/streams';

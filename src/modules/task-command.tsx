@@ -13,6 +13,7 @@ import TaskManagerSpinner from '@/src/ui/task-manager-spinner';
 import { printJson } from '@/src/utils/json';
 
 import { InkCommand } from './ink-command';
+import { ExitException } from '@/src/utils/exit';
 
 // Types
 export interface ITaskCommandArgs {
@@ -79,7 +80,7 @@ export abstract class TaskCommand<A = unknown> extends InkCommand<A> {
       const result = await waitFor(tasks, 'finished');
 
       if (result.failed > 0) {
-        return process.exit(1);
+        throw new ExitException(1);
       }
     }
   }

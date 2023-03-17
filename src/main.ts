@@ -11,6 +11,7 @@ import { PluginLoaderService } from '@/src/modules/plugin-loader.service';
 
 // @ts-ignore: Outside of typescript's rootDir in build
 import pkg from '../package.json';
+import { ExitException } from '@/src/utils/exit';
 
 // Bootstrap
 (async () => {
@@ -43,6 +44,6 @@ import pkg from '../package.json';
     const logger = container.get(Logger);
     logger.error(err);
 
-    process.exit(1);
+    process.exit(err instanceof ExitException ? err.code : err);
   }
 })();

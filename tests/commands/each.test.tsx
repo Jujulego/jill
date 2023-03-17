@@ -11,8 +11,9 @@ import { TASK_MANAGER } from '@/src/tasks/task-manager.config';
 import Layout from '@/src/ui/layout';
 
 import { TestBed } from '@/tools/test-bed';
-import { TestCommandTask } from '@/tools/test-tasks';
+import { TestScriptTask } from '@/tools/test-tasks';
 import { flushPromises, spyLogger, wrapInkTestApp } from '@/tools/utils';
+import { ExitException } from '@/src/utils/exit';
 
 // Setup
 let app: ReturnType<typeof render>;
@@ -22,7 +23,12 @@ let spinner: SpinnerService;
 
 let bed: TestBed;
 
+beforeAll(() => {
+  container.snapshot();
+});
+
 beforeEach(async () => {
+  container.restore();
   container.snapshot();
 
   jest.resetAllMocks();
@@ -47,7 +53,6 @@ beforeEach(async () => {
 
 afterEach(() => {
   cleanup();
-  container.restore();
 });
 
 // Tests
@@ -62,8 +67,8 @@ describe('jill each', () => {
 
     // Setup tasks
     const tasks = [
-      new TestCommandTask(workspaces[0], { command: 'cmd', args: ['--arg'] }, { logger: spyLogger }),
-      new TestCommandTask(workspaces[1], { command: 'cmd', args: ['--arg'] }, { logger: spyLogger }),
+      new TestScriptTask(workspaces[0], 'cmd', ['--arg'], { logger: spyLogger }),
+      new TestScriptTask(workspaces[1], 'cmd', ['--arg'], { logger: spyLogger }),
     ];
 
     jest.spyOn(manager, 'tasks', 'get').mockReturnValue(tasks);
@@ -114,11 +119,10 @@ describe('jill each', () => {
 
     // Setup tasks
     const tasks = [
-      new TestCommandTask(workspaces[0], { command: 'cmd', args: ['--arg'] }, { logger: spyLogger }),
+      new TestScriptTask(workspaces[0], 'cmd', ['--arg'], { logger: spyLogger }),
     ];
 
     jest.spyOn(manager, 'tasks', 'get').mockReturnValue(tasks);
-
     jest.spyOn(workspaces[0], 'run').mockResolvedValue(tasks[0]);
 
     // Run command
@@ -142,18 +146,19 @@ describe('jill each', () => {
   });
 
   it('should exit 1 if no matching workspace is found', async () => {
-    jest.spyOn(process, 'exit').mockImplementation();
     jest.spyOn(spinner, 'failed');
 
     // Setup tasks
     jest.spyOn(manager, 'tasks', 'get').mockReturnValue([]);
 
     // Run command
-    await yargs.command(command)
-      .parse('each --deps-mode prod cmd -- --arg');
+    await expect(
+      yargs.command(command)
+        .fail(false)
+        .parse('each --deps-mode prod cmd -- --arg')
+    ).rejects.toEqual(new ExitException(1));
 
-    expect(spinner.failed).toHaveBeenCalledWith('No workspace found !');
-    expect(process.exit).toHaveBeenCalledWith(1);
+    expect(spinner.failed).toHaveBeenCalledWith('No matching workspace found !');
   });
 
   describe('private filter', () => {
@@ -167,8 +172,8 @@ describe('jill each', () => {
 
       // Setup tasks
       const tasks = [
-        new TestCommandTask(workspaces[0], { command: 'cmd', args: ['--arg'] }, { logger: spyLogger }),
-        new TestCommandTask(workspaces[1], { command: 'cmd', args: ['--arg'] }, { logger: spyLogger }),
+        new TestScriptTask(workspaces[0], 'cmd', ['--arg'], { logger: spyLogger }),
+        new TestScriptTask(workspaces[1], 'cmd', ['--arg'], { logger: spyLogger }),
       ];
 
       jest.spyOn(manager, 'tasks', 'get').mockReturnValue(tasks);
@@ -209,8 +214,8 @@ describe('jill each', () => {
 
       // Setup tasks
       const tasks = [
-        new TestCommandTask(workspaces[0], { command: 'cmd', args: ['--arg'] }, { logger: spyLogger }),
-        new TestCommandTask(workspaces[1], { command: 'cmd', args: ['--arg'] }, { logger: spyLogger }),
+        new TestScriptTask(workspaces[0], 'cmd', ['--arg'], { logger: spyLogger }),
+        new TestScriptTask(workspaces[1], 'cmd', ['--arg'], { logger: spyLogger }),
       ];
 
       jest.spyOn(manager, 'tasks', 'get').mockReturnValue(tasks);
@@ -253,8 +258,8 @@ describe('jill each', () => {
 
       // Setup tasks
       const tasks = [
-        new TestCommandTask(workspaces[0], { command: 'cmd', args: ['--arg'] }, { logger: spyLogger }),
-        new TestCommandTask(workspaces[1], { command: 'cmd', args: ['--arg'] }, { logger: spyLogger }),
+        new TestScriptTask(workspaces[0], 'cmd', ['--arg'], { logger: spyLogger }),
+        new TestScriptTask(workspaces[1], 'cmd', ['--arg'], { logger: spyLogger }),
       ];
 
       jest.spyOn(manager, 'tasks', 'get').mockReturnValue(tasks);
