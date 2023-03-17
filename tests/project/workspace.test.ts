@@ -15,20 +15,27 @@ jest.mock('node:fs/promises', () => fs.promises);
 // Setup
 let bed: TestBed;
 let wksA: Workspace;
+let wksB: Workspace;
+let wksC: Workspace;
 let prjDir: string;
 
 let git: GitService;
 
+beforeAll(() => {
+  container.snapshot();
+});
+
 beforeEach(async () => {
+  container.restore();
   container.snapshot();
 
   // Build fake project
   bed = new TestBed();
 
-  const wksC = bed.addWorkspace('wks-c', { scripts: { build: 'tsc' }});
-  const wksB = bed.addWorkspace('wks-b', { scripts: { build: 'tsc' }})
+  wksC = bed.addWorkspace('wks-c', { scripts: { build: 'tsc' }});
+  wksB = bed.addWorkspace('wks-b', { scripts: { build: 'tsc' }})
     .addDependency(wksC, true);
-  wksA = bed.addWorkspace('wks-a')
+  wksA = bed.addWorkspace('wks-a', { scripts: { test: 'jest' }})
     .addDependency(wksB)
     .addDependency(wksC, true);
 
@@ -41,7 +48,6 @@ beforeEach(async () => {
 });
 
 afterEach(() => {
-  container.restore();
   vol.reset();
 });
 
@@ -108,21 +114,18 @@ describe('Workspace.exec', () => {
       cwd: path.resolve('test/wks-a'),
       dependencies: expect.arrayContaining([
         expect.objectContaining({
-          cmd: 'yarn',
-          args: ['run', 'build'],
-          cwd: path.resolve('test/wks-b'),
+          script: 'build',
+          workspace: wksB,
           dependencies: [
             expect.objectContaining({
-              cmd: 'yarn',
-              args: ['run', 'build'],
-              cwd: path.resolve('test/wks-c')
+              script: 'build',
+              workspace: wksC,
             })
           ]
         }),
         expect.objectContaining({
-          cmd: 'yarn',
-          args: ['run', 'build'],
-          cwd: path.resolve('test/wks-c')
+          script: 'build',
+          workspace: wksC,
         })
       ])
     }));
@@ -142,32 +145,28 @@ describe('Workspace.run', () => {
 
     // Check up tree
     expect(task).toEqual(expect.objectContaining({
-      cmd: 'yarn',
-      args: ['run', 'test'],
-      cwd: path.resolve('test/wks-a'),
+      script: 'test',
+      workspace: wksA,
       dependencies: expect.arrayContaining([
         expect.objectContaining({
-          cmd: 'yarn',
-          args: ['run', 'build'],
-          cwd: path.resolve('test/wks-b'),
+          script: 'build',
+          workspace: wksB,
           dependencies: [
             expect.objectContaining({
-              cmd: 'yarn',
-              args: ['run', 'build'],
-              cwd: path.resolve('test/wks-c')
+              script: 'build',
+              workspace: wksC,
             })
           ]
         }),
         expect.objectContaining({
-          cmd: 'yarn',
-          args: ['run', 'build'],
-          cwd: path.resolve('test/wks-c')
+          script: 'build',
+          workspace: wksC,
         })
       ])
     }));
 
     // Both workspace 'wks-c' task should be the same
-    expect(task.dependencies[1]).toBe(task.dependencies[0].dependencies[0]);
+    expect(task!.dependencies[1]).toBe(task!.dependencies[0].dependencies[0]);
     expect(bed.project.packageManager).toHaveBeenCalled();
   });
 });
