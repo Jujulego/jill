@@ -12,7 +12,7 @@ import { TASK_MANAGER } from '@/src/tasks/task-manager.config';
 import Layout from '@/src/ui/layout';
 
 import { TestBed } from '@/tools/test-bed';
-import { TestParallelGroup, TestCommandTask } from '@/tools/test-tasks';
+import { TestParallelGroup, TestScriptTask } from '@/tools/test-tasks';
 import { flushPromises, spyLogger, wrapInkTestApp } from '@/tools/utils';
 
 // Setup
@@ -25,15 +25,20 @@ let bed: TestBed;
 let wks: Workspace;
 let task: TestParallelGroup;
 
+beforeAll(() => {
+  container.snapshot();
+});
+
 beforeEach(async () => {
+  container.restore();
   container.snapshot();
 
   bed = new TestBed();
   wks = bed.addWorkspace('wks');
 
   task = new TestParallelGroup('Test group', {}, { logger: spyLogger });
-  task.add(new TestCommandTask(wks, { command: 'test1', args: [] }, { logger: spyLogger }));
-  task.add(new TestCommandTask(wks, { command: 'test2', args: [] }, { logger: spyLogger }));
+  task.add(new TestScriptTask(wks, 'test1', [], { logger: spyLogger }));
+  task.add(new TestScriptTask(wks, 'test2', [], { logger: spyLogger }));
 
   app = render(<Layout />);
   container.rebind(INK_APP).toConstantValue(wrapInkTestApp(app));
@@ -53,7 +58,6 @@ beforeEach(async () => {
 });
 
 afterEach(() => {
-  container.restore();
   cleanup();
 });
 
@@ -62,6 +66,7 @@ describe('jill group', () => {
   it('should run all tasks in current workspace', async () => {
     // Run command
     const prom = yargs.command(command)
+      .fail(false)
       .parse('group -w wks test1 // test2');
 
     await flushPromises();
@@ -82,7 +87,7 @@ describe('jill group', () => {
     // Complete tasks
     jest.spyOn(task, 'status', 'get').mockReturnValue('done');
 
-    for (const child of task.tasks as TestCommandTask[]) {
+    for (const child of task.tasks as TestScriptTask[]) {
       jest.spyOn(child, 'status', 'get').mockReturnValue('done');
 
       child.emit('status.done', { status: 'done', previous: 'running' });
@@ -105,6 +110,7 @@ describe('jill group', () => {
   it('should use given dependency mode', async () => {
     // Run command
     const prom = yargs.command(command)
+      .fail(false)
       .parse('group -w wks --deps-mode prod test1 // test2');
 
     await flushPromises();
@@ -124,7 +130,7 @@ describe('jill group', () => {
     // Complete tasks
     jest.spyOn(task, 'status', 'get').mockReturnValue('done');
 
-    for (const child of task.tasks as TestCommandTask[]) {
+    for (const child of task.tasks as TestScriptTask[]) {
       jest.spyOn(child, 'status', 'get').mockReturnValue('done');
 
       child.emit('status.done', { status: 'done', previous: 'running' });
