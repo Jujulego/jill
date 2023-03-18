@@ -2,7 +2,6 @@ import { SpawnTask, type SpawnTaskOptions, type TaskContext } from '@jujulego/ta
 
 import { type Workspace } from '@/src/project/workspace';
 import { linesFrom } from '@/src/utils/events';
-import { type CommandLine } from '@/src/utils/string';
 
 // Types
 export interface CommandContext extends TaskContext {
@@ -10,7 +9,9 @@ export interface CommandContext extends TaskContext {
   command: string;
 }
 
-export type CommandOptions = Omit<SpawnTaskOptions, 'cwd'>;
+export interface CommandOptions extends Omit<SpawnTaskOptions, 'cwd'> {
+  superCommand?: string;
+}
 
 // Utils
 export function isCommandCtx(ctx: Readonly<TaskContext>): ctx is Readonly<CommandContext> {
@@ -20,8 +21,14 @@ export function isCommandCtx(ctx: Readonly<TaskContext>): ctx is Readonly<Comman
 // Class
 export class CommandTask extends SpawnTask<CommandContext> {
   // Constructor
-  constructor(readonly workspace: Workspace, { command, args }: CommandLine, opts: CommandOptions = {}) {
-    super(command, args, { workspace, command }, {
+  constructor(readonly workspace: Workspace, command: string, args: string[], opts: CommandOptions = {}) {
+    const cmd = opts.superCommand ?? command;
+
+    if (opts.superCommand) {
+      args = [command, ...args];
+    }
+
+    super(cmd, args, { workspace, command }, {
       ...opts,
       cwd: workspace.cwd,
       env: {

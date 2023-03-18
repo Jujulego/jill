@@ -41,19 +41,11 @@ export class ScriptTask extends GroupTask<ScriptContext> {
 
     // Create command task for script
     const pm = await this.workspace.project.packageManager();
+    const [command, ...commandArgs] = splitCommandLine(line);
 
-    let command = splitCommandLine(line);
-    command.args.push(...args);
-
-    if (pm === 'yarn') {
-      command = {
-        command: 'yarn',
-        args: [command.command, ...command.args]
-      };
-    }
-
-    return new CommandTask(this.workspace, command, {
-      logger: this._logger
+    return new CommandTask(this.workspace, command, [...commandArgs, ...args], {
+      logger: this._logger,
+      superCommand: pm === 'yarn' ? 'yarn' : undefined,
     });
   }
 

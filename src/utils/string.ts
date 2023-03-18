@@ -1,15 +1,9 @@
-// Types
-export interface CommandLine {
-  command: string;
-  args: string[];
-}
-
 // Utils
 export function capitalize(txt: string): string {
   return txt.charAt(0).toUpperCase() + txt.substring(1).toLowerCase();
 }
 
-export function splitCommandLine(line: string): CommandLine {
+export function splitCommandLine(line: string): string[] {
   line = line.trim();
 
   const parts: string[] = [];
@@ -36,6 +30,5 @@ export function splitCommandLine(line: string): CommandLine {
 
   parts.push(line.slice(last));
 
-  const [command, ...args] = parts;
-  return { command, args };
+  return parts;
 }

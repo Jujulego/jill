@@ -141,7 +141,7 @@ export class Workspace {
   }
 
   async exec(command: string, args: string[] = [], opts: WorkspaceRunOptions = {}): Promise<CommandTask> {
-    const task = new CommandTask(this, { command, args }, {
+    const task = new CommandTask(this, command, args, {
       ...opts,
       logger: this._logger.child({ label: `${this.name}$${command}` }),
     });

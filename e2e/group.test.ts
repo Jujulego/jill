@@ -2,7 +2,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 
 import { TestBed } from '@/tools/test-bed';
-import { fileExists, noColor } from '@/tools/utils';
+import { fileExists } from '@/tools/utils';
 
 import { jill, withPackageManager } from './utils';
 
@@ -207,7 +207,7 @@ describe('jill group', () => void withPackageManager((packageManager) => {
       id: expect.stringMatching(/[0-9a-f]{32}/),
       groupId: plan[1].id,
       context: {
-        command: packageManager === 'yarn' ? 'yarn' : 'node',
+        command: 'node',
         workspace: {
           name: 'wks-c',
           cwd: path.join(prjDir, 'wks-c')
@@ -232,7 +232,7 @@ describe('jill group', () => void withPackageManager((packageManager) => {
       id: expect.stringMatching(/[0-9a-f]{32}/),
       groupId: plan[3].id,
       context: {
-        command: packageManager === 'yarn' ? 'yarn' : 'node',
+        command: 'node',
         workspace: {
           name: 'wks-c',
           cwd: path.join(prjDir, 'wks-c')

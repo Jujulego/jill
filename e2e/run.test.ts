@@ -128,7 +128,7 @@ describe('jill run', () => void withPackageManager((packageManager) => {
       id: expect.stringMatching(/[0-9a-f]{32}/),
       groupId: plan[0].id,
       context: {
-        command: packageManager === 'yarn' ? 'yarn' : 'node',
+        command: 'node',
         workspace: {
           name: 'wks-c',
           cwd: path.join(prjDir, 'wks-c')
@@ -155,7 +155,7 @@ describe('jill run', () => void withPackageManager((packageManager) => {
       id: expect.stringMatching(/[0-9a-f]{32}/),
       groupId: plan[2].id,
       context: {
-        command: packageManager === 'yarn' ? 'yarn' : 'node',
+        command: 'node',
         workspace: {
           name: 'wks-b',
           cwd: path.join(prjDir, 'wks-b')

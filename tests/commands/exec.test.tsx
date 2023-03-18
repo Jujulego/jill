@@ -33,7 +33,7 @@ beforeEach(async () => {
 
   bed = new TestBed();
   wks = bed.addWorkspace('wks');
-  task = new TestCommandTask(wks, { command: 'cmd', args: ['--arg'] }, { logger: spyLogger });
+  task = new TestCommandTask(wks, 'cmd', ['--arg'], { logger: spyLogger });
 
   app = render(<Layout />);
   container.rebind(INK_APP).toConstantValue(wrapInkTestApp(app));
