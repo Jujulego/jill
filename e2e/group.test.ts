@@ -48,7 +48,7 @@ describe('jill group', () => void withPackageManager((packageManager) => {
   // Tests
   describe('parallel group', () => {
     it('should run wks-c both test1 and test2 scripts in parallel', async () => {
-      const res = await jill(['group', '-w', 'wks-c', 'test1 // test2'], { cwd: prjDir });
+      const res = await jill('group -w wks-c "test1 // test2"', { cwd: prjDir });
 
       // Check jill output
       expect(res.code).toBe(0);
@@ -67,7 +67,7 @@ describe('jill group', () => void withPackageManager((packageManager) => {
     });
 
     it('should run wks-c both test1 and fails scripts in parallel and exit 1', async () => {
-      const res = await jill(['group', '-w', 'wks-c', 'test1 // fails'], { cwd: prjDir });
+      const res = await jill('group -w wks-c "test1 // fails"', { cwd: prjDir });
 
       // Check jill output
       expect(res.code).toBe(1);
@@ -86,7 +86,7 @@ describe('jill group', () => void withPackageManager((packageManager) => {
     });
 
     it('should run wks-c build then run wks-b both test1 and test2 scripts in parallel', async () => {
-      const res = await jill(['group', '-w', 'wks-b', 'test1 // test2'], { cwd: prjDir });
+      const res = await jill('group -w wks-b "test1 // test2"', { cwd: prjDir });
 
       // Check jill output
       expect(res.code).toBe(0);
@@ -112,7 +112,7 @@ describe('jill group', () => void withPackageManager((packageManager) => {
 
   describe('sequence group', () => {
     it('should run wks-c both test1 and test2 scripts in sequence', async () => {
-      const res = await jill(['group', '-w', 'wks-c', 'test1 -> test2'], { cwd: prjDir });
+      const res = await jill('group -w wks-c "test1 -> test2"', { cwd: prjDir });
 
       // Check jill output
       expect(res.code).toBe(0);
@@ -131,7 +131,7 @@ describe('jill group', () => void withPackageManager((packageManager) => {
     });
 
     it('should run wks-c both test1 and fails scripts in sequence and exit 1', async () => {
-      const res = await jill(['group', '-w', 'wks-c', 'test1 -> fails'], { cwd: prjDir });
+      const res = await jill('group -w wks-c "test1 -> fails"', { cwd: prjDir });
 
       // Check jill output
       expect(res.code).toBe(1);
@@ -150,7 +150,7 @@ describe('jill group', () => void withPackageManager((packageManager) => {
     });
 
     it('should run wks-c build then run wks-b both test1 and test2 scripts in sequence', async () => {
-      const res = await jill(['group', '-w', 'wks-b', 'test1 -> test2'], { cwd: prjDir });
+      const res = await jill('group -w wks-b "test1 -> test2"', { cwd: prjDir });
 
       // Check jill output
       expect(res.code).toBe(0);
@@ -175,7 +175,7 @@ describe('jill group', () => void withPackageManager((packageManager) => {
   });
 
   it('should print task plan and do not run any script', async () => {
-    const res = await jill(['group', '-w', 'wks-c', '--plan', '--planMode', 'json', 'test1 -> test2'], { cwd: prjDir });
+    const res = await jill('group -w wks-c --plan --plan-mode json "test1 -> test2"', { cwd: prjDir });
 
     // Check jill output
     expect(res.code).toBe(0);

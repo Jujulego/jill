@@ -43,7 +43,7 @@ describe('jill run', () => void withPackageManager((packageManager) => {
 
   // Tests
   it('should run wks-c start script', async () => {
-    const res = await jill(['run', '-w', 'wks-c', 'start'], { cwd: prjDir });
+    const res = await jill('run -w wks-c start', { cwd: prjDir });
 
     // Check jill output
     expect(res.code).toBe(0);
@@ -59,7 +59,7 @@ describe('jill run', () => void withPackageManager((packageManager) => {
   });
 
   it('should run wks-c fails script and exit 1', async () => {
-    const res = await jill(['run', '-w', 'wks-c', 'fails'], { cwd: prjDir });
+    const res = await jill('run -w wks-c fails', { cwd: prjDir });
 
     // Check jill output
     expect(res.code).toBe(1);
@@ -71,7 +71,7 @@ describe('jill run', () => void withPackageManager((packageManager) => {
   });
 
   it('should exit 1 if script does not exists', async () => {
-    const res = await jill(['run', '-w', 'wks-c', 'miss'], { cwd: prjDir });
+    const res = await jill('run -w wks-c miss', { cwd: prjDir });
 
     // Check jill output
     expect(res.code).toBe(1);
@@ -82,7 +82,7 @@ describe('jill run', () => void withPackageManager((packageManager) => {
   });
 
   it('should run wks-b start script and build script', async () => {
-    const res = await jill(['run', '-w', 'wks-b', 'start'], { cwd: prjDir });
+    const res = await jill('run -w wks-b start', { cwd: prjDir });
 
     // Check jill output
     expect(res.code).toBe(0);
@@ -103,7 +103,7 @@ describe('jill run', () => void withPackageManager((packageManager) => {
   });
 
   it('should print task plan and do not run any script', async () => {
-    const res = await jill(['run', '-w', 'wks-b', '--plan', '--planMode', 'json', 'start'], { cwd: prjDir });
+    const res = await jill('run -w wks-b --plan --plan-mode json start', { cwd: prjDir });
 
     // Check jill plan
     expect(res.code).toBe(0);

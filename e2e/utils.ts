@@ -4,6 +4,7 @@ import path from 'node:path';
 import { type PackageManager } from '@/src/project/project';
 
 import { InkScreen } from '@/tools/ink-screen';
+import { splitCommandLine } from '@/src/utils/string';
 
 // Constants
 export const MAIN = path.join(__dirname, '../bin/jill.js');
@@ -18,12 +19,19 @@ export interface SpawnResult {
 export interface SpawnOptions {
   cwd?: string;
   env?: Record<string, string>;
+  removeCotes?: boolean;
 }
 
 // Utils
-export function jill(args: ReadonlyArray<string>, opts: SpawnOptions = {}): Promise<SpawnResult> {
+export function jill(args: string, opts: SpawnOptions = {}): Promise<SpawnResult> {
   return new Promise<SpawnResult>((resolve, reject) => {
-    const proc = cp.fork(MAIN, args, {
+    let argv = splitCommandLine(args);
+
+    if (!opts.removeCotes) {
+      argv = argv.map(arg => arg.replace(/^["'](.+)["']$/, '$1'));
+    }
+
+    const proc = cp.fork(MAIN, argv, {
       cwd: opts.cwd,
       stdio: 'overlapped',
       env: process.env

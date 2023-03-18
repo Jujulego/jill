@@ -48,7 +48,7 @@ describe('jill each', () => void withPackageManager((packageManager) => {
 
   // Tests
   it('should run start script on each workspace (and build dependencies)', async () => {
-    const res = await jill(['each', 'start'], { cwd: prjDir });
+    const res = await jill('each start', { cwd: prjDir });
 
     // Check jill output
     expect(res.code).toBe(0);
@@ -79,7 +79,7 @@ describe('jill each', () => void withPackageManager((packageManager) => {
   });
 
   it('should run fails script on each workspace (and build dependencies)', async () => {
-    const res = await jill(['each', 'fails'], { cwd: prjDir });
+    const res = await jill('each fails', { cwd: prjDir });
 
     // Check jill output
     expect(res.code).toBe(1);
@@ -97,7 +97,7 @@ describe('jill each', () => void withPackageManager((packageManager) => {
   });
 
   it('should exit 1 if no workspace is found', async () => {
-    const res = await jill(['each', 'toto'], { cwd: prjDir });
+    const res = await jill('each toto', { cwd: prjDir });
 
     // Check jill output
     expect(res.code).toBe(1);
@@ -107,7 +107,7 @@ describe('jill each', () => void withPackageManager((packageManager) => {
   });
 
   it('should print task plan and do not run any script', async () => {
-    const res = await jill(['each', '--plan', '--planMode', 'json', 'start'], { cwd: prjDir });
+    const res = await jill('each --plan --plan-mode json start', { cwd: prjDir });
 
     // Check jill output
     expect(res.code).toBe(0);

@@ -32,7 +32,7 @@ class TestCommand {
 
 Command({
   command: 'test',
-  describe: 'Plugin test command',
+  describe: 'Plugin test command'
 })(TestCommand);
 
 // Plugin
@@ -55,7 +55,7 @@ module.exports = { default: TestPlugin };
 
   // Tests
   it('should run command loaded from plugin file', async () => {
-    const res = await jill(['test'], { cwd: prjDir });
+    const res = await jill('test', { cwd: prjDir });
 
     expect(res.stdout).toEqual([
       'this is a test plugin !'

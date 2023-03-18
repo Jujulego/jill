@@ -127,11 +127,11 @@ export class TestBed {
     // Run package manager
     switch (pm) {
       case 'npm':
-        await shell('npm', ['install'], { cwd: prjDir });
+        await shell('npm install', { cwd: prjDir });
         break;
 
       case 'yarn':
-        await shell('yarn', ['install', '--no-immutable'], { cwd: prjDir });
+        await shell('yarn install --no-immutable', { cwd: prjDir });
         break;
     }
 
