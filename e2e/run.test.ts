@@ -2,7 +2,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 
 import { TestBed } from '@/tools/test-bed';
-import { fileExists, noColor } from '@/tools/utils';
+import { fileExists } from '@/tools/utils';
 
 import { withPackageManager, jill } from './utils';
 
@@ -87,11 +87,7 @@ describe('jill run', () => void withPackageManager((packageManager) => {
     // Check jill output
     expect(res.code).toBe(0);
 
-    const screen = res.screen.screen.split('\n')
-      .filter((line) => !noColor(line).startsWith('[wks-c#build]'))
-      .filter((line) => !noColor(line).startsWith('[wks-b#start]'));
-
-    expect(screen).toMatchLines([
+    expect(res.screen.screen).toMatchLines([
       expect.ignoreColor(/^. Running build in wks-c \(took [0-9.]+m?s\)$/),
       expect.ignoreColor(/^ {2}.( yarn)? node -e "require\('node:fs'\).+ \(took [0-9.]+m?s\)$/),
       expect.ignoreColor(/^. Running start in wks-b \(took [0-9.]+m?s\)$/),
