@@ -19,7 +19,7 @@ export function isScriptCtx(ctx: Readonly<TaskContext>): ctx is Readonly<ScriptC
 // Class
 export class ScriptTask extends GroupTask<ScriptContext> {
   // Attributes
-  private _script: CommandTask;
+  private _task: CommandTask;
 
   // Constructor
   constructor(
@@ -53,22 +53,22 @@ export class ScriptTask extends GroupTask<ScriptContext> {
     const script = await this._runScript(this.script, this.args);
 
     if (!script) {
-      throw new Error(`No script ${this.script} in ${this.workspace}`);
+      throw new Error(`No script ${this.script} in ${this.workspace.name}`);
     }
 
     this.add(script);
-    this._script = script;
+    this._task = script;
   }
 
   protected async *_orchestrate(): AsyncGenerator<Task> {
-    if (!this._script) {
+    if (!this._task) {
       throw new Error('ScriptTask needs to be prepared. Call prepare before starting it');
     }
 
-    yield this._script;
+    yield this._task;
 
-    await waitFor(this._script, 'completed');
-    this.status = this._script.status;
+    await waitFor(this._task, 'completed');
+    this.status = this._task.status;
   }
 
   protected _stop(): void {
@@ -80,7 +80,7 @@ export class ScriptTask extends GroupTask<ScriptContext> {
   complexity(cache = new Map<string, number>()): number {
     let complexity = super.complexity(cache);
 
-    complexity += this._script.complexity(cache);
+    complexity += this._task.complexity(cache);
     cache.set(this.id, complexity);
 
     return complexity;
@@ -89,5 +89,9 @@ export class ScriptTask extends GroupTask<ScriptContext> {
   // Properties
   get project() {
     return this.workspace.project;
+  }
+
+  get task() {
+    return this._task;
   }
 }
