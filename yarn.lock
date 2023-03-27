@@ -1292,7 +1292,7 @@ __metadata:
     "@types/async-lock": 1.4.0
     "@types/jest": 29.5.0
     "@types/moo": 0.5.5
-    "@types/node": 16.18.19
+    "@types/node": 16.18.21
     "@types/normalize-package-data": 2.4.1
     "@types/react": 17.0.53
     "@types/semver": 7.3.13
@@ -1760,10 +1760,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:16.18.19":
-  version: 16.18.19
-  resolution: "@types/node@npm:16.18.19"
-  checksum: 83d7b5927d467776e1be906a3174180c4d7937fd4b8a21dded787fd148b6fe6bb5dfa4cbcf5976c489697205bf8101aebfde89e96793ca32b19873c9c770dcd0
+"@types/node@npm:16.18.21":
+  version: 16.18.21
+  resolution: "@types/node@npm:16.18.21"
+  checksum: 152e7976f30b4e599d37e5a92a0c62dbe0751a63dab1aef44a0c2db940fa6f79a23be9783886b6afe34aa20485679c6bdd7b787b304fdbb05e72326c95d2b255
   languageName: node
   linkType: hard
 
