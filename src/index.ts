@@ -28,6 +28,8 @@ export * from './project/workspace';
 // Services
 export * from './inversify.config';
 export * from './commons/spinner.service';
+export * from './tasks/command-task';
+export * from './tasks/script-task';
 export * from './tasks/task-expr.service';
 export * from './tasks/task-manager.config';
 
@@ -59,6 +61,8 @@ export { default as WorkspaceTree } from './ui/workspace-tree';
 export * from './ui/workspace-tree';
 
 // Utils
+export * from './utils/events';
+export * from './utils/exit';
 export * from './utils/import';
 export * from './utils/json';
 export * from './utils/streams';

@@ -1,9 +1,11 @@
-import { type Workspace } from '@/src/project/workspace';
+import { ParallelGroup, SequenceGroup } from '@jujulego/tasks';
+
 import { container } from '@/src/inversify.config';
+import { type Workspace } from '@/src/project/workspace';
+import { ScriptTask } from '@/src/tasks/script-task';
 import { type GroupNode, TaskExprService, type TaskNode } from '@/src/tasks/task-expr.service';
 
 import { TestBed } from '@/tools/test-bed';
-import { ParallelGroup, SequenceGroup, SpawnTask } from '@jujulego/tasks';
 
 // Setup
 let service: TaskExprService;
@@ -77,7 +79,7 @@ describe('TaskExprService.parse', () => {
 describe('TaskExprService.buildTask', () => {
   it('should use workspace to create simple task', async () => {
     const tree: TaskNode = { script: 'test' };
-    const task = new SpawnTask('test', [], { workspace: wks, script: 'test' });
+    const task = new ScriptTask(wks, 'test', []);
 
     jest.spyOn(wks, 'run').mockResolvedValue(task);
 
@@ -95,14 +97,14 @@ describe('TaskExprService.buildTask', () => {
       ]
     };
     jest.spyOn(wks, 'run')
-      .mockImplementation(async (script) => new SpawnTask(script, [], { workspace: wks, script }));
+      .mockImplementation(async (script) => new ScriptTask(wks, script, []));
 
     const group = await service.buildTask(tree, wks) as ParallelGroup;
 
     expect(group).toBeInstanceOf(ParallelGroup);
     expect(group.tasks).toEqual([
-      expect.objectContaining({ cmd: 'test1' }),
-      expect.objectContaining({ cmd: 'test2' }),
+      expect.objectContaining({ workspace: wks, script: 'test1' }),
+      expect.objectContaining({ workspace: wks, script: 'test2' }),
     ]);
 
     expect(wks.run).toHaveBeenCalledWith('test1', [], undefined);
@@ -118,14 +120,14 @@ describe('TaskExprService.buildTask', () => {
       ]
     };
     jest.spyOn(wks, 'run')
-      .mockImplementation(async (script) => new SpawnTask(script, [], { workspace: wks, script }));
+      .mockImplementation(async (script) => new ScriptTask(wks, script, []));
 
     const group = await service.buildTask(tree, wks) as SequenceGroup;
 
     expect(group).toBeInstanceOf(SequenceGroup);
     expect(group.tasks).toEqual([
-      expect.objectContaining({ cmd: 'test1' }),
-      expect.objectContaining({ cmd: 'test2' }),
+      expect.objectContaining({ workspace: wks, script: 'test1' }),
+      expect.objectContaining({ workspace: wks, script: 'test2' }),
     ]);
 
     expect(wks.run).toHaveBeenCalledWith('test1', [], undefined);

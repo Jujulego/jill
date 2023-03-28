@@ -11,6 +11,7 @@ import { ScriptsFilter } from '@/src/filters/scripts.filter';
 import { LoadProject } from '@/src/middlewares/load-project';
 import { LazyCurrentProject, type Project } from '@/src/project/project';
 import { type WorkspaceDepsMode } from '@/src/project/workspace';
+import { ExitException } from '@/src/utils/exit';
 
 // Types
 export interface IEachCommandArgs {
@@ -123,13 +124,15 @@ export class EachCommand extends TaskCommand<IEachCommandArgs> {
           buildDeps: args.depsMode,
         });
 
-        yield task;
-        empty = false;
+        if (task) {
+          yield task;
+          empty = false;
+        }
       }
 
       if (empty) {
-        this.spinner.failed('No workspace found !');
-        return process.exit(1);
+        this.spinner.failed('No matching workspace found !');
+        throw new ExitException(1);
       }
     } finally {
       this.spinner.stop();

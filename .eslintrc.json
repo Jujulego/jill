@@ -1,6 +1,7 @@
 {
   "parser": "@typescript-eslint/parser",
   "root": true,
+  "reportUnusedDisableDirectives": true,
   "plugins": [
     "@typescript-eslint",
     "workspaces"
@@ -10,7 +11,6 @@
       "version": "detect"
     }
   },
-  "reportUnusedDisableDirectives": true,
   "ignorePatterns": [
     "coverage/**",
     "dist/**"

@@ -5,11 +5,13 @@ import cp from 'node:child_process';
 import fs from 'node:fs/promises';
 
 import { ESC } from './ink-screen';
+import { splitCommandLine } from '@/src/utils/string';
 
 // Logger
 export const spyLogger: ILogger = {
   debug: jest.fn(),
   verbose: jest.fn(),
+  info: jest.fn(),
   warn: jest.fn(),
   error: jest.fn(),
 };
@@ -49,8 +51,9 @@ export interface ShellOptions {
   cwd?: string;
 }
 
-export function shell(cmd: string, args: string[], opts: ShellOptions = {}): Promise<void> {
+export function shell(line: string, opts: ShellOptions = {}): Promise<void> {
   return new Promise((resolve, reject) => {
+    const [cmd, ...args] = splitCommandLine(line);
     const proc = cp.spawn(cmd, args, {
       cwd: opts.cwd,
       shell: true,

@@ -7,13 +7,13 @@ import { EachCommand } from '@/src/commands/each';
 import { SpinnerService } from '@/src/commons/spinner.service';
 import { INK_APP } from '@/src/ink.config';
 import { container } from '@/src/inversify.config';
-import { type WorkspaceContext } from '@/src/project/workspace';
 import { TASK_MANAGER } from '@/src/tasks/task-manager.config';
 import Layout from '@/src/ui/layout';
 
 import { TestBed } from '@/tools/test-bed';
-import { TestSpawnTask } from '@/tools/test-tasks';
+import { TestScriptTask } from '@/tools/test-tasks';
 import { flushPromises, spyLogger, wrapInkTestApp } from '@/tools/utils';
+import { ExitException } from '@/src/utils/exit';
 
 // Setup
 let app: ReturnType<typeof render>;
@@ -23,7 +23,12 @@ let spinner: SpinnerService;
 
 let bed: TestBed;
 
+beforeAll(() => {
+  container.snapshot();
+});
+
 beforeEach(async () => {
+  container.restore();
   container.snapshot();
 
   jest.resetAllMocks();
@@ -48,7 +53,6 @@ beforeEach(async () => {
 
 afterEach(() => {
   cleanup();
-  container.restore();
 });
 
 // Tests
@@ -63,8 +67,8 @@ describe('jill each', () => {
 
     // Setup tasks
     const tasks = [
-      new TestSpawnTask<WorkspaceContext>('cmd', ['--arg'], { workspace: workspaces[0], script: 'cmd' }, { logger: spyLogger, cwd: workspaces[0].cwd }),
-      new TestSpawnTask<WorkspaceContext>('cmd', ['--arg'], { workspace: workspaces[1], script: 'cmd' }, { logger: spyLogger, cwd: workspaces[1].cwd }),
+      new TestScriptTask(workspaces[0], 'cmd', ['--arg'], { logger: spyLogger }),
+      new TestScriptTask(workspaces[1], 'cmd', ['--arg'], { logger: spyLogger }),
     ];
 
     jest.spyOn(manager, 'tasks', 'get').mockReturnValue(tasks);
@@ -74,6 +78,7 @@ describe('jill each', () => {
 
     // Run command
     const prom = yargs.command(command)
+      .fail(false)
       .parse('each cmd -- --arg');
 
     // should create script task then add it to manager
@@ -115,15 +120,15 @@ describe('jill each', () => {
 
     // Setup tasks
     const tasks = [
-      new TestSpawnTask<WorkspaceContext>('cmd', ['--arg'], { workspace: workspaces[0], script: 'cmd' }, { logger: spyLogger, cwd: workspaces[0].cwd }),
+      new TestScriptTask(workspaces[0], 'cmd', ['--arg'], { logger: spyLogger }),
     ];
 
     jest.spyOn(manager, 'tasks', 'get').mockReturnValue(tasks);
-
     jest.spyOn(workspaces[0], 'run').mockResolvedValue(tasks[0]);
 
     // Run command
     const prom = yargs.command(command)
+      .fail(false)
       .parse('each --deps-mode prod cmd -- --arg');
 
     // should create script task than add it to manager
@@ -143,18 +148,19 @@ describe('jill each', () => {
   });
 
   it('should exit 1 if no matching workspace is found', async () => {
-    jest.spyOn(process, 'exit').mockImplementation();
     jest.spyOn(spinner, 'failed');
 
     // Setup tasks
     jest.spyOn(manager, 'tasks', 'get').mockReturnValue([]);
 
     // Run command
-    await yargs.command(command)
-      .parse('each --deps-mode prod cmd -- --arg');
+    await expect(
+      yargs.command(command)
+        .fail(false)
+        .parse('each --deps-mode prod cmd -- --arg')
+    ).rejects.toEqual(new ExitException(1));
 
-    expect(spinner.failed).toHaveBeenCalledWith('No workspace found !');
-    expect(process.exit).toHaveBeenCalledWith(1);
+    expect(spinner.failed).toHaveBeenCalledWith('No matching workspace found !');
   });
 
   describe('private filter', () => {
@@ -168,8 +174,8 @@ describe('jill each', () => {
 
       // Setup tasks
       const tasks = [
-        new TestSpawnTask<WorkspaceContext>('cmd', ['--arg'], { workspace: workspaces[0], script: 'cmd' }, { logger: spyLogger, cwd: workspaces[0].cwd }),
-        new TestSpawnTask<WorkspaceContext>('cmd', ['--arg'], { workspace: workspaces[1], script: 'cmd' }, { logger: spyLogger, cwd: workspaces[1].cwd }),
+        new TestScriptTask(workspaces[0], 'cmd', ['--arg'], { logger: spyLogger }),
+        new TestScriptTask(workspaces[1], 'cmd', ['--arg'], { logger: spyLogger }),
       ];
 
       jest.spyOn(manager, 'tasks', 'get').mockReturnValue(tasks);
@@ -179,6 +185,7 @@ describe('jill each', () => {
 
       // Run command
       const prom = yargs.command(command)
+        .fail(false)
         .parse('each --private cmd -- --arg');
 
       // should create script task than add it to manager
@@ -210,8 +217,8 @@ describe('jill each', () => {
 
       // Setup tasks
       const tasks = [
-        new TestSpawnTask<WorkspaceContext>('cmd', ['--arg'], { workspace: workspaces[0], script: 'cmd' }, { logger: spyLogger, cwd: workspaces[0].cwd }),
-        new TestSpawnTask<WorkspaceContext>('cmd', ['--arg'], { workspace: workspaces[1], script: 'cmd' }, { logger: spyLogger, cwd: workspaces[1].cwd }),
+        new TestScriptTask(workspaces[0], 'cmd', ['--arg'], { logger: spyLogger }),
+        new TestScriptTask(workspaces[1], 'cmd', ['--arg'], { logger: spyLogger }),
       ];
 
       jest.spyOn(manager, 'tasks', 'get').mockReturnValue(tasks);
@@ -221,6 +228,7 @@ describe('jill each', () => {
 
       // Run command
       const prom = yargs.command(command)
+        .fail(false)
         .parse('each --no-private cmd -- --arg');
 
       // should create script task than add it to manager
@@ -254,8 +262,8 @@ describe('jill each', () => {
 
       // Setup tasks
       const tasks = [
-        new TestSpawnTask<WorkspaceContext>('cmd', ['--arg'], { workspace: workspaces[0], script: 'cmd' }, { logger: spyLogger, cwd: workspaces[0].cwd }),
-        new TestSpawnTask<WorkspaceContext>('cmd', ['--arg'], { workspace: workspaces[1], script: 'cmd' }, { logger: spyLogger, cwd: workspaces[1].cwd }),
+        new TestScriptTask(workspaces[0], 'cmd', ['--arg'], { logger: spyLogger }),
+        new TestScriptTask(workspaces[1], 'cmd', ['--arg'], { logger: spyLogger }),
       ];
 
       jest.spyOn(manager, 'tasks', 'get').mockReturnValue(tasks);
@@ -268,6 +276,7 @@ describe('jill each', () => {
 
       // Run command
       const prom = yargs.command(command)
+        .fail(false)
         .parse('each --affected test cmd -- --arg');
 
       // should create script task than add it to manager

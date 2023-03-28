@@ -26,7 +26,7 @@ describe('jill tree', () => void withPackageManager((packageManager) => {
 
   // Tests
   it('should print current workspace dependency tree', async () => {
-    const res = await jill(['tree'], { cwd: prjDir });
+    const res = await jill('tree', { cwd: prjDir });
 
     await expect(res.screen.screen).toEqualLines([
       expect.ignoreColor('main@1.0.0'),
@@ -34,7 +34,7 @@ describe('jill tree', () => void withPackageManager((packageManager) => {
   });
 
   it('should print given workspace dependency tree', async () => {
-    const res = await jill(['tree', '-w', 'wks-a'], { cwd: prjDir });
+    const res = await jill('tree -w wks-a', { cwd: prjDir });
 
     await expect(res.screen.screen).toEqualLines([
       expect.ignoreColor('wks-a@1.0.0'),

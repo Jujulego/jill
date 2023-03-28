@@ -1,10 +1,13 @@
+import { inject } from 'inversify';
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
 
+import { Logger } from '@/src/commons/logger.service';
 import { Command } from '@/src/modules/command';
 import { TaskCommand } from '@/src/modules/task-command';
 import { LoadProject } from '@/src/middlewares/load-project';
 import { LoadWorkspace } from '@/src/middlewares/load-workspace';
 import { LazyCurrentWorkspace, type Workspace, type WorkspaceDepsMode } from '@/src/project/workspace';
+import { ExitException } from '@/src/utils/exit';
 
 // Types
 export interface IRunCommandArgs {
@@ -25,6 +28,14 @@ export class RunCommand extends TaskCommand<IRunCommandArgs> {
   // Lazy injections
   @LazyCurrentWorkspace()
   readonly workspace: Workspace;
+
+  // Constructor
+  constructor(
+    @inject(Logger)
+    private readonly logger: Logger,
+  ) {
+    super();
+  }
 
   // Methods
   builder(parser: Argv) {
@@ -53,6 +64,11 @@ export class RunCommand extends TaskCommand<IRunCommandArgs> {
       buildDeps: args.depsMode,
     });
 
-    yield task;
+    if (task) {
+      yield task;
+    } else {
+      this.logger.error(`Workspace ${this.workspace.name} have no ${args.script} script`);
+      throw new ExitException(1);
+    }
   }
 }

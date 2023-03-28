@@ -6,13 +6,14 @@ import yargs, { type CommandModule } from 'yargs';
 import { RunCommand } from '@/src/commands/run';
 import { INK_APP } from '@/src/ink.config';
 import { container } from '@/src/inversify.config';
-import { type Workspace, type WorkspaceContext } from '@/src/project/workspace';
+import { type Workspace } from '@/src/project/workspace';
 import { TASK_MANAGER } from '@/src/tasks/task-manager.config';
 import Layout from '@/src/ui/layout';
 
 import { TestBed } from '@/tools/test-bed';
-import { TestSpawnTask } from '@/tools/test-tasks';
+import { TestScriptTask } from '@/tools/test-tasks';
 import { flushPromises, spyLogger, wrapInkTestApp } from '@/tools/utils';
+import { ExitException } from '@/src/utils/exit';
 
 // Setup
 let app: ReturnType<typeof render>;
@@ -21,16 +22,19 @@ let manager: TaskManager;
 
 let bed: TestBed;
 let wks: Workspace;
-let task: TestSpawnTask<WorkspaceContext>;
+let task: TestScriptTask;
+
+beforeAll(() => {
+  container.snapshot();
+});
 
 beforeEach(async () => {
+  container.restore();
   container.snapshot();
 
   bed = new TestBed();
   wks = bed.addWorkspace('wks');
-  task = new TestSpawnTask('cmd', [], { workspace: wks, script: 'cmd' }, {
-    logger: spyLogger,
-  });
+  task = new TestScriptTask(wks, 'cmd', [], { logger: spyLogger });
 
   app = render(<Layout />);
   container.rebind(INK_APP).toConstantValue(wrapInkTestApp(app));
@@ -49,7 +53,6 @@ beforeEach(async () => {
 });
 
 afterEach(() => {
-  container.restore();
   cleanup();
 });
 
@@ -58,6 +61,7 @@ describe('jill run', () => {
   it('should run command in current workspace', async () => {
     // Run command
     const prom = yargs.command(command)
+      .fail(false)
       .parse('run -w wks cmd -- --arg');
 
     await flushPromises();
@@ -83,6 +87,7 @@ describe('jill run', () => {
   it('should use given dependency selection mode', async () => {
     // Run command
     const prom = yargs.command(command)
+      .fail(false)
       .parse('run -w wks --deps-mode prod cmd -- --arg');
 
     await flushPromises();
@@ -96,5 +101,17 @@ describe('jill run', () => {
     task.emit('completed', { status: 'done', duration: 100 });
 
     await prom;
+  });
+
+  it('should exit 1 if script does not exist', async () => {
+    jest.spyOn(wks, 'run').mockResolvedValue(null);
+    jest.spyOn(manager, 'tasks', 'get').mockReturnValue([]);
+
+    // Run command
+    await expect(
+      yargs.command(command)
+        .fail(false)
+        .parse('run -w wks --deps-mode prod cmd -- --arg')
+    ).rejects.toEqual(new ExitException(1));
   });
 });
