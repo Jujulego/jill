@@ -34,7 +34,7 @@ import pkg from '../package.json';
 
     // Commands
     await parser
-      .command(await container.getAllAsync(COMMAND) as any)
+      .command(await container.getAllAsync(COMMAND))
       .demandCommand()
       .recommendCommands()
       .strict()
