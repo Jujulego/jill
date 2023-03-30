@@ -44,6 +44,7 @@ export class Project {
   }
 
   // Statics
+  /** @deprecated use ProjectRepository.searchProjectRoot instead */
   static async searchProjectRoot(dir: string): Promise<string> {
     const logger = container.get(Logger);
 
