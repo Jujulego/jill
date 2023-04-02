@@ -96,7 +96,7 @@ export class ProjectRepository {
     return projectRoot;
   }
 
-  getProject(root: string, opts: ProjectOptions): Project {
+  getProject(root: string, opts?: ProjectOptions): Project {
     let project = this._cache.get(root);
 
     if (!project) {

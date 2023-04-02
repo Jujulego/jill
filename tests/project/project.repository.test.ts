@@ -3,6 +3,7 @@ import path from 'node:path';
 
 import { container } from '@/src/inversify.config';
 import { ProjectRepository } from '@/src/project/project.repository';
+import { Project } from '@/src/project/project';
 
 // Mocks
 jest.mock('fs', () => fs);
@@ -191,5 +192,21 @@ describe('ProjectRepository.searchProjectRoot', () => {
 
     expect(repository.isProjectRoot).toHaveBeenCalledTimes(1);
     expect(repository.isProjectRoot).toHaveBeenCalledWith(path.resolve('/test/workspaces/wks-a'));
+  });
+});
+
+describe('ProjectRepository.getProject', () => {
+  it('should create a Project with given parameters', () => {
+    const prj = repository.getProject('/test');
+
+    expect(prj).toBeInstanceOf(Project);
+    expect(prj.root).toBe(path.resolve('/test'));
+  });
+
+  it('should cache Project instances', () => {
+    const prjA = repository.getProject('/test');
+    const prjB = repository.getProject('/test');
+
+    expect(prjA).toBe(prjB);
   });
 });
