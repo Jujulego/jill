@@ -4,8 +4,9 @@ import { type render } from 'ink-testing-library';
 import cp from 'node:child_process';
 import fs from 'node:fs/promises';
 
-import { ESC } from './ink-screen';
 import { splitCommandLine } from '@/src/utils/string';
+
+import { ESC } from './ink-screen';
 
 // Logger
 export const spyLogger: ILogger = {

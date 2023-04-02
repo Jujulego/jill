@@ -7,10 +7,12 @@ import { container } from '@/src/inversify.config';
 import { LoadProject } from '@/src/middlewares/load-project';
 import { CURRENT } from '@/src/project/constants';
 import { Project } from '@/src/project/project';
+import { ProjectRepository } from '@/src/project/project.repository';
 
 // Setup
 let parser: yargs.Argv;
 let spinner: SpinnerService;
+let projectRepo: ProjectRepository;
 
 beforeEach(() => {
   container.snapshot();
@@ -19,7 +21,8 @@ beforeEach(() => {
   jest.spyOn(spinner, 'spin');
   jest.spyOn(spinner, 'stop');
 
-  jest.spyOn(Project, 'searchProjectRoot')
+  projectRepo = container.get(ProjectRepository);
+  jest.spyOn(projectRepo, 'searchProjectRoot')
     .mockResolvedValue('/test');
 
   parser = applyMiddlewares(yargs(), [LoadProject]);
@@ -35,7 +38,7 @@ describe('LoadProject', () => {
     await parser.parse(''); // <= no args
 
     expect(spinner.spin).toHaveBeenCalledWith('Loading project ...');
-    expect(Project.searchProjectRoot).toHaveBeenCalledWith(process.cwd());
+    expect(projectRepo.searchProjectRoot).toHaveBeenCalledWith(process.cwd());
 
     expect(container.isBoundNamed(Project, CURRENT)).toBe(true);
     expect(container.getNamed(Project, CURRENT).root).toBe(path.resolve('/test'));
@@ -46,7 +49,7 @@ describe('LoadProject', () => {
   it('should search project root using arguments', async () => {
     await parser.parse('-p /toto');
 
-    expect(Project.searchProjectRoot).toHaveBeenCalledWith('/toto');
+    expect(projectRepo.searchProjectRoot).toHaveBeenCalledWith('/toto');
   });
 
   it('should set package manager using arguments', async () => {

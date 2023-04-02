@@ -5,7 +5,9 @@ import { type IMiddleware, Middleware } from '@/src/modules/middleware';
 import { SpinnerService } from '@/src/commons/spinner.service';
 import { container } from '@/src/inversify.config';
 import { CURRENT } from '@/src/project/constants';
-import { Project, type PackageManager } from '@/src/project/project';
+import { Project } from '@/src/project/project';
+import { ProjectRepository } from '@/src/project/project.repository';
+import { type PackageManager } from '@/src/project/types';
 
 // Types
 export interface ILoadProjectArgs {
@@ -19,7 +21,9 @@ export class LoadProject implements IMiddleware<ILoadProjectArgs> {
   // Constructor
   constructor(
     @inject(SpinnerService)
-    private readonly spinner: SpinnerService
+    private readonly spinner: SpinnerService,
+    @inject(ProjectRepository)
+    private readonly projects: ProjectRepository,
   ) {}
 
   // Methods
@@ -41,12 +45,10 @@ export class LoadProject implements IMiddleware<ILoadProjectArgs> {
   async handler(args: ArgumentsCamelCase<ILoadProjectArgs>): Promise<void> {
     try {
       this.spinner.spin('Loading project ...');
-      const root = args.project = await Project.searchProjectRoot(args.project);
+      const root = args.project = await this.projects.searchProjectRoot(args.project);
 
       container.bind(Project)
-        .toDynamicValue(() => new Project(root, {
-          packageManager: args.packageManager
-        }))
+        .toDynamicValue(() => this.projects.getProject(root, { packageManager: args.packageManager }))
         .whenTargetNamed(CURRENT);
     } finally {
       this.spinner.stop();
