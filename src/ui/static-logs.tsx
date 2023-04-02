@@ -24,9 +24,9 @@ export default function StaticLogs() {
     const logger = container.get(Logger);
 
     // Remove Console transport
-    for (const transport of logger.transports) {
+    for (const transport of logger.winston.transports) {
       if (transport instanceof winston.transports.Console) {
-        logger.remove(transport);
+        logger.winston.remove(transport);
       }
     }
 
@@ -51,11 +51,11 @@ export default function StaticLogs() {
       }
     };
 
-    logger.add(transport);
+    logger.winston.add(transport);
 
     return () => {
-      logger.remove(transport);
-      logger.add(new winston.transports.Console({
+      logger.winston.remove(transport);
+      logger.winston.add(new winston.transports.Console({
         format: consoleFormat
       }));
     };

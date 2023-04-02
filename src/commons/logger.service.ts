@@ -6,8 +6,8 @@ import wt from 'node:worker_threads';
 
 import { container } from '@/src/inversify.config';
 
+import { $log } from './logger/log.tag';
 import { ThreadTransport } from './logger/thread.transport';
-import { $log } from '@/src/commons/logger/log.tag';
 
 // Utils
 export const consoleFormat = winston.format.combine(
@@ -41,12 +41,12 @@ export const consoleFormat = winston.format.combine(
 export class Logger implements ILogger {
   // Constructor
   constructor(
-    private _logger: winston.Logger
+    readonly winston: winston.Logger
   ) {}
 
   // Methods
   log(level: string, msg: string): void {
-    this._logger.log(level, msg);
+    this.winston.log(level, msg);
   }
 
   debug(msg: string): void;
@@ -56,7 +56,7 @@ export class Logger implements ILogger {
       msg = $log(msg, ...args);
     }
 
-    this._logger.debug(msg);
+    this.winston.debug(msg);
   }
 
   verbose(msg: string): void;
@@ -66,7 +66,7 @@ export class Logger implements ILogger {
       msg = $log(msg, ...args);
     }
 
-    this._logger.verbose(msg);
+    this.winston.verbose(msg);
   }
 
   info(msg: string): void;
@@ -76,7 +76,7 @@ export class Logger implements ILogger {
       msg = $log(msg, ...args);
     }
 
-    this._logger.info(msg);
+    this.winston.info(msg);
   }
 
   warn(msg: string, cause?: unknown): void;
@@ -90,7 +90,7 @@ export class Logger implements ILogger {
       cause = args[0];
     }
 
-    this._logger.warn(msg, cause);
+    this.winston.warn(msg, cause);
   }
 
   error(msg: string, cause?: unknown): void;
@@ -104,32 +104,20 @@ export class Logger implements ILogger {
       cause = args[0];
     }
 
-    this._logger.error(msg, cause);
+    this.winston.error(msg, cause);
   }
 
   child(options: Record<string, unknown>): Logger {
-    return new Logger(this._logger.child(options));
-  }
-
-  add(transport: winston.transport) {
-    this._logger.add(transport);
-  }
-
-  remove(transport: winston.transport) {
-    this._logger.remove(transport);
+    return new Logger(this.winston.child(options));
   }
 
   // Properties
   get level() {
-    return this._logger.level;
+    return this.winston.level;
   }
 
   set level(level: string) {
-    this._logger.level = level;
-  }
-
-  get transports() {
-    return this._logger.transports;
+    this.winston.level = level;
   }
 }
 

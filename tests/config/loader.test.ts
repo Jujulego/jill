@@ -120,16 +120,17 @@ describe('configLoader', () => {
     container.rebind(CONFIG_EXPLORER).toConstantValue(explorer as any);
     container.rebind(CONFIG_VALIDATOR).toConstantValue(validator as any);
 
-    jest.spyOn(logger, 'error').mockImplementation();
+    jest.spyOn(logger.winston, 'error').mockImplementation();
     jest.spyOn(process, 'exit').mockImplementation();
 
     // Load config
     await expect(configLoader())
       .resolves.toEqual({});
 
-    expect(logger.error).toHaveBeenCalledWith(
+    expect(logger.winston.error).toHaveBeenCalledWith(
       'Errors in config file:\n' +
-      '- config/toto must be real'
+      '- config/toto must be real',
+      undefined
     );
     expect(process.exit).toHaveBeenCalledWith(1);
   });
