@@ -41,40 +41,6 @@ export class Project {
     }
   }
 
-  // Statics
-  static async searchProjectRoot(dir: string): Promise<string> {
-    const logger = container.get(Logger);
-
-    // Will process directories from dir to root
-    let found = false;
-    let last = dir;
-    dir = path.resolve(dir);
-
-    do {
-      const files = await fs.readdir(dir);
-
-      if (files.includes('package.json')) {
-        last = dir;
-        found = true;
-      }
-
-      if (['package-lock.json', 'yarn.lock'].some(lock => files.includes(lock))) {
-        logger.debug`Project root found at #cwd:${dir}`;
-        return dir;
-      }
-
-      dir = path.dirname(dir);
-    } while (dir !== path.dirname(dir));
-
-    if (found) {
-      logger.debug`Project root found at #cwd:${last}`;
-    } else {
-      logger.debug`Project root not found, keeping #cwd:${last}`;
-    }
-
-    return last;
-  }
-
   // Methods
   private async _loadManifest(dir: string): Promise<Package> {
     const file = path.resolve(this.root, dir, 'package.json');
