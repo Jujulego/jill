@@ -25,7 +25,7 @@ export class PluginLoaderService {
 
   // Methods
   private async _importPlugin(filepath: string): Promise<ContainerModule> {
-    this._logger.verbose(`Loading plugin ${filepath}`);
+    this._logger.verbose`Loading plugin ${filepath}`;
 
     // Load plugin
     let plugin = await dynamicImport(filepath);
