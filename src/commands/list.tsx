@@ -3,14 +3,14 @@ import path from 'node:path';
 import slugify from 'slugify';
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
 
-import { Command } from '@/src/modules/command';
-import { InkCommand } from '@/src/modules/ink-command';
 import { AffectedFilter } from '@/src/filters/affected.filter';
 import { Pipeline } from '@/src/filters/pipeline';
 import { PrivateFilter } from '@/src/filters/private.filter';
 import { ScriptsFilter } from '@/src/filters/scripts.filter';
-import { LoadProject } from '@/src/middlewares/load-project';
-import { LazyCurrentProject, type Project } from '@/src/project/project';
+import { LazyCurrentProject, LoadProject } from '@/src/middlewares/load-project';
+import { Command } from '@/src/modules/command';
+import { InkCommand } from '@/src/modules/ink-command';
+import { type Project } from '@/src/project/project';
 import { type Workspace } from '@/src/project/workspace';
 import List from '@/src/ui/list';
 import { printJson } from '@/src/utils/json';

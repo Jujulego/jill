@@ -4,41 +4,42 @@ import { applyMiddlewares } from '@/src/modules/middleware';
 import { SpinnerService } from '@/src/commons/spinner.service';
 import { container } from '@/src/inversify.config';
 import { LoadWorkspace } from '@/src/middlewares/load-workspace';
-import { CURRENT } from '@/src/project/constants';
-import { Project } from '@/src/project/project';
+import { CURRENT } from '@/src/constants';
 import { Workspace } from '@/src/project/workspace';
 
 import { TestBed } from '@/tools/test-bed';
+import { ContextService } from '@/src/commons/context.service';
 
 // Setup
 let bed: TestBed;
 let parser: yargs.Argv;
+let context: ContextService;
 let spinner: SpinnerService;
 
+beforeAll(() => {
+  container.snapshot();
+});
+
 beforeEach(() => {
+  container.restore();
   container.snapshot();
 
+  context = container.get(ContextService);
   spinner = container.get(SpinnerService);
   jest.spyOn(spinner, 'spin');
   jest.spyOn(spinner, 'stop');
   jest.spyOn(spinner, 'failed');
 
   bed = new TestBed();
-  container.bind(Project)
-    .toConstantValue(bed.project)
-    .whenTargetNamed(CURRENT);
 
   parser = applyMiddlewares(yargs(), [LoadWorkspace]);
-});
-
-afterEach(() => {
-  container.restore();
 });
 
 // Tests
 describe('LoadWorkspace', () => {
   it('should search for current workspace', async () => {
     const wks = bed.addWorkspace('root');
+    context.reset({ project: bed.project });
 
     jest.spyOn(bed.project, 'workspace')
       .mockResolvedValue(wks);
@@ -55,6 +56,7 @@ describe('LoadWorkspace', () => {
   });
 
   it('should search for named workspace', async () => {
+    context.reset({ project: bed.project });
     jest.spyOn(bed.project, 'workspace')
       .mockResolvedValue(bed.addWorkspace('test'));
 
@@ -65,6 +67,7 @@ describe('LoadWorkspace', () => {
   });
 
   it('should print failed spinner if workspace is not found', async () => {
+    context.reset({ project: bed.project });
     jest.spyOn(yargs, 'exit').mockImplementation();
     jest.spyOn(bed.project, 'workspace')
       .mockResolvedValue(null);

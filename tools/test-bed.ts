@@ -13,8 +13,8 @@ import { type IMiddleware } from '@/src/modules/middleware';
 import { getRegistry } from '@/src/modules/module';
 import { LoadProject } from '@/src/middlewares/load-project';
 import { LoadWorkspace } from '@/src/middlewares/load-workspace';
-import { CURRENT } from '@/src/project/constants';
-import { Project } from '@/src/project/project';
+import { CURRENT } from '@/src/constants';
+import { type Project } from '@/src/project/project';
 import { Workspace } from '@/src/project/workspace';
 import { type PackageManager } from '@/src/project/types';
 import { type Class } from '@/src/types';
@@ -22,6 +22,7 @@ import { type Class } from '@/src/types';
 import { TestProject } from './test-project';
 import { TestWorkspace } from './test-workspace';
 import { shell } from './utils';
+import { ContextService } from '@/src/commons/context.service';
 
 // Bed
 export class TestBed {
@@ -74,7 +75,7 @@ export class TestBed {
 
     container.rebind<IMiddleware>(LoadProject).toConstantValue({
       handler() {
-        container.bind(Project).toConstantValue(prj).whenTargetNamed(CURRENT);
+        container.get(ContextService).project = prj;
       }
     });
 

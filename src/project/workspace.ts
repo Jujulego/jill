@@ -11,7 +11,7 @@ import { CommandTask } from '@/src/tasks/command-task';
 import { ScriptTask } from '@/src/tasks/script-task';
 import { combine } from '@/src/utils/streams';
 
-import { CURRENT } from './constants';
+import { CURRENT } from '../constants';
 import { type Project } from './project';
 
 // Types

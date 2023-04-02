@@ -21,7 +21,7 @@ export * from './modules/plugin-loader.service';
 export * from './modules/service';
 
 // Project
-export * from './project/constants';
+export * from './constants';
 export * from './project/project';
 export * from './project/project.repository';
 export * from './project/workspace';

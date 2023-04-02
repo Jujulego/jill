@@ -1,12 +1,14 @@
 import { inject } from 'inversify';
 import yargs, { type ArgumentsCamelCase, type Argv } from 'yargs';
 
-import { type IMiddleware, Middleware } from '@/src/modules/middleware';
 import { SpinnerService } from '@/src/commons/spinner.service';
+import { CURRENT } from '@/src/constants';
 import { container } from '@/src/inversify.config';
-import { LazyCurrentProject, type Project } from '@/src/project/project';
-import { CURRENT } from '@/src/project/constants';
+import { type IMiddleware, Middleware } from '@/src/modules/middleware';
+import { type Project } from '@/src/project/project';
 import { Workspace } from '@/src/project/workspace';
+
+import { LazyCurrentProject } from './load-project';
 
 // Types
 export interface ILoadWorkspaceArgs {
