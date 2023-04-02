@@ -5,8 +5,9 @@ import { type IMiddleware, Middleware } from '@/src/modules/middleware';
 import { SpinnerService } from '@/src/commons/spinner.service';
 import { container } from '@/src/inversify.config';
 import { CURRENT } from '@/src/project/constants';
-import { Project, type PackageManager } from '@/src/project/project';
+import { Project } from '@/src/project/project';
 import { ProjectRepository } from '@/src/project/project.repository';
+import { type PackageManager } from '@/src/project/types';
 
 // Types
 export interface ILoadProjectArgs {

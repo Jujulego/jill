@@ -58,25 +58,6 @@ afterEach(() => {
 });
 
 // Test suites
-describe('Project.searchProjectRoot', () => {
-  beforeEach(() => {
-    vol.fromJSON({
-      'yarn.lock': '',
-    }, '/test');
-  });
-
-  // Test
-  it('should return mock root', async () => {
-    await expect(Project.searchProjectRoot('/test'))
-      .resolves.toBe(path.resolve('/test'));
-  });
-
-  it('should return mock root from workspace', async () => {
-    await expect(Project.searchProjectRoot('/test/workspaces/wks-a'))
-      .resolves.toBe(path.resolve('/test'));
-  });
-});
-
 describe('Project.mainWorkspace', () => {
   // Tests
   it('should return root workspace', async () => {

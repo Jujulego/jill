@@ -1,9 +1,8 @@
 import cp from 'node:child_process';
 import path from 'node:path';
 
-import { type PackageManager } from '@/src/project/project';
-
 import { InkScreen } from '@/tools/ink-screen';
+import { type PackageManager } from '@/src/project/types';
 import { splitCommandLine } from '@/src/utils/string';
 
 // Constants

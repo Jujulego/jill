@@ -5,14 +5,14 @@ import path from 'node:path';
 import normalize, { type Package } from 'normalize-package-data';
 import glob from 'tiny-glob';
 
-import { container, lazyInject, lazyInjectNamed } from '@/src/inversify.config';
+import { lazyInject, lazyInjectNamed } from '@/src/inversify.config';
 import { Logger } from '@/src/commons/logger.service';
 
 import { CURRENT } from './constants';
 import { Workspace } from './workspace';
+import { type PackageManager } from './types';
 
 // Types
-export type PackageManager = 'npm' | 'yarn';
 export interface ProjectOptions {
   packageManager?: PackageManager | undefined;
 }
@@ -41,41 +41,6 @@ export class Project {
       this._logger.debug(`Forced use of ${opts.packageManager} in ${path.relative(process.cwd(), this.root) || '.'}`);
       this._packageManager = opts.packageManager;
     }
-  }
-
-  // Statics
-  /** @deprecated use ProjectRepository.searchProjectRoot instead */
-  static async searchProjectRoot(dir: string): Promise<string> {
-    const logger = container.get(Logger);
-
-    // Will process directories from dir to root
-    let found = false;
-    let last = dir;
-    dir = path.resolve(dir);
-
-    do {
-      const files = await fs.readdir(dir);
-
-      if (files.includes('package.json')) {
-        last = dir;
-        found = true;
-      }
-
-      if (['package-lock.json', 'yarn.lock'].some(lock => files.includes(lock))) {
-        logger.debug(`Project root found at ${path.relative(process.cwd(), dir) || '.'}`);
-        return dir;
-      }
-
-      dir = path.dirname(dir);
-    } while (dir !== path.dirname(dir));
-
-    if (found) {
-      logger.debug(`Project root found at ${path.relative(process.cwd(), last) || '.'}`);
-    } else {
-      logger.debug(`Project root not found, keeping ${path.relative(process.cwd(), last) || '.'}`);
-    }
-
-    return last;
   }
 
   // Methods

@@ -23,7 +23,9 @@ export * from './modules/service';
 // Project
 export * from './project/constants';
 export * from './project/project';
+export * from './project/project.repository';
 export * from './project/workspace';
+export * from './project/types';
 
 // Services
 export * from './inversify.config';
