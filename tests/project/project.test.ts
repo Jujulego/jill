@@ -1,6 +1,8 @@
 import { fs, vol } from 'memfs';
 import path from 'node:path';
 
+import { container } from '@/src/inversify.config';
+import { Logger } from '@/src/commons/logger.service';
 import { Project } from '@/src/project/project';
 import { Workspace } from '@/src/project/workspace';
 
@@ -10,8 +12,16 @@ jest.mock('node:fs/promises', () => fs.promises);
 
 // Setup
 let project: Project;
+let logger: Logger;
 
-beforeEach(() => {
+beforeAll(() => {
+  container.snapshot();
+});
+
+beforeEach(async () => {
+  container.restore();
+  container.snapshot();
+
   // Create project structure
   vol.fromNestedJSON({
     'workspaces': {
@@ -50,7 +60,8 @@ beforeEach(() => {
     }),
   }, '/test');
 
-  project = new Project('/test');
+  logger = container.get(Logger).child({ label: 'projects' });
+  project = new Project('/test', logger);
 });
 
 afterEach(() => {
@@ -160,7 +171,7 @@ describe('Project.packageManager', () => {
   });
 
   it('should return packageManager from options', async () => {
-    const prj = new Project('/test', { packageManager: 'yarn' });
+    const prj = new Project('/test', logger, { packageManager: 'yarn' });
 
     // Test
     await expect(prj.packageManager())

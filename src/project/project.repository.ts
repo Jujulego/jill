@@ -5,6 +5,8 @@ import { inject } from 'inversify';
 import { Logger } from '@/src/commons/logger.service';
 import { Service } from '@/src/modules/service';
 
+import { Project, type ProjectOptions } from './project';
+
 // Constants
 const MANIFEST = 'package.json';
 const LOCK_FILES = ['package-lock.json', 'yarn.lock'];
@@ -19,13 +21,16 @@ export interface IsProjectRoot {
 @Service()
 export class ProjectRepository {
   // Attributes
+  private readonly _logger: Logger;
+  private readonly _cache = new Map<string, Project>();
   private readonly _roots = new Map<string, string>();
 
   // Constructor
   constructor(
-    @inject(Logger)
-    private readonly logger: Logger,
-  ) {}
+    @inject(Logger) logger: Logger,
+  ) {
+    this._logger = logger.child({ label: 'projects' });
+  }
 
   // Methods
   async isProjectRoot(dir: string): Promise<IsProjectRoot> {
@@ -83,11 +88,22 @@ export class ProjectRepository {
 
     // Log it
     if (foundManifest) {
-      this.logger.debug(`Project root found at ${path.relative(process.cwd(), projectRoot) || '.'}`);
+      this._logger.debug(`Project root found at ${path.relative(process.cwd(), projectRoot) || '.'}`);
     } else {
-      this.logger.debug(`Project root not found, keeping ${path.relative(process.cwd(), projectRoot) || '.'}`);
+      this._logger.debug(`Project root not found, keeping ${path.relative(process.cwd(), projectRoot) || '.'}`);
     }
 
     return projectRoot;
+  }
+
+  getProject(root: string, opts: ProjectOptions): Project {
+    let project = this._cache.get(root);
+
+    if (!project) {
+      project = new Project(root, this._logger, opts);
+      this._cache.set(root, project);
+    }
+
+    return project;
   }
 }

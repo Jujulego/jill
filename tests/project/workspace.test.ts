@@ -2,6 +2,7 @@ import { fs, vol } from 'memfs';
 import path from 'node:path';
 
 import { GitService } from '@/src/commons/git.service';
+import { Logger } from '@/src/commons/logger.service';
 import { container } from '@/src/inversify.config';
 import { Project } from '@/src/project/project';
 import { Workspace } from '@/src/project/workspace';
@@ -20,6 +21,7 @@ let wksC: Workspace;
 let prjDir: string;
 
 let git: GitService;
+let logger: Logger;
 
 beforeAll(() => {
   container.snapshot();
@@ -45,6 +47,7 @@ beforeEach(async () => {
   jest.resetAllMocks();
 
   git = container.get(GitService);
+  logger = container.get(Logger);
 });
 
 afterEach(() => {
@@ -58,7 +61,7 @@ describe('Workspace.dependencies', () => {
 
   beforeEach(() => {
     // Create test project
-    project = new Project(prjDir);
+    project = new Project(prjDir, logger);
     workspace = new Workspace(wksA.cwd, wksA.manifest, project);
 
     // Mocks
@@ -82,7 +85,7 @@ describe('Workspace.devDependencies', () => {
 
   beforeEach(() => {
     // Create test project
-    project = new Project(prjDir);
+    project = new Project(prjDir, logger);
     workspace = new Workspace(wksA.cwd, wksA.manifest, project);
 
     // Mocks

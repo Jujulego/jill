@@ -1,3 +1,5 @@
+import { container } from '@/src/inversify.config';
+import { Logger } from '@/src/commons/logger.service';
 import { Project, type ProjectOptions } from '@/src/project/project';
 
 import { TestWorkspace } from './test-workspace';
@@ -10,7 +12,7 @@ export class TestProject extends Project {
 
   // Constructor
   constructor(root: string, opts?: ProjectOptions) {
-    super(root, opts);
+    super(root, container.get(Logger).child({ label: 'projects' }), opts);
 
     this._testMainWorkspace = new TestWorkspace(root, {
       _id: 'main',

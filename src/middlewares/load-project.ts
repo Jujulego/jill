@@ -48,9 +48,7 @@ export class LoadProject implements IMiddleware<ILoadProjectArgs> {
       const root = args.project = await this.projects.searchProjectRoot(args.project);
 
       container.bind(Project)
-        .toDynamicValue(() => new Project(root, {
-          packageManager: args.packageManager
-        }))
+        .toDynamicValue(() => this.projects.getProject(root, { packageManager: args.packageManager }))
         .whenTargetNamed(CURRENT);
     } finally {
       this.spinner.stop();

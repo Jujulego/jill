@@ -5,8 +5,8 @@ import path from 'node:path';
 import normalize, { type Package } from 'normalize-package-data';
 import glob from 'tiny-glob';
 
-import { lazyInject, lazyInjectNamed } from '@/src/inversify.config';
-import { Logger } from '@/src/commons/logger.service';
+import { lazyInjectNamed } from '@/src/inversify.config';
+import { type Logger } from '@/src/commons/logger.service';
 
 import { CURRENT } from './constants';
 import { Workspace } from './workspace';
@@ -29,12 +29,10 @@ export class Project {
   private _isFullyLoaded = false;
   private _lock = new Lock();
 
-  @lazyInject(Logger)
-  private readonly _logger: Logger;
-
   // Constructor
   constructor(
     private readonly _root: string,
+    private readonly _logger: Logger,
     opts: ProjectOptions = {}
   ) {
     if (opts.packageManager) {
