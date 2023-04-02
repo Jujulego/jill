@@ -36,9 +36,43 @@ export class Project {
     opts: ProjectOptions = {}
   ) {
     if (opts.packageManager) {
-      this._logger.debug(`Forced use of ${opts.packageManager} in ${path.relative(process.cwd(), this.root) || '.'}`);
+      this._logger.debug`Forced use of ${opts.packageManager} in #cwd:${this.root}`;
       this._packageManager = opts.packageManager;
     }
+  }
+
+  // Statics
+  static async searchProjectRoot(dir: string): Promise<string> {
+    const logger = container.get(Logger);
+
+    // Will process directories from dir to root
+    let found = false;
+    let last = dir;
+    dir = path.resolve(dir);
+
+    do {
+      const files = await fs.readdir(dir);
+
+      if (files.includes('package.json')) {
+        last = dir;
+        found = true;
+      }
+
+      if (['package-lock.json', 'yarn.lock'].some(lock => files.includes(lock))) {
+        logger.debug`Project root found at #cwd:${dir}`;
+        return dir;
+      }
+
+      dir = path.dirname(dir);
+    } while (dir !== path.dirname(dir));
+
+    if (found) {
+      logger.debug`Project root found at #cwd:${last}`;
+    } else {
+      logger.debug`Project root not found, keeping #cwd:${last}`;
+    }
+
+    return last;
   }
 
   // Methods
@@ -78,13 +112,13 @@ export class Project {
       const files = await fs.readdir(this.root);
 
       if (files.includes('yarn.lock')) {
-        this._logger.debug(`Detected yarn in ${path.relative(process.cwd(), this.root) || '.'}`);
+        this._logger.debug`Detected yarn in #cwd:${this.root}`;
         this._packageManager = 'yarn';
       } else if (files.includes('package-lock.json')) {
-        this._logger.debug(`Detected npm in ${path.relative(process.cwd(), this.root) || '.'}`);
+        this._logger.debug`Detected npm in #cwd:${this.root}`;
         this._packageManager = 'npm';
       } else {
-        this._logger.debug(`No package manager recognized in ${path.relative(process.cwd(), this.root) || '.'}, defaults to npm`);
+        this._logger.debug`No package manager recognized in #cwd:${this.root}, defaults to npm`;
         this._packageManager = 'npm';
       }
     }

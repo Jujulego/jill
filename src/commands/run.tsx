@@ -67,7 +67,7 @@ export class RunCommand extends TaskCommand<IRunCommandArgs> {
     if (task) {
       yield task;
     } else {
-      this.logger.error(`Workspace ${this.workspace.name} have no ${args.script} script`);
+      this.logger.error`Workspace ${this.workspace.name} have no ${args.script} script`;
       throw new ExitException(1);
     }
   }

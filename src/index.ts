@@ -39,6 +39,7 @@ export { CONFIG } from './config/config-loader';
 export { type IConfig } from './config/types';
 
 export { Logger } from './commons/logger.service';
+export { $log } from './commons/logger/log.tag';
 
 // Ui
 export { default as GroupTaskSpinner } from './ui/group-task-spinner';

@@ -52,11 +52,11 @@ export class AffectedFilter implements PipelineFilter {
     }
 
     if (result !== this.format) {
-      logger.verbose(`Resolved ${this.format} into ${result}`);
+      logger.verbose`Resolved ${this.format} into ${result}`;
     }
 
     if (result.includes('*')) {
-      logger.warn(`No revision found matching ${result}, using fallback ${this.fallback}`);
+      logger.warn`No revision found matching ${result}, using fallback ${this.fallback}`;
 
       return this.fallback;
     }

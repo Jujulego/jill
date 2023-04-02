@@ -38,7 +38,7 @@ export async function configLoader() {
     const ajv = container.get(AJV);
     const errors = ajv.errorsText(validator.errors, { separator: '\n- ', dataVar: 'config' });
 
-    logger.error(`Errors in config file:\n- ${errors}`);
+    logger.error`Errors in config file:\n- ${errors}`;
     process.exit(1);
 
     return {};
@@ -54,10 +54,10 @@ export async function configLoader() {
       container.get(Logger).level = config.verbose;
     }
 
-    logger.verbose(`Loaded ${loaded.filepath} config file`);
+    logger.verbose`Loaded ${loaded.filepath} config file`;
   }
 
-  logger.debug(`Loaded config:\n${JSON.stringify(config, null, 2)}`);
+  logger.debug`Loaded config:\n${JSON.stringify(config, null, 2)}`;
 
   return config;
 }

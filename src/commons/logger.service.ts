@@ -7,6 +7,7 @@ import wt from 'node:worker_threads';
 import { container } from '@/src/inversify.config';
 
 import { ThreadTransport } from './logger/thread.transport';
+import { $log } from '@/src/commons/logger/log.tag';
 
 // Utils
 export const consoleFormat = winston.format.combine(
@@ -48,23 +49,61 @@ export class Logger implements ILogger {
     this._logger.log(level, msg);
   }
 
-  debug(msg: string): void {
+  debug(msg: string): void;
+  debug(strings: TemplateStringsArray, ...args: unknown[]): void;
+  debug(msg: TemplateStringsArray | string, ...args: unknown[]): void {
+    if (typeof msg !== 'string') {
+      msg = $log(msg, ...args);
+    }
+
     this._logger.debug(msg);
   }
 
-  verbose(msg: string): void {
+  verbose(msg: string): void;
+  verbose(strings: TemplateStringsArray, ...args: unknown[]): void;
+  verbose(msg: TemplateStringsArray | string, ...args: unknown[]): void {
+    if (typeof msg !== 'string') {
+      msg = $log(msg, ...args);
+    }
+
     this._logger.verbose(msg);
   }
 
-  info(msg: string): void {
+  info(msg: string): void;
+  info(strings: TemplateStringsArray, ...args: unknown[]): void;
+  info(msg: TemplateStringsArray | string, ...args: unknown[]): void {
+    if (typeof msg !== 'string') {
+      msg = $log(msg, ...args);
+    }
+
     this._logger.info(msg);
   }
 
-  warn(msg: string, cause?: unknown): void {
+  warn(msg: string, cause?: unknown): void;
+  warn(strings: TemplateStringsArray, ...args: unknown[]): void;
+  warn(msg: TemplateStringsArray | string, ...args: unknown[]): void {
+    let cause = undefined;
+
+    if (typeof msg !== 'string') {
+      msg = $log(msg, ...args);
+    } else {
+      cause = args[0];
+    }
+
     this._logger.warn(msg, cause);
   }
 
-  error(msg: string, cause?: unknown): void {
+  error(msg: string, cause?: unknown): void;
+  error(strings: TemplateStringsArray, ...args: unknown[]): void;
+  error(msg: TemplateStringsArray | string, ...args: unknown[]): void {
+    let cause = undefined;
+
+    if (typeof msg !== 'string') {
+      msg = $log(msg, ...args);
+    } else {
+      cause = args[0];
+    }
+
     this._logger.error(msg, cause);
   }
 
