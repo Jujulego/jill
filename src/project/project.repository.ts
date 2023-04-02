@@ -88,9 +88,9 @@ export class ProjectRepository {
 
     // Log it
     if (foundManifest) {
-      this._logger.debug(`Project root found at ${path.relative(process.cwd(), projectRoot) || '.'}`);
+      this._logger.debug`Project root found at #cwd:${projectRoot}`;
     } else {
-      this._logger.debug(`Project root not found, keeping ${path.relative(process.cwd(), projectRoot) || '.'}`);
+      this._logger.debug`Project root not found, keeping #cwd:${projectRoot}`;
     }
 
     return projectRoot;
