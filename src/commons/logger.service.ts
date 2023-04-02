@@ -1,4 +1,6 @@
+import { type ILogger } from '@jujulego/tasks';
 import chalk from 'chalk';
+import { injectable } from 'inversify';
 import winston, { type LogEntry } from 'winston';
 import wt from 'node:worker_threads';
 
@@ -34,10 +36,63 @@ export const consoleFormat = winston.format.combine(
 );
 
 // Service
-export class Logger {}
+@injectable()
+export class Logger implements ILogger {
+  // Constructor
+  constructor(
+    private _logger: winston.Logger
+  ) {}
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface Logger extends winston.Logger {}
+  // Methods
+  log(level: string, msg: string): void {
+    this._logger.log(level, msg);
+  }
+
+  debug(msg: string): void {
+    this._logger.debug(msg);
+  }
+
+  verbose(msg: string): void {
+    this._logger.verbose(msg);
+  }
+
+  info(msg: string): void {
+    this._logger.info(msg);
+  }
+
+  warn(msg: string, cause?: unknown): void {
+    this._logger.warn(msg, cause);
+  }
+
+  error(msg: string, cause?: unknown): void {
+    this._logger.error(msg, cause);
+  }
+
+  child(options: Record<string, unknown>): Logger {
+    return new Logger(this._logger.child(options));
+  }
+
+  add(transport: winston.transport) {
+    this._logger.add(transport);
+  }
+
+  remove(transport: winston.transport) {
+    this._logger.remove(transport);
+  }
+
+  // Properties
+  get level() {
+    return this._logger.level;
+  }
+
+  set level(level: string) {
+    this._logger.level = level;
+  }
+
+  get transports() {
+    return this._logger.transports;
+  }
+}
 
 container.bind(Logger)
   .toDynamicValue(() => {
@@ -65,6 +120,6 @@ container.bind(Logger)
       logger.add(new ThreadTransport('jujulego:jill:logger'));
     }
 
-    return logger;
+    return new Logger(logger);
   })
   .inSingletonScope();
