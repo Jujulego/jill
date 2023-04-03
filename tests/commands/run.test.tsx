@@ -4,20 +4,22 @@ import symbols from 'log-symbols';
 import yargs, { type CommandModule } from 'yargs';
 
 import { RunCommand } from '@/src/commands/run';
+import { ContextService } from '@/src/commons/context.service';
 import { INK_APP } from '@/src/ink.config';
 import { container } from '@/src/inversify.config';
 import { type Workspace } from '@/src/project/workspace';
 import { TASK_MANAGER } from '@/src/tasks/task-manager.config';
 import Layout from '@/src/ui/layout';
+import { ExitException } from '@/src/utils/exit';
 
 import { TestBed } from '@/tools/test-bed';
 import { TestScriptTask } from '@/tools/test-tasks';
 import { flushPromises, spyLogger, wrapInkTestApp } from '@/tools/utils';
-import { ExitException } from '@/src/utils/exit';
 
 // Setup
 let app: ReturnType<typeof render>;
 let command: CommandModule;
+let context: ContextService;
 let manager: TaskManager;
 
 let bed: TestBed;
@@ -40,6 +42,7 @@ beforeEach(async () => {
   container.rebind(INK_APP).toConstantValue(wrapInkTestApp(app));
 
   command = await bed.prepareCommand(RunCommand, wks);
+  context = container.get(ContextService);
   manager = container.get(TASK_MANAGER);
 
   // Mocks
@@ -59,6 +62,8 @@ afterEach(() => {
 // Tests
 describe('jill run', () => {
   it('should run command in current workspace', async () => {
+    context.reset();
+
     // Run command
     const prom = yargs.command(command)
       .fail(false)
@@ -85,6 +90,8 @@ describe('jill run', () => {
   });
 
   it('should use given dependency selection mode', async () => {
+    context.reset();
+
     // Run command
     const prom = yargs.command(command)
       .fail(false)
@@ -104,6 +111,8 @@ describe('jill run', () => {
   });
 
   it('should exit 1 if script does not exist', async () => {
+    context.reset();
+
     jest.spyOn(wks, 'run').mockResolvedValue(null);
     jest.spyOn(manager, 'tasks', 'get').mockReturnValue([]);
 

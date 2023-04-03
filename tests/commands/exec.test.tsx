@@ -4,6 +4,7 @@ import symbols from 'log-symbols';
 import yargs, { type CommandModule } from 'yargs';
 
 import { ExecCommand } from '@/src/commands/exec';
+import { ContextService } from '@/src/commons/context.service';
 import { INK_APP } from '@/src/ink.config';
 import { container } from '@/src/inversify.config';
 import { type Workspace } from '@/src/project/workspace';
@@ -17,6 +18,7 @@ import { flushPromises, spyLogger, wrapInkTestApp } from '@/tools/utils';
 // Setup
 let app: ReturnType<typeof render>;
 let command: CommandModule;
+let context: ContextService;
 let manager: TaskManager;
 
 let bed: TestBed;
@@ -39,6 +41,7 @@ beforeEach(async () => {
   container.rebind(INK_APP).toConstantValue(wrapInkTestApp(app));
 
   command = await bed.prepareCommand(ExecCommand, wks);
+  context = container.get(ContextService);
   manager = container.get(TASK_MANAGER);
 
   // Mocks
@@ -58,6 +61,8 @@ afterEach(() => {
 // Tests
 describe('jill exec', () => {
   it('should run command in current workspace', async () => {
+    context.reset();
+
     // Run command
     const prom = yargs.command(command)
       .fail(false)
@@ -84,6 +89,8 @@ describe('jill exec', () => {
   });
 
   it('should use given dependency selection mode', async () => {
+    context.reset();
+
     // Run command
     const prom = yargs.command(command)
       .fail(false)

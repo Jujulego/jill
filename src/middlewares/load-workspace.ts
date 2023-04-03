@@ -49,7 +49,7 @@ export class LoadWorkspace implements IMiddleware<ILoadWorkspaceArgs> {
 
       if (!workspace) {
         this.spinner.failed(`Workspace "${args.workspace || '.'}" not found`);
-        new ExitException(1, 'Workspace not found');
+        throw new ExitException(1, 'Workspace not found');
       } else {
         this.context.workspace = workspace;
       }

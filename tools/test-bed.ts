@@ -81,7 +81,7 @@ export class TestBed {
 
     container.rebind<IMiddleware>(LoadWorkspace).toConstantValue({
       handler() {
-        container.bind(Workspace).toConstantValue(wks).whenTargetNamed(CURRENT);
+        container.get(ContextService).workspace = wks;
       }
     });
 

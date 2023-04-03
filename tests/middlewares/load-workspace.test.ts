@@ -1,14 +1,15 @@
 import yargs from 'yargs';
 
-import { applyMiddlewares } from '@/src/modules/middleware';
+import { ContextService } from '@/src/commons/context.service';
 import { SpinnerService } from '@/src/commons/spinner.service';
+import { CURRENT } from '@/src/constants';
 import { container } from '@/src/inversify.config';
 import { LoadWorkspace } from '@/src/middlewares/load-workspace';
-import { CURRENT } from '@/src/constants';
+import { applyMiddlewares } from '@/src/modules/middleware';
 import { Workspace } from '@/src/project/workspace';
+import { ExitException } from '@/src/utils/exit';
 
 import { TestBed } from '@/tools/test-bed';
-import { ContextService } from '@/src/commons/context.service';
 
 // Setup
 let bed: TestBed;
@@ -49,8 +50,7 @@ describe('LoadWorkspace', () => {
     expect(spinner.spin).toHaveBeenCalledWith('Loading "." workspace ...');
     expect(bed.project.workspace).toHaveBeenCalled();
 
-    expect(container.isBoundNamed(Workspace, CURRENT)).toBe(true);
-    expect(container.getNamed(Workspace, CURRENT)).toBe(wks);
+    expect(context.workspace).toBe(wks);
 
     expect(spinner.stop).toHaveBeenCalled();
   });
@@ -68,15 +68,33 @@ describe('LoadWorkspace', () => {
 
   it('should print failed spinner if workspace is not found', async () => {
     context.reset({ project: bed.project });
-    jest.spyOn(yargs, 'exit').mockImplementation();
     jest.spyOn(bed.project, 'workspace')
       .mockResolvedValue(null);
 
-    await parser.parse('-w test');
+    await expect(parser.parse('-w test'))
+      .rejects.toEqual(new ExitException(1, 'Workspace not found'));
 
     expect(spinner.spin).toHaveBeenCalledWith('Loading "test" workspace ...');
     expect(spinner.failed).toHaveBeenCalledWith('Workspace "test" not found');
+  });
+});
 
-    expect(yargs.exit).toHaveBeenCalledWith(1, new Error('Workspace not found'));
+describe('Workspace CURRENT binding', () => {
+  it('should return workspace from context', () => {
+    // Set project in context
+    const wks = bed.addWorkspace('root');
+    context.reset({ workspace: wks });
+
+    // Use binding
+    expect(container.getNamed(Workspace, CURRENT)).toBe(wks);
+  });
+
+  it('should throw if project miss in context', () => {
+    // Set project in context
+    context.reset();
+
+    // Use binding
+    expect(() => container.getNamed(Workspace, CURRENT))
+      .toThrow(new Error('Cannot inject current workspace, it not yet defined'));
   });
 });
