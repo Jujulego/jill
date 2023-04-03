@@ -4,6 +4,7 @@ import symbols from 'log-symbols';
 import yargs, { type CommandModule } from 'yargs';
 
 import { GroupCommand } from '@/src/commands/group';
+import { ContextService } from '@/src/commons/context.service';
 import { INK_APP } from '@/src/ink.config';
 import { container } from '@/src/inversify.config';
 import { type Workspace } from '@/src/project/workspace';
@@ -18,6 +19,7 @@ import { flushPromises, spyLogger, wrapInkTestApp } from '@/tools/utils';
 // Setup
 let app: ReturnType<typeof render>;
 let command: CommandModule;
+let context: ContextService;
 let manager: TaskManager;
 let taskExpr: TaskExprService;
 
@@ -44,6 +46,8 @@ beforeEach(async () => {
   container.rebind(INK_APP).toConstantValue(wrapInkTestApp(app));
 
   command = await bed.prepareCommand(GroupCommand, wks);
+
+  context = container.get(ContextService);
   manager = container.get(TASK_MANAGER);
   taskExpr = container.get(TaskExprService);
 
@@ -64,6 +68,8 @@ afterEach(() => {
 // Tests
 describe('jill group', () => {
   it('should run all tasks in current workspace', async () => {
+    context.reset();
+
     // Run command
     const prom = yargs.command(command)
       .fail(false)
@@ -108,6 +114,8 @@ describe('jill group', () => {
   });
 
   it('should use given dependency mode', async () => {
+    context.reset();
+
     // Run command
     const prom = yargs.command(command)
       .fail(false)

@@ -5,8 +5,8 @@ import { Logger } from '@/src/commons/logger.service';
 import { Command } from '@/src/modules/command';
 import { TaskCommand } from '@/src/modules/task-command';
 import { LoadProject } from '@/src/middlewares/load-project';
-import { LoadWorkspace } from '@/src/middlewares/load-workspace';
-import { LazyCurrentWorkspace, type Workspace, type WorkspaceDepsMode } from '@/src/project/workspace';
+import { LazyCurrentWorkspace, LoadWorkspace } from '@/src/middlewares/load-workspace';
+import { type Workspace, type WorkspaceDepsMode } from '@/src/project/workspace';
 import { ExitException } from '@/src/utils/exit';
 
 // Types

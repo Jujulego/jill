@@ -5,10 +5,8 @@ import path from 'node:path';
 import normalize, { type Package } from 'normalize-package-data';
 import glob from 'tiny-glob';
 
-import { lazyInjectNamed } from '@/src/inversify.config';
 import { type Logger } from '@/src/commons/logger.service';
 
-import { CURRENT } from './constants';
 import { Workspace } from './workspace';
 import { type PackageManager } from './types';
 
@@ -185,9 +183,4 @@ export class Project {
   get root(): string {
     return path.resolve(this._root);
   }
-}
-
-// Decorators
-export function LazyCurrentProject() {
-  return lazyInjectNamed(Project, CURRENT);
 }

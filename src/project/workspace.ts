@@ -5,13 +5,12 @@ import { type Package } from 'normalize-package-data';
 import { satisfies } from 'semver';
 
 import { GitService } from '@/src/commons/git.service';
-import { container, lazyInject, lazyInjectNamed } from '@/src/inversify.config';
+import { container, lazyInject } from '@/src/inversify.config';
 import { Logger } from '@/src/commons/logger.service';
 import { CommandTask } from '@/src/tasks/command-task';
 import { ScriptTask } from '@/src/tasks/script-task';
 import { combine } from '@/src/utils/streams';
 
-import { CURRENT } from './constants';
 import { type Project } from './project';
 
 // Types
@@ -214,9 +213,4 @@ export class Workspace {
   get cwd(): string {
     return path.resolve(this.project.root, this._cwd);
   }
-}
-
-// Decorators
-export function LazyCurrentWorkspace() {
-  return lazyInjectNamed(Workspace, CURRENT);
 }

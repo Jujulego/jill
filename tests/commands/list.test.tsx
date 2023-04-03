@@ -9,14 +9,21 @@ import Layout from '@/src/ui/layout';
 
 import { TestBed } from '@/tools/test-bed';
 import { wrapInkTestApp } from '@/tools/utils';
+import { ContextService } from '@/src/commons/context.service';
 
 // Setup
 let app: ReturnType<typeof render>;
 let command: CommandModule;
+let context: ContextService;
 
 let bed: TestBed;
 
+beforeAll(() => {
+  container.snapshot();
+});
+
 beforeEach(async () => {
+  container.restore();
   container.snapshot();
 
   jest.resetAllMocks();
@@ -24,6 +31,7 @@ beforeEach(async () => {
 
   // Project
   bed = new TestBed();
+  context = container.get(ContextService);
 
   app = render(<Layout />);
   container.rebind(INK_APP).toConstantValue(wrapInkTestApp(app));
@@ -32,13 +40,14 @@ beforeEach(async () => {
 });
 
 afterEach(() => {
-  container.restore();
   cleanup();
 });
 
 // Tests
 describe('jill list', () => {
   it('should print list of all workspaces', async () => {
+    context.reset({});
+
     // Setup workspaces
     bed.addWorkspace('wks-1');
     bed.addWorkspace('wks-2');
@@ -57,6 +66,8 @@ describe('jill list', () => {
 
   describe('private filter', () => {
     it('should print only private workspaces (--private)', async () => {
+      context.reset({});
+
       // Setup workspaces
       bed.addWorkspace('wks-1', { private: true });
       bed.addWorkspace('wks-2');
@@ -72,6 +83,8 @@ describe('jill list', () => {
     });
 
     it('should print only public workspaces (--no-private)', async () => {
+      context.reset({});
+
       // Setup workspaces
       bed.addWorkspace('wks-1', { private: true });
       bed.addWorkspace('wks-2');
@@ -90,6 +103,8 @@ describe('jill list', () => {
 
   describe('affected filter', () => {
     it('should print only affected workspaces (--affected test)', async () => {
+      context.reset({});
+
       // Setup workspaces
       const workspaces = [
         bed.addWorkspace('wks-1'),
@@ -113,6 +128,8 @@ describe('jill list', () => {
 
   describe('with-script filter', () => {
     it('should print only workspaces with \'test\' script (--with-script test)', async () => {
+      context.reset({});
+
       // Setup workspaces
       bed.addWorkspace('wks-1');
       bed.addWorkspace('wks-2', { scripts: { test: 'test' }});
@@ -128,6 +145,8 @@ describe('jill list', () => {
     });
 
     it('should print only workspaces with \'test\' or \'lint\' scripts (--with-script test lint)', async () => {
+      context.reset({});
+
       // Setup workspaces
       bed.addWorkspace('wks-1');
       bed.addWorkspace('wks-2', { scripts: { test: 'test' }});
@@ -146,6 +165,8 @@ describe('jill list', () => {
 
   describe('formatting', () => {
     it('should print list with headers (--headers)', async () => {
+      context.reset({});
+
       // Setup workspaces
       bed.addWorkspace('wks-1');
       bed.addWorkspace('wks-2');
@@ -164,6 +185,8 @@ describe('jill list', () => {
     });
 
     it('should print long list of all workspaces (--long)', async () => {
+      context.reset({});
+
       // Setup workspaces
       bed.addWorkspace('wks-1');
       bed.addWorkspace('wks-2');
@@ -182,6 +205,8 @@ describe('jill list', () => {
     });
 
     it('should print json array of all workspaces (--json)', async () => {
+      context.reset({});
+
       // Setup workspaces
       bed.addWorkspace('wks-1');
       bed.addWorkspace('wks-2');

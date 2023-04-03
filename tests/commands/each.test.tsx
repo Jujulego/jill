@@ -14,11 +14,13 @@ import { TestBed } from '@/tools/test-bed';
 import { TestScriptTask } from '@/tools/test-tasks';
 import { flushPromises, spyLogger, wrapInkTestApp } from '@/tools/utils';
 import { ExitException } from '@/src/utils/exit';
+import { ContextService } from '@/src/commons/context.service';
 
 // Setup
 let app: ReturnType<typeof render>;
 let command: CommandModule;
 let manager: TaskManager;
+let context: ContextService;
 let spinner: SpinnerService;
 
 let bed: TestBed;
@@ -42,6 +44,7 @@ beforeEach(async () => {
 
   command = await bed.prepareCommand(EachCommand);
   manager = container.get(TASK_MANAGER);
+  context = container.get(ContextService);
   spinner = container.get(SpinnerService);
 
   // Mocks
@@ -58,6 +61,8 @@ afterEach(() => {
 // Tests
 describe('jill each', () => {
   it('should run script in all workspaces having that script', async () => {
+    context.reset({});
+
     // Setup workspaces
     const workspaces = [
       bed.addWorkspace('wks-1', { scripts: { cmd: 'cmd' } }),
@@ -113,6 +118,8 @@ describe('jill each', () => {
   });
 
   it('should use given dependency selection mode', async () => {
+    context.reset({});
+
     // Setup workspaces
     const workspaces = [
       bed.addWorkspace('wks', { scripts: { cmd: 'cmd' } }),
@@ -148,6 +155,7 @@ describe('jill each', () => {
   });
 
   it('should exit 1 if no matching workspace is found', async () => {
+    context.reset({});
     jest.spyOn(spinner, 'failed');
 
     // Setup tasks
@@ -165,6 +173,8 @@ describe('jill each', () => {
 
   describe('private filter', () => {
     it('should run script only in private workspaces (--private)', async () => {
+      context.reset({});
+
       // Setup workspaces
       const workspaces = [
         bed.addWorkspace('wks-1', { private: true, scripts: { cmd: 'cmd' } }),
@@ -208,6 +218,8 @@ describe('jill each', () => {
     });
 
     it('should run script only in private workspaces (--no-private)', async () => {
+      context.reset({});
+
       // Setup workspaces
       const workspaces = [
         bed.addWorkspace('wks-1', { private: true, scripts: { cmd: 'cmd' } }),
@@ -253,6 +265,8 @@ describe('jill each', () => {
 
   describe('affected filter', () => {
     it('should run script only in affected workspaces (--affected test)', async () => {
+      context.reset({});
+
       // Setup workspaces
       const workspaces = [
         bed.addWorkspace('wks-1', { scripts: { cmd: 'cmd' } }),

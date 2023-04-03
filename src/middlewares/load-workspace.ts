@@ -1,12 +1,16 @@
 import { inject } from 'inversify';
-import yargs, { type ArgumentsCamelCase, type Argv } from 'yargs';
+import { type ArgumentsCamelCase, type Argv } from 'yargs';
 
-import { type IMiddleware, Middleware } from '@/src/modules/middleware';
+import { ContextService } from '@/src/commons/context.service';
 import { SpinnerService } from '@/src/commons/spinner.service';
-import { container } from '@/src/inversify.config';
-import { LazyCurrentProject, type Project } from '@/src/project/project';
-import { CURRENT } from '@/src/project/constants';
+import { CURRENT } from '@/src/constants';
+import { container, lazyInjectNamed } from '@/src/inversify.config';
+import { type IMiddleware, Middleware } from '@/src/modules/middleware';
+import { type Project } from '@/src/project/project';
 import { Workspace } from '@/src/project/workspace';
+import { ExitException } from '@/src/utils/exit';
+
+import { LazyCurrentProject } from './load-project';
 
 // Types
 export interface ILoadWorkspaceArgs {
@@ -23,7 +27,9 @@ export class LoadWorkspace implements IMiddleware<ILoadWorkspaceArgs> {
   // Constructor
   constructor(
     @inject(SpinnerService)
-    private readonly spinner: SpinnerService
+    private readonly spinner: SpinnerService,
+    @inject(ContextService)
+    private readonly context: ContextService,
   ) {}
 
   // Methods
@@ -43,15 +49,30 @@ export class LoadWorkspace implements IMiddleware<ILoadWorkspaceArgs> {
 
       if (!workspace) {
         this.spinner.failed(`Workspace "${args.workspace || '.'}" not found`);
-        yargs.exit(1, new Error('Workspace not found'));
+        throw new ExitException(1, 'Workspace not found');
       } else {
-        container
-          .bind(Workspace)
-          .toConstantValue(workspace)
-          .whenTargetNamed(CURRENT);
+        this.context.workspace = workspace;
       }
     } finally {
       this.spinner.stop();
     }
   }
 }
+
+// Decorators
+export function LazyCurrentWorkspace() {
+  return lazyInjectNamed(Workspace, CURRENT);
+}
+
+container.bind(Workspace)
+  .toDynamicValue(({ container }) => {
+    const ctx = container.get(ContextService);
+    const wks = ctx.workspace;
+
+    if (!wks) {
+      throw new Error('Cannot inject current workspace, it not yet defined');
+    }
+
+    return wks;
+  })
+  .whenTargetNamed(CURRENT);

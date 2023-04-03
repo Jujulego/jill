@@ -2,10 +2,11 @@ import chalk from 'chalk';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
-import { COMMAND } from '@/src/modules/command';
+import { ContextService } from '@/src/commons/context.service';
 import { applyConfigOptions } from '@/src/config/config-options';
 import { CorePlugin } from '@/src/core.plugin';
 import { container } from '@/src/inversify.config';
+import { COMMAND } from '@/src/modules/command';
 import { getModule } from '@/src/modules/module';
 import { PluginLoaderService } from '@/src/modules/plugin-loader.service';
 import { ExitException } from '@/src/utils/exit';
@@ -15,6 +16,8 @@ import pkg from '../package.json';
 
 // Bootstrap
 (async () => {
+  container.get(ContextService).reset();
+
   // Setup yargs
   const parser = yargs(hideBin(process.argv))
     .scriptName('jill')
