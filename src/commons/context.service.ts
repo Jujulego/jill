@@ -4,10 +4,12 @@ import { AsyncLocalStorage } from 'node:async_hooks';
 import { Logger } from '@/src/commons/logger.service';
 import { Service } from '@/src/modules/service';
 import { type Project } from '@/src/project/project';
+import { type Workspace } from '@/src/project/workspace';
 
 // Types
 export interface Context {
   project?: Project;
+  workspace?: Workspace;
 }
 
 // Service
@@ -51,5 +53,13 @@ export class ContextService implements Context {
 
   set project(project: Project | undefined) {
     this._updateContext({ project });
+  }
+
+  get workspace(): Workspace | undefined {
+    return this._getContext().workspace;
+  }
+
+  set workspace(workspace: Workspace | undefined) {
+    this._updateContext({ workspace });
   }
 }

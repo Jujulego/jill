@@ -1,8 +1,8 @@
 import { Command } from '@/src/modules/command';
 import { InkCommand } from '@/src/modules/ink-command';
 import { LoadProject } from '@/src/middlewares/load-project';
-import { LoadWorkspace } from '@/src/middlewares/load-workspace';
-import { LazyCurrentWorkspace, type Workspace } from '@/src/project/workspace';
+import { LazyCurrentWorkspace, LoadWorkspace } from '@/src/middlewares/load-workspace';
+import { type Workspace } from '@/src/project/workspace';
 import WorkspaceTree from '@/src/ui/workspace-tree';
 
 // Command
