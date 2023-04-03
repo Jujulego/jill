@@ -5,9 +5,11 @@ import { Logger } from '@/src/commons/logger.service';
 import { Service } from '@/src/modules/service';
 import { type Project } from '@/src/project/project';
 import { type Workspace } from '@/src/project/workspace';
+import { type JillApplication } from '@/src/jill.application';
 
 // Types
 export interface Context {
+  application?: JillApplication;
   project?: Project;
   workspace?: Workspace;
 }
@@ -24,6 +26,7 @@ export class ContextService implements Context {
     @inject(Logger) logger: Logger,
   ) {
     this._logger = logger.child({ label: 'context' });
+    this.reset();
   }
 
   // Methods
@@ -47,6 +50,14 @@ export class ContextService implements Context {
   }
 
   // Properties
+  get application(): JillApplication | undefined {
+    return this._getContext().application;
+  }
+
+  set application(application: JillApplication | undefined) {
+    this._updateContext({ application });
+  }
+
   get project(): Project | undefined {
     return this._getContext().project;
   }

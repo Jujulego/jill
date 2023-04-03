@@ -1,4 +1,4 @@
-import { type ContainerModule, inject } from 'inversify';
+import { type ContainerModule, inject, type interfaces as int } from 'inversify';
 
 import { CONFIG } from '@/src/config/config-loader';
 import { type IConfig } from '@/src/config/types';
@@ -48,12 +48,12 @@ export class PluginLoaderService {
     return module;
   }
 
-  async loadPlugins(): Promise<void> {
+  async loadPlugins(ctn: int.Container = container): Promise<void> {
     if (!this._config.plugins) return;
 
     for (const path of this._config.plugins) {
       const plugin = await this._importPlugin(path);
-      container.load(plugin);
+      ctn.load(plugin);
     }
   }
 }
