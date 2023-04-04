@@ -10,9 +10,9 @@ export const TASK_MANAGER: int.ServiceIdentifier<TaskManager> = Symbol('jujulego
 
 // Service
 container.bind(TASK_MANAGER)
-  .toDynamicValue((context) => {
-    const config = context.container.get(CONFIG);
-    const logger = context.container.get(Logger);
+  .toDynamicValue(({ container }) => {
+    const config = container.get(CONFIG);
+    const logger = container.get(Logger);
 
     return new TaskManager({ jobs: config.jobs, logger });
   })

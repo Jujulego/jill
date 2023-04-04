@@ -10,7 +10,7 @@ export const AJV: int.ServiceIdentifier<Ajv> = Symbol('jujulego:jill:Ajv');
 // Setup
 container
   .bind(AJV)
-  .toDynamicValue(() => {
+  .toDynamicValue(({ container }) => {
     const logger = container.get(Logger);
 
     return new Ajv({

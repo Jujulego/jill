@@ -16,8 +16,8 @@ export const CONFIG_VALIDATOR: int.ServiceIdentifier<ValidateFunction<IConfig>> 
 // Setup
 container
   .bind(CONFIG_VALIDATOR)
-  .toDynamicValue((context) => {
-    const ajv = context.container.get(AJV);
+  .toDynamicValue(({ container }) => {
+    const ajv = container.get(AJV);
     return ajv.compile<IConfig>(schema);
   })
   .inSingletonScope();
