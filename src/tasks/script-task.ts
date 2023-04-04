@@ -47,7 +47,10 @@ export class ScriptTask extends GroupTask<ScriptContext> {
 
     if (command === 'jill') {
       const app = container.get(JillApplication);
-      return await app.getTasks(commandArgs);
+      return await app.tasksOf(commandArgs, {
+        project: this.project,
+        workspace: this.workspace,
+      });
     }
 
     return [

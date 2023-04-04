@@ -2,7 +2,7 @@ import { type Task } from '@jujulego/tasks';
 import { inject, injectable, type interfaces as int } from 'inversify';
 import yargs from 'yargs';
 
-import { ContextService } from '@/src/commons/context.service';
+import { ContextService, type Context } from '@/src/commons/context.service';
 import { Logger } from '@/src/commons/logger.service';
 import { applyConfigOptions } from '@/src/config/config-options';
 import { CURRENT } from '@/src/constants';
@@ -11,11 +11,11 @@ import { container, lazyInjectNamed } from '@/src/inversify.config';
 import { buildCommandModule, COMMAND, COMMAND_MODULE } from '@/src/modules/command';
 import { getModule } from '@/src/modules/module';
 import { PluginLoaderService } from '@/src/modules/plugin-loader.service';
+import { TaskCommand } from '@/src/modules/task-command';
+import { JillTask } from '@/src/tasks/jill-task';
 
 // @ts-ignore: Outside of typescript's rootDir in build
 import pkg from '../package.json';
-import { TaskCommand } from '@/src/modules/task-command';
-import { JillTask } from '@/src/tasks/jill-task';
 
 // Application
 @injectable()
@@ -72,7 +72,9 @@ export class JillApplication {
     await this._prepareParser(commands).parse(argv);
   }
 
-  async getTasks(argv: string[]): Promise<Task[]> {
+  async tasksOf(argv: string[], ctx: Omit<Context, 'application'> = {}): Promise<Task[]> {
+    this.context.reset({ ...ctx, application: this });
+
     // Load plugins
     this.logger.child({ label: 'plugin' }).verbose('Loading plugin <core>');
     this.container.load(getModule(CorePlugin, true));

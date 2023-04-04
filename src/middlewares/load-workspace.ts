@@ -45,7 +45,12 @@ export class LoadWorkspace implements IMiddleware<ILoadWorkspaceArgs> {
   async handler(args: ArgumentsCamelCase<ILoadWorkspaceArgs>): Promise<void> {
     try {
       this.spinner.spin(`Loading "${args.workspace || '.'}" workspace ...`);
-      const workspace = await this.project.workspace(args.workspace);
+
+      let workspace = this.context.workspace ?? null;
+
+      if (!workspace || args.workspace) {
+        workspace = await this.project.workspace(args.workspace);
+      }
 
       if (!workspace) {
         this.spinner.failed(`Workspace "${args.workspace || '.'}" not found`);

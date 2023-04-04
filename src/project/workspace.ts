@@ -143,6 +143,7 @@ export class Workspace {
     const task = new CommandTask(this, command, args, {
       ...opts,
       logger: this._logger.child({ label: `${this.name}$${command}` }),
+      superCommand: await this.project.packageManager() === 'yarn' ? 'yarn' : undefined
     });
 
     await this._buildDependencies(task, opts.buildDeps);

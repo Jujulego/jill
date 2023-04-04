@@ -12,7 +12,7 @@ import { type PackageManager } from '@/src/project/types';
 
 // Types
 export interface ILoadProjectArgs {
-  project: string;
+  project?: string;
   'package-manager'?: PackageManager;
 }
 
@@ -35,7 +35,6 @@ export class LoadProject implements IMiddleware<ILoadProjectArgs> {
       .option('project', {
         alias: 'p',
         type: 'string',
-        default: process.cwd(),
         description: 'Project root directory'
       })
       .option('package-manager', {
@@ -48,9 +47,14 @@ export class LoadProject implements IMiddleware<ILoadProjectArgs> {
   async handler(args: ArgumentsCamelCase<ILoadProjectArgs>): Promise<void> {
     try {
       this.spinner.spin('Loading project ...');
-      const root = args.project = await this.projects.searchProjectRoot(args.project);
 
-      this.context.project = this.projects.getProject(root, { packageManager: args.packageManager });
+      if (!this.context.project || args.project) {
+        args.project = await this.projects.searchProjectRoot(args.project ?? process.cwd());
+
+        this.context.project = this.projects.getProject(args.project, {
+          packageManager: args.packageManager
+        });
+      }
     } finally {
       this.spinner.stop();
     }
