@@ -17,6 +17,7 @@ import { ExitException } from '@/src/utils/exit';
     } else {
       console.error(await app.parser.getHelp());
       console.error(chalk.red(err.message));
+      // console.error(err);
 
       process.exit(1);
     }

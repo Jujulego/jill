@@ -9,7 +9,8 @@ import { setRegistry } from '@/src/modules/module';
 // Symbols
 const COMMAND_OPTS = Symbol('jujulego:jill:command-opts');
 
-export const COMMAND: int.ServiceIdentifier<CommandModule> = Symbol('jujulego:jill:command');
+export const COMMAND: int.ServiceIdentifier<[ICommand, ICommandOpts]> = Symbol('jujulego:jill:command');
+export const COMMAND_MODULE: int.ServiceIdentifier<CommandModule> = Symbol('jujulego:jill:command-module');
 
 // Types
 export interface ICommand<A = unknown> {
@@ -54,7 +55,7 @@ export function buildCommandModule(cmd: ICommand, opts: ICommandOpts): CommandMo
 
       return parser;
     },
-    handler: (...args) => cmd.handler(...args),
+    handler: (args) => cmd.handler(args),
   };
 }
 
@@ -65,14 +66,20 @@ export function Command(opts: ICommandOpts) {
 
     Reflect.defineMetadata(COMMAND_OPTS, opts, target);
 
+    const cmd = opts.command.split(' ')[0];
     setRegistry(target, (bind) => {
       bind(target).toSelf();
+
       bind(COMMAND)
+        .toDynamicValue(async ({ container }) => [await container.getAsync(target), opts])
+        .whenTargetNamed(cmd);
+
+      bind(COMMAND_MODULE)
         .toDynamicValue(async ({ container }) => {
           const cmd = await container.getAsync(target);
           return buildCommandModule(cmd, opts);
         })
-        .whenTargetNamed(opts.command.split(' ')[0]);
+        .whenTargetNamed(cmd);
     });
   };
 }

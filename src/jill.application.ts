@@ -1,3 +1,4 @@
+import { type Task } from '@jujulego/tasks';
 import { inject, injectable, type interfaces as int } from 'inversify';
 import yargs from 'yargs';
 
@@ -7,12 +8,14 @@ import { applyConfigOptions } from '@/src/config/config-options';
 import { CURRENT } from '@/src/constants';
 import { CorePlugin } from '@/src/core.plugin';
 import { container, lazyInjectNamed } from '@/src/inversify.config';
-import { COMMAND } from '@/src/modules/command';
+import { buildCommandModule, COMMAND, COMMAND_MODULE } from '@/src/modules/command';
 import { getModule } from '@/src/modules/module';
 import { PluginLoaderService } from '@/src/modules/plugin-loader.service';
 
 // @ts-ignore: Outside of typescript's rootDir in build
 import pkg from '../package.json';
+import { TaskCommand } from '@/src/modules/task-command';
+import { JillTask } from '@/src/tasks/jill-task';
 
 // Application
 @injectable()
@@ -40,11 +43,20 @@ export class JillApplication {
       .help('help', 'Show help for a command')
       .version('version', 'Show version', pkg.version)
       .wrap(process.stdout.columns);
-
-    applyConfigOptions(this.parser);
   }
 
   // Methods
+  private _prepareParser(commands: yargs.CommandModule[]): yargs.Argv {
+    applyConfigOptions(this.parser);
+
+    return this.parser
+      .command(commands)
+      .demandCommand()
+      .recommendCommands()
+      .strict()
+      .fail(false);
+  }
+
   async run(argv: string | readonly string[]): Promise<void> {
     this.context.reset({ application: this });
 
@@ -55,13 +67,49 @@ export class JillApplication {
     await this.plugins.loadPlugins(this.container);
 
     // Parse command
-    await this.parser
-      .command(await this.container.getAllAsync(COMMAND))
-      .demandCommand()
-      .recommendCommands()
-      .strict()
-      .fail(false)
-      .parse(argv);
+    const commands = await this.container.getAllAsync(COMMAND_MODULE);
+
+    await this._prepareParser(commands).parse(argv);
+  }
+
+  async getTasks(argv: string[]): Promise<Task[]> {
+    // Load plugins
+    this.logger.child({ label: 'plugin' }).verbose('Loading plugin <core>');
+    this.container.load(getModule(CorePlugin, true));
+
+    await this.plugins.loadPlugins(this.container);
+
+    // Prepare commands
+    const commands = await this.container.getAllAsync(COMMAND);
+
+    return new Promise<Task[]>((resolve, reject) => {
+      const modules: yargs.CommandModule[] = [];
+
+      for (const [cmd, opts] of commands) {
+        const mod = buildCommandModule(cmd, opts);
+
+        mod.handler = async (args) => {
+          if (cmd instanceof TaskCommand) {
+            const tasks: Task[] = [];
+
+            for await (const tsk of cmd.prepare(args)) {
+              tasks.push(tsk);
+            }
+
+            resolve(tasks);
+          } else {
+            resolve([new JillTask(`jill ${argv.join(' ')}`, cmd, args)]);
+          }
+        };
+
+        modules.push(mod);
+      }
+
+      // Parse command
+      this._prepareParser(modules)
+        .parseAsync(argv)
+        .catch(reject);
+    });
   }
 }
 

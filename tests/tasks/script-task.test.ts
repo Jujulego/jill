@@ -40,7 +40,7 @@ describe('ScriptTask.prepare', () => {
     const script = new ScriptTask(wks, 'test', ['--arg']);
     await script.prepare();
 
-    expect(script.tasks).toHaveLength(1);
+    expect(script.scriptTasks).toHaveLength(1);
 
     expect(script.task).toBeInstanceOf(CommandTask);
     expect(script.task.group).toBe(script);
@@ -54,7 +54,7 @@ describe('ScriptTask.prepare', () => {
     const script = new ScriptTask(wks, 'test', ['--arg']);
     await script.prepare();
 
-    expect(script.tasks).toHaveLength(1);
+    expect(script.scriptTasks).toHaveLength(1);
 
     expect(script.task).toBeInstanceOf(CommandTask);
     expect(script.task.group).toBe(script);
@@ -70,7 +70,7 @@ describe('ScriptTask.prepare', () => {
     await expect(script.prepare())
       .rejects.toEqual(new Error('No script test in wks'));
 
-    expect(script.tasks).toHaveLength(0);
+    expect(script.scriptTasks).toHaveLength(0);
   });
 });
 
