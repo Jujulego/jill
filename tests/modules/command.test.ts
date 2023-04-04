@@ -2,7 +2,7 @@ import yargs, { type ArgumentsCamelCase, type CommandBuilder } from 'yargs';
 
 import {
   buildCommandModule,
-  COMMAND,
+  COMMAND_MODULE,
   Command,
   getCommandOpts,
   type ICommand,
@@ -161,7 +161,7 @@ describe('@Command', () => {
     expect(container.get(TestCommand)).toBeInstanceOf(TestCommand);
 
     // Get module
-    await expect(container.getNamedAsync(COMMAND, 'test'))
+    await expect(container.getNamedAsync(COMMAND_MODULE, 'test'))
       .resolves.toEqual({
         command: 'test',
         describe: 'test',
