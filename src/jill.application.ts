@@ -4,8 +4,9 @@ import yargs from 'yargs';
 import { ContextService } from '@/src/commons/context.service';
 import { Logger } from '@/src/commons/logger.service';
 import { applyConfigOptions } from '@/src/config/config-options';
+import { CURRENT } from '@/src/constants';
 import { CorePlugin } from '@/src/core.plugin';
-import { container } from '@/src/inversify.config';
+import { container, lazyInjectNamed } from '@/src/inversify.config';
 import { COMMAND } from '@/src/modules/command';
 import { getModule } from '@/src/modules/module';
 import { PluginLoaderService } from '@/src/modules/plugin-loader.service';
@@ -30,7 +31,7 @@ export class JillApplication {
     private readonly logger: Logger,
   ) {
     // Create container
-    this.container = (context.application?.container ?? container).createChild();
+    this.container = container.createChild();
 
     // Create parser
     this.parser = yargs()
@@ -64,4 +65,25 @@ export class JillApplication {
   }
 }
 
-container.bind(JillApplication).toSelf().inTransientScope();
+container.bind(JillApplication)
+  .toSelf()
+  .inTransientScope()
+  .whenTargetIsDefault();
+
+// Lazy injection
+export function LazyCurrentApplication() {
+  return lazyInjectNamed(JillApplication, CURRENT);
+}
+
+container.bind(JillApplication)
+  .toDynamicValue(({ container }) => {
+    const ctx = container.get(ContextService);
+    const app = ctx.application;
+
+    if (!app) {
+      throw new Error('Cannot inject current application, it not yet defined');
+    }
+
+    return app;
+  })
+  .whenTargetNamed(CURRENT);
