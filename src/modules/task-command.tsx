@@ -48,7 +48,7 @@ export abstract class TaskCommand<A = unknown> extends InkCommand<A> {
 
   async* render(args: ArgumentsCamelCase<A & ITaskCommandArgs>) {
     // Prepare tasks
-    const tasks = new TaskSet(this.manager);
+    const tasks = new TaskSet();
 
     for await (const tsk of this.prepare(args)) {
       tasks.add(tsk);
@@ -75,7 +75,7 @@ export abstract class TaskCommand<A = unknown> extends InkCommand<A> {
       yield <TaskManagerSpinner manager={this.manager} />;
 
       // Start tasks
-      tasks.start();
+      tasks.start(this.manager);
 
       const result = await waitFor(tasks, 'finished');
 
