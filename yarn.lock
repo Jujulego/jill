@@ -1317,7 +1317,7 @@ __metadata:
   dependencies:
     "@jujulego/2d-maths": 1.6.0
     "@jujulego/event-tree": 2.1.1
-    "@jujulego/tasks": 1.4.2
+    "@jujulego/tasks": 1.5.0
     "@jujulego/utils": 1.2.0
     "@microsoft/eslint-formatter-sarif": 3.0.0
     "@swc/core": 1.3.39
@@ -1376,14 +1376,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jujulego/tasks@npm:1.4.2":
-  version: 1.4.2
-  resolution: "@jujulego/tasks@npm:1.4.2"
+"@jujulego/tasks@npm:1.5.0":
+  version: 1.5.0
+  resolution: "@jujulego/tasks@npm:1.5.0"
   dependencies:
     "@jujulego/event-tree": ^2.1.1
     "@jujulego/utils": ^1.2.0
     tree-kill: ^1.2.2
-  checksum: 3069e237aa5334be3f1b882bb9bcf1659b7b02bbbc7a7da7b57e62731db6707af5d6caeb1af02264b90e121cc8a6d300ac89381f4d05bae260cee47f3ee73040
+  checksum: 231e297e11dc5f0c5a5b026a3653a71525ec5423e2fcf34bca72cb16c214a1fda470f6e8ca1d178b061f465607e86a7f11c3a63894e6367812f3bfd2c4e72a15
   languageName: node
   linkType: hard
 

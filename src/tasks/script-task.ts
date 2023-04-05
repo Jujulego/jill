@@ -1,11 +1,11 @@
 import { waitFor } from '@jujulego/event-tree';
-import { GroupTask, type Task, type TaskContext, type TaskOptions } from '@jujulego/tasks';
+import { GroupTask, type Task, type TaskContext, type TaskOptions, TaskSet } from '@jujulego/tasks';
 
 import { container } from '@/src/inversify.config';
-import { type Workspace } from '@/src/project/workspace';
-import { splitCommandLine } from '@/src/utils/string';
-import { CommandTask } from '@/src/tasks/command-task';
 import { JillApplication } from '@/src/jill.application';
+import { type Workspace } from '@/src/project/workspace';
+import { CommandTask } from '@/src/tasks/command-task';
+import { splitCommandLine } from '@/src/utils/string';
 
 // Types
 export interface ScriptContext extends TaskContext {
@@ -21,7 +21,7 @@ export function isScriptCtx(ctx: Readonly<TaskContext>): ctx is Readonly<ScriptC
 // Class
 export class ScriptTask extends GroupTask<ScriptContext> {
   // Attributes
-  private _scriptTasks: Task[];
+  private _scriptTasks: TaskSet;
 
   // Constructor
   constructor(
@@ -68,11 +68,12 @@ export class ScriptTask extends GroupTask<ScriptContext> {
       throw new Error(`No script ${this.script} in ${this.workspace.name}`);
     }
 
+    this._scriptTasks = new TaskSet();
+
     for (const tsk of tasks) {
       this.add(tsk);
+      this._scriptTasks.add(tsk);
     }
-
-    this._scriptTasks = tasks;
   }
 
   protected async *_orchestrate(): AsyncGenerator<Task, void, undefined> {
@@ -82,8 +83,8 @@ export class ScriptTask extends GroupTask<ScriptContext> {
 
     yield* this._scriptTasks;
 
-    await Promise.all(this._scriptTasks.map((tsk) => waitFor(tsk, 'completed')));
-    this.status = 'done';
+    const results = await waitFor(this._scriptTasks, 'finished');
+    this.status = results.failed === 0 ? 'done' : 'failed';
   }
 
   protected _stop(): void {
@@ -95,7 +96,7 @@ export class ScriptTask extends GroupTask<ScriptContext> {
   complexity(cache = new Map<string, number>()): number {
     let complexity = super.complexity(cache);
 
-    complexity += this._scriptTasks.reduce((cpl, tsk) => cpl + tsk.complexity(cache), 0);
+    complexity += this._scriptTasks.tasks.reduce((cpl, tsk) => cpl + tsk.complexity(cache), 0);
     cache.set(this.id, complexity);
 
     return complexity;
