@@ -40,12 +40,14 @@ describe('ScriptTask.prepare', () => {
     const script = new ScriptTask(wks, 'test', ['--arg']);
     await script.prepare();
 
-    expect(script.scriptTasks).toHaveLength(1);
+    expect(script.tasks).toHaveLength(1);
 
-    expect(script.task).toBeInstanceOf(CommandTask);
-    expect(script.task.group).toBe(script);
-    expect(script.task.cmd).toBe('jest');
-    expect(script.task.args).toEqual(['--script', '--arg']);
+    const tsk = script.tasks[0] as CommandTask;
+
+    expect(tsk).toBeInstanceOf(CommandTask);
+    expect(tsk.group).toBe(script);
+    expect(tsk.cmd).toBe('jest');
+    expect(tsk.args).toEqual(['--script', '--arg']);
   });
 
   it('should create a task running the script (yarn)', async () => {
@@ -54,12 +56,14 @@ describe('ScriptTask.prepare', () => {
     const script = new ScriptTask(wks, 'test', ['--arg']);
     await script.prepare();
 
-    expect(script.scriptTasks).toHaveLength(1);
+    expect(script.tasks).toHaveLength(1);
 
-    expect(script.task).toBeInstanceOf(CommandTask);
-    expect(script.task.group).toBe(script);
-    expect(script.task.cmd).toBe('yarn');
-    expect(script.task.args).toEqual(['jest', '--script', '--arg']);
+    const tsk = script.tasks[0] as CommandTask;
+
+    expect(tsk).toBeInstanceOf(CommandTask);
+    expect(tsk.group).toBe(script);
+    expect(tsk.cmd).toBe('yarn');
+    expect(tsk.args).toEqual(['jest', '--script', '--arg']);
   });
 
   it('should throw if script does not exist', async () => {
@@ -70,7 +74,7 @@ describe('ScriptTask.prepare', () => {
     await expect(script.prepare())
       .rejects.toEqual(new Error('No script test in wks'));
 
-    expect(script.scriptTasks).toHaveLength(0);
+    expect(script.tasks).toHaveLength(0);
   });
 });
 
@@ -79,10 +83,10 @@ describe('ScriptTask.complexity', () => {
     const script = new ScriptTask(wks, 'test', ['--arg']);
     await script.prepare();
 
-    jest.spyOn(script.task, 'complexity').mockReturnValue(1);
+    jest.spyOn(script.tasks[0], 'complexity').mockReturnValue(1);
 
     expect(script.complexity()).toBe(1);
-    expect(script.task.complexity).toHaveBeenCalled();
+    expect(script.tasks[0].complexity).toHaveBeenCalled();
   });
 });
 

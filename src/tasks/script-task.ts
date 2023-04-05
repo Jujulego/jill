@@ -88,7 +88,7 @@ export class ScriptTask extends GroupTask<ScriptContext> {
   }
 
   protected _stop(): void {
-    for (const tsk of this.scriptTasks) {
+    for (const tsk of this._scriptTasks) {
       tsk.stop();
     }
   }
@@ -105,9 +105,5 @@ export class ScriptTask extends GroupTask<ScriptContext> {
   // Properties
   get project() {
     return this.workspace.project;
-  }
-
-  get scriptTasks() {
-    return this._scriptTasks;
   }
 }

@@ -112,8 +112,8 @@ describe('Workspace.exec', () => {
 
     // Check up tree
     expect(task).toEqual(expect.objectContaining({
-      cmd: 'test',
-      args: [],
+      cmd: 'yarn',
+      args: ['test'],
       cwd: path.resolve('test/wks-a'),
       dependencies: expect.arrayContaining([
         expect.objectContaining({
