@@ -6,7 +6,6 @@ import { ContextService, type Context } from '@/src/commons/context.service';
 import { Logger } from '@/src/commons/logger.service';
 import { applyConfigOptions } from '@/src/config/config-options';
 import { CURRENT } from '@/src/constants';
-import { CorePlugin } from '@/src/core.plugin';
 import { container, lazyInjectNamed } from '@/src/inversify.config';
 import { buildCommandModule, COMMAND, COMMAND_MODULE } from '@/src/modules/command';
 import { getModule } from '@/src/modules/module';
@@ -57,14 +56,18 @@ export class JillApplication {
       .fail(false);
   }
 
-  async run(argv: string | readonly string[]): Promise<void> {
-    this.context.reset({ application: this });
-
-    // Load plugins
+  private async _loadPlugins(): Promise<void> {
     this.logger.child({ label: 'plugin' }).verbose('Loading plugin <core>');
+
+    const { CorePlugin } = await import('@/src/core.plugin');
     this.container.load(getModule(CorePlugin, true));
 
     await this.plugins.loadPlugins(this.container);
+  }
+
+  async run(argv: string | readonly string[]): Promise<void> {
+    this.context.reset({ application: this });
+    await this._loadPlugins();
 
     // Parse command
     const commands = await this.container.getAllAsync(COMMAND_MODULE);
@@ -74,12 +77,7 @@ export class JillApplication {
 
   async tasksOf(argv: string[], ctx: Omit<Context, 'application'> = {}): Promise<Task[]> {
     this.context.reset({ ...ctx, application: this });
-
-    // Load plugins
-    this.logger.child({ label: 'plugin' }).verbose('Loading plugin <core>');
-    this.container.load(getModule(CorePlugin, true));
-
-    await this.plugins.loadPlugins(this.container);
+    await this._loadPlugins();
 
     // Prepare commands
     const commands = await this.container.getAllAsync(COMMAND);
