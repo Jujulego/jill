@@ -42,16 +42,21 @@ export class ScriptTask extends GroupTask<ScriptContext> {
     }
 
     // Create command task for script
-    const pm = await this.workspace.project.packageManager();
     const [command, ...commandArgs] = splitCommandLine(line);
 
     if (command === 'jill') {
       const app = container.get(JillApplication);
-      return await app.tasksOf(commandArgs, {
+      const tasks = await app.tasksOf(commandArgs, {
         project: this.project,
         workspace: this.workspace,
       });
+
+      if (tasks.length) {
+        return tasks;
+      }
     }
+
+    const pm = await this.workspace.project.packageManager();
 
     return [
       new CommandTask(this.workspace, command, [...commandArgs, ...args], {

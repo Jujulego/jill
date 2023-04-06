@@ -140,10 +140,11 @@ export class Workspace {
   }
 
   async exec(command: string, args: string[] = [], opts: WorkspaceRunOptions = {}): Promise<CommandTask> {
+    const pm = await this.project.packageManager();
     const task = new CommandTask(this, command, args, {
       ...opts,
       logger: this._logger.child({ label: `${this.name}$${command}` }),
-      superCommand: await this.project.packageManager() === 'yarn' ? 'yarn' : undefined
+      superCommand: pm === 'yarn' ? 'yarn' : undefined
     });
 
     await this._buildDependencies(task, opts.buildDeps);

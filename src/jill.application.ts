@@ -11,7 +11,6 @@ import { buildCommandModule, COMMAND, COMMAND_MODULE } from '@/src/modules/comma
 import { getModule } from '@/src/modules/module';
 import { PluginLoaderService } from '@/src/modules/plugin-loader.service';
 import { TaskCommand } from '@/src/modules/task-command';
-import { JillTask } from '@/src/tasks/jill-task';
 
 // @ts-ignore: Outside of typescript's rootDir in build
 import pkg from '../package.json';
@@ -98,7 +97,7 @@ export class JillApplication {
 
             resolve(tasks);
           } else {
-            resolve([new JillTask(`jill ${argv.join(' ')}`, cmd, args)]);
+            resolve([]);
           }
         };
 
