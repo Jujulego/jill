@@ -45,18 +45,20 @@ export class LoadProject implements IMiddleware<ILoadProjectArgs> {
   }
 
   async handler(args: ArgumentsCamelCase<ILoadProjectArgs>): Promise<void> {
-    try {
-      this.spinner.spin('Loading project ...');
+    if (!this.context.project || args.project) {
+      try {
+        this.spinner.spin('Loading project ...');
 
-      if (!this.context.project || args.project) {
         args.project = await this.projects.searchProjectRoot(args.project ?? process.cwd());
 
         this.context.project = this.projects.getProject(args.project, {
           packageManager: args.packageManager
         });
+      } finally {
+        this.spinner.stop();
       }
-    } finally {
-      this.spinner.stop();
+    } else {
+      args.project = this.context.project.root;
     }
   }
 }
