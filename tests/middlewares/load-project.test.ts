@@ -87,7 +87,7 @@ describe('LoadProject', () => {
     const project = new Project('/parent', container.get(Logger));
     context.reset({ project });
 
-    const parsed = await parser.parse('-p /test'); // <= no args
+    const parsed = await parser.parse('-p /test');
 
     expect(spinner.spin).toHaveBeenCalledWith('Loading project ...');
     expect(projectRepo.searchProjectRoot).toHaveBeenCalledWith('/test');

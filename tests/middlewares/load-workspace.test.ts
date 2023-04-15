@@ -77,6 +77,33 @@ describe('LoadWorkspace', () => {
     expect(spinner.spin).toHaveBeenCalledWith('Loading "test" workspace ...');
     expect(spinner.failed).toHaveBeenCalledWith('Workspace "test" not found');
   });
+
+  it('should keep workspace from context if no args are provided', async () => {
+    const wks = bed.addWorkspace('parent');
+    context.reset({ project: bed.project, workspace: wks });
+
+    jest.spyOn(bed.project, 'workspace')
+      .mockResolvedValue(bed.addWorkspace('test'));
+
+    await parser.parse(''); // <= no args
+
+    expect(bed.project.workspace).not.toHaveBeenCalled();
+    expect(context.workspace).toBe(wks);
+  });
+
+  it('should replace workspace in context if args are provided', async () => {
+    const wks = bed.addWorkspace('test');
+
+    context.reset({ project: bed.project, workspace: bed.addWorkspace('parent') });
+
+    jest.spyOn(bed.project, 'workspace')
+      .mockResolvedValue(wks);
+
+    await parser.parse('-w test');
+
+    expect(bed.project.workspace).toHaveBeenCalledWith('test');
+    expect(context.workspace).toBe(wks);
+  });
 });
 
 describe('Workspace CURRENT binding', () => {
