@@ -7,7 +7,7 @@ import { Logger } from '@/src/commons/logger.service';
 import { applyConfigOptions } from '@/src/config/config-options';
 import { CURRENT } from '@/src/constants';
 import { container, lazyInjectNamed } from '@/src/inversify.config';
-import { buildCommandModule, COMMAND, COMMAND_MODULE } from '@/src/modules/command';
+import { buildCommandModule, COMMAND, COMMAND_MODULE, getCommandOpts } from '@/src/modules/command';
 import { getModule } from '@/src/modules/module';
 import { PluginLoaderService } from '@/src/modules/plugin-loader.service';
 import { TaskCommand } from '@/src/modules/task-command';
@@ -84,7 +84,8 @@ export class JillApplication {
     return new Promise<Task[]>((resolve, reject) => {
       const modules: yargs.CommandModule[] = [];
 
-      for (const [cmd, opts] of commands) {
+      for (const cmd of commands) {
+        const opts = getCommandOpts(Object.getPrototypeOf(cmd));
         const mod = buildCommandModule(cmd, opts);
 
         mod.handler = async (args) => {

@@ -1,15 +1,15 @@
 import { decorate, injectable, type interfaces as int } from 'inversify';
 import { type ArgumentsCamelCase, type Argv, type CommandModule } from 'yargs';
 
+import { setRegistry } from '@/src/modules/module';
 import { type Awaitable, type Class, type Type } from '@/src/types';
 
 import { applyMiddlewares, type IMiddleware } from './middleware';
-import { setRegistry } from '@/src/modules/module';
 
 // Symbols
 const COMMAND_OPTS = Symbol('jujulego:jill:command-opts');
 
-export const COMMAND: int.ServiceIdentifier<[ICommand, ICommandOpts]> = Symbol('jujulego:jill:command');
+export const COMMAND: int.ServiceIdentifier<ICommand> = Symbol('jujulego:jill:command');
 export const COMMAND_MODULE: int.ServiceIdentifier<CommandModule> = Symbol('jujulego:jill:command-module');
 
 // Types
@@ -71,7 +71,7 @@ export function Command(opts: ICommandOpts) {
       bind(target).toSelf();
 
       bind(COMMAND)
-        .toDynamicValue(async ({ container }) => [await container.getAsync(target), opts])
+        .toDynamicValue(({ container }) => container.getAsync(target))
         .whenTargetNamed(cmd);
 
       bind(COMMAND_MODULE)

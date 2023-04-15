@@ -6,7 +6,7 @@ import {
   Command,
   getCommandOpts,
   type ICommand,
-  type ICommandOpts
+  type ICommandOpts, COMMAND
 } from '@/src/modules/command';
 import { applyMiddlewares, type IMiddleware, Middleware } from '@/src/modules/middleware';
 import { container } from '@/src/inversify.config';
@@ -152,13 +152,23 @@ describe('buildCommandModule', () => {
 });
 
 describe('@Command', () => {
-  it('should create a registry to load Command in container', async () => {
+  it('should create a registry to load command instance in container', async () => {
     // Load command
     const registry = getRegistry(TestCommand);
     container.load(new ContainerModule(registry));
 
     // Get class
     expect(container.get(TestCommand)).toBeInstanceOf(TestCommand);
+
+    // Get module
+    await expect(container.getNamedAsync(COMMAND, 'test'))
+      .resolves.toBeInstanceOf(TestCommand);
+  });
+
+  it('should create a registry to load yargs command module in container', async () => {
+    // Load command
+    const registry = getRegistry(TestCommand);
+    container.load(new ContainerModule(registry));
 
     // Get module
     await expect(container.getNamedAsync(COMMAND_MODULE, 'test'))
