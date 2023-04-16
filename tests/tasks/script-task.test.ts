@@ -1,9 +1,11 @@
 import { container } from '@/src/inversify.config';
+import { JillApplication } from '@/src/jill.application';
 import { type Workspace } from '@/src/project/workspace';
+import { CommandTask } from '@/src/tasks/command-task';
 import { ScriptTask } from '@/src/tasks/script-task';
 
 import { TestBed } from '@/tools/test-bed';
-import { CommandTask } from '@/src/tasks/command-task';
+import { TestCommandTask, TestScriptTask } from '@/tools/test-tasks';
 
 // Setup
 let bed: TestBed;
@@ -66,6 +68,35 @@ describe('ScriptTask.prepare', () => {
     expect(tsk.args).toEqual(['jest', '--script', '--arg']);
   });
 
+  it('should interpret jill command, to get its tasks', async () => {
+    jest.spyOn(wks, 'getScript').mockReturnValue('jill run test');
+
+    const childTsk = new TestCommandTask(wks, 'jest', ['--script', '--arg']);
+    jest.spyOn(JillApplication.prototype, 'tasksOf').mockResolvedValue([childTsk]);
+
+    const script = new ScriptTask(wks, 'test', ['--arg']);
+    await script.prepare();
+
+    expect(script.tasks).toHaveLength(1);
+    expect(script.tasks).toContain(childTsk);
+  });
+
+  it('should create a task spawning jill command, if it generates no tasks', async () => {
+    jest.spyOn(wks, 'getScript').mockReturnValue('jill tree');
+
+    jest.spyOn(JillApplication.prototype, 'tasksOf').mockResolvedValue([]);
+
+    const script = new ScriptTask(wks, 'test', ['--arg']);
+    await script.prepare();
+
+    const tsk = script.tasks[0] as CommandTask;
+
+    expect(tsk).toBeInstanceOf(CommandTask);
+    expect(tsk.group).toBe(script);
+    expect(tsk.cmd).toBe('jill');
+    expect(tsk.args).toEqual(['tree', '--arg']);
+  });
+
   it('should throw if script does not exist', async () => {
     jest.spyOn(wks, 'getScript').mockReturnValue(null);
 
@@ -75,6 +106,18 @@ describe('ScriptTask.prepare', () => {
       .rejects.toEqual(new Error('No script test in wks'));
 
     expect(script.tasks).toHaveLength(0);
+  });
+});
+
+describe('ScriptTask._stop', () => {
+  it('should stop all inner tasks', async () => {
+    const script = new TestScriptTask(wks, 'test', ['--arg']);
+    await script.prepare();
+
+    jest.spyOn(script.tasks[0], 'stop');
+    script._stop();
+
+    expect(script.tasks[0].stop).toHaveBeenCalled();
   });
 });
 
