@@ -1,3 +1,6 @@
+import { Task } from '@jujulego/tasks';
+import { waitFor } from '@jujulego/event-tree';
+
 import { container } from '@/src/inversify.config';
 import { JillApplication } from '@/src/jill.application';
 import { type Workspace } from '@/src/project/workspace';
@@ -10,6 +13,15 @@ import { TestCommandTask, TestScriptTask } from '@/tools/test-tasks';
 // Setup
 let bed: TestBed;
 let wks: Workspace;
+
+jest.mock('@jujulego/event-tree', () => {
+  const act = jest.requireActual('@jujulego/event-tree');
+
+  return {
+    ...act,
+    waitFor: jest.fn(act.waitFor),
+  };
+});
 
 beforeAll(() => {
   container.snapshot();
@@ -106,6 +118,54 @@ describe('ScriptTask.prepare', () => {
       .rejects.toEqual(new Error('No script test in wks'));
 
     expect(script.tasks).toHaveLength(0);
+  });
+});
+
+describe('ScriptTask._orchestrate', () => {
+  it('should yield all prepared tasks and gain status done when they are done', async () => {
+    const script = new TestScriptTask(wks, 'test', ['--arg']);
+    await script.prepare();
+
+    const it = script._orchestrate();
+
+    // It emit one task
+    let next = await it.next();
+    expect(next).toEqual({ done: false, value: expect.any(Task) });
+
+    // Then wait for it to finish
+    jest.mocked(waitFor).mockResolvedValue({ failed: 0 });
+
+    next = await it.next();
+    expect(next).toEqual({ done: true });
+
+    expect(script.status).toBe('done');
+  });
+
+  it('should yield all prepared tasks and gain status failed when one has failed', async () => {
+    const script = new TestScriptTask(wks, 'test', ['--arg']);
+    await script.prepare();
+
+    const it = script._orchestrate();
+
+    // It emit one task
+    let next = await it.next();
+    expect(next).toEqual({ done: false, value: expect.any(Task) });
+
+    // Then wait for it to finish
+    jest.mocked(waitFor).mockResolvedValue({ failed: 1 });
+
+    next = await it.next();
+    expect(next).toEqual({ done: true });
+
+    expect(script.status).toBe('failed');
+  });
+
+  it('should throw if script is not yet prepared', async () => {
+    const script = new TestScriptTask(wks, 'test', ['--arg']);
+
+    const it = script._orchestrate();
+    await expect(it.next())
+      .rejects.toEqual(new Error('ScriptTask needs to be prepared. Call prepare before starting it'));
   });
 });
 

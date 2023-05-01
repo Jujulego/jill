@@ -13,6 +13,10 @@ export class TestScriptTask extends ScriptTask {
   // Methods
   readonly emit = this._groupEvents.emit;
 
+  async* _orchestrate() {
+    yield* super._orchestrate();
+  }
+
   _stop() {
     super._stop();
   }
