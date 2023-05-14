@@ -1,4 +1,4 @@
-name: 'Pull Request'
+name: 'Check PR'
 
 on:
   pull_request:
@@ -24,29 +24,6 @@ jobs:
         id: lint
         run: yarn lint
 
-  tests:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v3.5.0
-
-      - name: Use Node.js 16.x
-        uses: actions/setup-node@v3.6.0
-        with:
-          node-version: 16
-          cache: yarn
-
-      - name: Install
-        run: yarn install --immutable
-
-      - name: Test
-        run: yarn test --verbose
-
-      - uses: actions/upload-artifact@v3
-        with:
-          name: coverage-artifacts
-          path: coverage
-
   build:
     runs-on: ubuntu-latest
 
@@ -67,8 +44,31 @@ jobs:
 
       - uses: actions/upload-artifact@v3
         with:
-          name: build-artifacts
+          name: build
           path: dist
+
+  tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3.5.0
+
+      - name: Use Node.js 16.x
+        uses: actions/setup-node@v3.6.0
+        with:
+          node-version: 16
+          cache: yarn
+
+      - name: Install
+        run: yarn install --immutable
+
+      - name: Test
+        run: yarn test --verbose
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: coverage
+          path: coverage
 
   e2e:
     runs-on: ${{ matrix.os }}
@@ -101,13 +101,13 @@ jobs:
 
       - uses: actions/download-artifact@v3
         with:
-          name: build-artifacts
+          name: build
           path: dist
 
       - name: Git setup
         run: |
-          git config --global user.name 'Boobrie'
-          git config --global user.email 'boobrie@users.noreply.github.com'
+          git config user.name github-actions
+          git config user.email github-actions@github.com
 
       - name: Test
         run: yarn e2e --verbose
@@ -116,7 +116,7 @@ jobs:
 
   complete:
     runs-on: ubuntu-latest
-    needs: [ lint, tests, e2e ]
+    needs: [ lint, build, tests, e2e ]
     if: ${{ always() }}
 
     steps:
@@ -141,12 +141,12 @@ jobs:
         uses: actions/download-artifact@v3
         continue-on-error: true
         with:
-          name: coverage-artifacts
+          name: coverage
           path: coverage
 
       - name: Load package.json
         id: info
-        run: 'echo version=`jq ".version" package.json` >> $GITHUB_OUTPUT'
+        run: echo "version=$(jq -r ".version" package.json)" >> $GITHUB_OUTPUT
 
       - name: Sonarcloud
         uses: sonarsource/sonarcloud-github-action@v1.9
