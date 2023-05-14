@@ -1,0 +1,11 @@
+changelog:
+  categories:
+    - title: ":tada: Features"
+      labels:
+        - '*'
+      exclude:
+        labels:
+          - dependencies
+    - title: ":package: Dependencies"
+      labels:
+        - dependencies
