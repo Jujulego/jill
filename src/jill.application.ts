@@ -7,10 +7,11 @@ import { Logger } from '@/src/commons/logger.service';
 import { applyConfigOptions } from '@/src/config/config-options';
 import { CURRENT } from '@/src/constants';
 import { container, lazyInjectNamed } from '@/src/inversify.config';
-import { buildCommandModule, COMMAND, COMMAND_MODULE, getCommandOpts } from '@/src/modules/command';
+import { buildCommandModule, COMMAND, COMMAND_MODULE, getCommandOpts, type ICommand } from '@/src/modules/command';
 import { getModule } from '@/src/modules/module';
 import { PluginLoaderService } from '@/src/modules/plugin-loader.service';
 import { TaskCommand } from '@/src/modules/task-command';
+import { type Class } from '@/src/types';
 
 // @ts-ignore: Outside of typescript's rootDir in build
 import pkg from '../package.json';
@@ -71,7 +72,7 @@ export class JillApplication {
     // Parse command
     const commands = await this.container.getAllAsync(COMMAND_MODULE);
 
-    await this._prepareParser(commands).parse(argv);
+    await this._prepareParser(commands).parseAsync(argv);
   }
 
   async tasksOf(argv: string[], ctx: Omit<Context, 'application'> = {}): Promise<Task[]> {
@@ -85,7 +86,7 @@ export class JillApplication {
       const modules: yargs.CommandModule[] = [];
 
       for (const cmd of commands) {
-        const opts = getCommandOpts(Object.getPrototypeOf(cmd));
+        const opts = getCommandOpts(cmd.constructor as Class<ICommand>);
         const mod = buildCommandModule(cmd, opts);
 
         mod.handler = async (args) => {
