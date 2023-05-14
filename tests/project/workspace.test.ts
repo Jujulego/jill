@@ -57,19 +57,19 @@ afterEach(() => {
 // Test suites
 describe('Workspace.dependencies', () => {
   let project: Project;
-  let workspace: Workspace;
 
   beforeEach(() => {
     // Create test project
     project = new Project(prjDir, logger);
-    workspace = new Workspace(wksA.cwd, wksA.manifest, project);
 
     // Mocks
     jest.spyOn(project, 'workspace');
   });
 
   // Tests
-  it('should return all workspace\'s dependencies', async () => {
+  it('should yield all workspace\'s dependencies', async () => {
+    const workspace = new Workspace(wksA.cwd, wksA.manifest, project);
+
     await expect(workspace.dependencies()).toYield([
       expect.objectContaining({ name: 'wks-b' })
     ]);
@@ -77,23 +77,31 @@ describe('Workspace.dependencies', () => {
     expect(project.workspace).toHaveBeenCalledTimes(1);
     expect(project.workspace).toHaveBeenCalledWith('wks-b');
   });
+
+  it('should yield nothing if devDependencies empty', async () => {
+    const workspace = new Workspace(wksC.cwd, wksC.manifest, project);
+
+    await expect(workspace.dependencies()).toYield([]);
+
+    expect(project.workspace).not.toHaveBeenCalled();
+  });
 });
 
 describe('Workspace.devDependencies', () => {
   let project: Project;
-  let workspace: Workspace;
 
   beforeEach(() => {
     // Create test project
     project = new Project(prjDir, logger);
-    workspace = new Workspace(wksA.cwd, wksA.manifest, project);
 
     // Mocks
     jest.spyOn(project, 'workspace');
   });
 
   // Tests
-  it('should return all workspace\'s devDependencies', async () => {
+  it('should yield all workspace\'s devDependencies', async () => {
+    const workspace = new Workspace(wksA.cwd, wksA.manifest, project);
+
     await expect(workspace.devDependencies()).toYield([
       expect.objectContaining({ name: 'wks-c' }),
     ]);
@@ -101,12 +109,54 @@ describe('Workspace.devDependencies', () => {
     expect(project.workspace).toHaveBeenCalledTimes(1);
     expect(project.workspace).toHaveBeenCalledWith('wks-c');
   });
+
+  it('should yield nothing if devDependencies empty', async () => {
+    const workspace = new Workspace(wksC.cwd, wksC.manifest, project);
+
+    await expect(workspace.devDependencies()).toYield([]);
+
+    expect(project.workspace).not.toHaveBeenCalled();
+  });
 });
 
 describe('Workspace.exec', () => {
-  it('should return task with all build tree', async () => {
+  it('should return task with all build tree (yarn)', async () => {
     jest.spyOn(bed.project, 'packageManager')
       .mockResolvedValue('yarn');
+
+    const task = await wksA.exec('test');
+
+    // Check up tree
+    expect(task).toEqual(expect.objectContaining({
+      cmd: 'yarn',
+      args: ['test'],
+      cwd: path.resolve('test/wks-a'),
+      dependencies: expect.arrayContaining([
+        expect.objectContaining({
+          script: 'build',
+          workspace: wksB,
+          dependencies: [
+            expect.objectContaining({
+              script: 'build',
+              workspace: wksC,
+            })
+          ]
+        }),
+        expect.objectContaining({
+          script: 'build',
+          workspace: wksC,
+        })
+      ])
+    }));
+
+    // Both workspace 'wks-c' task should be the same
+    expect(task.dependencies[1]).toBe(task.dependencies[0].dependencies[0]);
+    expect(bed.project.packageManager).toHaveBeenCalled();
+  });
+
+  it('should return task with all build tree (not yarn)', async () => {
+    jest.spyOn(bed.project, 'packageManager')
+      .mockResolvedValue('npm');
 
     const task = await wksA.exec('test');
 

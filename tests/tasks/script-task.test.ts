@@ -1,13 +1,27 @@
+import { Task } from '@jujulego/tasks';
+import { waitFor } from '@jujulego/event-tree';
+
 import { container } from '@/src/inversify.config';
+import { JillApplication } from '@/src/jill.application';
 import { type Workspace } from '@/src/project/workspace';
+import { CommandTask } from '@/src/tasks/command-task';
 import { ScriptTask } from '@/src/tasks/script-task';
 
 import { TestBed } from '@/tools/test-bed';
-import { CommandTask } from '@/src/tasks/command-task';
+import { TestCommandTask, TestScriptTask } from '@/tools/test-tasks';
 
 // Setup
 let bed: TestBed;
 let wks: Workspace;
+
+jest.mock('@jujulego/event-tree', () => {
+  const act = jest.requireActual('@jujulego/event-tree');
+
+  return {
+    ...act,
+    waitFor: jest.fn(act.waitFor),
+  };
+});
 
 beforeAll(() => {
   container.snapshot();
@@ -42,10 +56,12 @@ describe('ScriptTask.prepare', () => {
 
     expect(script.tasks).toHaveLength(1);
 
-    expect(script.task).toBeInstanceOf(CommandTask);
-    expect(script.task.group).toBe(script);
-    expect(script.task.cmd).toBe('jest');
-    expect(script.task.args).toEqual(['--script', '--arg']);
+    const tsk = script.tasks[0] as CommandTask;
+
+    expect(tsk).toBeInstanceOf(CommandTask);
+    expect(tsk.group).toBe(script);
+    expect(tsk.cmd).toBe('jest');
+    expect(tsk.args).toEqual(['--script', '--arg']);
   });
 
   it('should create a task running the script (yarn)', async () => {
@@ -56,10 +72,41 @@ describe('ScriptTask.prepare', () => {
 
     expect(script.tasks).toHaveLength(1);
 
-    expect(script.task).toBeInstanceOf(CommandTask);
-    expect(script.task.group).toBe(script);
-    expect(script.task.cmd).toBe('yarn');
-    expect(script.task.args).toEqual(['jest', '--script', '--arg']);
+    const tsk = script.tasks[0] as CommandTask;
+
+    expect(tsk).toBeInstanceOf(CommandTask);
+    expect(tsk.group).toBe(script);
+    expect(tsk.cmd).toBe('yarn');
+    expect(tsk.args).toEqual(['jest', '--script', '--arg']);
+  });
+
+  it('should interpret jill command, to get its tasks', async () => {
+    jest.spyOn(wks, 'getScript').mockReturnValue('jill run test');
+
+    const childTsk = new TestCommandTask(wks, 'jest', ['--script', '--arg']);
+    jest.spyOn(JillApplication.prototype, 'tasksOf').mockResolvedValue([childTsk]);
+
+    const script = new ScriptTask(wks, 'test', ['--arg']);
+    await script.prepare();
+
+    expect(script.tasks).toHaveLength(1);
+    expect(script.tasks).toContain(childTsk);
+  });
+
+  it('should create a task spawning jill command, if it generates no tasks', async () => {
+    jest.spyOn(wks, 'getScript').mockReturnValue('jill tree');
+
+    jest.spyOn(JillApplication.prototype, 'tasksOf').mockResolvedValue([]);
+
+    const script = new ScriptTask(wks, 'test', ['--arg']);
+    await script.prepare();
+
+    const tsk = script.tasks[0] as CommandTask;
+
+    expect(tsk).toBeInstanceOf(CommandTask);
+    expect(tsk.group).toBe(script);
+    expect(tsk.cmd).toBe('jill');
+    expect(tsk.args).toEqual(['tree', '--arg']);
   });
 
   it('should throw if script does not exist', async () => {
@@ -74,15 +121,75 @@ describe('ScriptTask.prepare', () => {
   });
 });
 
+describe('ScriptTask._orchestrate', () => {
+  it('should yield all prepared tasks and gain status done when they are done', async () => {
+    const script = new TestScriptTask(wks, 'test', ['--arg']);
+    await script.prepare();
+
+    const it = script._orchestrate();
+
+    // It emit one task
+    let next = await it.next();
+    expect(next).toEqual({ done: false, value: expect.any(Task) });
+
+    // Then wait for it to finish
+    jest.mocked(waitFor).mockResolvedValue({ failed: 0 });
+
+    next = await it.next();
+    expect(next).toEqual({ done: true });
+
+    expect(script.status).toBe('done');
+  });
+
+  it('should yield all prepared tasks and gain status failed when one has failed', async () => {
+    const script = new TestScriptTask(wks, 'test', ['--arg']);
+    await script.prepare();
+
+    const it = script._orchestrate();
+
+    // It emit one task
+    let next = await it.next();
+    expect(next).toEqual({ done: false, value: expect.any(Task) });
+
+    // Then wait for it to finish
+    jest.mocked(waitFor).mockResolvedValue({ failed: 1 });
+
+    next = await it.next();
+    expect(next).toEqual({ done: true });
+
+    expect(script.status).toBe('failed');
+  });
+
+  it('should throw if script is not yet prepared', async () => {
+    const script = new TestScriptTask(wks, 'test', ['--arg']);
+
+    const it = script._orchestrate();
+    await expect(it.next())
+      .rejects.toEqual(new Error('ScriptTask needs to be prepared. Call prepare before starting it'));
+  });
+});
+
+describe('ScriptTask._stop', () => {
+  it('should stop all inner tasks', async () => {
+    const script = new TestScriptTask(wks, 'test', ['--arg']);
+    await script.prepare();
+
+    jest.spyOn(script.tasks[0], 'stop');
+    script._stop();
+
+    expect(script.tasks[0].stop).toHaveBeenCalled();
+  });
+});
+
 describe('ScriptTask.complexity', () => {
   it('should return sum of inner tasks', async () => {
     const script = new ScriptTask(wks, 'test', ['--arg']);
     await script.prepare();
 
-    jest.spyOn(script.task, 'complexity').mockReturnValue(1);
+    jest.spyOn(script.tasks[0], 'complexity').mockReturnValue(1);
 
     expect(script.complexity()).toBe(1);
-    expect(script.task.complexity).toHaveBeenCalled();
+    expect(script.tasks[0].complexity).toHaveBeenCalled();
   });
 });
 

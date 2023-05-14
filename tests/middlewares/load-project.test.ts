@@ -32,7 +32,7 @@ beforeEach(() => {
 
   projectRepo = container.get(ProjectRepository);
   jest.spyOn(projectRepo, 'searchProjectRoot')
-    .mockResolvedValue('/test');
+    .mockResolvedValue(path.resolve('/test'));
 
   parser = applyMiddlewares(yargs(), [LoadProject]);
 });
@@ -41,13 +41,15 @@ beforeEach(() => {
 describe('LoadProject', () => {
   it('should search project root using cwd', async () => {
     context.reset();
-    await parser.parse(''); // <= no args
+
+    const parsed = await parser.parse(''); // <= no args
 
     expect(spinner.spin).toHaveBeenCalledWith('Loading project ...');
     expect(projectRepo.searchProjectRoot).toHaveBeenCalledWith(process.cwd());
 
     expect(context.project).toBeInstanceOf(Project);
     expect(context.project?.root).toBe(path.resolve('/test'));
+    expect(parsed.project).toBe(path.resolve('/test'));
 
     expect(spinner.stop).toHaveBeenCalled();
   });
@@ -66,6 +68,33 @@ describe('LoadProject', () => {
     expect(context.project).toBeInstanceOf(Project);
     await expect(context.project?.packageManager())
       .resolves.toBe('npm');
+  });
+
+  it('should keep project from context if no args are provided', async () => {
+    const project = new Project('/parent', container.get(Logger));
+    context.reset({ project });
+
+    const parsed = await parser.parse(''); // <= no args
+
+    expect(spinner.spin).not.toHaveBeenCalled();
+    expect(projectRepo.searchProjectRoot).not.toHaveBeenCalled();
+
+    expect(context.project).toBe(project);
+    expect(parsed.project).toBe(project.root);
+  });
+
+  it('should replace project in context if args are provided', async () => {
+    const project = new Project('/parent', container.get(Logger));
+    context.reset({ project });
+
+    const parsed = await parser.parse('-p /test');
+
+    expect(spinner.spin).toHaveBeenCalledWith('Loading project ...');
+    expect(projectRepo.searchProjectRoot).toHaveBeenCalledWith('/test');
+
+    expect(context.project).not.toBe(project);
+    expect(context.project?.root).toBe(path.resolve('/test'));
+    expect(parsed.project).toBe(path.resolve('/test'));
   });
 });
 
