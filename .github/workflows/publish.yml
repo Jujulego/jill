@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3.5.0
+      - uses: actions/checkout@v3.5.2
 
       - name: Use Node.js 16.x
         uses: actions/setup-node@v3.6.0
@@ -36,7 +36,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3.5.0
+      - uses: actions/checkout@v3.5.2
 
       - name: Use Node.js 16.x
         uses: actions/setup-node@v3.6.0
@@ -73,7 +73,7 @@ jobs:
           - yarn
 
     steps:
-      - uses: actions/checkout@v3.5.0
+      - uses: actions/checkout@v3.5.2
 
       - name: Use Node.js ${{ matrix.node }}.x
         uses: actions/setup-node@v3.6.0
@@ -102,14 +102,14 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     environment: npm
-    needs: [ build, tests, e2e ]
+    needs: [ tests, e2e ]
 
     permissions:
       actions: write
       contents: write
 
     steps:
-      - uses: actions/checkout@v3.5.0
+      - uses: actions/checkout@v3.5.2
 
       - name: Use Node.js 16.x
         uses: actions/setup-node@v3.6.0
@@ -137,7 +137,7 @@ jobs:
     needs: [ tests ]
 
     steps:
-      - uses: actions/checkout@v3.5.0
+      - uses: actions/checkout@v3.5.2
         with:
           fetch-depth: 0
 
