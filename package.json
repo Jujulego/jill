@@ -28,7 +28,7 @@
   },
   "devDependencies": {
     "@jujulego/2d-maths": "1.6.0",
-    "@jujulego/event-tree": "1.1.1",
+    "@jujulego/event-tree": "2.7.2",
     "@jujulego/tasks": "1.3.0",
     "@swc/core": "1.3.39",
     "@swc/jest": "0.2.24",

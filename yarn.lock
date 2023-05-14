@@ -1273,7 +1273,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jujulego/event-tree@npm:1.1.1, @jujulego/event-tree@npm:^1.1.1":
+"@jujulego/event-tree@npm:2.7.2":
+  version: 2.7.2
+  resolution: "@jujulego/event-tree@npm:2.7.2"
+  checksum: 262a7bdeb065df5138ac30818afd6af4245957e98e9c8a4256ab67cb6b7b79eb95c3a5d291b1e37dccee9b189e81e3264bc6a41140776bdbb61974ea68d2d359
+  languageName: node
+  linkType: hard
+
+"@jujulego/event-tree@npm:^1.1.1":
   version: 1.1.1
   resolution: "@jujulego/event-tree@npm:1.1.1"
   checksum: f252bf1d3c04a892374efd0d4950e878bed617cce201c1d5d5d9aa67f3f5633a979decdb72ae0602b640aadbc1f4003ab2c04aa8da202184827d025f2395d8b9
@@ -1285,7 +1292,7 @@ __metadata:
   resolution: "@jujulego/jill@workspace:."
   dependencies:
     "@jujulego/2d-maths": 1.6.0
-    "@jujulego/event-tree": 1.1.1
+    "@jujulego/event-tree": 2.7.2
     "@jujulego/tasks": 1.3.0
     "@swc/core": 1.3.39
     "@swc/jest": 0.2.24
