@@ -2,6 +2,7 @@
   "extends": [
     "config:base"
   ],
+  "baseBranches": ["master", "next"],
   "labels": ["dependencies"],
   "packageRules": [
     {
@@ -13,6 +14,6 @@
     }
   ],
   "js": {
-    "labels": ["dependencies", "javascript"]
+    "addLabels": ["javascript"]
   }
 }
