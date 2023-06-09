@@ -3,17 +3,18 @@ import { plan as extractPlan, type Task, type TaskManager, TaskSet, type TaskSum
 import { injectable } from 'inversify';
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
 
-import { lazyInject } from '@/src/inversify.config';
+import { Logger } from '@/src/commons/logger.service';
+import { container, lazyInject } from '@/src/inversify.config';
 import { isCommandCtx } from '@/src/tasks/command-task';
 import { isScriptCtx } from '@/src/tasks/script-task';
 import { TASK_MANAGER } from '@/src/tasks/task-manager.config';
 import { type AwaitableGenerator } from '@/src/types';
 import List from '@/src/ui/list';
 import TaskManagerSpinner from '@/src/ui/task-manager-spinner';
+import { ExitException } from '@/src/utils/exit';
 import { printJson } from '@/src/utils/json';
 
 import { InkCommand } from './ink-command';
-import { ExitException } from '@/src/utils/exit';
 
 // Types
 export interface ITaskCommandArgs {
@@ -82,6 +83,9 @@ export abstract class TaskCommand<A = unknown> extends InkCommand<A> {
       if (result.failed > 0) {
         throw new ExitException(1);
       }
+    } else {
+      const logger = container.get(Logger);
+      logger.warn`No task found`;
     }
   }
 }
