@@ -8,13 +8,12 @@ import { type Workspace, type WorkspaceDepsMode } from '@/src/project/workspace'
 
 // Types
 export interface IExecCommandArgs {
-  command: string;
   'deps-mode': WorkspaceDepsMode;
 }
 
 // Command
 @Command({
-  command: 'exec <command>',
+  command: 'exec [command]',
   aliases: ['$0'],
   describe: 'Run command inside workspace',
   middlewares: [
@@ -30,7 +29,6 @@ export class ExecCommand extends TaskCommand<IExecCommandArgs> {
   // Methods
   builder(parser: Argv) {
     return this.addTaskOptions(parser)
-      .positional('command', { type: 'string', demandOption: true })
       .option('deps-mode', {
         choice: ['all', 'prod', 'none'],
         default: 'all' as const,
@@ -38,6 +36,9 @@ export class ExecCommand extends TaskCommand<IExecCommandArgs> {
           ' - all = dependencies AND devDependencies\n' +
           ' - prod = dependencies\n' +
           ' - none = nothing'
+      })
+      .parserConfiguration({
+        'halt-at-non-option': true,
       });
   }
 
@@ -46,14 +47,16 @@ export class ExecCommand extends TaskCommand<IExecCommandArgs> {
     const rest = args._.map(arg => arg.toString());
 
     if (rest[0] === 'exec') {
-      rest.splice(0, 1);
+      rest.splice(0, 2);
     }
 
-    // Run script in workspace
-    const task = await this.workspace.exec(args.command, rest, {
-      buildDeps: args.depsMode,
-    });
+    if (rest.length > 0) {
+      // Run script in workspace
+      const task = await this.workspace.exec(rest[0], rest.slice(1), {
+        buildDeps: args.depsMode,
+      });
 
-    yield task;
+      yield task;
+    }
   }
 }
