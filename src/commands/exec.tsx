@@ -40,9 +40,14 @@ export class ExecCommand extends TaskCommand<IExecCommandArgs> {
           ' - prod = dependencies\n' +
           ' - none = nothing'
       })
+
+      // Documentation
       .example('jill eslint', '')
       .example('jill eslint --env-info', 'Unknown arguments are passed down to command. Here it would run eslint --env-info')
       .example('jill eslint -- -v', 'You can use -- to stop argument parsing. Here it would run eslint -v')
+
+      // Config
+      .strict(false)
       .parserConfiguration({
         'unknown-options-as-args': true,
       });

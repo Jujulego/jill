@@ -42,12 +42,19 @@ export class RunCommand extends TaskCommand<IRunCommandArgs> {
     return this.addTaskOptions(parser)
       .positional('script', { type: 'string', demandOption: true })
       .option('deps-mode', {
+        alias: 'd',
         choice: ['all', 'prod', 'none'],
         default: 'all' as const,
         desc: 'Dependency selection mode:\n' +
           ' - all = dependencies AND devDependencies\n' +
           ' - prod = dependencies\n' +
           ' - none = nothing'
+      })
+
+      // Config
+      .strict(false)
+      .parserConfiguration({
+        'unknown-options-as-args': true,
       });
   }
 

@@ -55,6 +55,7 @@ export class EachCommand extends TaskCommand<IEachCommandArgs> {
       // Run options
       .positional('script', { type: 'string', demandOption: true })
       .option('deps-mode', {
+        alias: 'd',
         choice: ['all', 'prod', 'none'],
         default: 'all' as const,
         desc: 'Dependency selection mode:\n' +
@@ -86,6 +87,12 @@ export class EachCommand extends TaskCommand<IEachCommandArgs> {
         default: 'master',
         group: 'Filters:',
         desc: 'Fallback revision, used if no revision matching the given format is found',
+      })
+
+      // Config
+      .strict(false)
+      .parserConfiguration({
+        'unknown-options-as-args': true,
       });
   }
 
