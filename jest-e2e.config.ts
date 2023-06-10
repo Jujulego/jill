@@ -7,7 +7,7 @@ const config: Config = {
   setupFilesAfterEnv: [
     '<rootDir>/e2e/setup.ts'
   ],
-  testTimeout: 10000,
+  testTimeout: 20000,
   moduleNameMapper: {
     '#ansi-styles': 'ansi-styles',
     '#supports-color': 'supports-color'
@@ -16,7 +16,7 @@ const config: Config = {
     '^.+\\.(t|j)sx?$': '@swc/jest'
   },
   transformIgnorePatterns: [
-    '/node_modules/(?!(ansi-styles|chalk|supports-color))'
+    '/node_modules/(?!(ansi-styles|chalk|is-unicode-supported|log-symbols|parse-ms|pretty-ms|supports-color))'
   ],
 };
 

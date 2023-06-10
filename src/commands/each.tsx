@@ -1,75 +1,104 @@
-import { waitForEvent } from '@jujulego/event-tree';
-import { TaskSet } from '@jujulego/tasks';
+import { inject } from 'inversify';
+import { type ArgumentsCamelCase, type Argv } from 'yargs';
 
+import { SpinnerService } from '@/src/commons/spinner.service';
 import { AffectedFilter } from '@/src/filters/affected.filter';
 import { Pipeline } from '@/src/filters/pipeline';
 import { PrivateFilter } from '@/src/filters/private.filter';
 import { ScriptsFilter } from '@/src/filters/scripts.filter';
-import { loadProject } from '@/src/middlewares/load-project';
-import { setupInk } from '@/src/middlewares/setup-ink';
-import { Project } from '@/src/project/project';
-import { container, CURRENT, INK_APP } from '@/src/services/inversify.config';
-import { SpinnerService } from '@/src/services/spinner.service';
-import { TASK_MANAGER } from '@/src/services/task-manager.config';
-import Layout from '@/src/ui/layout';
-import TaskManagerSpinner from '@/src/ui/task-manager-spinner';
-import { applyMiddlewares, defineCommand } from '@/src/utils/yargs';
+import { LazyCurrentProject, LoadProject } from '@/src/middlewares/load-project';
+import { Command } from '@/src/modules/command';
+import { TaskCommand } from '@/src/modules/task-command';
+import { type Project } from '@/src/project/project';
+import { type WorkspaceDepsMode } from '@/src/project/workspace';
+import { ExitException } from '@/src/utils/exit';
+
+// Types
+export interface IEachCommandArgs {
+  script: string;
+  'deps-mode': WorkspaceDepsMode;
+
+  // Filters
+  private?: boolean;
+
+  // Affected filter
+  affected: string;
+  'affected-rev-fallback': string;
+  'affected-rev-sort'?: string;
+}
+
 
 // Command
-export default defineCommand({
+@Command({
   command: 'each <script>',
   describe: 'Run script on many workspaces',
-  builder: async (yargs) =>
-    (await applyMiddlewares(yargs, [
-      setupInk,
-      loadProject,
-    ]))
-    // Run options
-    .positional('script', { type: 'string', demandOption: true })
-    .option('deps-mode', {
-      choice: ['all', 'prod', 'none'],
-      default: 'all' as const,
-      desc: 'Dependency selection mode:\n' +
-        ' - all = dependencies AND devDependencies\n' +
-        ' - prod = dependencies\n' +
-        ' - none = nothing'
-    })
+  middlewares: [
+    LoadProject
+  ]
+})
+export class EachCommand extends TaskCommand<IEachCommandArgs> {
+  // Lazy injections
+  @LazyCurrentProject()
+  readonly project: Project;
 
-    // Filters
-    .option('private', {
-      type: 'boolean',
-      group: 'Filters:',
-      desc: 'Print only private workspaces',
-    })
+  // Constructor
+  constructor(
+    @inject(SpinnerService)
+    private readonly spinner: SpinnerService,
+  ) {
+    super();
+  }
 
-    // Affected filter
-    .option('affected', {
-      alias: 'a',
-      type: 'string',
-      coerce: (rev: string) => rev === '' ? 'master' : rev,
-      group: 'Affected:',
-      desc: 'Print only affected workspaces towards given git revision. If no revision is given, it will check towards master.\n' +
-        'Replaces %name by workspace name.',
-    })
-    .option('affected-rev-sort', {
-      type: 'string',
-      group: 'Affected:',
-      desc: 'Sort applied to git tag / git branch command',
-    })
-    .option('affected-rev-fallback', {
-      type: 'string',
-      default: 'master',
-      group: 'Affected:',
-      desc: 'Fallback revision, used if no revision matching the given format is found',
-    }),
-  async handler(args) {
-    const app = container.get(INK_APP);
-    const project = container.getNamed(Project, CURRENT);
-    const manager = container.get(TASK_MANAGER);
-    const spinner = container.get(SpinnerService);
+  // Methods
+  builder(parser: Argv): Argv<IEachCommandArgs> {
+    return this.addTaskOptions(parser)
+      // Run options
+      .positional('script', { type: 'string', demandOption: true })
+      .option('deps-mode', {
+        alias: 'd',
+        choice: ['all', 'prod', 'none'],
+        default: 'all' as const,
+        desc: 'Dependency selection mode:\n' +
+          ' - all = dependencies AND devDependencies\n' +
+          ' - prod = dependencies\n' +
+          ' - none = nothing'
+      })
 
+      // Filters
+      .option('private', {
+        type: 'boolean',
+        group: 'Filters:',
+        desc: 'Print only private workspaces',
+      })
+      .option('affected', {
+        alias: 'a',
+        type: 'string',
+        coerce: (rev) => rev === '' ? 'master' : rev,
+        group: 'Filters:',
+        desc: 'Print only affected workspaces towards given git revision. If no revision is given, it will check towards master. Replaces %name by workspace name.',
+      })
+      .option('affected-rev-sort', {
+        type: 'string',
+        group: 'Filters:',
+        desc: 'Sort applied to git tag / git branch command',
+      })
+      .option('affected-rev-fallback', {
+        type: 'string',
+        default: 'master',
+        group: 'Filters:',
+        desc: 'Fallback revision, used if no revision matching the given format is found',
+      })
+
+      // Config
+      .strict(false)
+      .parserConfiguration({
+        'unknown-options-as-args': true,
+      });
+  }
+
+  async *prepare(args: ArgumentsCamelCase<IEachCommandArgs>) {
     try {
-      spinner.spin('Loading workspaces ...');
+      this.spinner.spin('Loading workspaces ...');
 
       // Setup pipeline
       const pipeline = new Pipeline();
@@ -95,38 +124,25 @@ export default defineCommand({
       }
 
       // Create script tasks
-      const tasks = new TaskSet(manager);
+      let empty = true;
 
-      for await (const wks of pipeline.filter(project.workspaces())) {
-        tasks.add(await wks.run(args.script, rest, {
+      for await (const wks of pipeline.filter(this.project.workspaces())) {
+        const task = await wks.run(args.script, rest, {
           buildDeps: args.depsMode,
-        }));
+        });
+
+        if (task) {
+          yield task;
+          empty = false;
+        }
       }
 
-      if (tasks.tasks.length === 0) {
-        spinner.failed('No workspace found !');
-        return process.exit(1);
-      }
-
-      spinner.stop();
-
-      // Render
-      app.rerender(
-        <Layout>
-          <TaskManagerSpinner manager={manager} />
-        </Layout>
-      );
-
-      // Start and wait for result
-      tasks.start();
-
-      const result = await waitForEvent(tasks, 'finished');
-
-      if (result.failed > 0) {
-        return process.exit(1);
+      if (empty) {
+        this.spinner.failed('No matching workspace found !');
+        throw new ExitException(1);
       }
     } finally {
-      spinner.stop();
+      this.spinner.stop();
     }
   }
-});
+}

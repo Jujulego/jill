@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 
 import GlobalSpinner from './global-spinner';
 import StaticLogs from './static-logs';

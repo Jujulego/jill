@@ -1,4 +1,4 @@
-// export * from './git';
+export * from './commons/git.service';
 export * from './types';
 
 // Filters
@@ -10,26 +10,36 @@ export * from './filters/scripts.filter';
 // Middlewares
 export * from './middlewares/load-project';
 export * from './middlewares/load-workspace';
-export * from './middlewares/setup-ink';
+
+// Modules
+export * from './modules/command';
+export * from './modules/ink-command';
+export * from './modules/middleware';
+export * from './modules/module';
+export * from './modules/plugin';
+export * from './modules/plugin-loader.service';
+export * from './modules/service';
 
 // Project
+export * from './constants';
 export * from './project/project';
+export * from './project/project.repository';
 export * from './project/workspace';
+export * from './project/types';
 
 // Services
-export * from './services/inversify.config';
-export * from './services/spinner.service';
-export * from './services/task-expr.service';
-export * from './services/task-manager.config';
+export * from './inversify.config';
+export * from './commons/spinner.service';
+export * from './tasks/command-task';
+export * from './tasks/script-task';
+export * from './tasks/task-expr.service';
+export * from './tasks/task-manager.config';
 
-export { CONFIG } from './services/config/loader';
-export { type Config } from './services/config/types';
+export { CONFIG } from './config/config-loader';
+export { type IConfig } from './config/types';
 
-export { Logger } from './services/logger.service';
-
-export { PluginLoaderService } from './services/plugins/plugin-loader.service';
-export { type Plugin } from './services/plugins/types';
-export { definePlugin } from './services/plugins/utils';
+export { Logger } from './commons/logger.service';
+export { $log } from './commons/logger/log.tag';
 
 // Ui
 export { default as GroupTaskSpinner } from './ui/group-task-spinner';
@@ -54,7 +64,10 @@ export { default as WorkspaceTree } from './ui/workspace-tree';
 export * from './ui/workspace-tree';
 
 // Utils
+export * from './utils/events';
+export * from './utils/exit';
 export * from './utils/import';
+export * from './utils/json';
 export * from './utils/streams';
 export * from './utils/string';
-export * from './utils/yargs';
+export * from './utils/worker-cache';

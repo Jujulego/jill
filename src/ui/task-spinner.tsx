@@ -1,5 +1,5 @@
-import { Task } from '@jujulego/tasks';
-import { Text } from 'ink';
+import { type Task } from '@jujulego/tasks';
+import { Box, Text } from 'ink';
 import Spinner from 'ink-spinner';
 import symbols from 'log-symbols';
 import ms from 'pretty-ms';
@@ -20,13 +20,13 @@ export default function TaskSpinner({ task }: TaskSpinnerProps) {
 
   // Effects
   useLayoutEffect(() => {
-    return task.subscribe('status', (event) => {
+    return task.on('status', (event) => {
       setStatus(event.status);
     });
   }, [task]);
 
   useLayoutEffect(() => {
-    return task.subscribe('completed', ({ duration }) => {
+    return task.on('completed', ({ duration }) => {
       setTime(duration);
     });
   }, [task]);
@@ -36,32 +36,48 @@ export default function TaskSpinner({ task }: TaskSpinnerProps) {
     case 'blocked':
     case 'ready':
       return (
-        <Text color="grey">
-          <Spinner type="line2"/>{' '}<TaskName task={task}/>
-        </Text>
+        <Box>
+          <Text color="grey"><Spinner type="line2" /></Text>
+          <Box paddingLeft={1}>
+            <Text color="grey" wrap="truncate"><TaskName task={task} /></Text>
+          </Box>
+        </Box>
       );
 
     case 'running':
       return (
-        <Text>
-          <Spinner/>{' '}<TaskName task={task}/>
-        </Text>
+        <Box>
+          <Spinner />
+          <Box paddingLeft={1}>
+            <Text wrap="truncate"><TaskName task={task} /></Text>
+          </Box>
+        </Box>
       );
 
     case 'done':
       return (
-        <Text>
-          <Text color="green">{symbols.success}{' '}<TaskName task={task}/></Text>
-          <Text color="magenta">{' '}(took {ms(time)})</Text>
-        </Text>
+        <Box>
+          <Text color="green">{ symbols.success }</Text>
+          <Box paddingLeft={1}>
+            <Text wrap="truncate"><TaskName task={task} /></Text>
+          </Box>
+          <Box paddingLeft={1} flexShrink={0}>
+            <Text color="magenta">(took {ms(time)})</Text>
+          </Box>
+        </Box>
       );
 
     case 'failed':
       return (
-        <Text>
-          <Text color="red">{symbols.error}{' '}<TaskName task={task}/></Text>
-          <Text color="magenta">{' '}(took {ms(time)})</Text>
-        </Text>
+        <Box>
+          <Text color="red">{ symbols.error }</Text>
+          <Box paddingLeft={1}>
+            <Text wrap="truncate"><TaskName task={task} /></Text>
+          </Box>
+          <Box paddingLeft={1} flexShrink={0}>
+            <Text color="magenta">(took {ms(time)})</Text>
+          </Box>
+        </Box>
       );
   }
 }

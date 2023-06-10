@@ -16,7 +16,7 @@ export default function GroupTaskSpinner({ group }: GroupTaskSpinnerProps) {
   useLayoutEffect(() => {
     let dirty = false;
 
-    return group.subscribe('task.added', () => {
+    return group.on('task.added', () => {
       if (!dirty) {
         dirty = true;
 

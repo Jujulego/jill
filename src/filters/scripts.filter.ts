@@ -1,6 +1,6 @@
-import { Workspace } from '@/src/project/workspace';
+import { type Workspace } from '@/src/project/workspace';
 
-import { PipelineFilter } from './pipeline';
+import { type PipelineFilter } from './pipeline';
 
 // Filter
 export class ScriptsFilter implements PipelineFilter {

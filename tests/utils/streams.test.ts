@@ -1,7 +1,8 @@
-import { streamEvents } from '@jujulego/event-tree';
-import { SpawnTask } from '@jujulego/tasks';
+import { iterate } from '@jujulego/event-tree';
 
 import { combine, streamLines } from '@/src/utils/streams';
+
+import { TestSpawnTask } from '@/tools/test-tasks';
 
 // Mocks
 jest.mock('@jujulego/event-tree', () => {
@@ -9,7 +10,7 @@ jest.mock('@jujulego/event-tree', () => {
 
   return {
     ...actual,
-    streamEvents: jest.fn(actual.streamEvents)
+    iterate: jest.fn(actual.iterate)
   };
 });
 
@@ -31,10 +32,10 @@ describe('combine', () => {
 });
 
 describe('streamLines', () => {
-  let task: SpawnTask;
+  let task: TestSpawnTask;
 
   beforeEach(() => {
-    task = new SpawnTask('cmd', [], {});
+    task = new TestSpawnTask('cmd', [], {});
   });
 
   it('should emit all received content, line by line', async () => {
@@ -66,11 +67,10 @@ describe('streamLines', () => {
   });
 
   it('should throw error thrown by streamEvents', async () => {
-    jest.mocked(streamEvents)
+    jest.mocked(iterate)
       // eslint-disable-next-line require-yield
       .mockImplementation(async function* () { throw new Error('aborted'); });
 
-    // eslint-disable-next-line no-empty
     await expect(
       (async function () {
         for await (const line of streamLines(task, 'stdout')) {

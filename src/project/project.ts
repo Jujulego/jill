@@ -1,21 +1,22 @@
-import AsyncLock from 'async-lock';
+import { Lock } from '@jujulego/utils';
+import { injectable } from 'inversify';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import normalize, { type Package } from 'normalize-package-data';
 import glob from 'tiny-glob';
 
-import { container, lazyInject } from '@/src/services/inversify.config';
-import { Logger } from '@/src/services/logger.service';
+import { type Logger } from '@/src/commons/logger.service';
 
 import { Workspace } from './workspace';
+import { type PackageManager } from './types';
 
 // Types
-export type PackageManager = 'npm' | 'yarn';
 export interface ProjectOptions {
   packageManager?: PackageManager | undefined;
 }
 
 // Class
+@injectable()
 export class Project {
   // Attributes
   private _mainWorkspace?: Workspace;
@@ -24,54 +25,18 @@ export class Project {
 
   private _packageManager?: PackageManager;
   private _isFullyLoaded = false;
-  private _lock = new AsyncLock();
-
-  @lazyInject(Logger)
-  private readonly _logger: Logger;
+  private _lock = new Lock();
 
   // Constructor
   constructor(
     private readonly _root: string,
+    private readonly _logger: Logger,
     opts: ProjectOptions = {}
   ) {
     if (opts.packageManager) {
-      this._logger.debug(`Forced use of ${opts.packageManager} in ${path.relative(process.cwd(), this.root) || '.'}`);
+      this._logger.debug`Forced use of ${opts.packageManager} in #cwd:${this.root}`;
       this._packageManager = opts.packageManager;
     }
-  }
-
-  // Statics
-  static async searchProjectRoot(dir: string): Promise<string> {
-    const logger = container.get(Logger);
-
-    // Will process directories from dir to root
-    let found = false;
-    let last = dir;
-    dir = path.resolve(dir);
-
-    do {
-      const files = await fs.readdir(dir);
-
-      if (files.includes('package.json')) {
-        last = dir;
-        found = true;
-      }
-
-      if (['package-lock.json', 'yarn.lock'].some(lock => files.includes(lock))) {
-        logger.debug(`Project root found at ${path.relative(process.cwd(), dir) || '.'}`);
-        return dir;
-      }
-
-      dir = path.dirname(dir);
-    } while (dir !== path.dirname(dir));
-
-    if (found) {
-      logger.debug(`Project root found at ${path.relative(process.cwd(), last) || '.'}`);
-    } else {
-      logger.debug(`Project root not found, keeping ${path.relative(process.cwd(), last) || '.'}`);
-    }
-
-    return last;
   }
 
   // Methods
@@ -91,7 +56,7 @@ export class Project {
   }
 
   private async _loadWorkspace(dir: string): Promise<Workspace> {
-    return await this._lock.acquire('workspaces', async () => {
+    return await this._lock.with(async () => {
       let wks = this._workspaces.get(dir);
 
       if (!wks) {
@@ -111,13 +76,13 @@ export class Project {
       const files = await fs.readdir(this.root);
 
       if (files.includes('yarn.lock')) {
-        this._logger.debug(`Detected yarn in ${path.relative(process.cwd(), this.root) || '.'}`);
+        this._logger.debug`Detected yarn in #cwd:${this.root}`;
         this._packageManager = 'yarn';
       } else if (files.includes('package-lock.json')) {
-        this._logger.debug(`Detected npm in ${path.relative(process.cwd(), this.root) || '.'}`);
+        this._logger.debug`Detected npm in #cwd:${this.root}`;
         this._packageManager = 'npm';
       } else {
-        this._logger.debug(`No package manager recognized in ${path.relative(process.cwd(), this.root) || '.'}, defaults to npm`);
+        this._logger.debug`No package manager recognized in #cwd:${this.root}, defaults to npm`;
         this._packageManager = 'npm';
       }
     }

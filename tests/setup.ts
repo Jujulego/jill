@@ -1,7 +1,6 @@
-import { container, SERVICES_CONFIG } from '@/src/services/inversify.config';
-import { CONFIG } from '@/src/services/config/loader';
+import { container } from '@/src/inversify.config';
+import { CONFIG } from '@/src/config/config-loader';
 import '@/tools/matchers/setup';
 
 // Setup global config
-container.bind(SERVICES_CONFIG).toConstantValue({ jobs: 1 });
-container.rebind(CONFIG).toConstantValue({});
+container.rebind(CONFIG).toConstantValue({ jobs: 1 });

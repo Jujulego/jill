@@ -8,7 +8,7 @@
             <SchemaInfo>
               <option name="generatedName" value="New Schema" />
               <option name="name" value="jill" />
-              <option name="relativePathToSchema" value="src/assets/schema.json" />
+              <option name="relativePathToSchema" value="src/config/schema.json" />
               <option name="patterns">
                 <list>
                   <Item>

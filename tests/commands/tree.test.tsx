@@ -1,28 +1,33 @@
 import { cleanup, render } from 'ink-testing-library';
-import yargs from 'yargs';
+import yargs, { type CommandModule } from 'yargs';
 
-import treeCommand from '@/src/commands/tree';
-import { loadProject } from '@/src/middlewares/load-project';
-import { loadWorkspace } from '@/src/middlewares/load-workspace';
-import { setupInk } from '@/src/middlewares/setup-ink';
-import { Project } from '@/src/project/project';
-import { Workspace } from '@/src/project/workspace';
-import { container, CURRENT, INK_APP } from '@/src/services/inversify.config';
+import { TreeCommand } from '@/src/commands/tree';
+import { ContextService } from '@/src/commons/context.service';
+import { INK_APP } from '@/src/ink.config';
+import { type Workspace } from '@/src/project/workspace';
+import { container } from '@/src/inversify.config';
 import Layout from '@/src/ui/layout';
 
 import { TestBed } from '@/tools/test-bed';
-import { flushPromises } from '@/tools/utils';
+import { flushPromises, wrapInkTestApp } from '@/tools/utils';
 
 // Setup
 let app: ReturnType<typeof render>;
+let command: CommandModule;
+let context: ContextService;
 
 let bed: TestBed;
 let wksA: Workspace;
 let wksB: Workspace;
 let wksC: Workspace;
 
-beforeEach(() => {
+beforeAll(async () => {
   container.snapshot();
+});
+
+beforeEach(async () => {
+  container.snapshot();
+  container.restore();
 
   bed = new TestBed();
 
@@ -33,24 +38,15 @@ beforeEach(() => {
     .addDependency(wksB)
     .addDependency(wksC, true);
 
+  app = render(<Layout />);
+  container.rebind(INK_APP).toConstantValue(wrapInkTestApp(app));
+
+  command = await bed.prepareCommand(TreeCommand, wksA);
+  context = container.get(ContextService);
+
   // Mocks
   jest.resetAllMocks();
   jest.restoreAllMocks();
-
-  jest.spyOn(setupInk, 'handler').mockImplementation(() => {
-    app = render(<Layout />);
-    container.bind(INK_APP).toConstantValue(app as any);
-  });
-  jest.spyOn(loadProject, 'handler').mockImplementation(() => {
-    container.bind(Project)
-      .toConstantValue(bed.project)
-      .whenTargetNamed(CURRENT);
-  });
-  jest.spyOn(loadWorkspace, 'handler').mockImplementation(() => {
-    container.bind(Workspace)
-      .toConstantValue(wksA)
-      .whenTargetNamed(CURRENT);
-  });
 
   jest.spyOn(wksA, 'dependencies');
   jest.spyOn(wksA, 'devDependencies');
@@ -61,15 +57,16 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  container.restore();
   cleanup();
 });
 
 // Tests
 describe('jill tree', () => {
   it('should print current workspace', async () => {
+    context.reset();
+
     // Run command
-    await yargs.command(treeCommand)
+    await yargs.command(command)
       .parse('tree -w wks-a');
 
     await flushPromises();

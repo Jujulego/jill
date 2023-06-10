@@ -4,32 +4,32 @@ import path from 'path';
 import { TestBed } from '@/tools/test-bed';
 import { shell } from '@/tools/utils';
 
-import { jill } from './utils';
+import { jill, withPackageManager } from './utils';
 
-// Setup
-let prjDir: string;
+describe('jill list', () => void withPackageManager((packageManager) => {
+  // Setup
+  let prjDir: string;
 
-beforeEach(async () => {
-  const bed = new TestBed();
+  beforeEach(async () => {
+    const bed = new TestBed();
 
-  const wksC = bed.addWorkspace('wks-c');
-  const wksB = bed.addWorkspace('wks-b')
-    .addDependency(wksC, true);
-  bed.addWorkspace('wks-a')
-    .addDependency(wksB)
-    .addDependency(wksC, true);
+    const wksC = bed.addWorkspace('wks-c');
+    const wksB = bed.addWorkspace('wks-b')
+      .addDependency(wksC, true);
+    bed.addWorkspace('wks-a')
+      .addDependency(wksB)
+      .addDependency(wksC, true);
 
-  prjDir = await bed.createProjectPackage();
-});
+    prjDir = await bed.createProjectPackage(packageManager);
+  });
 
-afterEach(async () => {
-  await fs.rm(prjDir, { recursive: true });
-});
+  afterEach(async () => {
+    await fs.rm(prjDir, { recursive: true });
+  });
 
-// Tests
-describe('jill list', () => {
+  // Tests
   it('should print a list of all workspaces', async () => {
-    const res = await jill(['list'], { cwd: prjDir });
+    const res = await jill('list', { cwd: prjDir });
 
     expect(res.code).toBe(0);
     expect(res.screen.screen).toEqualLines([
@@ -41,7 +41,7 @@ describe('jill list', () => {
   });
 
   it('should print a long list of all workspaces', async () => {
-    const res = await jill(['list', '-l'], { cwd: prjDir });
+    const res = await jill('list -l', { cwd: prjDir });
 
     expect(res.code).toBe(0);
     expect(res.screen.screen).toEqualLines([
@@ -54,7 +54,7 @@ describe('jill list', () => {
   });
 
   it('should print a list of all workspaces in json', async () => {
-    const res = await jill(['list', '--json'], { cwd: prjDir });
+    const res = await jill('list --json', { cwd: prjDir });
 
     expect(res.code).toBe(0);
     expect(res.stdout).toEqual([
@@ -86,45 +86,45 @@ describe('jill list', () => {
       ])
     ]);
   });
-});
 
-describe('jill list --affected', () => {
-  beforeEach(async () => {
-    await shell('git', ['init'], { cwd: prjDir });
-    await shell('git', ['add', '.'], { cwd: prjDir });
-    await shell('git', ['commit', '-m', '"initial commit"'], { cwd: prjDir });
+  describe('Affected filter (--affected)', () => {
+    beforeEach(async () => {
+      await shell('git init', { cwd: prjDir });
+      await shell('git add .', { cwd: prjDir });
+      await shell('git commit -m "initial commit"', { cwd: prjDir });
+    });
+
+    it('should list affected workspaces', async () => {
+      // Create a file in a branch
+      await shell('git checkout -b test', { cwd: prjDir });
+      await fs.writeFile(path.resolve(prjDir, 'wks-a/toto.txt'), 'toto');
+      await shell('git add .', { cwd: prjDir });
+
+      // Run jill
+      const res = await jill('list --affected', { cwd: prjDir });
+
+      expect(res.code).toBe(0);
+      expect(res.screen.screen).toEqualLines([
+        'main',
+        'wks-a'
+      ]);
+    });
+
+    it('should also list indirectly affected workspaces', async () => {
+      // Create a file in a branch
+      await shell('git checkout -b test', { cwd: prjDir });
+      await fs.writeFile(path.resolve(prjDir, 'wks-b/toto.txt'), 'toto');
+      await shell('git add .', { cwd: prjDir });
+
+      // Run jill
+      const res = await jill('list --affected', { cwd: prjDir });
+
+      expect(res.code).toBe(0);
+      expect(res.screen.screen).toEqualLines([
+        'main',
+        'wks-b',
+        'wks-a'
+      ]);
+    });
   });
-
-  it('should list affected workspaces', async () => {
-    // Create a file in a branch
-    await shell('git', ['checkout', '-b', 'test'], { cwd: prjDir });
-    await fs.writeFile(path.resolve(prjDir, 'wks-a/toto.txt'), 'toto');
-    await shell('git', ['add', '.'], { cwd: prjDir });
-
-    // Run jill
-    const res = await jill(['list', '--affected'], { cwd: prjDir });
-
-    expect(res.code).toBe(0);
-    expect(res.screen.screen).toEqualLines([
-      'main',
-      'wks-a'
-    ]);
-  });
-
-  it('should also list indirectly affected workspaces', async () => {
-    // Create a file in a branch
-    await shell('git', ['checkout', '-b', 'test'], { cwd: prjDir });
-    await fs.writeFile(path.resolve(prjDir, 'wks-b/toto.txt'), 'toto');
-    await shell('git', ['add', '.'], { cwd: prjDir });
-
-    // Run jill
-    const res = await jill(['list', '--affected'], { cwd: prjDir });
-
-    expect(res.code).toBe(0);
-    expect(res.screen.screen).toEqualLines([
-      'main',
-      'wks-b',
-      'wks-a'
-    ]);
-  });
-});
+}));

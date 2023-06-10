@@ -1,37 +1,83 @@
-import yargs from 'yargs';
+import { inject } from 'inversify';
+import { type ArgumentsCamelCase, type Argv } from 'yargs';
 
-import { Project } from '@/src/project/project';
+import { ContextService } from '@/src/commons/context.service';
+import { SpinnerService } from '@/src/commons/spinner.service';
+import { CURRENT } from '@/src/constants';
+import { container, lazyInjectNamed } from '@/src/inversify.config';
+import { type IMiddleware, Middleware } from '@/src/modules/middleware';
+import { type Project } from '@/src/project/project';
 import { Workspace } from '@/src/project/workspace';
-import { container, CURRENT } from '@/src/services/inversify.config';
-import { SpinnerService } from '@/src/services/spinner.service';
-import { defineMiddleware } from '@/src/utils/yargs';
+import { ExitException } from '@/src/utils/exit';
+
+import { LazyCurrentProject } from './load-project';
+
+// Types
+export interface ILoadWorkspaceArgs {
+  workspace?: string;
+}
 
 // Middleware
-export const loadWorkspace = defineMiddleware({
-  builder: (yargs) => yargs
-    .option('workspace', {
-      alias: 'w',
-      type: 'string',
-      desc: 'Workspace to use'
-    }),
-  async handler(args): Promise<void> {
-    const spinner = container.get(SpinnerService);
-    const project = container.getNamed(Project, CURRENT);
+@Middleware()
+export class LoadWorkspace implements IMiddleware<ILoadWorkspaceArgs> {
+  // Lazy injections
+  @LazyCurrentProject()
+  readonly project: Project;
 
+  // Constructor
+  constructor(
+    @inject(SpinnerService)
+    private readonly spinner: SpinnerService,
+    @inject(ContextService)
+    private readonly context: ContextService,
+  ) {}
+
+  // Methods
+  builder(parser: Argv) {
+    return parser
+      .option('workspace', {
+        alias: 'w',
+        type: 'string',
+        desc: 'Workspace to use'
+      });
+  }
+
+  async handler(args: ArgumentsCamelCase<ILoadWorkspaceArgs>): Promise<void> {
     try {
-      spinner.spin(`Loading "${args.workspace || '.'}" workspace ...`);
-      const workspace = await project.workspace(args.workspace);
+      this.spinner.spin(`Loading "${args.workspace || '.'}" workspace ...`);
+
+      let workspace = this.context.workspace ?? null;
+
+      if (!workspace || args.workspace) {
+        workspace = await this.project.workspace(args.workspace);
+      }
 
       if (!workspace) {
-        spinner.failed(`Workspace "${args.workspace || '.'}" not found`);
-        yargs.exit(1, new Error('Workspace not found'));
+        this.spinner.failed(`Workspace "${args.workspace || '.'}" not found`);
+        throw new ExitException(1, 'Workspace not found');
       } else {
-        container.bind(Workspace)
-          .toConstantValue(workspace)
-          .whenTargetNamed(CURRENT);
+        this.context.workspace = workspace;
       }
     } finally {
-      spinner.stop();
+      this.spinner.stop();
     }
   }
-});
+}
+
+// Decorators
+export function LazyCurrentWorkspace() {
+  return lazyInjectNamed(Workspace, CURRENT);
+}
+
+container.bind(Workspace)
+  .toDynamicValue(({ container }) => {
+    const ctx = container.get(ContextService);
+    const wks = ctx.workspace;
+
+    if (!wks) {
+      throw new Error('Cannot inject current workspace, it not yet defined');
+    }
+
+    return wks;
+  })
+  .whenTargetNamed(CURRENT);

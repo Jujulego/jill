@@ -1,15 +1,16 @@
-import { SpawnTask } from '@jujulego/tasks';
 import { render, cleanup } from 'ink-testing-library';
 import symbols from 'log-symbols';
 
 import TaskSpinner from '@/src/ui/task-spinner';
+
+import { TestSpawnTask } from '@/tools/test-tasks';
 import { noColor } from '@/tools/utils';
 
 // Setup
-let task: SpawnTask;
+let task: TestSpawnTask;
 
 beforeEach(() => {
-  task = new SpawnTask('cmd', [], {});
+  task = new TestSpawnTask('cmd', [], {});
 });
 
 afterEach(() => {
@@ -42,7 +43,6 @@ describe('<TaskSpinner>', () => {
     task.emit('status.done', { status: 'done', previous: 'running' });
     task.emit('completed', { status: 'done', duration: 100 });
 
-    // eslint-disable-next-line quotes
     expect(lastFrame()).toEqual(expect.ignoreColor(`${symbols.success} cmd (took 100ms)`));
   });
 
@@ -53,7 +53,6 @@ describe('<TaskSpinner>', () => {
     task.emit('status.failed', { status: 'failed', previous: 'running' });
     task.emit('completed', { status: 'failed', duration: 100 });
 
-    // eslint-disable-next-line quotes
     expect(lastFrame()).toEqual(expect.ignoreColor(`${symbols.error} cmd (took 100ms)`));
   });
 });

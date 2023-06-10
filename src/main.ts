@@ -1,45 +1,24 @@
-import yargs from 'yargs';
+import chalk from 'chalk';
 import { hideBin } from 'yargs/helpers';
 
-import { commands } from './commands';
-import { configOptions } from './middlewares/config-options';
-import { container } from './services/inversify.config';
-import { Logger } from './services/logger.service';
-import { PluginLoaderService } from './services/plugins/plugin-loader.service';
-import { applyMiddlewares } from './utils/yargs';
-
-// @ts-ignore: Outside of typescript's rootDir in build
-import pkg from '../package.json';
+import { container } from '@/src/inversify.config';
+import { JillApplication } from '@/src/jill.application';
+import { ExitException } from '@/src/utils/exit';
 
 // Bootstrap
 (async () => {
+  const app = await container.getAsync(JillApplication);
+
   try {
-    // Setup yargs
-    const parser = yargs(hideBin(process.argv))
-      .scriptName('jill')
-      .completion('completion', 'Generate bash completion script')
-      .help('help', 'Show help for a command')
-      .version('version', 'Show version', pkg.version)
-      .wrap(process.stdout.columns);
-
-    // Middlewares
-    await applyMiddlewares(parser, [configOptions]);
-
-    // Load plugins
-    const pluginLoader = await container.getAsync(PluginLoaderService);
-    await pluginLoader.loadPlugins(parser);
-
-    // Commands
-    await parser
-      .command(commands as any)
-      .demandCommand()
-      .recommendCommands()
-      .strict()
-      .parse();
+    await app.run(hideBin(process.argv));
   } catch (err) {
-    const logger = container.get(Logger);
-    logger.error(err);
+    if (err instanceof ExitException) {
+      process.exit(err.code);
+    } else {
+      console.error(await app.parser.getHelp());
+      console.error(chalk.red(err.message));
 
-    process.exit(1);
+      process.exit(1);
+    }
   }
 })();

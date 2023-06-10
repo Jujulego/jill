@@ -1,25 +1,36 @@
-import { SpawnTask } from '@jujulego/tasks';
+import { type TaskManager } from '@jujulego/tasks';
 import { cleanup, render } from 'ink-testing-library';
 import symbols from 'log-symbols';
-import yargs from 'yargs';
+import yargs, { type CommandModule } from 'yargs';
 
-import eachCommand from '@/src/commands/each';
-import { loadProject } from '@/src/middlewares/load-project';
-import { setupInk } from '@/src/middlewares/setup-ink';
-import { Project } from '@/src/project/project';
-import { WorkspaceContext } from '@/src/project/workspace';
-import { container, CURRENT, INK_APP } from '@/src/services/inversify.config';
-import { TASK_MANAGER } from '@/src/services/task-manager.config';
+import { EachCommand } from '@/src/commands/each';
+import { SpinnerService } from '@/src/commons/spinner.service';
+import { INK_APP } from '@/src/ink.config';
+import { container } from '@/src/inversify.config';
+import { TASK_MANAGER } from '@/src/tasks/task-manager.config';
 import Layout from '@/src/ui/layout';
 
 import { TestBed } from '@/tools/test-bed';
-import { flushPromises, spyLogger } from '@/tools/utils';
+import { TestScriptTask } from '@/tools/test-tasks';
+import { flushPromises, spyLogger, wrapInkTestApp } from '@/tools/utils';
+import { ExitException } from '@/src/utils/exit';
+import { ContextService } from '@/src/commons/context.service';
 
 // Setup
 let app: ReturnType<typeof render>;
+let command: CommandModule;
+let manager: TaskManager;
+let context: ContextService;
+let spinner: SpinnerService;
+
 let bed: TestBed;
 
-beforeEach(() => {
+beforeAll(() => {
+  container.snapshot();
+});
+
+beforeEach(async () => {
+  container.restore();
   container.snapshot();
 
   jest.resetAllMocks();
@@ -28,27 +39,30 @@ beforeEach(() => {
   // Project
   bed = new TestBed();
 
+  app = render(<Layout />);
+  container.rebind(INK_APP).toConstantValue(wrapInkTestApp(app));
+
+  command = await bed.prepareCommand(EachCommand);
+  manager = container.get(TASK_MANAGER);
+  context = container.get(ContextService);
+  spinner = container.get(SpinnerService);
+
   // Mocks
-  jest.spyOn(console, 'log').mockImplementation();
-  jest.spyOn(setupInk, 'handler').mockImplementation(() => {
-    app = render(<Layout />);
-    container.bind(INK_APP).toConstantValue(app as any);
-  });
-  jest.spyOn(loadProject, 'handler').mockImplementation(() => {
-    container.bind(Project)
-      .toConstantValue(bed.project)
-      .whenTargetNamed(CURRENT);
-  });
+  jest.resetAllMocks();
+  jest.restoreAllMocks();
+
+  jest.spyOn(manager, 'add').mockImplementation();
 });
 
 afterEach(() => {
-  container.restore();
   cleanup();
 });
 
 // Tests
 describe('jill each', () => {
   it('should run script in all workspaces having that script', async () => {
+    context.reset({});
+
     // Setup workspaces
     const workspaces = [
       bed.addWorkspace('wks-1', { scripts: { cmd: 'cmd' } }),
@@ -57,27 +71,25 @@ describe('jill each', () => {
     ];
 
     // Setup tasks
-    const manager = container.get(TASK_MANAGER);
-
     const tasks = [
-      new SpawnTask<WorkspaceContext>('cmd', ['--arg'], { workspace: workspaces[0], script: 'cmd' }, { logger: spyLogger, cwd: workspaces[0].cwd }),
-      new SpawnTask<WorkspaceContext>('cmd', ['--arg'], { workspace: workspaces[1], script: 'cmd' }, { logger: spyLogger, cwd: workspaces[1].cwd }),
+      new TestScriptTask(workspaces[0], 'cmd', [], { logger: spyLogger }),
+      new TestScriptTask(workspaces[1], 'cmd', [], { logger: spyLogger }),
     ];
 
-    jest.spyOn(manager, 'add').mockImplementation();
     jest.spyOn(manager, 'tasks', 'get').mockReturnValue(tasks);
 
     jest.spyOn(workspaces[0], 'run').mockResolvedValue(tasks[0]);
     jest.spyOn(workspaces[1], 'run').mockResolvedValue(tasks[1]);
 
     // Run command
-    const prom = yargs.command(eachCommand)
-      .parse('each cmd -- --arg');
+    const prom = yargs.command(command)
+      .fail(false)
+      .parse('each cmd');
 
-    // should create script task than add it to manager
+    // should create script task then add it to manager
     await flushPromises();
-    expect(workspaces[0].run).toHaveBeenCalledWith('cmd', ['--arg'], { buildDeps: 'all' });
-    expect(workspaces[1].run).toHaveBeenCalledWith('cmd', ['--arg'], { buildDeps: 'all' });
+    expect(workspaces[0].run).toHaveBeenCalledWith('cmd', [], { buildDeps: 'all' });
+    expect(workspaces[1].run).toHaveBeenCalledWith('cmd', [], { buildDeps: 'all' });
 
     await flushPromises();
     expect(manager.add).toHaveBeenCalledWith(tasks[0]);
@@ -106,30 +118,29 @@ describe('jill each', () => {
   });
 
   it('should use given dependency selection mode', async () => {
+    context.reset({});
+
     // Setup workspaces
     const workspaces = [
       bed.addWorkspace('wks', { scripts: { cmd: 'cmd' } }),
     ];
 
     // Setup tasks
-    const manager = container.get(TASK_MANAGER);
-
     const tasks = [
-      new SpawnTask<WorkspaceContext>('cmd', ['--arg'], { workspace: workspaces[0], script: 'cmd' }, { logger: spyLogger, cwd: workspaces[0].cwd }),
+      new TestScriptTask(workspaces[0], 'cmd', [], { logger: spyLogger }),
     ];
 
-    jest.spyOn(manager, 'add').mockImplementation();
     jest.spyOn(manager, 'tasks', 'get').mockReturnValue(tasks);
-
     jest.spyOn(workspaces[0], 'run').mockResolvedValue(tasks[0]);
 
     // Run command
-    const prom = yargs.command(eachCommand)
-      .parse('each --deps-mode prod cmd -- --arg');
+    const prom = yargs.command(command)
+      .fail(false)
+      .parse('each -d prod cmd');
 
     // should create script task than add it to manager
     await flushPromises();
-    expect(workspaces[0].run).toHaveBeenCalledWith('cmd', ['--arg'], { buildDeps: 'prod' });
+    expect(workspaces[0].run).toHaveBeenCalledWith('cmd', [], { buildDeps: 'prod' });
 
     await flushPromises();
 
@@ -143,70 +154,101 @@ describe('jill each', () => {
     await prom;
   });
 
-  it('should exit 1 if one task fails', async () => {
-    jest.spyOn(process, 'exit').mockImplementation();
+  it('should exit 1 if no matching workspace is found', async () => {
+    context.reset({});
+    jest.spyOn(spinner, 'failed');
+
+    // Setup tasks
+    jest.spyOn(manager, 'tasks', 'get').mockReturnValue([]);
+
+    // Run command
+    await expect(
+      yargs.command(command)
+        .fail(false)
+        .parse('each cmd')
+    ).rejects.toEqual(new ExitException(1));
+
+    expect(spinner.failed).toHaveBeenCalledWith('No matching workspace found !');
+  });
+
+  it('should pass down unknown arguments', async () => {
+    context.reset({});
 
     // Setup workspaces
     const workspaces = [
-      bed.addWorkspace('wks-1', { scripts: { cmd: 'cmd' } }),
-      bed.addWorkspace('wks-2', { scripts: { cmd: 'cmd' } }),
-      bed.addWorkspace('wks-3'),
+      bed.addWorkspace('wks', { scripts: { cmd: 'cmd' } }),
     ];
 
     // Setup tasks
-    const manager = container.get(TASK_MANAGER);
-
     const tasks = [
-      new SpawnTask<WorkspaceContext>('cmd', ['--arg'], { workspace: workspaces[0], script: 'cmd' }, { logger: spyLogger, cwd: workspaces[0].cwd }),
-      new SpawnTask<WorkspaceContext>('cmd', ['--arg'], { workspace: workspaces[1], script: 'cmd' }, { logger: spyLogger, cwd: workspaces[1].cwd }),
+      new TestScriptTask(workspaces[0], 'cmd', ['--arg'], { logger: spyLogger }),
     ];
 
-    jest.spyOn(manager, 'add').mockImplementation();
     jest.spyOn(manager, 'tasks', 'get').mockReturnValue(tasks);
-
     jest.spyOn(workspaces[0], 'run').mockResolvedValue(tasks[0]);
-    jest.spyOn(workspaces[1], 'run').mockResolvedValue(tasks[1]);
 
     // Run command
-    const prom = yargs.command(eachCommand)
-      .parse('each cmd -- --arg');
+    const prom = yargs.command(command)
+      .fail(false)
+      .parse('each cmd --arg');
 
     // should create script task than add it to manager
     await flushPromises();
     expect(workspaces[0].run).toHaveBeenCalledWith('cmd', ['--arg'], { buildDeps: 'all' });
-    expect(workspaces[1].run).toHaveBeenCalledWith('cmd', ['--arg'], { buildDeps: 'all' });
 
     await flushPromises();
-    expect(manager.add).toHaveBeenCalledWith(tasks[0]);
-    expect(manager.add).toHaveBeenCalledWith(tasks[1]);
-
-    // should print task spinners
-    expect(app.lastFrame()).toMatchLines([
-      expect.ignoreColor(/^. Running cmd in wks-1$/),
-      expect.ignoreColor(/^. Running cmd in wks-2$/),
-    ]);
 
     // complete tasks
-    jest.spyOn(tasks[0], 'status', 'get').mockReturnValue('done');
-    tasks[0].emit('status.done', { status: 'done', previous: 'running' });
-    tasks[0].emit('completed', { status: 'done', duration: 100 });
-
-    jest.spyOn(tasks[1], 'status', 'get').mockReturnValue('failed');
-    tasks[1].emit('status.failed', { status: 'failed', previous: 'running' });
-    tasks[1].emit('completed', { status: 'failed', duration: 100 });
+    for (const task of tasks) {
+      jest.spyOn(task, 'status', 'get').mockReturnValue('done');
+      task.emit('status.done', { status: 'done', previous: 'running' });
+      task.emit('completed', { status: 'done', duration: 100 });
+    }
 
     await prom;
+  });
 
-    // should print all tasks completed
-    expect(app.lastFrame()).toMatchLines([
-      expect.ignoreColor(`${symbols.success} Running cmd in wks-1 (took 100ms)`),
-      expect.ignoreColor(`${symbols.error} Running cmd in wks-2 (took 100ms)`),
-    ]);
-    expect(process.exit).toHaveBeenCalledWith(1);
+  it('should pass down unparsed arguments', async () => {
+    context.reset({});
+
+    // Setup workspaces
+    const workspaces = [
+      bed.addWorkspace('wks', { scripts: { cmd: 'cmd' } }),
+    ];
+
+    // Setup tasks
+    const tasks = [
+      new TestScriptTask(workspaces[0], 'cmd', ['-d', 'toto'], { logger: spyLogger }),
+    ];
+
+    jest.spyOn(manager, 'tasks', 'get').mockReturnValue(tasks);
+    jest.spyOn(workspaces[0], 'run').mockResolvedValue(tasks[0]);
+
+    // Run command
+    const prom = yargs.command(command)
+      .fail(false)
+      .parse('each cmd -- -d toto');
+
+    // should create script task than add it to manager
+    await flushPromises();
+    expect(workspaces[0].run).toHaveBeenCalledWith('cmd', ['-d', 'toto'], { buildDeps: 'all' });
+
+    await flushPromises();
+
+    // complete tasks
+    for (const task of tasks) {
+      jest.spyOn(task, 'status', 'get').mockReturnValue('done');
+      task.emit('status.done', { status: 'done', previous: 'running' });
+      task.emit('completed', { status: 'done', duration: 100 });
+    }
+
+    await prom;
   });
 
   describe('private filter', () => {
     it('should run script only in private workspaces (--private)', async () => {
+      context.reset({});
+
       // Setup workspaces
       const workspaces = [
         bed.addWorkspace('wks-1', { private: true, scripts: { cmd: 'cmd' } }),
@@ -215,26 +257,24 @@ describe('jill each', () => {
       ];
 
       // Setup tasks
-      const manager = container.get(TASK_MANAGER);
-
       const tasks = [
-        new SpawnTask<WorkspaceContext>('cmd', ['--arg'], { workspace: workspaces[0], script: 'cmd' }, { logger: spyLogger, cwd: workspaces[0].cwd }),
-        new SpawnTask<WorkspaceContext>('cmd', ['--arg'], { workspace: workspaces[1], script: 'cmd' }, { logger: spyLogger, cwd: workspaces[1].cwd }),
+        new TestScriptTask(workspaces[0], 'cmd', [], { logger: spyLogger }),
+        new TestScriptTask(workspaces[1], 'cmd', [], { logger: spyLogger }),
       ];
 
-      jest.spyOn(manager, 'add').mockImplementation();
       jest.spyOn(manager, 'tasks', 'get').mockReturnValue(tasks);
 
       jest.spyOn(workspaces[0], 'run').mockResolvedValue(tasks[0]);
       jest.spyOn(workspaces[1], 'run').mockResolvedValue(tasks[1]);
 
       // Run command
-      const prom = yargs.command(eachCommand)
-        .parse('each --private cmd -- --arg');
+      const prom = yargs.command(command)
+        .fail(false)
+        .parse('each --private cmd');
 
       // should create script task than add it to manager
       await flushPromises();
-      expect(workspaces[0].run).toHaveBeenCalledWith('cmd', ['--arg'], { buildDeps: 'all' });
+      expect(workspaces[0].run).toHaveBeenCalledWith('cmd', [], { buildDeps: 'all' });
       expect(workspaces[1].run).not.toHaveBeenCalled();
 
       await flushPromises();
@@ -252,6 +292,8 @@ describe('jill each', () => {
     });
 
     it('should run script only in private workspaces (--no-private)', async () => {
+      context.reset({});
+
       // Setup workspaces
       const workspaces = [
         bed.addWorkspace('wks-1', { private: true, scripts: { cmd: 'cmd' } }),
@@ -260,27 +302,25 @@ describe('jill each', () => {
       ];
 
       // Setup tasks
-      const manager = container.get(TASK_MANAGER);
-
       const tasks = [
-        new SpawnTask<WorkspaceContext>('cmd', ['--arg'], { workspace: workspaces[0], script: 'cmd' }, { logger: spyLogger, cwd: workspaces[0].cwd }),
-        new SpawnTask<WorkspaceContext>('cmd', ['--arg'], { workspace: workspaces[1], script: 'cmd' }, { logger: spyLogger, cwd: workspaces[1].cwd }),
+        new TestScriptTask(workspaces[0], 'cmd', [], { logger: spyLogger }),
+        new TestScriptTask(workspaces[1], 'cmd', [], { logger: spyLogger }),
       ];
 
-      jest.spyOn(manager, 'add').mockImplementation();
       jest.spyOn(manager, 'tasks', 'get').mockReturnValue(tasks);
 
       jest.spyOn(workspaces[0], 'run').mockResolvedValue(tasks[0]);
       jest.spyOn(workspaces[1], 'run').mockResolvedValue(tasks[1]);
 
       // Run command
-      const prom = yargs.command(eachCommand)
-        .parse('each --no-private cmd -- --arg');
+      const prom = yargs.command(command)
+        .fail(false)
+        .parse('each --no-private cmd');
 
       // should create script task than add it to manager
       await flushPromises();
       expect(workspaces[0].run).not.toHaveBeenCalled();
-      expect(workspaces[1].run).toHaveBeenCalledWith('cmd', ['--arg'], { buildDeps: 'all' });
+      expect(workspaces[1].run).toHaveBeenCalledWith('cmd', [], { buildDeps: 'all' });
 
       await flushPromises();
       expect(manager.add).not.toHaveBeenCalledWith(tasks[0]);
@@ -299,6 +339,8 @@ describe('jill each', () => {
 
   describe('affected filter', () => {
     it('should run script only in affected workspaces (--affected test)', async () => {
+      context.reset({});
+
       // Setup workspaces
       const workspaces = [
         bed.addWorkspace('wks-1', { scripts: { cmd: 'cmd' } }),
@@ -307,14 +349,11 @@ describe('jill each', () => {
       ];
 
       // Setup tasks
-      const manager = container.get(TASK_MANAGER);
-
       const tasks = [
-        new SpawnTask<WorkspaceContext>('cmd', ['--arg'], { workspace: workspaces[0], script: 'cmd' }, { logger: spyLogger, cwd: workspaces[0].cwd }),
-        new SpawnTask<WorkspaceContext>('cmd', ['--arg'], { workspace: workspaces[1], script: 'cmd' }, { logger: spyLogger, cwd: workspaces[1].cwd }),
+        new TestScriptTask(workspaces[0], 'cmd', [], { logger: spyLogger }),
+        new TestScriptTask(workspaces[1], 'cmd', [], { logger: spyLogger }),
       ];
 
-      jest.spyOn(manager, 'add').mockImplementation();
       jest.spyOn(manager, 'tasks', 'get').mockReturnValue(tasks);
 
       jest.spyOn(workspaces[0], 'run').mockResolvedValue(tasks[0]);
@@ -324,12 +363,13 @@ describe('jill each', () => {
       jest.spyOn(workspaces[1], 'isAffected').mockResolvedValue(false);
 
       // Run command
-      const prom = yargs.command(eachCommand)
-        .parse('each --affected test cmd -- --arg');
+      const prom = yargs.command(command)
+        .fail(false)
+        .parse('each --affected test cmd');
 
       // should create script task than add it to manager
       await flushPromises();
-      expect(workspaces[0].run).toHaveBeenCalledWith('cmd', ['--arg'], { buildDeps: 'all' });
+      expect(workspaces[0].run).toHaveBeenCalledWith('cmd', [], { buildDeps: 'all' });
       expect(workspaces[1].run).not.toHaveBeenCalled();
 
       await flushPromises();

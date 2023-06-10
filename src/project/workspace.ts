@@ -1,33 +1,35 @@
-import { SpawnTask, SpawnTaskOptions, SpawnTaskStream, TaskContext } from '@jujulego/tasks';
+import { type Task, type TaskOptions } from '@jujulego/tasks';
+import { injectable } from 'inversify';
 import path from 'node:path';
 import { type Package } from 'normalize-package-data';
 import { satisfies } from 'semver';
 
-import { Git } from '@/src/git';
-import { container } from '@/src/services/inversify.config';
-import { Logger } from '@/src/services/logger.service';
-import { combine, streamLines } from '@/src/utils/streams';
+import { GitService } from '@/src/commons/git.service';
+import { container, lazyInject } from '@/src/inversify.config';
+import { Logger } from '@/src/commons/logger.service';
+import { CommandTask } from '@/src/tasks/command-task';
+import { ScriptTask } from '@/src/tasks/script-task';
+import { combine } from '@/src/utils/streams';
 
-import { Project } from './project';
+import { type Project } from './project';
 
 // Types
 export type WorkspaceDepsMode = 'all' | 'prod' | 'none';
 
-export interface WorkspaceContext extends TaskContext {
-  workspace: Workspace;
-  script: string;
-}
-
-export interface WorkspaceRunOptions extends Omit<SpawnTaskOptions, 'cwd'> {
+export interface WorkspaceRunOptions extends Omit<TaskOptions, 'logger'> {
   buildDeps?: WorkspaceDepsMode;
 }
 
 // Class
+@injectable()
 export class Workspace {
   // Attributes
   private readonly _logger: Logger;
   private readonly _affectedCache = new Map<string, Promise<boolean>>();
-  private readonly _tasks = new Map<string, SpawnTask<WorkspaceContext>>();
+  private readonly _tasks = new Map<string, ScriptTask>();
+
+  @lazyInject(GitService)
+  private readonly _git: GitService;
 
   // Constructor
   constructor(
@@ -52,7 +54,7 @@ export class Workspace {
     return !this.version || satisfies(this.version, range);
   }
 
-  private async _buildDependencies(task: SpawnTask, deps: WorkspaceDepsMode = 'all') {
+  private async _buildDependencies(task: Task, deps: WorkspaceDepsMode = 'all') {
     // Generators
     const generators: AsyncGenerator<Workspace, void>[] = [];
 
@@ -76,7 +78,7 @@ export class Workspace {
   }
 
   private async _isAffected(reference: string): Promise<boolean> {
-    const isAffected = await Git.isAffected(reference, ['--', this.cwd], {
+    const isAffected = await this._git.isAffected(reference, [this.cwd], {
       cwd: this.project.root,
       logger: this._logger,
     });
@@ -115,7 +117,7 @@ export class Workspace {
         if (ws._satisfies(this, range)) {
           yield ws;
         } else {
-          this._logger.verbose(`Ignoring ${kind} ${ws.reference} as it does not match requirement ${range}`);
+          this._logger.verbose`Ignoring ${kind} ${ws.reference} as it does not match requirement ${range}`;
         }
       }
     }
@@ -137,37 +139,35 @@ export class Workspace {
     }
   }
 
-  private async _streamLogs(task: SpawnTask<WorkspaceContext>, stream: SpawnTaskStream, level: string) {
-    try {
-      for await (const line of streamLines(task, stream)) {
-        this._logger.log(level, line, { label: `${this.name}#${task.context.script}` });
-      }
-    } catch (err) {
-      if (err) {
-        this._logger.warn(`Error while streaming task ${stream}`, err, { label: `${this.name}#${task.context.script}` });
-      }
-    }
+  async exec(command: string, args: string[] = [], opts: WorkspaceRunOptions = {}): Promise<CommandTask> {
+    const pm = await this.project.packageManager();
+    const task = new CommandTask(this, command, args, {
+      ...opts,
+      logger: this._logger.child({ label: `${this.name}$${command}` }),
+      superCommand: pm === 'yarn' ? 'yarn' : undefined
+    });
+
+    await this._buildDependencies(task, opts.buildDeps);
+
+    return task;
   }
 
-  async run(script: string, args: string[] = [], opts: WorkspaceRunOptions = {}): Promise<SpawnTask<WorkspaceContext>> {
+  async run(script: string, args: string[] = [], opts: WorkspaceRunOptions = {}): Promise<ScriptTask | null> {
+    // Script not found
+    if (!this.getScript(script)) {
+      return null;
+    }
+
+    // Create task if it doesn't exist yet
     let task = this._tasks.get(script);
 
     if (!task) {
-      const pm = await this.project.packageManager();
-
-      task = new SpawnTask(pm, ['run', script, ...args], { workspace: this, script }, {
+      task = new ScriptTask(this, script, args, {
         ...opts,
-        cwd: this.cwd,
-        logger: this._logger.child({ label: `${this.name}#${script}`}),
-        env: {
-          FORCE_COLOR: '1',
-          ...opts.env
-        }
+        logger: this._logger.child({ label: `${this.name}#${script}` }),
       });
 
-      this._streamLogs(task, 'stdout', 'info');
-      this._streamLogs(task, 'stderr', 'info');
-
+      await task.prepare();
       await this._buildDependencies(task, opts.buildDeps);
 
       this._tasks.set(script, task);
@@ -176,15 +176,27 @@ export class Workspace {
     return task;
   }
 
-  async build(opts?: WorkspaceRunOptions): Promise<SpawnTask | null> {
-    const { scripts = {} } = this.manifest;
+  async build(opts?: WorkspaceRunOptions): Promise<ScriptTask | null> {
+    const task = await this.run('build', [], opts);
 
-    if (!scripts.build) {
+    if (!task) {
       this._logger.warn('Will not be built (no build script)');
-      return null;
     }
 
-    return await this.run('build', [], opts);
+    return task;
+  }
+
+  getScript(script: string): string | null {
+    const { scripts = {} } = this.manifest;
+    return scripts[script] || null;
+  }
+
+  toJSON() {
+    return {
+      name: this.name,
+      version: this.version,
+      cwd: this.cwd,
+    };
   }
 
   // Properties

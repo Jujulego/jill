@@ -1,4 +1,4 @@
-import { GroupTask, TaskManager } from '@jujulego/tasks';
+import { GroupTask, type TaskManager } from '@jujulego/tasks';
 import { useLayoutEffect, useState } from 'react';
 
 import GroupTaskSpinner from './group-task-spinner';
@@ -16,7 +16,7 @@ export default function TaskManagerSpinner({ manager }: TasksSpinnerProps) {
   useLayoutEffect(() => {
     let dirty = false;
 
-    return manager.subscribe('added', () => {
+    return manager.on('added', () => {
       if (!dirty) {
         dirty = true;
 

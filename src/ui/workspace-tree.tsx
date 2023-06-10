@@ -1,7 +1,7 @@
-import { Newline, Text, TextProps } from 'ink';
-import { FC, ReactElement, useEffect, useState } from 'react';
+import { Newline, Text, type TextProps } from 'ink';
+import { type ReactElement, useEffect, useState } from 'react';
 
-import { Workspace } from '@/src/project/workspace';
+import { type Workspace } from '@/src/project/workspace';
 
 // Types
 export interface WorkspaceTreeProps {

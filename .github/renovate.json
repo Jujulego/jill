@@ -1,0 +1,19 @@
+{
+  "extends": [
+    "config:base"
+  ],
+  "baseBranches": ["master", "next"],
+  "labels": ["dependencies"],
+  "packageRules": [
+    {
+      "matchDepTypes": ["devDependencies"],
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "automerge": true,
+      "automergeType": "pr",
+      "platformAutomerge": true
+    }
+  ],
+  "js": {
+    "addLabels": ["javascript"]
+  }
+}

@@ -9,6 +9,7 @@ const config: Config = {
     '<rootDir>/tests/setup.ts'
   ],
   moduleNameMapper: {
+    '^@/(.*)$': '<rootDir>/$1',
     '#ansi-styles': 'ansi-styles',
     '#supports-color': 'supports-color'
   },

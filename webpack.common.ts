@@ -1,5 +1,5 @@
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
-import { Configuration, IgnorePlugin } from 'webpack';
+import { type Configuration, IgnorePlugin } from 'webpack';
 import path from 'node:path';
 
 // Config

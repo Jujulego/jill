@@ -1,7 +1,10 @@
 import { SpawnTask } from '@jujulego/tasks';
 import { render } from 'ink-testing-library';
+import { Text } from 'ink';
 
+import { ScriptTask } from '@/src/tasks/script-task';
 import TaskName from '@/src/ui/task-name';
+
 import { TestBed } from '@/tools/test-bed';
 
 // Setup
@@ -17,20 +20,25 @@ describe('<TaskName>', () => {
     const task = new SpawnTask('cmd', [], {});
     jest.spyOn(task, 'name', 'get').mockReturnValue('test');
     
-    const { lastFrame } = render(<TaskName task={task} />);
+    const { lastFrame } = render(
+      <Text>
+        <TaskName task={task} />
+      </Text>
+    );
     
     expect(lastFrame()).toBe('test');
   });
 
   it('should print running script and workspace name', () => {
     const wks = bed.addWorkspace('wks-a');
-    const task = new SpawnTask('cmd', [], {
-      script: 'test',
-      workspace: wks,
-    });
+    const task = new ScriptTask(wks, 'cmd', []);
 
-    const { lastFrame } = render(<TaskName task={task} />);
+    const { lastFrame } = render(
+      <Text>
+        <TaskName task={task} />
+      </Text>
+    );
 
-    expect(lastFrame()).toEqual(expect.ignoreColor('Running test in wks-a'));
+    expect(lastFrame()).toEqual(expect.ignoreColor('Running cmd in wks-a'));
   });
 });

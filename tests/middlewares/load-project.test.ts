@@ -1,58 +1,119 @@
 import path from 'node:path';
 import yargs from 'yargs';
 
-import { loadProject } from '@/src/middlewares/load-project';
+import { ContextService } from '@/src/commons/context.service';
+import { Logger } from '@/src/commons/logger.service';
+import { SpinnerService } from '@/src/commons/spinner.service';
+import { CURRENT } from '@/src/constants';
+import { container } from '@/src/inversify.config';
+import { LoadProject } from '@/src/middlewares/load-project';
+import { applyMiddlewares } from '@/src/modules/middleware';
 import { Project } from '@/src/project/project';
-import { container, CURRENT } from '@/src/services/inversify.config';
-import { SpinnerService } from '@/src/services/spinner.service';
-import { applyMiddlewares } from '@/src/utils/yargs';
+import { ProjectRepository } from '@/src/project/project.repository';
 
 // Setup
 let parser: yargs.Argv;
+let context: ContextService;
 let spinner: SpinnerService;
+let projectRepo: ProjectRepository;
 
-beforeEach(async () => {
+beforeAll(() => {
+  container.snapshot();
+});
+
+beforeEach(() => {
+  container.restore();
   container.snapshot();
 
+  context = container.get(ContextService);
   spinner = container.get(SpinnerService);
   jest.spyOn(spinner, 'spin');
   jest.spyOn(spinner, 'stop');
 
-  jest.spyOn(Project, 'searchProjectRoot')
-    .mockResolvedValue('/test');
+  projectRepo = container.get(ProjectRepository);
+  jest.spyOn(projectRepo, 'searchProjectRoot')
+    .mockResolvedValue(path.resolve('/test'));
 
-  parser = await applyMiddlewares(yargs(), [loadProject]);
-});
-
-afterEach(() => {
-  container.restore();
+  parser = applyMiddlewares(yargs(), [LoadProject]);
 });
 
 // Tests
-describe('loadProject', () => {
-  it('should search project root using cwd and bind CURRENT_PROJECT', async () => {
-    await parser.parse(''); // <= no args
+describe('LoadProject', () => {
+  it('should search project root using cwd', async () => {
+    context.reset();
+
+    const parsed = await parser.parse(''); // <= no args
 
     expect(spinner.spin).toHaveBeenCalledWith('Loading project ...');
-    expect(Project.searchProjectRoot).toHaveBeenCalledWith(process.cwd());
+    expect(projectRepo.searchProjectRoot).toHaveBeenCalledWith(process.cwd());
 
-    expect(container.isBoundNamed(Project, CURRENT)).toBe(true);
-    expect(container.getNamed(Project, CURRENT).root).toBe(path.resolve('/test'));
+    expect(context.project).toBeInstanceOf(Project);
+    expect(context.project?.root).toBe(path.resolve('/test'));
+    expect(parsed.project).toBe(path.resolve('/test'));
 
     expect(spinner.stop).toHaveBeenCalled();
   });
 
   it('should search project root using arguments', async () => {
+    context.reset();
     await parser.parse('-p /toto');
 
-    expect(Project.searchProjectRoot).toHaveBeenCalledWith('/toto');
+    expect(projectRepo.searchProjectRoot).toHaveBeenCalledWith('/toto');
   });
 
   it('should set package manager using arguments', async () => {
+    context.reset();
     await parser.parse('--package-manager npm');
 
-    expect(container.isBoundNamed(Project, CURRENT)).toBe(true);
-    await expect(container.getNamed(Project, CURRENT).packageManager())
+    expect(context.project).toBeInstanceOf(Project);
+    await expect(context.project?.packageManager())
       .resolves.toBe('npm');
+  });
+
+  it('should keep project from context if no args are provided', async () => {
+    const project = new Project('/parent', container.get(Logger));
+    context.reset({ project });
+
+    const parsed = await parser.parse(''); // <= no args
+
+    expect(spinner.spin).not.toHaveBeenCalled();
+    expect(projectRepo.searchProjectRoot).not.toHaveBeenCalled();
+
+    expect(context.project).toBe(project);
+    expect(parsed.project).toBe(project.root);
+  });
+
+  it('should replace project in context if args are provided', async () => {
+    const project = new Project('/parent', container.get(Logger));
+    context.reset({ project });
+
+    const parsed = await parser.parse('-p /test');
+
+    expect(spinner.spin).toHaveBeenCalledWith('Loading project ...');
+    expect(projectRepo.searchProjectRoot).toHaveBeenCalledWith('/test');
+
+    expect(context.project).not.toBe(project);
+    expect(context.project?.root).toBe(path.resolve('/test'));
+    expect(parsed.project).toBe(path.resolve('/test'));
+  });
+});
+
+describe('Project CURRENT binding', () => {
+  it('should return project from context', () => {
+    // Set project in context
+    const project = new Project('/test', container.get(Logger));
+    context.reset({ project });
+
+    // Use binding
+    expect(container.getNamed(Project, CURRENT)).toBe(project);
+  });
+
+  it('should throw if project miss in context', () => {
+    // Set project in context
+    context.reset();
+
+    // Use binding
+    expect(() => container.getNamed(Project, CURRENT))
+      .toThrow(new Error('Cannot inject current project, it not yet defined'));
   });
 });

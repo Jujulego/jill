@@ -1,15 +1,18 @@
-import { Git } from '@/src/git';
-import { Workspace } from '@/src/project/workspace';
-import { lazyInject } from '@/src/services/inversify.config';
-import { Logger } from '@/src/services/logger.service';
+import { GitService } from '@/src/commons/git.service';
+import { type Workspace } from '@/src/project/workspace';
+import { lazyInject } from '@/src/inversify.config';
+import { Logger } from '@/src/commons/logger.service';
 
-import { PipelineFilter } from './pipeline';
+import { type PipelineFilter } from './pipeline';
 
 // Class
 export class AffectedFilter implements PipelineFilter {
   // Properties
   @lazyInject(Logger)
   private readonly _logger: Logger;
+
+  @lazyInject(GitService)
+  private readonly _git: GitService;
 
   // Constructor
   constructor(
@@ -32,7 +35,7 @@ export class AffectedFilter implements PipelineFilter {
 
     // - search in branches
     if (result.includes('*')) {
-      const branches = await Git.listBranches([...sortArgs, result], { cwd: wks.cwd, logger: logger });
+      const branches = await this._git.listBranches([...sortArgs, result], { cwd: wks.cwd, logger: logger });
 
       if (branches.length > 0) {
         result = branches[branches.length - 1];
@@ -41,7 +44,7 @@ export class AffectedFilter implements PipelineFilter {
 
     // - search in tags
     if (result.includes('*')) {
-      const tags = await Git.listTags([...sortArgs, result], { cwd: wks.cwd, logger: logger });
+      const tags = await this._git.listTags([...sortArgs, result], { cwd: wks.cwd, logger: logger });
 
       if (tags.length > 0) {
         result = tags[tags.length - 1];
@@ -49,11 +52,11 @@ export class AffectedFilter implements PipelineFilter {
     }
 
     if (result !== this.format) {
-      logger.verbose(`Resolved ${this.format} into ${result}`);
+      logger.verbose`Resolved ${this.format} into ${result}`;
     }
 
     if (result.includes('*')) {
-      logger.warn(`No revision found matching ${result}, using fallback ${this.fallback}`);
+      logger.warn`No revision found matching ${result}, using fallback ${this.fallback}`;
 
       return this.fallback;
     }

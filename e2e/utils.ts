@@ -2,6 +2,8 @@ import cp from 'node:child_process';
 import path from 'node:path';
 
 import { InkScreen } from '@/tools/ink-screen';
+import { type PackageManager } from '@/src/project/types';
+import { splitCommandLine } from '@/src/utils/string';
 
 // Constants
 export const MAIN = path.join(__dirname, '../bin/jill.js');
@@ -16,12 +18,19 @@ export interface SpawnResult {
 export interface SpawnOptions {
   cwd?: string;
   env?: Record<string, string>;
+  removeCotes?: boolean;
 }
 
 // Utils
-export function jill(args: ReadonlyArray<string>, opts: SpawnOptions = {}): Promise<SpawnResult> {
+export function jill(args: string, opts: SpawnOptions = {}): Promise<SpawnResult> {
   return new Promise<SpawnResult>((resolve, reject) => {
-    const proc = cp.fork(MAIN, args, {
+    let argv = splitCommandLine(args);
+
+    if (!opts.removeCotes) {
+      argv = argv.map(arg => arg.replace(/^["'](.+)["']$/, '$1'));
+    }
+
+    const proc = cp.fork(MAIN, argv, {
       cwd: opts.cwd,
       stdio: 'overlapped',
       env: process.env
@@ -48,4 +57,19 @@ export function jill(args: ReadonlyArray<string>, opts: SpawnOptions = {}): Prom
 
     proc.on('error', reject);
   });
+}
+
+export function withPackageManager(cb: (pm: PackageManager) => void) {
+  let managers: PackageManager[] = ['npm', 'yarn'];
+
+  if (process.env.USE_PACKAGE_MANAGER) {
+    const toUse = process.env.USE_PACKAGE_MANAGER.split(/, ?/g);
+    managers = managers.filter((pm) => toUse.includes(pm));
+  }
+
+  for (const pm of managers) {
+    describe(`using ${pm}`, () => {
+      cb(pm);
+    });
+  }
 }
