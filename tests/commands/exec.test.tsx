@@ -35,7 +35,7 @@ beforeEach(async () => {
 
   bed = new TestBed();
   wks = bed.addWorkspace('wks');
-  task = new TestCommandTask(wks, 'cmd', ['--arg'], { logger: spyLogger });
+  task = new TestCommandTask(wks, 'cmd', [], { logger: spyLogger });
 
   app = render(<Layout />);
   container.rebind(INK_APP).toConstantValue(wrapInkTestApp(app));
@@ -66,16 +66,16 @@ describe('jill exec', () => {
     // Run command
     const prom = yargs.command(command)
       .fail(false)
-      .parse('-w wks cmd -- --arg');
+      .parse('cmd');
 
     await flushPromises();
 
     // should create script task then add it to manager
-    expect(wks.exec).toHaveBeenCalledWith('cmd', ['--arg'], { buildDeps: 'all' });
+    expect(wks.exec).toHaveBeenCalledWith('cmd', [], { buildDeps: 'all' });
     expect(manager.add).toHaveBeenCalledWith(task);
 
     // should print task spinner
-    expect(app.lastFrame()).toEqual(expect.ignoreColor(/^. cmd --arg/));
+    expect(app.lastFrame()).toEqual(expect.ignoreColor(/^. cmd/));
 
     // complete task
     jest.spyOn(task, 'status', 'get').mockReturnValue('done');
@@ -85,7 +85,7 @@ describe('jill exec', () => {
     await prom;
 
     // should print task completed
-    expect(app.lastFrame()).toEqual(expect.ignoreColor(`${symbols.success} cmd --arg (took 100ms)`));
+    expect(app.lastFrame()).toEqual(expect.ignoreColor(`${symbols.success} cmd (took 100ms)`));
   });
 
   it('should use given dependency selection mode', async () => {
@@ -94,12 +94,54 @@ describe('jill exec', () => {
     // Run command
     const prom = yargs.command(command)
       .fail(false)
-      .parse('exec -w wks --deps-mode prod cmd -- --arg');
+      .parse('exec -d prod cmd');
 
     await flushPromises();
 
     // should create script task than add it to manager
-    expect(wks.exec).toHaveBeenCalledWith('cmd', ['--arg'], { buildDeps: 'prod' });
+    expect(wks.exec).toHaveBeenCalledWith('cmd', [], { buildDeps: 'prod' });
+
+    // complete task
+    jest.spyOn(task, 'status', 'get').mockReturnValue('done');
+    task.emit('status.done', { status: 'done', previous: 'running' });
+    task.emit('completed', { status: 'done', duration: 100 });
+
+    await prom;
+  });
+
+  it('should pass down unknown arguments', async () => {
+    context.reset();
+
+    // Run command
+    const prom = yargs.command(command)
+      .fail(false)
+      .parse('cmd --arg');
+
+    await flushPromises();
+
+    // should create script task than add it to manager
+    expect(wks.exec).toHaveBeenCalledWith('cmd', ['--arg'], { buildDeps: 'all' });
+
+    // complete task
+    jest.spyOn(task, 'status', 'get').mockReturnValue('done');
+    task.emit('status.done', { status: 'done', previous: 'running' });
+    task.emit('completed', { status: 'done', duration: 100 });
+
+    await prom;
+  });
+
+  it('should pass down unparsed arguments', async () => {
+    context.reset();
+
+    // Run command
+    const prom = yargs.command(command)
+      .fail(false)
+      .parse('cmd -- -d toto');
+
+    await flushPromises();
+
+    // should create script task than add it to manager
+    expect(wks.exec).toHaveBeenCalledWith('cmd', ['-d', 'toto'], { buildDeps: 'all' });
 
     // complete task
     jest.spyOn(task, 'status', 'get').mockReturnValue('done');

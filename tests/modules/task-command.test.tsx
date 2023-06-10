@@ -3,6 +3,7 @@ import { cleanup, render } from 'ink-testing-library';
 import { injectable } from 'inversify';
 import symbols from 'log-symbols';
 
+import { Logger } from '@/src/commons/logger.service';
 import { INK_APP } from '@/src/ink.config';
 import { container } from '@/src/inversify.config';
 import { TaskCommand } from '@/src/modules/task-command';
@@ -93,8 +94,6 @@ describe('TaskCommand', () => {
     });
 
     it('should exit 1 if a task fails', async () => {
-      jest.spyOn(process, 'exit').mockImplementation();
-
       // Run command
       const prom = command.handler({ $0: 'jill', _: [] });
       await flushPromises();
@@ -108,6 +107,21 @@ describe('TaskCommand', () => {
 
       // should print task failed
       expect(app.lastFrame()).toEqual(expect.ignoreColor(`${symbols.error} Running cmd in wks (took 100ms)`));
+    });
+
+    it('should log and exit if no task were yielded', async () => {
+      const logger = container.get(Logger);
+
+      jest.spyOn(logger, 'warn').mockImplementation();
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      jest.mocked(command.prepare).mockImplementation(function* () {});
+
+      // Run command
+      await command.handler({ $0: 'jill', _: [] });
+
+      // should have only logged
+      expect(manager.add).not.toHaveBeenCalled();
+      expect(logger.warn).toHaveBeenCalledWith(['No task found']);
     });
   });
 

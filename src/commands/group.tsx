@@ -46,6 +46,7 @@ export class GroupCommand extends TaskCommand<IGroupCommandArgs> {
         }
       })
       .option('deps-mode', {
+        alias: 'd',
         choice: ['all', 'prod', 'none'],
         default: 'all' as const,
         desc: 'Dependency selection mode:\n' +

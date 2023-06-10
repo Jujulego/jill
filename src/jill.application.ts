@@ -50,7 +50,6 @@ export class JillApplication {
 
     return this.parser
       .command(commands)
-      .demandCommand()
       .recommendCommands()
       .strict()
       .fail(false);
