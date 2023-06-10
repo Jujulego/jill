@@ -34,7 +34,7 @@ describe('jill exec', () => void withPackageManager((packageManager) => {
 
   // Tests
   it('should run node in wks-c', async () => {
-    const res = await jill('exec -w wks-c node -- -e "require(\'node:fs\').writeFileSync(\'script.txt\', \'node\')"', { cwd: prjDir, removeCotes: true });
+    const res = await jill('exec -w wks-c node -e "require(\'node:fs\').writeFileSync(\'script.txt\', \'node\')"', { cwd: prjDir, removeCotes: true });
 
     // Check jill output
     expect(res.code).toBe(0);
@@ -49,7 +49,7 @@ describe('jill exec', () => void withPackageManager((packageManager) => {
   });
 
   it('should be the default command', async () => {
-    const res = await jill('-w wks-c node -- -e "require(\'node:fs\').writeFileSync(\'script.txt\', \'node\')"', { cwd: prjDir, removeCotes: true });
+    const res = await jill('-w wks-c node -e "require(\'node:fs\').writeFileSync(\'script.txt\', \'node\')"', { cwd: prjDir, removeCotes: true });
 
     // Check jill output
     expect(res.code).toBe(0);
@@ -60,7 +60,7 @@ describe('jill exec', () => void withPackageManager((packageManager) => {
   });
 
   it('should run wks-c fails script and exit 1', async () => {
-    const res = await jill('exec -w wks-c node -- -e "process.exit(1)"', { cwd: prjDir, removeCotes: true });
+    const res = await jill('exec -w wks-c node -e "process.exit(1)"', { cwd: prjDir, removeCotes: true });
 
     // Check jill output
     expect(res.code).toBe(1);
@@ -71,7 +71,7 @@ describe('jill exec', () => void withPackageManager((packageManager) => {
   });
 
   it('should run wks-b start script and build script', async () => {
-    const res = await jill('-w wks-b node -- -e "require(\'node:fs\').writeFileSync(\'script.txt\', \'node\')"', { cwd: prjDir, removeCotes: true });
+    const res = await jill('-w wks-b node -e "require(\'node:fs\').writeFileSync(\'script.txt\', \'node\')"', { cwd: prjDir, removeCotes: true });
 
     // Check jill output
     expect(res.code).toBe(0);
@@ -91,7 +91,7 @@ describe('jill exec', () => void withPackageManager((packageManager) => {
   });
 
   it('should print task plan and do not run any script', async () => {
-    const res = await jill('-w wks-b --plan --plan-mode json node -- -e "require(\'node:fs\').writeFileSync(\'script.txt\', \'node\')"', { cwd: prjDir, removeCotes: true });
+    const res = await jill('-w wks-b --plan --plan-mode json node -e "require(\'node:fs\').writeFileSync(\'script.txt\', \'node\')"', { cwd: prjDir, removeCotes: true });
 
     // Check jill plan
     expect(res.code).toBe(0);
