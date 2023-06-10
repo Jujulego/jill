@@ -73,7 +73,7 @@ describe('jill group', () => {
     // Run command
     const prom = yargs.command(command)
       .fail(false)
-      .parse('group -w wks test1 // test2');
+      .parse('group test1 // test2');
 
     await flushPromises();
 
@@ -119,7 +119,7 @@ describe('jill group', () => {
     // Run command
     const prom = yargs.command(command)
       .fail(false)
-      .parse('group -w wks --deps-mode prod test1 // test2');
+      .parse('group -d prod test1 // test2');
 
     await flushPromises();
 
