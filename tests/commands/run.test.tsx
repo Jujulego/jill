@@ -67,12 +67,12 @@ describe('jill run', () => {
     // Run command
     const prom = yargs.command(command)
       .fail(false)
-      .parse('run -w wks cmd -- --arg');
+      .parse('run cmd');
 
     await flushPromises();
 
     // should create script task then add it to manager
-    expect(wks.run).toHaveBeenCalledWith('cmd', ['--arg'], { buildDeps: 'all' });
+    expect(wks.run).toHaveBeenCalledWith('cmd', [], { buildDeps: 'all' });
     expect(manager.add).toHaveBeenCalledWith(task);
 
     // should print task spinner
@@ -95,12 +95,12 @@ describe('jill run', () => {
     // Run command
     const prom = yargs.command(command)
       .fail(false)
-      .parse('run -w wks --deps-mode prod cmd -- --arg');
+      .parse('run -d prod cmd');
 
     await flushPromises();
 
     // should create script task than add it to manager
-    expect(wks.run).toHaveBeenCalledWith('cmd', ['--arg'], { buildDeps: 'prod' });
+    expect(wks.run).toHaveBeenCalledWith('cmd', [], { buildDeps: 'prod' });
 
     // complete task
     jest.spyOn(task, 'status', 'get').mockReturnValue('done');
@@ -120,7 +120,49 @@ describe('jill run', () => {
     await expect(
       yargs.command(command)
         .fail(false)
-        .parse('run -w wks --deps-mode prod cmd -- --arg')
+        .parse('run cmd')
     ).rejects.toEqual(new ExitException(1));
+  });
+
+  it('should pass down unknown arguments', async () => {
+    context.reset();
+
+    // Run command
+    const prom = yargs.command(command)
+      .fail(false)
+      .parse('run cmd --arg');
+
+    await flushPromises();
+
+    // should create script task than add it to manager
+    expect(wks.run).toHaveBeenCalledWith('cmd', ['--arg'], { buildDeps: 'all' });
+
+    // complete task
+    jest.spyOn(task, 'status', 'get').mockReturnValue('done');
+    task.emit('status.done', { status: 'done', previous: 'running' });
+    task.emit('completed', { status: 'done', duration: 100 });
+
+    await prom;
+  });
+
+  it('should pass down unparsed arguments', async () => {
+    context.reset();
+
+    // Run command
+    const prom = yargs.command(command)
+      .fail(false)
+      .parse('run cmd -- -d toto');
+
+    await flushPromises();
+
+    // should create script task than add it to manager
+    expect(wks.run).toHaveBeenCalledWith('cmd', ['-d', 'toto'], { buildDeps: 'all' });
+
+    // complete task
+    jest.spyOn(task, 'status', 'get').mockReturnValue('done');
+    task.emit('status.done', { status: 'done', previous: 'running' });
+    task.emit('completed', { status: 'done', duration: 100 });
+
+    await prom;
   });
 });
