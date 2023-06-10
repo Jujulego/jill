@@ -947,7 +947,7 @@ __metadata:
     eslint-plugin-jest: 27.2.1
     eslint-plugin-react: 7.32.2
     eslint-plugin-react-hooks: 4.6.0
-    eslint-plugin-workspaces: 0.8.0
+    eslint-plugin-workspaces: 0.9.0
     fork-ts-checker-webpack-plugin: 8.0.0
     ink: 3.2.0
     ink-spinner: 4.0.3
@@ -3281,12 +3281,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-workspaces@npm:0.8.0":
-  version: 0.8.0
-  resolution: "eslint-plugin-workspaces@npm:0.8.0"
+"eslint-plugin-workspaces@npm:0.9.0":
+  version: 0.9.0
+  resolution: "eslint-plugin-workspaces@npm:0.9.0"
   dependencies:
-    find-workspaces: ^0.1.0
-  checksum: d942078502979b8049ff1cc1651f65b629d92402158bdd27e9c79aed44466f939d7e3acebcc6162f4aef612f1a6090bcdae88b517853e5ebe897dd31af43ba0b
+    find-workspaces: ^0.2.0
+  checksum: 69646eece10e0cb0fdb89fa3c3e1ca15eced7f0064fa00b2d2488ee42c6aaac753eb1842e4870cfbfd11c644a0133ede36d37929fed025d47fc8bd0f00dea0b8
   languageName: node
   linkType: hard
 
@@ -3652,14 +3652,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"find-workspaces@npm:^0.1.0":
-  version: 0.1.0
-  resolution: "find-workspaces@npm:0.1.0"
+"find-workspaces@npm:^0.2.0":
+  version: 0.2.0
+  resolution: "find-workspaces@npm:0.2.0"
   dependencies:
     fast-glob: ^3.2.12
-    type-fest: ^3.2.0
-    yaml: ^2.1.3
-  checksum: ced008960974722816bbad5ac84eef9deb7132769efca760e3a780d64594d56c1ffe731c6d17e9bfd8702ac2e6460cab1c5bd462d072a3a3c1fc0ced839edd98
+    pkg-types: ^1.0.3
+    yaml: ^2.3.1
+  checksum: 63cfec2797f6deb0306b82841eb719c819a9c1f67ed40b1f6b224bc07a98079d84a5b51a0fcabc5e0f6044fe84a9f3431b6da1fc3d2830d2ed9d9c44a36df8e3
   languageName: node
   linkType: hard
 
@@ -5497,6 +5497,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"mlly@npm:^1.2.0":
+  version: 1.3.0
+  resolution: "mlly@npm:1.3.0"
+  dependencies:
+    acorn: ^8.8.2
+    pathe: ^1.1.0
+    pkg-types: ^1.0.3
+    ufo: ^1.1.2
+  checksum: aea2a99131b1a1f02a733219317b6466156e150473e0a2f490802eaf2dc66940a21bb68e0ddd5c003360263e674e7dd0bd02da6520c740e6d16fa0edf5efa46e
+  languageName: node
+  linkType: hard
+
 "moo@npm:0.5.2":
   version: 0.5.2
   resolution: "moo@npm:0.5.2"
@@ -5893,6 +5905,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"pathe@npm:^1.1.0":
+  version: 1.1.1
+  resolution: "pathe@npm:1.1.1"
+  checksum: 34ab3da2e5aa832ebc6a330ffe3f73d7ba8aec6e899b53b8ec4f4018de08e40742802deb12cf5add9c73b7bf719b62c0778246bd376ca62b0fb23e0dde44b759
+  languageName: node
+  linkType: hard
+
 "picocolors@npm:^1.0.0":
   version: 1.0.0
   resolution: "picocolors@npm:1.0.0"
@@ -5920,6 +5939,17 @@ __metadata:
   dependencies:
     find-up: ^4.0.0
   checksum: 9863e3f35132bf99ae1636d31ff1e1e3501251d480336edb1c211133c8d58906bed80f154a1d723652df1fda91e01c7442c2eeaf9dc83157c7ae89087e43c8d6
+  languageName: node
+  linkType: hard
+
+"pkg-types@npm:^1.0.3":
+  version: 1.0.3
+  resolution: "pkg-types@npm:1.0.3"
+  dependencies:
+    jsonc-parser: ^3.2.0
+    mlly: ^1.2.0
+    pathe: ^1.1.0
+  checksum: 4b305c834b912ddcc8a0fe77530c0b0321fe340396f84cbb87aecdbc126606f47f2178f23b8639e71a4870f9631c7217aef52ffed0ae17ea2dbbe7e43d116a6e
   languageName: node
   linkType: hard
 
@@ -7122,13 +7152,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"type-fest@npm:^3.2.0":
-  version: 3.6.1
-  resolution: "type-fest@npm:3.6.1"
-  checksum: f7e39bf6b74a883661ec8642707f49c33cfcdc6221e1ba36b1d329c1cf301d87351b3ca0839b894cbfe47dc62140c0ce47e69c88f76800b678e0b67b7fe826e6
-  languageName: node
-  linkType: hard
-
 "typescript@npm:4.9.5":
   version: 4.9.5
   resolution: "typescript@npm:4.9.5"
@@ -7146,6 +7169,13 @@ __metadata:
     tsc: bin/tsc
     tsserver: bin/tsserver
   checksum: 1f8f3b6aaea19f0f67cba79057674ba580438a7db55057eb89cc06950483c5d632115c14077f6663ea76fd09fce3c190e6414bb98582ec80aa5a4eaf345d5b68
+  languageName: node
+  linkType: hard
+
+"ufo@npm:^1.1.2":
+  version: 1.1.2
+  resolution: "ufo@npm:1.1.2"
+  checksum: 83c940a6a23b6d4fc0cd116265bb5dcf88ab34a408ad9196e413270ca607a4781c09b547dc518f43caee128a096f20fe80b5a0e62b4bcc0a868619896106d048
   languageName: node
   linkType: hard
 
@@ -7584,10 +7614,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"yaml@npm:^2.1.3":
-  version: 2.2.1
-  resolution: "yaml@npm:2.2.1"
-  checksum: 84f68cbe462d5da4e7ded4a8bded949ffa912bc264472e5a684c3d45b22d8f73a3019963a32164023bdf3d83cfb6f5b58ff7b2b10ef5b717c630f40bd6369a23
+"yaml@npm:^2.3.1":
+  version: 2.3.1
+  resolution: "yaml@npm:2.3.1"
+  checksum: 2c7bc9a7cd4c9f40d3b0b0a98e370781b68b8b7c4515720869aced2b00d92f5da1762b4ffa947f9e795d6cd6b19f410bd4d15fdd38aca7bd96df59bd9486fb54
   languageName: node
   linkType: hard
 
