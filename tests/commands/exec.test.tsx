@@ -136,12 +136,12 @@ describe('jill exec', () => {
     // Run command
     const prom = yargs.command(command)
       .fail(false)
-      .parse('cmd -- -v');
+      .parse('cmd -- -d toto');
 
     await flushPromises();
 
     // should create script task than add it to manager
-    expect(wks.exec).toHaveBeenCalledWith('cmd', ['-v'], { buildDeps: 'all' });
+    expect(wks.exec).toHaveBeenCalledWith('cmd', ['-d', 'toto'], { buildDeps: 'all' });
 
     // complete task
     jest.spyOn(task, 'status', 'get').mockReturnValue('done');
