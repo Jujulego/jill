@@ -3,6 +3,7 @@ import { cleanup, render } from 'ink-testing-library';
 import { injectable } from 'inversify';
 import symbols from 'log-symbols';
 
+import { Logger } from '@/src/commons/logger.service';
 import { INK_APP } from '@/src/ink.config';
 import { container } from '@/src/inversify.config';
 import { TaskCommand } from '@/src/modules/task-command';
@@ -15,7 +16,6 @@ import { printJson } from '@/src/utils/json';
 import { TestBed } from '@/tools/test-bed';
 import { TestScriptTask } from '@/tools/test-tasks';
 import { flushPromises, spyLogger, wrapInkTestApp } from '@/tools/utils';
-import { Logger } from '@/src/commons/logger.service';
 
 // Class
 @injectable()
