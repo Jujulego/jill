@@ -19,7 +19,7 @@ export function linesFrom(task: SpawnTask, stream: SpawnTaskStream): Source<stri
     current = lines.pop() ?? '';
 
     for (const line of lines) {
-      inner.emit(line);
+      inner.next(line);
     }
   });
 
@@ -28,7 +28,7 @@ export function linesFrom(task: SpawnTask, stream: SpawnTaskStream): Source<stri
     stop();
 
     if (current) {
-      inner.emit(current);
+      inner.next(current);
     }
   });
 
