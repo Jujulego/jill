@@ -13,6 +13,7 @@
     }
   ],
   "js": {
-    "addLabels": ["javascript"]
+    "addLabels": ["javascript"],
+    "postUpdateOptions": ["yarnDedupeHighest"]
   }
 }
