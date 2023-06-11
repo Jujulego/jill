@@ -174,13 +174,13 @@ jobs:
           path: dist
 
       - name: Publish latest
-        if: ${{ github.ref_name == "master" }}
+        if: ${{ github.ref_name == 'master' }}
         run: yarn npm publish --access public --tolerate-republish
         env:
           YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish ${{ github.ref_name }}
-        if: ${{ github.ref_name != "master" }}
+        if: ${{ github.ref_name != 'master' }}
         run: yarn npm publish --access public --tag ${{ github.ref_name }} --tolerate-republish
         env:
           YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
