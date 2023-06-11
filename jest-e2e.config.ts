@@ -13,7 +13,7 @@ const config: Config = {
     '#supports-color': 'supports-color'
   },
   transform: {
-    '^.+\\.(t|j)sx?$': '@swc/jest'
+    '^.+\\.(t|j)sx?$': 'ts-jest'
   },
   transformIgnorePatterns: [
     '/node_modules/(?!(ansi-styles|chalk|is-unicode-supported|log-symbols|parse-ms|pretty-ms|supports-color))'
