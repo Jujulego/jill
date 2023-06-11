@@ -910,7 +910,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jujulego/event-tree@npm:>=2.6.0":
+"@jujulego/event-tree@npm:^3.0.0":
   version: 3.0.0
   resolution: "@jujulego/event-tree@npm:3.0.0"
   checksum: d4748792ed495767005b88f3ab533cd7df4f1640714366617d990ffcab263d41a44e4386f08e1677e38f92e73debc11c4ee4ac5e1936ef9b0ed72bef4c8cb12d
@@ -924,7 +924,7 @@ __metadata:
     "@jujulego/2d-maths": 1.6.0
     "@jujulego/event-tree": 2.1.1
     "@jujulego/tasks": 1.5.0
-    "@jujulego/utils": 1.4.2
+    "@jujulego/utils": 1.4.3
     "@microsoft/eslint-formatter-sarif": 3.0.0
     "@swc/core": 1.3.39
     "@swc/jest": 0.2.24
@@ -993,12 +993,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jujulego/utils@npm:1.4.2":
-  version: 1.4.2
-  resolution: "@jujulego/utils@npm:1.4.2"
+"@jujulego/utils@npm:1.4.3":
+  version: 1.4.3
+  resolution: "@jujulego/utils@npm:1.4.3"
   dependencies:
-    "@jujulego/event-tree": ">=2.6.0"
-  checksum: 9bcea3dbd055a4f65d14a69335df0172b564f2712603b5e7ca83d477997253bcd86a459f5d14b31747fd23f95b8d612c1b68ff9f612b6657e8c784bc2574058f
+    "@jujulego/event-tree": ^3.0.0
+  checksum: 5b8bf3c52da3b2bc0ea684541947c565e9f05d274dffee1742e6309a3a896e3c4d6094ffa48a5d8aaccc925da3d80fb78be0eeb902ccd4e33d72a5d49559cf20
   languageName: node
   linkType: hard
 
