@@ -1,11 +1,14 @@
-name: 'Publish next'
+name: 'Javascript'
 
 on:
   push:
-    branches: [ next ]
+    branches: [ master ]
+
+  pull_request:
+    branches: [ master, next ]
 
 concurrency:
-  group: publish-next
+  group: javascript-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -13,10 +16,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3.5.3
+      - uses: actions/checkout@v3
 
       - name: Use Node.js 16.x
-        uses: actions/setup-node@v3.6.0
+        uses: actions/setup-node@v3
         with:
           node-version: 16
           cache: yarn
@@ -32,14 +35,42 @@ jobs:
           name: build
           path: dist
 
+  lint:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      security-events: write
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Use Node.js 16.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: yarn
+
+      - name: Install
+        run: yarn install --immutable
+
+      - name: Lint
+        run: yarn lint -f @microsoft/sarif -o eslint-results.sarif
+
+      - name: Upload analysis results to GitHub
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: eslint-results.sarif
+          wait-for-processing: true
+
   tests:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3.5.3
+      - uses: actions/checkout@v3
 
       - name: Use Node.js 16.x
-        uses: actions/setup-node@v3.6.0
+        uses: actions/setup-node@v3
         with:
           node-version: 16
           cache: yarn
@@ -73,10 +104,10 @@ jobs:
           - yarn
 
     steps:
-      - uses: actions/checkout@v3.5.3
+      - uses: actions/checkout@v3
 
       - name: Use Node.js ${{ matrix.node }}.x
-        uses: actions/setup-node@v3.6.0
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
           cache: yarn
@@ -99,20 +130,36 @@ jobs:
         env:
           USE_PACKAGE_MANAGER: ${{ matrix.packageManager }}
 
+  complete:
+    if: ${{ github.event_name == 'pull_request' && always() }}
+
+    runs-on: ubuntu-latest
+    needs: [ lint, tests, e2e ]
+
+    steps:
+      - name: Failed
+        if: ${{ contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') }}
+        run: exit 1
+
+      - name: Success
+        run: echo 'You are soooo curious ;)'
+
   publish:
+    if: ${{ github.event_name == 'push' }}
+
     runs-on: ubuntu-latest
     environment: npm
-    needs: [ tests, e2e ]
+    needs: [ lint, tests, e2e ]
 
     permissions:
       actions: write
       contents: write
 
     steps:
-      - uses: actions/checkout@v3.5.3
+      - uses: actions/checkout@v3
 
       - name: Use Node.js 16.x
-        uses: actions/setup-node@v3.6.0
+        uses: actions/setup-node@v3
         with:
           node-version: 16
           registry-url: https://registry.npmjs.org
@@ -126,8 +173,15 @@ jobs:
           name: build
           path: dist
 
-      - name: Publish
-        run: yarn npm publish --access public --tag next --tolerate-republish
+      - name: Publish latest
+        if: ${{ github.ref_name == "master" }}
+        run: yarn npm publish --access public --tolerate-republish
+        env:
+          YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish ${{ github.ref_name }}
+        if: ${{ github.ref_name != "master" }}
+        run: yarn npm publish --access public --tag ${{ github.ref_name }} --tolerate-republish
         env:
           YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
@@ -137,7 +191,7 @@ jobs:
     needs: [ tests ]
 
     steps:
-      - uses: actions/checkout@v3.5.3
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
@@ -162,6 +216,8 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   release:
+    if: ${{ github.event_name == 'push' }}
+
     runs-on: ubuntu-latest
     needs: [ publish ]
 
@@ -169,7 +225,7 @@ jobs:
       contents: write
 
     steps:
-      - uses: actions/checkout@v3.5.3
+      - uses: actions/checkout@v3
 
       - name: Read package.json
         id: info
