@@ -15,5 +15,8 @@
   "js": {
     "addLabels": ["javascript"],
     "postUpdateOptions": ["yarnDedupeHighest"]
+  },
+  "github-actions": {
+    "addLabels": ["github-actions"]
   }
 }
