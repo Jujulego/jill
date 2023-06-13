@@ -868,7 +868,7 @@ __metadata:
     "@swc/jest": 0.2.24
     "@types/jest": 29.5.2
     "@types/moo": 0.5.5
-    "@types/node": 16.18.35
+    "@types/node": 16.18.36
     "@types/normalize-package-data": 2.4.1
     "@types/react": 17.0.61
     "@types/semver": 7.5.0
@@ -1313,10 +1313,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:16.18.35":
-  version: 16.18.35
-  resolution: "@types/node@npm:16.18.35"
-  checksum: 68e3015eb24f009d2b5a7ad959d1e1090016847248f22242c520b75a2780eb19e2d212e775e68022ed474fac00bcc8edaebcd02712f1dfee542efa23e2a4027e
+"@types/node@npm:*, @types/node@npm:16.18.36":
+  version: 16.18.36
+  resolution: "@types/node@npm:16.18.36"
+  checksum: a9d138fa1269079c60daad6984713dc0b713983f8b34a83edbc6d7957b2e38beab9b2598c9fe99f19d073e20bc212a18aaf82eabdc23ef64dce7d2089a9aab2a
   languageName: node
   linkType: hard
 
