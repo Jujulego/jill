@@ -16,6 +16,7 @@ import { ExitException } from '@/src/utils/exit';
 // Types
 export interface IEachCommandArgs {
   script: string;
+  'build-script': string;
   'deps-mode': WorkspaceDepsMode;
 
   // Filters
@@ -54,6 +55,10 @@ export class EachCommand extends TaskCommand<IEachCommandArgs> {
     return this.addTaskOptions(parser)
       // Run options
       .positional('script', { type: 'string', demandOption: true })
+      .option('build-script', {
+        default: 'build',
+        desc: 'Script to use to build dependencies'
+      })
       .option('deps-mode', {
         alias: 'd',
         choice: ['all', 'prod', 'none'],
@@ -128,6 +133,7 @@ export class EachCommand extends TaskCommand<IEachCommandArgs> {
 
       for await (const wks of pipeline.filter(this.project.workspaces())) {
         const task = await wks.run(args.script, rest, {
+          buildScript: args.buildScript,
           buildDeps: args.depsMode,
         });
 
