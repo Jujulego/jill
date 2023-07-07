@@ -86,7 +86,10 @@ describe('jill group', () => {
         ]
       },
       wks,
-      { buildDeps: 'all' }
+      {
+        buildDeps: 'all',
+        buildScript: 'build',
+      }
     );
     expect(manager.add).toHaveBeenCalledWith(task);
 
@@ -132,7 +135,10 @@ describe('jill group', () => {
         ]
       },
       wks,
-      { buildDeps: 'prod' }
+      {
+        buildDeps: 'prod',
+        buildScript: 'build'
+      }
     );
 
     // Complete tasks
