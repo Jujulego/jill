@@ -9,6 +9,7 @@ import { type Workspace, type WorkspaceDepsMode } from '@/src/project/workspace'
 // Types
 export interface IExecCommandArgs {
   command: string;
+  'build-script': string;
   'deps-mode': WorkspaceDepsMode;
 }
 
@@ -31,6 +32,10 @@ export class ExecCommand extends TaskCommand<IExecCommandArgs> {
   builder(parser: Argv) {
     return this.addTaskOptions(parser)
       .positional('command', { type: 'string', demandOption: true })
+      .option('build-script', {
+        default: 'build',
+        desc: 'Script to use to build dependencies'
+      })
       .option('deps-mode', {
         alias: 'd',
         choice: ['all', 'prod', 'none'],
@@ -63,6 +68,7 @@ export class ExecCommand extends TaskCommand<IExecCommandArgs> {
 
     // Run script in workspace
     const task = await this.workspace.exec(args.command, rest, {
+      buildScript: args.buildScript,
       buildDeps: args.depsMode,
     });
 

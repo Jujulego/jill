@@ -12,6 +12,7 @@ import { ExitException } from '@/src/utils/exit';
 // Types
 export interface IRunCommandArgs {
   script: string;
+  'build-script': string;
   'deps-mode': WorkspaceDepsMode;
 }
 
@@ -41,6 +42,10 @@ export class RunCommand extends TaskCommand<IRunCommandArgs> {
   builder(parser: Argv) {
     return this.addTaskOptions(parser)
       .positional('script', { type: 'string', demandOption: true })
+      .option('build-script', {
+        default: 'build',
+        desc: 'Script to use to build dependencies'
+      })
       .option('deps-mode', {
         alias: 'd',
         choice: ['all', 'prod', 'none'],
@@ -68,6 +73,7 @@ export class RunCommand extends TaskCommand<IRunCommandArgs> {
 
     // Run script in workspace
     const task = await this.workspace.run(args.script, rest, {
+      buildScript: args.buildScript,
       buildDeps: args.depsMode,
     });
 

@@ -11,6 +11,7 @@ import { TaskExprService, type TaskTree } from '@/src/tasks/task-expr.service';
 // Types
 export interface IGroupCommandArgs {
   script: TaskTree;
+  'build-script': string;
   'deps-mode': WorkspaceDepsMode;
 }
 
@@ -45,6 +46,10 @@ export class GroupCommand extends TaskCommand<IGroupCommandArgs> {
           return this.taskExpr.parse(expr.join(' '));
         }
       })
+      .option('build-script', {
+        default: 'build',
+        desc: 'Script to use to build dependencies'
+      })
       .option('deps-mode', {
         alias: 'd',
         choice: ['all', 'prod', 'none'],
@@ -59,6 +64,7 @@ export class GroupCommand extends TaskCommand<IGroupCommandArgs> {
   async *prepare(args: ArgumentsCamelCase<IGroupCommandArgs>) {
     // Run script in workspace
     const group = await this.taskExpr.buildTask(args.script.roots[0], this.workspace, {
+      buildScript: args.buildScript,
       buildDeps: args.depsMode,
     });
 
