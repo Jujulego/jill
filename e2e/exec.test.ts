@@ -50,40 +50,17 @@ describe('jill exec', () => void withPackageManager((packageManager) => {
       .resolves.toBe('node');
   });
 
-  if (os.platform() == 'win32') {
-    it('should run dir in wks-c', async () => {
-      const res = await jill('exec -w wks-c dir', { cwd: prjDir, removeCotes: true });
+  it('should run ls in wks-c', async () => {
+    const res = await jill('exec -w wks-c ls', { cwd: prjDir, removeCotes: true });
 
-      // Check jill output
-      expect(res.code).toBe(0);
+    // Check jill output
+    expect(res.code).toBe(0);
 
-      expect(res.screen.screen).toMatchLines([
-        expect.ignoreColor(/^\[wks-c\$dir]/),
-        expect.ignoreColor(/^\[wks-c\$dir]/),
-        expect.ignoreColor(/^\[wks-c\$dir]/),
-        expect.ignoreColor(/^\[wks-c\$dir]/),
-        expect.ignoreColor(/^\[wks-c\$dir]/),
-        expect.ignoreColor(/^\[wks-c\$dir] .+ <DIR> +\./),
-        expect.ignoreColor(/^\[wks-c\$dir] .+ <DIR> +\.\./),
-        expect.ignoreColor(/^\[wks-c\$dir] .+ package\.json/),
-        expect.ignoreColor(/^\[wks-c\$dir]/),
-        expect.ignoreColor(/^\[wks-c\$dir]/),
-        expect.ignoreColor(/^.( yarn exec)? dir \(took [0-9.]+m?s\)/),
-      ]);
-    });
-  } else {
-    it('should run ls in wks-c', async () => {
-      const res = await jill('exec -w wks-c ls', { cwd: prjDir, removeCotes: true });
-
-      // Check jill output
-      expect(res.code).toBe(0);
-
-      expect(res.screen.screen).toMatchLines([
-        expect.ignoreColor(/^\[wks-c\$ls] package\.json/),
-        expect.ignoreColor(/^.( yarn exec)? ls \(took [0-9.]+m?s\)/),
-      ]);
-    });
-  }
+    expect(res.screen.screen).toMatchLines([
+      expect.ignoreColor(/^\[wks-c\$ls] package\.json/),
+      expect.ignoreColor(/^.( yarn exec)? ls \(took [0-9.]+m?s\)/),
+    ]);
+  });
 
   it('should be the default command', async () => {
     const res = await jill('-w wks-c node -e "require(\'node:fs\').writeFileSync(\'script.txt\', \'node\')"', { cwd: prjDir, removeCotes: true });
