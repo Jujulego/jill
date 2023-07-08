@@ -50,7 +50,7 @@ describe('jill run', () => void withPackageManager((packageManager) => {
 
     expect(res.screen.screen).toMatchLines([
       expect.ignoreColor(/^. Running start in wks-c \(took [0-9.]+m?s\)$/),
-      expect.ignoreColor(/^ {2}.( yarn)? node -e "require\('node:fs'\).+ \(took [0-9.]+m?s\)$/),
+      expect.ignoreColor(/^ {2}.( yarn exec)? node -e "require\('node:fs'\).+ \(took [0-9.]+m?s\)$/),
     ]);
 
     // Check script result
@@ -66,7 +66,7 @@ describe('jill run', () => void withPackageManager((packageManager) => {
 
     expect(res.screen.screen).toMatchLines([
       expect.ignoreColor(/^. Running fails in wks-c \(took [0-9.]+m?s\)$/),
-      expect.ignoreColor(/^ {2}.( yarn)? node -e "process.exit\(1\)" \(took [0-9.]+m?s\)$/),
+      expect.ignoreColor(/^ {2}.( yarn exec)? node -e "process.exit\(1\)" \(took [0-9.]+m?s\)$/),
     ]);
   });
 
@@ -89,9 +89,9 @@ describe('jill run', () => void withPackageManager((packageManager) => {
 
     expect(res.screen.screen).toMatchLines([
       expect.ignoreColor(/^. Running build in wks-c \(took [0-9.]+m?s\)$/),
-      expect.ignoreColor(/^ {2}.( yarn)? node -e "require\('node:fs'\).+ \(took [0-9.]+m?s\)$/),
+      expect.ignoreColor(/^ {2}.( yarn exec)? node -e "require\('node:fs'\).+ \(took [0-9.]+m?s\)$/),
       expect.ignoreColor(/^. Running start in wks-b \(took [0-9.]+m?s\)$/),
-      expect.ignoreColor(/^ {2}.( yarn)? node -e "require\('node:fs'\).+ \(took [0-9.]+m?s\)$/),
+      expect.ignoreColor(/^ {2}.( yarn exec)? node -e "require\('node:fs'\).+ \(took [0-9.]+m?s\)$/),
     ]);
 
     // Check scripts result
