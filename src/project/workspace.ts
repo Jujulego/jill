@@ -145,7 +145,7 @@ export class Workspace {
     const task = new CommandTask(this, command, args, {
       ...opts,
       logger: this._logger.child({ label: `${this.name}$${command}` }),
-      superCommand: pm === 'yarn' ? 'yarn' : undefined
+      superCommand: pm === 'yarn' ? ['yarn', 'exec'] : undefined
     });
 
     await this._buildDependencies(task, opts);

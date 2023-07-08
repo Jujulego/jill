@@ -10,7 +10,7 @@ export interface CommandContext extends TaskContext {
 }
 
 export interface CommandOptions extends Omit<SpawnTaskOptions, 'cwd'> {
-  superCommand?: string;
+  superCommand?: string | string[];
 }
 
 // Utils
@@ -22,10 +22,17 @@ export function isCommandCtx(ctx: Readonly<TaskContext>): ctx is Readonly<Comman
 export class CommandTask extends SpawnTask<CommandContext> {
   // Constructor
   constructor(readonly workspace: Workspace, command: string, args: string[], opts: CommandOptions = {}) {
-    const cmd = opts.superCommand ?? command;
+    let cmd = command;
 
     if (opts.superCommand) {
-      args = [command, ...args];
+      if (typeof opts.superCommand === 'string') {
+        opts.superCommand = [opts.superCommand];
+      }
+
+      if (opts.superCommand.length > 0) {
+        cmd = opts.superCommand[0];
+        args = [...opts.superCommand.slice(1), command, ...args];
+      }
     }
 
     super(cmd, args, { workspace, command }, {

@@ -13,7 +13,6 @@ import { type IMiddleware } from '@/src/modules/middleware';
 import { getRegistry } from '@/src/modules/module';
 import { LoadProject } from '@/src/middlewares/load-project';
 import { LoadWorkspace } from '@/src/middlewares/load-workspace';
-import { CURRENT } from '@/src/constants';
 import { type Project } from '@/src/project/project';
 import { Workspace } from '@/src/project/workspace';
 import { type PackageManager } from '@/src/project/types';

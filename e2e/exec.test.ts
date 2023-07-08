@@ -6,6 +6,7 @@ import { fileExists } from '@/tools/utils';
 
 import { withPackageManager, jill } from './utils';
 
+// Tests
 describe('jill exec', () => void withPackageManager((packageManager) => {
   // Setup
   let prjDir: string;
@@ -40,12 +41,24 @@ describe('jill exec', () => void withPackageManager((packageManager) => {
     expect(res.code).toBe(0);
 
     expect(res.screen.screen).toMatchLines([
-      expect.ignoreColor(/^.( yarn)? node -e "require\('node:fs'\).+ \(took [0-9.]+m?s\)/),
+      expect.ignoreColor(/^.( yarn exec)? node -e "require\('node:fs'\).+ \(took [0-9.]+m?s\)/),
     ]);
 
     // Check script result
     await expect(fs.readFile(path.join(prjDir, 'wks-c', 'script.txt'), 'utf8'))
       .resolves.toBe('node');
+  });
+
+  it('should run ls in wks-c', async () => {
+    const res = await jill('exec -w wks-c ls', { cwd: prjDir, removeCotes: true });
+
+    // Check jill output
+    expect(res.code).toBe(0);
+
+    expect(res.screen.screen).toMatchLines([
+      expect.ignoreColor(/^\[wks-c\$ls] package\.json/),
+      expect.ignoreColor(/^.( yarn exec)? ls \(took [0-9.]+m?s\)/),
+    ]);
   });
 
   it('should be the default command', async () => {
@@ -66,7 +79,7 @@ describe('jill exec', () => void withPackageManager((packageManager) => {
     expect(res.code).toBe(1);
 
     expect(res.screen.screen).toMatchLines([
-      expect.ignoreColor(/^.( yarn)? node -e "process.exit\(1\)" \(took [0-9.]+m?s\)$/),
+      expect.ignoreColor(/^.( yarn exec)? node -e "process.exit\(1\)" \(took [0-9.]+m?s\)$/),
     ]);
   });
 
@@ -78,8 +91,8 @@ describe('jill exec', () => void withPackageManager((packageManager) => {
 
     expect(res.screen.screen).toMatchLines([
       expect.ignoreColor(/^. Running build in wks-c \(took [0-9.]+m?s\)$/),
-      expect.ignoreColor(/^ {2}.( yarn)? node -e "require\('node:fs'\).+ \(took [0-9.]+m?s\)$/),
-      expect.ignoreColor(/^.( yarn)? node -e "require\('node:fs'\).+ \(took [0-9.]+m?s\)/),
+      expect.ignoreColor(/^ {2}.( yarn exec)? node -e "require\('node:fs'\).+ \(took [0-9.]+m?s\)$/),
+      expect.ignoreColor(/^.( yarn exec)? node -e "require\('node:fs'\).+ \(took [0-9.]+m?s\)/),
     ]);
 
     // Check scripts result
