@@ -61,7 +61,7 @@ export class ScriptTask extends GroupTask<ScriptContext> {
     return [
       new CommandTask(this.workspace, command, [...commandArgs, ...args], {
         logger: this._logger,
-        superCommand: pm === 'yarn' ? 'yarn' : undefined,
+        superCommand: pm === 'yarn' ? ['yarn', 'exec'] : undefined,
       })
     ];
   }
