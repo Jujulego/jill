@@ -1,5 +1,5 @@
 import { type Task } from '@jujulego/tasks';
-import { inject, injectable, type interfaces as int } from 'inversify';
+import { injectable, type interfaces as int } from 'inversify';
 import yargs from 'yargs';
 
 import { ContextService, type Context } from '@/src/commons/context.service';
@@ -25,11 +25,8 @@ export class JillApplication {
 
   // Constructor
   constructor(
-    @inject(ContextService)
     private readonly context: ContextService,
-    @inject(PluginLoaderService)
     private readonly plugins: PluginLoaderService,
-    @inject(Logger)
     private readonly logger: Logger,
   ) {
     // Create container
