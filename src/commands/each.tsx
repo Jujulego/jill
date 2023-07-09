@@ -1,4 +1,3 @@
-import { inject } from 'inversify';
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
 
 import { SpinnerService } from '@/src/commons/spinner.service';
@@ -28,7 +27,6 @@ export interface IEachCommandArgs {
   'affected-rev-sort'?: string;
 }
 
-
 // Command
 @Command({
   command: 'each <script>',
@@ -44,7 +42,6 @@ export class EachCommand extends TaskCommand<IEachCommandArgs> {
 
   // Constructor
   constructor(
-    @inject(SpinnerService)
     private readonly spinner: SpinnerService,
   ) {
     super();

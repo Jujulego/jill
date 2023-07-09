@@ -1,4 +1,3 @@
-import { inject } from 'inversify';
 import { AsyncLocalStorage } from 'node:async_hooks';
 
 import { Logger } from '@/src/commons/logger.service';
@@ -22,9 +21,7 @@ export class ContextService implements Context {
   private readonly _storage = new AsyncLocalStorage<Context>();
 
   // Constructor
-  constructor(
-    @inject(Logger) logger: Logger,
-  ) {
+  constructor(logger: Logger) {
     this._logger = logger.child({ label: 'context' });
     this.reset();
   }

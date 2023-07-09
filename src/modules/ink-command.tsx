@@ -33,6 +33,6 @@ export abstract class InkCommand<A = unknown> implements ICommand<A> {
       );
     }
 
-    return this.app.waitUntilExit();
+    await this.app.waitUntilExit();
   }
 }
