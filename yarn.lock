@@ -855,10 +855,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jujulego/event-tree@npm:3.0.1, @jujulego/event-tree@npm:^3.0.0":
-  version: 3.0.1
-  resolution: "@jujulego/event-tree@npm:3.0.1"
-  checksum: 8a0c2efd5f6e634d4cc1da11172d3b5874e0f91b096fd2628bf596b8d0d77d26c9042d7a3dbbaea7ea2a88d24c4bbc8af6271b9e8b4e1d2e1189d4a307fc4fac
+"@jujulego/event-tree@npm:3.0.2, @jujulego/event-tree@npm:^3.0.0":
+  version: 3.0.2
+  resolution: "@jujulego/event-tree@npm:3.0.2"
+  checksum: 31a0a77277832dd2eccc8000237ea078b1ff11057bcb488d76273e2e2234646a3e56b0d602b6e0a42f1a3573b5376f2f73d3e05203aa7b886a909136fbaff81c
   languageName: node
   linkType: hard
 
@@ -867,7 +867,7 @@ __metadata:
   resolution: "@jujulego/jill@workspace:."
   dependencies:
     "@jujulego/2d-maths": 1.6.0
-    "@jujulego/event-tree": 3.0.1
+    "@jujulego/event-tree": 3.0.2
     "@jujulego/tasks": 1.5.1
     "@jujulego/utils": 1.4.3
     "@microsoft/eslint-formatter-sarif": 3.0.0
