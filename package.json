@@ -34,7 +34,7 @@
     "@jujulego/tasks": "1.5.1",
     "@jujulego/utils": "1.4.3",
     "@microsoft/eslint-formatter-sarif": "3.0.0",
-    "@swc/core": "1.3.69",
+    "@swc/core": "1.3.70",
     "@swc/jest": "0.2.26",
     "@types/jest": "29.5.3",
     "@types/moo": "0.5.5",
