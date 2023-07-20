@@ -30,7 +30,7 @@
   },
   "devDependencies": {
     "@jujulego/2d-maths": "1.6.0",
-    "@jujulego/event-tree": "3.0.2",
+    "@jujulego/event-tree": "3.1.0",
     "@jujulego/tasks": "1.5.1",
     "@jujulego/utils": "1.4.3",
     "@microsoft/eslint-formatter-sarif": "3.0.0",
