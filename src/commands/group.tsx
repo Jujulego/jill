@@ -1,4 +1,3 @@
-import { inject } from 'inversify';
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
 
 import { Command } from '@/src/modules/command';
@@ -11,6 +10,7 @@ import { TaskExprService, type TaskTree } from '@/src/tasks/task-expr.service';
 // Types
 export interface IGroupCommandArgs {
   script: TaskTree;
+  'build-script': string;
   'deps-mode': WorkspaceDepsMode;
 }
 
@@ -30,7 +30,6 @@ export class GroupCommand extends TaskCommand<IGroupCommandArgs> {
 
   // Constructor
   constructor(
-    @inject(TaskExprService)
     private readonly taskExpr: TaskExprService,
   ) {
     super();
@@ -44,6 +43,10 @@ export class GroupCommand extends TaskCommand<IGroupCommandArgs> {
         coerce: (expr: string[]) => {
           return this.taskExpr.parse(expr.join(' '));
         }
+      })
+      .option('build-script', {
+        default: 'build',
+        desc: 'Script to use to build dependencies'
       })
       .option('deps-mode', {
         alias: 'd',
@@ -59,6 +62,7 @@ export class GroupCommand extends TaskCommand<IGroupCommandArgs> {
   async *prepare(args: ArgumentsCamelCase<IGroupCommandArgs>) {
     // Run script in workspace
     const group = await this.taskExpr.buildTask(args.script.roots[0], this.workspace, {
+      buildScript: args.buildScript,
       buildDeps: args.depsMode,
     });
 

@@ -30,7 +30,7 @@ describe('workerCache', () => {
     expect(compute).toHaveBeenCalled();
     expect(getEnvironmentData(KEY)).toBe('toto');
 
-    await flushPromises();
+    await flushPromises(100);
     expect(channel.onmessage).toHaveBeenCalledWith(expect.objectContaining({
       data: {
         key: KEY,
@@ -49,7 +49,7 @@ describe('workerCache', () => {
     expect(compute).not.toHaveBeenCalled();
     expect(getEnvironmentData(KEY)).toBe('toto');
 
-    await flushPromises();
+    await flushPromises(100);
     expect(channel.onmessage).not.toHaveBeenCalledWith(expect.objectContaining({
       data: {
         key: KEY,

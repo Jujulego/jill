@@ -44,15 +44,15 @@ export async function configLoader() {
     return {};
   }
 
+  // Apply on logger
+  if (config.verbose) {
+    container.get(Logger).level = config.verbose;
+  }
+
   if (loaded) {
     // Resolve paths relative to config file
     const base = path.dirname(loaded.filepath);
     config.plugins = config.plugins?.map((plugin) => path.resolve(base, plugin));
-
-    // Apply on logger
-    if (config.verbose) {
-      container.get(Logger).level = config.verbose;
-    }
 
     logger.verbose`Loaded ${loaded.filepath} config file`;
   }

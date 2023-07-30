@@ -1,11 +1,15 @@
 {
   "jsc": {
+    "loose": true,
     "target": "es2022",
     "parser": {
       "syntax": "typescript",
-      "decorators": true
+      "tsx": true,
+      "decorators": true,
+      "dynamicImport": true
     },
     "transform": {
+      "decoratorMetadata": true,
       "react": {
         "runtime": "automatic"
       }

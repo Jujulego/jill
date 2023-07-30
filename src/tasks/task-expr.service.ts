@@ -30,7 +30,6 @@ export class TaskExprService {
 
   // Constructor
   constructor(
-    @inject(Logger)
     private readonly _logger: Logger
   ) {}
 

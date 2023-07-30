@@ -1,6 +1,5 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { inject } from 'inversify';
 
 import { Logger } from '@/src/commons/logger.service';
 import { Service } from '@/src/modules/service';
@@ -26,9 +25,7 @@ export class ProjectRepository {
   private readonly _roots = new Map<string, string>();
 
   // Constructor
-  constructor(
-    @inject(Logger) logger: Logger,
-  ) {
+  constructor(logger: Logger) {
     this._logger = logger.child({ label: 'projects' });
   }
 

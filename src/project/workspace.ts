@@ -18,6 +18,7 @@ export type WorkspaceDepsMode = 'all' | 'prod' | 'none';
 
 export interface WorkspaceRunOptions extends Omit<TaskOptions, 'logger'> {
   buildDeps?: WorkspaceDepsMode;
+  buildScript?: string;
 }
 
 // Class
@@ -54,11 +55,11 @@ export class Workspace {
     return !this.version || satisfies(this.version, range);
   }
 
-  private async _buildDependencies(task: Task, deps: WorkspaceDepsMode = 'all') {
+  private async _buildDependencies(task: Task, opts: WorkspaceRunOptions) {
     // Generators
     const generators: AsyncGenerator<Workspace, void>[] = [];
 
-    switch (deps) {
+    switch (opts.buildDeps ?? 'all') {
       case 'all':
         generators.unshift(this.devDependencies());
 
@@ -69,7 +70,7 @@ export class Workspace {
 
     // Build deps
     for await (const dep of combine(...generators)) {
-      const build = await dep.build();
+      const build = await dep.build(opts);
 
       if (build) {
         task.dependsOn(build);
@@ -144,10 +145,10 @@ export class Workspace {
     const task = new CommandTask(this, command, args, {
       ...opts,
       logger: this._logger.child({ label: `${this.name}$${command}` }),
-      superCommand: pm === 'yarn' ? 'yarn' : undefined
+      superCommand: pm === 'yarn' ? ['yarn', 'exec'] : undefined
     });
 
-    await this._buildDependencies(task, opts.buildDeps);
+    await this._buildDependencies(task, opts);
 
     return task;
   }
@@ -168,7 +169,7 @@ export class Workspace {
       });
 
       await task.prepare();
-      await this._buildDependencies(task, opts.buildDeps);
+      await this._buildDependencies(task, opts);
 
       this._tasks.set(script, task);
     }
@@ -176,8 +177,8 @@ export class Workspace {
     return task;
   }
 
-  async build(opts?: WorkspaceRunOptions): Promise<ScriptTask | null> {
-    const task = await this.run('build', [], opts);
+  async build(opts: WorkspaceRunOptions = {}): Promise<ScriptTask | null> {
+    const task = await this.run(opts?.buildScript ?? 'build', [], opts);
 
     if (!task) {
       this._logger.warn('Will not be built (no build script)');

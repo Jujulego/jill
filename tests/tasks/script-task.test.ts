@@ -77,7 +77,7 @@ describe('ScriptTask.prepare', () => {
     expect(tsk).toBeInstanceOf(CommandTask);
     expect(tsk.group).toBe(script);
     expect(tsk.cmd).toBe('yarn');
-    expect(tsk.args).toEqual(['jest', '--script', '--arg']);
+    expect(tsk.args).toEqual(['exec', 'jest', '--script', '--arg']);
   });
 
   it('should interpret jill command, to get its tasks', async () => {

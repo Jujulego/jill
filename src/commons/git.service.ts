@@ -19,7 +19,6 @@ export class GitService {
   constructor(
     @inject(TASK_MANAGER)
     private readonly manager: TaskManager,
-    @inject(Logger)
     private readonly logger: Logger,
   ) {}
 

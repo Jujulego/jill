@@ -1,4 +1,3 @@
-import { inject } from 'inversify';
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
 
 import { SpinnerService } from '@/src/commons/spinner.service';
@@ -16,6 +15,7 @@ import { ExitException } from '@/src/utils/exit';
 // Types
 export interface IEachCommandArgs {
   script: string;
+  'build-script': string;
   'deps-mode': WorkspaceDepsMode;
 
   // Filters
@@ -26,7 +26,6 @@ export interface IEachCommandArgs {
   'affected-rev-fallback': string;
   'affected-rev-sort'?: string;
 }
-
 
 // Command
 @Command({
@@ -43,7 +42,6 @@ export class EachCommand extends TaskCommand<IEachCommandArgs> {
 
   // Constructor
   constructor(
-    @inject(SpinnerService)
     private readonly spinner: SpinnerService,
   ) {
     super();
@@ -54,6 +52,10 @@ export class EachCommand extends TaskCommand<IEachCommandArgs> {
     return this.addTaskOptions(parser)
       // Run options
       .positional('script', { type: 'string', demandOption: true })
+      .option('build-script', {
+        default: 'build',
+        desc: 'Script to use to build dependencies'
+      })
       .option('deps-mode', {
         alias: 'd',
         choice: ['all', 'prod', 'none'],
@@ -128,6 +130,7 @@ export class EachCommand extends TaskCommand<IEachCommandArgs> {
 
       for await (const wks of pipeline.filter(this.project.workspaces())) {
         const task = await wks.run(args.script, rest, {
+          buildScript: args.buildScript,
           buildDeps: args.depsMode,
         });
 

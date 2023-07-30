@@ -72,7 +72,7 @@ describe('jill run', () => {
     await flushPromises();
 
     // should create script task then add it to manager
-    expect(wks.run).toHaveBeenCalledWith('cmd', [], { buildDeps: 'all' });
+    expect(wks.run).toHaveBeenCalledWith('cmd', [], { buildDeps: 'all', buildScript: 'build' });
     expect(manager.add).toHaveBeenCalledWith(task);
 
     // should print task spinner
@@ -100,7 +100,7 @@ describe('jill run', () => {
     await flushPromises();
 
     // should create script task than add it to manager
-    expect(wks.run).toHaveBeenCalledWith('cmd', [], { buildDeps: 'prod' });
+    expect(wks.run).toHaveBeenCalledWith('cmd', [], { buildDeps: 'prod', buildScript: 'build' });
 
     // complete task
     jest.spyOn(task, 'status', 'get').mockReturnValue('done');
@@ -135,7 +135,7 @@ describe('jill run', () => {
     await flushPromises();
 
     // should create script task than add it to manager
-    expect(wks.run).toHaveBeenCalledWith('cmd', ['--arg'], { buildDeps: 'all' });
+    expect(wks.run).toHaveBeenCalledWith('cmd', ['--arg'], { buildDeps: 'all', buildScript: 'build' });
 
     // complete task
     jest.spyOn(task, 'status', 'get').mockReturnValue('done');
@@ -156,7 +156,7 @@ describe('jill run', () => {
     await flushPromises();
 
     // should create script task than add it to manager
-    expect(wks.run).toHaveBeenCalledWith('cmd', ['-d', 'toto'], { buildDeps: 'all' });
+    expect(wks.run).toHaveBeenCalledWith('cmd', ['-d', 'toto'], { buildDeps: 'all', buildScript: 'build' });
 
     // complete task
     jest.spyOn(task, 'status', 'get').mockReturnValue('done');

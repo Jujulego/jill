@@ -88,8 +88,8 @@ describe('jill each', () => {
 
     // should create script task then add it to manager
     await flushPromises();
-    expect(workspaces[0].run).toHaveBeenCalledWith('cmd', [], { buildDeps: 'all' });
-    expect(workspaces[1].run).toHaveBeenCalledWith('cmd', [], { buildDeps: 'all' });
+    expect(workspaces[0].run).toHaveBeenCalledWith('cmd', [], { buildDeps: 'all', buildScript: 'build' });
+    expect(workspaces[1].run).toHaveBeenCalledWith('cmd', [], { buildDeps: 'all', buildScript: 'build' });
 
     await flushPromises();
     expect(manager.add).toHaveBeenCalledWith(tasks[0]);
@@ -140,7 +140,7 @@ describe('jill each', () => {
 
     // should create script task than add it to manager
     await flushPromises();
-    expect(workspaces[0].run).toHaveBeenCalledWith('cmd', [], { buildDeps: 'prod' });
+    expect(workspaces[0].run).toHaveBeenCalledWith('cmd', [], { buildDeps: 'prod', buildScript: 'build' });
 
     await flushPromises();
 
@@ -194,7 +194,7 @@ describe('jill each', () => {
 
     // should create script task than add it to manager
     await flushPromises();
-    expect(workspaces[0].run).toHaveBeenCalledWith('cmd', ['--arg'], { buildDeps: 'all' });
+    expect(workspaces[0].run).toHaveBeenCalledWith('cmd', ['--arg'], { buildDeps: 'all', buildScript: 'build' });
 
     await flushPromises();
 
@@ -231,7 +231,7 @@ describe('jill each', () => {
 
     // should create script task than add it to manager
     await flushPromises();
-    expect(workspaces[0].run).toHaveBeenCalledWith('cmd', ['-d', 'toto'], { buildDeps: 'all' });
+    expect(workspaces[0].run).toHaveBeenCalledWith('cmd', ['-d', 'toto'], { buildDeps: 'all', buildScript: 'build' });
 
     await flushPromises();
 
@@ -274,7 +274,7 @@ describe('jill each', () => {
 
       // should create script task than add it to manager
       await flushPromises();
-      expect(workspaces[0].run).toHaveBeenCalledWith('cmd', [], { buildDeps: 'all' });
+      expect(workspaces[0].run).toHaveBeenCalledWith('cmd', [], { buildDeps: 'all', buildScript: 'build' });
       expect(workspaces[1].run).not.toHaveBeenCalled();
 
       await flushPromises();
@@ -320,7 +320,7 @@ describe('jill each', () => {
       // should create script task than add it to manager
       await flushPromises();
       expect(workspaces[0].run).not.toHaveBeenCalled();
-      expect(workspaces[1].run).toHaveBeenCalledWith('cmd', [], { buildDeps: 'all' });
+      expect(workspaces[1].run).toHaveBeenCalledWith('cmd', [], { buildDeps: 'all', buildScript: 'build' });
 
       await flushPromises();
       expect(manager.add).not.toHaveBeenCalledWith(tasks[0]);
@@ -369,7 +369,7 @@ describe('jill each', () => {
 
       // should create script task than add it to manager
       await flushPromises();
-      expect(workspaces[0].run).toHaveBeenCalledWith('cmd', [], { buildDeps: 'all' });
+      expect(workspaces[0].run).toHaveBeenCalledWith('cmd', [], { buildDeps: 'all', buildScript: 'build' });
       expect(workspaces[1].run).not.toHaveBeenCalled();
 
       await flushPromises();
