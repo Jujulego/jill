@@ -20,8 +20,8 @@
     "build:prod": "webpack --config webpack.prod.ts",
     "stats": "webpack --config webpack.stats.ts",
     "watch": "webpack --watch",
-    "test": "vitest",
-    "e2e": "jest -c jest-e2e.config.ts",
+    "test": "vitest run tests tools",
+    "e2e": "vitest run e2e",
     "e2e:npm": "cross-env USE_PACKAGE_MANAGER=npm yarn run e2e",
     "e2e:yarn": "cross-env USE_PACKAGE_MANAGER=yarn yarn run e2e"
   },

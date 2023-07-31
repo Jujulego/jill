@@ -5,7 +5,6 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 export default defineConfig({
   test: {
     globals: true,
-    exclude: ['e2e/**'],
     setupFiles: ['tests/setup.ts'],
     threads: false,
   },
