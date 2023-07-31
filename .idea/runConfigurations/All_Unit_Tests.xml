@@ -1,10 +1,11 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="All Tests" type="JavaScriptTestRunnerVitest" nameIsGenerated="true">
+  <configuration default="false" name="All Unit Tests" type="JavaScriptTestRunnerVitest">
     <node-interpreter value="project" />
     <vitest-package value="yarn:package.json:vitest" />
     <working-dir value="$PROJECT_DIR$" />
     <envs />
-    <scope-kind value="ALL" />
+    <scope-kind value="DIRECTORY" />
+    <test-directory value="$PROJECT_DIR$/tests" />
     <method v="2" />
   </configuration>
 </component>
