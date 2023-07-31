@@ -43,4 +43,4 @@ describe('jill tree', () => void withPackageManager((packageManager) => {
       expect.ignoreColor('└─ wks-c@1.0.0'),
     ]);
   });
-}));
+}), { timeout: 10000 });

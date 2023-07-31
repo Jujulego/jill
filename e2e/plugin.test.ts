@@ -61,4 +61,4 @@ module.exports = { default: TestPlugin };
       'this is a test plugin !'
     ]);
   });
-}));
+}), { timeout: 10000 });

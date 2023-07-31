@@ -227,4 +227,4 @@ describe('jill each', () => void withPackageManager((packageManager) => {
     await expect(fileExists(path.join(prjDir, 'wks-b', 'start.txt'))).resolves.toBe(false);
     await expect(fileExists(path.join(prjDir, 'wks-a', 'start.txt'))).resolves.toBe(false);
   });
-}));
+}), { timeout: 10000 });

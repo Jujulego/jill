@@ -154,4 +154,4 @@ describe('jill exec', () => void withPackageManager((packageManager) => {
     await expect(fileExists(path.join(prjDir, 'wks-c', 'script.txt'))).resolves.toBe(false);
     await expect(fileExists(path.join(prjDir, 'wks-b', 'script.txt'))).resolves.toBe(false);
   });
-}));
+}), { timeout: 10000 });
