@@ -1,7 +1,6 @@
-import { patchRequire } from 'fs-monkey';
 import { fs, vol } from 'memfs';
 import path from 'node:path';
-import ufs from 'unionfs';
+import glob from 'tiny-glob';
 import { vi } from 'vitest';
 
 import { container } from '@/src/inversify.config';
@@ -11,6 +10,7 @@ import { Workspace } from '@/src/project/workspace';
 
 // Mocks
 vi.mock('node:fs/promises', () => ({ default: fs.promises }));
+vi.mock('tiny-glob');
 
 // Setup
 let project: Project;
@@ -18,8 +18,6 @@ let logger: Logger;
 
 beforeAll(async () => {
   container.snapshot();
-
-  patchRequire(ufs.use(vol).use(await import('node:fs')));
 });
 
 beforeEach(async () => {
@@ -63,13 +61,22 @@ beforeEach(async () => {
     }),
   }, '/test');
 
+  vi.mocked(glob).mockResolvedValue([
+    'workspaces/wks-a',
+    'workspaces/wks-b',
+    'workspaces/wks-c',
+    'workspaces/empty',
+    'workspaces/just-a-file.txt'
+  ]);
+
+  // Initiate project
   logger = container.get(Logger).child({ label: 'projects' });
   project = new Project('/test', logger);
 });
 
 afterEach(() => {
-  container.restore();
   vol.reset();
+  container.restore();
 });
 
 // Test suites

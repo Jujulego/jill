@@ -1,5 +1,6 @@
 import { fs, vol } from 'memfs';
 import path from 'node:path';
+import glob from 'tiny-glob';
 import { vi } from 'vitest';
 
 import { GitService } from '@/src/commons/git.service';
@@ -11,8 +12,8 @@ import { Workspace } from '@/src/project/workspace';
 import { TestBed } from '@/tools/test-bed';
 
 // Mocks
-vi.mock('fs', () => ({ default: fs }));
 vi.mock('node:fs/promises', () => ({ default: fs.promises }));
+vi.mock('tiny-glob');
 
 // Setup
 let bed: TestBed;
@@ -29,7 +30,6 @@ beforeAll(() => {
 });
 
 beforeEach(async () => {
-  container.restore();
   container.snapshot();
 
   // Build fake project
@@ -47,12 +47,15 @@ beforeEach(async () => {
   // Mocks
   vi.resetAllMocks();
 
+  vi.mocked(glob).mockResolvedValue(['wks-a', 'wks-b', 'wks-c']);
+
   git = container.get(GitService);
   logger = container.get(Logger);
 });
 
 afterEach(() => {
   vol.reset();
+  container.restore();
 });
 
 // Test suites

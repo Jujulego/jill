@@ -7,7 +7,6 @@ import { ProjectRepository } from '@/src/project/project.repository';
 import { Project } from '@/src/project/project';
 
 // Mocks
-vi.mock('fs', () => ({ default: fs }));
 vi.mock('node:fs/promises', () => ({ default: fs.promises }));
 
 // Setup
@@ -186,12 +185,10 @@ describe('ProjectRepository.searchProjectRoot', () => {
     expect(repository.isProjectRoot).toHaveBeenCalledWith(path.resolve('/'));
 
     // Check cache
-    vi.mocked(repository.isProjectRoot).mockReset();
-
     await expect(repository.searchProjectRoot('/test/workspaces/wks-a'))
       .resolves.toBe(path.resolve('/test'));
 
-    expect(repository.isProjectRoot).toHaveBeenCalledTimes(1);
+    expect(repository.isProjectRoot).toHaveBeenCalledTimes(4);
     expect(repository.isProjectRoot).toHaveBeenCalledWith(path.resolve('/test/workspaces/wks-a'));
   });
 });
