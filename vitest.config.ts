@@ -7,6 +7,10 @@ export default defineConfig({
     globals: true,
     setupFiles: ['tools/setup.ts'],
     threads: false,
+    coverage: {
+      include: ['src/**', 'tools/**'],
+      reporter: ['text', 'lcovonly'],
+    }
   },
   esbuild: false,
   plugins: [
