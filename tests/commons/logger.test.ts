@@ -1,11 +1,11 @@
 import chalk from 'chalk';
+import wt from 'node:worker_threads';
 import { vi } from 'vitest';
 import winston from 'winston';
-import wt from 'node:worker_threads';
 
-import { container } from '@/src/inversify.config';
 import { Logger } from '@/src/commons/logger.service';
 import { ThreadTransport } from '@/src/commons/logger/thread.transport';
+import { container } from '@/src/inversify.config';
 
 // Setup
 chalk.level = 1;
@@ -18,7 +18,6 @@ let winstonLogger: winston.Logger;
 let logger: Logger;
 
 beforeEach(() => {
-  container.restore();
   container.snapshot();
 
   winstonLogger = {
@@ -31,13 +30,15 @@ beforeEach(() => {
     error: vi.fn(),
     add: vi.fn(),
     remove: vi.fn(),
-    child: vi.fn((opts: unknown) => winstonLogger) as winston.Logger['child'],
+    child: vi.fn(() => winstonLogger) as winston.Logger['child'],
   } as vi.MaybeMocked<winston.Logger>;
 
   logger = new Logger(winstonLogger);
 });
 
 afterEach(() => {
+  container.restore();
+
   Object.assign(wt, { isMainThread: true });
 });
 

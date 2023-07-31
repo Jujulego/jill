@@ -7,6 +7,7 @@ export default defineConfig({
     globals: true,
     exclude: ['e2e/**'],
     setupFiles: ['tests/setup.ts'],
+    threads: false,
   },
   esbuild: false,
   plugins: [

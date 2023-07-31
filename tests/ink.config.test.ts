@@ -7,14 +7,6 @@ import { container } from '@/src/inversify.config';
 
 // Setup
 vi.mock('ink');
-vi.mock('node:worker_threads', async (importOriginal) => {
-  return {
-    default: {
-      ...await importOriginal(),
-      isMainThread: true,
-    }
-  };
-});
 
 beforeEach(() => {
   container.snapshot();
