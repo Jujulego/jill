@@ -4,5 +4,4 @@ import { container } from '@/src/inversify.config';
 import '@/tools/matchers/setup';
 
 // Setup global config
-container.bind(CONFIG)
-  .toConstantValue({ jobs: 1 });
+container.rebind(CONFIG).toConstantValue({ jobs: 1 });

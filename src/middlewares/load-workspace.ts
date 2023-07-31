@@ -1,3 +1,4 @@
+import { inject } from 'inversify';
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
 
 import { ContextService } from '@/src/commons/context.service';
@@ -25,7 +26,9 @@ export class LoadWorkspace implements IMiddleware<ILoadWorkspaceArgs> {
 
   // Constructor
   constructor(
+    @inject(SpinnerService)
     private readonly spinner: SpinnerService,
+    @inject(ContextService)
     private readonly context: ContextService,
   ) {}
 

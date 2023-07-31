@@ -1,11 +1,13 @@
+import { vi } from 'vitest';
+
 import { INK_APP } from '@/src/ink.config';
 import { container } from '@/src/inversify.config';
 import { SpinnerService, type SpinnerState } from '@/src/commons/spinner.service';
 
 // Setup
 let service: SpinnerService;
-const createInkSpy = jest.fn();
-const stateEventSpy = jest.fn<void, [SpinnerState]>();
+const createInkSpy = vi.fn();
+const stateEventSpy = vi.fn<[SpinnerState], void>();
 
 beforeEach(() => {
   container.snapshot();

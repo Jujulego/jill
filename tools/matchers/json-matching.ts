@@ -1,5 +1,7 @@
+import type { ExpectationResult, MatcherState } from '@vitest/expect';
+
 // Matcher
-export function jsonMatching(this: jest.MatcherContext, received: string, expected: unknown): jest.CustomMatcherResult {
+export function jsonMatching(this: MatcherState, received: string, expected: unknown): ExpectationResult {
   const options = {
     comment: 'JSON matching',
     isNot: this.isNot,
@@ -10,13 +12,7 @@ export function jsonMatching(this: jest.MatcherContext, received: string, expect
     try {
       return JSON.parse(received);
     } catch (err) {
-      throw new Error(
-        this.utils.matcherErrorMessage(
-          this.utils.matcherHint('jsonMatching', undefined, undefined, options),
-          `${this.utils.printExpected('received')} value must be a valid json string: ${err.message}`,
-          this.utils.printWithType('Received', received, this.utils.printReceived)
-        )
-      );
+      throw new Error(`${this.utils.printReceived(received)} value must be a valid json string: ${err.message}`);
     }
   };
 
@@ -27,14 +23,8 @@ export function jsonMatching(this: jest.MatcherContext, received: string, expect
 }
 
 // Typings
-declare global {
-  // eslint-disable-next-line @typescript-eslint/no-namespace
-  namespace jest {
-    interface Expect {
-      jsonMatching(obj: unknown): unknown;
-    }
-    interface InverseAsymmetricMatchers {
-      jsonMatching(obj: unknown): unknown;
-    }
+declare module 'vitest' {
+  interface AsymmetricMatchersContaining {
+    jsonMatching(obj: unknown): unknown;
   }
 }

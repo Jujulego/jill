@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { BroadcastChannel, getEnvironmentData, setEnvironmentData } from 'node:worker_threads';
 
 import { workerCache } from '@/src/utils/worker-cache';
@@ -12,7 +13,7 @@ beforeEach(() => {
   setEnvironmentData(KEY, undefined as any);
 
   // Spy on channel
-  channel.onmessage = jest.fn();
+  channel.onmessage = vi.fn();
 });
 
 afterAll(() => {
@@ -22,7 +23,7 @@ afterAll(() => {
 // Tests
 describe('workerCache', () => {
   it('should use compute to set value in environment data', async () => {
-    const compute = jest.fn(() => 'toto');
+    const compute = vi.fn(() => 'toto');
 
     await expect(workerCache(KEY, compute))
       .resolves.toBe('toto');
@@ -40,7 +41,7 @@ describe('workerCache', () => {
   });
 
   it('should return value from environment data', async () => {
-    const compute = jest.fn(() => 'toto');
+    const compute = vi.fn(() => 'toto');
     setEnvironmentData(KEY, 'toto');
 
     await expect(workerCache(KEY, compute))

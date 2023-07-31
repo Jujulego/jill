@@ -19,6 +19,7 @@ export class PluginLoaderService {
   constructor(
     @inject(CONFIG)
     private readonly _config: IConfig,
+    @inject(Logger)
     logger: Logger,
   ) {
     this._logger = logger.child({ label: 'plugin' });

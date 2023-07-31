@@ -1,3 +1,5 @@
+import { vi } from 'vitest';
+
 import { Command, type ICommand } from '@/src/modules/command';
 
 // Command
@@ -6,5 +8,5 @@ import { Command, type ICommand } from '@/src/modules/command';
 })
 export class MockCommand implements ICommand {
   // Methods
-  handler = jest.fn();
+  handler = vi.fn();
 }

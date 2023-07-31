@@ -1,3 +1,4 @@
+import { inject } from 'inversify';
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
 
 import { Logger } from '@/src/commons/logger.service';
@@ -31,6 +32,7 @@ export class RunCommand extends TaskCommand<IRunCommandArgs> {
 
   // Constructor
   constructor(
+    @inject(Logger)
     private readonly logger: Logger,
   ) {
     super();

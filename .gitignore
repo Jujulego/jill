@@ -1,6 +1,7 @@
 # yarn
 .pnp.*
 .yarn/*
+node_modules
 !.yarn/patches
 !.yarn/releases
 !.yarn/plugins

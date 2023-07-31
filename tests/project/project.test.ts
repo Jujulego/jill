@@ -1,5 +1,7 @@
 import { fs, vol } from 'memfs';
 import path from 'node:path';
+import glob from 'tiny-glob';
+import { vi } from 'vitest';
 
 import { container } from '@/src/inversify.config';
 import { Logger } from '@/src/commons/logger.service';
@@ -7,19 +9,18 @@ import { Project } from '@/src/project/project';
 import { Workspace } from '@/src/project/workspace';
 
 // Mocks
-jest.mock('fs', () => fs);
-jest.mock('node:fs/promises', () => fs.promises);
+vi.mock('node:fs/promises', () => ({ default: fs.promises }));
+vi.mock('tiny-glob');
 
 // Setup
 let project: Project;
 let logger: Logger;
 
-beforeAll(() => {
+beforeAll(async () => {
   container.snapshot();
 });
 
 beforeEach(async () => {
-  container.restore();
   container.snapshot();
 
   // Create project structure
@@ -60,12 +61,22 @@ beforeEach(async () => {
     }),
   }, '/test');
 
+  vi.mocked(glob).mockResolvedValue([
+    'workspaces/wks-a',
+    'workspaces/wks-b',
+    'workspaces/wks-c',
+    'workspaces/empty',
+    'workspaces/just-a-file.txt'
+  ]);
+
+  // Initiate project
   logger = container.get(Logger).child({ label: 'projects' });
   project = new Project('/test', logger);
 });
 
 afterEach(() => {
   vol.reset();
+  container.restore();
 });
 
 // Test suites
@@ -120,7 +131,7 @@ describe('Project.workspaces', () => {
 describe('Project.workspace', () => {
   // Tests
   it('should return current directory workspace', async () => {
-    jest.spyOn(process, 'cwd').mockReturnValue('/test/workspaces/wks-a');
+    vi.spyOn(process, 'cwd').mockReturnValue('/test/workspaces/wks-a');
 
     await expect(project.workspace())
       .resolves.toMatchObject({

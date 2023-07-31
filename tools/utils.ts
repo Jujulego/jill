@@ -1,6 +1,7 @@
 import { type ILogger } from '@jujulego/tasks';
 import type ink from 'ink';
 import { type render } from 'ink-testing-library';
+import { vi } from 'vitest';
 import cp from 'node:child_process';
 import fs from 'node:fs/promises';
 
@@ -10,19 +11,19 @@ import { ESC } from './ink-screen';
 
 // Logger
 export const spyLogger: ILogger = {
-  debug: jest.fn(),
-  verbose: jest.fn(),
-  info: jest.fn(),
-  warn: jest.fn(),
-  error: jest.fn(),
+  debug: vi.fn(),
+  verbose: vi.fn(),
+  info: vi.fn(),
+  warn: vi.fn(),
+  error: vi.fn(),
 };
 
 // Ink
 export function wrapInkTestApp(app: ReturnType<typeof render>): ink.Instance {
   return {
     ...app,
-    waitUntilExit: jest.fn() as ink.Instance['waitUntilExit'],
-    clear: jest.fn() as ink.Instance['clear'],
+    waitUntilExit: vi.fn() as ink.Instance['waitUntilExit'],
+    clear: vi.fn() as ink.Instance['clear'],
   } as ink.Instance;
 }
 

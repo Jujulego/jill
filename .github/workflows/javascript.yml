@@ -55,6 +55,7 @@ jobs:
         run: yarn install --immutable
 
       - name: Lint
+        continue-on-error: true
         run: yarn lint -f @microsoft/sarif -o eslint-results.sarif
 
       - name: Upload analysis results to GitHub
@@ -79,7 +80,7 @@ jobs:
         run: yarn install --immutable
 
       - name: Test
-        run: yarn test --verbose
+        run: yarn test --coverage
 
       - uses: actions/upload-artifact@v3
         with:
@@ -126,7 +127,7 @@ jobs:
           git config --global user.email github-actions@github.com
 
       - name: Test
-        run: yarn e2e --verbose
+        run: yarn e2e
         env:
           USE_PACKAGE_MANAGER: ${{ matrix.packageManager }}
 

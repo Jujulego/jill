@@ -1,4 +1,5 @@
 import yargs, { type ArgumentsCamelCase, type CommandBuilder } from 'yargs';
+import { vi } from 'vitest';
 
 import {
   buildCommandModule,
@@ -20,23 +21,23 @@ import { ContainerModule } from 'inversify';
 })
 class TestCommand implements ICommand {
   // Methods
-  builder = jest.fn((parser) => parser);
-  handler = jest.fn();
+  builder = vi.fn((parser) => parser);
+  handler = vi.fn();
 }
 
 @Middleware()
 class TestMiddleware implements IMiddleware {
   // Methods
-  handler = jest.fn();
+  handler = vi.fn();
 }
 
 // Mocks
-jest.mock('@/src/modules/middleware', () => {
-  const actual = jest.requireActual('@/src/modules/middleware');
+vi.mock('@/src/modules/middleware', async (importOriginal) => {
+  const mod: typeof import('@/src/modules/middleware') = await importOriginal();
 
   return {
-    ...actual,
-    applyMiddlewares: jest.fn((parser) => parser),
+    ...mod,
+    applyMiddlewares: vi.fn((parser) => parser),
   };
 });
 
@@ -60,7 +61,7 @@ describe('getCommandOpts', () => {
 
   it('should throw if no options found', () => {
     class TestEmpty implements ICommand {
-      handler = jest.fn();
+      handler = vi.fn();
     }
 
     expect(() => getCommandOpts(TestEmpty)).toThrow(new Error('No command options found in TestEmpty'));
@@ -75,7 +76,7 @@ describe('buildCommandModule', () => {
     };
 
     const cmd: ICommand = {
-      handler: jest.fn(),
+      handler: vi.fn(),
     };
 
     // Build module
@@ -107,8 +108,8 @@ describe('buildCommandModule', () => {
     };
 
     const cmd: ICommand = {
-      builder: jest.fn((parser) => parser),
-      handler: jest.fn(),
+      builder: vi.fn((parser) => parser),
+      handler: vi.fn(),
     };
 
     // Build module
@@ -132,8 +133,8 @@ describe('buildCommandModule', () => {
     };
 
     const cmd: ICommand = {
-      builder: jest.fn((parser) => parser),
-      handler: jest.fn(),
+      builder: vi.fn((parser) => parser),
+      handler: vi.fn(),
     };
 
     // Build module

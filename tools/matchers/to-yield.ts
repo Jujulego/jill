@@ -1,5 +1,7 @@
+import type { MatcherState } from '@vitest/expect';
+
 // Matcher
-export async function toYield(this: jest.MatcherContext, received: AsyncIterable<unknown>, expected: unknown[]) {
+export async function toYield(this: MatcherState, received: AsyncIterable<unknown>, expected: unknown[]) {
   const options = {
     comment: 'Yielded values',
     isNot: this.isNot,
@@ -23,11 +25,8 @@ export async function toYield(this: jest.MatcherContext, received: AsyncIterable
   };
 }
 
-declare global {
-  // eslint-disable-next-line @typescript-eslint/no-namespace
-  namespace jest {
-    interface Matchers<R> {
-      toYield(expected: any[]): Promise<R>;
-    }
+declare module 'vitest' {
+  interface Assertion<T = any> {
+    toYield(expected: unknown[]): Promise<T>;
   }
 }

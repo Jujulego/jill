@@ -1,6 +1,7 @@
 import { SpawnTask } from '@jujulego/tasks';
 import { render } from 'ink-testing-library';
 import { Text } from 'ink';
+import { vi } from 'vitest';
 
 import { ScriptTask } from '@/src/tasks/script-task';
 import TaskName from '@/src/ui/task-name';
@@ -18,7 +19,7 @@ beforeEach(() => {
 describe('<TaskName>', () => {
   it('should print task\'s name', () => {
     const task = new SpawnTask('cmd', [], {});
-    jest.spyOn(task, 'name', 'get').mockReturnValue('test');
+    vi.spyOn(task, 'name', 'get').mockReturnValue('test');
     
     const { lastFrame } = render(
       <Text>

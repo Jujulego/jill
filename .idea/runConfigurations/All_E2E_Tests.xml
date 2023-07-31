@@ -1,12 +1,12 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="All E2E Tests" type="JavaScriptTestRunnerJest">
-    <config-file value="$PROJECT_DIR$/jest-e2e.config.ts" />
+  <configuration default="false" name="All E2E Tests" type="JavaScriptTestRunnerVitest">
     <node-interpreter value="project" />
-    <node-options value="" />
-    <jest-package value="yarn:package.json:jest" />
+    <vitest-package value="yarn:package.json:vitest" />
     <working-dir value="$PROJECT_DIR$" />
+    <vitest-options value="--run" />
     <envs />
-    <scope-kind value="ALL" />
+    <scope-kind value="DIRECTORY" />
+    <test-directory value="$PROJECT_DIR$/e2e" />
     <method v="2" />
   </configuration>
 </component>

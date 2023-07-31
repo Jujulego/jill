@@ -1,5 +1,4 @@
 import { ScriptsFilter } from '@/src/filters/scripts.filter';
-
 import { TestBed } from '@/tools/test-bed';
 
 // Setup

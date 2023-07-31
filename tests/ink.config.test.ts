@@ -1,17 +1,17 @@
 import { render } from 'ink';
 import wt from 'node:worker_threads';
+import { vi } from 'vitest';
 
 import { INK_APP } from '@/src/ink.config';
 import { container } from '@/src/inversify.config';
 
 // Setup
-jest.mock('ink');
+vi.mock('ink');
 
 beforeEach(() => {
   container.snapshot();
 
-  jest.resetAllMocks();
-  jest.restoreAllMocks();
+  vi.restoreAllMocks();
 });
 
 afterEach(() => {

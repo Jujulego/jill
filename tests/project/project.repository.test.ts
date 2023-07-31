@@ -1,13 +1,13 @@
 import { fs, vol } from 'memfs';
 import path from 'node:path';
+import { vi } from 'vitest';
 
 import { container } from '@/src/inversify.config';
 import { ProjectRepository } from '@/src/project/project.repository';
 import { Project } from '@/src/project/project';
 
 // Mocks
-jest.mock('fs', () => fs);
-jest.mock('node:fs/promises', () => fs.promises);
+vi.mock('node:fs/promises', () => ({ default: fs.promises }));
 
 // Setup
 let repository: ProjectRepository;
@@ -69,7 +69,7 @@ afterEach(() => {
 describe('ProjectRepository.searchProjectRoot', () => {
   // root search
   it('should return /test for /test (yarn lockfile)', async ()=> {
-    jest.spyOn(repository, 'isProjectRoot');
+    vi.spyOn(repository, 'isProjectRoot');
 
     // Add lockfile
     vol.fromJSON({ 'yarn.lock': '' }, '/test');
@@ -83,7 +83,7 @@ describe('ProjectRepository.searchProjectRoot', () => {
   });
 
   it('should return /test for /test (npm lockfile)', async ()=> {
-    jest.spyOn(repository, 'isProjectRoot');
+    vi.spyOn(repository, 'isProjectRoot');
 
     // Add lockfile
     vol.fromJSON({ 'package-lock.json': '' }, '/test');
@@ -97,7 +97,7 @@ describe('ProjectRepository.searchProjectRoot', () => {
   });
 
   it('should return /test for /test (package.json manifest)', async ()=> {
-    jest.spyOn(repository, 'isProjectRoot');
+    vi.spyOn(repository, 'isProjectRoot');
 
     // Test
     await expect(repository.searchProjectRoot('/test'))
@@ -109,7 +109,7 @@ describe('ProjectRepository.searchProjectRoot', () => {
   });
 
   it('should return /test for /test/workspaces/wks-a (yarn lockfile)', async ()=> {
-    jest.spyOn(repository, 'isProjectRoot');
+    vi.spyOn(repository, 'isProjectRoot');
 
     // Add lockfile
     vol.fromJSON({ 'yarn.lock': '' }, '/test');
@@ -125,7 +125,7 @@ describe('ProjectRepository.searchProjectRoot', () => {
   });
 
   it('should return /test for /test/workspaces/wks-a (npm lockfile)', async ()=> {
-    jest.spyOn(repository, 'isProjectRoot');
+    vi.spyOn(repository, 'isProjectRoot');
 
     // Add lockfile
     vol.fromJSON({ 'package-lock.json': '' }, '/test');
@@ -141,7 +141,7 @@ describe('ProjectRepository.searchProjectRoot', () => {
   });
 
   it('should return /test for /test/workspaces/wks-a (package.json manifest)', async ()=> {
-    jest.spyOn(repository, 'isProjectRoot');
+    vi.spyOn(repository, 'isProjectRoot');
 
     // Test
     await expect(repository.searchProjectRoot('/test/workspaces/wks-a'))
@@ -155,7 +155,7 @@ describe('ProjectRepository.searchProjectRoot', () => {
   });
 
   it('should return /toto/tata/tutu for /toto/tata/tutu (nothing found)', async () => {
-    jest.spyOn(repository, 'isProjectRoot');
+    vi.spyOn(repository, 'isProjectRoot');
 
     // Add file
     vol.fromJSON({ 'test.txt': '' }, '/toto/tata/tutu');
@@ -173,7 +173,7 @@ describe('ProjectRepository.searchProjectRoot', () => {
 
   // cache
   it('should take advantage of cache', async ()=> {
-    jest.spyOn(repository, 'isProjectRoot');
+    vi.spyOn(repository, 'isProjectRoot');
 
     // Test
     await expect(repository.searchProjectRoot('/test/workspaces'))
@@ -185,7 +185,7 @@ describe('ProjectRepository.searchProjectRoot', () => {
     expect(repository.isProjectRoot).toHaveBeenCalledWith(path.resolve('/'));
 
     // Check cache
-    jest.mocked(repository.isProjectRoot).mockReset();
+    vi.mocked(repository.isProjectRoot).mockClear();
 
     await expect(repository.searchProjectRoot('/test/workspaces/wks-a'))
       .resolves.toBe(path.resolve('/test'));

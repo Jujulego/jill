@@ -1,10 +1,10 @@
 import { type GroupTask, ParallelGroup, SequenceGroup, type Task } from '@jujulego/tasks';
+import { inject } from 'inversify';
 import moo from 'moo';
 
 import { Logger } from '@/src/commons/logger.service';
-import { type Workspace, type WorkspaceRunOptions } from '@/src/project/workspace';
-import { inject } from 'inversify';
 import { Service } from '@/src/modules/service';
+import { type Workspace, type WorkspaceRunOptions } from '@/src/project/workspace';
 
 // Interfaces
 export interface TaskNode {
@@ -30,6 +30,7 @@ export class TaskExprService {
 
   // Constructor
   constructor(
+    @inject(Logger)
     private readonly _logger: Logger
   ) {}
 

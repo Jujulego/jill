@@ -1,5 +1,6 @@
 import { render, cleanup } from 'ink-testing-library';
 import symbols from 'log-symbols';
+import { vi } from 'vitest';
 
 import TaskSpinner from '@/src/ui/task-spinner';
 
@@ -29,7 +30,7 @@ describe('<TaskSpinner>', () => {
   it('should print task name with running spinner', () => {
     const { lastFrame } = render(<TaskSpinner task={task} />);
 
-    jest.spyOn(task, 'status', 'get').mockReturnValue('running');
+    vi.spyOn(task, 'status', 'get').mockReturnValue('running');
     task.emit('status.running', { status: 'running', previous: 'ready' });
 
     // eslint-disable-next-line quotes
@@ -39,7 +40,7 @@ describe('<TaskSpinner>', () => {
   it('should print task name with success symbol', () => {
     const { lastFrame } = render(<TaskSpinner task={task} />);
 
-    jest.spyOn(task, 'status', 'get').mockReturnValue('done');
+    vi.spyOn(task, 'status', 'get').mockReturnValue('done');
     task.emit('status.done', { status: 'done', previous: 'running' });
     task.emit('completed', { status: 'done', duration: 100 });
 
@@ -49,7 +50,7 @@ describe('<TaskSpinner>', () => {
   it('should print task name with error symbol', () => {
     const { lastFrame } = render(<TaskSpinner task={task} />);
 
-    jest.spyOn(task, 'status', 'get').mockReturnValue('failed');
+    vi.spyOn(task, 'status', 'get').mockReturnValue('failed');
     task.emit('status.failed', { status: 'failed', previous: 'running' });
     task.emit('completed', { status: 'failed', duration: 100 });
 

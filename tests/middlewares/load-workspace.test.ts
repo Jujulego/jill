@@ -1,4 +1,5 @@
 import yargs from 'yargs';
+import { vi } from 'vitest';
 
 import { ContextService } from '@/src/commons/context.service';
 import { SpinnerService } from '@/src/commons/spinner.service';
@@ -27,9 +28,9 @@ beforeEach(() => {
 
   context = container.get(ContextService);
   spinner = container.get(SpinnerService);
-  jest.spyOn(spinner, 'spin');
-  jest.spyOn(spinner, 'stop');
-  jest.spyOn(spinner, 'failed');
+  vi.spyOn(spinner, 'spin').mockReturnValue();
+  vi.spyOn(spinner, 'stop').mockReturnValue();
+  vi.spyOn(spinner, 'failed').mockReturnValue();
 
   bed = new TestBed();
 
@@ -42,7 +43,7 @@ describe('LoadWorkspace', () => {
     const wks = bed.addWorkspace('root');
     context.reset({ project: bed.project });
 
-    jest.spyOn(bed.project, 'workspace')
+    vi.spyOn(bed.project, 'workspace')
       .mockResolvedValue(wks);
 
     await parser.parse(''); // <= no args
@@ -57,7 +58,7 @@ describe('LoadWorkspace', () => {
 
   it('should search for named workspace', async () => {
     context.reset({ project: bed.project });
-    jest.spyOn(bed.project, 'workspace')
+    vi.spyOn(bed.project, 'workspace')
       .mockResolvedValue(bed.addWorkspace('test'));
 
     await parser.parse('-w test');
@@ -68,7 +69,7 @@ describe('LoadWorkspace', () => {
 
   it('should print failed spinner if workspace is not found', async () => {
     context.reset({ project: bed.project });
-    jest.spyOn(bed.project, 'workspace')
+    vi.spyOn(bed.project, 'workspace')
       .mockResolvedValue(null);
 
     await expect(parser.parse('-w test'))
@@ -82,7 +83,7 @@ describe('LoadWorkspace', () => {
     const wks = bed.addWorkspace('parent');
     context.reset({ project: bed.project, workspace: wks });
 
-    jest.spyOn(bed.project, 'workspace')
+    vi.spyOn(bed.project, 'workspace')
       .mockResolvedValue(bed.addWorkspace('test'));
 
     await parser.parse(''); // <= no args
@@ -96,7 +97,7 @@ describe('LoadWorkspace', () => {
 
     context.reset({ project: bed.project, workspace: bed.addWorkspace('parent') });
 
-    jest.spyOn(bed.project, 'workspace')
+    vi.spyOn(bed.project, 'workspace')
       .mockResolvedValue(wks);
 
     await parser.parse('-w test');

@@ -1,10 +1,12 @@
+import { MaybeMocked } from '@vitest/spy';
 import chalk from 'chalk';
-import winston from 'winston';
 import wt from 'node:worker_threads';
+import { vi } from 'vitest';
+import winston from 'winston';
 
-import { container } from '@/src/inversify.config';
 import { Logger } from '@/src/commons/logger.service';
 import { ThreadTransport } from '@/src/commons/logger/thread.transport';
+import { container } from '@/src/inversify.config';
 
 // Setup
 chalk.level = 1;
@@ -17,26 +19,27 @@ let winstonLogger: winston.Logger;
 let logger: Logger;
 
 beforeEach(() => {
-  container.restore();
   container.snapshot();
 
   winstonLogger = {
     level: '',
-    log: jest.fn(),
-    debug: jest.fn(),
-    verbose: jest.fn(),
-    info: jest.fn(),
-    warn: jest.fn(),
-    error: jest.fn(),
-    add: jest.fn(),
-    remove: jest.fn(),
-    child: jest.fn((opts: unknown) => winstonLogger) as winston.Logger['child'],
-  } as jest.MaybeMocked<winston.Logger>;
+    log: vi.fn(),
+    debug: vi.fn(),
+    verbose: vi.fn(),
+    info: vi.fn(),
+    warn: vi.fn(),
+    error: vi.fn(),
+    add: vi.fn(),
+    remove: vi.fn(),
+    child: vi.fn(() => winstonLogger) as winston.Logger['child'],
+  } as MaybeMocked<winston.Logger>;
 
   logger = new Logger(winstonLogger);
 });
 
 afterEach(() => {
+  container.restore();
+
   Object.assign(wt, { isMainThread: true });
 });
 
@@ -157,7 +160,7 @@ describe('Logger.child', () => {
 
     expect(child).toBeInstanceOf(Logger);
     expect(winstonLogger.child).toHaveBeenCalledWith({ toto: 5 });
-    expect(child.winston).toBe(jest.mocked(winstonLogger.child).mock.results[0].value);
+    expect(child.winston).toBe(vi.mocked(winstonLogger.child).mock.results[0].value);
   });
 });
 
@@ -167,6 +170,6 @@ describe('Logger.add', () => {
 
     expect(child).toBeInstanceOf(Logger);
     expect(winstonLogger.child).toHaveBeenCalledWith({ toto: 5 });
-    expect(child.winston).toBe(jest.mocked(winstonLogger.child).mock.results[0].value);
+    expect(child.winston).toBe(vi.mocked(winstonLogger.child).mock.results[0].value);
   });
 });

@@ -1,3 +1,5 @@
+import { vi } from 'vitest';
+
 import { printJson } from '@/src/utils/json';
 
 // Setup
@@ -6,7 +8,7 @@ let stream: NodeJS.WriteStream;
 beforeEach(() => {
   stream = {
     isTTY: true,
-    write: jest.fn() as NodeJS.WriteStream['write'],
+    write: vi.fn() as NodeJS.WriteStream['write'],
   } as NodeJS.WriteStream;
 });
 

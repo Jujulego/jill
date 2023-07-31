@@ -1,3 +1,5 @@
+import { vi } from 'vitest';
+
 import { container } from '@/src/inversify.config';
 import { PluginLoaderService } from '@/src/modules/plugin-loader.service';
 import { dynamicImport } from '@/src/utils/import';
@@ -6,7 +8,7 @@ import { Command, type ICommand } from '@/src/modules/command';
 import { Plugin } from '@/src/modules/plugin';
 
 // Mocks
-jest.mock('@/src/utils/import');
+vi.mock('@/src/utils/import');
 
 // Utils
 @Command({
@@ -15,8 +17,8 @@ jest.mock('@/src/utils/import');
 })
 class TestCommand implements ICommand {
   // Methods
-  builder = jest.fn((parser) => parser);
-  handler = jest.fn();
+  builder = vi.fn((parser) => parser);
+  handler = vi.fn();
 }
 
 @Plugin({
@@ -43,7 +45,7 @@ afterEach(() => {
 // Tests
 describe('PluginLoaderService.loadPlugins', () => {
   it('should import plugin from config', async () => {
-    jest.mocked(dynamicImport).mockResolvedValue({
+    vi.mocked(dynamicImport).mockResolvedValue({
       default: TestPlugin,
     });
 
@@ -56,7 +58,7 @@ describe('PluginLoaderService.loadPlugins', () => {
   });
 
   it('should fail to import plugin (no default export)', async () => {
-    jest.mocked(dynamicImport).mockResolvedValue({
+    vi.mocked(dynamicImport).mockResolvedValue({
       default: null,
     });
 
@@ -69,7 +71,7 @@ describe('PluginLoaderService.loadPlugins', () => {
   });
 
   it('should fail to import plugin (invalid plugin)', async () => {
-    jest.mocked(dynamicImport).mockResolvedValue({
+    vi.mocked(dynamicImport).mockResolvedValue({
       default: class Test {},
     });
 

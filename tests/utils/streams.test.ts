@@ -1,16 +1,17 @@
 import { iterate } from '@jujulego/event-tree';
+import { vi } from 'vitest';
 
 import { combine, streamLines } from '@/src/utils/streams';
 
 import { TestSpawnTask } from '@/tools/test-tasks';
 
 // Mocks
-jest.mock('@jujulego/event-tree', () => {
-  const actual = jest.requireActual('@jujulego/event-tree');
+vi.mock('@jujulego/event-tree', async (importOriginal) => {
+  const mod: typeof import('@jujulego/event-tree') = await importOriginal();
 
   return {
-    ...actual,
-    iterate: jest.fn(actual.iterate)
+    ...mod,
+    iterate: vi.fn(mod.iterate)
   };
 });
 
@@ -39,7 +40,7 @@ describe('streamLines', () => {
   });
 
   it('should emit all received content, line by line', async () => {
-    jest.spyOn(task, 'exitCode', 'get')
+    vi.spyOn(task, 'exitCode', 'get')
       .mockReturnValue(0);
 
     setTimeout(() => {
@@ -67,7 +68,7 @@ describe('streamLines', () => {
   });
 
   it('should throw error thrown by streamEvents', async () => {
-    jest.mocked(iterate)
+    vi.mocked(iterate)
       // eslint-disable-next-line require-yield
       .mockImplementation(async function* () { throw new Error('aborted'); });
 

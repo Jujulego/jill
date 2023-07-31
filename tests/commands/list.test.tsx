@@ -1,5 +1,6 @@
 import { cleanup, render } from 'ink-testing-library';
 import path from 'node:path';
+import { vi } from 'vitest';
 import yargs, { type CommandModule } from 'yargs';
 
 import { ListCommand } from '@/src/commands/list';
@@ -26,8 +27,7 @@ beforeEach(async () => {
   container.restore();
   container.snapshot();
 
-  jest.resetAllMocks();
-  jest.restoreAllMocks();
+  vi.restoreAllMocks();
 
   // Project
   bed = new TestBed();
@@ -54,7 +54,7 @@ describe('jill list', () => {
     bed.addWorkspace('wks-3');
 
     // Run command
-    await yargs.command(command)
+    await yargs().command(command)
       .parse('list');
 
     expect(app.lastFrame()).toEqualLines([
@@ -74,7 +74,7 @@ describe('jill list', () => {
       bed.addWorkspace('wks-3');
 
       // Run command
-      await yargs.command(command)
+      await yargs().command(command)
         .parse('list --private');
 
       expect(app.lastFrame()).toEqualLines([
@@ -91,7 +91,7 @@ describe('jill list', () => {
       bed.addWorkspace('wks-3');
 
       // Run command
-      await yargs.command(command)
+      await yargs().command(command)
         .parse('list --no-private');
 
       expect(app.lastFrame()).toEqualLines([
@@ -112,12 +112,12 @@ describe('jill list', () => {
         bed.addWorkspace('wks-3'),
       ];
 
-      jest.spyOn(workspaces[0], 'isAffected').mockResolvedValue(false);
-      jest.spyOn(workspaces[1], 'isAffected').mockResolvedValue(true);
-      jest.spyOn(workspaces[2], 'isAffected').mockResolvedValue(false);
+      vi.spyOn(workspaces[0], 'isAffected').mockResolvedValue(false);
+      vi.spyOn(workspaces[1], 'isAffected').mockResolvedValue(true);
+      vi.spyOn(workspaces[2], 'isAffected').mockResolvedValue(false);
 
       // Run command
-      await yargs.command(command)
+      await yargs().command(command)
         .parse('list --affected test');
 
       expect(app.lastFrame()).toEqualLines([
@@ -136,7 +136,7 @@ describe('jill list', () => {
       bed.addWorkspace('wks-3', { scripts: { lint: 'lint' }});
 
       // Run command
-      await yargs.command(command)
+      await yargs().command(command)
         .parse('list --with-script test');
 
       expect(app.lastFrame()).toEqualLines([
@@ -153,7 +153,7 @@ describe('jill list', () => {
       bed.addWorkspace('wks-3', { scripts: { lint: 'lint' }});
 
       // Run command
-      await yargs.command(command)
+      await yargs().command(command)
         .parse('list --with-script test lint');
 
       expect(app.lastFrame()).toEqualLines([
@@ -173,7 +173,7 @@ describe('jill list', () => {
       bed.addWorkspace('wks-3');
 
       // Run command
-      await yargs.command(command)
+      await yargs().command(command)
         .parse('list --headers');
 
       expect(app.lastFrame()).toEqualLines([
@@ -193,7 +193,7 @@ describe('jill list', () => {
       bed.addWorkspace('wks-3');
 
       // Run command
-      await yargs.command(command)
+      await yargs().command(command)
         .parse('list --long');
 
       expect(app.lastFrame()).toEqualLines([
@@ -212,10 +212,10 @@ describe('jill list', () => {
       bed.addWorkspace('wks-2');
       bed.addWorkspace('wks-3');
 
-      jest.spyOn(process.stdout, 'write').mockImplementation();
+      vi.spyOn(process.stdout, 'write').mockReturnValue(true);
 
       // Run command
-      await yargs.command(command)
+      await yargs().command(command)
         .parse('list --json');
 
       expect(process.stdout.write).toHaveBeenCalledWith(

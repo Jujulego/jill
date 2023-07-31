@@ -1,6 +1,7 @@
 import { ParallelGroup, SpawnTask } from '@jujulego/tasks';
 import { render, cleanup } from 'ink-testing-library';
 import symbols from 'log-symbols';
+import { vi } from 'vitest';
 
 import GroupTaskSpinner from '@/src/ui/group-task-spinner';
 import { flushPromises, spyLogger } from '@/tools/utils';
@@ -17,15 +18,15 @@ beforeEach(() => {
   taskB = new SpawnTask('cmd-b', [], {}, { logger: spyLogger });
   taskC = new SpawnTask('cmd-c', [], {}, { logger: spyLogger });
 
-  jest.spyOn(taskA, 'status', 'get').mockReturnValue('done');
-  jest.spyOn(taskB, 'status', 'get').mockReturnValue('done');
-  jest.spyOn(taskC, 'status', 'get').mockReturnValue('done');
+  vi.spyOn(taskA, 'status', 'get').mockReturnValue('done');
+  vi.spyOn(taskB, 'status', 'get').mockReturnValue('done');
+  vi.spyOn(taskC, 'status', 'get').mockReturnValue('done');
 
   group = new ParallelGroup('Test group', {}, { logger: spyLogger });
   group.add(taskA);
   group.add(taskB);
 
-  jest.spyOn(group, 'status', 'get').mockReturnValue('done');
+  vi.spyOn(group, 'status', 'get').mockReturnValue('done');
 });
 
 afterEach(() => {
@@ -61,7 +62,7 @@ describe('<GroupTaskSpinner>', () => {
     root.add(group);
     root.add(taskC);
 
-    jest.spyOn(root, 'status', 'get').mockReturnValue('done');
+    vi.spyOn(root, 'status', 'get').mockReturnValue('done');
 
     const { lastFrame } = render(<GroupTaskSpinner group={root} />);
 

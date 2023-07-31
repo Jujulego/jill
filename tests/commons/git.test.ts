@@ -1,4 +1,5 @@
 import { type TaskManager } from '@jujulego/tasks';
+import { vi } from 'vitest';
 
 import { GitService, type GitContext } from '@/src/commons/git.service';
 import { container } from '@/src/inversify.config';
@@ -8,13 +9,12 @@ import { TASK_MANAGER } from '@/src/tasks/task-manager.config';
 import { type TestSpawnTask } from '@/tools/test-tasks';
 
 // Mocks
-jest.mock('@jujulego/tasks', () => {
-  const actual = jest.requireActual('@jujulego/tasks');
-  const { SpawnTask } = actual;
+vi.mock('@jujulego/tasks', async (importOriginal) => {
+  const mod: typeof import('@jujulego/tasks') = await importOriginal();
 
   return {
-    ...actual,
-    SpawnTask: class extends SpawnTask {
+    ...mod,
+    SpawnTask: class extends mod.SpawnTask {
       readonly emit = this._spawnEvents.emit;
     },
   };
@@ -26,8 +26,7 @@ let manager: TaskManager;
 let git: GitService;
 
 beforeEach(() => {
-  jest.resetAllMocks();
-  jest.restoreAllMocks();
+  vi.restoreAllMocks();
 
   // Services
   logger = container.get(Logger);
@@ -35,7 +34,7 @@ beforeEach(() => {
   git = container.get(GitService);
 
   // Mocks
-  jest.spyOn(manager, 'add').mockImplementation();
+  vi.spyOn(manager, 'add').mockReturnValue(undefined);
 });
 
 // Test suites
@@ -50,7 +49,7 @@ describe('Git.command', () => {
   });
 
   it('should redirect stdout data to logger (debug level)', () => {
-    jest.spyOn(logger, 'debug');
+    vi.spyOn(logger, 'debug');
 
     const task = git.command('cmd', ['arg1', 'arg2']) as TestSpawnTask<GitContext>;
     task.emit('stream.stdout', { stream: 'stdout', data: Buffer.from('test') });
@@ -59,7 +58,7 @@ describe('Git.command', () => {
   });
 
   it('should redirect stderr data to logger (debug level)', () => {
-    jest.spyOn(logger, 'debug');
+    vi.spyOn(logger, 'debug');
 
     const task = git.command('cmd', ['arg1', 'arg2']) as TestSpawnTask<GitContext>;
     task.emit('stream.stderr', { stream: 'stderr', data: Buffer.from('test') });
@@ -83,7 +82,7 @@ for (const cmd of ['branch', 'diff', 'tag'] as const) {
 
 describe('git.isAffected', () => {
   beforeEach(() => {
-    jest.spyOn(git, 'diff');
+    vi.spyOn(git, 'diff');
   });
 
   // Tests
@@ -94,7 +93,7 @@ describe('git.isAffected', () => {
     expect(git.diff).toHaveBeenCalledWith(['--quiet', 'master', '--'], undefined);
 
     // Task complete
-    const task = jest.mocked(git.diff).mock.results[0].value as TestSpawnTask<GitContext>;
+    const task = vi.mocked(git.diff).mock.results[0].value as TestSpawnTask<GitContext>;
     setTimeout(() => task.emit('status.done', { status: 'done', previous: 'running' }), 0);
 
     await expect(prom).resolves.toBe(false);
@@ -107,9 +106,9 @@ describe('git.isAffected', () => {
     expect(git.diff).toHaveBeenCalledWith(['--quiet', 'master', '--'], undefined);
 
     // Task complete
-    const task = jest.mocked(git.diff).mock.results[0].value as TestSpawnTask<GitContext>;
+    const task = vi.mocked(git.diff).mock.results[0].value as TestSpawnTask<GitContext>;
 
-    jest.spyOn(task, 'exitCode', 'get').mockReturnValue(1);
+    vi.spyOn(task, 'exitCode', 'get').mockReturnValue(1);
     setTimeout(() => task.emit('status.failed', { status: 'failed', previous: 'running' }), 0);
 
     await expect(prom).resolves.toBe(true);
@@ -122,7 +121,7 @@ describe('git.isAffected', () => {
     expect(git.diff).toHaveBeenCalledWith(['--quiet', 'master', '--'], undefined);
 
     // Task complete
-    const task = jest.mocked(git.diff).mock.results[0].value as TestSpawnTask<GitContext>;
+    const task = vi.mocked(git.diff).mock.results[0].value as TestSpawnTask<GitContext>;
 
     setTimeout(() => task.emit('status.failed', { status: 'failed', previous: 'running' }), 0);
 
@@ -132,7 +131,7 @@ describe('git.isAffected', () => {
 
 describe('git.listBranches', () => {
   beforeEach(() => {
-    jest.spyOn(git, 'branch');
+    vi.spyOn(git, 'branch');
   });
 
   // Tests
@@ -143,7 +142,7 @@ describe('git.listBranches', () => {
     expect(git.branch).toHaveBeenCalledWith(['-l'], undefined);
 
     // Complete task
-    const task = jest.mocked(git.branch).mock.results[0].value as TestSpawnTask<GitContext>;
+    const task = vi.mocked(git.branch).mock.results[0].value as TestSpawnTask<GitContext>;
 
     task.emit('stream.stdout', { stream: 'stdout', data: Buffer.from(
       '  dev\n' +
@@ -151,7 +150,7 @@ describe('git.listBranches', () => {
       '* feat/test\n'
     ) });
 
-    jest.spyOn(task, 'exitCode', 'get').mockReturnValue(0);
+    vi.spyOn(task, 'exitCode', 'get').mockReturnValue(0);
     setTimeout(() => task.emit('completed', { status: 'done', duration: 1000 }), 0);
 
     await expect(prom).resolves.toEqual([
@@ -164,7 +163,7 @@ describe('git.listBranches', () => {
 
 describe('git.listTags', () => {
   beforeEach(() => {
-    jest.spyOn(git, 'tag');
+    vi.spyOn(git, 'tag');
   });
 
   // Tests
@@ -175,7 +174,7 @@ describe('git.listTags', () => {
     expect(git.tag).toHaveBeenCalledWith(['-l'], undefined);
 
     // Complete task
-    const task = jest.mocked(git.tag).mock.results[0].value as TestSpawnTask<GitContext>;
+    const task = vi.mocked(git.tag).mock.results[0].value as TestSpawnTask<GitContext>;
 
     task.emit('stream.stdout', { stream: 'stdout', data: Buffer.from(
       '1.0.0\n' +
@@ -183,7 +182,7 @@ describe('git.listTags', () => {
       '3.0.0\n'
     ) });
 
-    jest.spyOn(task, 'exitCode', 'get').mockReturnValue(0);
+    vi.spyOn(task, 'exitCode', 'get').mockReturnValue(0);
     setTimeout(() => task.emit('completed', { status: 'done', duration: 1000 }), 0);
 
     await expect(prom).resolves.toEqual([

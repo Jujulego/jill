@@ -1,8 +1,9 @@
+import { vi } from 'vitest';
+
 import { GitService } from '@/src/commons/git.service';
 import { AffectedFilter } from '@/src/filters/affected.filter';
 import { container } from '@/src/inversify.config';
 import { type Workspace } from '@/src/project/workspace';
-
 import { TestBed } from '@/tools/test-bed';
 
 // Setup
@@ -18,14 +19,13 @@ beforeEach(() => {
   wks = bed.addWorkspace('wks');
 
   // Mocks
-  jest.resetAllMocks();
-  jest.restoreAllMocks();
+  vi.restoreAllMocks();
 
   git = container.get(GitService);
-  jest.spyOn(git, 'listBranches');
-  jest.spyOn(git, 'listTags');
+  vi.spyOn(git, 'listBranches');
+  vi.spyOn(git, 'listTags');
 
-  jest.spyOn(wks, 'isAffected').mockResolvedValue(true);
+  vi.spyOn(wks, 'isAffected').mockResolvedValue(true);
 });
 
 afterEach(() => {
@@ -85,7 +85,7 @@ describe('AffectedFilter', () => {
   it('should test against branch-2', async () => {
     const filter = new AffectedFilter('branch-*', 'fallback');
 
-    jest.mocked(git.listBranches).mockResolvedValue(['branch-1', 'branch-2']);
+    vi.mocked(git.listBranches).mockResolvedValue(['branch-1', 'branch-2']);
 
     await expect(filter.test(wks))
       .resolves.toBe(true);
@@ -99,8 +99,8 @@ describe('AffectedFilter', () => {
   it('should test against tag-2', async () => {
     const filter = new AffectedFilter('tag-*', 'fallback');
 
-    jest.mocked(git.listBranches).mockResolvedValue([]);
-    jest.mocked(git.listTags).mockResolvedValue(['tag-1', 'tag-2']);
+    vi.mocked(git.listBranches).mockResolvedValue([]);
+    vi.mocked(git.listTags).mockResolvedValue(['tag-1', 'tag-2']);
 
     await expect(filter.test(wks))
       .resolves.toBe(true);
@@ -114,8 +114,8 @@ describe('AffectedFilter', () => {
   it('should test against fallback', async () => {
     const filter = new AffectedFilter('tag-*', 'fallback');
 
-    jest.mocked(git.listBranches).mockResolvedValue([]);
-    jest.mocked(git.listTags).mockResolvedValue([]);
+    vi.mocked(git.listBranches).mockResolvedValue([]);
+    vi.mocked(git.listTags).mockResolvedValue([]);
 
     await expect(filter.test(wks))
       .resolves.toBe(true);
@@ -129,8 +129,8 @@ describe('AffectedFilter', () => {
   it('should use sort arguments', async () => {
     const filter = new AffectedFilter('tag-*', 'fallback', 'v:refname');
 
-    jest.mocked(git.listBranches).mockResolvedValue([]);
-    jest.mocked(git.listTags).mockResolvedValue(['tag-1', 'tag-2']);
+    vi.mocked(git.listBranches).mockResolvedValue([]);
+    vi.mocked(git.listTags).mockResolvedValue(['tag-1', 'tag-2']);
 
     await expect(filter.test(wks))
       .resolves.toBe(true);

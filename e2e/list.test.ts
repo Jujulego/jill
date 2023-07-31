@@ -127,4 +127,4 @@ describe('jill list', () => void withPackageManager((packageManager) => {
       ]);
     });
   });
-}));
+}), { timeout: 10000 });

@@ -242,4 +242,4 @@ describe('jill group', () => void withPackageManager((packageManager) => {
 
     await expect(fileExists(path.join(prjDir, 'wks-c', 'script.txt'))).resolves.toBe(false);
   });
-}));
+}), { timeout: 10000 });

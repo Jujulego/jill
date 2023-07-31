@@ -1,4 +1,5 @@
 import { ParallelGroup, SequenceGroup } from '@jujulego/tasks';
+import { vi } from 'vitest';
 
 import { container } from '@/src/inversify.config';
 import { type Workspace } from '@/src/project/workspace';
@@ -81,7 +82,7 @@ describe('TaskExprService.buildTask', () => {
     const tree: TaskNode = { script: 'test' };
     const task = new ScriptTask(wks, 'test', []);
 
-    jest.spyOn(wks, 'run').mockResolvedValue(task);
+    vi.spyOn(wks, 'run').mockResolvedValue(task);
 
     await expect(service.buildTask(tree, wks)).resolves.toBe(task);
 
@@ -96,7 +97,7 @@ describe('TaskExprService.buildTask', () => {
         { script: 'test2' },
       ]
     };
-    jest.spyOn(wks, 'run')
+    vi.spyOn(wks, 'run')
       .mockImplementation(async (script) => new ScriptTask(wks, script, []));
 
     const group = await service.buildTask(tree, wks) as ParallelGroup;
@@ -119,7 +120,7 @@ describe('TaskExprService.buildTask', () => {
         { script: 'test2' },
       ]
     };
-    jest.spyOn(wks, 'run')
+    vi.spyOn(wks, 'run')
       .mockImplementation(async (script) => new ScriptTask(wks, script, []));
 
     const group = await service.buildTask(tree, wks) as SequenceGroup;

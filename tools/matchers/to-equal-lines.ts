@@ -1,5 +1,7 @@
+import type { ExpectationResult, MatcherState } from '@vitest/expect';
+
 // Matcher
-export function toEqualLines(this: jest.MatcherContext, received: unknown, expected: unknown[]): jest.CustomMatcherResult {
+export function toEqualLines(this: MatcherState, received: unknown, expected: unknown[]): ExpectationResult {
   try {
     const options = {
       isNot: this.isNot,
@@ -24,11 +26,8 @@ export function toEqualLines(this: jest.MatcherContext, received: unknown, expec
 }
 
 // Typings
-declare global {
-  // eslint-disable-next-line @typescript-eslint/no-namespace
-  namespace jest {
-    interface Matchers<R> {
-      toEqualLines(expected: unknown[]): R;
-    }
+declare module 'vitest' {
+  interface Assertion<T = any> {
+    toEqualLines(expected: unknown[]): T;
   }
 }

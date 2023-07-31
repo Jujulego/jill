@@ -1,5 +1,5 @@
 import { type Task } from '@jujulego/tasks';
-import { injectable, type interfaces as int } from 'inversify';
+import { inject, injectable, type interfaces as int } from 'inversify';
 import yargs from 'yargs';
 
 import { ContextService, type Context } from '@/src/commons/context.service';
@@ -25,8 +25,11 @@ export class JillApplication {
 
   // Constructor
   constructor(
+    @inject(ContextService)
     private readonly context: ContextService,
+    @inject(PluginLoaderService)
     private readonly plugins: PluginLoaderService,
+    @inject(Logger)
     private readonly logger: Logger,
   ) {
     // Create container
@@ -38,7 +41,8 @@ export class JillApplication {
       .completion('completion', 'Generate bash completion script')
       .help('help', 'Show help for a command')
       .version('version', 'Show version', pkg.version)
-      .wrap(process.stdout.columns);
+      .wrap(process.stdout.columns)
+      .exitProcess(false);
   }
 
   // Methods

@@ -2,6 +2,7 @@ import { type TaskManager } from '@jujulego/tasks';
 import { cleanup, render } from 'ink-testing-library';
 import symbols from 'log-symbols';
 import yargs, { type CommandModule } from 'yargs';
+import { vi } from 'vitest';
 
 import { RunCommand } from '@/src/commands/run';
 import { ContextService } from '@/src/commons/context.service';
@@ -46,13 +47,12 @@ beforeEach(async () => {
   manager = container.get(TASK_MANAGER);
 
   // Mocks
-  jest.resetAllMocks();
-  jest.restoreAllMocks();
+  vi.restoreAllMocks();
 
-  jest.spyOn(wks, 'run').mockResolvedValue(task);
+  vi.spyOn(wks, 'run').mockResolvedValue(task);
 
-  jest.spyOn(manager, 'add').mockImplementation();
-  jest.spyOn(manager, 'tasks', 'get').mockReturnValue([task]);
+  vi.spyOn(manager, 'add').mockReturnValue(undefined);
+  vi.spyOn(manager, 'tasks', 'get').mockReturnValue([task]);
 });
 
 afterEach(() => {
@@ -65,7 +65,7 @@ describe('jill run', () => {
     context.reset();
 
     // Run command
-    const prom = yargs.command(command)
+    const prom = yargs().command(command)
       .fail(false)
       .parse('run cmd');
 
@@ -79,7 +79,7 @@ describe('jill run', () => {
     expect(app.lastFrame()).toEqual(expect.ignoreColor(/^. Running cmd in wks$/));
 
     // complete task
-    jest.spyOn(task, 'status', 'get').mockReturnValue('done');
+    vi.spyOn(task, 'status', 'get').mockReturnValue('done');
     task.emit('status.done', { status: 'done', previous: 'running' });
     task.emit('completed', { status: 'done', duration: 100 });
 
@@ -93,7 +93,7 @@ describe('jill run', () => {
     context.reset();
 
     // Run command
-    const prom = yargs.command(command)
+    const prom = yargs().command(command)
       .fail(false)
       .parse('run -d prod cmd');
 
@@ -103,7 +103,7 @@ describe('jill run', () => {
     expect(wks.run).toHaveBeenCalledWith('cmd', [], { buildDeps: 'prod', buildScript: 'build' });
 
     // complete task
-    jest.spyOn(task, 'status', 'get').mockReturnValue('done');
+    vi.spyOn(task, 'status', 'get').mockReturnValue('done');
     task.emit('status.done', { status: 'done', previous: 'running' });
     task.emit('completed', { status: 'done', duration: 100 });
 
@@ -113,12 +113,12 @@ describe('jill run', () => {
   it('should exit 1 if script does not exist', async () => {
     context.reset();
 
-    jest.spyOn(wks, 'run').mockResolvedValue(null);
-    jest.spyOn(manager, 'tasks', 'get').mockReturnValue([]);
+    vi.spyOn(wks, 'run').mockResolvedValue(null);
+    vi.spyOn(manager, 'tasks', 'get').mockReturnValue([]);
 
     // Run command
     await expect(
-      yargs.command(command)
+      yargs().command(command)
         .fail(false)
         .parse('run cmd')
     ).rejects.toEqual(new ExitException(1));
@@ -128,7 +128,7 @@ describe('jill run', () => {
     context.reset();
 
     // Run command
-    const prom = yargs.command(command)
+    const prom = yargs().command(command)
       .fail(false)
       .parse('run cmd --arg');
 
@@ -138,7 +138,7 @@ describe('jill run', () => {
     expect(wks.run).toHaveBeenCalledWith('cmd', ['--arg'], { buildDeps: 'all', buildScript: 'build' });
 
     // complete task
-    jest.spyOn(task, 'status', 'get').mockReturnValue('done');
+    vi.spyOn(task, 'status', 'get').mockReturnValue('done');
     task.emit('status.done', { status: 'done', previous: 'running' });
     task.emit('completed', { status: 'done', duration: 100 });
 
@@ -149,7 +149,7 @@ describe('jill run', () => {
     context.reset();
 
     // Run command
-    const prom = yargs.command(command)
+    const prom = yargs().command(command)
       .fail(false)
       .parse('run cmd -- -d toto');
 
@@ -159,7 +159,7 @@ describe('jill run', () => {
     expect(wks.run).toHaveBeenCalledWith('cmd', ['-d', 'toto'], { buildDeps: 'all', buildScript: 'build' });
 
     // complete task
-    jest.spyOn(task, 'status', 'get').mockReturnValue('done');
+    vi.spyOn(task, 'status', 'get').mockReturnValue('done');
     task.emit('status.done', { status: 'done', previous: 'running' });
     task.emit('completed', { status: 'done', duration: 100 });
 

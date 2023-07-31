@@ -1,3 +1,4 @@
+import { inject } from 'inversify';
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
 
 import { Command } from '@/src/modules/command';
@@ -30,6 +31,7 @@ export class GroupCommand extends TaskCommand<IGroupCommandArgs> {
 
   // Constructor
   constructor(
+    @inject(TaskExprService)
     private readonly taskExpr: TaskExprService,
   ) {
     super();

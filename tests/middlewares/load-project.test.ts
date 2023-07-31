@@ -1,5 +1,6 @@
 import path from 'node:path';
 import yargs from 'yargs';
+import { vi } from 'vitest';
 
 import { ContextService } from '@/src/commons/context.service';
 import { Logger } from '@/src/commons/logger.service';
@@ -27,11 +28,11 @@ beforeEach(() => {
 
   context = container.get(ContextService);
   spinner = container.get(SpinnerService);
-  jest.spyOn(spinner, 'spin');
-  jest.spyOn(spinner, 'stop');
+  vi.spyOn(spinner, 'spin').mockReturnValue();
+  vi.spyOn(spinner, 'stop').mockReturnValue();
 
   projectRepo = container.get(ProjectRepository);
-  jest.spyOn(projectRepo, 'searchProjectRoot')
+  vi.spyOn(projectRepo, 'searchProjectRoot')
     .mockResolvedValue(path.resolve('/test'));
 
   parser = applyMiddlewares(yargs(), [LoadProject]);

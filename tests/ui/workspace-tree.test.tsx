@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { render, cleanup } from 'ink-testing-library';
 
 import { type Workspace } from '@/src/project/workspace';
@@ -22,12 +23,12 @@ beforeEach(() => {
     .addDependency(wksB)
     .addDependency(wksC, true);
 
-  jest.spyOn(wksA, 'dependencies');
-  jest.spyOn(wksA, 'devDependencies');
-  jest.spyOn(wksB, 'dependencies');
-  jest.spyOn(wksB, 'devDependencies');
-  jest.spyOn(wksC, 'dependencies');
-  jest.spyOn(wksC, 'devDependencies');
+  vi.spyOn(wksA, 'dependencies');
+  vi.spyOn(wksA, 'devDependencies');
+  vi.spyOn(wksB, 'dependencies');
+  vi.spyOn(wksB, 'devDependencies');
+  vi.spyOn(wksC, 'dependencies');
+  vi.spyOn(wksC, 'devDependencies');
 });
 
 afterEach(() => {

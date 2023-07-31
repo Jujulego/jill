@@ -50,13 +50,9 @@
       }
     },
     {
-      "files": "{tests,e2e}/**/*.{js,jsx,ts,tsx}",
-      "globals": {
-        "jest/globals": true
-      },
+      "files": "**/*.test.{js,jsx,ts,tsx}",
       "extends": [
-        "plugin:jest/recommended",
-        "plugin:jest/style"
+        "plugin:vitest/recommended"
       ]
     }
   ]
