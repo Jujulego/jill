@@ -55,6 +55,7 @@ jobs:
         run: yarn install --immutable
 
       - name: Lint
+        continue-on-error: true
         run: yarn lint -f @microsoft/sarif -o eslint-results.sarif
 
       - name: Upload analysis results to GitHub
