@@ -89,7 +89,7 @@ export class ScriptTask extends GroupTask<ScriptContext> {
     yield* this._scriptTasks;
 
     const results = await waitFor(this._scriptTasks, 'finished');
-    this.status = results.failed === 0 ? 'done' : 'failed';
+    this.setStatus(results.failed === 0 ? 'done' : 'failed');
   }
 
   protected _stop(): void {
