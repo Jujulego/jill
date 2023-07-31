@@ -79,7 +79,7 @@ jobs:
         run: yarn install --immutable
 
       - name: Test
-        run: yarn test --verbose
+        run: yarn test --coverage
 
       - uses: actions/upload-artifact@v3
         with:

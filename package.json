@@ -20,7 +20,7 @@
     "build:prod": "webpack --config webpack.prod.ts",
     "stats": "webpack --config webpack.stats.ts",
     "watch": "webpack --watch",
-    "test": "jest",
+    "test": "vitest",
     "e2e": "jest -c jest-e2e.config.ts",
     "e2e:npm": "cross-env USE_PACKAGE_MANAGER=npm yarn run e2e",
     "e2e:yarn": "cross-env USE_PACKAGE_MANAGER=yarn yarn run e2e"
@@ -47,6 +47,7 @@
     "@types/yargs": "17.0.24",
     "@typescript-eslint/eslint-plugin": "5.62.0",
     "@typescript-eslint/parser": "5.62.0",
+    "@vitest/coverage-v8": "^0.33.0",
     "ajv": "8.12.0",
     "ansi-styles": "6.2.1",
     "chalk": "5.3.0",
