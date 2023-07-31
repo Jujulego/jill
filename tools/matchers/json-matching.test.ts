@@ -1,3 +1,5 @@
+import { vi } from 'vitest';
+
 import { jsonMatching } from './json-matching';
 
 // Tests
@@ -6,8 +8,8 @@ describe('jsonMatching', () => {
     const context = {
       isNot: false,
       promise: false,
-      equals: jest.fn().mockReturnValue(true),
-    } as unknown as jest.MatcherContext;
+      equals: vi.fn().mockReturnValue(true),
+    };
 
     expect(jsonMatching.call(context, JSON.stringify({ test: true }), { test: true }))
       .toMatchObject({

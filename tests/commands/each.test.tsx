@@ -2,6 +2,7 @@ import { type TaskManager } from '@jujulego/tasks';
 import { cleanup, render } from 'ink-testing-library';
 import symbols from 'log-symbols';
 import yargs, { type CommandModule } from 'yargs';
+import { vi } from 'vitest';
 
 import { EachCommand } from '@/src/commands/each';
 import { SpinnerService } from '@/src/commons/spinner.service';
@@ -33,8 +34,8 @@ beforeEach(async () => {
   container.restore();
   container.snapshot();
 
-  jest.resetAllMocks();
-  jest.restoreAllMocks();
+  vi.resetAllMocks();
+  vi.restoreAllMocks();
 
   // Project
   bed = new TestBed();
@@ -48,10 +49,10 @@ beforeEach(async () => {
   spinner = container.get(SpinnerService);
 
   // Mocks
-  jest.resetAllMocks();
-  jest.restoreAllMocks();
+  vi.resetAllMocks();
+  vi.restoreAllMocks();
 
-  jest.spyOn(manager, 'add').mockImplementation();
+  vi.spyOn(manager, 'add').mockImplementation();
 });
 
 afterEach(() => {
@@ -76,10 +77,10 @@ describe('jill each', () => {
       new TestScriptTask(workspaces[1], 'cmd', [], { logger: spyLogger }),
     ];
 
-    jest.spyOn(manager, 'tasks', 'get').mockReturnValue(tasks);
+    vi.spyOn(manager, 'tasks', 'get').mockReturnValue(tasks);
 
-    jest.spyOn(workspaces[0], 'run').mockResolvedValue(tasks[0]);
-    jest.spyOn(workspaces[1], 'run').mockResolvedValue(tasks[1]);
+    vi.spyOn(workspaces[0], 'run').mockResolvedValue(tasks[0]);
+    vi.spyOn(workspaces[1], 'run').mockResolvedValue(tasks[1]);
 
     // Run command
     const prom = yargs.command(command)
@@ -103,7 +104,7 @@ describe('jill each', () => {
 
     // complete tasks
     for (const task of tasks) {
-      jest.spyOn(task, 'status', 'get').mockReturnValue('done');
+      vi.spyOn(task, 'status', 'get').mockReturnValue('done');
       task.emit('status.done', { status: 'done', previous: 'running' });
       task.emit('completed', { status: 'done', duration: 100 });
     }
@@ -130,8 +131,8 @@ describe('jill each', () => {
       new TestScriptTask(workspaces[0], 'cmd', [], { logger: spyLogger }),
     ];
 
-    jest.spyOn(manager, 'tasks', 'get').mockReturnValue(tasks);
-    jest.spyOn(workspaces[0], 'run').mockResolvedValue(tasks[0]);
+    vi.spyOn(manager, 'tasks', 'get').mockReturnValue(tasks);
+    vi.spyOn(workspaces[0], 'run').mockResolvedValue(tasks[0]);
 
     // Run command
     const prom = yargs.command(command)
@@ -146,7 +147,7 @@ describe('jill each', () => {
 
     // complete tasks
     for (const task of tasks) {
-      jest.spyOn(task, 'status', 'get').mockReturnValue('done');
+      vi.spyOn(task, 'status', 'get').mockReturnValue('done');
       task.emit('status.done', { status: 'done', previous: 'running' });
       task.emit('completed', { status: 'done', duration: 100 });
     }
@@ -156,10 +157,10 @@ describe('jill each', () => {
 
   it('should exit 1 if no matching workspace is found', async () => {
     context.reset({});
-    jest.spyOn(spinner, 'failed');
+    vi.spyOn(spinner, 'failed');
 
     // Setup tasks
-    jest.spyOn(manager, 'tasks', 'get').mockReturnValue([]);
+    vi.spyOn(manager, 'tasks', 'get').mockReturnValue([]);
 
     // Run command
     await expect(
@@ -184,8 +185,8 @@ describe('jill each', () => {
       new TestScriptTask(workspaces[0], 'cmd', ['--arg'], { logger: spyLogger }),
     ];
 
-    jest.spyOn(manager, 'tasks', 'get').mockReturnValue(tasks);
-    jest.spyOn(workspaces[0], 'run').mockResolvedValue(tasks[0]);
+    vi.spyOn(manager, 'tasks', 'get').mockReturnValue(tasks);
+    vi.spyOn(workspaces[0], 'run').mockResolvedValue(tasks[0]);
 
     // Run command
     const prom = yargs.command(command)
@@ -200,7 +201,7 @@ describe('jill each', () => {
 
     // complete tasks
     for (const task of tasks) {
-      jest.spyOn(task, 'status', 'get').mockReturnValue('done');
+      vi.spyOn(task, 'status', 'get').mockReturnValue('done');
       task.emit('status.done', { status: 'done', previous: 'running' });
       task.emit('completed', { status: 'done', duration: 100 });
     }
@@ -221,8 +222,8 @@ describe('jill each', () => {
       new TestScriptTask(workspaces[0], 'cmd', ['-d', 'toto'], { logger: spyLogger }),
     ];
 
-    jest.spyOn(manager, 'tasks', 'get').mockReturnValue(tasks);
-    jest.spyOn(workspaces[0], 'run').mockResolvedValue(tasks[0]);
+    vi.spyOn(manager, 'tasks', 'get').mockReturnValue(tasks);
+    vi.spyOn(workspaces[0], 'run').mockResolvedValue(tasks[0]);
 
     // Run command
     const prom = yargs.command(command)
@@ -237,7 +238,7 @@ describe('jill each', () => {
 
     // complete tasks
     for (const task of tasks) {
-      jest.spyOn(task, 'status', 'get').mockReturnValue('done');
+      vi.spyOn(task, 'status', 'get').mockReturnValue('done');
       task.emit('status.done', { status: 'done', previous: 'running' });
       task.emit('completed', { status: 'done', duration: 100 });
     }
@@ -262,10 +263,10 @@ describe('jill each', () => {
         new TestScriptTask(workspaces[1], 'cmd', [], { logger: spyLogger }),
       ];
 
-      jest.spyOn(manager, 'tasks', 'get').mockReturnValue(tasks);
+      vi.spyOn(manager, 'tasks', 'get').mockReturnValue(tasks);
 
-      jest.spyOn(workspaces[0], 'run').mockResolvedValue(tasks[0]);
-      jest.spyOn(workspaces[1], 'run').mockResolvedValue(tasks[1]);
+      vi.spyOn(workspaces[0], 'run').mockResolvedValue(tasks[0]);
+      vi.spyOn(workspaces[1], 'run').mockResolvedValue(tasks[1]);
 
       // Run command
       const prom = yargs.command(command)
@@ -283,7 +284,7 @@ describe('jill each', () => {
 
       // complete tasks
       for (const task of tasks) {
-        jest.spyOn(task, 'status', 'get').mockReturnValue('done');
+        vi.spyOn(task, 'status', 'get').mockReturnValue('done');
         task.emit('status.done', { status: 'done', previous: 'running' });
         task.emit('completed', { status: 'done', duration: 100 });
       }
@@ -307,10 +308,10 @@ describe('jill each', () => {
         new TestScriptTask(workspaces[1], 'cmd', [], { logger: spyLogger }),
       ];
 
-      jest.spyOn(manager, 'tasks', 'get').mockReturnValue(tasks);
+      vi.spyOn(manager, 'tasks', 'get').mockReturnValue(tasks);
 
-      jest.spyOn(workspaces[0], 'run').mockResolvedValue(tasks[0]);
-      jest.spyOn(workspaces[1], 'run').mockResolvedValue(tasks[1]);
+      vi.spyOn(workspaces[0], 'run').mockResolvedValue(tasks[0]);
+      vi.spyOn(workspaces[1], 'run').mockResolvedValue(tasks[1]);
 
       // Run command
       const prom = yargs.command(command)
@@ -328,7 +329,7 @@ describe('jill each', () => {
 
       // complete tasks
       for (const task of tasks) {
-        jest.spyOn(task, 'status', 'get').mockReturnValue('done');
+        vi.spyOn(task, 'status', 'get').mockReturnValue('done');
         task.emit('status.done', { status: 'done', previous: 'running' });
         task.emit('completed', { status: 'done', duration: 100 });
       }
@@ -354,13 +355,13 @@ describe('jill each', () => {
         new TestScriptTask(workspaces[1], 'cmd', [], { logger: spyLogger }),
       ];
 
-      jest.spyOn(manager, 'tasks', 'get').mockReturnValue(tasks);
+      vi.spyOn(manager, 'tasks', 'get').mockReturnValue(tasks);
 
-      jest.spyOn(workspaces[0], 'run').mockResolvedValue(tasks[0]);
-      jest.spyOn(workspaces[1], 'run').mockResolvedValue(tasks[1]);
+      vi.spyOn(workspaces[0], 'run').mockResolvedValue(tasks[0]);
+      vi.spyOn(workspaces[1], 'run').mockResolvedValue(tasks[1]);
 
-      jest.spyOn(workspaces[0], 'isAffected').mockResolvedValue(true);
-      jest.spyOn(workspaces[1], 'isAffected').mockResolvedValue(false);
+      vi.spyOn(workspaces[0], 'isAffected').mockResolvedValue(true);
+      vi.spyOn(workspaces[1], 'isAffected').mockResolvedValue(false);
 
       // Run command
       const prom = yargs.command(command)
@@ -378,7 +379,7 @@ describe('jill each', () => {
 
       // complete tasks
       for (const task of tasks) {
-        jest.spyOn(task, 'status', 'get').mockReturnValue('done');
+        vi.spyOn(task, 'status', 'get').mockReturnValue('done');
         task.emit('status.done', { status: 'done', previous: 'running' });
         task.emit('completed', { status: 'done', duration: 100 });
       }

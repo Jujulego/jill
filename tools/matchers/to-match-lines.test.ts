@@ -1,3 +1,5 @@
+import { vi } from 'vitest';
+
 import { toMatchLines } from './to-match-lines';
 
 // Tests
@@ -6,8 +8,8 @@ describe('toMatchLines', () => {
     const context = {
       isNot: false,
       promise: false,
-      equals: jest.fn().mockReturnValue(true),
-    } as unknown as jest.MatcherContext;
+      equals: vi.fn().mockReturnValue(true),
+    };
 
     expect(toMatchLines.call(context, 'toto\ntata', ['toto', 'tata']))
       .toMatchObject({
@@ -22,8 +24,8 @@ describe('toMatchLines', () => {
     const context = {
       isNot: false,
       promise: false,
-      equals: jest.fn().mockReturnValue(true),
-    } as unknown as jest.MatcherContext;
+      equals: vi.fn().mockReturnValue(true),
+    };
 
     expect(toMatchLines.call(context, 'toto\ntata', [/toto/, /tata/]))
       .toMatchObject({

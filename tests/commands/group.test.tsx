@@ -2,6 +2,7 @@ import { type TaskManager } from '@jujulego/tasks';
 import { cleanup, render } from 'ink-testing-library';
 import symbols from 'log-symbols';
 import yargs, { type CommandModule } from 'yargs';
+import { vi } from 'vitest';
 
 import { GroupCommand } from '@/src/commands/group';
 import { ContextService } from '@/src/commons/context.service';
@@ -52,13 +53,13 @@ beforeEach(async () => {
   taskExpr = container.get(TaskExprService);
 
   // Mocks
-  jest.resetAllMocks();
-  jest.restoreAllMocks();
+  vi.resetAllMocks();
+  vi.restoreAllMocks();
 
-  jest.spyOn(taskExpr, 'buildTask').mockResolvedValue(task);
+  vi.spyOn(taskExpr, 'buildTask').mockResolvedValue(task);
 
-  jest.spyOn(manager, 'add').mockImplementation();
-  jest.spyOn(manager, 'tasks', 'get').mockReturnValue([task]);
+  vi.spyOn(manager, 'add').mockImplementation();
+  vi.spyOn(manager, 'tasks', 'get').mockReturnValue([task]);
 });
 
 afterEach(() => {
@@ -94,10 +95,10 @@ describe('jill group', () => {
     expect(manager.add).toHaveBeenCalledWith(task);
 
     // Complete tasks
-    jest.spyOn(task, 'status', 'get').mockReturnValue('done');
+    vi.spyOn(task, 'status', 'get').mockReturnValue('done');
 
     for (const child of task.tasks as TestScriptTask[]) {
-      jest.spyOn(child, 'status', 'get').mockReturnValue('done');
+      vi.spyOn(child, 'status', 'get').mockReturnValue('done');
 
       child.emit('status.done', { status: 'done', previous: 'running' });
       child.emit('completed', { status: 'done', duration: 100 });
@@ -142,10 +143,10 @@ describe('jill group', () => {
     );
 
     // Complete tasks
-    jest.spyOn(task, 'status', 'get').mockReturnValue('done');
+    vi.spyOn(task, 'status', 'get').mockReturnValue('done');
 
     for (const child of task.tasks as TestScriptTask[]) {
-      jest.spyOn(child, 'status', 'get').mockReturnValue('done');
+      vi.spyOn(child, 'status', 'get').mockReturnValue('done');
 
       child.emit('status.done', { status: 'done', previous: 'running' });
       child.emit('completed', { status: 'done', duration: 100 });

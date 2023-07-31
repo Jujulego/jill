@@ -2,6 +2,7 @@ import { type TaskManager } from '@jujulego/tasks';
 import { cleanup, render } from 'ink-testing-library';
 import symbols from 'log-symbols';
 import yargs, { type CommandModule } from 'yargs';
+import { vi } from 'vitest';
 
 import { ExecCommand } from '@/src/commands/exec';
 import { ContextService } from '@/src/commons/context.service';
@@ -45,13 +46,13 @@ beforeEach(async () => {
   manager = container.get(TASK_MANAGER);
 
   // Mocks
-  jest.resetAllMocks();
-  jest.restoreAllMocks();
+  vi.resetAllMocks();
+  vi.restoreAllMocks();
 
-  jest.spyOn(wks, 'exec').mockResolvedValue(task);
+  vi.spyOn(wks, 'exec').mockResolvedValue(task);
 
-  jest.spyOn(manager, 'add').mockImplementation();
-  jest.spyOn(manager, 'tasks', 'get').mockReturnValue([task]);
+  vi.spyOn(manager, 'add').mockImplementation();
+  vi.spyOn(manager, 'tasks', 'get').mockReturnValue([task]);
 });
 
 afterEach(() => {
@@ -78,7 +79,7 @@ describe('jill exec', () => {
     expect(app.lastFrame()).toEqual(expect.ignoreColor(/^. cmd/));
 
     // complete task
-    jest.spyOn(task, 'status', 'get').mockReturnValue('done');
+    vi.spyOn(task, 'status', 'get').mockReturnValue('done');
     task.emit('status.done', { status: 'done', previous: 'running' });
     task.emit('completed', { status: 'done', duration: 100 });
 
@@ -102,7 +103,7 @@ describe('jill exec', () => {
     expect(wks.exec).toHaveBeenCalledWith('cmd', [], { buildDeps: 'prod', buildScript: 'build' });
 
     // complete task
-    jest.spyOn(task, 'status', 'get').mockReturnValue('done');
+    vi.spyOn(task, 'status', 'get').mockReturnValue('done');
     task.emit('status.done', { status: 'done', previous: 'running' });
     task.emit('completed', { status: 'done', duration: 100 });
 
@@ -123,7 +124,7 @@ describe('jill exec', () => {
     expect(wks.exec).toHaveBeenCalledWith('cmd', ['--arg'], { buildDeps: 'all', buildScript: 'build' });
 
     // complete task
-    jest.spyOn(task, 'status', 'get').mockReturnValue('done');
+    vi.spyOn(task, 'status', 'get').mockReturnValue('done');
     task.emit('status.done', { status: 'done', previous: 'running' });
     task.emit('completed', { status: 'done', duration: 100 });
 
@@ -144,7 +145,7 @@ describe('jill exec', () => {
     expect(wks.exec).toHaveBeenCalledWith('cmd', ['-d', 'toto'], { buildDeps: 'all', buildScript: 'build' });
 
     // complete task
-    jest.spyOn(task, 'status', 'get').mockReturnValue('done');
+    vi.spyOn(task, 'status', 'get').mockReturnValue('done');
     task.emit('status.done', { status: 'done', previous: 'running' });
     task.emit('completed', { status: 'done', duration: 100 });
 

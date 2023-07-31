@@ -1,5 +1,6 @@
 import { cleanup, render } from 'ink-testing-library';
 import path from 'node:path';
+import { vi } from 'vitest';
 import yargs, { type CommandModule } from 'yargs';
 
 import { ListCommand } from '@/src/commands/list';
@@ -26,8 +27,8 @@ beforeEach(async () => {
   container.restore();
   container.snapshot();
 
-  jest.resetAllMocks();
-  jest.restoreAllMocks();
+  vi.resetAllMocks();
+  vi.restoreAllMocks();
 
   // Project
   bed = new TestBed();
@@ -112,9 +113,9 @@ describe('jill list', () => {
         bed.addWorkspace('wks-3'),
       ];
 
-      jest.spyOn(workspaces[0], 'isAffected').mockResolvedValue(false);
-      jest.spyOn(workspaces[1], 'isAffected').mockResolvedValue(true);
-      jest.spyOn(workspaces[2], 'isAffected').mockResolvedValue(false);
+      vi.spyOn(workspaces[0], 'isAffected').mockResolvedValue(false);
+      vi.spyOn(workspaces[1], 'isAffected').mockResolvedValue(true);
+      vi.spyOn(workspaces[2], 'isAffected').mockResolvedValue(false);
 
       // Run command
       await yargs.command(command)
@@ -212,7 +213,7 @@ describe('jill list', () => {
       bed.addWorkspace('wks-2');
       bed.addWorkspace('wks-3');
 
-      jest.spyOn(process.stdout, 'write').mockImplementation();
+      vi.spyOn(process.stdout, 'write').mockImplementation();
 
       // Run command
       await yargs.command(command)

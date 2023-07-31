@@ -1,3 +1,5 @@
+import { vi } from 'vitest';
+
 import { toEqualLines } from './to-equal-lines';
 
 // Tests
@@ -6,8 +8,8 @@ describe('toEqualLines', () => {
     const context = {
       isNot: false,
       promise: false,
-      equals: jest.fn().mockReturnValue(true),
-    } as unknown as jest.MatcherContext;
+      equals: vi.fn().mockReturnValue(true),
+    };
 
     expect(toEqualLines.call(context, 'toto\ntata', ['toto', 'tata']))
       .toMatchObject({

@@ -1,5 +1,6 @@
-import { linesFrom } from '@/src/utils/events';
+import { vi } from 'vitest';
 
+import { linesFrom } from '@/src/utils/events';
 import { TestSpawnTask } from '@/tools/test-tasks';
 
 // Tests
@@ -11,12 +12,12 @@ describe('linesFrom', () => {
   });
 
   it('should emit all received content, line by line', async () => {
-    jest.spyOn(task, 'exitCode', 'get')
+    vi.spyOn(task, 'exitCode', 'get')
       .mockReturnValue(0);
 
     const lines = linesFrom(task, 'stdout');
 
-    const listener = jest.fn();
+    const listener = vi.fn();
     lines.subscribe(listener);
 
     // One full line

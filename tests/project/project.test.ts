@@ -1,5 +1,6 @@
 import { fs, vol } from 'memfs';
 import path from 'node:path';
+import { vi } from 'vitest';
 
 import { container } from '@/src/inversify.config';
 import { Logger } from '@/src/commons/logger.service';
@@ -7,8 +8,8 @@ import { Project } from '@/src/project/project';
 import { Workspace } from '@/src/project/workspace';
 
 // Mocks
-jest.mock('fs', () => fs);
-jest.mock('node:fs/promises', () => fs.promises);
+require('mock-require')('fs', vol);
+vi.mock('node:fs/promises', () => ({ default: fs.promises }));
 
 // Setup
 let project: Project;
@@ -120,7 +121,7 @@ describe('Project.workspaces', () => {
 describe('Project.workspace', () => {
   // Tests
   it('should return current directory workspace', async () => {
-    jest.spyOn(process, 'cwd').mockReturnValue('/test/workspaces/wks-a');
+    vi.spyOn(process, 'cwd').mockReturnValue('/test/workspaces/wks-a');
 
     await expect(project.workspace())
       .resolves.toMatchObject({
@@ -156,7 +157,7 @@ describe('Project.packageManager', () => {
 
   it('should return \'npm\'', async () => {
     vol.fromJSON({
-      'package-lock.json': '',
+      'package-lock.json': 'toto',
     }, '/test');
 
     // Test

@@ -1,5 +1,6 @@
 import { Task } from '@jujulego/tasks';
 import { waitFor } from '@jujulego/event-tree';
+import { vi } from 'vitest';
 
 import { container } from '@/src/inversify.config';
 import { JillApplication } from '@/src/jill.application';
@@ -14,12 +15,12 @@ import { TestCommandTask, TestScriptTask } from '@/tools/test-tasks';
 let bed: TestBed;
 let wks: Workspace;
 
-jest.mock('@jujulego/event-tree', () => {
-  const act = jest.requireActual('@jujulego/event-tree');
+vi.mock('@jujulego/event-tree', async (importOriginal) => {
+  const mod = await importOriginal();
 
   return {
-    ...act,
-    waitFor: jest.fn(act.waitFor),
+    ...mod,
+    waitFor: vi.fn(mod.waitFor),
   };
 });
 
@@ -34,8 +35,8 @@ beforeEach(() => {
   bed = new TestBed();
   wks = bed.addWorkspace('wks');
 
-  jest.spyOn(wks, 'getScript').mockReturnValue('jest --script');
-  jest.spyOn(wks.project, 'packageManager').mockResolvedValue('npm');
+  vi.spyOn(wks, 'getScript').mockReturnValue('vi --script');
+  vi.spyOn(wks.project, 'packageManager').mockResolvedValue('npm');
 });
 
 describe('new ScriptTask', () => {
@@ -60,12 +61,12 @@ describe('ScriptTask.prepare', () => {
 
     expect(tsk).toBeInstanceOf(CommandTask);
     expect(tsk.group).toBe(script);
-    expect(tsk.cmd).toBe('jest');
+    expect(tsk.cmd).toBe('vi');
     expect(tsk.args).toEqual(['--script', '--arg']);
   });
 
   it('should create a task running the script (yarn)', async () => {
-    jest.spyOn(wks.project, 'packageManager').mockResolvedValue('yarn');
+    vi.spyOn(wks.project, 'packageManager').mockResolvedValue('yarn');
 
     const script = new ScriptTask(wks, 'test', ['--arg']);
     await script.prepare();
@@ -77,14 +78,14 @@ describe('ScriptTask.prepare', () => {
     expect(tsk).toBeInstanceOf(CommandTask);
     expect(tsk.group).toBe(script);
     expect(tsk.cmd).toBe('yarn');
-    expect(tsk.args).toEqual(['exec', 'jest', '--script', '--arg']);
+    expect(tsk.args).toEqual(['exec', 'vi', '--script', '--arg']);
   });
 
   it('should interpret jill command, to get its tasks', async () => {
-    jest.spyOn(wks, 'getScript').mockReturnValue('jill run test');
+    vi.spyOn(wks, 'getScript').mockReturnValue('jill run test');
 
-    const childTsk = new TestCommandTask(wks, 'jest', ['--script', '--arg']);
-    jest.spyOn(JillApplication.prototype, 'tasksOf').mockResolvedValue([childTsk]);
+    const childTsk = new TestCommandTask(wks, 'vi', ['--script', '--arg']);
+    vi.spyOn(JillApplication.prototype, 'tasksOf').mockResolvedValue([childTsk]);
 
     const script = new ScriptTask(wks, 'test', ['--arg']);
     await script.prepare();
@@ -94,9 +95,9 @@ describe('ScriptTask.prepare', () => {
   });
 
   it('should create a task spawning jill command, if it generates no tasks', async () => {
-    jest.spyOn(wks, 'getScript').mockReturnValue('jill tree');
+    vi.spyOn(wks, 'getScript').mockReturnValue('jill tree');
 
-    jest.spyOn(JillApplication.prototype, 'tasksOf').mockResolvedValue([]);
+    vi.spyOn(JillApplication.prototype, 'tasksOf').mockResolvedValue([]);
 
     const script = new ScriptTask(wks, 'test', ['--arg']);
     await script.prepare();
@@ -110,7 +111,7 @@ describe('ScriptTask.prepare', () => {
   });
 
   it('should throw if script does not exist', async () => {
-    jest.spyOn(wks, 'getScript').mockReturnValue(null);
+    vi.spyOn(wks, 'getScript').mockReturnValue(null);
 
     const script = new ScriptTask(wks, 'test', ['--arg']);
 
@@ -133,7 +134,7 @@ describe('ScriptTask._orchestrate', () => {
     expect(next).toEqual({ done: false, value: expect.any(Task) });
 
     // Then wait for it to finish
-    jest.mocked(waitFor).mockResolvedValue({ failed: 0 });
+    vi.mocked(waitFor).mockResolvedValue({ failed: 0 });
 
     next = await it.next();
     expect(next).toEqual({ done: true });
@@ -152,7 +153,7 @@ describe('ScriptTask._orchestrate', () => {
     expect(next).toEqual({ done: false, value: expect.any(Task) });
 
     // Then wait for it to finish
-    jest.mocked(waitFor).mockResolvedValue({ failed: 1 });
+    vi.mocked(waitFor).mockResolvedValue({ failed: 1 });
 
     next = await it.next();
     expect(next).toEqual({ done: true });
@@ -174,7 +175,7 @@ describe('ScriptTask._stop', () => {
     const script = new TestScriptTask(wks, 'test', ['--arg']);
     await script.prepare();
 
-    jest.spyOn(script.tasks[0], 'stop');
+    vi.spyOn(script.tasks[0], 'stop');
     script._stop();
 
     expect(script.tasks[0].stop).toHaveBeenCalled();
@@ -186,7 +187,7 @@ describe('ScriptTask.complexity', () => {
     const script = new ScriptTask(wks, 'test', ['--arg']);
     await script.prepare();
 
-    jest.spyOn(script.tasks[0], 'complexity').mockReturnValue(1);
+    vi.spyOn(script.tasks[0], 'complexity').mockReturnValue(1);
 
     expect(script.complexity()).toBe(1);
     expect(script.tasks[0].complexity).toHaveBeenCalled();

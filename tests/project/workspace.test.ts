@@ -1,5 +1,6 @@
 import { fs, vol } from 'memfs';
 import path from 'node:path';
+import { vi } from 'vitest';
 
 import { GitService } from '@/src/commons/git.service';
 import { Logger } from '@/src/commons/logger.service';
@@ -10,8 +11,8 @@ import { Workspace } from '@/src/project/workspace';
 import { TestBed } from '@/tools/test-bed';
 
 // Mocks
-jest.mock('fs', () => fs);
-jest.mock('node:fs/promises', () => fs.promises);
+vi.mock('fs', () => ({ default: fs }));
+vi.mock('node:fs/promises', () => ({ default: fs.promises }));
 
 // Setup
 let bed: TestBed;
@@ -37,14 +38,14 @@ beforeEach(async () => {
   wksC = bed.addWorkspace('wks-c', { scripts: { build: 'tsc' }});
   wksB = bed.addWorkspace('wks-b', { scripts: { build: 'tsc' }})
     .addDependency(wksC, true);
-  wksA = bed.addWorkspace('wks-a', { scripts: { test: 'jest' }})
+  wksA = bed.addWorkspace('wks-a', { scripts: { test: 'vi' }})
     .addDependency(wksB)
     .addDependency(wksC, true);
 
   prjDir = await bed.createProjectDirectory();
 
   // Mocks
-  jest.resetAllMocks();
+  vi.resetAllMocks();
 
   git = container.get(GitService);
   logger = container.get(Logger);
@@ -63,7 +64,7 @@ describe('Workspace.dependencies', () => {
     project = new Project(prjDir, logger);
 
     // Mocks
-    jest.spyOn(project, 'workspace');
+    vi.spyOn(project, 'workspace');
   });
 
   // Tests
@@ -95,7 +96,7 @@ describe('Workspace.devDependencies', () => {
     project = new Project(prjDir, logger);
 
     // Mocks
-    jest.spyOn(project, 'workspace');
+    vi.spyOn(project, 'workspace');
   });
 
   // Tests
@@ -121,7 +122,7 @@ describe('Workspace.devDependencies', () => {
 
 describe('Workspace.exec', () => {
   it('should return task with all build tree (yarn)', async () => {
-    jest.spyOn(bed.project, 'packageManager')
+    vi.spyOn(bed.project, 'packageManager')
       .mockResolvedValue('yarn');
 
     const task = await wksA.exec('test');
@@ -155,7 +156,7 @@ describe('Workspace.exec', () => {
   });
 
   it('should return task with all build tree (not yarn)', async () => {
-    jest.spyOn(bed.project, 'packageManager')
+    vi.spyOn(bed.project, 'packageManager')
       .mockResolvedValue('npm');
 
     const task = await wksA.exec('test');
@@ -191,7 +192,7 @@ describe('Workspace.exec', () => {
 
 describe('Workspace.run', () => {
   it('should return task with all build tree', async () => {
-    jest.spyOn(bed.project, 'packageManager')
+    vi.spyOn(bed.project, 'packageManager')
       .mockResolvedValue('yarn');
 
     const task = await wksA.run('test');
@@ -226,7 +227,7 @@ describe('Workspace.run', () => {
 
 describe('Workspace.isAffected', () => {
   it('should return true', async () => {
-    jest.spyOn(git, 'isAffected').mockResolvedValue(true);
+    vi.spyOn(git, 'isAffected').mockResolvedValue(true);
 
     await expect(wksA.isAffected('test'))
         .resolves.toBe(true);
@@ -241,7 +242,7 @@ describe('Workspace.isAffected', () => {
   });
 
   it('should return false', async () => {
-    jest.spyOn(git, 'isAffected').mockResolvedValue(false);
+    vi.spyOn(git, 'isAffected').mockResolvedValue(false);
 
     await expect(wksA.isAffected('test'))
       .resolves.toBe(false);

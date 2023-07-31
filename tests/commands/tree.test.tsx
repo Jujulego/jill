@@ -1,5 +1,6 @@
 import { cleanup, render } from 'ink-testing-library';
 import yargs, { type CommandModule } from 'yargs';
+import { vi } from 'vitest';
 
 import { TreeCommand } from '@/src/commands/tree';
 import { ContextService } from '@/src/commons/context.service';
@@ -45,15 +46,15 @@ beforeEach(async () => {
   context = container.get(ContextService);
 
   // Mocks
-  jest.resetAllMocks();
-  jest.restoreAllMocks();
+  vi.resetAllMocks();
+  vi.restoreAllMocks();
 
-  jest.spyOn(wksA, 'dependencies');
-  jest.spyOn(wksA, 'devDependencies');
-  jest.spyOn(wksB, 'dependencies');
-  jest.spyOn(wksB, 'devDependencies');
-  jest.spyOn(wksC, 'dependencies');
-  jest.spyOn(wksC, 'devDependencies');
+  vi.spyOn(wksA, 'dependencies');
+  vi.spyOn(wksA, 'devDependencies');
+  vi.spyOn(wksB, 'dependencies');
+  vi.spyOn(wksB, 'devDependencies');
+  vi.spyOn(wksC, 'dependencies');
+  vi.spyOn(wksC, 'devDependencies');
 });
 
 afterEach(() => {

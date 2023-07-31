@@ -1,4 +1,5 @@
 import { render } from 'ink-testing-library';
+import { vi } from 'vitest';
 import winston from 'winston';
 
 import { container } from '@/src/inversify.config';
@@ -9,7 +10,7 @@ import StaticLogs from '@/src/ui/static-logs';
 let logger: Logger;
 
 beforeEach(() => {
-  jest.spyOn(winston.transports.Console.prototype, 'log')
+  vi.spyOn(winston.transports.Console.prototype, 'log')
     .mockImplementation();
 
   logger = container.get(Logger);
@@ -28,7 +29,7 @@ describe('<StaticLogs>', () => {
       expect.any(Function)
     );
 
-    jest.mocked(winston.transports.Console.prototype.log).mockReset();
+    vi.mocked(winston.transports.Console.prototype.log).mockReset();
 
     // Mount <StaticLogs>
     const { stderr, unmount } = render(<StaticLogs />);
@@ -37,7 +38,7 @@ describe('<StaticLogs>', () => {
     expect(stderr.lastFrame()).toEqual(expect.stringContaining('should be logged by <StaticLogs>'));
     expect(winston.transports.Console.prototype.log).not.toHaveBeenCalled();
 
-    jest.mocked(winston.transports.Console.prototype.log).mockReset();
+    vi.mocked(winston.transports.Console.prototype.log).mockReset();
 
     // Unmount <StaticLogs>
     unmount();

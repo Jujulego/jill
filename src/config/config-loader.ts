@@ -5,6 +5,7 @@ import path from 'node:path';
 import { AJV } from '@/src/ajv.config';
 import { Logger } from '@/src/commons/logger.service';
 import { container } from '@/src/inversify.config';
+import { ExitException } from '@/src/utils/exit';
 import { workerCache } from '@/src/utils/worker-cache';
 
 import { CONFIG_OPTIONS } from './config-options';
@@ -39,9 +40,7 @@ export async function configLoader() {
     const errors = ajv.errorsText(validator.errors, { separator: '\n- ', dataVar: 'config' });
 
     logger.error`Errors in config file:\n- ${errors}`;
-    process.exit(1);
-
-    return {};
+    throw new ExitException(1);
   }
 
   // Apply on logger

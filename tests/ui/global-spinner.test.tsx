@@ -5,6 +5,15 @@ import { SpinnerService } from '@/src/commons/spinner.service';
 import GlobalSpinner from '@/src/ui/global-spinner';
 
 // Setup
+vi.mock('node:worker_threads', async (importOriginal) => {
+  return {
+    default: {
+      ...await importOriginal(),
+      isMainThread: true,
+    }
+  };
+});
+
 let spinner: SpinnerService;
 
 beforeEach(() => {

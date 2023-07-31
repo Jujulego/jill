@@ -1,5 +1,6 @@
-import { type PipelineFilter, Pipeline } from '@/src/filters/pipeline';
+import { vi } from 'vitest';
 
+import { type PipelineFilter, Pipeline } from '@/src/filters/pipeline';
 import { TestBed } from '@/tools/test-bed';
 
 // Setup
@@ -14,7 +15,7 @@ describe('Pipeline.filter', () => {
   it('should call filter', async () => {
     const wks = bed.addWorkspace('wks');
     const filter: PipelineFilter = {
-      test: jest.fn(),
+      test: vi.fn(),
     };
 
     const pipeline = new Pipeline();

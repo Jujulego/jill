@@ -1,6 +1,7 @@
 import { SpawnTask, TaskManager } from '@jujulego/tasks';
 import { render, cleanup } from 'ink-testing-library';
 import symbols from 'log-symbols';
+import { vi } from 'vitest';
 
 import TaskManagerSpinner from '@/src/ui/task-manager-spinner';
 import { spyLogger } from '@/tools/utils';
@@ -15,9 +16,9 @@ beforeEach(() => {
   taskB = new SpawnTask('cmd-b', [], {}, { logger: spyLogger });
   taskC = new SpawnTask('cmd-c', [], {}, { logger: spyLogger });
 
-  jest.spyOn(taskA, 'status', 'get').mockReturnValue('done');
-  jest.spyOn(taskB, 'status', 'get').mockReturnValue('done');
-  jest.spyOn(taskC, 'status', 'get').mockReturnValue('done');
+  vi.spyOn(taskA, 'status', 'get').mockReturnValue('done');
+  vi.spyOn(taskB, 'status', 'get').mockReturnValue('done');
+  vi.spyOn(taskC, 'status', 'get').mockReturnValue('done');
 });
 
 afterEach(() => {

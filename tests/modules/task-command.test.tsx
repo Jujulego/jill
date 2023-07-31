@@ -2,6 +2,7 @@ import { ParallelGroup, SpawnTask, type Task, type TaskManager } from '@jujulego
 import { cleanup, render } from 'ink-testing-library';
 import { injectable } from 'inversify';
 import symbols from 'log-symbols';
+import { vi } from 'vitest';
 
 import { Logger } from '@/src/commons/logger.service';
 import { INK_APP } from '@/src/ink.config';
@@ -36,7 +37,7 @@ let bed: TestBed;
 let wks: Workspace;
 let task: TestScriptTask;
 
-jest.mock('@/src/utils/json');
+vi.mock('@/src/utils/json');
 
 beforeEach(async () => {
   container.snapshot();
@@ -52,15 +53,15 @@ beforeEach(async () => {
   manager = container.get(TASK_MANAGER);
 
   // Mocks
-  jest.resetAllMocks();
-  jest.restoreAllMocks();
+  vi.resetAllMocks();
+  vi.restoreAllMocks();
 
-  jest.spyOn(command, 'prepare').mockImplementation(function* () {
+  vi.spyOn(command, 'prepare').mockImplementation(function* () {
     yield task;
   });
 
-  jest.spyOn(manager, 'add').mockImplementation();
-  jest.spyOn(manager, 'tasks', 'get').mockReturnValue([task]);
+  vi.spyOn(manager, 'add').mockImplementation();
+  vi.spyOn(manager, 'tasks', 'get').mockReturnValue([task]);
 });
 
 afterEach(() => {
@@ -83,7 +84,7 @@ describe('TaskCommand', () => {
       expect(app.lastFrame()).toEqual(expect.ignoreColor(/^. Running cmd in wks$/));
 
       // complete task
-      jest.spyOn(task, 'status', 'get').mockReturnValue('done');
+      vi.spyOn(task, 'status', 'get').mockReturnValue('done');
       task.emit('status.done', { status: 'done', previous: 'running' });
       task.emit('completed', { status: 'done', duration: 100 });
 
@@ -99,7 +100,7 @@ describe('TaskCommand', () => {
       await flushPromises();
 
       // complete task
-      jest.spyOn(task, 'status', 'get').mockReturnValue('failed');
+      vi.spyOn(task, 'status', 'get').mockReturnValue('failed');
       task.emit('status.failed', { status: 'failed', previous: 'running' });
       task.emit('completed', { status: 'failed', duration: 100 });
 
@@ -112,9 +113,9 @@ describe('TaskCommand', () => {
     it('should log and exit if no task were yielded', async () => {
       const logger = container.get(Logger);
 
-      jest.spyOn(logger, 'warn').mockImplementation();
+      vi.spyOn(logger, 'warn').mockImplementation();
       // eslint-disable-next-line @typescript-eslint/no-empty-function
-      jest.mocked(command.prepare).mockImplementation(function* () {});
+      vi.mocked(command.prepare).mockImplementation(function* () {});
 
       // Run command
       await command.handler({ $0: 'jill', _: [] });
@@ -145,8 +146,8 @@ describe('TaskCommand', () => {
       task.dependsOn(tsk2);
       tsk1.dependsOn(tsk2);
 
-      jest.spyOn(manager, 'tasks', 'get').mockReturnValue([task, tsk1, tsk2]);
-      jest.spyOn(command, 'prepare').mockImplementation(function* () {
+      vi.spyOn(manager, 'tasks', 'get').mockReturnValue([task, tsk1, tsk2]);
+      vi.spyOn(command, 'prepare').mockImplementation(function* () {
         yield task;
         yield tsk1;
         yield tsk2;
@@ -172,8 +173,8 @@ describe('TaskCommand', () => {
       group.add(tsk1);
       group.add(tsk2);
 
-      jest.spyOn(manager, 'tasks', 'get').mockReturnValue([group]);
-      jest.spyOn(command, 'prepare').mockImplementation(function* () {
+      vi.spyOn(manager, 'tasks', 'get').mockReturnValue([group]);
+      vi.spyOn(command, 'prepare').mockImplementation(function* () {
         yield group;
       });
 

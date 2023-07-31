@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { type LogEntry } from 'winston';
 
 import { ThreadTransport } from '@/src/commons/logger/thread.transport';
@@ -8,9 +9,10 @@ let transport: ThreadTransport;
 beforeEach(() => {
   transport = new ThreadTransport('jujulego:jill:test-logger');
 
-  jest.spyOn(transport, 'emit');
-  jest.spyOn(transport.channel, 'postMessage');
-  jest.spyOn(transport.channel, 'close');
+
+  vi.spyOn(transport, 'emit');
+  vi.spyOn(transport.channel, 'postMessage');
+  vi.spyOn(transport.channel, 'close');
 });
 
 afterEach(() => {
@@ -22,7 +24,7 @@ describe('ThreadTransport.log', () => {
   const log: LogEntry = { level: 'test', message: 'toto' };
 
   it('should pass log entry to channel', () => {
-    const next = jest.fn();
+    const next = vi.fn();
 
     transport.log(log, next);
 
@@ -34,7 +36,7 @@ describe('ThreadTransport.log', () => {
 
 describe('ThreadTransport.close', () => {
   it('should pass log entry to channel', () => {
-    const next = jest.fn();
+    const next = vi.fn();
 
     transport.close(next);
 

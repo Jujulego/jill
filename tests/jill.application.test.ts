@@ -1,4 +1,5 @@
 import { SpawnTask } from '@jujulego/tasks';
+import { vi } from 'vitest';
 
 import { ContextService } from '@/src/commons/context.service';
 import { CURRENT } from '@/src/constants';
@@ -12,12 +13,12 @@ import { MockCommand } from '@/tools/mocks/mock.command';
 import { MockTaskCommand } from '@/tools/mocks/mock-task.command';
 
 // Mocks
-jest.mock('@/src/modules/module', () => {
-  const actual = jest.requireActual('@/src/modules/module');
+vi.mock('@/src/modules/module', async (importOriginal) => {
+  const mod = await importOriginal();
 
   return {
-    ...actual,
-    getModule: jest.fn(actual.getModule),
+    ...mod,
+    getModule: vi.fn(mod.getModule),
   };
 });
 
@@ -38,15 +39,15 @@ beforeEach(() => {
   context = container.get(ContextService);
   plugins = container.get(PluginLoaderService);
 
-  jest.resetAllMocks();
-  jest.spyOn(plugins, 'loadPlugins').mockResolvedValue();
-  jest.mocked(getModule).mockImplementation(jest.requireActual('@/src/modules/module').getModule);
+  vi.resetAllMocks();
+  vi.spyOn(plugins, 'loadPlugins').mockResolvedValue();
+  vi.mocked(getModule).mockImplementation(vi.requireActual('@/src/modules/module').getModule);
 });
 
 // Tests
 describe('JillApplication.run', () => {
   beforeEach(() => {
-    jest.spyOn(application.parser, 'parseAsync').mockImplementation();
+    vi.spyOn(application.parser, 'parseAsync').mockImplementation();
   });
 
   it('should load plugins and run command', async () => {
@@ -73,7 +74,7 @@ describe('JillApplication.taskOf', () => {
     mockCommand = new MockCommand();
     taskCommand = new MockTaskCommand();
 
-    jest.spyOn(application.container, 'getAllAsync')
+    vi.spyOn(application.container, 'getAllAsync')
       .mockResolvedValue([
         mockCommand,
         taskCommand,
@@ -89,7 +90,7 @@ describe('JillApplication.taskOf', () => {
 
   it('should return tasks from command\'s prepare method', async () => {
     const task = new SpawnTask('test', [], {});
-    jest.spyOn(taskCommand, 'prepare').mockImplementation(function *prepare() {
+    vi.spyOn(taskCommand, 'prepare').mockImplementation(function *prepare() {
       yield task;
     });
 
