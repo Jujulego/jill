@@ -1,5 +1,7 @@
+import { patchRequire } from 'fs-monkey';
 import { fs, vol } from 'memfs';
 import path from 'node:path';
+import ufs from 'unionfs';
 import { vi } from 'vitest';
 
 import { container } from '@/src/inversify.config';
@@ -8,19 +10,19 @@ import { Project } from '@/src/project/project';
 import { Workspace } from '@/src/project/workspace';
 
 // Mocks
-require('mock-require')('fs', vol);
 vi.mock('node:fs/promises', () => ({ default: fs.promises }));
 
 // Setup
 let project: Project;
 let logger: Logger;
 
-beforeAll(() => {
+beforeAll(async () => {
   container.snapshot();
+
+  patchRequire(ufs.use(vol).use(await import('node:fs')));
 });
 
 beforeEach(async () => {
-  container.restore();
   container.snapshot();
 
   // Create project structure
@@ -66,6 +68,7 @@ beforeEach(async () => {
 });
 
 afterEach(() => {
+  container.restore();
   vol.reset();
 });
 

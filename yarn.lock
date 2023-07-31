@@ -1074,6 +1074,7 @@ __metadata:
     eslint-plugin-react-hooks: 4.6.0
     eslint-plugin-workspaces: 0.9.0
     fork-ts-checker-webpack-plugin: 8.0.0
+    fs-monkey: 1.0.4
     ink: 3.2.0
     ink-spinner: 4.0.3
     ink-testing-library: 2.1.0
@@ -1097,6 +1098,7 @@ __metadata:
     tiny-glob: 0.2.9
     ts-node: 10.9.1
     typescript: 5.1.6
+    unionfs: 4.5.1
     vite: 4.4.7
     vite-tsconfig-paths: 4.2.0
     vitest: 0.33.0
@@ -3883,7 +3885,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fs-monkey@npm:^1.0.4":
+"fs-monkey@npm:1.0.4, fs-monkey@npm:^1.0.0, fs-monkey@npm:^1.0.4":
   version: 1.0.4
   resolution: "fs-monkey@npm:1.0.4"
   checksum: 8b254c982905c0b7e028eab22b410dc35a5c0019c1c860456f5f54ae6a61666e1cb8c6b700d6c88cc873694c00953c935847b9959cc4dcf274aacb8673c1e8bf
@@ -7554,6 +7556,15 @@ __metadata:
     has-symbols: ^1.0.3
     which-boxed-primitive: ^1.0.2
   checksum: b7a1cf5862b5e4b5deb091672ffa579aa274f648410009c81cca63fed3b62b610c4f3b773f912ce545bb4e31edc3138975b5bc777fc6e4817dca51affb6380e9
+  languageName: node
+  linkType: hard
+
+"unionfs@npm:4.5.1":
+  version: 4.5.1
+  resolution: "unionfs@npm:4.5.1"
+  dependencies:
+    fs-monkey: ^1.0.0
+  checksum: 6d915b206403c05fe1d01259529f24af82c20858f37b5c7f08068f1419dc579e103f5f243a74a93629382d8f84be7ee231de9b3d71ed96b7ed0bb67d0701e7a0
   languageName: node
   linkType: hard
 
