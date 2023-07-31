@@ -38,7 +38,7 @@ beforeEach(async () => {
   wksC = bed.addWorkspace('wks-c', { scripts: { build: 'tsc' }});
   wksB = bed.addWorkspace('wks-b', { scripts: { build: 'tsc' }})
     .addDependency(wksC, true);
-  wksA = bed.addWorkspace('wks-a', { scripts: { test: 'vi' }})
+  wksA = bed.addWorkspace('wks-a', { scripts: { test: 'jest' }})
     .addDependency(wksB)
     .addDependency(wksC, true);
 

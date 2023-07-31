@@ -1,11 +1,11 @@
 import { vi } from 'vitest';
 import path from 'node:path';
 
+import { Logger } from '@/src/commons/logger.service';
 import { configLoader } from '@/src/config/config-loader';
 import { type IConfig } from '@/src/config/types';
 import { CONFIG_EXPLORER, CONFIG_VALIDATOR } from '@/src/config/utils';
 import { container } from '@/src/inversify.config';
-import { Logger } from '@/src/commons/logger.service';
 import { ExitException } from '@/src/utils/exit';
 
 // Setup

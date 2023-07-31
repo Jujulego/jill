@@ -19,7 +19,7 @@ describe('Scripts (one script)', () => {
 
   it('should return true if workspace has the script', () => {
     const filter = new ScriptsFilter(['test']);
-    const wks = bed.addWorkspace('wks-1', { scripts: { test: 'vi' } });
+    const wks = bed.addWorkspace('wks-1', { scripts: { test: 'jest' } });
 
     expect(filter.test(wks)).toBe(true);
   });
@@ -42,7 +42,7 @@ describe('Scripts (many scripts)', () => {
 
   it('should return true if workspace has the script', () => {
     const filter = new ScriptsFilter(['build', 'test', 'start']);
-    const wks = bed.addWorkspace('wks-1', { scripts: { test: 'vi' } });
+    const wks = bed.addWorkspace('wks-1', { scripts: { test: 'jest' } });
 
     expect(filter.test(wks)).toBe(true);
   });

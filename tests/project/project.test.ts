@@ -167,7 +167,7 @@ describe('Project.packageManager', () => {
 
   it('should return \'npm\'', async () => {
     vol.fromJSON({
-      'package-lock.json': 'toto',
+      'package-lock.json': '',
     }, '/test');
 
     // Test

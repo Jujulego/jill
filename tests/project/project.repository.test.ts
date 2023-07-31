@@ -185,10 +185,12 @@ describe('ProjectRepository.searchProjectRoot', () => {
     expect(repository.isProjectRoot).toHaveBeenCalledWith(path.resolve('/'));
 
     // Check cache
+    vi.mocked(repository.isProjectRoot).mockClear();
+
     await expect(repository.searchProjectRoot('/test/workspaces/wks-a'))
       .resolves.toBe(path.resolve('/test'));
 
-    expect(repository.isProjectRoot).toHaveBeenCalledTimes(4);
+    expect(repository.isProjectRoot).toHaveBeenCalledTimes(1);
     expect(repository.isProjectRoot).toHaveBeenCalledWith(path.resolve('/test/workspaces/wks-a'));
   });
 });

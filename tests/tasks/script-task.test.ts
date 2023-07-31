@@ -35,7 +35,7 @@ beforeEach(() => {
   bed = new TestBed();
   wks = bed.addWorkspace('wks');
 
-  vi.spyOn(wks, 'getScript').mockReturnValue('vi --script');
+  vi.spyOn(wks, 'getScript').mockReturnValue('jest --script');
   vi.spyOn(wks.project, 'packageManager').mockResolvedValue('npm');
 });
 
@@ -61,7 +61,7 @@ describe('ScriptTask.prepare', () => {
 
     expect(tsk).toBeInstanceOf(CommandTask);
     expect(tsk.group).toBe(script);
-    expect(tsk.cmd).toBe('vi');
+    expect(tsk.cmd).toBe('jest');
     expect(tsk.args).toEqual(['--script', '--arg']);
   });
 
@@ -78,13 +78,13 @@ describe('ScriptTask.prepare', () => {
     expect(tsk).toBeInstanceOf(CommandTask);
     expect(tsk.group).toBe(script);
     expect(tsk.cmd).toBe('yarn');
-    expect(tsk.args).toEqual(['exec', 'vi', '--script', '--arg']);
+    expect(tsk.args).toEqual(['exec', 'jest', '--script', '--arg']);
   });
 
   it('should interpret jill command, to get its tasks', async () => {
     vi.spyOn(wks, 'getScript').mockReturnValue('jill run test');
 
-    const childTsk = new TestCommandTask(wks, 'vi', ['--script', '--arg']);
+    const childTsk = new TestCommandTask(wks, 'jest', ['--script', '--arg']);
     vi.spyOn(JillApplication.prototype, 'tasksOf').mockResolvedValue([childTsk]);
 
     const script = new ScriptTask(wks, 'test', ['--arg']);
