@@ -51,9 +51,6 @@
     },
     {
       "files": "**/*.test.{js,jsx,ts,tsx}",
-      "globals": {
-        "jest/globals": true
-      },
       "extends": [
         "plugin:vitest/recommended"
       ]

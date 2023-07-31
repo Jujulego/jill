@@ -19,7 +19,6 @@ beforeEach(() => {
   wks = bed.addWorkspace('wks');
 
   // Mocks
-  vi.resetAllMocks();
   vi.restoreAllMocks();
 
   git = container.get(GitService);

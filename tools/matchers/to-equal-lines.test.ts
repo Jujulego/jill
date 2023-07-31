@@ -1,3 +1,4 @@
+import type { MatcherState } from '@vitest/expect';
 import { vi } from 'vitest';
 
 import { toEqualLines } from './to-equal-lines';
@@ -9,7 +10,7 @@ describe('toEqualLines', () => {
       isNot: false,
       promise: false,
       equals: vi.fn().mockReturnValue(true),
-    };
+    } as unknown as MatcherState;
 
     expect(toEqualLines.call(context, 'toto\ntata', ['toto', 'tata']))
       .toMatchObject({

@@ -1,5 +1,7 @@
+import type { MatcherState } from '@vitest/expect';
+
 // Matcher
-export function toMatchLines(this: jest.MatcherContext, received: unknown, expected: unknown[]) {
+export function toMatchLines(this: MatcherState, received: unknown, expected: unknown[]) {
   try {
     const options = {
       isNot: this.isNot,
@@ -43,11 +45,8 @@ export function toMatchLines(this: jest.MatcherContext, received: unknown, expec
 }
 
 // Typings
-declare global {
-  // eslint-disable-next-line @typescript-eslint/no-namespace
-  namespace jest {
-    interface Matchers<R> {
-      toMatchLines(expected: (unknown | RegExp)[]): R;
-    }
+declare module 'vitest' {
+  interface Assertion<T = any> {
+    toMatchLines(expected: (unknown | RegExp)[]): T;
   }
 }

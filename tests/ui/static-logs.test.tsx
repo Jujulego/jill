@@ -11,7 +11,7 @@ let logger: Logger;
 
 beforeEach(() => {
   vi.spyOn(winston.transports.Console.prototype, 'log')
-    .mockImplementation();
+    .mockReturnValue(undefined);
 
   logger = container.get(Logger);
 });

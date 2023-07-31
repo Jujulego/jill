@@ -1,3 +1,4 @@
+import type { MatcherState } from '@vitest/expect';
 import { vi } from 'vitest';
 
 import { toYield } from './to-yield';
@@ -9,7 +10,7 @@ describe('toYield', () => {
       isNot: false,
       promise: false,
       equals: vi.fn().mockReturnValue(true),
-    };
+    } as unknown as MatcherState;
 
     const generator = (async function* () {
       yield 'toto';

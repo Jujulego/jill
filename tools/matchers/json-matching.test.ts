@@ -1,3 +1,4 @@
+import type { MatcherState } from '@vitest/expect';
 import { vi } from 'vitest';
 
 import { jsonMatching } from './json-matching';
@@ -9,7 +10,7 @@ describe('jsonMatching', () => {
       isNot: false,
       promise: false,
       equals: vi.fn().mockReturnValue(true),
-    };
+    } as unknown as MatcherState;
 
     expect(jsonMatching.call(context, JSON.stringify({ test: true }), { test: true }))
       .toMatchObject({

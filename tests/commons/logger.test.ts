@@ -1,3 +1,4 @@
+import { MaybeMocked } from '@vitest/spy';
 import chalk from 'chalk';
 import wt from 'node:worker_threads';
 import { vi } from 'vitest';
@@ -31,7 +32,7 @@ beforeEach(() => {
     add: vi.fn(),
     remove: vi.fn(),
     child: vi.fn(() => winstonLogger) as winston.Logger['child'],
-  } as vi.MaybeMocked<winston.Logger>;
+  } as MaybeMocked<winston.Logger>;
 
   logger = new Logger(winstonLogger);
 });

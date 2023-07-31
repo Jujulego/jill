@@ -14,7 +14,7 @@ import { MockTaskCommand } from '@/tools/mocks/mock-task.command';
 
 // Mocks
 vi.mock('@/src/modules/module', async (importOriginal) => {
-  const mod = await importOriginal();
+  const mod: typeof import('@/src/modules/module') = await importOriginal();
 
   return {
     ...mod,
@@ -31,7 +31,7 @@ beforeAll(() => {
   container.snapshot();
 });
 
-beforeEach(() => {
+beforeEach(async () => {
   container.restore();
   container.snapshot();
 
@@ -39,15 +39,15 @@ beforeEach(() => {
   context = container.get(ContextService);
   plugins = container.get(PluginLoaderService);
 
-  vi.resetAllMocks();
+  vi.clearAllMocks();
+
   vi.spyOn(plugins, 'loadPlugins').mockResolvedValue();
-  vi.mocked(getModule).mockImplementation(vi.importActual('@/src/modules/module').getModule);
 });
 
 // Tests
 describe('JillApplication.run', () => {
   beforeEach(() => {
-    vi.spyOn(application.parser, 'parseAsync').mockImplementation();
+    vi.spyOn(application.parser, 'parseAsync');
   });
 
   it('should load plugins and run command', async () => {

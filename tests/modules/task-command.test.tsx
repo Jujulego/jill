@@ -53,14 +53,13 @@ beforeEach(async () => {
   manager = container.get(TASK_MANAGER);
 
   // Mocks
-  vi.resetAllMocks();
   vi.restoreAllMocks();
 
   vi.spyOn(command, 'prepare').mockImplementation(function* () {
     yield task;
   });
 
-  vi.spyOn(manager, 'add').mockImplementation();
+  vi.spyOn(manager, 'add').mockReturnValue(undefined);
   vi.spyOn(manager, 'tasks', 'get').mockReturnValue([task]);
 });
 
@@ -113,7 +112,7 @@ describe('TaskCommand', () => {
     it('should log and exit if no task were yielded', async () => {
       const logger = container.get(Logger);
 
-      vi.spyOn(logger, 'warn').mockImplementation();
+      vi.spyOn(logger, 'warn').mockReturnValue(undefined);
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       vi.mocked(command.prepare).mockImplementation(function* () {});
 

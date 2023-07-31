@@ -47,12 +47,11 @@ beforeEach(async () => {
   manager = container.get(TASK_MANAGER);
 
   // Mocks
-  vi.resetAllMocks();
   vi.restoreAllMocks();
 
   vi.spyOn(wks, 'run').mockResolvedValue(task);
 
-  vi.spyOn(manager, 'add').mockImplementation();
+  vi.spyOn(manager, 'add').mockReturnValue(undefined);
   vi.spyOn(manager, 'tasks', 'get').mockReturnValue([task]);
 });
 

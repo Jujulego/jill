@@ -27,7 +27,6 @@ beforeEach(async () => {
   container.restore();
   container.snapshot();
 
-  vi.resetAllMocks();
   vi.restoreAllMocks();
 
   // Project
@@ -213,7 +212,7 @@ describe('jill list', () => {
       bed.addWorkspace('wks-2');
       bed.addWorkspace('wks-3');
 
-      vi.spyOn(process.stdout, 'write').mockImplementation();
+      vi.spyOn(process.stdout, 'write').mockReturnValue(true);
 
       // Run command
       await yargs().command(command)

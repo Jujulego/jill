@@ -33,8 +33,10 @@ class TestMiddleware implements IMiddleware {
 
 // Mocks
 vi.mock('@/src/modules/middleware', async (importOriginal) => {
+  const mod: typeof import('@/src/modules/middleware') = await importOriginal();
+
   return {
-    ...await importOriginal(),
+    ...mod,
     applyMiddlewares: vi.fn((parser) => parser),
   };
 });

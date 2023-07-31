@@ -122,7 +122,7 @@ describe('configLoader', () => {
     container.rebind(CONFIG_EXPLORER).toConstantValue(explorer as any);
     container.rebind(CONFIG_VALIDATOR).toConstantValue(validator as any);
 
-    vi.spyOn(logger.winston, 'error').mockImplementation();
+    vi.spyOn(logger.winston, 'error');
 
     // Load config
     await expect(configLoader())

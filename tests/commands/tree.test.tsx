@@ -46,7 +46,6 @@ beforeEach(async () => {
   context = container.get(ContextService);
 
   // Mocks
-  vi.resetAllMocks();
   vi.restoreAllMocks();
 
   vi.spyOn(wksA, 'dependencies');

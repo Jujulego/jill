@@ -10,7 +10,7 @@ import { type TestSpawnTask } from '@/tools/test-tasks';
 
 // Mocks
 vi.mock('@jujulego/tasks', async (importOriginal) => {
-  const mod = await importOriginal();
+  const mod: typeof import('@jujulego/tasks') = await importOriginal();
 
   return {
     ...mod,
@@ -26,7 +26,6 @@ let manager: TaskManager;
 let git: GitService;
 
 beforeEach(() => {
-  vi.resetAllMocks();
   vi.restoreAllMocks();
 
   // Services
@@ -35,7 +34,7 @@ beforeEach(() => {
   git = container.get(GitService);
 
   // Mocks
-  vi.spyOn(manager, 'add').mockImplementation();
+  vi.spyOn(manager, 'add').mockReturnValue(undefined);
 });
 
 // Test suites

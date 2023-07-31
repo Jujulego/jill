@@ -16,7 +16,7 @@ let bed: TestBed;
 let wks: Workspace;
 
 vi.mock('@jujulego/event-tree', async (importOriginal) => {
-  const mod = await importOriginal();
+  const mod: typeof import('@jujulego/event-tree') = await importOriginal();
 
   return {
     ...mod,

@@ -7,7 +7,7 @@ import { SpinnerService, type SpinnerState } from '@/src/commons/spinner.service
 // Setup
 let service: SpinnerService;
 const createInkSpy = vi.fn();
-const stateEventSpy = vi.fn<void, [SpinnerState]>();
+const stateEventSpy = vi.fn<[SpinnerState], void>();
 
 beforeEach(() => {
   container.snapshot();

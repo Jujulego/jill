@@ -1,3 +1,4 @@
+import type { MatcherState } from '@vitest/expect';
 import { vi } from 'vitest';
 
 import { ESC } from '../ink-screen';
@@ -10,7 +11,7 @@ describe('expect.ignoreColor', () => {
       isNot: false,
       promise: false,
       equals: vi.fn().mockReturnValue(true),
-    };
+    } as unknown as MatcherState;
 
     expect(ignoreColor.call(context, `${ESC}[1;34mtoto${ESC}[3mtata${ESC}[0m`, 'tototata'))
       .toMatchObject({

@@ -1,7 +1,9 @@
+import type { ExpectationResult, MatcherState } from '@vitest/expect';
+
 import { noColor } from '@/tools/utils';
 
 // Matcher
-export function ignoreColor(this: jest.MatcherContext, received: string, expected: unknown): jest.CustomMatcherResult {
+export function ignoreColor(this: MatcherState, received: string, expected: unknown): ExpectationResult {
   const options = {
     comment: 'String matching ignoring style escape codes',
     isNot: this.isNot,
@@ -27,14 +29,8 @@ export function ignoreColor(this: jest.MatcherContext, received: string, expecte
 }
 
 // Typings
-declare global {
-  // eslint-disable-next-line @typescript-eslint/no-namespace
-  namespace jest {
-    interface Expect {
-      ignoreColor(str: unknown): unknown;
-    }
-    interface InverseAsymmetricMatchers {
-      ignoreColor(str: unknown): unknown;
-    }
+declare module 'vitest' {
+  interface AsymmetricMatchersContaining {
+    ignoreColor(str: unknown): unknown;
   }
 }

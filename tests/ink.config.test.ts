@@ -11,7 +11,6 @@ vi.mock('ink');
 beforeEach(() => {
   container.snapshot();
 
-  vi.resetAllMocks();
   vi.restoreAllMocks();
 });
 

@@ -7,7 +7,7 @@ import { TestSpawnTask } from '@/tools/test-tasks';
 
 // Mocks
 vi.mock('@jujulego/event-tree', async (importOriginal) => {
-  const mod = await importOriginal();
+  const mod: typeof import('@jujulego/event-tree') = await importOriginal();
 
   return {
     ...mod,

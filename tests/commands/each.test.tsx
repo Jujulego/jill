@@ -34,7 +34,6 @@ beforeEach(async () => {
   container.restore();
   container.snapshot();
 
-  vi.resetAllMocks();
   vi.restoreAllMocks();
 
   // Project
@@ -49,10 +48,9 @@ beforeEach(async () => {
   spinner = container.get(SpinnerService);
 
   // Mocks
-  vi.resetAllMocks();
   vi.restoreAllMocks();
 
-  vi.spyOn(manager, 'add').mockImplementation();
+  vi.spyOn(manager, 'add').mockReturnValue(undefined);
 });
 
 afterEach(() => {
