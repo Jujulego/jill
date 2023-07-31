@@ -1,11 +1,11 @@
 import { swc } from 'rollup-plugin-swc3';
-import { defineConfig } from 'vitest/config';
 import tsconfigPaths from 'vite-tsconfig-paths';
+import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   test: {
     globals: true,
-    setupFiles: ['tests/setup.ts'],
+    setupFiles: ['tools/setup.ts'],
     threads: false,
   },
   esbuild: false,
