@@ -14,7 +14,7 @@ export class TestScriptTask extends ScriptTask {
   readonly emit = this._groupEvents.emit;
 
   async* _orchestrate() {
-    yield* super._orchestrate();
+    //yield* super._orchestrate();
   }
 
   _stop() {
@@ -25,6 +25,10 @@ export class TestScriptTask extends ScriptTask {
 export class TestCommandTask extends CommandTask {
   // Methods
   readonly emit = this._spawnEvents.emit;
+
+  protected _start() {
+    return;
+  }
 }
 
 export class TestSpawnTask<C extends TaskContext = TaskContext> extends SpawnTask<C> {

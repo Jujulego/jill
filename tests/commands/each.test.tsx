@@ -1,8 +1,8 @@
 import { type TaskManager } from '@jujulego/tasks';
 import { cleanup, render } from 'ink-testing-library';
 import symbols from 'log-symbols';
-import yargs, { type CommandModule } from 'yargs';
 import { vi } from 'vitest';
+import yargs, { type CommandModule } from 'yargs';
 
 import { EachCommand } from '@/src/commands/each';
 import { SpinnerService } from '@/src/commons/spinner.service';
@@ -83,7 +83,7 @@ describe('jill each', () => {
     vi.spyOn(workspaces[1], 'run').mockResolvedValue(tasks[1]);
 
     // Run command
-    const prom = yargs.command(command)
+    const prom = yargs().command(command)
       .fail(false)
       .parse('each cmd');
 
@@ -135,7 +135,7 @@ describe('jill each', () => {
     vi.spyOn(workspaces[0], 'run').mockResolvedValue(tasks[0]);
 
     // Run command
-    const prom = yargs.command(command)
+    const prom = yargs().command(command)
       .fail(false)
       .parse('each -d prod cmd');
 
@@ -164,7 +164,7 @@ describe('jill each', () => {
 
     // Run command
     await expect(
-      yargs.command(command)
+      yargs().command(command)
         .fail(false)
         .parse('each cmd')
     ).rejects.toEqual(new ExitException(1));
@@ -189,7 +189,7 @@ describe('jill each', () => {
     vi.spyOn(workspaces[0], 'run').mockResolvedValue(tasks[0]);
 
     // Run command
-    const prom = yargs.command(command)
+    const prom = yargs().command(command)
       .fail(false)
       .parse('each cmd --arg');
 
@@ -226,7 +226,7 @@ describe('jill each', () => {
     vi.spyOn(workspaces[0], 'run').mockResolvedValue(tasks[0]);
 
     // Run command
-    const prom = yargs.command(command)
+    const prom = yargs().command(command)
       .fail(false)
       .parse('each cmd -- -d toto');
 
@@ -269,7 +269,7 @@ describe('jill each', () => {
       vi.spyOn(workspaces[1], 'run').mockResolvedValue(tasks[1]);
 
       // Run command
-      const prom = yargs.command(command)
+      const prom = yargs().command(command)
         .fail(false)
         .parse('each --private cmd');
 
@@ -314,7 +314,7 @@ describe('jill each', () => {
       vi.spyOn(workspaces[1], 'run').mockResolvedValue(tasks[1]);
 
       // Run command
-      const prom = yargs.command(command)
+      const prom = yargs().command(command)
         .fail(false)
         .parse('each --no-private cmd');
 
@@ -364,7 +364,7 @@ describe('jill each', () => {
       vi.spyOn(workspaces[1], 'isAffected').mockResolvedValue(false);
 
       // Run command
-      const prom = yargs.command(command)
+      const prom = yargs().command(command)
         .fail(false)
         .parse('each --affected test cmd');
 

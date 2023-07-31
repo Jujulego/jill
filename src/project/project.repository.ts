@@ -1,3 +1,4 @@
+import { inject } from 'inversify';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
@@ -25,7 +26,7 @@ export class ProjectRepository {
   private readonly _roots = new Map<string, string>();
 
   // Constructor
-  constructor(logger: Logger) {
+  constructor(@inject(Logger) logger: Logger) {
     this._logger = logger.child({ label: 'projects' });
   }
 

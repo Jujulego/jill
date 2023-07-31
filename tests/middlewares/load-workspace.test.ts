@@ -28,9 +28,9 @@ beforeEach(() => {
 
   context = container.get(ContextService);
   spinner = container.get(SpinnerService);
-  vi.spyOn(spinner, 'spin');
-  vi.spyOn(spinner, 'stop');
-  vi.spyOn(spinner, 'failed');
+  vi.spyOn(spinner, 'spin').mockReturnValue();
+  vi.spyOn(spinner, 'stop').mockReturnValue();
+  vi.spyOn(spinner, 'failed').mockReturnValue();
 
   bed = new TestBed();
 

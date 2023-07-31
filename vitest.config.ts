@@ -21,7 +21,6 @@ export default defineConfig({
           dynamicImport: true
         },
         transform: {
-          decoratorMetadata: true,
           react: {
             runtime: 'automatic'
           }

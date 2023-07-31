@@ -72,7 +72,7 @@ describe('jill group', () => {
     context.reset();
 
     // Run command
-    const prom = yargs.command(command)
+    const prom = yargs().command(command)
       .fail(false)
       .parse('group test1 // test2');
 
@@ -121,7 +121,7 @@ describe('jill group', () => {
     context.reset();
 
     // Run command
-    const prom = yargs.command(command)
+    const prom = yargs().command(command)
       .fail(false)
       .parse('group -d prod test1 // test2');
 

@@ -55,7 +55,7 @@ describe('jill list', () => {
     bed.addWorkspace('wks-3');
 
     // Run command
-    await yargs.command(command)
+    await yargs().command(command)
       .parse('list');
 
     expect(app.lastFrame()).toEqualLines([
@@ -75,7 +75,7 @@ describe('jill list', () => {
       bed.addWorkspace('wks-3');
 
       // Run command
-      await yargs.command(command)
+      await yargs().command(command)
         .parse('list --private');
 
       expect(app.lastFrame()).toEqualLines([
@@ -92,7 +92,7 @@ describe('jill list', () => {
       bed.addWorkspace('wks-3');
 
       // Run command
-      await yargs.command(command)
+      await yargs().command(command)
         .parse('list --no-private');
 
       expect(app.lastFrame()).toEqualLines([
@@ -118,7 +118,7 @@ describe('jill list', () => {
       vi.spyOn(workspaces[2], 'isAffected').mockResolvedValue(false);
 
       // Run command
-      await yargs.command(command)
+      await yargs().command(command)
         .parse('list --affected test');
 
       expect(app.lastFrame()).toEqualLines([
@@ -137,7 +137,7 @@ describe('jill list', () => {
       bed.addWorkspace('wks-3', { scripts: { lint: 'lint' }});
 
       // Run command
-      await yargs.command(command)
+      await yargs().command(command)
         .parse('list --with-script test');
 
       expect(app.lastFrame()).toEqualLines([
@@ -154,7 +154,7 @@ describe('jill list', () => {
       bed.addWorkspace('wks-3', { scripts: { lint: 'lint' }});
 
       // Run command
-      await yargs.command(command)
+      await yargs().command(command)
         .parse('list --with-script test lint');
 
       expect(app.lastFrame()).toEqualLines([
@@ -174,7 +174,7 @@ describe('jill list', () => {
       bed.addWorkspace('wks-3');
 
       // Run command
-      await yargs.command(command)
+      await yargs().command(command)
         .parse('list --headers');
 
       expect(app.lastFrame()).toEqualLines([
@@ -194,7 +194,7 @@ describe('jill list', () => {
       bed.addWorkspace('wks-3');
 
       // Run command
-      await yargs.command(command)
+      await yargs().command(command)
         .parse('list --long');
 
       expect(app.lastFrame()).toEqualLines([
@@ -216,7 +216,7 @@ describe('jill list', () => {
       vi.spyOn(process.stdout, 'write').mockImplementation();
 
       // Run command
-      await yargs.command(command)
+      await yargs().command(command)
         .parse('list --json');
 
       expect(process.stdout.write).toHaveBeenCalledWith(

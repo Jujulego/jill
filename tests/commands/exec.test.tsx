@@ -65,7 +65,7 @@ describe('jill exec', () => {
     context.reset();
 
     // Run command
-    const prom = yargs.command(command)
+    const prom = yargs().command(command)
       .fail(false)
       .parse('cmd');
 
@@ -93,7 +93,7 @@ describe('jill exec', () => {
     context.reset();
 
     // Run command
-    const prom = yargs.command(command)
+    const prom = yargs().command(command)
       .fail(false)
       .parse('exec -d prod cmd');
 
@@ -114,7 +114,7 @@ describe('jill exec', () => {
     context.reset();
 
     // Run command
-    const prom = yargs.command(command)
+    const prom = yargs().command(command)
       .fail(false)
       .parse('cmd --arg');
 
@@ -135,7 +135,7 @@ describe('jill exec', () => {
     context.reset();
 
     // Run command
-    const prom = yargs.command(command)
+    const prom = yargs().command(command)
       .fail(false)
       .parse('cmd -- -d toto');
 

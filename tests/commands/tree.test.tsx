@@ -67,7 +67,7 @@ describe('jill tree', () => {
     context.reset();
 
     // Run command
-    await yargs.command(command)
+    await yargs().command(command)
       .parse('tree -w wks-a');
 
     await flushPromises();

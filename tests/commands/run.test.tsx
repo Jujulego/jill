@@ -66,7 +66,7 @@ describe('jill run', () => {
     context.reset();
 
     // Run command
-    const prom = yargs.command(command)
+    const prom = yargs().command(command)
       .fail(false)
       .parse('run cmd');
 
@@ -94,7 +94,7 @@ describe('jill run', () => {
     context.reset();
 
     // Run command
-    const prom = yargs.command(command)
+    const prom = yargs().command(command)
       .fail(false)
       .parse('run -d prod cmd');
 
@@ -119,7 +119,7 @@ describe('jill run', () => {
 
     // Run command
     await expect(
-      yargs.command(command)
+      yargs().command(command)
         .fail(false)
         .parse('run cmd')
     ).rejects.toEqual(new ExitException(1));
@@ -129,7 +129,7 @@ describe('jill run', () => {
     context.reset();
 
     // Run command
-    const prom = yargs.command(command)
+    const prom = yargs().command(command)
       .fail(false)
       .parse('run cmd --arg');
 
@@ -150,7 +150,7 @@ describe('jill run', () => {
     context.reset();
 
     // Run command
-    const prom = yargs.command(command)
+    const prom = yargs().command(command)
       .fail(false)
       .parse('run cmd -- -d toto');
 

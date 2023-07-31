@@ -41,7 +41,7 @@ beforeEach(() => {
 
   vi.resetAllMocks();
   vi.spyOn(plugins, 'loadPlugins').mockResolvedValue();
-  vi.mocked(getModule).mockImplementation(vi.requireActual('@/src/modules/module').getModule);
+  vi.mocked(getModule).mockImplementation(vi.importActual('@/src/modules/module').getModule);
 });
 
 // Tests

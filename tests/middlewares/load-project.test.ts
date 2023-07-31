@@ -28,8 +28,8 @@ beforeEach(() => {
 
   context = container.get(ContextService);
   spinner = container.get(SpinnerService);
-  vi.spyOn(spinner, 'spin');
-  vi.spyOn(spinner, 'stop');
+  vi.spyOn(spinner, 'spin').mockReturnValue();
+  vi.spyOn(spinner, 'stop').mockReturnValue();
 
   projectRepo = container.get(ProjectRepository);
   vi.spyOn(projectRepo, 'searchProjectRoot')

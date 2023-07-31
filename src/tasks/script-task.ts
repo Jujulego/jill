@@ -21,7 +21,7 @@ export function isScriptCtx(ctx: Readonly<TaskContext>): ctx is Readonly<ScriptC
 // Class
 export class ScriptTask extends GroupTask<ScriptContext> {
   // Attributes
-  private _scriptTasks: TaskSet;
+  private _scriptTasks?: TaskSet;
 
   // Constructor
   constructor(
@@ -93,6 +93,8 @@ export class ScriptTask extends GroupTask<ScriptContext> {
   }
 
   protected _stop(): void {
+    if (!this._scriptTasks) return;
+
     for (const tsk of this._scriptTasks) {
       tsk.stop();
     }
@@ -101,7 +103,10 @@ export class ScriptTask extends GroupTask<ScriptContext> {
   complexity(cache = new Map<string, number>()): number {
     let complexity = super.complexity(cache);
 
-    complexity += this._scriptTasks.tasks.reduce((cpl, tsk) => cpl + tsk.complexity(cache), 0);
+    if (this._scriptTasks) {
+      complexity += this._scriptTasks.tasks.reduce((cpl, tsk) => cpl + tsk.complexity(cache), 0);
+    }
+
     cache.set(this.id, complexity);
 
     return complexity;
