@@ -4,7 +4,7 @@ import symbols from 'log-symbols';
 import yargs, { type CommandModule } from 'yargs';
 import { vi } from 'vitest';
 
-import { RunCommand } from '@/src/commands/run';
+import { RunCommand } from '@/src/commands/run.js';
 import { ContextService } from '@/src/commons/context.service';
 import { INK_APP } from '@/src/ink.config';
 import { container } from '@/src/inversify.config';

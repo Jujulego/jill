@@ -2,15 +2,15 @@ import { type interfaces as int } from 'inversify';
 import os from 'node:os';
 import path from 'node:path';
 
-import { AJV } from '@/src/ajv.config';
-import { Logger } from '@/src/commons/logger.service';
-import { container } from '@/src/inversify.config';
-import { ExitException } from '@/src/utils/exit';
-import { workerCache } from '@/src/utils/worker-cache';
+import { AJV } from '@/src/ajv.config.ts';
+import { Logger } from '@/src/commons/logger.service.ts';
+import { container } from '@/src/inversify.config.ts';
+import { ExitException } from '@/src/utils/exit.ts';
+import { workerCache } from '@/src/utils/worker-cache.ts';
 
-import { CONFIG_OPTIONS } from './config-options';
-import { type IConfig } from './types';
-import { CONFIG_EXPLORER, CONFIG_VALIDATOR } from './utils';
+import { CONFIG_OPTIONS } from './config-options.ts';
+import { type IConfig } from './types.ts';
+import { CONFIG_EXPLORER, CONFIG_VALIDATOR } from './utils.ts';
 
 // Symbols
 export const CONFIG: int.ServiceIdentifier<IConfig> = Symbol('jujulego:jill:config');

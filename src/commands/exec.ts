@@ -1,10 +1,10 @@
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
 
-import { Command } from '@/src/modules/command';
-import { TaskCommand } from '@/src/modules/task-command';
-import { LoadProject } from '@/src/middlewares/load-project';
-import { LazyCurrentWorkspace, LoadWorkspace } from '@/src/middlewares/load-workspace';
-import { type Workspace, type WorkspaceDepsMode } from '@/src/project/workspace';
+import { Command } from '@/src/modules/command.ts';
+import { TaskCommand } from '@/src/modules/task-command.tsx';
+import { LoadProject } from '@/src/middlewares/load-project.ts';
+import { LazyCurrentWorkspace, LoadWorkspace } from '@/src/middlewares/load-workspace.ts';
+import { type Workspace, type WorkspaceDepsMode } from '@/src/project/workspace.ts';
 
 // Types
 export interface IExecCommandArgs {

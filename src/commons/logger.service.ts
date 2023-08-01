@@ -3,11 +3,11 @@ import { injectable } from 'inversify';
 import winston, { type LogEntry } from 'winston';
 import wt from 'node:worker_threads';
 
-import { container } from '@/src/inversify.config';
+import { container } from '@/src/inversify.config.ts';
 
-import { $log } from './logger/log.tag';
-import { consoleFormat } from './logger/console.formatter';
-import { ThreadTransport } from './logger/thread.transport';
+import { $log } from './logger/log.tag.ts';
+import { consoleFormat } from './logger/console.formatter.ts';
+import { ThreadTransport } from './logger/thread.transport.ts';
 
 // Service
 @injectable()

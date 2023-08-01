@@ -1,10 +1,10 @@
 import { decorate, injectable, type interfaces as int } from 'inversify';
 import { type ArgumentsCamelCase, type Argv, type CommandModule } from 'yargs';
 
-import { setRegistry } from '@/src/modules/module';
-import { type Awaitable, type Class, type Type } from '@/src/types';
+import { setRegistry } from '@/src/modules/module.ts';
+import { type Awaitable, type Class, type Type } from '@/src/types.ts';
 
-import { applyMiddlewares, type IMiddleware } from './middleware';
+import { applyMiddlewares, type IMiddleware } from './middleware.ts';
 
 // Symbols
 const COMMAND_OPTS = Symbol('jujulego:jill:command-opts');

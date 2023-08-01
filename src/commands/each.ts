@@ -1,17 +1,17 @@
 import { inject } from 'inversify';
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
 
-import { SpinnerService } from '@/src/commons/spinner.service';
-import { AffectedFilter } from '@/src/filters/affected.filter';
-import { Pipeline } from '@/src/filters/pipeline';
-import { PrivateFilter } from '@/src/filters/private.filter';
-import { ScriptsFilter } from '@/src/filters/scripts.filter';
-import { LazyCurrentProject, LoadProject } from '@/src/middlewares/load-project';
-import { Command } from '@/src/modules/command';
-import { TaskCommand } from '@/src/modules/task-command';
-import { type Project } from '@/src/project/project';
-import { type WorkspaceDepsMode } from '@/src/project/workspace';
-import { ExitException } from '@/src/utils/exit';
+import { SpinnerService } from '@/src/commons/spinner.service.ts';
+import { AffectedFilter } from '@/src/filters/affected.filter.ts';
+import { Pipeline } from '@/src/filters/pipeline.ts';
+import { PrivateFilter } from '@/src/filters/private.filter.ts';
+import { ScriptsFilter } from '@/src/filters/scripts.filter.ts';
+import { LazyCurrentProject, LoadProject } from '@/src/middlewares/load-project.ts';
+import { Command } from '@/src/modules/command.ts';
+import { TaskCommand } from '@/src/modules/task-command.tsx';
+import { type Project } from '@/src/project/project.ts';
+import { type WorkspaceDepsMode } from '@/src/project/workspace.ts';
+import { ExitException } from '@/src/utils/exit.ts';
 
 // Types
 export interface IEachCommandArgs {

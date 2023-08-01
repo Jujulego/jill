@@ -1,17 +1,17 @@
 import { type Task } from '@jujulego/tasks';
 import { inject, injectable, type interfaces as int } from 'inversify';
-import yargs from 'yargs';
+import yargs, { type Argv, type CommandModule } from 'yargs';
 
-import { ContextService, type Context } from '@/src/commons/context.service';
-import { Logger } from '@/src/commons/logger.service';
-import { applyConfigOptions } from '@/src/config/config-options';
-import { CURRENT } from '@/src/constants';
-import { container, lazyInjectNamed } from '@/src/inversify.config';
-import { buildCommandModule, COMMAND, COMMAND_MODULE, getCommandOpts, type ICommand } from '@/src/modules/command';
-import { getModule } from '@/src/modules/module';
-import { PluginLoaderService } from '@/src/modules/plugin-loader.service';
-import { TaskCommand } from '@/src/modules/task-command';
-import { type Class } from '@/src/types';
+import { ContextService, type Context } from '@/src/commons/context.service.ts';
+import { Logger } from '@/src/commons/logger.service.ts';
+import { applyConfigOptions } from '@/src/config/config-options.ts';
+import { CURRENT } from '@/src/constants.ts';
+import { container, lazyInjectNamed } from '@/src/inversify.config.ts';
+import { buildCommandModule, COMMAND, COMMAND_MODULE, getCommandOpts, type ICommand } from '@/src/modules/command.ts';
+import { getModule } from '@/src/modules/module.ts';
+import { PluginLoaderService } from '@/src/modules/plugin-loader.service.ts';
+import { TaskCommand } from '@/src/modules/task-command.ts';
+import { type Class } from '@/src/types.ts';
 
 // @ts-ignore: Outside of typescript's rootDir in build
 import pkg from '../package.json';
@@ -21,7 +21,7 @@ import pkg from '../package.json';
 export class JillApplication {
   // Attributes
   readonly container: int.Container;
-  readonly parser: yargs.Argv;
+  readonly parser: Argv;
 
   // Constructor
   constructor(
@@ -46,7 +46,7 @@ export class JillApplication {
   }
 
   // Methods
-  private _prepareParser(commands: yargs.CommandModule[]): yargs.Argv {
+  private _prepareParser(commands: CommandModule[]): Argv {
     applyConfigOptions(this.parser);
 
     return this.parser
@@ -59,7 +59,7 @@ export class JillApplication {
   private async _loadPlugins(): Promise<void> {
     this.logger.child({ label: 'plugin' }).verbose('Loading plugin <core>');
 
-    const { CorePlugin } = await import('@/src/core.plugin');
+    const { CorePlugin } = await import('@/src/core.plugin.ts');
     this.container.load(getModule(CorePlugin, true));
 
     await this.plugins.loadPlugins(this.container);
@@ -83,7 +83,7 @@ export class JillApplication {
     const commands = await this.container.getAllAsync(COMMAND);
 
     return new Promise<Task[]>((resolve, reject) => {
-      const modules: yargs.CommandModule[] = [];
+      const modules: CommandModule[] = [];
 
       for (const cmd of commands) {
         const opts = getCommandOpts(cmd.constructor as Class<ICommand>);

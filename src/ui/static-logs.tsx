@@ -3,9 +3,9 @@ import { useLayoutEffect, } from 'react';
 import winston from 'winston';
 import Transport from 'winston-transport';
 
-import { container } from '@/src/inversify.config';
-import { Logger } from '@/src/commons/logger.service';
-import { consoleFormat } from '@/src/commons/logger/console.formatter';
+import { container } from '@/src/inversify.config.ts';
+import { Logger } from '@/src/commons/logger.service.ts';
+import { consoleFormat } from '@/src/commons/logger/console.formatter.ts';
 
 // Constants
 const MESSAGE = Symbol.for('message');

@@ -1,9 +1,9 @@
 import { ContainerModule, id, type interfaces as int } from 'inversify';
 
-import { type Class, type Type } from '@/src/types';
+import { type Class, type Type } from '@/src/types.ts';
 
-import { type ICommand } from './command';
-import { getRegistry, setModule } from './module';
+import { type ICommand } from './command.ts';
+import { getRegistry, setModule } from './module.ts';
 
 // Types
 export interface IPluginOpts {

@@ -1,9 +1,9 @@
-import { GitService } from '@/src/commons/git.service';
-import { type Workspace } from '@/src/project/workspace';
-import { lazyInject } from '@/src/inversify.config';
-import { Logger } from '@/src/commons/logger.service';
+import { GitService } from '@/src/commons/git.service.ts';
+import { type Workspace } from '@/src/project/workspace.ts';
+import { lazyInject } from '@/src/inversify.config.ts';
+import { Logger } from '@/src/commons/logger.service.ts';
 
-import { type PipelineFilter } from './pipeline';
+import { type PipelineFilter } from './pipeline.ts';
 
 // Class
 export class AffectedFilter implements PipelineFilter {

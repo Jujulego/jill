@@ -5,7 +5,7 @@ import symbols from 'log-symbols';
 import ms from 'pretty-ms';
 import { useLayoutEffect, useState } from 'react';
 
-import TaskName from './task-name';
+import TaskName from './task-name.tsx';
 
 // Types
 export interface TaskSpinnerProps {

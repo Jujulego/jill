@@ -1,8 +1,8 @@
 import { GroupTask, type TaskManager } from '@jujulego/tasks';
 import { useLayoutEffect, useState } from 'react';
 
-import GroupTaskSpinner from './group-task-spinner';
-import TaskSpinner from './task-spinner';
+import GroupTaskSpinner from './group-task-spinner.tsx';
+import TaskSpinner from './task-spinner.tsx';
 
 // Types
 export interface TasksSpinnerProps {

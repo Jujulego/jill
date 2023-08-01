@@ -1,11 +1,11 @@
 import { inject } from 'inversify';
 import { AsyncLocalStorage } from 'node:async_hooks';
 
-import { Logger } from '@/src/commons/logger.service';
-import { Service } from '@/src/modules/service';
-import { type Project } from '@/src/project/project';
-import { type Workspace } from '@/src/project/workspace';
-import { type JillApplication } from '@/src/jill.application';
+import { Logger } from '@/src/commons/logger.service.ts';
+import { Service } from '@/src/modules/service.ts';
+import { type Project } from '@/src/project/project.ts';
+import { type Workspace } from '@/src/project/workspace.ts';
+import { type JillApplication } from '@/src/jill.application.ts';
 
 // Types
 export interface Context {

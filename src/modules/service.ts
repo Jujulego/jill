@@ -1,5 +1,6 @@
 import { decorate, injectable } from 'inversify';
-import { container } from '@/src/inversify.config';
+
+import { container } from '@/src/inversify.config.ts';
 
 // Decorators
 /**

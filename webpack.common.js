@@ -1,9 +1,13 @@
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
-import { type Configuration, IgnorePlugin } from 'webpack';
+import webpack from 'webpack';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-// Config
-const commonConfig: Configuration = {
+/**
+ * Config
+ * @type import('webpack').Configuration
+ */
+const commonConfig = {
   devtool: 'source-map',
   target: 'node',
   entry: {
@@ -15,7 +19,7 @@ const commonConfig: Configuration = {
     },
   },
   output: {
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(path.dirname(fileURLToPath(import.meta.url)), 'dist'),
     library: {
       type: 'commonjs2'
     },
@@ -58,7 +62,7 @@ const commonConfig: Configuration = {
         mode: 'write-dts'
       }
     }),
-    new IgnorePlugin({
+    new webpack.IgnorePlugin({
       resourceRegExp: /^import-fresh$/
     })
   ]

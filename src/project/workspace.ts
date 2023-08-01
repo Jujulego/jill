@@ -4,14 +4,14 @@ import path from 'node:path';
 import { type Package } from 'normalize-package-data';
 import { satisfies } from 'semver';
 
-import { GitService } from '@/src/commons/git.service';
-import { container, lazyInject } from '@/src/inversify.config';
-import { Logger } from '@/src/commons/logger.service';
-import { CommandTask } from '@/src/tasks/command-task';
-import { ScriptTask } from '@/src/tasks/script-task';
-import { combine } from '@/src/utils/streams';
+import { GitService } from '@/src/commons/git.service.ts';
+import { container, lazyInject } from '@/src/inversify.config.ts';
+import { Logger } from '@/src/commons/logger.service.ts';
+import { CommandTask } from '@/src/tasks/command-task.ts';
+import { ScriptTask } from '@/src/tasks/script-task.ts';
+import { combine } from '@/src/utils/streams.ts';
 
-import { type Project } from './project';
+import { type Project } from './project.ts';
 
 // Types
 export type WorkspaceDepsMode = 'all' | 'prod' | 'none';

@@ -1,6 +1,6 @@
 import { ContainerModule, type interfaces as int } from 'inversify';
 
-import { type Class } from '@/src/types';
+import { type Class } from '@/src/types.ts';
 
 // Symbols
 const MODULE = Symbol('jujulego:jill:module');
