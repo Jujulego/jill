@@ -9,7 +9,10 @@ import { fileURLToPath } from 'node:url';
  */
 const commonConfig = {
   devtool: 'source-map',
-  target: 'node',
+  target: 'browserslist:node 16',
+  experiments: {
+    outputModule: true,
+  },
   entry: {
     index: {
       import: './src/index'
@@ -19,9 +22,10 @@ const commonConfig = {
     },
   },
   output: {
+    module: true,
     path: path.resolve(path.dirname(fileURLToPath(import.meta.url)), 'dist'),
     library: {
-      type: 'commonjs2'
+      type: 'module'
     },
     clean: {
       keep: /(\.d\.ts|\.tsbuildinfo)$/
@@ -48,12 +52,15 @@ const commonConfig = {
     ]
   },
   resolve: {
-    extensions: ['.js', '.json', '.jsx', '.ts', '.tsx'],
+    extensions: ['.js', '.json', '.jsx', '.ts', '.tsx']
   },
   externals: [
     'react-devtools-core',
     'ws', // used only by ink for devtools
   ],
+  externalsPresets: {
+    node: true,
+  },
   plugins: [
     new ForkTsCheckerWebpackPlugin({
       typescript: {
