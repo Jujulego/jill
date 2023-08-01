@@ -61,7 +61,7 @@ const commonConfig = {
   },
   externals: [
     nodeExternals({
-      importType: (name) => `${name.startsWith('@jujulego/') ? 'node-commonjs' : 'module'} ${name}`,
+      importType: (name) => `${['@jujulego/event-tree', '@jujulego/tasks', 'avj', 'inversify-inject-decorators', 'slugify'].includes(name) ? 'node-commonjs' : 'module'} ${name}`,
       modulesFromFile: {
         include: ['dependencies']
       },

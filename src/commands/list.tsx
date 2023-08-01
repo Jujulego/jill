@@ -47,7 +47,7 @@ const EXTRACTORS = {
   name: wks => wks.name,
   version: (wks, json) => wks.manifest.version || (json ? undefined : chalk.grey('unset')),
   root: wks => wks.cwd,
-  slug: wks => slugify.defaul(wks.name)
+  slug: wks => (slugify as any)(wks.name)
 } satisfies Record<Attribute, Extractor<string | undefined>>;
 
 // Utils
