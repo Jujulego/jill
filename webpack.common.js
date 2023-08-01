@@ -1,5 +1,6 @@
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import webpack from 'webpack';
+import nodeExternals from 'webpack-node-externals';
 import path from 'node:path';
 import url from 'node:url';
 
@@ -55,6 +56,11 @@ const commonConfig = {
     extensions: ['.js', '.json', '.jsx', '.ts', '.tsx']
   },
   externals: [
+    nodeExternals({
+      modulesFromFile: {
+        include: ['dependencies']
+      },
+    }),
     'react-devtools-core',
     'ws', // used only by ink for devtools
   ],
