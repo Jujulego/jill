@@ -7,4 +7,4 @@ import 'reflect-metadata';
 export const container = new Container();
 
 // Utilities
-export const { lazyInject, lazyInjectNamed } = (getDecorators as typeof getDecorators.default)(container);
+export const { lazyInject, lazyInjectNamed } = (getDecorators as any)(container);
