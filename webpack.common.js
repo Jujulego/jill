@@ -1,7 +1,7 @@
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import webpack from 'webpack';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import url from 'node:url';
 
 /**
  * Config
@@ -23,7 +23,7 @@ const commonConfig = {
   },
   output: {
     module: true,
-    path: path.resolve(path.dirname(fileURLToPath(import.meta.url)), 'dist'),
+    path: path.resolve(path.dirname(url.fileURLToPath(import.meta.url)), 'dist'),
     library: {
       type: 'module'
     },
