@@ -24,10 +24,10 @@ const commonConfig = {
   },
   output: {
     module: true,
-    path: path.resolve(path.dirname(url.fileURLToPath(import.meta.url)), 'dist'),
     library: {
       type: 'module'
     },
+    path: path.resolve(path.dirname(url.fileURLToPath(import.meta.url)), 'dist'),
     clean: {
       keep: /(\.d\.ts|\.tsbuildinfo)$/
     },
@@ -55,8 +55,13 @@ const commonConfig = {
   resolve: {
     extensions: ['.js', '.json', '.jsx', '.ts', '.tsx']
   },
+  externalsType: 'node-commonjs',
+  externalsPresets: {
+    node: true,
+  },
   externals: [
     nodeExternals({
+      importType: (name) => `${name.startsWith('@jujulego/') ? 'node-commonjs' : 'module'} ${name}`,
       modulesFromFile: {
         include: ['dependencies']
       },
@@ -64,9 +69,6 @@ const commonConfig = {
     'react-devtools-core',
     'ws', // used only by ink for devtools
   ],
-  externalsPresets: {
-    node: true,
-  },
   plugins: [
     new ForkTsCheckerWebpackPlugin({
       typescript: {
