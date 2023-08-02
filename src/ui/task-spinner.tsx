@@ -51,11 +51,11 @@ export default function TaskSpinner({ task }: TaskSpinnerProps) {
     case 'running':
       return (
         <Box>
-          <Text color={isScriptChild ? 'dim' : null}>
+          <Text color={isScriptChild ? 'dim' : undefined}>
             <Spinner />
           </Text>
           <Box paddingLeft={1}>
-            <Text color={isScriptChild ? 'dim' : null} wrap="truncate">
+            <Text color={isScriptChild ? 'dim' : undefined} wrap="truncate">
               <TaskName task={task} />
             </Text>
           </Box>
