@@ -43,7 +43,7 @@ export default function TaskManagerSpinner({ manager }: TasksSpinnerProps) {
 
   return (
     <>
-      { tasks.map((task: Task) =>
+      { tasks.map((task) =>
         (task instanceof GroupTask<unknown>) ? (
           <GroupTaskSpinner key={task.id} group={task} />
         ) : (
