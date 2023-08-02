@@ -4,6 +4,9 @@ import nodeExternals from 'webpack-node-externals';
 import path from 'node:path';
 import url from 'node:url';
 
+// Options
+const FORCE_COMMONJS = ['avj', 'inversify-inject-decorators', 'slugify'];
+
 /**
  * Config
  * @type import('webpack').Configuration
@@ -55,13 +58,12 @@ const commonConfig = {
   resolve: {
     extensions: ['.js', '.json', '.jsx', '.ts', '.tsx']
   },
-  externalsType: 'node-commonjs',
   externalsPresets: {
     node: true,
   },
   externals: [
     nodeExternals({
-      importType: (name) => `${['@jujulego/event-tree', '@jujulego/tasks', 'avj', 'inversify-inject-decorators', 'slugify'].includes(name) ? 'node-commonjs' : 'module'} ${name}`,
+      importType: (name) => `${FORCE_COMMONJS.includes(name) ? 'node-commonjs' : 'module'} ${name}`,
       modulesFromFile: {
         include: ['dependencies']
       },
