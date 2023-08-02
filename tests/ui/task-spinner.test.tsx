@@ -24,7 +24,7 @@ describe('<TaskSpinner>', () => {
     const { lastFrame } = render(<TaskSpinner task={task} />);
 
     // eslint-disable-next-line quotes
-    expect(noColor(lastFrame())).toMatchInlineSnapshot(`"⠂ cmd"`);
+    expect(noColor(lastFrame())).toMatchInlineSnapshot(`"\u00B7 cmd"`);
   });
 
   it('should print task name with running spinner', () => {

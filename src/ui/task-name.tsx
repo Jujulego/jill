@@ -12,11 +12,11 @@ export interface TaskNameProps {
 export default function TaskName({ task }: TaskNameProps) {
   if (isScriptCtx(task.context)) {
     return (
-      <>
+      <Text>
         Running <Text bold>{ task.context.script }</Text> in { task.context.workspace.name }
-      </>
+      </Text>
     );
   } else {
-    return <>{ task.name }</>;
+    return <Text>{ task.name }</Text>;
   }
 }
