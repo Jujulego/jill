@@ -1,4 +1,4 @@
-import { GroupTask, Task, type TaskContext, type TaskManager } from '@jujulego/tasks';
+import { GroupTask, Task, type TaskManager } from '@jujulego/tasks';
 import { useLayoutEffect, useState } from 'react';
 
 import GroupTaskSpinner from './group-task-spinner.tsx';
@@ -44,7 +44,7 @@ export default function TaskManagerSpinner({ manager }: TasksSpinnerProps) {
   return (
     <>
       { tasks.map((task) =>
-        (task instanceof GroupTask<TaskContext>) ? (
+        (task instanceof GroupTask) ? (
           <GroupTaskSpinner key={task.id} group={task} />
         ) : (
           <TaskSpinner key={task.id} task={task} />
