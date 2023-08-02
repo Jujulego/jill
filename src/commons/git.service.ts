@@ -1,14 +1,15 @@
 import { once } from '@jujulego/event-tree';
-import { SpawnTask, type SpawnTaskOptions, type TaskContext, type TaskManager } from '@jujulego/tasks';
+import { SpawnTask, type SpawnTaskOptions, TaskContext, type TaskManager } from '@jujulego/tasks';
 import { inject } from 'inversify';
 
 import { Logger } from '@/src/commons/logger.service.ts';
 import { TASK_MANAGER } from '@/src/tasks/task-manager.config.ts';
 import { streamLines } from '@/src/utils/streams.ts';
 import { Service } from '@/src/modules/service.ts';
+import { TaskUIContext } from '@/src/types.ts';
 
 // Types
-export interface GitContext extends TaskContext {
+export interface GitContext extends TaskContext, TaskUIContext {
   command: string;
 }
 
@@ -35,7 +36,7 @@ export class GitService {
     const opts = { logger: this.logger, ...options };
 
     // Create task
-    const task = new SpawnTask('git', [cmd, ...args], { command: cmd }, opts);
+    const task = new SpawnTask('git', [cmd, ...args], { command: cmd, hidden: true }, opts);
     task.on('stream', ({ data }) => opts.logger.debug(data.toString('utf-8')));
 
     this.manager.add(task);

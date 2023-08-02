@@ -1,5 +1,5 @@
 import { type TaskManager } from '@jujulego/tasks';
-import { vi } from 'vitest';
+import { describe, vi } from 'vitest';
 
 import { GitService, type GitContext } from '@/src/commons/git.service';
 import { container } from '@/src/inversify.config';
@@ -45,7 +45,10 @@ describe('Git.command', () => {
 
     expect(task.cmd).toBe('git');
     expect(task.args).toEqual(['cmd', 'arg1', 'arg2']);
-    expect(task.context).toEqual({ command: 'cmd' });
+    expect(task.context).toEqual({
+      command: 'cmd',
+      hidden: true,
+    });
   });
 
   it('should redirect stdout data to logger (debug level)', () => {
@@ -67,18 +70,19 @@ describe('Git.command', () => {
   });
 });
 
-for (const cmd of ['branch', 'diff', 'tag'] as const) {
-  describe(`git.${cmd}`, () => {
-    // Tests
-    it(`should call command with ${cmd}`, () => {
-      const task = git[cmd](['arg1', 'arg2']);
+describe.each(['branch', 'diff', 'tag'] as const)('git.%s', (cmd) => {
+  // Tests
+  it(`should call command with ${cmd}`, () => {
+    const task = git[cmd](['arg1', 'arg2']);
 
-      expect(task.cmd).toBe('git');
-      expect(task.args).toEqual([cmd, 'arg1', 'arg2']);
-      expect(task.context).toEqual({ command: cmd });
+    expect(task.cmd).toBe('git');
+    expect(task.args).toEqual([cmd, 'arg1', 'arg2']);
+    expect(task.context).toEqual({
+      command: cmd,
+      hidden: true,
     });
   });
-}
+});
 
 describe('git.isAffected', () => {
   beforeEach(() => {
