@@ -40,8 +40,11 @@ export default function TaskSpinner({ task }: TaskSpinnerProps) {
     case 'blocked':
     case 'ready':
       return (
-        <Box paddingLeft={2}>
-          <Text color="grey" wrap="truncate"><TaskName task={task} /></Text>
+        <Box>
+          <Text color="grey">{'\u00B7'}</Text>
+          <Box paddingLeft={1}>
+            <Text color="grey" wrap="truncate"><TaskName task={task} /></Text>
+          </Box>
         </Box>
       );
 
