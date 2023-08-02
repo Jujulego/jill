@@ -5,6 +5,8 @@ import symbols from 'log-symbols';
 import ms from 'pretty-ms';
 import { useLayoutEffect, useState } from 'react';
 
+import { isScriptCtx } from '@/src/tasks/script-task.ts';
+
 import TaskName from './task-name.tsx';
 
 // Types
@@ -32,24 +34,27 @@ export default function TaskSpinner({ task }: TaskSpinnerProps) {
   }, [task]);
 
   // Render
+  const isScriptChild = task.group && isScriptCtx(task.group.context);
+
   switch (status) {
     case 'blocked':
     case 'ready':
       return (
-        <Box>
-          <Text color="grey"><Spinner type="line2" /></Text>
-          <Box paddingLeft={1}>
-            <Text color="grey" wrap="truncate"><TaskName task={task} /></Text>
-          </Box>
+        <Box paddingLeft={2}>
+          <Text color="grey" wrap="truncate"><TaskName task={task} /></Text>
         </Box>
       );
 
     case 'running':
       return (
         <Box>
-          <Spinner />
+          <Text color={isScriptChild ? 'dim' : null}>
+            <Spinner />
+          </Text>
           <Box paddingLeft={1}>
-            <Text wrap="truncate"><TaskName task={task} /></Text>
+            <Text color={isScriptChild ? 'dim' : null} wrap="truncate">
+              <TaskName task={task} />
+            </Text>
           </Box>
         </Box>
       );
@@ -62,7 +67,7 @@ export default function TaskSpinner({ task }: TaskSpinnerProps) {
             <Text wrap="truncate"><TaskName task={task} /></Text>
           </Box>
           <Box paddingLeft={1} flexShrink={0}>
-            <Text color="magenta">(took {ms(time)})</Text>
+            <Text color="dim">(took {ms(time)})</Text>
           </Box>
         </Box>
       );
@@ -75,7 +80,7 @@ export default function TaskSpinner({ task }: TaskSpinnerProps) {
             <Text wrap="truncate"><TaskName task={task} /></Text>
           </Box>
           <Box paddingLeft={1} flexShrink={0}>
-            <Text color="magenta">(took {ms(time)})</Text>
+            <Text color="dim">(took {ms(time)})</Text>
           </Box>
         </Box>
       );
