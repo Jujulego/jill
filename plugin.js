@@ -1,5 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { Command, Plugin } = require('./dist');
+import { Command, Plugin } from './dist/index.mjs';
 
 // Command
 class TestCommand {
@@ -23,4 +22,4 @@ Plugin({
   ]
 })(TestPlugin);
 
-module.exports = { default: TestPlugin };
+export default TestPlugin;
