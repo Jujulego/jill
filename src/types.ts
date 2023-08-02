@@ -9,3 +9,7 @@ export interface Type<T = any> {
 export interface Class<T = any> extends Type<T> {
   readonly name: string;
 }
+
+export interface TaskUIContext {
+  hidden?: boolean;
+}
