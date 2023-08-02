@@ -58,7 +58,6 @@ export default TestPlugin;
   // Tests
   it('should run command loaded from plugin file', async () => {
     const res = await jill('test', { cwd: prjDir });
-    console.log(res);
 
     expect(res.stdout).toEqual([
       'this is a test plugin !'
