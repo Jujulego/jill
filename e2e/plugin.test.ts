@@ -1,5 +1,6 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import url from 'node:url';
 
 import { jill, withPackageManager } from './utils';
 import { TestBed } from '@/tools/test-bed';
@@ -12,16 +13,17 @@ describe('jill test (command from plugin)', () => void withPackageManager((packa
     // Create project directory
     const bed = new TestBed();
     bed.config = {
-      plugins: ['./plugin.js']
+      plugins: ['./plugin.mjs']
     };
 
     prjDir = await bed.createProjectPackage(packageManager);
+    const jillPath = url.pathToFileURL(path.resolve(__dirname, '../dist/index.mjs'));
 
     // Add plugin code
-    await fs.writeFile(path.join(prjDir, 'plugin.js'),
+    await fs.writeFile(path.join(prjDir, 'plugin.mjs'),
       // language=javascript
       `
-const { Command, Plugin } = require(${JSON.stringify(path.resolve(__dirname, '../dist'))}); // require('jill');
+import { Command, Plugin } from ${JSON.stringify(jillPath)};
 
 // Command
 class TestCommand {
@@ -45,7 +47,7 @@ Plugin({
   ]
 })(TestPlugin);
 
-module.exports = { default: TestPlugin };
+export default TestPlugin;
 `);
   });
 

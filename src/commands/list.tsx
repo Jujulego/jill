@@ -3,17 +3,17 @@ import path from 'node:path';
 import slugify from 'slugify';
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
 
-import { AffectedFilter } from '@/src/filters/affected.filter';
-import { Pipeline } from '@/src/filters/pipeline';
-import { PrivateFilter } from '@/src/filters/private.filter';
-import { ScriptsFilter } from '@/src/filters/scripts.filter';
-import { LazyCurrentProject, LoadProject } from '@/src/middlewares/load-project';
-import { Command } from '@/src/modules/command';
-import { InkCommand } from '@/src/modules/ink-command';
-import { type Project } from '@/src/project/project';
-import { type Workspace } from '@/src/project/workspace';
-import List from '@/src/ui/list';
-import { printJson } from '@/src/utils/json';
+import { AffectedFilter } from '@/src/filters/affected.filter.ts';
+import { Pipeline } from '@/src/filters/pipeline.ts';
+import { PrivateFilter } from '@/src/filters/private.filter.ts';
+import { ScriptsFilter } from '@/src/filters/scripts.filter.ts';
+import { LazyCurrentProject, LoadProject } from '@/src/middlewares/load-project.ts';
+import { Command } from '@/src/modules/command.ts';
+import { InkCommand } from '@/src/modules/ink-command.tsx';
+import { type Project } from '@/src/project/project.ts';
+import { type Workspace } from '@/src/project/workspace.ts';
+import List from '@/src/ui/list.tsx';
+import { printJson } from '@/src/utils/json.ts';
 
 // Types
 export type Attribute = 'name' | 'version' | 'root' | 'slug';
@@ -47,7 +47,7 @@ const EXTRACTORS = {
   name: wks => wks.name,
   version: (wks, json) => wks.manifest.version || (json ? undefined : chalk.grey('unset')),
   root: wks => wks.cwd,
-  slug: wks => slugify(wks.name)
+  slug: wks => (slugify as any)(wks.name)
 } satisfies Record<Attribute, Extractor<string | undefined>>;
 
 // Utils

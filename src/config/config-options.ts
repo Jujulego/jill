@@ -2,9 +2,9 @@ import yargs, { type Argv } from 'yargs';
 import { type interfaces as int } from 'inversify';
 import { hideBin } from 'yargs/helpers';
 
-import { container } from '@/src/inversify.config';
+import { container } from '@/src/inversify.config.ts';
 
-import { type IConfig } from './types';
+import { type IConfig } from './types.ts';
 
 // Symbols
 export const CONFIG_OPTIONS: int.ServiceIdentifier<IConfig> = Symbol('jujulego:jill:config-options');

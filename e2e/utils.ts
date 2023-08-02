@@ -6,7 +6,7 @@ import { type PackageManager } from '@/src/project/types';
 import { splitCommandLine } from '@/src/utils/string';
 
 // Constants
-export const MAIN = path.join(__dirname, '../bin/jill.js');
+export const MAIN = path.join(__dirname, '../bin/jill.mjs');
 
 // Type
 export interface SpawnResult {

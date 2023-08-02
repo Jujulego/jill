@@ -2,12 +2,12 @@ import { type interfaces as int } from 'inversify';
 import { type ValidateFunction } from 'ajv';
 import { cosmiconfig, defaultLoaders } from 'cosmiconfig';
 
-import { AJV } from '@/src/ajv.config';
+import { AJV } from '@/src/ajv.config.ts';
 import schema from '@/src/config/schema.json';
-import { container } from '@/src/inversify.config';
-import { dynamicImport } from '@/src/utils/import';
+import { container } from '@/src/inversify.config.ts';
+import { dynamicImport } from '@/src/utils/import.ts';
 
-import { type IConfig, type IConfigExplorer } from './types';
+import { type IConfig, type IConfigExplorer } from './types.ts';
 
 // Symbols
 export const CONFIG_EXPLORER: int.ServiceIdentifier<IConfigExplorer> = Symbol('jujulego:jill:config-explorer');

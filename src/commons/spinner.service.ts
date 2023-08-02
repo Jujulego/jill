@@ -1,8 +1,8 @@
 import { multiplexer, source } from '@jujulego/event-tree';
 
-import { Service } from '@/src/modules/service';
-import { container } from '@/src/inversify.config';
-import { INK_APP } from '@/src/ink.config';
+import { Service } from '@/src/modules/service.ts';
+import { container } from '@/src/inversify.config.ts';
+import { INK_APP } from '@/src/ink.config.ts';
 
 // Interface
 export type SpinnerStatus = 'spin' | 'stop' | 'success' | 'failed';

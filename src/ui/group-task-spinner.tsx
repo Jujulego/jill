@@ -2,7 +2,7 @@ import { GroupTask } from '@jujulego/tasks';
 import { Box } from 'ink';
 import { Fragment, useLayoutEffect, useState } from 'react';
 
-import TaskSpinner from './task-spinner';
+import TaskSpinner from './task-spinner.tsx';
 
 // Types
 export interface GroupTaskSpinnerProps {

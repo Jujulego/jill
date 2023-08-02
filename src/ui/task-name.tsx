@@ -1,7 +1,7 @@
 import { type Task } from '@jujulego/tasks';
 import { Text } from 'ink';
 
-import { isScriptCtx } from '@/src/tasks/script-task';
+import { isScriptCtx } from '@/src/tasks/script-task.ts';
 
 // Types
 export interface TaskNameProps {

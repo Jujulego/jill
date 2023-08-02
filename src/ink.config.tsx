@@ -1,13 +1,13 @@
-import type ink from 'ink';
+import { type Instance } from 'ink';
 import { render } from 'ink';
 import { type interfaces as int } from 'inversify';
 import wt from 'node:worker_threads';
 
-import { container } from '@/src/inversify.config';
-import Layout from '@/src/ui/layout';
+import { container } from '@/src/inversify.config.ts';
+import Layout from '@/src/ui/layout.tsx';
 
 // Constants
-export const INK_APP: int.ServiceIdentifier<ink.Instance> = Symbol.for('jujulego:jill:ink-app');
+export const INK_APP: int.ServiceIdentifier<Instance> = Symbol.for('jujulego:jill:ink-app');
 
 // Setup
 container

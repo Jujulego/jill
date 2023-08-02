@@ -2,9 +2,9 @@ import { type GroupTask, ParallelGroup, SequenceGroup, type Task } from '@jujule
 import { inject } from 'inversify';
 import moo from 'moo';
 
-import { Logger } from '@/src/commons/logger.service';
-import { Service } from '@/src/modules/service';
-import { type Workspace, type WorkspaceRunOptions } from '@/src/project/workspace';
+import { Logger } from '@/src/commons/logger.service.ts';
+import { Service } from '@/src/modules/service.ts';
+import { type Workspace, type WorkspaceRunOptions } from '@/src/project/workspace.ts';
 
 // Interfaces
 export interface TaskNode {

@@ -5,10 +5,10 @@ import path from 'node:path';
 import normalize, { type Package } from 'normalize-package-data';
 import glob from 'tiny-glob';
 
-import { type Logger } from '@/src/commons/logger.service';
+import { type Logger } from '@/src/commons/logger.service.ts';
 
-import { Workspace } from './workspace';
-import { type PackageManager } from './types';
+import { Workspace } from './workspace.ts';
+import { type PackageManager } from './types.ts';
 
 // Types
 export interface ProjectOptions {

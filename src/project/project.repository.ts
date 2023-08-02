@@ -2,10 +2,10 @@ import { inject } from 'inversify';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
-import { Logger } from '@/src/commons/logger.service';
-import { Service } from '@/src/modules/service';
+import { Logger } from '@/src/commons/logger.service.ts';
+import { Service } from '@/src/modules/service.ts';
 
-import { Project, type ProjectOptions } from './project';
+import { Project, type ProjectOptions } from './project.ts';
 
 // Constants
 const MANIFEST = 'package.json';

@@ -1,7 +1,7 @@
 import { SpawnTask, type SpawnTaskOptions, type TaskContext } from '@jujulego/tasks';
 
-import { type Workspace } from '@/src/project/workspace';
-import { linesFrom } from '@/src/utils/events';
+import { type Workspace } from '@/src/project/workspace.ts';
+import { linesFrom } from '@/src/utils/events.ts';
 
 // Types
 export interface CommandContext extends TaskContext {

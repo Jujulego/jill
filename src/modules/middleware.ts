@@ -1,8 +1,8 @@
 import { decorate, injectable } from 'inversify';
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
 
-import { container } from '@/src/inversify.config';
-import { type Awaitable, type Type } from '@/src/types';
+import { container } from '@/src/inversify.config.ts';
+import { type Awaitable, type Type } from '@/src/types.ts';
 
 // Types
 export interface IMiddleware<A = unknown> {

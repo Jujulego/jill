@@ -1,11 +1,19 @@
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
-import { type Configuration, IgnorePlugin } from 'webpack';
+import webpack from 'webpack';
+import nodeExternals from 'webpack-node-externals';
 import path from 'node:path';
+import url from 'node:url';
 
-// Config
-const commonConfig: Configuration = {
+/**
+ * Config
+ * @type import('webpack').Configuration
+ */
+const commonConfig = {
   devtool: 'source-map',
-  target: 'node',
+  target: 'browserslist:node 16',
+  experiments: {
+    outputModule: true,
+  },
   entry: {
     index: {
       import: './src/index'
@@ -15,10 +23,11 @@ const commonConfig: Configuration = {
     },
   },
   output: {
-    path: path.resolve(__dirname, 'dist'),
+    module: true,
     library: {
-      type: 'commonjs2'
+      type: 'module'
     },
+    path: path.resolve(path.dirname(url.fileURLToPath(import.meta.url)), 'dist'),
     clean: {
       keep: /(\.d\.ts|\.tsbuildinfo)$/
     },
@@ -44,9 +53,19 @@ const commonConfig: Configuration = {
     ]
   },
   resolve: {
-    extensions: ['.js', '.json', '.jsx', '.ts', '.tsx'],
+    extensions: ['.js', '.json', '.jsx', '.ts', '.tsx']
+  },
+  externalsType: 'node-commonjs',
+  externalsPresets: {
+    node: true,
   },
   externals: [
+    nodeExternals({
+      importType: (name) => `${['@jujulego/event-tree', '@jujulego/tasks', 'avj', 'inversify-inject-decorators', 'slugify'].includes(name) ? 'node-commonjs' : 'module'} ${name}`,
+      modulesFromFile: {
+        include: ['dependencies']
+      },
+    }),
     'react-devtools-core',
     'ws', // used only by ink for devtools
   ],
@@ -58,7 +77,7 @@ const commonConfig: Configuration = {
         mode: 'write-dts'
       }
     }),
-    new IgnorePlugin({
+    new webpack.IgnorePlugin({
       resourceRegExp: /^import-fresh$/
     })
   ]
