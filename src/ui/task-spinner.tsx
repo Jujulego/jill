@@ -39,6 +39,7 @@ export default function TaskSpinner({ task }: TaskSpinnerProps) {
   switch (status) {
     case 'blocked':
     case 'ready':
+    case 'starting':
       return (
         <Box>
           <Text color="grey">{'\u00B7'}</Text>
