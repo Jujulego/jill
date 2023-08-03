@@ -34,7 +34,7 @@ export default function TaskSpinner({ task }: TaskSpinnerProps) {
   }, [task]);
 
   // Render
-  const isScriptChild = task.group && isScriptCtx(task.group.context);
+  const isScriptChild = !isScriptCtx(task.context) && task.group && isScriptCtx(task.group.context);
 
   switch (status) {
     case 'blocked':
@@ -67,10 +67,10 @@ export default function TaskSpinner({ task }: TaskSpinnerProps) {
         <Box>
           <Text color="green">{ symbols.success }</Text>
           <Box paddingLeft={1}>
-            <Text wrap="truncate"><TaskName task={task} /></Text>
+            <Text color={isScriptChild ? 'dim' : undefined} wrap="truncate"><TaskName task={task} /></Text>
           </Box>
           <Box paddingLeft={1} flexShrink={0}>
-            <Text color="dim">(took {ms(time)})</Text>
+            <Text color={isScriptChild ? 'grey' : 'dim'}>(took {ms(time)})</Text>
           </Box>
         </Box>
       );
@@ -80,10 +80,10 @@ export default function TaskSpinner({ task }: TaskSpinnerProps) {
         <Box>
           <Text color="red">{ symbols.error }</Text>
           <Box paddingLeft={1}>
-            <Text wrap="truncate"><TaskName task={task} /></Text>
+            <Text color={isScriptChild ? 'dim' : undefined} wrap="truncate"><TaskName task={task} /></Text>
           </Box>
           <Box paddingLeft={1} flexShrink={0}>
-            <Text color="dim">(took {ms(time)})</Text>
+            <Text color={isScriptChild ? 'grey' : 'dim'}>(took {ms(time)})</Text>
           </Box>
         </Box>
       );
