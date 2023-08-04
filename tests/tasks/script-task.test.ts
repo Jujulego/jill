@@ -129,7 +129,7 @@ describe('ScriptTask._orchestrate', () => {
 
     const it = script._orchestrate();
 
-    // It emit one task
+    // It emits one task
     let next = await it.next();
     expect(next).toEqual({ done: false, value: expect.any(Task) });
 
@@ -148,7 +148,7 @@ describe('ScriptTask._orchestrate', () => {
 
     const it = script._orchestrate();
 
-    // It emit one task
+    // It emits one task
     let next = await it.next();
     expect(next).toEqual({ done: false, value: expect.any(Task) });
 

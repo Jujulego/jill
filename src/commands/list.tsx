@@ -13,6 +13,7 @@ import { InkCommand } from '@/src/modules/ink-command.tsx';
 import { type Project } from '@/src/project/project.ts';
 import { type Workspace } from '@/src/project/workspace.ts';
 import List from '@/src/ui/list.tsx';
+import { fixDefaultExport } from '@/src/utils/import.ts';
 import { printJson } from '@/src/utils/json.ts';
 
 // Types
@@ -47,7 +48,7 @@ const EXTRACTORS = {
   name: wks => wks.name,
   version: (wks, json) => wks.manifest.version || (json ? undefined : chalk.grey('unset')),
   root: wks => wks.cwd,
-  slug: wks => slugify(wks.name)
+  slug: wks => fixDefaultExport(slugify)(wks.name)
 } satisfies Record<Attribute, Extractor<string | undefined>>;
 
 // Utils

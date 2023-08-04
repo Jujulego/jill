@@ -13,7 +13,8 @@ container
   .toDynamicValue(({ container }) => {
     const logger = container.get(Logger);
 
-    return new Ajv({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return new (Ajv as any)({
       allErrors: true,
       logger: logger.child({ label: 'ajv' }),
       strict: process.env.NODE_ENV === 'development' ? 'log' : true,
