@@ -10,7 +10,7 @@ const channel = new BroadcastChannel('jujulego:jill:worker-cache');
 
 beforeEach(() => {
   // Reset environment data
-  setEnvironmentData(KEY, undefined as any);
+  setEnvironmentData(KEY, undefined);
 
   // Spy on channel
   channel.onmessage = vi.fn();

@@ -46,6 +46,7 @@ export function toMatchLines(this: MatcherState, received: unknown, expected: un
 
 // Typings
 declare module 'vitest' {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   interface Assertion<T = any> {
     toMatchLines(expected: (unknown | RegExp)[]): T;
   }

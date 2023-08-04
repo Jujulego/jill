@@ -26,6 +26,7 @@ export async function toYield(this: MatcherState, received: AsyncIterable<unknow
 }
 
 declare module 'vitest' {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   interface Assertion<T = any> {
     toYield(expected: unknown[]): Promise<T>;
   }

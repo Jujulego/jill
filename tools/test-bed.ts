@@ -49,6 +49,7 @@ export class TestBed {
   }
 
   async writeManifest(path: string, wks: Workspace): Promise<void> {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { _id: _, ...manifest } = wks.manifest;
     await fs.writeFile(path, JSON.stringify(manifest));
   }

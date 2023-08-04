@@ -113,7 +113,6 @@ describe('TaskCommand', () => {
       const logger = container.get(Logger);
 
       vi.spyOn(logger, 'warn').mockReturnValue(undefined);
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
       vi.mocked(command.prepare).mockImplementation(function* () {});
 
       // Run command

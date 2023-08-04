@@ -27,6 +27,7 @@ export function toEqualLines(this: MatcherState, received: unknown, expected: un
 
 // Typings
 declare module 'vitest' {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   interface Assertion<T = any> {
     toEqualLines(expected: unknown[]): T;
   }
