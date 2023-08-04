@@ -34,8 +34,8 @@ describe('configLoader', () => {
     };
     const validator = vi.fn().mockReturnValue(true);
 
-    container.rebind(CONFIG_EXPLORER).toConstantValue(explorer as any);
-    container.rebind(CONFIG_VALIDATOR).toConstantValue(validator as any);
+    container.rebind(CONFIG_EXPLORER).toConstantValue(explorer);
+    container.rebind(CONFIG_VALIDATOR).toConstantValue(validator);
     
     // Load config
     await expect(configLoader())
@@ -60,8 +60,8 @@ describe('configLoader', () => {
 
     const validator = vi.fn().mockReturnValue(true);
 
-    container.rebind(CONFIG_EXPLORER).toConstantValue(explorer as any);
-    container.rebind(CONFIG_VALIDATOR).toConstantValue(validator as any);
+    container.rebind(CONFIG_EXPLORER).toConstantValue(explorer);
+    container.rebind(CONFIG_VALIDATOR).toConstantValue(validator);
 
     // Load config
     await expect(configLoader())
@@ -85,8 +85,8 @@ describe('configLoader', () => {
 
     const validator = vi.fn().mockReturnValue(true);
 
-    container.rebind(CONFIG_EXPLORER).toConstantValue(explorer as any);
-    container.rebind(CONFIG_VALIDATOR).toConstantValue(validator as any);
+    container.rebind(CONFIG_EXPLORER).toConstantValue(explorer);
+    container.rebind(CONFIG_VALIDATOR).toConstantValue(validator);
 
     // Load config
     await expect(configLoader())
@@ -119,8 +119,8 @@ describe('configLoader', () => {
       ]
     });
 
-    container.rebind(CONFIG_EXPLORER).toConstantValue(explorer as any);
-    container.rebind(CONFIG_VALIDATOR).toConstantValue(validator as any);
+    container.rebind(CONFIG_EXPLORER).toConstantValue(explorer);
+    container.rebind(CONFIG_VALIDATOR).toConstantValue(validator);
 
     vi.spyOn(logger.winston, 'error');
 

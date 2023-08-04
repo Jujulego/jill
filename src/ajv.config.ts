@@ -13,7 +13,7 @@ container
   .toDynamicValue(({ container }) => {
     const logger = container.get(Logger);
 
-    return new (Ajv as any)({
+    return new Ajv({
       allErrors: true,
       logger: logger.child({ label: 'ajv' }),
       strict: process.env.NODE_ENV === 'development' ? 'log' : true,
