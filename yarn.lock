@@ -444,7 +444,7 @@ __metadata:
     "@jujulego/utils": ^1.4.5
     "@microsoft/eslint-formatter-sarif": 3.0.0
     "@swc/core": 1.3.71
-    "@types/moo": 0.5.5
+    "@types/moo": 0.5.6
     "@types/node": 16.18.39
     "@types/normalize-package-data": 2.4.1
     "@types/react": 18.2.18
@@ -951,10 +951,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/moo@npm:0.5.5":
-  version: 0.5.5
-  resolution: "@types/moo@npm:0.5.5"
-  checksum: 3ade4daad004d2876b88b5d780390b8c08c0bfb57e84ddc3a25ace8147d44a4c9ea173e4abcdfec4f7b9204b408091287d3fabf0336de1cfbb6a07e3beedf372
+"@types/moo@npm:0.5.6":
+  version: 0.5.6
+  resolution: "@types/moo@npm:0.5.6"
+  checksum: f001264897cd8e75189a6ee4194222368b7efd5ac1897eed1e5e9bd51dbb9b963927970f6aa66b61802b32db15473f98fe1830c29a75e649ed86a1f8e44c57b5
   languageName: node
   linkType: hard
 
