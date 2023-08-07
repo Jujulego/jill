@@ -12,13 +12,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@alcalzone/ansi-tokenize@npm:^0.1.1":
-  version: 0.1.1
-  resolution: "@alcalzone/ansi-tokenize@npm:0.1.1"
+"@alcalzone/ansi-tokenize@npm:^0.1.2":
+  version: 0.1.2
+  resolution: "@alcalzone/ansi-tokenize@npm:0.1.2"
   dependencies:
     ansi-styles: ^6.2.1
     is-fullwidth-code-point: ^4.0.0
-  checksum: 73c453cf280cf00f4feee4de389e987a86be27d1c35279edb6b09d0d67ebd69250eaa6bb27083cf7315dca59bebb550a28fac330e5b29ac6b752f7f1644ee026
+  checksum: bca8222102a50095aa1dcbb0c9351b422c173e27180263bdf5c76ac8ec5d3770854e39838ce973251163a9d76f4405a6916405911ffc7bc34d0675bc76c426f2
   languageName: node
   linkType: hard
 
@@ -3362,10 +3362,10 @@ __metadata:
   linkType: hard
 
 "ink@npm:^4.3.0":
-  version: 4.3.0
-  resolution: "ink@npm:4.3.0"
+  version: 4.3.1
+  resolution: "ink@npm:4.3.1"
   dependencies:
-    "@alcalzone/ansi-tokenize": ^0.1.1
+    "@alcalzone/ansi-tokenize": ^0.1.2
     ansi-escapes: ^6.0.0
     auto-bind: ^5.0.1
     chalk: ^5.2.0
@@ -3399,7 +3399,7 @@ __metadata:
       optional: true
     react-devtools-core:
       optional: true
-  checksum: 80a4e9bfd14e50d5dcaa824673795ec416abda480f690bb94e1505f129cc066cc9acdf40d20c019c89d73f99ba948e8bd1fa915a51798cc0610656422b73ad7c
+  checksum: 8484398d73f6fa538c7d0f2b4fc8cd247da0dd477d4b7de97cbe3cbf064f84ad502cd1afbc91abc6f5d274dd8034f6a3e07b17241ccb8d48250660b68356188c
   languageName: node
   linkType: hard
 
