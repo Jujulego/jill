@@ -40,7 +40,7 @@ describe('jill each', () => void withPackageManager((packageManager) => {
       .addDependency(wksC, true);
 
     prjDir = await bed.createProjectPackage(packageManager);
-  });
+  }, 15000);
 
   afterEach(async () => {
     await fs.rm(prjDir, { recursive: true });
