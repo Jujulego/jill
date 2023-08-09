@@ -434,13 +434,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@jujulego/event-tree@npm:^4.0.1":
+  version: 4.0.1
+  resolution: "@jujulego/event-tree@npm:4.0.1"
+  dependenciesMeta:
+    vitest@0.34.1:
+      unplugged: true
+  checksum: cd1303412ed2f24758edd724adb0683216124550a45c6ffe64a2ab3847c5af22003c1c04782000666309ea18058a6f7df711a4d283a9b10fba33386f9e1b442d
+  languageName: node
+  linkType: hard
+
 "@jujulego/jill@workspace:.":
   version: 0.0.0-use.local
   resolution: "@jujulego/jill@workspace:."
   dependencies:
     "@jujulego/2d-maths": 1.6.0
     "@jujulego/event-tree": ^3.1.2
-    "@jujulego/tasks": ^1.7.0
+    "@jujulego/tasks": ^2.0.0
     "@jujulego/utils": ^1.4.5
     "@microsoft/eslint-formatter-sarif": 3.0.0
     "@swc/core": 1.3.71
@@ -503,14 +513,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jujulego/tasks@npm:^1.7.0":
-  version: 1.7.0
-  resolution: "@jujulego/tasks@npm:1.7.0"
+"@jujulego/tasks@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "@jujulego/tasks@npm:2.0.0"
   dependencies:
-    "@jujulego/event-tree": ^3.1.2
-    "@jujulego/utils": ^1.4.5
+    "@jujulego/event-tree": ^4.0.1
+    "@jujulego/utils": ^2.0.0
     tree-kill: ^1.2.2
-  checksum: cdd8e9ec5dd40d8b9d3fefed11c27a22fa9297c1f9e577ca1278905cb8d946a6c4e9cca2d42ba98833cb9a137b434d6cd5d3c9b2197154e2f4469b7c1c8ce7be
+  checksum: 89115bc86eb32bd61a887d33b4ba1116fa4d2b4197b69e07517dead3644044b5d5dc93cea553a5cca15c37162b40f6145809ec10c76618741dd6aa98bc6b8233
   languageName: node
   linkType: hard
 
@@ -520,6 +530,15 @@ __metadata:
   dependencies:
     "@jujulego/event-tree": ^3.0.0
   checksum: 9fd68326bb32a78a360c557b00a71816274ab77a9abd555ee6a88b4f55de0f88a6a99c39402f6f197aae4420824115822d1b45f5d2cd2144d97d462e145dd6a0
+  languageName: node
+  linkType: hard
+
+"@jujulego/utils@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "@jujulego/utils@npm:2.0.0"
+  dependencies:
+    "@jujulego/event-tree": ^4.0.1
+  checksum: 7f0674aed8f0cd176147d71f9fee6652256578898027ba00e0aadc4d4eebafe351c391ba2de4a46ea3b48a1d0faeb4836409ad6962ffbe2e0448ad97139b231f
   languageName: node
   linkType: hard
 
