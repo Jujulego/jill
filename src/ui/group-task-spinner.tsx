@@ -11,7 +11,16 @@ export interface GroupTaskSpinnerProps {
 
 // Components
 export default function GroupTaskSpinner({ group }: GroupTaskSpinnerProps) {
+  // State
+  const [status, setStatus] = useState(group.status);
   const [tasks, setTasks] = useState([...group.tasks]);
+
+  // Effects
+  useLayoutEffect(() => {
+    return group.on('status', (event) => {
+      setStatus(event.status);
+    });
+  }, [group]);
 
   useLayoutEffect(() => {
     let dirty = false;
@@ -28,20 +37,23 @@ export default function GroupTaskSpinner({ group }: GroupTaskSpinnerProps) {
     });
   }, [group]);
 
+  // Render
   return (
     <>
       <TaskSpinner task={group} />
-      <Box flexDirection="column" marginLeft={2}>
-        { tasks.map((task) => (
-          <Fragment key={task.id}>
-            { (task instanceof GroupTask) ? (
-              <GroupTaskSpinner group={task} />
-            ) : (
-              <TaskSpinner task={task} />
-            ) }
-          </Fragment>
-        )) }
-      </Box>
+      { status != 'done' && (
+        <Box flexDirection="column" marginLeft={2}>
+          { tasks.map((task) => (
+            <Fragment key={task.id}>
+              { (task instanceof GroupTask) ? (
+                <GroupTaskSpinner group={task} />
+              ) : (
+                <TaskSpinner task={task} />
+              ) }
+            </Fragment>
+          )) }
+        </Box>
+      ) }
     </>
   );
 }
