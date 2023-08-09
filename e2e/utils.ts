@@ -18,7 +18,7 @@ export interface SpawnResult {
 export interface SpawnOptions {
   cwd?: string;
   env?: Record<string, string>;
-  removeCotes?: boolean;
+  keepQuotes?: boolean;
 }
 
 // Utils
@@ -26,7 +26,7 @@ export function jill(args: string, opts: SpawnOptions = {}): Promise<SpawnResult
   return new Promise<SpawnResult>((resolve, reject) => {
     let argv = splitCommandLine(args);
 
-    if (!opts.removeCotes) {
+    if (!opts.keepQuotes) {
       argv = argv.map(arg => arg.replace(/^["'](.+)["']$/, '$1'));
     }
 
