@@ -49,7 +49,7 @@ Plugin({
 
 export default TestPlugin;
 `);
-  });
+  }, 15000);
 
   afterEach(async () => {
     await fs.rm(prjDir, { recursive: true });
