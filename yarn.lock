@@ -434,12 +434,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@jujulego/event-tree@npm:^4.0.0":
+  version: 4.0.1
+  resolution: "@jujulego/event-tree@npm:4.0.1"
+  dependenciesMeta:
+    vitest@0.34.1:
+      unplugged: true
+  checksum: cd1303412ed2f24758edd724adb0683216124550a45c6ffe64a2ab3847c5af22003c1c04782000666309ea18058a6f7df711a4d283a9b10fba33386f9e1b442d
+  languageName: node
+  linkType: hard
+
 "@jujulego/jill@workspace:.":
   version: 0.0.0-use.local
   resolution: "@jujulego/jill@workspace:."
   dependencies:
     "@jujulego/2d-maths": 1.6.0
-    "@jujulego/event-tree": ^3.1.2
+    "@jujulego/event-tree": ^4.0.0
     "@jujulego/tasks": ^1.7.0
     "@jujulego/utils": ^1.4.5
     "@microsoft/eslint-formatter-sarif": 3.0.0
