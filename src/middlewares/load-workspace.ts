@@ -51,8 +51,10 @@ export class LoadWorkspace implements IMiddleware<ILoadWorkspaceArgs> {
       if (!workspace || args.workspace) {
         if (args.workspace) {
           workspace = await this.project.workspace(args.workspace);
+        } else if (this.project.root.startsWith(process.cwd())) {
+          workspace = await this.project.currentWorkspace();
         } else {
-          workspace = await this.project.currentWorkspace(args.project);
+          workspace = await this.project.mainWorkspace();
         }
       }
 
