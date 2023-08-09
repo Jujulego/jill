@@ -1,6 +1,8 @@
 import { GroupTask } from '@jujulego/tasks';
 import { Box } from 'ink';
-import { Fragment, useLayoutEffect, useState } from 'react';
+import { Fragment, useLayoutEffect, useMemo, useState } from 'react';
+
+import { isCommandCtx } from '@/src/tasks/command-task.ts';
 
 import TaskSpinner from './task-spinner.tsx';
 
@@ -14,6 +16,9 @@ export default function GroupTaskSpinner({ group }: GroupTaskSpinnerProps) {
   // State
   const [status, setStatus] = useState(group.status);
   const [tasks, setTasks] = useState([...group.tasks]);
+
+  // Memo
+  const isReduced = useMemo(() => status == 'done' && tasks.every((tsk) => isCommandCtx(tsk.context)), [status, tasks]);
 
   // Effects
   useLayoutEffect(() => {
@@ -41,7 +46,7 @@ export default function GroupTaskSpinner({ group }: GroupTaskSpinnerProps) {
   return (
     <>
       <TaskSpinner task={group} />
-      { status != 'done' && (
+      { isReduced || (
         <Box flexDirection="column" marginLeft={2}>
           { tasks.map((task) => (
             <Fragment key={task.id}>
