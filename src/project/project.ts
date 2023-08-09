@@ -162,20 +162,22 @@ export class Project {
 
     // Try name index
     const wks = this._names.get(name);
-    if (wks) return wks;
 
-    if (this._isFullyLoaded) {
-      return null;
+    if (wks) {
+      return wks;
     }
 
     // Load workspaces
-    for await (const ws of this.workspaces()) {
-      if (ws.name === name) {
-        return ws;
+    if (!this._isFullyLoaded) {
+      for await (const ws of this.workspaces()) {
+        if (ws.name === name) {
+          return ws;
+        }
       }
+
+      this._isFullyLoaded = true;
     }
 
-    this._isFullyLoaded = true;
     return null;
   }
 
