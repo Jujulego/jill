@@ -5,6 +5,7 @@ import symbols from 'log-symbols';
 import ms from 'pretty-ms';
 import { useLayoutEffect, useState } from 'react';
 
+import { isCommandCtx } from '@/src/tasks/command-task.ts';
 import { isScriptCtx } from '@/src/tasks/script-task.ts';
 
 import TaskName from './task-name.tsx';
@@ -34,7 +35,7 @@ export default function TaskSpinner({ task }: TaskSpinnerProps) {
   }, [task]);
 
   // Render
-  const isScriptChild = !isScriptCtx(task.context) && task.group && isScriptCtx(task.group.context);
+  const isScriptChild = isCommandCtx(task.context) && task.group && isScriptCtx(task.group.context);
 
   switch (status) {
     case 'blocked':

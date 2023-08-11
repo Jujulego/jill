@@ -22,8 +22,8 @@
     "watch": "webpack --watch",
     "test": "vitest run tests tools",
     "e2e": "vitest run e2e",
-    "e2e:npm": "cross-env USE_PACKAGE_MANAGER=npm yarn run e2e",
-    "e2e:yarn": "cross-env USE_PACKAGE_MANAGER=yarn yarn run e2e"
+    "e2e:npm": "yarn run e2e -t npm",
+    "e2e:yarn": "yarn run e2e -t yarn"
   },
   "engines": {
     "node": "^16.x || ^18.x"
@@ -69,7 +69,6 @@
     "@vitest/expect": "0.34.1",
     "@vitest/spy": "0.34.1",
     "browserslist": "4.21.10",
-    "cross-env": "7.0.3",
     "eslint": "8.46.0",
     "eslint-plugin-react": "7.33.1",
     "eslint-plugin-react-hooks": "4.6.0",

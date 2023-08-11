@@ -18,7 +18,7 @@ export interface SpawnResult {
 export interface SpawnOptions {
   cwd?: string;
   env?: Record<string, string>;
-  removeCotes?: boolean;
+  keepQuotes?: boolean;
 }
 
 // Utils
@@ -26,7 +26,7 @@ export function jill(args: string, opts: SpawnOptions = {}): Promise<SpawnResult
   return new Promise<SpawnResult>((resolve, reject) => {
     let argv = splitCommandLine(args);
 
-    if (!opts.removeCotes) {
+    if (!opts.keepQuotes) {
       argv = argv.map(arg => arg.replace(/^["'](.+)["']$/, '$1'));
     }
 
@@ -57,19 +57,4 @@ export function jill(args: string, opts: SpawnOptions = {}): Promise<SpawnResult
 
     proc.on('error', reject);
   });
-}
-
-export function withPackageManager(cb: (pm: PackageManager) => void) {
-  let managers: PackageManager[] = ['npm', 'yarn'];
-
-  if (process.env.USE_PACKAGE_MANAGER) {
-    const toUse = process.env.USE_PACKAGE_MANAGER.split(/, ?/g);
-    managers = managers.filter((pm) => toUse.includes(pm));
-  }
-
-  for (const pm of managers) {
-    describe(`using ${pm}`, () => {
-      cb(pm);
-    });
-  }
 }
