@@ -1,8 +1,10 @@
 import { multiplexer, source } from '@jujulego/event-tree';
+import { inject } from 'inversify';
 
-import { Service } from '@/src/modules/service.ts';
+import { Logger } from '@/src/commons/logger.service.ts';
 import { container } from '@/src/inversify.config.ts';
 import { INK_APP } from '@/src/ink.config.ts';
+import { Service } from '@/src/modules/service.ts';
 
 // Interface
 export type SpinnerStatus = 'spin' | 'stop' | 'success' | 'failed';
@@ -15,11 +17,17 @@ export interface SpinnerState {
 @Service()
 export class SpinnerService {
   // Attributes
+  private readonly _logger: Logger;
   private _status: SpinnerStatus = 'stop';
   private _label = '';
   private _events = multiplexer({
     state: source<SpinnerState>(),
   });
+
+  // Constructor
+  constructor(@inject(Logger) logger: Logger) {
+    this._logger = logger.child({ label: 'spinner' });
+  }
 
   // Methods
   private _awakeInk() {
@@ -28,6 +36,7 @@ export class SpinnerService {
   }
 
   spin(label: string) {
+    this._logger.debug(`spin: ${label}`);
     this._status = 'spin';
     this._label = label;
 
@@ -36,6 +45,7 @@ export class SpinnerService {
   }
 
   success(label: string) {
+    this._logger.debug(`success: ${label}`);
     this._status = 'success';
     this._label = label;
 
@@ -44,6 +54,7 @@ export class SpinnerService {
   }
 
   failed(label: string) {
+    this._logger.debug(`failed: ${label}`);
     this._status = 'failed';
     this._label = label;
 
@@ -53,6 +64,7 @@ export class SpinnerService {
 
   stop() {
     if (this._status === 'spin') {
+      this._logger.debug(`stop: ${this._label}`);
       this._status = 'stop';
 
       this._events.emit('state', this.state);
