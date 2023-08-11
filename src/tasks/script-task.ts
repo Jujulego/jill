@@ -45,8 +45,11 @@ export class ScriptTask extends GroupTask<ScriptContext> {
     const [command, ...commandArgs] = splitCommandLine(line);
 
     if (command === 'jill') {
+      this._logger.debug(`Interpreting ${line}`);
+      const argv = commandArgs.map(arg => arg.replace(/^["'](.+)["']$/, '$1'));
+
       const app = container.get(JillApplication);
-      const tasks = await app.tasksOf(commandArgs, {
+      const tasks = await app.tasksOf(argv, {
         project: this.project,
         workspace: this.workspace,
       });

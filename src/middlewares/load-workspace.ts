@@ -10,10 +10,10 @@ import { type Project } from '@/src/project/project.ts';
 import { Workspace } from '@/src/project/workspace.ts';
 import { ExitException } from '@/src/utils/exit.ts';
 
-import { LazyCurrentProject } from './load-project.ts';
+import { ILoadProjectArgs, LazyCurrentProject } from './load-project.ts';
 
 // Types
-export interface ILoadWorkspaceArgs {
+export interface ILoadWorkspaceArgs extends ILoadProjectArgs {
   workspace?: string;
 }
 
@@ -49,7 +49,13 @@ export class LoadWorkspace implements IMiddleware<ILoadWorkspaceArgs> {
       let workspace = this.context.workspace ?? null;
 
       if (!workspace || args.workspace) {
-        workspace = await this.project.workspace(args.workspace);
+        if (args.workspace) {
+          workspace = await this.project.workspace(args.workspace);
+        } else if (process.cwd().startsWith(this.project.root)) {
+          workspace = await this.project.currentWorkspace();
+        } else {
+          workspace = await this.project.mainWorkspace();
+        }
       }
 
       if (!workspace) {
