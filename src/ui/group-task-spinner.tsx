@@ -2,6 +2,8 @@ import { GroupTask } from '@jujulego/tasks';
 import { Box } from 'ink';
 import { Fragment, useLayoutEffect, useMemo, useState } from 'react';
 
+import { CONFIG } from '@/src/config/config-loader.ts';
+import { container } from '@/src/inversify.config.ts';
 import { isCommandCtx } from '@/src/tasks/command-task.ts';
 
 import TaskSpinner from './task-spinner.tsx';
@@ -14,13 +16,22 @@ export interface GroupTaskSpinnerProps {
 // Components
 export default function GroupTaskSpinner({ group }: GroupTaskSpinnerProps) {
   // State
+  const [verbose, setVerbose] = useState(false);
   const [status, setStatus] = useState(group.status);
   const [tasks, setTasks] = useState([...group.tasks]);
 
   // Memo
-  const isReduced = useMemo(() => status == 'done' && tasks.every((tsk) => isCommandCtx(tsk.context)), [status, tasks]);
+  const isReduced = useMemo(() => !verbose && status == 'done' && tasks.every((tsk) => isCommandCtx(tsk.context)), [status, tasks]);
 
   // Effects
+  useLayoutEffect(() => {
+    const config = container.get(CONFIG);
+
+    if (config.verbose) {
+      setVerbose(['verbose', 'debug'].includes(config.verbose));
+    }
+  }, []);
+
   useLayoutEffect(() => {
     return group.on('status', (event) => {
       setStatus(event.status);
