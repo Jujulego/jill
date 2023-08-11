@@ -5,7 +5,6 @@ import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 
-import { ContextService } from '@/src/commons/context.service';
 import { CONFIG } from '@/src/config/config-loader';
 import { type IConfig } from '@/src/config/types';
 import { container } from '@/src/inversify.config';
@@ -22,6 +21,7 @@ import { type Class } from '@/src/types';
 import { TestProject } from './test-project';
 import { TestWorkspace } from './test-workspace';
 import { shell } from './utils';
+import { ContextService } from '@/src/commons/context.service';
 
 // Bed
 export class TestBed {

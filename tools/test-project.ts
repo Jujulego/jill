@@ -7,14 +7,14 @@ import { TestWorkspace } from './test-workspace';
 // Class
 export class TestProject extends Project {
   // Attributes
-  readonly testMainWorkspace: TestWorkspace;
-  readonly testWorkspaces = new Map<string, TestWorkspace>();
+  private readonly _testMainWorkspace: TestWorkspace;
+  private readonly _testWorkspaces = new Map<string, TestWorkspace>();
 
   // Constructor
   constructor(root: string, opts?: ProjectOptions) {
     super(root, container.get(Logger).child({ label: 'projects' }), opts);
 
-    this.testMainWorkspace = new TestWorkspace(root, {
+    this._testMainWorkspace = new TestWorkspace(root, {
       _id: 'main',
       name: 'main',
       version: '1.0.0',
@@ -24,14 +24,14 @@ export class TestProject extends Project {
 
   // Methods
   addWorkspace(wks: TestWorkspace): void {
-    this.testWorkspaces.set(wks.name, wks);
+    this._testWorkspaces.set(wks.name, wks);
 
-    this.testMainWorkspace.manifest.workspaces ??= [];
-    this.testMainWorkspace.manifest.workspaces.push(wks.name);
+    this._testMainWorkspace.manifest.workspaces ??= [];
+    this._testMainWorkspace.manifest.workspaces.push(wks.name);
   }
 
   override async mainWorkspace(): Promise<TestWorkspace> {
-    return this.testMainWorkspace;
+    return this._testMainWorkspace;
   }
 
   override async currentWorkspace(cwd?: string): Promise<TestWorkspace | null> {
@@ -39,7 +39,7 @@ export class TestProject extends Project {
   }
 
   override async* workspaces(): AsyncGenerator<TestWorkspace, void> {
-    for (const wks of this.testWorkspaces.values()) {
+    for (const wks of this._testWorkspaces.values()) {
       yield wks;
     }
   }
@@ -49,6 +49,6 @@ export class TestProject extends Project {
       return await this.currentWorkspace();
     }
 
-    return this.testWorkspaces.get(name) ?? null;
+    return this._testWorkspaces.get(name) ?? null;
   }
 }
