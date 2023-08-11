@@ -127,9 +127,7 @@ jobs:
           git config --global user.email github-actions@github.com
 
       - name: Test
-        run: yarn e2e --threads --single-thread
-        env:
-          USE_PACKAGE_MANAGER: ${{ matrix.packageManager }}
+        run: yarn e2e --threads --single-thread -t ${{ matrix.packageManager }}
 
   complete:
     if: ${{ github.event_name == 'pull_request' && always() }}
