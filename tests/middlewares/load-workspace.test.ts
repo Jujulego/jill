@@ -39,17 +39,46 @@ beforeEach(() => {
 
 // Tests
 describe('LoadWorkspace', () => {
-  it('should search for current workspace', async () => {
-    const wks = bed.addWorkspace('root');
+  it('should search for main workspace', async () => {
     context.reset({ project: bed.project });
 
-    vi.spyOn(bed.project, 'workspace')
-      .mockResolvedValue(wks);
+    vi.spyOn(bed.project, 'workspace');
+    vi.spyOn(bed.project, 'currentWorkspace');
+    vi.spyOn(bed.project, 'mainWorkspace');
 
     await parser.parse(''); // <= no args
 
     expect(spinner.spin).toHaveBeenCalledWith('Loading "." workspace ...');
-    expect(bed.project.workspace).toHaveBeenCalled();
+    expect(bed.project.workspace).not.toHaveBeenCalled();
+    expect(bed.project.currentWorkspace).not.toHaveBeenCalled();
+    expect(bed.project.mainWorkspace).toHaveBeenCalled();
+
+    expect(context.workspace).toBe(bed.project.testMainWorkspace);
+
+    expect(spinner.stop).toHaveBeenCalled();
+  });
+
+  it('should search for current workspace', async () => {
+    const wks = bed.addWorkspace('test');
+    context.reset({ project: bed.project });
+
+    vi.spyOn(bed.project, 'workspace');
+    vi.spyOn(bed.project, 'currentWorkspace');
+    vi.spyOn(bed.project, 'mainWorkspace');
+
+    const root = bed.project.root;
+    vi.spyOn(bed.project, 'root', 'get').mockReturnValue(root);
+
+    const cwd = wks.cwd;
+    vi.spyOn(wks, 'cwd', 'get').mockReturnValue(cwd);
+    vi.spyOn(process, 'cwd').mockReturnValue(cwd);
+
+    await parser.parse(''); // <= no args
+
+    expect(spinner.spin).toHaveBeenCalledWith('Loading "." workspace ...');
+    expect(bed.project.workspace).not.toHaveBeenCalled();
+    expect(bed.project.currentWorkspace).toHaveBeenCalledWith();
+    expect(bed.project.mainWorkspace).not.toHaveBeenCalled();
 
     expect(context.workspace).toBe(wks);
 
@@ -57,14 +86,23 @@ describe('LoadWorkspace', () => {
   });
 
   it('should search for named workspace', async () => {
+    const wks = bed.addWorkspace('test');
     context.reset({ project: bed.project });
-    vi.spyOn(bed.project, 'workspace')
-      .mockResolvedValue(bed.addWorkspace('test'));
+
+    vi.spyOn(bed.project, 'workspace');
+    vi.spyOn(bed.project, 'currentWorkspace');
+    vi.spyOn(bed.project, 'mainWorkspace');
 
     await parser.parse('-w test');
 
     expect(spinner.spin).toHaveBeenCalledWith('Loading "test" workspace ...');
     expect(bed.project.workspace).toHaveBeenCalledWith('test');
+    expect(bed.project.currentWorkspace).not.toHaveBeenCalled();
+    expect(bed.project.mainWorkspace).not.toHaveBeenCalled();
+
+    expect(context.workspace).toBe(wks);
+
+    expect(spinner.stop).toHaveBeenCalled();
   });
 
   it('should print failed spinner if workspace is not found', async () => {
