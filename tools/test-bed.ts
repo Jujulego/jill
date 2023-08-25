@@ -5,23 +5,23 @@ import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 
-import { ContextService } from '@/src/commons/context.service';
-import { CONFIG } from '@/src/config/config-loader';
-import { type IConfig } from '@/src/config/types';
-import { container } from '@/src/inversify.config';
-import { buildCommandModule, getCommandOpts, type ICommand } from '@/src/modules/command';
-import { type IMiddleware } from '@/src/modules/middleware';
-import { getRegistry } from '@/src/modules/module';
-import { LoadProject } from '@/src/middlewares/load-project';
-import { LoadWorkspace } from '@/src/middlewares/load-workspace';
-import { type Project } from '@/src/project/project';
-import { Workspace } from '@/src/project/workspace';
-import { type PackageManager } from '@/src/project/types';
-import { type Class } from '@/src/types';
+import { ContextService } from '@/src/commons/context.service.ts';
+import { CONFIG } from '@/src/config/config-loader.ts';
+import { type IConfig } from '@/src/config/types.ts';
+import { container } from '@/src/inversify.config.ts';
+import { buildCommandModule, getCommandOpts, type ICommand } from '@/src/modules/command.ts';
+import { type IMiddleware } from '@/src/modules/middleware.ts';
+import { getRegistry } from '@/src/modules/module.ts';
+import { LoadProject } from '@/src/middlewares/load-project.ts';
+import { LoadWorkspace } from '@/src/middlewares/load-workspace.ts';
+import { type Project } from '@/src/project/project.ts';
+import { Workspace } from '@/src/project/workspace.ts';
+import { type PackageManager } from '@/src/project/types.ts';
+import { type Class } from '@/src/types.ts';
 
-import { TestProject } from './test-project';
-import { TestWorkspace } from './test-workspace';
-import { shell } from './utils';
+import { TestProject } from './test-project.ts';
+import { TestWorkspace } from './test-workspace.ts';
+import { shell } from './utils.ts';
 
 // Bed
 export class TestBed {
@@ -129,7 +129,7 @@ export class TestBed {
     // Run package manager
     switch (pm) {
       case 'npm':
-        await shell('npm install', { cwd: prjDir });
+        await shell('npm install --no-audit', { cwd: prjDir });
         break;
 
       case 'yarn':

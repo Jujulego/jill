@@ -1,20 +1,20 @@
 import { SpawnTask } from '@jujulego/tasks';
 import { vi } from 'vitest';
 
-import { ContextService } from '@/src/commons/context.service';
-import { CURRENT } from '@/src/constants';
-import { CorePlugin } from '@/src/core.plugin';
-import { container } from '@/src/inversify.config';
-import { JillApplication } from '@/src/jill.application';
-import { getModule } from '@/src/modules/module';
-import { PluginLoaderService } from '@/src/modules/plugin-loader.service';
+import { ContextService } from '@/src/commons/context.service.ts';
+import { CURRENT } from '@/src/constants.ts';
+import { CorePlugin } from '@/src/core.plugin.ts';
+import { container } from '@/src/inversify.config.ts';
+import { JillApplication } from '@/src/jill.application.ts';
+import { getModule } from '@/src/modules/module.ts';
+import { PluginLoaderService } from '@/src/modules/plugin-loader.service.ts';
 
-import { MockCommand } from '@/tools/mocks/mock.command';
-import { MockTaskCommand } from '@/tools/mocks/mock-task.command';
+import { MockCommand } from '@/tools/mocks/mock.command.ts';
+import { MockTaskCommand } from '@/tools/mocks/mock-task.command.ts';
 
 // Mocks
 vi.mock('@/src/modules/module', async (importOriginal) => {
-  const mod: typeof import('@/src/modules/module') = await importOriginal();
+  const mod: typeof import('@/src/modules/module.ts') = await importOriginal();
 
   return {
     ...mod,
