@@ -466,7 +466,7 @@ __metadata:
     eslint: 8.48.0
     eslint-plugin-react: 7.33.2
     eslint-plugin-react-hooks: 4.6.0
-    eslint-plugin-vitest: 0.2.8
+    eslint-plugin-vitest: 0.3.0
     eslint-plugin-workspaces: 0.9.0
     fork-ts-checker-webpack-plugin: 8.0.0
     ink: ^4.3.0
@@ -1135,7 +1135,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/utils@npm:6.5.0, @typescript-eslint/utils@npm:^6.2.0":
+"@typescript-eslint/utils@npm:6.5.0, @typescript-eslint/utils@npm:^6.5.0":
   version: 6.5.0
   resolution: "@typescript-eslint/utils@npm:6.5.0"
   dependencies:
@@ -2657,18 +2657,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-vitest@npm:0.2.8":
-  version: 0.2.8
-  resolution: "eslint-plugin-vitest@npm:0.2.8"
+"eslint-plugin-vitest@npm:0.3.0":
+  version: 0.3.0
+  resolution: "eslint-plugin-vitest@npm:0.3.0"
   dependencies:
-    "@typescript-eslint/utils": ^6.2.0
+    "@typescript-eslint/utils": ^6.5.0
+    typescript: ^5.2.2
   peerDependencies:
     eslint: ">=8.0.0"
     vitest: "*"
   peerDependenciesMeta:
-    vite:
+    "@typescript-eslint/eslint-plugin":
       optional: true
-  checksum: bf09a8da8b564277b7bfcac37d24b3db16b35c61293bccfeb45651a3810c919da74e29e5a264eaf611af35c91b971dbbf28f6fba34166cf6a263d40ad91a48a6
+  checksum: 26fbd0b1f0b4751223e327a5ec5621017c95b093142d18bf795c3ce8b6391bef79fcd73588e16a52209f2bbc199885fb56f726269db250826826692e51345bc1
   languageName: node
   linkType: hard
 
@@ -6201,7 +6202,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:5.2.2":
+"typescript@npm:5.2.2, typescript@npm:^5.2.2":
   version: 5.2.2
   resolution: "typescript@npm:5.2.2"
   bin:
@@ -6211,7 +6212,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@5.2.2#~builtin<compat/typescript>":
+"typescript@patch:typescript@5.2.2#~builtin<compat/typescript>, typescript@patch:typescript@^5.2.2#~builtin<compat/typescript>":
   version: 5.2.2
   resolution: "typescript@patch:typescript@npm%3A5.2.2#~builtin<compat/typescript>::version=5.2.2&hash=f3b441"
   bin:
