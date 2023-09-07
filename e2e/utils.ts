@@ -1,9 +1,8 @@
 import cp from 'node:child_process';
 import path from 'node:path';
 
-import { InkScreen } from '@/tools/ink-screen';
-import { type PackageManager } from '@/src/project/types';
-import { splitCommandLine } from '@/src/utils/string';
+import { InkScreen } from '@/tools/ink-screen.js';
+import { splitCommandLine } from '@/src/utils/string.js';
 
 // Constants
 export const MAIN = path.join(__dirname, '../bin/jill.mjs');

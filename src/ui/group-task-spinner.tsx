@@ -21,7 +21,7 @@ export default function GroupTaskSpinner({ group }: GroupTaskSpinnerProps) {
   const [tasks, setTasks] = useState([...group.tasks]);
 
   // Memo
-  const isReduced = useMemo(() => !verbose && status == 'done' && tasks.every((tsk) => isCommandCtx(tsk.context)), [status, tasks]);
+  const isReduced = useMemo(() => !verbose && status == 'done' && tasks.every((tsk) => isCommandCtx(tsk.context)), [verbose, status, tasks]);
 
   // Effects
   useLayoutEffect(() => {
