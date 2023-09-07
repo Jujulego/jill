@@ -21,5 +21,8 @@
   "module": {
     "type": "es6"
   },
-  "sourceMaps": true
+  "sourceMaps": true,
+  "env": {
+    "targets": "node 16"
+  }
 }
