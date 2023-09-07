@@ -1,6 +1,4 @@
-import { dirname } from 'node:path';
-import { fileURLToPath } from 'node:url';
-import { swc } from 'rollup-plugin-swc3';
+import swc from '@rollup/plugin-swc';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import { defineConfig } from 'vitest/config';
 
@@ -17,26 +15,6 @@ export default defineConfig({
   esbuild: false,
   plugins: [
     tsconfigPaths(),
-    swc({
-      jsc: {
-        loose: true,
-        parser: {
-          syntax: 'typescript',
-          tsx: true,
-          decorators: true,
-          dynamicImport: true
-        },
-        transform: {
-          react: {
-            runtime: 'automatic'
-          }
-        },
-        baseUrl: dirname(fileURLToPath(import.meta.url)),
-        paths: {
-          '@/src/*': ['./src/*'],
-          '@/tools/*': ['./tools/*']
-        }
-      }
-    })
+    swc()
   ]
 });

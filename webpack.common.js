@@ -5,6 +5,7 @@ import path from 'node:path';
 import url from 'node:url';
 
 // Options
+const DIRNAME = path.dirname(url.fileURLToPath(import.meta.url));
 const FORCE_COMMONJS = ['avj', 'inversify-inject-decorators', 'slugify'];
 
 /**
@@ -30,7 +31,7 @@ const commonConfig = {
     library: {
       type: 'module'
     },
-    path: path.resolve(path.dirname(url.fileURLToPath(import.meta.url)), 'dist'),
+    path: path.resolve(DIRNAME, 'dist'),
     clean: {
       keep: /(\.d\.ts|\.tsbuildinfo)$/
     },
