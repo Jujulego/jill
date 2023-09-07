@@ -10,7 +10,7 @@ import { container, lazyInjectNamed } from '@/src/inversify.config.ts';
 import { buildCommandModule, COMMAND, COMMAND_MODULE, getCommandOpts, type ICommand } from '@/src/modules/command.ts';
 import { getModule } from '@/src/modules/module.ts';
 import { PluginLoaderService } from '@/src/modules/plugin-loader.service.ts';
-import { TaskCommand } from '@/src/modules/task-command.ts';
+import { TaskCommand } from '@/src/modules/task-command.tsx';
 import { type Class } from '@/src/types.ts';
 
 // @ts-ignore: Outside of typescript's rootDir in build

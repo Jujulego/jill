@@ -3,7 +3,7 @@ import { inject } from 'inversify';
 
 import { Logger } from '@/src/commons/logger.service.ts';
 import { container } from '@/src/inversify.config.ts';
-import { INK_APP } from '@/src/ink.config.ts';
+import { INK_APP } from '@/src/ink.config.tsx';
 import { Service } from '@/src/modules/service.ts';
 
 // Interface

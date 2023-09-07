@@ -12,6 +12,7 @@
         "runtime": "automatic"
       }
     },
+    "baseUrl": "./",
     "paths": {
       "@/src/*": ["./src/*"],
       "@/tools/*": ["./tools/*"]
