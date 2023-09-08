@@ -101,6 +101,7 @@ jobs:
         node:
           - 16
           - 18
+          - 20
         packageManager:
           - npm
           - yarn
