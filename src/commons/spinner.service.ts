@@ -1,4 +1,4 @@
-import { multiplexer, source } from '@jujulego/event-tree';
+import { multiplexer$, source$ } from '@jujulego/event-tree';
 import { inject } from 'inversify';
 
 import { Logger } from '@/src/commons/logger.service.ts';
@@ -20,8 +20,8 @@ export class SpinnerService {
   private readonly _logger: Logger;
   private _status: SpinnerStatus = 'stop';
   private _label = '';
-  private _events = multiplexer({
-    state: source<SpinnerState>(),
+  private _events = multiplexer$({
+    state: source$<SpinnerState>(),
   });
 
   // Constructor

@@ -1,6 +1,6 @@
 {
   "name": "@jujulego/jill",
-  "version": "2.3.1",
+  "version": "2.3.2",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -29,9 +29,9 @@
     "node": "^16.x || ^18.x"
   },
   "dependencies": {
-    "@jujulego/event-tree": "^4.0.1",
-    "@jujulego/tasks": "^2.0.0",
-    "@jujulego/utils": "^2.0.0",
+    "@jujulego/event-tree": "^4.1.0",
+    "@jujulego/tasks": "^2.0.1",
+    "@jujulego/utils": "^2.0.1",
     "ajv": "^8.12.0",
     "chalk": "^5.3.0",
     "cosmiconfig": "^8.2.0",

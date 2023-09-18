@@ -1,5 +1,5 @@
 import { Task } from '@jujulego/tasks';
-import { waitFor } from '@jujulego/event-tree';
+import { waitFor$ } from '@jujulego/event-tree';
 import { vi } from 'vitest';
 
 import { container } from '@/src/inversify.config';
@@ -20,7 +20,7 @@ vi.mock('@jujulego/event-tree', async (importOriginal) => {
 
   return {
     ...mod,
-    waitFor: vi.fn(mod.waitFor),
+    waitFor$: vi.fn(mod.waitFor$),
   };
 });
 
@@ -134,7 +134,7 @@ describe('ScriptTask._orchestrate', () => {
     expect(next).toEqual({ done: false, value: expect.any(Task) });
 
     // Then wait for it to finish
-    vi.mocked(waitFor).mockResolvedValue({ failed: 0 });
+    vi.mocked(waitFor$).mockResolvedValue({ failed: 0 });
 
     next = await it.next();
     expect(next).toEqual({ done: true });
@@ -153,7 +153,7 @@ describe('ScriptTask._orchestrate', () => {
     expect(next).toEqual({ done: false, value: expect.any(Task) });
 
     // Then wait for it to finish
-    vi.mocked(waitFor).mockResolvedValue({ failed: 1 });
+    vi.mocked(waitFor$).mockResolvedValue({ failed: 1 });
 
     next = await it.next();
     expect(next).toEqual({ done: true });

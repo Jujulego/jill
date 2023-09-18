@@ -1,9 +1,9 @@
-import { once, source, type Source } from '@jujulego/event-tree';
+import { once$, source$, type Source } from '@jujulego/event-tree';
 import { type SpawnTask, type SpawnTaskStream } from '@jujulego/tasks';
 
 // Utils
 export function linesFrom(task: SpawnTask, stream: SpawnTaskStream): Source<string> {
-  const inner = source<string>();
+  const inner = source$<string>();
 
   if (task.completed) {
     return inner;
@@ -24,7 +24,7 @@ export function linesFrom(task: SpawnTask, stream: SpawnTaskStream): Source<stri
   });
 
   // Listen to end of task
-  once(task, 'completed', () => {
+  once$(task, 'completed', () => {
     stop();
 
     if (current) {

@@ -1,4 +1,4 @@
-import { waitFor } from '@jujulego/event-tree';
+import { waitFor$ } from '@jujulego/event-tree';
 import { plan as extractPlan, type Task, type TaskManager, TaskSet, type TaskSummary } from '@jujulego/tasks';
 import { injectable } from 'inversify';
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
@@ -78,7 +78,7 @@ export abstract class TaskCommand<A = unknown> extends InkCommand<A> {
       // Start tasks
       tasks.start(this.manager);
 
-      const result = await waitFor(tasks, 'finished');
+      const result = await waitFor$(tasks, 'finished');
 
       if (result.failed > 0) {
         throw new ExitException(1);

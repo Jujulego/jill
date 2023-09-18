@@ -1,4 +1,4 @@
-import { waitFor } from '@jujulego/event-tree';
+import { waitFor$ } from '@jujulego/event-tree';
 import { GroupTask, type Task, type TaskContext, type TaskOptions, TaskSet } from '@jujulego/tasks';
 
 import { container } from '@/src/inversify.config.ts';
@@ -91,7 +91,7 @@ export class ScriptTask extends GroupTask<ScriptContext> {
 
     yield* this._scriptTasks;
 
-    const results = await waitFor(this._scriptTasks, 'finished');
+    const results = await waitFor$(this._scriptTasks, 'finished');
     this.setStatus(results.failed === 0 ? 'done' : 'failed');
   }
 

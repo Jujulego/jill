@@ -1,4 +1,4 @@
-import { once } from '@jujulego/event-tree';
+import { once$ } from '@jujulego/event-tree';
 import { SpawnTask, type SpawnTaskOptions, TaskContext, type TaskManager } from '@jujulego/tasks';
 import { inject } from 'inversify';
 
@@ -85,8 +85,8 @@ export class GitService {
     return new Promise((resolve, reject) => {
       const task = this.diff(['--quiet', reference, '--', ...files], opts);
 
-      once(task, 'status.done', () => resolve(false));
-      once(task, 'status.failed', () => {
+      once$(task, 'status.done', () => resolve(false));
+      once$(task, 'status.failed', () => {
         if (task.exitCode) {
           resolve(true);
         } else {
