@@ -1,4 +1,4 @@
-import { iterate } from '@jujulego/event-tree';
+import { iterate$ } from '@jujulego/event-tree';
 import { vi } from 'vitest';
 
 import { combine, streamLines } from '@/src/utils/streams';
@@ -11,7 +11,7 @@ vi.mock('@jujulego/event-tree', async (importOriginal) => {
 
   return {
     ...mod,
-    iterate: vi.fn(mod.iterate)
+    iterate$: vi.fn(mod.iterate$)
   };
 });
 
@@ -68,7 +68,7 @@ describe('streamLines', () => {
   });
 
   it('should throw error thrown by streamEvents', async () => {
-    vi.mocked(iterate)
+    vi.mocked(iterate$)
       // eslint-disable-next-line require-yield
       .mockImplementation(async function* () { throw new Error('aborted'); });
 
