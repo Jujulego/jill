@@ -421,12 +421,12 @@ __metadata:
   linkType: hard
 
 "@jujulego/event-tree@npm:^4.1.0":
-  version: 4.1.0
-  resolution: "@jujulego/event-tree@npm:4.1.0"
+  version: 4.1.1
+  resolution: "@jujulego/event-tree@npm:4.1.1"
   dependenciesMeta:
     vitest@0.34.4:
       unplugged: true
-  checksum: fca03a9d3f413fc407afd0e312a17b258f35d515fbf62a862c894f380148c13746ed2286c9ca0a597111b00809a8799ad0c646159d64f1680efc31726f15e033
+  checksum: 6a76c29b4727e5533f88b61de8a7822bc575436ebd055cc5a1a2f37d5d16e24e5218b77f0bcccf7e5b8024977419c489006c994d8e761083a7d75b6b781d14a9
   languageName: node
   linkType: hard
 
