@@ -3,10 +3,10 @@ import { render } from 'ink-testing-library';
 import { Text } from 'ink';
 import { vi } from 'vitest';
 
-import { ScriptTask } from '@/src/tasks/script-task';
-import TaskName from '@/src/ui/task-name';
+import { ScriptTask } from '@/src/tasks/script-task.js';
+import TaskName from '@/src/ui/task-name.js';
 
-import { TestBed } from '@/tools/test-bed';
+import { TestBed } from '@/tools/test-bed.js';
 
 // Setup
 let bed: TestBed;

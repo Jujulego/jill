@@ -1,6 +1,6 @@
 import { vi } from 'vitest';
 
-import { Command, type ICommand } from '@/src/modules/command';
+import { Command, type ICommand } from '@/src/modules/command.js';
 
 // Command
 @Command({

@@ -1,4 +1,4 @@
-import { capitalize, splitCommandLine } from '@/src/utils/string';
+import { capitalize, splitCommandLine } from '@/src/utils/string.js';
 
 // Tests
 describe('capitalize', () => {

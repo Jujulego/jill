@@ -1,7 +1,7 @@
 import type { MatcherState } from '@vitest/expect';
 import { vi } from 'vitest';
 
-import { toYield } from './to-yield';
+import { toYield } from './to-yield.js';
 
 // Tests
 describe('toYield', () => {

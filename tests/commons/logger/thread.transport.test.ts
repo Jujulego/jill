@@ -1,7 +1,7 @@
 import { vi } from 'vitest';
 import { type LogEntry } from 'winston';
 
-import { ThreadTransport } from '@/src/commons/logger/thread.transport';
+import { ThreadTransport } from '@/src/commons/logger/thread.transport.js';
 
 // Setup
 let transport: ThreadTransport;

@@ -1,7 +1,7 @@
 import chalk from 'chalk';
 import wt from 'node:worker_threads';
 
-import { consoleFormat } from '@/src/commons/logger/console.formatter';
+import { consoleFormat } from '@/src/commons/logger/console.formatter.js';
 
 // Setup
 chalk.level = 1;

@@ -1,7 +1,7 @@
 import { ParallelGroup, SpawnTask, type TaskContext } from '@jujulego/tasks';
 
-import { CommandTask } from '@/src/tasks/command-task';
-import { ScriptTask } from '@/src/tasks/script-task';
+import { CommandTask } from '@/src/tasks/command-task.js';
+import { ScriptTask } from '@/src/tasks/script-task.js';
 
 // Classes
 export class TestParallelGroup<C extends TaskContext = TaskContext> extends ParallelGroup<C> {

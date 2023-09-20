@@ -1,19 +1,19 @@
 import path from 'node:path';
-import yargs from 'yargs';
+import yargs, { Argv } from 'yargs';
 import { vi } from 'vitest';
 
-import { ContextService } from '@/src/commons/context.service';
-import { Logger } from '@/src/commons/logger.service';
-import { SpinnerService } from '@/src/commons/spinner.service';
-import { CURRENT } from '@/src/constants';
-import { container } from '@/src/inversify.config';
-import { LoadProject } from '@/src/middlewares/load-project';
-import { applyMiddlewares } from '@/src/modules/middleware';
-import { Project } from '@/src/project/project';
-import { ProjectRepository } from '@/src/project/project.repository';
+import { ContextService } from '@/src/commons/context.service.js';
+import { Logger } from '@/src/commons/logger.service.js';
+import { SpinnerService } from '@/src/commons/spinner.service.js';
+import { CURRENT } from '@/src/constants.js';
+import { container } from '@/src/inversify.config.js';
+import { LoadProject } from '@/src/middlewares/load-project.js';
+import { applyMiddlewares } from '@/src/modules/middleware.js';
+import { Project } from '@/src/project/project.js';
+import { ProjectRepository } from '@/src/project/project.repository.js';
 
 // Setup
-let parser: yargs.Argv;
+let parser: Argv;
 let context: ContextService;
 let spinner: SpinnerService;
 let projectRepo: ProjectRepository;

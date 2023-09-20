@@ -1,11 +1,11 @@
 import { vi } from 'vitest';
 
-import { container } from '@/src/inversify.config';
-import { PluginLoaderService } from '@/src/modules/plugin-loader.service';
-import { dynamicImport } from '@/src/utils/import';
-import { CONFIG } from '@/src/config/config-loader';
-import { Command, type ICommand } from '@/src/modules/command';
-import { Plugin } from '@/src/modules/plugin';
+import { container } from '@/src/inversify.config.js';
+import { PluginLoaderService } from '@/src/modules/plugin-loader.service.js';
+import { dynamicImport } from '@/src/utils/import.js';
+import { CONFIG } from '@/src/config/config-loader.js';
+import { Command, type ICommand } from '@/src/modules/command.js';
+import { Plugin } from '@/src/modules/plugin.js';
 
 // Mocks
 vi.mock('@/src/utils/import');

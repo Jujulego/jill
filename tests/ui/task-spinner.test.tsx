@@ -2,10 +2,10 @@ import { render, cleanup } from 'ink-testing-library';
 import symbols from 'log-symbols';
 import { vi } from 'vitest';
 
-import TaskSpinner from '@/src/ui/task-spinner';
+import TaskSpinner from '@/src/ui/task-spinner.js';
 
-import { TestSpawnTask } from '@/tools/test-tasks';
-import { noColor } from '@/tools/utils';
+import { TestSpawnTask } from '@/tools/test-tasks.js';
+import { noColor } from '@/tools/utils.js';
 
 // Setup
 let task: TestSpawnTask;

@@ -1,7 +1,7 @@
 import type { MatcherState } from '@vitest/expect';
 import { vi } from 'vitest';
 
-import { toMatchLines } from './to-match-lines';
+import { toMatchLines } from './to-match-lines.js';
 
 // Tests
 describe('toMatchLines', () => {

@@ -4,18 +4,18 @@ import symbols from 'log-symbols';
 import yargs, { type CommandModule } from 'yargs';
 import { vi } from 'vitest';
 
-import { GroupCommand } from '@/src/commands/group';
-import { ContextService } from '@/src/commons/context.service';
-import { INK_APP } from '@/src/ink.config';
-import { container } from '@/src/inversify.config';
-import { type Workspace } from '@/src/project/workspace';
-import { TaskExprService } from '@/src/tasks/task-expr.service';
-import { TASK_MANAGER } from '@/src/tasks/task-manager.config';
-import Layout from '@/src/ui/layout';
+import { GroupCommand } from '@/src/commands/group.js';
+import { ContextService } from '@/src/commons/context.service.js';
+import { INK_APP } from '@/src/ink.config.js';
+import { container } from '@/src/inversify.config.js';
+import { type Workspace } from '@/src/project/workspace.js';
+import { TaskExprService } from '@/src/tasks/task-expr.service.js';
+import { TASK_MANAGER } from '@/src/tasks/task-manager.config.js';
+import Layout from '@/src/ui/layout.js';
 
-import { TestBed } from '@/tools/test-bed';
-import { TestParallelGroup, TestScriptTask } from '@/tools/test-tasks';
-import { flushPromises, spyLogger, wrapInkTestApp } from '@/tools/utils';
+import { TestBed } from '@/tools/test-bed.js';
+import { TestParallelGroup, TestScriptTask } from '@/tools/test-tasks.js';
+import { flushPromises, spyLogger, wrapInkTestApp } from '@/tools/utils.js';
 
 // Setup
 let app: ReturnType<typeof render>;

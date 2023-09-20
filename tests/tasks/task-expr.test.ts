@@ -1,12 +1,12 @@
 import { ParallelGroup, SequenceGroup } from '@jujulego/tasks';
 import { vi } from 'vitest';
 
-import { container } from '@/src/inversify.config';
-import { type Workspace } from '@/src/project/workspace';
-import { ScriptTask } from '@/src/tasks/script-task';
-import { type GroupNode, TaskExprService, type TaskNode } from '@/src/tasks/task-expr.service';
+import { container } from '@/src/inversify.config.js';
+import { type Workspace } from '@/src/project/workspace.js';
+import { ScriptTask } from '@/src/tasks/script-task.js';
+import { type GroupNode, TaskExprService, type TaskNode } from '@/src/tasks/task-expr.service.js';
 
-import { TestBed } from '@/tools/test-bed';
+import { TestBed } from '@/tools/test-bed.js';
 
 // Setup
 let service: TaskExprService;

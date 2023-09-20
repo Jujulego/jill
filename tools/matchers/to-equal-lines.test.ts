@@ -1,7 +1,7 @@
 import type { MatcherState } from '@vitest/expect';
 import { vi } from 'vitest';
 
-import { toEqualLines } from './to-equal-lines';
+import { toEqualLines } from './to-equal-lines.js';
 
 // Tests
 describe('toEqualLines', () => {

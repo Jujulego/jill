@@ -1,6 +1,6 @@
-import { PrivateFilter } from '@/src/filters/private.filter';
+import { PrivateFilter } from '@/src/filters/private.filter.js';
 
-import { TestBed } from '@/tools/test-bed';
+import { TestBed } from '@/tools/test-bed.js';
 
 // Setup
 let bed: TestBed;

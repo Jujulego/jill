@@ -1,8 +1,8 @@
 import { vi } from 'vitest';
 import { BroadcastChannel, getEnvironmentData, setEnvironmentData } from 'node:worker_threads';
 
-import { workerCache } from '@/src/utils/worker-cache';
-import { flushPromises } from '@/tools/utils';
+import { workerCache } from '@/src/utils/worker-cache.js';
+import { flushPromises } from '@/tools/utils.js';
 
 // Setup
 const KEY = 'jujulego:jill:test-key';
@@ -10,7 +10,7 @@ const channel = new BroadcastChannel('jujulego:jill:worker-cache');
 
 beforeEach(() => {
   // Reset environment data
-  setEnvironmentData(KEY, undefined);
+  setEnvironmentData(KEY, undefined as any); // eslint-disable-line @typescript-eslint/no-explicit-any
 
   // Spy on channel
   channel.onmessage = vi.fn();

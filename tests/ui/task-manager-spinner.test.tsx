@@ -3,8 +3,8 @@ import { render, cleanup } from 'ink-testing-library';
 import symbols from 'log-symbols';
 import { vi } from 'vitest';
 
-import TaskManagerSpinner from '@/src/ui/task-manager-spinner';
-import { spyLogger } from '@/tools/utils';
+import TaskManagerSpinner from '@/src/ui/task-manager-spinner.js';
+import { spyLogger } from '@/tools/utils.js';
 
 // Setup
 let taskA: SpawnTask;

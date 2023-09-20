@@ -2,8 +2,8 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import url from 'node:url';
 
-import { jill } from './utils';
-import { TestBed } from '@/tools/test-bed';
+import { jill } from './utils.js';
+import { TestBed } from '@/tools/test-bed.js';
 
 describe('jill test (command from plugin)', () => {
   describe.each(['npm', 'yarn'] as const)('using %s', (packageManager) => {

@@ -4,9 +4,9 @@ import wt from 'node:worker_threads';
 import { vi } from 'vitest';
 import winston from 'winston';
 
-import { Logger } from '@/src/commons/logger.service';
-import { ThreadTransport } from '@/src/commons/logger/thread.transport';
-import { container } from '@/src/inversify.config';
+import { Logger } from '@/src/commons/logger.service.js';
+import { ThreadTransport } from '@/src/commons/logger/thread.transport.js';
+import { container } from '@/src/inversify.config.js';
 
 // Setup
 chalk.level = 1;

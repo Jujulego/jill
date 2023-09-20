@@ -1,10 +1,10 @@
 import { vi } from 'vitest';
 
-import { GitService } from '@/src/commons/git.service';
-import { AffectedFilter } from '@/src/filters/affected.filter';
-import { container } from '@/src/inversify.config';
-import { type Workspace } from '@/src/project/workspace';
-import { TestBed } from '@/tools/test-bed';
+import { GitService } from '@/src/commons/git.service.js';
+import { AffectedFilter } from '@/src/filters/affected.filter.js';
+import { container } from '@/src/inversify.config.js';
+import { type Workspace } from '@/src/project/workspace.js';
+import { TestBed } from '@/tools/test-bed.js';
 
 // Setup
 let bed: TestBed;

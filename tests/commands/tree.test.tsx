@@ -2,15 +2,15 @@ import { cleanup, render } from 'ink-testing-library';
 import yargs, { type CommandModule } from 'yargs';
 import { vi } from 'vitest';
 
-import { TreeCommand } from '@/src/commands/tree';
-import { ContextService } from '@/src/commons/context.service';
-import { INK_APP } from '@/src/ink.config';
-import { type Workspace } from '@/src/project/workspace';
-import { container } from '@/src/inversify.config';
-import Layout from '@/src/ui/layout';
+import { TreeCommand } from '@/src/commands/tree.js';
+import { ContextService } from '@/src/commons/context.service.js';
+import { INK_APP } from '@/src/ink.config.js';
+import { type Workspace } from '@/src/project/workspace.js';
+import { container } from '@/src/inversify.config.js';
+import Layout from '@/src/ui/layout.js';
 
-import { TestBed } from '@/tools/test-bed';
-import { flushPromises, wrapInkTestApp } from '@/tools/utils';
+import { TestBed } from '@/tools/test-bed.js';
+import { flushPromises, wrapInkTestApp } from '@/tools/utils.js';
 
 // Setup
 let app: ReturnType<typeof render>;

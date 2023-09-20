@@ -1,7 +1,7 @@
 import { vi } from 'vitest';
 
-import { Command } from '@/src/modules/command';
-import { TaskCommand } from '@/src/modules/task-command';
+import { Command } from '@/src/modules/command.js';
+import { TaskCommand } from '@/src/modules/task-command.js';
 
 // Command
 @Command({

@@ -2,9 +2,9 @@ import { fs, vol } from 'memfs';
 import path from 'node:path';
 import { vi } from 'vitest';
 
-import { container } from '@/src/inversify.config';
-import { ProjectRepository } from '@/src/project/project.repository';
-import { Project } from '@/src/project/project';
+import { container } from '@/src/inversify.config.js';
+import { ProjectRepository } from '@/src/project/project.repository.js';
+import { Project } from '@/src/project/project.js';
 
 // Mocks
 vi.mock('node:fs/promises', () => ({ default: fs.promises }));
