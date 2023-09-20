@@ -1,7 +1,7 @@
-import { Plugin } from '@/src/modules/plugin';
+import { Plugin } from '@/src/modules/plugin.js';
 
-import { MockCommand } from './mock.command';
-import { MockTaskCommand } from './mock-task.command';
+import { MockCommand } from './mock.command.js';
+import { MockTaskCommand } from './mock-task.command.js';
 
 // plugin
 @Plugin({

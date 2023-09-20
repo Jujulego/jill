@@ -4,18 +4,18 @@ import symbols from 'log-symbols';
 import { vi } from 'vitest';
 import yargs, { type CommandModule } from 'yargs';
 
-import { EachCommand } from '@/src/commands/each';
-import { SpinnerService } from '@/src/commons/spinner.service';
-import { INK_APP } from '@/src/ink.config';
-import { container } from '@/src/inversify.config';
-import { TASK_MANAGER } from '@/src/tasks/task-manager.config';
-import Layout from '@/src/ui/layout';
+import { EachCommand } from '@/src/commands/each.js';
+import { SpinnerService } from '@/src/commons/spinner.service.js';
+import { INK_APP } from '@/src/ink.config.js';
+import { container } from '@/src/inversify.config.js';
+import { TASK_MANAGER } from '@/src/tasks/task-manager.config.js';
+import Layout from '@/src/ui/layout.js';
 
-import { TestBed } from '@/tools/test-bed';
-import { TestScriptTask } from '@/tools/test-tasks';
-import { flushPromises, spyLogger, wrapInkTestApp } from '@/tools/utils';
-import { ExitException } from '@/src/utils/exit';
-import { ContextService } from '@/src/commons/context.service';
+import { TestBed } from '@/tools/test-bed.js';
+import { TestScriptTask } from '@/tools/test-tasks.js';
+import { flushPromises, spyLogger, wrapInkTestApp } from '@/tools/utils.js';
+import { ExitException } from '@/src/utils/exit.js';
+import { ContextService } from '@/src/commons/context.service.js';
 
 // Setup
 let app: ReturnType<typeof render>;

@@ -1,10 +1,10 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
-import { TestBed } from '@/tools/test-bed';
-import { fileExists } from '@/tools/utils';
+import { TestBed } from '@/tools/test-bed.js';
+import { fileExists } from '@/tools/utils.js';
 
-import { jill } from './utils';
+import { jill } from './utils.js';
 
 // Tests
 describe('jill exec', () => {

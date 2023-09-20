@@ -3,13 +3,13 @@ import path from 'node:path';
 import glob from 'tiny-glob';
 import { vi } from 'vitest';
 
-import { GitService } from '@/src/commons/git.service';
-import { Logger } from '@/src/commons/logger.service';
-import { container } from '@/src/inversify.config';
-import { Project } from '@/src/project/project';
-import { Workspace } from '@/src/project/workspace';
+import { GitService } from '@/src/commons/git.service.js';
+import { Logger } from '@/src/commons/logger.service.js';
+import { container } from '@/src/inversify.config.js';
+import { Project } from '@/src/project/project.js';
+import { Workspace } from '@/src/project/workspace.js';
 
-import { TestBed } from '@/tools/test-bed';
+import { TestBed } from '@/tools/test-bed.js';
 
 // Mocks
 vi.mock('node:fs/promises', () => ({ default: fs.promises }));

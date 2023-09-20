@@ -1,11 +1,11 @@
 import { vi } from 'vitest';
 import { render, cleanup } from 'ink-testing-library';
 
-import { type Workspace } from '@/src/project/workspace';
-import WorkspaceTree from '@/src/ui/workspace-tree';
+import { type Workspace } from '@/src/project/workspace.js';
+import WorkspaceTree from '@/src/ui/workspace-tree.js';
 
-import { TestBed } from '@/tools/test-bed';
-import { flushPromises } from '@/tools/utils';
+import { TestBed } from '@/tools/test-bed.js';
+import { flushPromises } from '@/tools/utils.js';
 
 // Setup
 let bed: TestBed;

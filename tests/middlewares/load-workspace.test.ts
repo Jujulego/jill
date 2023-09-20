@@ -1,20 +1,20 @@
-import yargs from 'yargs';
+import yargs, { Argv } from 'yargs';
 import { vi } from 'vitest';
 
-import { ContextService } from '@/src/commons/context.service';
-import { SpinnerService } from '@/src/commons/spinner.service';
-import { CURRENT } from '@/src/constants';
-import { container } from '@/src/inversify.config';
-import { LoadWorkspace } from '@/src/middlewares/load-workspace';
-import { applyMiddlewares } from '@/src/modules/middleware';
-import { Workspace } from '@/src/project/workspace';
-import { ExitException } from '@/src/utils/exit';
+import { ContextService } from '@/src/commons/context.service.js';
+import { SpinnerService } from '@/src/commons/spinner.service.js';
+import { CURRENT } from '@/src/constants.js';
+import { container } from '@/src/inversify.config.js';
+import { LoadWorkspace } from '@/src/middlewares/load-workspace.js';
+import { applyMiddlewares } from '@/src/modules/middleware.js';
+import { Workspace } from '@/src/project/workspace.js';
+import { ExitException } from '@/src/utils/exit.js';
 
-import { TestBed } from '@/tools/test-bed';
+import { TestBed } from '@/tools/test-bed.js';
 
 // Setup
 let bed: TestBed;
-let parser: yargs.Argv;
+let parser: Argv;
 let context: ContextService;
 let spinner: SpinnerService;
 

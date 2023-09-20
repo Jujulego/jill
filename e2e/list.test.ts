@@ -1,10 +1,10 @@
 import fs from 'node:fs/promises';
 import path from 'path';
 
-import { TestBed } from '@/tools/test-bed';
-import { shell } from '@/tools/utils';
+import { TestBed } from '@/tools/test-bed.js';
+import { shell } from '@/tools/utils.js';
 
-import { jill } from './utils';
+import { jill } from './utils.js';
 
 describe('jill list', () => {
   describe.each(['npm', 'yarn'] as const)('using %s', (packageManager) => {

@@ -1,5 +1,5 @@
-import { ScriptsFilter } from '@/src/filters/scripts.filter';
-import { TestBed } from '@/tools/test-bed';
+import { ScriptsFilter } from '@/src/filters/scripts.filter.js';
+import { TestBed } from '@/tools/test-bed.js';
 
 // Setup
 let bed: TestBed;

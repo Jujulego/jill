@@ -3,14 +3,14 @@ import path from 'node:path';
 import { vi } from 'vitest';
 import yargs, { type CommandModule } from 'yargs';
 
-import { ListCommand } from '@/src/commands/list';
-import { INK_APP } from '@/src/ink.config';
-import { container } from '@/src/inversify.config';
-import Layout from '@/src/ui/layout';
+import { ListCommand } from '@/src/commands/list.js';
+import { INK_APP } from '@/src/ink.config.js';
+import { container } from '@/src/inversify.config.js';
+import Layout from '@/src/ui/layout.js';
 
-import { TestBed } from '@/tools/test-bed';
-import { wrapInkTestApp } from '@/tools/utils';
-import { ContextService } from '@/src/commons/context.service';
+import { TestBed } from '@/tools/test-bed.js';
+import { wrapInkTestApp } from '@/tools/utils.js';
+import { ContextService } from '@/src/commons/context.service.js';
 
 // Setup
 let app: ReturnType<typeof render>;

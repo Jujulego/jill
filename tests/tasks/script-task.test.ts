@@ -2,14 +2,14 @@ import { Task } from '@jujulego/tasks';
 import { waitFor$ } from '@jujulego/event-tree';
 import { vi } from 'vitest';
 
-import { container } from '@/src/inversify.config';
-import { JillApplication } from '@/src/jill.application';
-import { type Workspace } from '@/src/project/workspace';
-import { CommandTask } from '@/src/tasks/command-task';
-import { ScriptTask } from '@/src/tasks/script-task';
+import { container } from '@/src/inversify.config.js';
+import { JillApplication } from '@/src/jill.application.js';
+import { type Workspace } from '@/src/project/workspace.js';
+import { CommandTask } from '@/src/tasks/command-task.js';
+import { ScriptTask } from '@/src/tasks/script-task.js';
 
-import { TestBed } from '@/tools/test-bed';
-import { TestCommandTask, TestScriptTask } from '@/tools/test-tasks';
+import { TestBed } from '@/tools/test-bed.js';
+import { TestCommandTask, TestScriptTask } from '@/tools/test-tasks.js';
 
 // Setup
 let bed: TestBed;

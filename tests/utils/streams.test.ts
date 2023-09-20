@@ -1,9 +1,9 @@
 import { iterate$ } from '@jujulego/event-tree';
 import { vi } from 'vitest';
 
-import { combine, streamLines } from '@/src/utils/streams';
+import { combine, streamLines } from '@/src/utils/streams.js';
 
-import { TestSpawnTask } from '@/tools/test-tasks';
+import { TestSpawnTask } from '@/tools/test-tasks.js';
 
 // Mocks
 vi.mock('@jujulego/event-tree', async (importOriginal) => {

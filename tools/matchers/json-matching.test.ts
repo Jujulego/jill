@@ -1,7 +1,7 @@
 import type { MatcherState } from '@vitest/expect';
 import { vi } from 'vitest';
 
-import { jsonMatching } from './json-matching';
+import { jsonMatching } from './json-matching.js';
 
 // Tests
 describe('jsonMatching', () => {

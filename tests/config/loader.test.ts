@@ -1,12 +1,13 @@
+import { ValidateFunction } from 'ajv';
 import { vi } from 'vitest';
 import path from 'node:path';
 
-import { Logger } from '@/src/commons/logger.service';
-import { configLoader } from '@/src/config/config-loader';
-import { type IConfig } from '@/src/config/types';
-import { CONFIG_EXPLORER, CONFIG_VALIDATOR } from '@/src/config/utils';
-import { container } from '@/src/inversify.config';
-import { ExitException } from '@/src/utils/exit';
+import { Logger } from '@/src/commons/logger.service.js';
+import { configLoader } from '@/src/config/config-loader.js';
+import { type IConfig, type IConfigExplorer } from '@/src/config/types.js';
+import { CONFIG_EXPLORER, CONFIG_VALIDATOR } from '@/src/config/utils.js';
+import { container } from '@/src/inversify.config.js';
+import { ExitException } from '@/src/utils/exit.js';
 
 // Setup
 let logger: Logger;
@@ -31,8 +32,8 @@ describe('configLoader', () => {
         config,
         filepath: '/test/.jillrc.yml',
       }),
-    };
-    const validator = vi.fn().mockReturnValue(true);
+    } as unknown as IConfigExplorer;
+    const validator = vi.fn().mockReturnValue(true) as unknown as ValidateFunction<IConfig>;
 
     container.rebind(CONFIG_EXPLORER).toConstantValue(explorer);
     container.rebind(CONFIG_VALIDATOR).toConstantValue(validator);
@@ -56,9 +57,9 @@ describe('configLoader', () => {
         config,
         filepath: '/test/.jillrc.yml',
       }),
-    };
+    } as unknown as IConfigExplorer;
 
-    const validator = vi.fn().mockReturnValue(true);
+    const validator = vi.fn().mockReturnValue(true) as unknown as ValidateFunction<IConfig>;
 
     container.rebind(CONFIG_EXPLORER).toConstantValue(explorer);
     container.rebind(CONFIG_VALIDATOR).toConstantValue(validator);
@@ -81,9 +82,9 @@ describe('configLoader', () => {
         config,
         filepath: '/test/.jillrc.yml',
       }),
-    };
+    } as unknown as IConfigExplorer;
 
-    const validator = vi.fn().mockReturnValue(true);
+    const validator = vi.fn().mockReturnValue(true) as unknown as ValidateFunction<IConfig>;
 
     container.rebind(CONFIG_EXPLORER).toConstantValue(explorer);
     container.rebind(CONFIG_VALIDATOR).toConstantValue(validator);
@@ -102,9 +103,9 @@ describe('configLoader', () => {
         config: {},
         filepath: '/test/.jillrc.yml',
       }),
-    };
+    } as unknown as IConfigExplorer;
 
-    const validator = vi.fn().mockReturnValue(false);
+    const validator = vi.fn().mockReturnValue(false) as unknown as ValidateFunction<IConfig>;
     Object.assign(validator, {
       errors: [
         {

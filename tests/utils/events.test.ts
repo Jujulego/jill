@@ -1,7 +1,7 @@
 import { vi } from 'vitest';
 
-import { linesFrom } from '@/src/utils/events';
-import { TestSpawnTask } from '@/tools/test-tasks';
+import { linesFrom } from '@/src/utils/events.js';
+import { TestSpawnTask } from '@/tools/test-tasks.js';
 
 // Tests
 describe('linesFrom', () => {

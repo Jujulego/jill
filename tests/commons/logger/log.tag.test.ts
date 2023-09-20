@@ -1,6 +1,6 @@
 import path from 'node:path';
 
-import { $log } from '@/src/commons/logger/log.tag';
+import { $log } from '@/src/commons/logger/log.tag.js';
 
 // Tests
 describe('$log', () => {

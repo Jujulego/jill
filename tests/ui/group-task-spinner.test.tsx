@@ -3,8 +3,8 @@ import { render, cleanup } from 'ink-testing-library';
 import symbols from 'log-symbols';
 import { vi } from 'vitest';
 
-import GroupTaskSpinner from '@/src/ui/group-task-spinner';
-import { flushPromises, spyLogger } from '@/tools/utils';
+import GroupTaskSpinner from '@/src/ui/group-task-spinner.js';
+import { flushPromises, spyLogger } from '@/tools/utils.js';
 
 // Setup
 let taskA: SpawnTask;

@@ -1,5 +1,6 @@
-import yargs, { type ArgumentsCamelCase, type CommandBuilder } from 'yargs';
+import { ContainerModule } from 'inversify';
 import { vi } from 'vitest';
+import yargs, { type ArgumentsCamelCase, type CommandBuilder } from 'yargs';
 
 import {
   buildCommandModule,
@@ -8,11 +9,10 @@ import {
   getCommandOpts,
   type ICommand,
   type ICommandOpts, COMMAND
-} from '@/src/modules/command';
-import { applyMiddlewares, type IMiddleware, Middleware } from '@/src/modules/middleware';
-import { container } from '@/src/inversify.config';
-import { getRegistry } from '@/src/modules/module';
-import { ContainerModule } from 'inversify';
+} from '@/src/modules/command.js';
+import { applyMiddlewares, type IMiddleware, Middleware } from '@/src/modules/middleware.js';
+import { container } from '@/src/inversify.config.js';
+import { getRegistry } from '@/src/modules/module.js';
 
 // Utils
 @Command({
@@ -33,7 +33,7 @@ class TestMiddleware implements IMiddleware {
 
 // Mocks
 vi.mock('@/src/modules/middleware', async (importOriginal) => {
-  const mod: typeof import('@/src/modules/middleware') = await importOriginal();
+  const mod: typeof import('@/src/modules/middleware.js') = await importOriginal();
 
   return {
     ...mod,

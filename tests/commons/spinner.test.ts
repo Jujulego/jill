@@ -1,8 +1,8 @@
 import { vi } from 'vitest';
 
-import { INK_APP } from '@/src/ink.config';
-import { container } from '@/src/inversify.config';
-import { SpinnerService, type SpinnerState } from '@/src/commons/spinner.service';
+import { INK_APP } from '@/src/ink.config.js';
+import { container } from '@/src/inversify.config.js';
+import { SpinnerService, type SpinnerState } from '@/src/commons/spinner.service.js';
 
 // Setup
 let service: SpinnerService;

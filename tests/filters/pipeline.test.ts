@@ -1,7 +1,7 @@
 import { vi } from 'vitest';
 
-import { type PipelineFilter, Pipeline } from '@/src/filters/pipeline';
-import { TestBed } from '@/tools/test-bed';
+import { type PipelineFilter, Pipeline } from '@/src/filters/pipeline.js';
+import { TestBed } from '@/tools/test-bed.js';
 
 // Setup
 let bed: TestBed;

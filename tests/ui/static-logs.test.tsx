@@ -2,9 +2,9 @@ import { render } from 'ink-testing-library';
 import { vi } from 'vitest';
 import winston from 'winston';
 
-import { container } from '@/src/inversify.config';
-import { Logger } from '@/src/commons/logger.service';
-import StaticLogs from '@/src/ui/static-logs';
+import { container } from '@/src/inversify.config.js';
+import { Logger } from '@/src/commons/logger.service.js';
+import StaticLogs from '@/src/ui/static-logs.js';
 
 // Setup
 let logger: Logger;
