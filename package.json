@@ -91,5 +91,5 @@
     "webpack-merge": "5.9.0",
     "webpack-node-externals": "3.0.0"
   },
-  "packageManager": "yarn@3.6.3"
+  "packageManager": "yarn@3.6.4"
 }
