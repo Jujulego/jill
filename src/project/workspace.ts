@@ -118,7 +118,7 @@ export class Workspace {
         if (ws._satisfies(this, range)) {
           yield ws;
         } else {
-          this._logger.verbose`Ignoring ${kind} ${ws.reference} as it does not match requirement ${range}`;
+          this._logger.warn`Ignoring ${kind} ${ws.reference} as it does not match requirement ${range}`;
         }
       }
     }
