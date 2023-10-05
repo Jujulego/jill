@@ -80,7 +80,7 @@ describe('TaskCommand', () => {
       expect(manager.add).toHaveBeenCalledWith(task);
 
       // should print task spinner
-      expect(app.lastFrame()).toEqual(expect.ignoreColor(/^. Running cmd in wks$/));
+      expect(app.lastFrame()).toEqual(expect.ignoreColor(/^. Run cmd in wks$/));
 
       // complete task
       vi.spyOn(task, 'status', 'get').mockReturnValue('done');
@@ -90,7 +90,7 @@ describe('TaskCommand', () => {
       await prom;
 
       // should print task completed
-      expect(app.lastFrame()).toEqual(expect.ignoreColor(`${symbols.success} Running cmd in wks (took 100ms)`));
+      expect(app.lastFrame()).toEqual(expect.ignoreColor(`${symbols.success} Run cmd in wks (took 100ms)`));
     });
 
     it('should exit 1 if a task fails', async () => {
@@ -106,7 +106,7 @@ describe('TaskCommand', () => {
       await expect(prom).rejects.toEqual(new ExitException(1));
 
       // should print task failed
-      expect(app.lastFrame()).toEqual(expect.ignoreColor(`${symbols.error} Running cmd in wks (took 100ms)`));
+      expect(app.lastFrame()).toEqual(expect.ignoreColor(`${symbols.error} Run cmd in wks (took 100ms)`));
     });
 
     it('should log and exit if no task were yielded', async () => {

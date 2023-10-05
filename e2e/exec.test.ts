@@ -91,7 +91,7 @@ describe('jill exec', () => {
       expect(res.code).toBe(0);
 
       expect(res.screen.screen).toMatchLines([
-        expect.ignoreColor(/^. Running build in wks-c \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^. Run build in wks-c \(took [0-9.]+m?s\)$/),
         expect.ignoreColor(/^.( yarn exec)? node -e "require\('node:fs'\).+ \(took [0-9.]+m?s\)/),
       ]);
 

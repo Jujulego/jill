@@ -19,9 +19,11 @@ export default function GroupTaskSpinner({ group }: GroupTaskSpinnerProps) {
   const [verbose, setVerbose] = useState(false);
   const [status, setStatus] = useState(group.status);
   const [tasks, setTasks] = useState([...group.tasks]);
+  const [canReduce, setCanReduce] = useState(true);
 
   // Memo
-  const isReduced = useMemo(() => !verbose && status == 'done' && tasks.every((tsk) => isCommandCtx(tsk.context)), [verbose, status, tasks]);
+  const forceExtended = useMemo(() => verbose || tasks.some((tsk) => !isCommandCtx(tsk.context)), [verbose, tasks]);
+  const isReduced = useMemo(() => !forceExtended && canReduce, [forceExtended, canReduce]);
 
   // Effects
   useLayoutEffect(() => {
@@ -52,6 +54,14 @@ export default function GroupTaskSpinner({ group }: GroupTaskSpinnerProps) {
       }
     });
   }, [group]);
+
+  useLayoutEffect(() => {
+    if (status === 'running') {
+      setCanReduce(false);
+    } else if (status === 'done') {
+      setCanReduce(true);
+    }
+  }, [status]);
 
   // Render
   return (

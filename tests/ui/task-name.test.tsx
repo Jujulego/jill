@@ -40,6 +40,6 @@ describe('<TaskName>', () => {
       </Text>
     );
 
-    expect(lastFrame()).toEqual(expect.ignoreColor('Running cmd in wks-a'));
+    expect(lastFrame()).toEqual(expect.ignoreColor('Run cmd in wks-a'));
   });
 });
