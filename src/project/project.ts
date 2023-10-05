@@ -46,7 +46,7 @@ export class Project {
     const relative = path.relative(this.root, path.dirname(file));
     const logger = this._logger.child({ label: relative ? `project@${relative}` : 'project' });
 
-    logger.verbose('Loading package.json ...');
+    logger.debug('Loading package.json ...');
 
     const data = await fs.readFile(file, 'utf-8');
     const mnf = JSON.parse(data);
