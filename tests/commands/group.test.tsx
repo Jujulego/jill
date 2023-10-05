@@ -111,8 +111,8 @@ describe('jill group', () => {
     // Should print all tasks
     expect(app.lastFrame()).toEqualLines([
       expect.ignoreColor(`${symbols.success} Test group (took 100ms)`),
-      expect.ignoreColor(`  ${symbols.success} Running test1 in wks (took 100ms)`),
-      expect.ignoreColor(`  ${symbols.success} Running test2 in wks (took 100ms)`),
+      expect.ignoreColor(`  ${symbols.success} Run test1 in wks (took 100ms)`),
+      expect.ignoreColor(`  ${symbols.success} Run test2 in wks (took 100ms)`),
     ]);
   });
 

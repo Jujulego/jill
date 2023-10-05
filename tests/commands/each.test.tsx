@@ -96,8 +96,8 @@ describe('jill each', () => {
 
     // should print task spinners
     expect(app.lastFrame()).toMatchLines([
-      expect.ignoreColor(/^. Running cmd in wks-1$/),
-      expect.ignoreColor(/^. Running cmd in wks-2$/),
+      expect.ignoreColor(/^. Run cmd in wks-1$/),
+      expect.ignoreColor(/^. Run cmd in wks-2$/),
     ]);
 
     // complete tasks
@@ -111,8 +111,8 @@ describe('jill each', () => {
 
     // should print all tasks completed
     expect(app.lastFrame()).toEqualLines([
-      expect.ignoreColor(`${symbols.success} Running cmd in wks-1 (took 100ms)`),
-      expect.ignoreColor(`${symbols.success} Running cmd in wks-2 (took 100ms)`),
+      expect.ignoreColor(`${symbols.success} Run cmd in wks-1 (took 100ms)`),
+      expect.ignoreColor(`${symbols.success} Run cmd in wks-2 (took 100ms)`),
     ]);
   });
 

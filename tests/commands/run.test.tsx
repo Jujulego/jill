@@ -76,7 +76,7 @@ describe('jill run', () => {
     expect(manager.add).toHaveBeenCalledWith(task);
 
     // should print task spinner
-    expect(app.lastFrame()).toEqual(expect.ignoreColor(/^. Running cmd in wks$/));
+    expect(app.lastFrame()).toEqual(expect.ignoreColor(/^. Run cmd in wks$/));
 
     // complete task
     vi.spyOn(task, 'status', 'get').mockReturnValue('done');
@@ -86,7 +86,7 @@ describe('jill run', () => {
     await prom;
 
     // should print task completed
-    expect(app.lastFrame()).toEqual(expect.ignoreColor(`${symbols.success} Running cmd in wks (took 100ms)`));
+    expect(app.lastFrame()).toEqual(expect.ignoreColor(`${symbols.success} Run cmd in wks (took 100ms)`));
   });
 
   it('should use given dependency selection mode', async () => {
