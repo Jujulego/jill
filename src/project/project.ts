@@ -1,11 +1,10 @@
+import { Logger, withLabel } from '@jujulego/logger';
 import { Lock } from '@jujulego/utils';
 import { injectable } from 'inversify';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import normalize, { type Package } from 'normalize-package-data';
 import glob from 'tiny-glob';
-
-import { type Logger } from '@/src/commons/logger.service.ts';
 
 import { Workspace } from './workspace.ts';
 import { type PackageManager } from './types.ts';
@@ -34,7 +33,7 @@ export class Project {
     opts: ProjectOptions = {}
   ) {
     if (opts.packageManager) {
-      this._logger.debug`Forced use of ${opts.packageManager} in #cwd:${this.root}`;
+      this._logger.debug`Forced use of ${opts.packageManager} in #!cwd:${this.root}`;
       this._packageManager = opts.packageManager;
     }
   }
@@ -44,7 +43,7 @@ export class Project {
     const file = path.resolve(this.root, dir, 'package.json');
 
     const relative = path.relative(this.root, path.dirname(file));
-    const logger = this._logger.child({ label: relative ? `project@${relative}` : 'project' });
+    const logger = this._logger.child(withLabel(relative ? `project@${relative}` : 'project'));
 
     logger.debug('Loading package.json ...');
 
@@ -76,13 +75,13 @@ export class Project {
       const files = await fs.readdir(this.root);
 
       if (files.includes('yarn.lock')) {
-        this._logger.debug`Detected yarn in #cwd:${this.root}`;
+        this._logger.debug`Detected yarn in #!cwd:${this.root}`;
         this._packageManager = 'yarn';
       } else if (files.includes('package-lock.json')) {
-        this._logger.debug`Detected npm in #cwd:${this.root}`;
+        this._logger.debug`Detected npm in #!cwd:${this.root}`;
         this._packageManager = 'npm';
       } else {
-        this._logger.debug`No package manager recognized in #cwd:${this.root}, defaults to npm`;
+        this._logger.debug`No package manager recognized in #!cwd:${this.root}, defaults to npm`;
         this._packageManager = 'npm';
       }
     }

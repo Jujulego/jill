@@ -1,7 +1,8 @@
+import { Logger, withLabel } from '@jujulego/logger';
+
 import { GitService } from '@/src/commons/git.service.ts';
 import { type Workspace } from '@/src/project/workspace.ts';
 import { lazyInject } from '@/src/inversify.config.ts';
-import { Logger } from '@/src/commons/logger.service.ts';
 
 import { type PipelineFilter } from './pipeline.ts';
 
@@ -23,7 +24,7 @@ export class AffectedFilter implements PipelineFilter {
 
   // Methods
   private async _formatRevision(wks: Workspace): Promise<string> {
-    const logger = this._logger.child({ label: wks.name });
+    const logger = this._logger.child(withLabel(wks.name));
 
     // Format revision
     let result = this.format;
@@ -56,7 +57,7 @@ export class AffectedFilter implements PipelineFilter {
     }
 
     if (result.includes('*')) {
-      logger.warn`No revision found matching ${result}, using fallback ${this.fallback}`;
+      logger.warning(`No revision found matching ${result}, using fallback ${this.fallback}`);
 
       return this.fallback;
     }

@@ -1,19 +1,10 @@
+import { flow$ } from '@jujulego/aegis';
+import { streamFormat, toStderr } from '@jujulego/logger';
 import { useStderr } from 'ink';
 import { useLayoutEffect, } from 'react';
-import winston from 'winston';
-import Transport from 'winston-transport';
 
 import { container } from '@/src/inversify.config.ts';
-import { Logger } from '@/src/commons/logger.service.ts';
-import { consoleFormat } from '@/src/commons/logger/console.formatter.ts';
-
-// Constants
-const MESSAGE = Symbol.for('message');
-
-// Types
-interface Info extends Record<string, unknown> {
-  [MESSAGE]: string;
-}
+import { LogGateway } from '@/src/commons/logger/log.gateway.ts';
 
 // Component
 export default function StaticLogs() {
@@ -22,43 +13,20 @@ export default function StaticLogs() {
 
   // Effect
   useLayoutEffect(() => {
-    const logger = container.get(Logger);
+    const gateway = container.get(LogGateway);
 
     // Remove Console transport
-    for (const transport of logger.winston.transports) {
-      if (transport instanceof winston.transports.Console) {
-        logger.winston.remove(transport);
-      }
-    }
+    gateway.clear();
 
     // Add custom transport
-    const transport = new class extends Transport {
-      // Constructor
-      constructor() {
-        super({
-          format: consoleFormat
-        });
-      }
-
-      // Methods
-      log(info: Info, next: () => void): void {
-        setTimeout(() => {
-          this.emit('logged', info);
-        }, 0);
-
-        write(info[MESSAGE] + '\n');
-
-        next();
-      }
-    };
-
-    logger.winston.add(transport);
+    const format = streamFormat();
+    const off = gateway.subscribe((log) => {
+      write(format(log) + '\n');
+    });
 
     return () => {
-      logger.winston.remove(transport);
-      logger.winston.add(new winston.transports.Console({
-        format: consoleFormat
-      }));
+      off();
+      flow$(gateway, toStderr());
     };
   }, [write]);
 

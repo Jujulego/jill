@@ -1,3 +1,5 @@
+import '@/src/commons/logger.service.ts';
+
 export * from './commons/git.service.ts';
 export * from './types.ts';
 
@@ -37,9 +39,6 @@ export * from './tasks/task-manager.config.ts';
 
 export { CONFIG } from './config/config-loader.ts';
 export { type IConfig } from './config/types.ts';
-
-export { Logger } from './commons/logger.service.ts';
-export { $log } from './commons/logger/log.tag.ts';
 
 // Ui
 export { default as GroupTaskSpinner } from './ui/group-task-spinner.tsx';
