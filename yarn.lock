@@ -420,7 +420,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jujulego/aegis@npm:2.0.0-beta.5, @jujulego/aegis@npm:^2.0.0-beta.5":
+"@jujulego/aegis@npm:^2.0.0-beta.5":
   version: 2.0.0-beta.5
   resolution: "@jujulego/aegis@npm:2.0.0-beta.5"
   dependencies:
@@ -513,20 +513,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jujulego/logger@npm:^0.2.2":
-  version: 0.2.2
-  resolution: "@jujulego/logger@npm:0.2.2"
-  dependencies:
-    "@jujulego/aegis": 2.0.0-beta.5
-    "@jujulego/event-tree": ^4.1.1
-    "@jujulego/quick-tag": ^0.3.3
-    chalk: ^5.3.0
-    chalk-template: ^1.1.0
-  checksum: b1f7861af258f88ae576b9125ef35611c6dc7e31ab0a3596c3febcd83a00910aa61e1a840d3cbdb407bb3298f6fbd2325aca7e248e4445df37d2b9f42f7d25b1
-  languageName: node
-  linkType: hard
-
-"@jujulego/logger@npm:^0.2.4":
+"@jujulego/logger@npm:^0.2.2, @jujulego/logger@npm:^0.2.4":
   version: 0.2.4
   resolution: "@jujulego/logger@npm:0.2.4"
   dependencies:

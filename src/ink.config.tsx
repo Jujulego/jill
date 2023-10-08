@@ -17,11 +17,6 @@ container
       throw new Error('Ink should only be used in main thread');
     }
 
-    return render(
-      <Layout />,
-      {
-        stdout: process.stdout.isTTY ? process.stdout : process.stderr,
-      }
-    );
+    return render(<Layout />);
   })
   .inSingletonScope();
