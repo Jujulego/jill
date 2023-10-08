@@ -1,5 +1,6 @@
 import { flow$ } from '@jujulego/aegis';
 import { streamFormat, toStderr } from '@jujulego/logger';
+import { chalkStderr } from 'chalk';
 import { useStderr } from 'ink';
 import { useLayoutEffect, } from 'react';
 
@@ -19,7 +20,7 @@ export default function StaticLogs() {
     gateway.clear();
 
     // Add custom transport
-    const format = streamFormat();
+    const format = streamFormat(chalkStderr);
     const off = gateway.subscribe((log) => {
       write(format(log) + '\n');
     });
