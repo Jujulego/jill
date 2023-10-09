@@ -58,7 +58,8 @@ describe('jill list', () => {
       const res = await jill('list --json', { cwd: prjDir });
 
       expect(res.code).toBe(0);
-      expect(res.stdout).toEqual([
+
+      expect(res.stdout).toMatchLines([
         expect.jsonMatching([
           {
             name: 'main',

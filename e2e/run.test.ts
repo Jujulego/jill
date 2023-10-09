@@ -105,9 +105,8 @@ describe('jill run', () => {
 
       // Check jill plan
       expect(res.code).toBe(0);
-      expect(res.stdout).toHaveLength(1);
 
-      const plan = JSON.parse(res.stdout[0]);
+      const plan = JSON.parse(res.stdout.join('\n'));
       expect(plan).toHaveLength(4);
 
       expect(plan[0]).toMatchObject({
