@@ -2,10 +2,10 @@ name: 'Javascript'
 
 on:
   push:
-    branches: [ master ]
+    branches: [ latest, next ]
 
   pull_request:
-    branches: [ master, next ]
+    branches: [ latest, next ]
 
 concurrency:
   group: javascript-${{ github.ref }}
@@ -16,7 +16,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
       - name: Use Node.js 16.x
         uses: actions/setup-node@v3
@@ -24,13 +25,14 @@ jobs:
           node-version: 16
           cache: yarn
 
-      - name: Install
+      - name: Install dependencies
         run: yarn install --immutable
 
       - name: Build
         run: yarn build:prod
 
-      - uses: actions/upload-artifact@v3
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
         with:
           name: build
           path: dist
@@ -43,7 +45,8 @@ jobs:
       security-events: write
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
       - name: Use Node.js 16.x
         uses: actions/setup-node@v3
@@ -51,7 +54,7 @@ jobs:
           node-version: 16
           cache: yarn
 
-      - name: Install
+      - name: Install dependencies
         run: yarn install --immutable
 
       - name: Lint
@@ -68,7 +71,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
       - name: Use Node.js 16.x
         uses: actions/setup-node@v3
@@ -76,13 +80,17 @@ jobs:
           node-version: 16
           cache: yarn
 
-      - name: Install
+      - name: Install dependencies
         run: yarn install --immutable
 
-      - name: Test
+#      - name: Type check tests
+#        run: yarn test:types --pass-with-no-tests
+
+      - name: Run tests
         run: yarn test --coverage
 
-      - uses: actions/upload-artifact@v3
+      - name: Upload coverage artifacts
+        uses: actions/upload-artifact@v3
         with:
           name: coverage
           path: coverage
@@ -107,7 +115,8 @@ jobs:
           - yarn
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
       - name: Use Node.js ${{ matrix.node }}.x
         uses: actions/setup-node@v3
@@ -115,20 +124,21 @@ jobs:
           node-version: ${{ matrix.node }}
           cache: yarn
 
-      - name: Install
+      - name: Install dependencies
         run: yarn install --immutable
 
-      - uses: actions/download-artifact@v3
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
         with:
           name: build
           path: dist
 
-      - name: Git setup
+      - name: Setup git
         run: |
           git config --global user.name github-actions
           git config --global user.email github-actions@github.com
 
-      - name: Test
+      - name: Run E2E tests
         run: yarn e2e --threads --single-thread -t ${{ matrix.packageManager }}
 
   complete:
@@ -147,17 +157,15 @@ jobs:
 
   publish:
     if: ${{ github.event_name == 'push' }}
+    name: Publish to npm
 
     runs-on: ubuntu-latest
     environment: npm
     needs: [ lint, tests, e2e ]
 
-    permissions:
-      actions: write
-      contents: write
-
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
       - name: Use Node.js 16.x
         uses: actions/setup-node@v3
@@ -166,22 +174,16 @@ jobs:
           registry-url: https://registry.npmjs.org
           cache: yarn
 
-      - name: Install
+      - name: Install dependencies
         run: yarn install --immutable
 
-      - uses: actions/download-artifact@v3
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
         with:
           name: build
           path: dist
 
-      - name: Publish latest
-        if: ${{ github.ref_name == 'master' }}
-        run: yarn npm publish --access public --tolerate-republish
-        env:
-          YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
       - name: Publish ${{ github.ref_name }}
-        if: ${{ github.ref_name != 'master' }}
         run: yarn npm publish --access public --tag ${{ github.ref_name }} --tolerate-republish
         env:
           YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -196,7 +198,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Download test coverage
+      - name: Download coverage artifacts
         uses: actions/download-artifact@v3
         continue-on-error: true
         with:
