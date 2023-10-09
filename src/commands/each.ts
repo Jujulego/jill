@@ -1,6 +1,6 @@
 import { Logger } from '@jujulego/logger';
 import { inject } from 'inversify';
-import logSymbols from 'log-symbols';
+import symbols from 'log-symbols';
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
 
 import { SpinnerService } from '@/src/commons/spinner.service.ts';
@@ -147,7 +147,7 @@ export class EachCommand extends TaskCommand<IEachCommandArgs> {
       }
 
       if (empty) {
-        this.logger.error(`${logSymbols.error} No matching workspace found !`);
+        this.logger.error(`${symbols.error} No matching workspace found !`);
         throw new ExitException(1);
       }
     } finally {

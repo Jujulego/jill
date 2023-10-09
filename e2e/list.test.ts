@@ -59,34 +59,32 @@ describe('jill list', () => {
 
       expect(res.code).toBe(0);
 
-      expect(res.stdout).toMatchLines([
-        expect.jsonMatching([
-          {
-            name: 'main',
-            version: '1.0.0',
-            slug: 'main',
-            root: prjDir,
-          },
-          {
-            name: 'wks-c',
-            version: '1.0.0',
-            slug: 'wks-c',
-            root: path.join(prjDir, 'wks-c'),
-          },
-          {
-            name: 'wks-b',
-            version: '1.0.0',
-            slug: 'wks-b',
-            root: path.join(prjDir, 'wks-b'),
-          },
-          {
-            name: 'wks-a',
-            version: '1.0.0',
-            slug: 'wks-a',
-            root: path.join(prjDir, 'wks-a'),
-          },
-        ])
-      ]);
+      expect(res.stdout.join('\n')).toEqual(expect.jsonMatching([
+        {
+          name: 'main',
+          version: '1.0.0',
+          slug: 'main',
+          root: prjDir,
+        },
+        {
+          name: 'wks-c',
+          version: '1.0.0',
+          slug: 'wks-c',
+          root: path.join(prjDir, 'wks-c'),
+        },
+        {
+          name: 'wks-b',
+          version: '1.0.0',
+          slug: 'wks-b',
+          root: path.join(prjDir, 'wks-b'),
+        },
+        {
+          name: 'wks-a',
+          version: '1.0.0',
+          slug: 'wks-a',
+          root: path.join(prjDir, 'wks-a'),
+        },
+      ]));
     });
 
     describe('affected filter (--affected)', () => {
