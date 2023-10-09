@@ -76,7 +76,7 @@ describe('jill run', () => {
       // Check jill output
       expect(res.code).toBe(1);
 
-      expect(res.screen.screen).toMatchLines([
+      expect(res.stderr).toMatchLines([
         expect.ignoreColor('Workspace wks-c have no miss script'),
       ]);
     });
