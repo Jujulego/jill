@@ -13,8 +13,5 @@ changelog:
         - dependencies
 
     - title: ":space_invader: Other"
-      exclude:
-        labels:
-          - enhancement
-          - bug
-          - dependencies
+      labels:
+        - "*"

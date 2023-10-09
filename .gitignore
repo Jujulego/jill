@@ -1,14 +1,17 @@
 # yarn
-.pnp.*
 .yarn/*
-node_modules
 !.yarn/patches
 !.yarn/releases
 !.yarn/plugins
 !.yarn/sdks
 !.yarn/versions
+.pnp.*
+node_modules
 
-# products
-coverage/
-coverage-e2e/
-dist/
+# Generated files
+.vitest
+coverage
+coverage-e2e
+dist
+*.log
+*.pid
