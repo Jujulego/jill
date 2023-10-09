@@ -1,6 +1,8 @@
 import { filter$, flow$, var$ } from '@jujulego/aegis';
 import { Listener, Observable, OffFn, source$ } from '@jujulego/event-tree';
-import { LogLevel, toStderr } from '@jujulego/logger';
+import { LogLevel, qlevelColor, quick, toStderr } from '@jujulego/logger';
+import { qprop } from '@jujulego/quick-tag';
+import { chalkTemplateStderr } from 'chalk-template';
 import { interfaces as int } from 'inversify';
 import wt from 'node:worker_threads';
 
@@ -8,6 +10,12 @@ import { OnServiceActivate, Service } from '@/src/modules/service.ts';
 
 import { ThreadGateway } from './thread.gateway.ts';
 import { JillLog } from './types.ts';
+
+// Utils
+export const jillLogFormat = qlevelColor(
+  quick.wrap(chalkTemplateStderr)
+    .function<JillLog>`#?:${qprop('label')}{grey [#$]} ?#${qprop('message')}`
+);
 
 // Service
 @Service()
@@ -25,7 +33,7 @@ export class LogGateway implements Observable<JillLog>, OnServiceActivate {
       // Redirect logs to stderr
       flow$(
         this._source,
-        toStderr(),
+        toStderr(jillLogFormat),
       );
 
       // Add thread gateway as input

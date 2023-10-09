@@ -1,10 +1,8 @@
-import { streamFormat } from '@jujulego/logger';
-import { chalkStderr } from 'chalk';
 import { useStderr } from 'ink';
 import { useLayoutEffect, } from 'react';
 
 import { container } from '@/src/inversify.config.ts';
-import { LogGateway } from '@/src/commons/logger/log.gateway.ts';
+import { jillLogFormat, LogGateway } from '@/src/commons/logger/log.gateway.ts';
 
 // Component
 export default function StaticLogs() {
@@ -20,9 +18,8 @@ export default function StaticLogs() {
     gateway.clear();
 
     // Add custom transport
-    const format = streamFormat(chalkStderr);
     const off = gateway.subscribe((log) => {
-      write(format(log) + '\n');
+      write(jillLogFormat(log) + '\n');
     });
 
     return () => {
