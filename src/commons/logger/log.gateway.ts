@@ -1,5 +1,5 @@
 import { filter$, flow$, var$ } from '@jujulego/aegis';
-import { Observable, OffFn, source$ } from '@jujulego/event-tree';
+import { Listener, Observable, OffFn, source$ } from '@jujulego/event-tree';
 import { LogLevel, toStderr } from '@jujulego/logger';
 import { interfaces as int } from 'inversify';
 import wt from 'node:worker_threads';
@@ -51,6 +51,10 @@ export class LogGateway implements Observable<JillLog>, OnServiceActivate {
   }
 
   // Properties
+  get listeners(): readonly Listener<JillLog>[] {
+    return Array.from(this._source.listeners);
+  }
+
   get level(): LogLevel {
     return this.level$.read();
   }

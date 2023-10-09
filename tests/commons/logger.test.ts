@@ -1,175 +1,26 @@
-import { MaybeMocked } from '@vitest/spy';
-import chalk from 'chalk';
-import wt from 'node:worker_threads';
+import { Logger } from '@jujulego/logger';
 import { vi } from 'vitest';
-import winston from 'winston';
 
-import { Logger } from '@/src/commons/logger.service.js';
-import { ThreadTransport } from '@/src/commons/logger/thread.transport.js';
 import { container } from '@/src/inversify.config.js';
-
-// Setup
-chalk.level = 1;
+import { LogGateway } from '@/src/commons/logger/log.gateway.js';
 
 beforeAll(() => {
   container.snapshot();
 });
 
-let winstonLogger: winston.Logger;
-let logger: Logger;
-
 beforeEach(() => {
-  container.snapshot();
-
-  winstonLogger = {
-    level: '',
-    log: vi.fn(),
-    debug: vi.fn(),
-    verbose: vi.fn(),
-    info: vi.fn(),
-    warn: vi.fn(),
-    error: vi.fn(),
-    add: vi.fn(),
-    remove: vi.fn(),
-    child: vi.fn(() => winstonLogger) as winston.Logger['child'],
-  } as MaybeMocked<winston.Logger>;
-
-  logger = new Logger(winstonLogger);
-});
-
-afterEach(() => {
   container.restore();
-
-  Object.assign(wt, { isMainThread: true });
+  container.snapshot();
 });
 
 // Tests
 describe('Logger', () => {
   it('should create logger with Console transport', () => {
-    const logger = container.get(Logger);
-
-    expect(logger.winston.transports).toHaveLength(1);
-    expect(logger.winston.transports[0]).toBeInstanceOf(winston.transports.Console);
-  });
-
-  it('should create logger with ThreadTransport outside of main thread', () => {
-    Object.assign(wt, { isMainThread: false });
+    const gateway = container.get(LogGateway);
+    vi.spyOn(gateway, 'connect');
 
     const logger = container.get(Logger);
 
-    expect(logger.winston.transports).toHaveLength(1);
-    expect(logger.winston.transports[0]).toBeInstanceOf(ThreadTransport);
-  });
-});
-
-describe('Logger.log', () => {
-  it('should pass values to winston Logger log method', () => {
-    logger.log('test', 'toto');
-    
-    expect(winstonLogger.log).toHaveBeenCalledWith('test', 'toto');
-  });
-});
-
-describe('Logger.debug', () => {
-  it('should pass message to winston Logger debug method', () => {
-    logger.debug('toto');
-
-    expect(winstonLogger.debug).toHaveBeenCalledWith('toto');
-  });
-
-  it('should interpret template and pass result to winston', () => {
-    logger.debug`test ${42}: life !`;
-
-    expect(winstonLogger.debug).toHaveBeenCalledWith('test 42: life !');
-  });
-});
-
-describe('Logger.verbose', () => {
-  it('should pass message to winston Logger verbose method', () => {
-    logger.verbose('toto');
-
-    expect(winstonLogger.verbose).toHaveBeenCalledWith('toto');
-  });
-
-  it('should interpret template and pass result to winston', () => {
-    logger.verbose`test ${42}: life !`;
-
-    expect(winstonLogger.verbose).toHaveBeenCalledWith('test 42: life !');
-  });
-});
-
-describe('Logger.info', () => {
-  it('should pass message to winston Logger info method', () => {
-    logger.info('toto');
-
-    expect(winstonLogger.info).toHaveBeenCalledWith('toto');
-  });
-
-  it('should interpret template and pass result to winston', () => {
-    logger.info`test ${42}: life !`;
-
-    expect(winstonLogger.info).toHaveBeenCalledWith('test 42: life !');
-  });
-});
-
-describe('Logger.warn', () => {
-  it('should pass message to winston Logger warn method', () => {
-    logger.warn('toto');
-
-    expect(winstonLogger.warn).toHaveBeenCalledWith('toto', undefined);
-  });
-
-  it('should pass message and cause to winston Logger warn method', () => {
-    const cause = new Error();
-    logger.warn('toto', cause);
-
-    expect(winstonLogger.warn).toHaveBeenCalledWith('toto', cause);
-  });
-
-  it('should interpret template and pass result to winston', () => {
-    logger.warn`test ${42}: life !`;
-
-    expect(winstonLogger.warn).toHaveBeenCalledWith('test 42: life !', undefined);
-  });
-});
-
-describe('Logger.error', () => {
-  it('should pass message to winston Logger error method', () => {
-    logger.error('toto');
-
-    expect(winstonLogger.error).toHaveBeenCalledWith('toto', undefined);
-  });
-
-  it('should pass message and cause to winston Logger error method', () => {
-    const cause = new Error();
-    logger.error('toto', cause);
-
-    expect(winstonLogger.error).toHaveBeenCalledWith('toto', cause);
-  });
-
-  it('should interpret template and pass result to winston', () => {
-    logger.error`test ${42}: life !`;
-
-    expect(winstonLogger.error).toHaveBeenCalledWith('test 42: life !', undefined);
-  });
-});
-
-describe('Logger.child', () => {
-  it('should return a new logger instance with a child of winston logger', () => {
-    const child = logger.child({ toto: 5 });
-
-    expect(child).toBeInstanceOf(Logger);
-    expect(winstonLogger.child).toHaveBeenCalledWith({ toto: 5 });
-    expect(child.winston).toBe(vi.mocked(winstonLogger.child).mock.results[0].value);
-  });
-});
-
-describe('Logger.add', () => {
-  it('should return a new logger instance with a child of winston logger', () => {
-    const child = logger.child({ toto: 5 });
-
-    expect(child).toBeInstanceOf(Logger);
-    expect(winstonLogger.child).toHaveBeenCalledWith({ toto: 5 });
-    expect(child.winston).toBe(vi.mocked(winstonLogger.child).mock.results[0].value);
+    expect(gateway.connect).toHaveBeenCalledWith(logger);
   });
 });

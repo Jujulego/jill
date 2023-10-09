@@ -1,21 +1,24 @@
+import { Logger, LogLevel } from '@jujulego/logger';
 import { ValidateFunction } from 'ajv';
 import { vi } from 'vitest';
 import path from 'node:path';
 
-import { Logger } from '@/src/commons/logger.service.js';
 import { configLoader } from '@/src/config/config-loader.js';
 import { type IConfig, type IConfigExplorer } from '@/src/config/types.js';
 import { CONFIG_EXPLORER, CONFIG_VALIDATOR } from '@/src/config/utils.js';
 import { container } from '@/src/inversify.config.js';
 import { ExitException } from '@/src/utils/exit.js';
+import { LogGateway } from '@/src/commons/logger/log.gateway.js';
 
 // Setup
 let logger: Logger;
+let logGateway: LogGateway;
 
 beforeEach(() => {
   container.snapshot();
 
   logger = container.get(Logger);
+  logGateway = container.get(LogGateway);
 });
 
 afterEach(() => {
@@ -93,7 +96,7 @@ describe('configLoader', () => {
     await expect(configLoader())
       .resolves.toBe(config);
 
-    expect(logger.level).toBe('verbose');
+    expect(logGateway.level).toBe(LogLevel.verbose);
   });
 
   it('should log error and exit', async () => {
@@ -123,16 +126,19 @@ describe('configLoader', () => {
     container.rebind(CONFIG_EXPLORER).toConstantValue(explorer);
     container.rebind(CONFIG_VALIDATOR).toConstantValue(validator);
 
-    vi.spyOn(logger.winston, 'error');
+    // Spy logs
+    const spy = vi.fn();
+    logger.subscribe(spy);
 
     // Load config
     await expect(configLoader())
       .rejects.toEqual(new ExitException(1));
 
-    expect(logger.winston.error).toHaveBeenCalledWith(
-      'Errors in config file:\n' +
-      '- config/toto must be real',
-      undefined
-    );
+    expect(spy).toHaveBeenCalledWith({
+      timestamp: expect.any(String),
+      level: LogLevel.error,
+      label: 'config',
+      message: 'Errors in config file:\n- config/toto must be real',
+    });
   });
 });

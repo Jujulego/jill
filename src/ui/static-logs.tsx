@@ -1,5 +1,4 @@
-import { flow$ } from '@jujulego/aegis';
-import { streamFormat, toStderr } from '@jujulego/logger';
+import { streamFormat } from '@jujulego/logger';
 import { chalkStderr } from 'chalk';
 import { useStderr } from 'ink';
 import { useLayoutEffect, } from 'react';
@@ -17,6 +16,7 @@ export default function StaticLogs() {
     const gateway = container.get(LogGateway);
 
     // Remove Console transport
+    const listeners = gateway.listeners;
     gateway.clear();
 
     // Add custom transport
@@ -27,7 +27,11 @@ export default function StaticLogs() {
 
     return () => {
       off();
-      flow$(gateway, toStderr());
+
+      // Restore previous listeners
+      for (const lst of listeners) {
+        gateway.subscribe(lst);
+      }
     };
   }, [write]);
 

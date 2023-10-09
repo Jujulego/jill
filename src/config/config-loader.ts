@@ -40,7 +40,7 @@ export async function configLoader() {
     const ajv = container.get(AJV);
     const errors = ajv.errorsText(validator.errors, { separator: '\n- ', dataVar: 'config' });
 
-    logger.error`Errors in config file:\n- ${errors}`;
+    logger.error(`Errors in config file:\n- ${errors}`);
     throw new ExitException(1);
   }
 
