@@ -26,7 +26,7 @@
     "e2e:yarn": "yarn run e2e -t yarn"
   },
   "engines": {
-    "node": "^16.x || ^18.x"
+    "node": "16.x || 18.x || 20.x"
   },
   "dependencies": {
     "@jujulego/aegis": "^2.0.0-beta.5",
