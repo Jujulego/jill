@@ -1,4 +1,4 @@
-import { type ILogger } from '@jujulego/tasks';
+import { logger$ } from '@jujulego/logger';
 import { Instance } from 'ink';
 import { type render } from 'ink-testing-library';
 import { vi } from 'vitest';
@@ -10,13 +10,12 @@ import { splitCommandLine } from '@/src/utils/string.js';
 import { ESC } from './ink-screen.js';
 
 // Logger
-export const spyLogger: ILogger = {
-  debug: vi.fn(),
-  verbose: vi.fn(),
-  info: vi.fn(),
-  warn: vi.fn(),
-  error: vi.fn(),
-};
+export const spyLogger = logger$();
+vi.spyOn(spyLogger, 'debug');
+vi.spyOn(spyLogger, 'verbose');
+vi.spyOn(spyLogger, 'info');
+vi.spyOn(spyLogger, 'warning');
+vi.spyOn(spyLogger, 'error');
 
 // Ink
 export function wrapInkTestApp(app: ReturnType<typeof render>): Instance {

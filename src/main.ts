@@ -1,6 +1,7 @@
 import chalk from 'chalk';
 import { hideBin } from 'yargs/helpers';
 
+import '@/src/commons/logger.service.ts';
 import { container } from '@/src/inversify.config.ts';
 import { JillApplication } from '@/src/jill.application.ts';
 import { ExitException } from '@/src/utils/exit.ts';

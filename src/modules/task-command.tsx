@@ -1,9 +1,9 @@
 import { waitFor$ } from '@jujulego/event-tree';
+import { Logger } from '@jujulego/logger';
 import { plan as extractPlan, type Task, type TaskManager, TaskSet, type TaskSummary } from '@jujulego/tasks';
 import { injectable } from 'inversify';
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
 
-import { Logger } from '@/src/commons/logger.service.ts';
 import { container, lazyInject } from '@/src/inversify.config.ts';
 import { isCommandCtx } from '@/src/tasks/command-task.ts';
 import { isScriptCtx } from '@/src/tasks/script-task.ts';
@@ -85,7 +85,7 @@ export abstract class TaskCommand<A = unknown> extends InkCommand<A> {
       }
     } else {
       const logger = container.get(Logger);
-      logger.warn`No task found`;
+      logger.warning('No task found');
     }
   }
 }

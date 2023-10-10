@@ -1,7 +1,7 @@
+import { Logger } from '@jujulego/logger';
 import { inject } from 'inversify';
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
 
-import { Logger } from '@/src/commons/logger.service.ts';
 import { Command } from '@/src/modules/command.ts';
 import { TaskCommand } from '@/src/modules/task-command.tsx';
 import { LoadProject } from '@/src/middlewares/load-project.ts';
@@ -80,7 +80,7 @@ export class RunCommand extends TaskCommand<IRunCommandArgs> {
     if (task) {
       yield task;
     } else {
-      this.logger.error`Workspace ${this.workspace.name} have no ${args.script} script`;
+      this.logger.error(`Workspace ${this.workspace.name} have no ${args.script} script`);
       throw new ExitException(1);
     }
   }

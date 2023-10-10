@@ -1,9 +1,9 @@
+import { Logger } from '@jujulego/logger';
 import path from 'node:path';
 import yargs, { Argv } from 'yargs';
 import { vi } from 'vitest';
 
 import { ContextService } from '@/src/commons/context.service.js';
-import { Logger } from '@/src/commons/logger.service.js';
 import { SpinnerService } from '@/src/commons/spinner.service.js';
 import { CURRENT } from '@/src/constants.js';
 import { container } from '@/src/inversify.config.js';

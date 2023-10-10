@@ -9,8 +9,9 @@ export const MAIN = path.join(__dirname, '../bin/jill.mjs');
 
 // Type
 export interface SpawnResult {
-  stdout: string[];
   screen: InkScreen;
+  stdout: string[];
+  stderr: string[];
   code: number;
 }
 
@@ -37,16 +38,21 @@ export function jill(args: string, opts: SpawnOptions = {}): Promise<SpawnResult
 
     // Gather result
     const res: SpawnResult = {
-      stdout: [],
       screen: new InkScreen(),
+      stdout: [],
+      stderr: [],
       code: 0
     };
+
+    proc.stdout?.pipe(res.screen);
 
     proc.stdout?.on('data', (msg: Buffer) => {
       res.stdout.push(...msg.toString('utf-8').replace(/\n$/, '').split('\n'));
     });
 
-    proc.stderr?.pipe(res.screen);
+    proc.stderr?.on('data', (msg: Buffer) => {
+      res.stderr.push(...msg.toString('utf-8').replace(/\n$/, '').split('\n'));
+    });
 
     // Emit result
     proc.on('close', (code) => {

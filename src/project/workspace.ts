@@ -1,3 +1,4 @@
+import { Logger, withLabel } from '@jujulego/logger';
 import { type Task, type TaskOptions } from '@jujulego/tasks';
 import { injectable } from 'inversify';
 import path from 'node:path';
@@ -6,7 +7,6 @@ import { satisfies } from 'semver';
 
 import { GitService } from '@/src/commons/git.service.ts';
 import { container, lazyInject } from '@/src/inversify.config.ts';
-import { Logger } from '@/src/commons/logger.service.ts';
 import { CommandTask } from '@/src/tasks/command-task.ts';
 import { ScriptTask } from '@/src/tasks/script-task.ts';
 import { combine } from '@/src/utils/streams.ts';
@@ -39,7 +39,7 @@ export class Workspace {
     readonly project: Project
   ) {
     const logger = container.get(Logger);
-    this._logger = logger.child({ label: this.manifest.name });
+    this._logger = logger.child(withLabel(this.manifest.name));
   }
 
   // Methods
@@ -118,7 +118,7 @@ export class Workspace {
         if (ws._satisfies(this, range)) {
           yield ws;
         } else {
-          this._logger.warn`Ignoring ${kind} ${ws.reference} as it does not match requirement ${range}`;
+          this._logger.warning(`Ignoring ${kind} ${ws.reference} as it does not match requirement ${range}`);
         }
       }
     }
@@ -144,7 +144,7 @@ export class Workspace {
     const pm = await this.project.packageManager();
     const task = new CommandTask(this, command, args, {
       ...opts,
-      logger: this._logger.child({ label: `${this.name}$${command}` }),
+      logger: this._logger.child(withLabel(`${this.name}$${command}`)),
       superCommand: pm === 'yarn' ? ['yarn', 'exec'] : undefined
     });
 
@@ -165,7 +165,7 @@ export class Workspace {
     if (!task) {
       task = new ScriptTask(this, script, args, {
         ...opts,
-        logger: this._logger.child({ label: `${this.name}#${script}` }),
+        logger: this._logger.child(withLabel(`${this.name}#${script}`)),
       });
 
       await task.prepare();
@@ -181,7 +181,7 @@ export class Workspace {
     const task = await this.run(opts?.buildScript ?? 'build', [], opts);
 
     if (!task) {
-      this._logger.warn('Will not be built (no build script)');
+      this._logger.warning('Will not be built (no build script)');
     }
 
     return task;

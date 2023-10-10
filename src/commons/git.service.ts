@@ -1,8 +1,8 @@
 import { once$ } from '@jujulego/event-tree';
+import { Logger } from '@jujulego/logger';
 import { SpawnTask, type SpawnTaskOptions, TaskContext, type TaskManager } from '@jujulego/tasks';
 import { inject } from 'inversify';
 
-import { Logger } from '@/src/commons/logger.service.ts';
 import { TASK_MANAGER } from '@/src/tasks/task-manager.config.ts';
 import { streamLines } from '@/src/utils/streams.ts';
 import { Service } from '@/src/modules/service.ts';

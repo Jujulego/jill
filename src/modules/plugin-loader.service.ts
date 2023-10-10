@@ -1,8 +1,8 @@
+import { Logger, withLabel } from '@jujulego/logger';
 import { type ContainerModule, inject, type interfaces as int } from 'inversify';
 
 import { CONFIG } from '@/src/config/config-loader.ts';
 import { type IConfig } from '@/src/config/types.ts';
-import { Logger } from '@/src/commons/logger.service.ts';
 import { container } from '@/src/inversify.config.ts';
 import { dynamicImport } from '@/src/utils/import.ts';
 
@@ -22,7 +22,7 @@ export class PluginLoaderService {
     @inject(Logger)
     logger: Logger,
   ) {
-    this._logger = logger.child({ label: 'plugin' });
+    this._logger = logger.child(withLabel('plugin'));
   }
 
   // Methods

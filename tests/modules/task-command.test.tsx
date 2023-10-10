@@ -1,10 +1,10 @@
+import { Logger } from '@jujulego/logger';
 import { ParallelGroup, SpawnTask, type Task, type TaskManager } from '@jujulego/tasks';
 import { cleanup, render } from 'ink-testing-library';
 import { injectable } from 'inversify';
 import symbols from 'log-symbols';
 import { vi } from 'vitest';
 
-import { Logger } from '@/src/commons/logger.service.js';
 import { INK_APP } from '@/src/ink.config.js';
 import { container } from '@/src/inversify.config.js';
 import { TaskCommand } from '@/src/modules/task-command.js';
@@ -112,7 +112,7 @@ describe('TaskCommand', () => {
     it('should log and exit if no task were yielded', async () => {
       const logger = container.get(Logger);
 
-      vi.spyOn(logger, 'warn').mockReturnValue(undefined);
+      vi.spyOn(logger, 'warning').mockReturnValue(undefined);
       vi.mocked(command.prepare).mockImplementation(function* () {});
 
       // Run command
@@ -120,7 +120,7 @@ describe('TaskCommand', () => {
 
       // should have only logged
       expect(manager.add).not.toHaveBeenCalled();
-      expect(logger.warn).toHaveBeenCalledWith(['No task found']);
+      expect(logger.warning).toHaveBeenCalledWith('No task found');
     });
   });
 

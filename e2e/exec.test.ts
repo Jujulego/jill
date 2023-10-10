@@ -57,8 +57,11 @@ describe('jill exec', () => {
       expect(res.code).toBe(0);
 
       expect(res.screen.screen).toMatchLines([
-        expect.ignoreColor(/^\[wks-c\$ls] package\.json/),
         expect.ignoreColor(/^.( yarn exec)? ls \(took [0-9.]+m?s\)/),
+      ]);
+
+      expect(res.stderr).toMatchLines([
+        expect.ignoreColor(/^\[wks-c\$ls] package\.json/),
       ]);
     });
 
@@ -108,9 +111,8 @@ describe('jill exec', () => {
 
       // Check jill plan
       expect(res.code).toBe(0);
-      expect(res.stdout).toHaveLength(1);
 
-      const plan = JSON.parse(res.stdout[0]);
+      const plan = JSON.parse(res.stdout.join('\n'));
       expect(plan).toHaveLength(3);
 
       expect(plan[0]).toMatchObject({

@@ -76,7 +76,7 @@ describe('jill run', () => {
       // Check jill output
       expect(res.code).toBe(1);
 
-      expect(res.screen.screen).toMatchLines([
+      expect(res.stderr).toMatchLines([
         expect.ignoreColor('Workspace wks-c have no miss script'),
       ]);
     });
@@ -105,9 +105,8 @@ describe('jill run', () => {
 
       // Check jill plan
       expect(res.code).toBe(0);
-      expect(res.stdout).toHaveLength(1);
 
-      const plan = JSON.parse(res.stdout[0]);
+      const plan = JSON.parse(res.stdout.join('\n'));
       expect(plan).toHaveLength(4);
 
       expect(plan[0]).toMatchObject({

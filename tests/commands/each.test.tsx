@@ -1,3 +1,4 @@
+import { Logger } from '@jujulego/logger';
 import { type TaskManager } from '@jujulego/tasks';
 import { cleanup, render } from 'ink-testing-library';
 import symbols from 'log-symbols';
@@ -5,7 +6,6 @@ import { vi } from 'vitest';
 import yargs, { type CommandModule } from 'yargs';
 
 import { EachCommand } from '@/src/commands/each.js';
-import { SpinnerService } from '@/src/commons/spinner.service.js';
 import { INK_APP } from '@/src/ink.config.js';
 import { container } from '@/src/inversify.config.js';
 import { TASK_MANAGER } from '@/src/tasks/task-manager.config.js';
@@ -22,7 +22,7 @@ let app: ReturnType<typeof render>;
 let command: CommandModule;
 let manager: TaskManager;
 let context: ContextService;
-let spinner: SpinnerService;
+let logger: Logger;
 
 let bed: TestBed;
 
@@ -45,7 +45,7 @@ beforeEach(async () => {
   command = await bed.prepareCommand(EachCommand);
   manager = container.get(TASK_MANAGER);
   context = container.get(ContextService);
-  spinner = container.get(SpinnerService);
+  logger = container.get(Logger);
 
   // Mocks
   vi.restoreAllMocks();
@@ -155,7 +155,7 @@ describe('jill each', () => {
 
   it('should exit 1 if no matching workspace is found', async () => {
     context.reset({});
-    vi.spyOn(spinner, 'failed');
+    vi.spyOn(logger, 'error');
 
     // Setup tasks
     vi.spyOn(manager, 'tasks', 'get').mockReturnValue([]);
@@ -167,7 +167,7 @@ describe('jill each', () => {
         .parse('each cmd')
     ).rejects.toEqual(new ExitException(1));
 
-    expect(spinner.failed).toHaveBeenCalledWith('No matching workspace found !');
+    expect(logger.error).toHaveBeenCalledWith(`${symbols.error} No matching workspace found !`);
   });
 
   it('should pass down unknown arguments', async () => {

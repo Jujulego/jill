@@ -1,8 +1,8 @@
+import { Logger } from '@jujulego/logger';
 import { type GroupTask, ParallelGroup, SequenceGroup, type Task } from '@jujulego/tasks';
 import { inject } from 'inversify';
 import moo from 'moo';
 
-import { Logger } from '@/src/commons/logger.service.ts';
 import { Service } from '@/src/modules/service.ts';
 import { type Workspace, type WorkspaceRunOptions } from '@/src/project/workspace.ts';
 

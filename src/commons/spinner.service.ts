@@ -1,7 +1,7 @@
+import { Logger, withLabel } from '@jujulego/logger';
 import { multiplexer$, source$ } from '@jujulego/event-tree';
 import { inject } from 'inversify';
 
-import { Logger } from '@/src/commons/logger.service.ts';
 import { container } from '@/src/inversify.config.ts';
 import { INK_APP } from '@/src/ink.config.tsx';
 import { Service } from '@/src/modules/service.ts';
@@ -26,7 +26,7 @@ export class SpinnerService {
 
   // Constructor
   constructor(@inject(Logger) logger: Logger) {
-    this._logger = logger.child({ label: 'spinner' });
+    this._logger = logger.child(withLabel('spinner'));
   }
 
   // Methods
