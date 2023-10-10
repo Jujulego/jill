@@ -10,29 +10,30 @@ import { JillLog } from './types.ts';
 @Service()
 export class ThreadGateway implements Source<JillLog> {
   // Attributes
-  private readonly _channel: BroadcastChannel;
+  readonly channel: BroadcastChannel;
+
   private readonly _source = source$<JillLog>();
 
   // Constructor
   constructor() {
-    this._channel = new BroadcastChannel('jujulego:jill:logger');
+    this.channel = new BroadcastChannel('jujulego:jill:logger');
+    this.channel.unref();
 
-    this._channel.onmessage = (log) => {
-      this._source.next(log as JillLog);
+    this.channel.onmessage = (log) => {
+      this._source.next((log as MessageEvent<JillLog>).data);
     };
 
-    this._channel.onmessageerror = (data) => {
+    this.channel.onmessageerror = (data) => {
       this._source.next(withTimestamp()({
         level: LogLevel.error,
-        message: quick.string`Unable to read message: #!json:${data as object}`
+        message: quick.string`Unable to read message: #!json:${(data as MessageEvent).data}`
       }));
     };
-    this._channel.unref();
   }
 
   // Methods
   next(data: JillLog): void {
-    this._channel.postMessage(data);
+    this.channel.postMessage(data);
   }
 
   readonly subscribe = this._source.subscribe;

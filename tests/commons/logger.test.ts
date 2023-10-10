@@ -4,6 +4,7 @@ import { vi } from 'vitest';
 import { container } from '@/src/inversify.config.js';
 import { LogGateway } from '@/src/commons/logger/log.gateway.js';
 
+// Setup
 beforeAll(() => {
   container.snapshot();
 });
