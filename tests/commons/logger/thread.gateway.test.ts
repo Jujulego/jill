@@ -4,9 +4,9 @@ import { vi } from 'vitest';
 
 import { flushPromises } from '@/tools/utils.js';
 
-import { ThreadGateway } from '@/src/commons/logger/thread.gateway.js';
-import { LOG_BROADCAST_CHANNEL } from '@/src/commons/logger/parameters.js';
-import { container } from '@/src/inversify.config.js';
+import { LOG_BROADCAST_CHANNEL } from '@/src/commons/logger/parameters.ts';
+import { ThreadGateway } from '@/src/commons/logger/thread.gateway.ts';
+import { container } from '@/src/inversify.config.ts';
 
 // Setup
 let channel: BroadcastChannel;

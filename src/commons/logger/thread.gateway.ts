@@ -1,12 +1,12 @@
 import { Source, source$ } from '@jujulego/event-tree';
 import { LogLevel, quick, withTimestamp } from '@jujulego/logger';
+import { inject } from 'inversify';
 import { BroadcastChannel } from 'node:worker_threads';
 
 import { Service } from '@/src/modules/service.ts';
 
+import { LOG_BROADCAST_CHANNEL } from './parameters.ts';
 import { JillLog } from './types.ts';
-import { inject } from 'inversify';
-import { LOG_BROADCAST_CHANNEL } from '@/src/commons/logger/parameters.js';
 
 // Gateway
 @Service()
