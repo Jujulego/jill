@@ -72,10 +72,12 @@ describe('streamLines', () => {
       // eslint-disable-next-line require-yield
       .mockImplementation(async function* () { throw new Error('aborted'); });
 
+    const use = vi.fn();
+
     await expect(
       (async function () {
         for await (const line of streamLines(task, 'stdout')) {
-          console.log(line);
+          use(line);
         }
       })()
     ).rejects.toThrow('aborted');

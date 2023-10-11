@@ -56,7 +56,7 @@ describe('jill test (command from plugin)', () => {
       tmpDir = path.dirname(baseDir);
 
       // Add plugin code
-      await fs.writeFile(path.join(prjDir, 'plugin.mjs'), PLUGIN_CODE);
+      await fs.writeFile(path.join(baseDir, 'plugin.mjs'), PLUGIN_CODE);
     }, 15000);
 
     beforeEach(async (ctx) => {
