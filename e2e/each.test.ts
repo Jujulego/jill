@@ -1,4 +1,5 @@
 import fs from 'node:fs/promises';
+import os from 'node:os';
 import path from 'node:path';
 
 import { TestBed } from '@/tools/test-bed.js';
@@ -9,9 +10,11 @@ import { jill } from './utils.js';
 describe('jill each', () => {
   describe.each(['npm', 'yarn'] as const)('using %s', (packageManager) => {
     // Setup
+    let baseDir: string;
+    let tmpDir: string;
     let prjDir: string;
 
-    beforeEach(async () => {
+    beforeAll(async () => {
       const bed = new TestBed();
 
       const wksC = bed.addWorkspace('wks-c', {
@@ -40,11 +43,17 @@ describe('jill each', () => {
         .addDependency(wksB)
         .addDependency(wksC, true);
 
-      prjDir = await bed.createProjectPackage(packageManager);
+      baseDir = await bed.createProjectPackage(packageManager);
+      tmpDir = path.dirname(baseDir);
     }, 15000);
 
-    afterEach(async () => {
-      await fs.rm(prjDir, { recursive: true });
+    beforeEach(async (ctx) => {
+      prjDir = path.join(tmpDir, ctx.meta.id);
+      await fs.cp(baseDir, prjDir, { force: true, recursive: true });
+    });
+
+    afterAll(async () => {
+      await fs.rm(tmpDir, { recursive: true });
     });
 
     // Tests
