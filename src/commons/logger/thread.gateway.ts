@@ -5,6 +5,8 @@ import { BroadcastChannel } from 'node:worker_threads';
 import { Service } from '@/src/modules/service.ts';
 
 import { JillLog } from './types.ts';
+import { inject } from 'inversify';
+import { LOG_BROADCAST_CHANNEL } from '@/src/commons/logger/parameters.js';
 
 // Gateway
 @Service()
@@ -15,8 +17,10 @@ export class ThreadGateway implements Source<JillLog> {
   private readonly _source = source$<JillLog>();
 
   // Constructor
-  constructor() {
-    this.channel = new BroadcastChannel('jujulego:jill:logger');
+  constructor(
+    @inject(LOG_BROADCAST_CHANNEL) channel: string
+  ) {
+    this.channel = new BroadcastChannel(channel);
     this.channel.unref();
 
     this.channel.onmessage = (log) => {
