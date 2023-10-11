@@ -6,40 +6,55 @@ import { fileExists } from '@/tools/utils.js';
 
 import { jill } from './utils.js';
 
+// Setup
+const bed = new TestBed();
+
+beforeAll(() => {
+  const wksC = bed.addWorkspace('wks-c', {
+    scripts: {
+      // language=bash
+      build: 'node -e "require(\'node:fs\').writeFileSync(\'script.txt\', \'build\')"',
+      // language=bash
+      start: 'node -e "require(\'node:fs\').writeFileSync(\'script.txt\', \'start\')"',
+      // language=bash
+      fails: 'node -e "process.exit(1)"',
+    }
+  });
+
+  const wksB = bed.addWorkspace('wks-b', {
+    scripts: {
+      // language=bash
+      start: 'node -e "require(\'node:fs\').writeFileSync(\'script.txt\', \'start\')"'
+    }
+  })
+    .addDependency(wksC, true);
+
+  bed.addWorkspace('wks-a')
+    .addDependency(wksB)
+    .addDependency(wksC, true);
+});
+
+// Tests
 describe('jill run', () => {
   describe.each(['npm', 'yarn'] as const)('using %s', (packageManager) => {
     // Setup
+    let baseDir: string;
+    let tmpDir: string;
     let prjDir: string;
 
-    beforeEach(async () => {
-      const bed = new TestBed();
-
-      const wksC = bed.addWorkspace('wks-c', {
-        scripts: {
-          // language=bash
-          build: 'node -e "require(\'node:fs\').writeFileSync(\'script.txt\', \'build\')"',
-          // language=bash
-          start: 'node -e "require(\'node:fs\').writeFileSync(\'script.txt\', \'start\')"',
-          // language=bash
-          fails: 'node -e "process.exit(1)"',
-        }
-      });
-      const wksB = bed.addWorkspace('wks-b', {
-        scripts: {
-          // language=bash
-          start: 'node -e "require(\'node:fs\').writeFileSync(\'script.txt\', \'start\')"'
-        }
-      })
-        .addDependency(wksC, true);
-      bed.addWorkspace('wks-a')
-        .addDependency(wksB)
-        .addDependency(wksC, true);
-
-      prjDir = await bed.createProjectPackage(packageManager);
+    beforeAll(async () => {
+      baseDir = await bed.createProjectPackage(packageManager);
+      tmpDir = path.dirname(baseDir);
     }, 15000);
 
-    afterEach(async () => {
-      await fs.rm(prjDir, { recursive: true });
+    beforeEach(async (ctx) => {
+      prjDir = path.join(tmpDir, ctx.task.id);
+
+      await fs.cp(baseDir, prjDir, { force: true, recursive: true });
+    });
+
+    afterAll(async () => {
+      await fs.rm(tmpDir, { recursive: true });
     });
 
     // Tests
