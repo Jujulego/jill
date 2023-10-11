@@ -6,45 +6,60 @@ import { fileExists } from '@/tools/utils.js';
 
 import { jill } from './utils.js';
 
+// Setup
+const bed = new TestBed();
+
+beforeAll(() => {
+  const wksC = bed.addWorkspace('wks-c', {
+    scripts: {
+      // language=bash
+      build: 'node -e "require(\'node:fs\').writeFileSync(\'build.txt\', \'built\')"',
+    }
+  });
+
+  const wksB = bed.addWorkspace('wks-b', {
+    scripts: {
+      // language=bash
+      build: 'node -e "require(\'node:fs\').writeFileSync(\'build.txt\', \'built\')"',
+      // language=bash
+      start: 'node -e "require(\'node:fs\').writeFileSync(\'start.txt\', \'started\')"',
+      // language=bash
+      fails: 'node -e "process.exit(1)"',
+    }
+  })
+    .addDependency(wksC, true);
+
+  bed.addWorkspace('wks-a', {
+    scripts: {
+      // language=bash
+      start: 'node -e "require(\'node:fs\').writeFileSync(\'start.txt\', \'started\')"'
+    }
+  })
+    .addDependency(wksB)
+    .addDependency(wksC, true);
+});
+
+// Tests
 describe('jill each', () => {
   describe.each(['npm', 'yarn'] as const)('using %s', (packageManager) => {
-    // Setup
+    // Create project folder
+    let baseDir: string;
+    let tmpDir: string;
     let prjDir: string;
 
-    beforeEach(async () => {
-      const bed = new TestBed();
-
-      const wksC = bed.addWorkspace('wks-c', {
-        scripts: {
-          // language=bash
-          build: 'node -e "require(\'node:fs\').writeFileSync(\'build.txt\', \'built\')"',
-        }
-      });
-      const wksB = bed.addWorkspace('wks-b', {
-        scripts: {
-          // language=bash
-          build: 'node -e "require(\'node:fs\').writeFileSync(\'build.txt\', \'built\')"',
-          // language=bash
-          start: 'node -e "require(\'node:fs\').writeFileSync(\'start.txt\', \'started\')"',
-          // language=bash
-          fails: 'node -e "process.exit(1)"',
-        }
-      })
-        .addDependency(wksC, true);
-      bed.addWorkspace('wks-a', {
-        scripts: {
-          // language=bash
-          start: 'node -e "require(\'node:fs\').writeFileSync(\'start.txt\', \'started\')"'
-        }
-      })
-        .addDependency(wksB)
-        .addDependency(wksC, true);
-
-      prjDir = await bed.createProjectPackage(packageManager);
+    beforeAll(async () => {
+      baseDir = await bed.createProjectPackage(packageManager);
+      tmpDir = path.dirname(baseDir);
     }, 15000);
 
-    afterEach(async () => {
-      await fs.rm(prjDir, { recursive: true });
+    beforeEach(async (ctx) => {
+      prjDir = path.join(tmpDir, ctx.task.id);
+
+      await fs.cp(baseDir, prjDir, { force: true, recursive: true });
+    });
+
+    afterAll(async () => {
+      await fs.rm(tmpDir, { recursive: true });
     });
 
     // Tests

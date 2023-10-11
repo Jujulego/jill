@@ -1,9 +1,11 @@
 import { Source, source$ } from '@jujulego/event-tree';
 import { LogLevel, quick, withTimestamp } from '@jujulego/logger';
+import { inject } from 'inversify';
 import { BroadcastChannel } from 'node:worker_threads';
 
 import { Service } from '@/src/modules/service.ts';
 
+import { LOG_BROADCAST_CHANNEL } from './parameters.ts';
 import { JillLog } from './types.ts';
 
 // Gateway
@@ -15,8 +17,10 @@ export class ThreadGateway implements Source<JillLog> {
   private readonly _source = source$<JillLog>();
 
   // Constructor
-  constructor() {
-    this.channel = new BroadcastChannel('jujulego:jill:logger');
+  constructor(
+    @inject(LOG_BROADCAST_CHANNEL) channel: string
+  ) {
+    this.channel = new BroadcastChannel(channel);
     this.channel.unref();
 
     this.channel.onmessage = (log) => {

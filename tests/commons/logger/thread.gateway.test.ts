@@ -1,10 +1,12 @@
+import { LogLevel, quick } from '@jujulego/logger';
 import { BroadcastChannel } from 'node:worker_threads';
 import { vi } from 'vitest';
 
-import { ThreadGateway } from '@/src/commons/logger/thread.gateway.js';
-import { container } from '@/src/inversify.config.js';
-import { LogLevel, quick } from '@jujulego/logger';
 import { flushPromises } from '@/tools/utils.js';
+
+import { LOG_BROADCAST_CHANNEL } from '@/src/commons/logger/parameters.ts';
+import { ThreadGateway } from '@/src/commons/logger/thread.gateway.ts';
+import { container } from '@/src/inversify.config.ts';
 
 // Setup
 let channel: BroadcastChannel;
@@ -12,9 +14,10 @@ let gateway: ThreadGateway;
 const gatewaySpy = vi.fn();
 
 beforeAll(() => {
+  container.rebind(LOG_BROADCAST_CHANNEL).toConstantValue('jujulego:jill:logger-test');
   container.snapshot();
 
-  channel = new BroadcastChannel('jujulego:jill:logger');
+  channel = new BroadcastChannel('jujulego:jill:logger-test');
   channel.onmessage = vi.fn();
   channel.onmessageerror = vi.fn();
 });
