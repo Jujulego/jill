@@ -3,7 +3,6 @@ import { inject } from 'inversify';
 import symbols from 'log-symbols';
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
 
-import { SpinnerService } from '@/src/commons/spinner.service.ts';
 import { AffectedFilter } from '@/src/filters/affected.filter.ts';
 import { Pipeline } from '@/src/filters/pipeline.ts';
 import { PrivateFilter } from '@/src/filters/private.filter.ts';
@@ -47,8 +46,6 @@ export class EachCommand extends TaskCommand<IEachCommandArgs> {
   constructor(
     @inject(Logger)
     private readonly logger: Logger,
-    @inject(SpinnerService)
-    private readonly spinner: SpinnerService,
   ) {
     super();
   }
@@ -105,53 +102,47 @@ export class EachCommand extends TaskCommand<IEachCommandArgs> {
   }
 
   async *prepare(args: ArgumentsCamelCase<IEachCommandArgs>) {
-    try {
-      this.spinner.spin('Loading workspaces ...');
+    // Setup pipeline
+    const pipeline = new Pipeline();
+    pipeline.add(new ScriptsFilter([args.script]));
 
-      // Setup pipeline
-      const pipeline = new Pipeline();
-      pipeline.add(new ScriptsFilter([args.script]));
+    if (args.private !== undefined) {
+      pipeline.add(new PrivateFilter(args.private));
+    }
 
-      if (args.private !== undefined) {
-        pipeline.add(new PrivateFilter(args.private));
+    if (args.affected !== undefined) {
+      pipeline.add(new AffectedFilter(
+        args.affected,
+        args.affectedRevFallback,
+        args.affectedRevSort
+      ));
+    }
+
+    // Extract arguments
+    const rest = args._.map(arg => arg.toString());
+
+    if (rest[0] === 'each') {
+      rest.splice(0, 1);
+    }
+
+    // Create script tasks
+    let empty = true;
+
+    for await (const wks of pipeline.filter(this.project.workspaces())) {
+      const task = await wks.run(args.script, rest, {
+        buildScript: args.buildScript,
+        buildDeps: args.depsMode,
+      });
+
+      if (task) {
+        yield task;
+        empty = false;
       }
+    }
 
-      if (args.affected !== undefined) {
-        pipeline.add(new AffectedFilter(
-          args.affected,
-          args.affectedRevFallback,
-          args.affectedRevSort
-        ));
-      }
-
-      // Extract arguments
-      const rest = args._.map(arg => arg.toString());
-
-      if (rest[0] === 'each') {
-        rest.splice(0, 1);
-      }
-
-      // Create script tasks
-      let empty = true;
-
-      for await (const wks of pipeline.filter(this.project.workspaces())) {
-        const task = await wks.run(args.script, rest, {
-          buildScript: args.buildScript,
-          buildDeps: args.depsMode,
-        });
-
-        if (task) {
-          yield task;
-          empty = false;
-        }
-      }
-
-      if (empty) {
-        this.logger.error(`${symbols.error} No matching workspace found !`);
-        throw new ExitException(1);
-      }
-    } finally {
-      this.spinner.stop();
+    if (empty) {
+      this.logger.error(`${symbols.error} No matching workspace found !`);
+      throw new ExitException(1);
     }
   }
 }

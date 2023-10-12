@@ -31,7 +31,6 @@ export * from './project/types.ts';
 
 // Services
 export * from './inversify.config.ts';
-export * from './commons/spinner.service.ts';
 export * from './tasks/command-task.ts';
 export * from './tasks/script-task.ts';
 export * from './tasks/task-expr.service.ts';

@@ -3,9 +3,8 @@ import path from 'node:path';
 import yargs, { Argv } from 'yargs';
 import { vi } from 'vitest';
 
-import { ContextService } from '@/src/commons/context.service.js';
-import { SpinnerService } from '@/src/commons/spinner.service.js';
 import { CURRENT } from '@/src/constants.js';
+import { ContextService } from '@/src/commons/context.service.js';
 import { container } from '@/src/inversify.config.js';
 import { LoadProject } from '@/src/middlewares/load-project.js';
 import { applyMiddlewares } from '@/src/modules/middleware.js';
@@ -15,7 +14,6 @@ import { ProjectRepository } from '@/src/project/project.repository.js';
 // Setup
 let parser: Argv;
 let context: ContextService;
-let spinner: SpinnerService;
 let projectRepo: ProjectRepository;
 
 beforeAll(() => {
@@ -27,9 +25,6 @@ beforeEach(() => {
   container.snapshot();
 
   context = container.get(ContextService);
-  spinner = container.get(SpinnerService);
-  vi.spyOn(spinner, 'spin').mockReturnValue();
-  vi.spyOn(spinner, 'stop').mockReturnValue();
 
   projectRepo = container.get(ProjectRepository);
   vi.spyOn(projectRepo, 'searchProjectRoot')
@@ -45,14 +40,11 @@ describe('LoadProject', () => {
 
     const parsed = await parser.parse(''); // <= no args
 
-    expect(spinner.spin).toHaveBeenCalledWith('Loading project ...');
     expect(projectRepo.searchProjectRoot).toHaveBeenCalledWith(process.cwd());
 
     expect(context.project).toBeInstanceOf(Project);
     expect(context.project?.root).toBe(path.resolve('/test'));
     expect(parsed.project).toBe(path.resolve('/test'));
-
-    expect(spinner.stop).toHaveBeenCalled();
   });
 
   it('should search project root using arguments', async () => {
@@ -77,7 +69,6 @@ describe('LoadProject', () => {
 
     const parsed = await parser.parse(''); // <= no args
 
-    expect(spinner.spin).not.toHaveBeenCalled();
     expect(projectRepo.searchProjectRoot).not.toHaveBeenCalled();
 
     expect(context.project).toBe(project);
@@ -90,7 +81,6 @@ describe('LoadProject', () => {
 
     const parsed = await parser.parse('-p /test');
 
-    expect(spinner.spin).toHaveBeenCalledWith('Loading project ...');
     expect(projectRepo.searchProjectRoot).toHaveBeenCalledWith('/test');
 
     expect(context.project).not.toBe(project);
