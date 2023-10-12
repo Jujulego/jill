@@ -47,11 +47,11 @@ export function jill(args: string, opts: SpawnOptions = {}): Promise<SpawnResult
     proc.stdout?.pipe(res.screen);
 
     proc.stdout?.on('data', (msg: Buffer) => {
-      res.stdout.push(...msg.toString('utf-8').replace(/\n$/, '').split('\n'));
+      res.stdout.push(...msg.toString('utf-8').replace(/\r?\n$/, '').split(/\r?\n/));
     });
 
     proc.stderr?.on('data', (msg: Buffer) => {
-      res.stderr.push(...msg.toString('utf-8').replace(/\n$/, '').split('\n'));
+      res.stderr.push(...msg.toString('utf-8').replace(/\r?\n$/, '').split(/\r?\n/));
     });
 
     // Emit result
