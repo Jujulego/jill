@@ -137,6 +137,17 @@ describe('TaskExprService.buildTask', () => {
     expect(wks.run).toHaveBeenCalledWith('test', [], undefined);
   });
 
+  it('should use workspace to create task with args', async () => {
+    const tree: TaskNode = { script: 'test', args: ['-abc', '--arg', '3'] };
+    const task = new ScriptTask(wks, 'test', ['-abc', '--arg', '3']);
+
+    vi.spyOn(wks, 'run').mockResolvedValue(task);
+
+    await expect(service.buildTask(tree, wks)).resolves.toBe(task);
+
+    expect(wks.run).toHaveBeenCalledWith('test', ['-abc', '--arg', '3'], undefined);
+  });
+
   it('should create a parallel group', async () => {
     const tree: GroupNode = {
       operator: '//',

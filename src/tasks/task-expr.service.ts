@@ -186,7 +186,7 @@ export class TaskExprService {
 
   async buildTask(node: TaskNode | GroupNode, workspace: Workspace, opts?: WorkspaceRunOptions): Promise<Task> {
     if (TaskExprService.isTaskNode(node)) {
-      const task = await workspace.run(node.script, [], opts);
+      const task = await workspace.run(node.script, node.args, opts);
 
       if (!task) {
         throw new Error(`Workspace ${workspace.name} have no ${node.script} script`);

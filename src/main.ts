@@ -16,8 +16,8 @@ import { ExitException } from '@/src/utils/exit.ts';
     if (err instanceof ExitException) {
       process.exit(err.code);
     } else {
-      console.error(await app.parser.getHelp());
       console.error(chalk.red(err.message));
+      console.error(await app.parser.getHelp());
 
       process.exit(1);
     }
