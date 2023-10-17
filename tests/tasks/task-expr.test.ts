@@ -32,7 +32,16 @@ describe('TaskExprService.parse', () => {
     expect(service.parse('toto:dev'))
       .toEqual({
         roots: [
-          { script: 'toto:dev' },
+          { script: 'toto:dev', args: [] },
+        ]
+      });
+  });
+
+  it('should return task with arguments (inline syntax)', () => {
+    expect(service.parse('toto:dev -abc --arg 3'))
+      .toEqual({
+        roots: [
+          { script: 'toto:dev', args: ['-abc', '--arg', '3'] },
         ]
       });
   });
@@ -41,7 +50,16 @@ describe('TaskExprService.parse', () => {
     expect(service.parse('\'\\\\single\\\'cote\\\\\''))
       .toEqual({
         roots: [
-          { script: '\\single\'cote\\' },
+          { script: '\\single\'cote\\', args: [] },
+        ]
+      });
+  });
+
+  it('should return task with arguments (single cote syntax)', () => {
+    expect(service.parse('\'single\\\'cote -abc  --arg 3\''))
+      .toEqual({
+        roots: [
+          { script: 'single\'cote', args: ['-abc', '--arg', '3'] },
         ]
       });
   });
@@ -50,7 +68,16 @@ describe('TaskExprService.parse', () => {
     expect(service.parse('"\\\\double\\"cote\\\\"'))
       .toEqual({
         roots: [
-          { script: '\\double"cote\\' },
+          { script: '\\double"cote\\', args: [] },
+        ]
+      });
+  });
+
+  it('should return task with arguments (double cote syntax)', () => {
+    expect(service.parse('"double\\"cote -abc  --arg 3"'))
+      .toEqual({
+        roots: [
+          { script: 'double"cote', args: ['-abc', '--arg', '3'] },
         ]
       });
   });
@@ -65,11 +92,32 @@ describe('TaskExprService.parse', () => {
               {
                 operator: '//',
                 tasks: [
-                  { script: 'toto' },
-                  { script: 'tata' },
+                  { script: 'toto', args: [] },
+                  { script: 'tata', args: [] },
                 ]
               },
-              { script: 'tutu' }
+              { script: 'tutu', args: [] }
+            ]
+          }
+        ]
+      });
+  });
+
+  it('should return complex tree with 2 operators and arguments', () => {
+    expect(service.parse('(toto --arg 1 // tata --arg 2) -> tutu --arg 3'))
+      .toEqual({
+        roots: [
+          {
+            operator: '->',
+            tasks: [
+              {
+                operator: '//',
+                tasks: [
+                  { script: 'toto', args: ['--arg', '1'] },
+                  { script: 'tata', args: ['--arg', '2'] },
+                ]
+              },
+              { script: 'tutu', args: ['--arg', '3'] }
             ]
           }
         ]
@@ -79,7 +127,7 @@ describe('TaskExprService.parse', () => {
 
 describe('TaskExprService.buildTask', () => {
   it('should use workspace to create simple task', async () => {
-    const tree: TaskNode = { script: 'test' };
+    const tree: TaskNode = { script: 'test', args: [] };
     const task = new ScriptTask(wks, 'test', []);
 
     vi.spyOn(wks, 'run').mockResolvedValue(task);
@@ -93,8 +141,8 @@ describe('TaskExprService.buildTask', () => {
     const tree: GroupNode = {
       operator: '//',
       tasks: [
-        { script: 'test1' },
-        { script: 'test2' },
+        { script: 'test1', args: [] },
+        { script: 'test2', args: [] },
       ]
     };
     vi.spyOn(wks, 'run')
@@ -116,8 +164,8 @@ describe('TaskExprService.buildTask', () => {
     const tree: GroupNode = {
       operator: '->',
       tasks: [
-        { script: 'test1' },
-        { script: 'test2' },
+        { script: 'test1', args: [] },
+        { script: 'test2', args: [] },
       ]
     };
     vi.spyOn(wks, 'run')
