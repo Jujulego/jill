@@ -1,7 +1,8 @@
-import chalk from 'chalk';
+import { Logger } from '@jujulego/logger';
 import { decorate, injectable, type interfaces as int } from 'inversify';
 import { type ArgumentsCamelCase, type Argv, type CommandModule } from 'yargs';
 
+import { container } from '@/src/inversify.config.ts';
 import { setRegistry } from '@/src/modules/module.ts';
 import { type Awaitable, type Class, type Type } from '@/src/types.ts';
 import { ExitException } from '@/src/utils/exit.ts';
@@ -61,7 +62,11 @@ export function buildCommandModule(cmd: ICommand, opts: ICommandOpts): CommandMo
       try {
         await cmd.handler(args);
       } catch (err) {
-        console.error(chalk.red(err.message));
+        if (err.message) {
+          const logger = container.get(Logger);
+          logger.error(err.message);
+        }
+
         throw new ExitException(1);
       }
     },
