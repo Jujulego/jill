@@ -81,8 +81,8 @@ describe('jill group', () => {
       {
         operator: '//',
         tasks: [
-          { script: 'test1' },
-          { script: 'test2' }
+          { script: 'test1', args: [] },
+          { script: 'test2', args: [] }
         ]
       },
       wks,
@@ -130,8 +130,8 @@ describe('jill group', () => {
       {
         operator: '//',
         tasks: [
-          { script: 'test1' },
-          { script: 'test2' }
+          { script: 'test1', args: [] },
+          { script: 'test2', args: [] }
         ]
       },
       wks,

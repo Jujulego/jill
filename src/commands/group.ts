@@ -42,9 +42,8 @@ export class GroupCommand extends TaskCommand<IGroupCommandArgs> {
     return this.addTaskOptions(parser)
       .positional('script', {
         demandOption: true,
-        coerce: (expr: string[]) => {
-          return this.taskExpr.parse(expr.join(' '));
-        }
+        desc: 'Task expression',
+        coerce: (expr: string[]) => this.taskExpr.parse(expr.join(' ')),
       })
       .option('build-script', {
         default: 'build',

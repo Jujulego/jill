@@ -9,6 +9,7 @@ import { type Workspace, type WorkspaceRunOptions } from '@/src/project/workspac
 // Interfaces
 export interface TaskNode {
   script: string;
+  args: string[];
 }
 
 export interface GroupNode {
@@ -40,27 +41,40 @@ export class TaskExprService {
       task: {
         lparen: '(',
         whitespace: /[ \t]+/,
+        script: { match: /[-_:a-zA-Z0-9]+/, push: 'operatorOrArgument' },
         string: [
-          // inline
-          { match: /[:a-zA-Z0-9]+/, push: 'operator' },
-          // single cotted
-          {
-            match: /'(?:\\['\\]|[^\n'\\])+'/,
+          { // single cotted
+            match: /'(?:\\['\\]|[^\r\n'\\])+'/,
             push: 'operator',
             value: x => x.slice(1, -1).replace(/\\(['\\])/g, '$1')
           },
-          // double cotted
-          {
-            match: /"(?:\\["\\]|[^\n"\\])+"/,
+          { // double cotted
+            match: /"(?:\\["\\]|[^\r\n"\\])+"/,
             push: 'operator',
             value: x => x.slice(1, -1).replace(/\\(["\\])/g, '$1')
           }
         ],
       },
       operator: {
-        whitespace: /[ \t]+/,
         rparen: ')',
+        whitespace: /[ \t]+/,
         operator: { match: ['->', '//'], pop: 1 },
+      },
+      operatorOrArgument: {
+        rparen: ')',
+        whitespace: /[ \t]+/,
+        operator: { match: ['->', '//'], pop: 1 },
+        argument: [
+          { match: /[-_:a-zA-Z0-9]+/ },
+          { // single cotted
+            match: /'(?:\\['\\]|[^\r\n'\\])+'/,
+            value: x => x.slice(1, -1).replace(/\\(['\\])/g, '$1')
+          },
+          { // double cotted
+            match: /"(?:\\["\\]|[^\r\n"\\])+"/,
+            value: x => x.slice(1, -1).replace(/\\(["\\])/g, '$1')
+          }
+        ],
       }
     });
   }
@@ -77,6 +91,25 @@ export class TaskExprService {
       // rparen = end of group
       if (token.type === 'rparen') {
         break;
+      }
+
+      // Handle argument
+      if (token.type === 'argument') {
+        if (!node) {
+          throw new Error(lexer.formatError(token, 'Unexpected argument'));
+        } else if (TaskExprService.isTaskNode(node)) {
+          node.args.push(token.value);
+        } else {
+          const lastTask = node.tasks[node.tasks.length - 1];
+
+          if (!lastTask || !TaskExprService.isTaskNode(lastTask)) {
+            throw new Error(lexer.formatError(token, 'Unexpected argument'));
+          } else {
+            lastTask.args.push(token.value);
+          }
+        }
+
+        continue;
       }
 
       // Handle operator
@@ -101,8 +134,11 @@ export class TaskExprService {
       // Build "child"
       let child: TaskNode | GroupNode;
 
-      if (token.type === 'string') {
-        child = { script: token.value };
+      if (token.type === 'script') {
+        child = { script: token.value, args: [] };
+      } else if (token.type === 'string') {
+        const [script, ...args] = token.value.split(/ +/);
+        child = { script, args };
       } else if (token.type === 'lparen') {
         const res = this._nextNode(lexer, i+1);
 
@@ -150,7 +186,7 @@ export class TaskExprService {
 
   async buildTask(node: TaskNode | GroupNode, workspace: Workspace, opts?: WorkspaceRunOptions): Promise<Task> {
     if (TaskExprService.isTaskNode(node)) {
-      const task = await workspace.run(node.script, [], opts);
+      const task = await workspace.run(node.script, node.args, opts);
 
       if (!task) {
         throw new Error(`Workspace ${workspace.name} have no ${node.script} script`);

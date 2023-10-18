@@ -1,8 +1,11 @@
+import { Logger } from '@jujulego/logger';
 import { decorate, injectable, type interfaces as int } from 'inversify';
 import { type ArgumentsCamelCase, type Argv, type CommandModule } from 'yargs';
 
+import { container } from '@/src/inversify.config.ts';
 import { setRegistry } from '@/src/modules/module.ts';
 import { type Awaitable, type Class, type Type } from '@/src/types.ts';
+import { ExitException } from '@/src/utils/exit.ts';
 
 import { applyMiddlewares, type IMiddleware } from './middleware.ts';
 
@@ -55,7 +58,18 @@ export function buildCommandModule(cmd: ICommand, opts: ICommandOpts): CommandMo
 
       return parser;
     },
-    handler: (args) => cmd.handler(args),
+    handler: async (args) => {
+      try {
+        await cmd.handler(args);
+      } catch (err) {
+        if (err.message) {
+          const logger = container.get(Logger);
+          logger.error(err.message);
+        }
+
+        throw new ExitException(1);
+      }
+    },
   };
 }
 

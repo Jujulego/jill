@@ -1,4 +1,4 @@
-import chalk from 'chalk';
+import { Logger } from '@jujulego/logger';
 import { hideBin } from 'yargs/helpers';
 
 import '@/src/commons/logger.service.ts';
@@ -16,9 +16,12 @@ import { ExitException } from '@/src/utils/exit.ts';
     if (err instanceof ExitException) {
       process.exit(err.code);
     } else {
-      console.error(await app.parser.getHelp());
-      console.error(chalk.red(err.message));
+      if (err.message) {
+        const logger = container.get(Logger);
+        logger.error(err.message);
+      }
 
+      console.error(await app.parser.getHelp());
       process.exit(1);
     }
   }
