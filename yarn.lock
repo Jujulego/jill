@@ -460,7 +460,7 @@ __metadata:
     eslint: 8.51.0
     eslint-plugin-react: 7.33.2
     eslint-plugin-react-hooks: 4.6.0
-    eslint-plugin-vitest: 0.3.2
+    eslint-plugin-vitest: 0.3.3
     eslint-plugin-workspaces: 0.9.0
     fork-ts-checker-webpack-plugin: 9.0.0
     ink: ^4.3.0
@@ -1027,7 +1027,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/utils@npm:6.8.0, @typescript-eslint/utils@npm:^6.6.0":
+"@typescript-eslint/utils@npm:6.8.0, @typescript-eslint/utils@npm:^6.7.5":
   version: 6.8.0
   resolution: "@typescript-eslint/utils@npm:6.8.0"
   dependencies:
@@ -2556,18 +2556,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-vitest@npm:0.3.2":
-  version: 0.3.2
-  resolution: "eslint-plugin-vitest@npm:0.3.2"
+"eslint-plugin-vitest@npm:0.3.3":
+  version: 0.3.3
+  resolution: "eslint-plugin-vitest@npm:0.3.3"
   dependencies:
-    "@typescript-eslint/utils": ^6.6.0
+    "@typescript-eslint/utils": ^6.7.5
   peerDependencies:
     eslint: ">=8.0.0"
     vitest: "*"
   peerDependenciesMeta:
     "@typescript-eslint/eslint-plugin":
       optional: true
-  checksum: 807b503a716cd51daf4ac197c34adbdad5109436238eae824bf19fb12ed6416f8e3e93845f56f4a5159873aabe5ea0339fd680fb8bdbb8e0788438370426bb4b
+  checksum: 739158fdb29f4238931e31a2eba40063542a538e83828ed024e75d6788b5d55dc86cc87b5138663a80538c84bd526aed98f233b5a363ee7f772062b1fc984e22
   languageName: node
   linkType: hard
 
