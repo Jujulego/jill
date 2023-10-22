@@ -420,7 +420,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jujulego/event-tree@npm:^4.1.0, @jujulego/event-tree@npm:^4.2.0":
+"@jujulego/event-tree@npm:^4.1.0, @jujulego/event-tree@npm:^4.1.1, @jujulego/event-tree@npm:^4.2.0":
   version: 4.2.0
   resolution: "@jujulego/event-tree@npm:4.2.0"
   dependenciesMeta:
@@ -498,14 +498,37 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@jujulego/logger@npm:^0.2.2":
+  version: 0.2.4
+  resolution: "@jujulego/logger@npm:0.2.4"
+  dependencies:
+    "@jujulego/event-tree": ^4.1.1
+    "@jujulego/quick-tag": ^0.3.3
+    chalk: ^5.3.0
+    chalk-template: ^1.1.0
+  checksum: d8f43a627d374fbc8a23393a14929e3fc15381e09e397bc05192b5965d7a354b9b7067e0f6cfeea8b2989b9ef1082494c81582a4a626d3123f87cdfcc200d711
+  languageName: node
+  linkType: hard
+
+"@jujulego/quick-tag@npm:^0.3.3":
+  version: 0.3.3
+  resolution: "@jujulego/quick-tag@npm:0.3.3"
+  dependenciesMeta:
+    vitest@0.34.6:
+      unplugged: true
+  checksum: 4e92934a0cf8cc1dd783c42885067317b702826f1d4042a5a976802a67dc0bb6ac2784b23e3d2c97b0e0abece3d4d6720005b1f4be2db0a4dd6f64902057b2ee
+  languageName: node
+  linkType: hard
+
 "@jujulego/tasks@npm:^2.0.1":
-  version: 2.0.2
-  resolution: "@jujulego/tasks@npm:2.0.2"
+  version: 2.2.0
+  resolution: "@jujulego/tasks@npm:2.2.0"
   dependencies:
     "@jujulego/event-tree": ^4.2.0
+    "@jujulego/logger": ^0.2.2
     "@jujulego/utils": ^2.0.0
     tree-kill: ^1.2.2
-  checksum: f6700088dba29e653c27613da57cdb512d1d5fed7c80eb865173daf0562cd23f99430abf3b252e95aa6ed600d8fe8345797f1886700902bbc2111451a14f8a9e
+  checksum: 06aaa5990a15c23c8bbe464bd25b2e604deed1da76dfd371fac8f89dce711fdf7a6224f3ef868e5f0e68fa5f7a8316cba2da8edeb6cf90e19648d90564a0a6a9
   languageName: node
   linkType: hard
 
@@ -1783,6 +1806,15 @@ __metadata:
     pathval: ^1.1.1
     type-detect: ^4.0.8
   checksum: 536668c60a0d985a0fbd94418028e388d243a925d7c5e858c7443e334753511614a3b6a124bac9ca077dfc4c37acc367d62f8c294960f440749536dc181dfc6d
+  languageName: node
+  linkType: hard
+
+"chalk-template@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "chalk-template@npm:1.1.0"
+  dependencies:
+    chalk: ^5.2.0
+  checksum: 868aae8d4e7556ad2f35de4e04fe65dbe1ea6c5c80ad783f1c156d0a5c33f444c6814f49cbb68fe348c78e99daf2bcf566b47ad7e13603e4691ca78b2f422824
   languageName: node
   linkType: hard
 
