@@ -39,7 +39,7 @@
     "ink-spinner": "^5.0.0",
     "inversify": "^6.0.1",
     "inversify-inject-decorators": "^3.1.0",
-    "log-symbols": "^5.1.0",
+    "log-symbols": "^6.0.0",
     "moo": "^0.5.2",
     "normalize-package-data": "^6.0.0",
     "pretty-ms": "^8.0.0",
