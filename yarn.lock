@@ -460,7 +460,7 @@ __metadata:
     eslint: 8.52.0
     eslint-plugin-react: 7.33.2
     eslint-plugin-react-hooks: 4.6.0
-    eslint-plugin-vitest: 0.3.3
+    eslint-plugin-vitest: 0.3.6
     eslint-plugin-workspaces: 0.9.0
     fork-ts-checker-webpack-plugin: 9.0.0
     ink: ^4.3.0
@@ -2563,9 +2563,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-vitest@npm:0.3.3":
-  version: 0.3.3
-  resolution: "eslint-plugin-vitest@npm:0.3.3"
+"eslint-plugin-vitest@npm:0.3.6":
+  version: 0.3.6
+  resolution: "eslint-plugin-vitest@npm:0.3.6"
   dependencies:
     "@typescript-eslint/utils": ^6.7.5
   peerDependencies:
@@ -2574,7 +2574,7 @@ __metadata:
   peerDependenciesMeta:
     "@typescript-eslint/eslint-plugin":
       optional: true
-  checksum: 739158fdb29f4238931e31a2eba40063542a538e83828ed024e75d6788b5d55dc86cc87b5138663a80538c84bd526aed98f233b5a363ee7f772062b1fc984e22
+  checksum: dce4696c8a6ecec3da233cb0ce4a995639993490069964930a5ab548dc1b817be7c1d1e47774719007cfad08e2ce8d5ef1bc774479dcf189d108ee54d821080a
   languageName: node
   linkType: hard
 
