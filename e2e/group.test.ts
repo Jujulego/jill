@@ -31,6 +31,8 @@ beforeAll(() => {
       test1: 'node -e "require(\'node:fs\').writeFileSync(\'script.txt\', \'test1\')"',
       // language=bash
       test2: 'node -e "require(\'node:fs\').writeFileSync(\'script.txt\', \'test2\')"',
+      // language=bash
+      fails: 'node -e "process.exit(1)"',
     }
   })
     .addDependency(wksC, true);
