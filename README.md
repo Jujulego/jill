@@ -22,14 +22,20 @@ It supports both `npm` and `yarn`.
 - `jill group` same as `run` but allows to run multiple scripts in sequence or in parallel using the task syntax
 
 #### Task syntax _(only supported by `jill group` command yet)_
-Allows to instruct multiple tasks with the given orchestration. The orchetraction is given by the following operators:
+Allows to instruct multiple tasks with the given orchestration. The orchestration is given by the following operators:
 - `->` in sequence
+- `||` fallbacks
 - `//` in parallel
 
 ##### Examples:
 - This will run scripts **taskA**, **taskB** and **taskC** in order, one after another.
   ```shell
   jill group 'taskA -> taskB -> taskC'
+  ```
+
+- This will run first **taskA**, if it fails it will run **taskB**, then **taskC** in order, until one succeed.
+  ```shell
+  jill group 'taskA || taskB || taskC'
   ```
 
 - This will run scripts **taskA**, **taskB** and **taskC** in parallel.
