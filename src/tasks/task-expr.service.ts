@@ -1,5 +1,5 @@
 import { Logger } from '@jujulego/logger';
-import { type GroupTask, ParallelGroup, SequenceGroup, type Task } from '@jujulego/tasks';
+import { FallbackGroup, type GroupTask, ParallelGroup, SequenceGroup, type Task } from '@jujulego/tasks';
 import { inject } from 'inversify';
 import moo from 'moo';
 
@@ -58,12 +58,12 @@ export class TaskExprService {
       operator: {
         rparen: ')',
         whitespace: /[ \t]+/,
-        operator: { match: ['->', '//'], pop: 1 },
+        operator: { match: ['->', '//', '||'], pop: 1 },
       },
       operatorOrArgument: {
         rparen: ')',
         whitespace: /[ \t]+/,
-        operator: { match: ['->', '//'], pop: 1 },
+        operator: { match: ['->', '//', '||'], pop: 1 },
         argument: [
           { match: /[-_:a-zA-Z0-9]+/ },
           { // single cotted
@@ -198,6 +198,10 @@ export class TaskExprService {
 
       if (node.operator === '//') {
         group = new ParallelGroup('In parallel', {}, {
+          logger: this._logger,
+        });
+      } else if (node.operator === '||') {
+        group = new FallbackGroup('Fallbacks', {}, {
           logger: this._logger,
         });
       } else {

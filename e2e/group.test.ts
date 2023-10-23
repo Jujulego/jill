@@ -20,6 +20,8 @@ beforeAll(() => {
       test2: 'node -e "require(\'node:fs\').writeFileSync(\'script.txt\', \'test2\')"',
       // language=bash
       fails: 'node -e "process.exit(1)"',
+      // language=bash
+      fails2: 'node -e "process.exit(1)"',
     }
   });
 
@@ -29,6 +31,8 @@ beforeAll(() => {
       test1: 'node -e "require(\'node:fs\').writeFileSync(\'script.txt\', \'test1\')"',
       // language=bash
       test2: 'node -e "require(\'node:fs\').writeFileSync(\'script.txt\', \'test2\')"',
+      // language=bash
+      fails: 'node -e "process.exit(1)"',
     }
   })
     .addDependency(wksC, true);
@@ -166,6 +170,80 @@ describe('jill group', () => {
           expect.ignoreColor(/^. Run build in wks-c \(took [0-9.]+m?s\)$/),
           expect.ignoreColor(/^. In sequence \(took [0-9.]+m?s\)$/),
           expect.ignoreColor(/^ {2}. Run test1 in wks-b \(took [0-9.]+m?s\)$/),
+          expect.ignoreColor(/^ {2}. Run test2 in wks-b \(took [0-9.]+m?s\)$/),
+        ]);
+
+        // Check script result
+        await expect(fs.readFile(path.join(prjDir, 'wks-c', 'script.txt'), 'utf8'))
+          .resolves.toBe('build');
+
+        await expect(fs.readFile(path.join(prjDir, 'wks-b', 'script.txt'), 'utf8'))
+          .resolves.toBe('test2');
+      });
+    });
+
+    describe('fallback group', () => {
+      it('should only run wks-c test1 script and not fails as test1 script succeed', async () => {
+        const res = await jill('group -w wks-c "test1 || fails"', { cwd: prjDir });
+
+        // Check jill output
+        expect(res.code).toBe(0);
+
+        expect(res.screen.screen).toMatchLines([
+          expect.ignoreColor(/^. Fallbacks \(took [0-9.]+m?s\)$/),
+          expect.ignoreColor(/^ {2}. Run test1 in wks-c \(took [0-9.]+m?s\)$/),
+          expect.ignoreColor(/^ {2}. Run fails in wks-c$/),
+        ]);
+
+        // Check script result
+        await expect(fs.readFile(path.join(prjDir, 'wks-c', 'script.txt'), 'utf8'))
+          .resolves.toBe('test1');
+      });
+
+      it('should run wks-c test2 script as fails script failed', async () => {
+        const res = await jill('group -w wks-c "fails || test2"', { cwd: prjDir });
+
+        // Check jill output
+        expect(res.code).toBe(0);
+
+        expect(res.screen.screen).toMatchLines([
+          expect.ignoreColor(/^. Fallbacks \(took [0-9.]+m?s\)$/),
+          expect.ignoreColor(/^ {2}. Run fails in wks-c \(took [0-9.]+m?s\)$/),
+          expect.ignoreColor(/^ {4}.( yarn exec)? node -e "process.exit\(1\)" \(took [0-9.]+m?s\)$/),
+          expect.ignoreColor(/^ {2}. Run test2 in wks-c \(took [0-9.]+m?s\)$/),
+        ]);
+
+        // Check script result
+        await expect(fs.readFile(path.join(prjDir, 'wks-c', 'script.txt'), 'utf8'))
+          .resolves.toBe('test2');
+      });
+
+      it('should run wks-c both fails and fails2 scripts in sequence and exit 1', async () => {
+        const res = await jill('group -w wks-c "fails || fails2"', { cwd: prjDir });
+
+        // Check jill output
+        expect(res.code).toBe(1);
+
+        expect(res.screen.screen).toMatchLines([
+          expect.ignoreColor(/^. Fallbacks \(took [0-9.]+m?s\)$/),
+          expect.ignoreColor(/^ {2}. Run fails in wks-c \(took [0-9.]+m?s\)$/),
+          expect.ignoreColor(/^ {4}.( yarn exec)? node -e "process.exit\(1\)" \(took [0-9.]+m?s\)$/),
+          expect.ignoreColor(/^ {2}. Run fails2 in wks-c \(took [0-9.]+m?s\)$/),
+          expect.ignoreColor(/^ {4}.( yarn exec)? node -e "process.exit\(1\)" \(took [0-9.]+m?s\)$/),
+        ]);
+      });
+
+      it('should run wks-c build then run wks-b both fails and test2 scripts in sequence', async () => {
+        const res = await jill('group -w wks-b "fails || test2"', { cwd: prjDir });
+
+        // Check jill output
+        expect(res.code).toBe(0);
+
+        expect(res.screen.screen).toMatchLines([
+          expect.ignoreColor(/^. Run build in wks-c \(took [0-9.]+m?s\)$/),
+          expect.ignoreColor(/^. Fallbacks \(took [0-9.]+m?s\)$/),
+          expect.ignoreColor(/^ {2}. Run fails in wks-b \(took [0-9.]+m?s\)$/),
+          expect.ignoreColor(/^ {4}.( yarn exec)? node -e "process.exit\(1\)" \(took [0-9.]+m?s\)$/),
           expect.ignoreColor(/^ {2}. Run test2 in wks-b \(took [0-9.]+m?s\)$/),
         ]);
 

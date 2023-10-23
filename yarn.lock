@@ -435,7 +435,7 @@ __metadata:
     "@jujulego/event-tree": ^4.2.0
     "@jujulego/logger": ^0.2.4
     "@jujulego/quick-tag": ^0.3.3
-    "@jujulego/tasks": ^2.1.0
+    "@jujulego/tasks": ^2.2.0
     "@jujulego/utils": ^2.0.2
     "@jujulego/vite-plugin-swc": 1.1.0
     "@microsoft/eslint-formatter-sarif": 3.0.0
@@ -519,15 +519,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jujulego/tasks@npm:^2.1.0":
-  version: 2.1.0
-  resolution: "@jujulego/tasks@npm:2.1.0"
+"@jujulego/tasks@npm:^2.2.0":
+  version: 2.2.0
+  resolution: "@jujulego/tasks@npm:2.2.0"
   dependencies:
     "@jujulego/event-tree": ^4.2.0
     "@jujulego/logger": ^0.2.2
     "@jujulego/utils": ^2.0.0
     tree-kill: ^1.2.2
-  checksum: c674c3f6378a250bbe72d684f58c02feb0befe334e50512cab87f7b1e75955b41aa82f218acc5980a4f8912192c5fd30f35200dfe61abe571efd4a25f56477b0
+  checksum: 06aaa5990a15c23c8bbe464bd25b2e604deed1da76dfd371fac8f89dce711fdf7a6224f3ef868e5f0e68fa5f7a8316cba2da8edeb6cf90e19648d90564a0a6a9
   languageName: node
   linkType: hard
 
