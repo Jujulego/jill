@@ -31,9 +31,11 @@ export async function configLoader() {
   // Apply options from cli
   if (options.jobs) config.jobs = options.jobs;
   if (options.verbose) config.verbose = options.verbose;
+  if (options.hooks) config.hooks = options.hooks;
 
   // Apply default
   config.jobs ??= (os.cpus().length - 1);
+  config.hooks ??= true;
 
   // Validate
   if (!validator(config)) {

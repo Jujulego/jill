@@ -1,4 +1,5 @@
 jobs: 2
+hooks: false
 
 plugins:
   - './plugin.js'

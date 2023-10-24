@@ -28,6 +28,10 @@ export function applyConfigOptions(parser: Argv): Argv<Omit<IConfig, 'plugins'>>
       alias: 'j',
       type: 'number',
       description: 'Set maximum parallel job number',
+    })
+    .option('hooks', {
+      type: 'boolean',
+      description: 'Run hook scripts',
     });
 }
 
