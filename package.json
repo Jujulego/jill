@@ -14,7 +14,9 @@
   "bin": "./bin/jill.mjs",
   "exports": "./dist/index.js",
   "scripts": {
+    "prelint": "echo pre-lint",
     "lint": "eslint .",
+    "postlint": "echo post-lint",
     "clean": "shx rm -rf dist",
     "build": "webpack",
     "build:prod": "webpack --config webpack.prod.js",
