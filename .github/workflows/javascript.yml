@@ -20,7 +20,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Use Node.js 16.x
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 16
           cache: yarn
@@ -49,7 +49,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Use Node.js 16.x
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 16
           cache: yarn
@@ -75,7 +75,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Use Node.js 16.x
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 16
           cache: yarn
@@ -119,7 +119,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Use Node.js ${{ matrix.node }}.x
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
           cache: yarn
@@ -168,7 +168,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Use Node.js 16.x
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 16
           registry-url: https://registry.npmjs.org
@@ -210,7 +210,7 @@ jobs:
         run: echo "version=$(jq -r ".version" package.json)" >> $GITHUB_OUTPUT
 
       - name: Sonarcloud
-        uses: sonarsource/sonarcloud-github-action@v1.9
+        uses: sonarsource/sonarcloud-github-action@v2.0.2
         with:
           args: >
             -Dsonar.projectVersion=${{ steps.info.outputs.version }}
