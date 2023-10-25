@@ -35,7 +35,7 @@ beforeEach(() => {
   bed = new TestBed();
   wks = bed.addWorkspace('wks');
 
-  vi.spyOn(wks, 'getScript').mockReturnValue('jest --script');
+  vi.spyOn(wks, 'getScript').mockImplementation((script) => ({ test: 'jest --script' })[script] ?? null);
   vi.spyOn(wks.project, 'packageManager').mockResolvedValue('npm');
 });
 
@@ -82,7 +82,7 @@ describe('ScriptTask.prepare', () => {
   });
 
   it('should interpret jill command, to get its tasks', async () => {
-    vi.spyOn(wks, 'getScript').mockReturnValue('jill run test');
+    vi.spyOn(wks, 'getScript').mockImplementation((script) => ({ test: 'jill run test' })[script] ?? null);
 
     const childTsk = new TestCommandTask(wks, 'jest', ['--script', '--arg']);
     vi.spyOn(JillApplication.prototype, 'tasksOf').mockResolvedValue([childTsk]);
@@ -95,9 +95,8 @@ describe('ScriptTask.prepare', () => {
   });
 
   it('should create a task spawning jill command, if it generates no tasks', async () => {
-    vi.spyOn(wks, 'getScript').mockReturnValue('jill tree');
-
     vi.spyOn(JillApplication.prototype, 'tasksOf').mockResolvedValue([]);
+    vi.spyOn(wks, 'getScript').mockImplementation((script) => ({ test: 'jill tree' })[script] ?? null);
 
     const script = new ScriptTask(wks, 'test', ['--arg']);
     await script.prepare();
