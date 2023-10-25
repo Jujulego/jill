@@ -210,7 +210,7 @@ jobs:
         run: echo "version=$(jq -r ".version" package.json)" >> $GITHUB_OUTPUT
 
       - name: Sonarcloud
-        uses: sonarsource/sonarcloud-github-action@v1.9
+        uses: sonarsource/sonarcloud-github-action@v2.0.2
         with:
           args: >
             -Dsonar.projectVersion=${{ steps.info.outputs.version }}
