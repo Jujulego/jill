@@ -33,7 +33,7 @@ export async function configLoader() {
   if (options.verbose) config.verbose = options.verbose;
   if (options.hooks !== undefined) config.hooks = options.hooks;
 
-  // Apply default
+  // Apply defaults
   config.jobs ??= (os.cpus().length - 1);
   config.hooks ??= true;
 

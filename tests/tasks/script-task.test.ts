@@ -65,6 +65,38 @@ describe('ScriptTask.prepare', () => {
     expect(tsk.args).toEqual(['--script', '--arg']);
   });
 
+  it('should create a task running the script with its hooks (npm)', async () => {
+    vi.spyOn(wks, 'getScript').mockImplementation(
+      (script) => ({ pretest: 'echo pre-hook', test: 'jest --script', posttest: 'echo post-hook' })[script] ?? null
+    );
+
+    const script = new ScriptTask(wks, 'test', ['--arg']);
+    await script.prepare();
+
+    expect(script.tasks).toHaveLength(3);
+
+    const preTask = script.tasks[0] as CommandTask;
+
+    expect(preTask).toBeInstanceOf(CommandTask);
+    expect(preTask.group).toBe(script);
+    expect(preTask.cmd).toBe('echo');
+    expect(preTask.args).toEqual(['pre-hook']);
+
+    const task = script.tasks[1] as CommandTask;
+
+    expect(task).toBeInstanceOf(CommandTask);
+    expect(task.group).toBe(script);
+    expect(task.cmd).toBe('jest');
+    expect(task.args).toEqual(['--script', '--arg']);
+
+    const postTask = script.tasks[2] as CommandTask;
+
+    expect(postTask).toBeInstanceOf(CommandTask);
+    expect(postTask.group).toBe(script);
+    expect(postTask.cmd).toBe('echo');
+    expect(postTask.args).toEqual(['post-hook']);
+  });
+
   it('should create a task running the script (yarn)', async () => {
     vi.spyOn(wks.project, 'packageManager').mockResolvedValue('yarn');
 
@@ -79,6 +111,39 @@ describe('ScriptTask.prepare', () => {
     expect(tsk.group).toBe(script);
     expect(tsk.cmd).toBe('yarn');
     expect(tsk.args).toEqual(['exec', 'jest', '--script', '--arg']);
+  });
+
+  it('should create a task running the script with its hooks (yarn)', async () => {
+    vi.spyOn(wks.project, 'packageManager').mockResolvedValue('yarn');
+    vi.spyOn(wks, 'getScript').mockImplementation(
+      (script) => ({ pretest: 'echo pre-hook', test: 'jest --script', posttest: 'echo post-hook' })[script] ?? null
+    );
+
+    const script = new ScriptTask(wks, 'test', ['--arg']);
+    await script.prepare();
+
+    expect(script.tasks).toHaveLength(3);
+
+    const preTask = script.tasks[0] as CommandTask;
+
+    expect(preTask).toBeInstanceOf(CommandTask);
+    expect(preTask.group).toBe(script);
+    expect(preTask.cmd).toBe('yarn');
+    expect(preTask.args).toEqual(['exec', 'echo', 'pre-hook']);
+
+    const task = script.tasks[1] as CommandTask;
+
+    expect(task).toBeInstanceOf(CommandTask);
+    expect(task.group).toBe(script);
+    expect(task.cmd).toBe('yarn');
+    expect(task.args).toEqual(['exec', 'jest', '--script', '--arg']);
+
+    const postTask = script.tasks[2] as CommandTask;
+
+    expect(postTask).toBeInstanceOf(CommandTask);
+    expect(postTask.group).toBe(script);
+    expect(postTask.cmd).toBe('yarn');
+    expect(postTask.args).toEqual(['exec', 'echo', 'post-hook']);
   });
 
   it('should interpret jill command, to get its tasks', async () => {
@@ -131,6 +196,46 @@ describe('ScriptTask._orchestrate', () => {
     // It emits one task
     let next = await it.next();
     expect(next).toEqual({ done: false, value: expect.any(Task) });
+
+    // Then wait for it to finish
+    vi.mocked(waitFor$).mockResolvedValue({ failed: 0 });
+
+    next = await it.next();
+    expect(next).toEqual({ done: true });
+
+    expect(script.status).toBe('done');
+  });
+
+  it('should yield all prepared tasks and hooks script in order and gain status done when they are done', async () => {
+    vi.spyOn(wks, 'getScript').mockImplementation(
+      (script) => ({ pretest: 'echo pre-hook', test: 'jest --script', posttest: 'echo post-hook' })[script] ?? null
+    );
+
+    const script = new TestScriptTask(wks, 'test', []);
+    await script.prepare();
+
+    const it = script._orchestrate();
+
+    // First it emits the pre hook task
+    let next = await it.next();
+    expect(next.done).toBe(false);
+    expect((next.value as Task)).toMatchObject({ cmd: 'echo', args: ['pre-hook'] });
+
+    // Then wait for it to finish
+    vi.mocked(waitFor$).mockResolvedValue({ failed: 0 });
+
+    // Then it emits the script task
+    next = await it.next();
+    expect(next.done).toBe(false);
+    expect((next.value as Task)).toMatchObject({ cmd: 'jest', args: ['--script'] });
+
+    // Then wait for it to finish
+    vi.mocked(waitFor$).mockResolvedValue({ failed: 0 });
+
+    // Finally it emits the post hook task
+    next = await it.next();
+    expect(next.done).toBe(false);
+    expect((next.value as Task)).toMatchObject({ cmd: 'echo', args: ['post-hook'] });
 
     // Then wait for it to finish
     vi.mocked(waitFor$).mockResolvedValue({ failed: 0 });
