@@ -64,7 +64,7 @@ describe('jill exec', () => {
         .resolves.toBe('node');
     });
 
-    it.only('should run echo in wks-c', async () => {
+    it('should run echo in wks-c', async () => {
       const res = await jill('exec -w wks-c echo toto', { cwd: prjDir, keepQuotes: true });
 
       // Check jill output
