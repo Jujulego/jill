@@ -60,7 +60,7 @@
     "@types/moo": "0.5.8",
     "@types/node": "16.18.59",
     "@types/normalize-package-data": "2.4.3",
-    "@types/react": "18.2.32",
+    "@types/react": "18.2.33",
     "@types/semver": "7.5.4",
     "@types/webpack-bundle-analyzer": "4.6.2",
     "@types/yargs": "17.0.29",
