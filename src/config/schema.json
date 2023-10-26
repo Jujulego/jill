@@ -6,6 +6,11 @@
     "jobs": {
       "type": "number"
     },
+    "hooks": {
+      "type": "boolean",
+      "default": true,
+      "description": "Run hook scripts"
+    },
     "plugins": {
       "type": "array",
       "items": {

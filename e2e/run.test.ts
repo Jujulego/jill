@@ -17,6 +17,12 @@ beforeAll(() => {
       // language=bash
       start: 'node -e "require(\'node:fs\').writeFileSync(\'script.txt\', \'start\')"',
       // language=bash
+      prehooked: 'node -e "require(\'node:fs\').writeFileSync(\'pre-hook.txt\', \'hooked\')"',
+      // language=bash
+      hooked: 'node -e "require(\'node:fs\').writeFileSync(\'script.txt\', \'hooked\')"',
+      // language=bash
+      posthooked: 'node -e "require(\'node:fs\').writeFileSync(\'post-hook.txt\', \'hooked\')"',
+      // language=bash
       fails: 'node -e "process.exit(1)"',
     }
   });
@@ -71,6 +77,27 @@ describe('jill run', () => {
       // Check script result
       await expect(fs.readFile(path.join(prjDir, 'wks-c', 'script.txt'), 'utf8'))
         .resolves.toBe('start');
+    });
+
+    it('should run wks-c hooked script with its hooks', async () => {
+      const res = await jill('run -w wks-c hooked', { cwd: prjDir });
+
+      // Check jill output
+      expect(res.code).toBe(0);
+
+      expect(res.screen.screen).toMatchLines([
+        expect.ignoreColor(/^. Run hooked in wks-c \(took [0-9.]+m?s\)$/),
+      ]);
+
+      // Check script result
+      await expect(fs.readFile(path.join(prjDir, 'wks-c', 'pre-hook.txt'), 'utf8'))
+        .resolves.toBe('hooked');
+
+      await expect(fs.readFile(path.join(prjDir, 'wks-c', 'script.txt'), 'utf8'))
+        .resolves.toBe('hooked');
+
+      await expect(fs.readFile(path.join(prjDir, 'wks-c', 'post-hook.txt'), 'utf8'))
+        .resolves.toBe('hooked');
     });
 
     it('should run wks-c fails script and exit 1', async () => {

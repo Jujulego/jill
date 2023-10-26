@@ -13,6 +13,10 @@ export interface ScriptContext extends TaskContext {
   script: string;
 }
 
+export interface ScriptOpts extends TaskOptions {
+  runHooks?: boolean;
+}
+
 // Utils
 export function isScriptCtx(ctx: Readonly<TaskContext>): ctx is Readonly<ScriptContext> {
   return 'workspace' in ctx && 'script' in ctx;
@@ -21,20 +25,24 @@ export function isScriptCtx(ctx: Readonly<TaskContext>): ctx is Readonly<ScriptC
 // Class
 export class ScriptTask extends GroupTask<ScriptContext> {
   // Attributes
-  private _scriptTasks?: TaskSet;
+  private _preHookTasks: TaskSet | null = null;
+  private _postHookTasks: TaskSet | null = null;
+  private _scriptTasks: TaskSet | null = null;
+  private readonly _runHooks: boolean;
 
   // Constructor
   constructor(
     readonly workspace: Workspace,
     readonly script: string,
     readonly args: string[],
-    opts?: TaskOptions
+    opts?: ScriptOpts
   ) {
     super(script, { workspace, script }, opts);
+    this._runHooks = opts?.runHooks ?? true;
   }
 
   // Methods
-  private async _runScript(script: string, args: string[]): Promise<Task[] | null> {
+  private async _runScript(script: string, args: string[]): Promise<TaskSet | null> {
     const line = this.workspace.getScript(script);
 
     if (!line) {
@@ -55,32 +63,62 @@ export class ScriptTask extends GroupTask<ScriptContext> {
       });
 
       if (tasks.length) {
-        return tasks;
+        const set = new TaskSet();
+
+        for (const tsk of tasks) {
+          set.add(tsk);
+        }
+
+        return set;
       }
     }
 
     const pm = await this.workspace.project.packageManager();
 
-    return [
+    const set = new TaskSet();
+    set.add(
       new CommandTask(this.workspace, command, [...commandArgs, ...args], {
         logger: this._logger,
         superCommand: pm === 'yarn' ? ['yarn', 'exec'] : undefined,
       })
-    ];
+    );
+
+    return set;
   }
 
   async prepare(): Promise<void> {
-    const tasks = await this._runScript(this.script, this.args);
+    // Prepare script run
+    this._scriptTasks = await this._runScript(this.script, this.args);
 
-    if (!tasks) {
+    if (!this._scriptTasks) {
       throw new Error(`No script ${this.script} in ${this.workspace.name}`);
     }
 
-    this._scriptTasks = new TaskSet();
+    // Prepare hooks run
+    if (this._runHooks) {
+      this._preHookTasks = await this._runScript(`pre${this.script}`, []);
+      this._postHookTasks = await this._runScript(`post${this.script}`, []);
+    }
 
-    for (const tsk of tasks) {
+    // Add tasks to group
+    if (this._preHookTasks) {
+      this._logger.verbose(`Found pre-hook script "pre${this.script}"`);
+
+      for (const tsk of this._preHookTasks) {
+        this.add(tsk);
+      }
+    }
+
+    for (const tsk of this._scriptTasks) {
       this.add(tsk);
-      this._scriptTasks.add(tsk);
+    }
+
+    if (this._postHookTasks) {
+      this._logger.verbose(`Found post-hook script "post${this.script}"`);
+
+      for (const tsk of this._postHookTasks) {
+        this.add(tsk);
+      }
     }
   }
 
@@ -89,10 +127,37 @@ export class ScriptTask extends GroupTask<ScriptContext> {
       throw new Error('ScriptTask needs to be prepared. Call prepare before starting it');
     }
 
+    // Run pre-hook
+    if (this._preHookTasks) {
+      yield* this._preHookTasks;
+
+      if (await this._hasFailed(this._preHookTasks)) {
+        return this.setStatus('failed');
+      }
+    }
+
+    // Run script
     yield* this._scriptTasks;
 
-    const results = await waitFor$(this._scriptTasks, 'finished');
-    this.setStatus(results.failed === 0 ? 'done' : 'failed');
+    if (await this._hasFailed(this._scriptTasks)) {
+      return this.setStatus('failed');
+    }
+
+    // Run post-hook
+    if (this._postHookTasks) {
+      yield* this._postHookTasks;
+
+      if (await this._hasFailed(this._postHookTasks)) {
+        return this.setStatus('failed');
+      }
+    }
+
+    this.setStatus('done');
+  }
+
+  private async _hasFailed(set: TaskSet): Promise<boolean> {
+    const results = await waitFor$(set, 'finished');
+    return results.failed > 0;
   }
 
   protected _stop(): void {

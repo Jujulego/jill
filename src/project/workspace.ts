@@ -6,6 +6,8 @@ import { type Package } from 'normalize-package-data';
 import { satisfies } from 'semver';
 
 import { GitService } from '@/src/commons/git.service.ts';
+import { CONFIG } from '@/src/config/config-loader.ts';
+import { type IConfig } from '@/src/config/types.ts';
 import { container, lazyInject } from '@/src/inversify.config.ts';
 import { CommandTask } from '@/src/tasks/command-task.ts';
 import { ScriptTask } from '@/src/tasks/script-task.ts';
@@ -31,6 +33,9 @@ export class Workspace {
 
   @lazyInject(GitService)
   private readonly _git: GitService;
+
+  @lazyInject(CONFIG)
+  private readonly _config: IConfig;
 
   // Constructor
   constructor(
@@ -166,6 +171,7 @@ export class Workspace {
       task = new ScriptTask(this, script, args, {
         ...opts,
         logger: this._logger.child(withLabel(`${this.name}#${script}`)),
+        runHooks: this._config.hooks,
       });
 
       await task.prepare();
