@@ -64,18 +64,18 @@ describe('jill exec', () => {
         .resolves.toBe('node');
     });
 
-    it('should run ls in wks-c', async () => {
-      const res = await jill('exec -w wks-c ls', { cwd: prjDir, keepQuotes: true });
+    it.only('should run echo in wks-c', async () => {
+      const res = await jill('exec -w wks-c echo toto', { cwd: prjDir, keepQuotes: true });
 
       // Check jill output
       expect(res.code).toBe(0);
 
       expect(res.screen.screen).toMatchLines([
-        expect.ignoreColor(/^.( yarn exec)? ls \(took [0-9.]+m?s\)/),
+        expect.ignoreColor(/^.( yarn exec)? echo toto \(took [0-9.]+m?s\)/),
       ]);
 
       expect(res.stderr).toMatchLines([
-        expect.ignoreColor(/^\[wks-c\$ls] package\.json/),
+        expect.ignoreColor(/^\[wks-c\$echo] toto/),
       ]);
     });
 

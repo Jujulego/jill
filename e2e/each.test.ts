@@ -14,6 +14,12 @@ beforeAll(() => {
     scripts: {
       // language=bash
       build: 'node -e "require(\'node:fs\').writeFileSync(\'build.txt\', \'built\')"',
+      // language=bash
+      prehooked: 'node -e "require(\'node:fs\').writeFileSync(\'pre-hook.txt\', \'hooked\')"',
+      // language=bash
+      hooked: 'node -e "require(\'node:fs\').writeFileSync(\'script.txt\', \'hooked\')"',
+      // language=bash
+      posthooked: 'node -e "require(\'node:fs\').writeFileSync(\'post-hook.txt\', \'hooked\')"',
     }
   });
 
@@ -23,6 +29,12 @@ beforeAll(() => {
       build: 'node -e "require(\'node:fs\').writeFileSync(\'build.txt\', \'built\')"',
       // language=bash
       start: 'node -e "require(\'node:fs\').writeFileSync(\'start.txt\', \'started\')"',
+      // language=bash
+      prehooked: 'node -e "require(\'node:fs\').writeFileSync(\'pre-hook.txt\', \'hooked\')"',
+      // language=bash
+      hooked: 'node -e "require(\'node:fs\').writeFileSync(\'script.txt\', \'hooked\')"',
+      // language=bash
+      posthooked: 'node -e "require(\'node:fs\').writeFileSync(\'post-hook.txt\', \'hooked\')"',
       // language=bash
       fails: 'node -e "process.exit(1)"',
     }
@@ -88,6 +100,41 @@ describe('jill each', () => {
 
       await expect(fs.readFile(path.join(prjDir, 'wks-a', 'start.txt'), 'utf8'))
         .resolves.toBe('started');
+    });
+
+    it('should run hooked script with its hooks on each workspace (and build dependencies)', async () => {
+      const res = await jill('each hooked', { cwd: prjDir });
+
+      // Check jill output
+      expect(res.code).toBe(0);
+
+      expect(res.screen.screen).toMatchLines([
+        expect.ignoreColor(/^. Run build in wks-c \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^. Run hooked in wks-c \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^. Run hooked in wks-b \(took [0-9.]+m?s\)$/),
+      ]);
+
+      // Check script result
+      await expect(fs.readFile(path.join(prjDir, 'wks-c', 'pre-hook.txt'), 'utf8'))
+        .resolves.toBe('hooked');
+
+      await expect(fs.readFile(path.join(prjDir, 'wks-c', 'script.txt'), 'utf8'))
+        .resolves.toBe('hooked');
+
+      await expect(fs.readFile(path.join(prjDir, 'wks-c', 'post-hook.txt'), 'utf8'))
+        .resolves.toBe('hooked');
+
+      await expect(fs.readFile(path.join(prjDir, 'wks-c', 'build.txt'), 'utf8'))
+        .resolves.toBe('built');
+
+      await expect(fs.readFile(path.join(prjDir, 'wks-b', 'pre-hook.txt'), 'utf8'))
+        .resolves.toBe('hooked');
+
+      await expect(fs.readFile(path.join(prjDir, 'wks-b', 'script.txt'), 'utf8'))
+        .resolves.toBe('hooked');
+
+      await expect(fs.readFile(path.join(prjDir, 'wks-b', 'post-hook.txt'), 'utf8'))
+        .resolves.toBe('hooked');
     });
 
     it('should run fails script on each workspace (and build dependencies)', async () => {
