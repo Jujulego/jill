@@ -101,16 +101,24 @@ export class ScriptTask extends GroupTask<ScriptContext> {
     }
 
     // Add tasks to group
-    for (const tsk of this._preHookTasks ?? []) {
-      this.add(tsk);
+    if (this._preHookTasks) {
+      this._logger.verbose(`Found pre-hook script "pre${this.script}"`);
+
+      for (const tsk of this._preHookTasks) {
+        this.add(tsk);
+      }
     }
 
     for (const tsk of this._scriptTasks) {
       this.add(tsk);
     }
 
-    for (const tsk of this._postHookTasks ?? []) {
-      this.add(tsk);
+    if (this._postHookTasks) {
+      this._logger.verbose(`Found post-hook script "post${this.script}"`);
+
+      for (const tsk of this._postHookTasks) {
+        this.add(tsk);
+      }
     }
   }
 
