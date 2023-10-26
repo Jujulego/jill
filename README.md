@@ -18,6 +18,12 @@ That done it can offer you various utilities:
 
 It supports both `npm` and `yarn`.
 
+### Hook scripts
+Jill will run hook script like npm do, for both npm and yarn. As npm, when you type `jill run test`, it will first run
+`pretest` if it exists, then `test` and finally `posttest`.
+
+This feature can be disabled using the `--no-hooks` option: `jill run --no-hooks test`.
+
 ### Experimental features
 - `jill group` same as `run` but allows to run multiple scripts in sequence or in parallel using the task syntax
 
