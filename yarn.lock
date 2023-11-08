@@ -443,7 +443,7 @@ __metadata:
     "@swc/core": 1.3.96
     "@types/moo": 0.5.9
     "@types/node": 16.18.61
-    "@types/normalize-package-data": 2.4.3
+    "@types/normalize-package-data": 2.4.4
     "@types/react": 18.2.36
     "@types/semver": 7.5.4
     "@types/webpack-bundle-analyzer": 4.6.2
@@ -859,10 +859,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/normalize-package-data@npm:2.4.3":
-  version: 2.4.3
-  resolution: "@types/normalize-package-data@npm:2.4.3"
-  checksum: 6f60e157c0fc39b80d80eb9043cdd78e4090f25c5264ef0317f5701648a5712fd453d364569675a19aef44a18c6f14f6e4809bdc0b97a46a0ed9ce4a320bbe42
+"@types/normalize-package-data@npm:2.4.4":
+  version: 2.4.4
+  resolution: "@types/normalize-package-data@npm:2.4.4"
+  checksum: 65dff72b543997b7be8b0265eca7ace0e34b75c3e5fee31de11179d08fa7124a7a5587265d53d0409532ecb7f7fba662c2012807963e1f9b059653ec2c83ee05
   languageName: node
   linkType: hard
 
