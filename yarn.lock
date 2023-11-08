@@ -446,7 +446,7 @@ __metadata:
     "@types/normalize-package-data": 2.4.4
     "@types/react": 18.2.36
     "@types/semver": 7.5.5
-    "@types/webpack-bundle-analyzer": 4.6.2
+    "@types/webpack-bundle-analyzer": 4.6.3
     "@types/yargs": 17.0.31
     "@typescript-eslint/eslint-plugin": 6.10.0
     "@typescript-eslint/parser": 6.10.0
@@ -898,14 +898,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/webpack-bundle-analyzer@npm:4.6.2":
-  version: 4.6.2
-  resolution: "@types/webpack-bundle-analyzer@npm:4.6.2"
+"@types/webpack-bundle-analyzer@npm:4.6.3":
+  version: 4.6.3
+  resolution: "@types/webpack-bundle-analyzer@npm:4.6.3"
   dependencies:
     "@types/node": "*"
     tapable: ^2.2.0
     webpack: ^5
-  checksum: 2f798e0c6a4aac9da84f56c4600c8fafbac7cc2316b0a0b3e35cab46f5b0d045c29b8c9803c64f03756faa941ff7344920e16b45fe46a322ae3be52f4c8dee76
+  checksum: 39dbe6db6a2e53e981fac506bd737b088d7efd6cd6c13b76987fb2ab5b8c3352ead2362ed611cb06279b793ed524870f915681559f34cb9ac5e99276b4ab36ac
   languageName: node
   linkType: hard
 
