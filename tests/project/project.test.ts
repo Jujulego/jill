@@ -1,7 +1,6 @@
 import { Logger, withLabel } from '@jujulego/logger';
 import { fs, vol } from 'memfs';
 import path from 'node:path';
-import glob from 'tiny-glob';
 import { vi } from 'vitest';
 
 import { container } from '@/src/inversify.config.js';
@@ -9,8 +8,8 @@ import { Project } from '@/src/project/project.js';
 import { Workspace } from '@/src/project/workspace.js';
 
 // Mocks
+vi.mock('node:fs', () => ({ default: fs }));
 vi.mock('node:fs/promises', () => ({ default: fs.promises }));
-vi.mock('tiny-glob');
 
 // Setup
 let project: Project;
@@ -60,14 +59,6 @@ beforeEach(async () => {
       workspaces: ['workspaces/*'],
     }),
   }, '/test');
-
-  vi.mocked(glob).mockResolvedValue([
-    'workspaces/wks-a',
-    'workspaces/wks-b',
-    'workspaces/wks-c',
-    'workspaces/empty',
-    'workspaces/just-a-file.txt'
-  ]);
 
   // Initiate project
   logger = container.get(Logger).child(withLabel('projects'));
@@ -121,9 +112,9 @@ describe('Project.workspaces', () => {
   it('should yield all workspaces', async () => {
     await expect(project.workspaces()).toYield([
       expect.objectContaining({ name: 'main' }),
-      expect.objectContaining({ name: 'wks-a' }),
-      expect.objectContaining({ name: 'wks-b' }),
       expect.objectContaining({ name: 'wks-c' }),
+      expect.objectContaining({ name: 'wks-b' }),
+      expect.objectContaining({ name: 'wks-a' }),
     ]);
   });
 });

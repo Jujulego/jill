@@ -1,10 +1,11 @@
 import { Logger, withLabel } from '@jujulego/logger';
 import { Lock } from '@jujulego/utils';
+import { Glob } from 'glob';
 import { injectable } from 'inversify';
-import fs from 'node:fs/promises';
+import fs from 'node:fs';
 import path from 'node:path';
 import normalize, { type Package } from 'normalize-package-data';
-import glob from 'tiny-glob';
+import { PathScurry } from 'path-scurry';
 
 import { Workspace } from './workspace.ts';
 import { type PackageManager } from './types.ts';
@@ -22,6 +23,9 @@ export class Project {
   private readonly _names = new Map<string, Workspace>();
   private readonly _workspaces = new Map<string, Workspace>();
 
+  private readonly _scurry: PathScurry;
+  private _workspaceGlob?: Glob<{ scurry: PathScurry, withFileTypes: true }>;
+
   private _packageManager?: PackageManager;
   private _isFullyLoaded = false;
   private _lock = new Lock();
@@ -32,6 +36,8 @@ export class Project {
     private readonly _logger: Logger,
     opts: ProjectOptions = {}
   ) {
+    this._scurry = new PathScurry(this.root, { fs });
+
     if (opts.packageManager) {
       this._logger.debug`Forced use of ${opts.packageManager} in #!cwd:${this.root}`;
       this._packageManager = opts.packageManager;
@@ -47,7 +53,7 @@ export class Project {
 
     logger.debug('Loading package.json ...');
 
-    const data = await fs.readFile(file, 'utf-8');
+    const data = await fs.promises.readFile(file, 'utf-8');
     const mnf = JSON.parse(data);
     normalize(mnf, (msg) => logger.verbose(msg));
 
@@ -72,7 +78,7 @@ export class Project {
 
   async packageManager(): Promise<PackageManager> {
     if (!this._packageManager) {
-      const files = await fs.readdir(this.root);
+      const files = await this._scurry.readdir(this.root, { withFileTypes: false });
 
       if (files.includes('yarn.lock')) {
         this._logger.debug`Detected yarn in #!cwd:${this.root}`;
@@ -126,25 +132,20 @@ export class Project {
     } else {
       // Load child workspaces
       const { workspaces = [] } = main.manifest;
+      this._workspaceGlob ??= new Glob(workspaces, { scurry: this._scurry, withFileTypes: true });
 
-      for (const pattern of workspaces) {
-        for (const dir of await glob(pattern, { cwd: this.root })) {
-          try {
-            // Check if dir is a directory exists
-            const file = path.resolve(this.root, dir);
-            const stat = await fs.stat(file);
-
-            if (stat.isDirectory()) {
-              yield await this._loadWorkspace(dir);
-            }
-
-          } catch (error) {
-            if (error.code === 'ENOENT') {
-              continue;
-            }
-
-            throw error;
+      for await (const dir of this._workspaceGlob) {
+        try {
+          // Check if dir is a directory
+          if (dir.isDirectory()) {
+            yield await this._loadWorkspace(dir.fullpath());
           }
+        } catch (error) {
+          if (error.code === 'ENOENT') {
+            continue;
+          }
+
+          throw error;
         }
       }
 
