@@ -1,9 +1,10 @@
 import { Lock } from '@jujulego/utils';
-import { Glob, GlobOptions } from 'glob';
+import { Glob } from 'glob';
 import { injectable } from 'inversify';
 import fs from 'node:fs';
 import path from 'node:path';
 import normalize, { type Package } from 'normalize-package-data';
+import { PathScurry } from 'path-scurry';
 
 import { type Logger } from '@/src/commons/logger.service.ts';
 
@@ -19,10 +20,12 @@ export interface ProjectOptions {
 @injectable()
 export class Project {
   // Attributes
-  private _glob?: Glob<GlobOptions & { withFileTypes?: false }>;
   private _mainWorkspace?: Workspace;
   private readonly _names = new Map<string, Workspace>();
   private readonly _workspaces = new Map<string, Workspace>();
+
+  private readonly _scurry: PathScurry;
+  private _workspaceGlob?: Glob<{ scurry: PathScurry, withFileTypes: true }>;
 
   private _packageManager?: PackageManager;
   private _isFullyLoaded = false;
@@ -34,6 +37,8 @@ export class Project {
     private readonly _logger: Logger,
     opts: ProjectOptions = {}
   ) {
+    this._scurry = new PathScurry(this.root, { fs });
+
     if (opts.packageManager) {
       this._logger.debug`Forced use of ${opts.packageManager} in #cwd:${this.root}`;
       this._packageManager = opts.packageManager;
@@ -74,7 +79,7 @@ export class Project {
 
   async packageManager(): Promise<PackageManager> {
     if (!this._packageManager) {
-      const files = await fs.promises.readdir(this.root);
+      const files = await this._scurry.readdir(this.root, { withFileTypes: false });
 
       if (files.includes('yarn.lock')) {
         this._logger.debug`Detected yarn in #cwd:${this.root}`;
@@ -128,18 +133,14 @@ export class Project {
     } else {
       // Load child workspaces
       const { workspaces = [] } = main.manifest;
-      this._glob ??= new Glob(workspaces, { cwd: this.root, fs });
+      this._workspaceGlob ??= new Glob(workspaces, { scurry: this._scurry, withFileTypes: true });
 
-      for await (const dir of this._glob) {
+      for await (const dir of this._workspaceGlob) {
         try {
-          // Check if dir is a directory exists
-          const file = path.resolve(this.root, dir);
-          const stat = await fs.promises.stat(file);
-
-          if (stat.isDirectory()) {
-            yield await this._loadWorkspace(dir);
+          // Check if dir is a directory
+          if (dir.isDirectory()) {
+            yield await this._loadWorkspace(dir.fullpath());
           }
-
         } catch (error) {
           if (error.code === 'ENOENT') {
             continue;
