@@ -1,6 +1,5 @@
 import { fs, vol } from 'memfs';
 import path from 'node:path';
-import glob from 'tiny-glob';
 import { vi } from 'vitest';
 
 import { GitService } from '@/src/commons/git.service.js';
@@ -12,8 +11,8 @@ import { Workspace } from '@/src/project/workspace.js';
 import { TestBed } from '@/tools/test-bed.js';
 
 // Mocks
+vi.mock('node:fs', () => ({ default: fs }));
 vi.mock('node:fs/promises', () => ({ default: fs.promises }));
-vi.mock('tiny-glob');
 
 // Setup
 let bed: TestBed;
@@ -46,8 +45,6 @@ beforeEach(async () => {
 
   // Mocks
   vi.resetAllMocks();
-
-  vi.mocked(glob).mockResolvedValue(['wks-a', 'wks-b', 'wks-c']);
 
   git = container.get(GitService);
   logger = container.get(Logger);
