@@ -1,7 +1,7 @@
 import { Lock } from '@jujulego/utils';
-import { Glob } from 'glob';
+import { Glob, GlobOptions } from 'glob';
 import { injectable } from 'inversify';
-import fs from 'node:fs/promises';
+import fs from 'node:fs';
 import path from 'node:path';
 import normalize, { type Package } from 'normalize-package-data';
 
@@ -19,7 +19,7 @@ export interface ProjectOptions {
 @injectable()
 export class Project {
   // Attributes
-  private _glob?: Glob<{ cwd: string }>;
+  private _glob?: Glob<GlobOptions & { withFileTypes?: false }>;
   private _mainWorkspace?: Workspace;
   private readonly _names = new Map<string, Workspace>();
   private readonly _workspaces = new Map<string, Workspace>();
@@ -49,7 +49,7 @@ export class Project {
 
     logger.debug('Loading package.json ...');
 
-    const data = await fs.readFile(file, 'utf-8');
+    const data = await fs.promises.readFile(file, 'utf-8');
     const mnf = JSON.parse(data);
     normalize(mnf, (msg) => logger.verbose(msg));
 
@@ -74,7 +74,7 @@ export class Project {
 
   async packageManager(): Promise<PackageManager> {
     if (!this._packageManager) {
-      const files = await fs.readdir(this.root);
+      const files = await fs.promises.readdir(this.root);
 
       if (files.includes('yarn.lock')) {
         this._logger.debug`Detected yarn in #cwd:${this.root}`;
@@ -128,13 +128,13 @@ export class Project {
     } else {
       // Load child workspaces
       const { workspaces = [] } = main.manifest;
-      this._glob ??= new Glob(workspaces, { cwd: this.root });
+      this._glob ??= new Glob(workspaces, { cwd: this.root, fs });
 
       for await (const dir of this._glob) {
         try {
           // Check if dir is a directory exists
           const file = path.resolve(this.root, dir);
-          const stat = await fs.stat(file);
+          const stat = await fs.promises.stat(file);
 
           if (stat.isDirectory()) {
             yield await this._loadWorkspace(dir);
