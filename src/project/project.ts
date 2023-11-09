@@ -1,9 +1,9 @@
 import { Lock } from '@jujulego/utils';
+import { Glob } from 'glob';
 import { injectable } from 'inversify';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import normalize, { type Package } from 'normalize-package-data';
-import glob from 'tiny-glob';
 
 import { type Logger } from '@/src/commons/logger.service.ts';
 
@@ -19,6 +19,7 @@ export interface ProjectOptions {
 @injectable()
 export class Project {
   // Attributes
+  private _glob?: Glob<{ cwd: string }>;
   private _mainWorkspace?: Workspace;
   private readonly _names = new Map<string, Workspace>();
   private readonly _workspaces = new Map<string, Workspace>();
@@ -127,25 +128,24 @@ export class Project {
     } else {
       // Load child workspaces
       const { workspaces = [] } = main.manifest;
+      this._glob ??= new Glob(workspaces, { cwd: this.root });
 
-      for (const pattern of workspaces) {
-        for (const dir of await glob(pattern, { cwd: this.root })) {
-          try {
-            // Check if dir is a directory exists
-            const file = path.resolve(this.root, dir);
-            const stat = await fs.stat(file);
+      for await (const dir of this._glob) {
+        try {
+          // Check if dir is a directory exists
+          const file = path.resolve(this.root, dir);
+          const stat = await fs.stat(file);
 
-            if (stat.isDirectory()) {
-              yield await this._loadWorkspace(dir);
-            }
-
-          } catch (error) {
-            if (error.code === 'ENOENT') {
-              continue;
-            }
-
-            throw error;
+          if (stat.isDirectory()) {
+            yield await this._loadWorkspace(dir);
           }
+
+        } catch (error) {
+          if (error.code === 'ENOENT') {
+            continue;
+          }
+
+          throw error;
         }
       }
 
