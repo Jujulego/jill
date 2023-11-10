@@ -1,5 +1,8 @@
+import { Logger } from '@jujulego/logger';
 import chalk from 'chalk';
+import { inject } from 'inversify';
 import path from 'node:path';
+import { compare } from 'semver';
 import slugify from 'slugify';
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
 
@@ -13,6 +16,7 @@ import { InkCommand } from '@/src/modules/ink-command.tsx';
 import { type Project } from '@/src/project/project.ts';
 import { type Workspace } from '@/src/project/workspace.ts';
 import List from '@/src/ui/list.tsx';
+import { ExitException } from '@/src/utils/exit.ts';
 import { fixDefaultExport } from '@/src/utils/import.ts';
 import { printJson } from '@/src/utils/json.ts';
 
@@ -37,6 +41,9 @@ export interface IListCommandArgs {
   headers?: boolean;
   long?: boolean;
   json?: boolean;
+
+  // Sort
+  'sort-by': Attribute[];
 }
 
 // Constants
@@ -50,6 +57,13 @@ const EXTRACTORS = {
   root: wks => wks.cwd,
   slug: wks => fixDefaultExport(slugify)(wks.name)
 } satisfies Record<Attribute, Extractor<string | undefined>>;
+
+const COMPARATORS = {
+  name: (a = '', b = '') => a.localeCompare(b),
+  version: (a = '0.0.0', b = '0.0.0') => compare(a, b),
+  root: (a = '', b = '') => a.localeCompare(b),
+  slug: (a = '', b = '') => a.localeCompare(b),
+} satisfies Record<Attribute, (a: string | undefined, b: string | undefined) => number>;
 
 // Utils
 function buildExtractor(attrs: Attribute[]): Extractor<Data> {
@@ -77,6 +91,14 @@ export class ListCommand extends InkCommand<IListCommandArgs> {
   // Lazy injections
   @LazyCurrentProject()
   readonly project: Project;
+
+  // Constructor
+  constructor(
+    @inject(Logger)
+    private readonly logger: Logger,
+  ) {
+    super();
+  }
 
   // Methods
   builder(parser: Argv): Argv<IListCommandArgs> {
@@ -135,10 +157,45 @@ export class ListCommand extends InkCommand<IListCommandArgs> {
         type: 'boolean',
         group: 'Format:',
         desc: 'Prints data as a JSON array',
+      })
+
+      // Sort
+      .option('sort-by', {
+        alias: 's',
+        type: 'array',
+        choices: ['name', 'version', 'root', 'slug'] as const,
+        default: [],
+        group: 'Sort:',
+        desc: 'Sort output by given attribute. By default sorts by name if printed'
       });
   }
 
   async *render(args: ArgumentsCamelCase<IListCommandArgs>) {
+    // Apply defaults
+    let attrs = args.attrs;
+
+    if (attrs.length === 0) {
+      if (args.long) {
+        attrs = LONG_ATTRIBUTES;
+      } else if (args.json) {
+        attrs = JSON_ATTRIBUTES;
+      } else {
+        attrs = DEFAULT_ATTRIBUTES;
+      }
+    }
+
+    // Check sorted attributes
+    const miss = args.sortBy.filter((attr) => !attrs.includes(attr));
+
+    if (miss.length > 0) {
+      this.logger.error`Cannot sort by non printed attributes. Missing ${miss.join(', ')}.`;
+      throw new ExitException(1);
+    }
+
+    if (args.sortBy.length === 0 && attrs.includes('name')) {
+      args.sortBy = ['name'];
+    }
+
     // Setup pipeline
     const pipeline = new Pipeline();
 
@@ -166,19 +223,19 @@ export class ListCommand extends InkCommand<IListCommandArgs> {
     }
 
     // Build data
-    let attrs = args.attrs;
-
-    if (attrs.length === 0) {
-      if (args.long) {
-        attrs = LONG_ATTRIBUTES;
-      } else if (args.json) {
-        attrs = JSON_ATTRIBUTES;
-      } else {
-        attrs = DEFAULT_ATTRIBUTES;
-      }
-    }
-
     const data = workspaces.map(wks => buildExtractor(attrs)(wks, args.json || false));
+
+    data.sort((a, b) => {
+      for (const attr of args.sortBy) {
+        const diff = COMPARATORS[attr](a[attr], b[attr]);
+
+        if (diff !== 0) {
+          return diff;
+        }
+      }
+
+      return 0;
+    });
 
     // Print list
     if (args.json) {
