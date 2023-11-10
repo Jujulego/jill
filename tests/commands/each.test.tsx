@@ -182,7 +182,7 @@ describe('jill each', () => {
       .fail(false)
       .parse('each cmd --allow-no-matching-workspaces');
 
-    expect(spinner.failed).not.toHaveBeenCalled();
+    expect(spinner.failed).toHaveBeenCalledWith('No matching workspace found !');
   });
 
   it('should pass down unknown arguments', async () => {

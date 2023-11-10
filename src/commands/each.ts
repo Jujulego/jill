@@ -98,8 +98,7 @@ export class EachCommand extends TaskCommand<IEachCommandArgs> {
       .option('allow-no-matching-workspaces', {
         type: 'boolean',
         default: false,
-        group: 'Filters:',
-        desc: 'Allow no workspaces. By default, jill will throw when no affected workspaces are found',
+        desc: 'Allow no matching workspaces. By default, jill will throw when no affected workspaces are found',
       })
 
       // Config
@@ -151,9 +150,11 @@ export class EachCommand extends TaskCommand<IEachCommandArgs> {
         }
       }
 
-      if (empty && args.allowNoMatchingWorkspaces === false) {
+      if (empty) {
         this.spinner.failed('No matching workspace found !');
-        throw new ExitException(1);
+        if (args.allowNoMatchingWorkspaces === false) {
+          throw new ExitException(1);
+        }
       }
     } finally {
       this.spinner.stop();
