@@ -18,7 +18,7 @@ import { ExitException } from '@/src/utils/exit.ts';
     } else {
       if (err.message) {
         const logger = container.get(Logger);
-        logger.error(err.message);
+        logger.error('Fatal error:', err);
       }
 
       console.error(await app.parser.getHelp());

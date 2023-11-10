@@ -37,13 +37,13 @@ export interface IListCommandArgs {
   'affected-rev-sort'?: string;
 
   // Format
-  attrs: Attribute[];
+  attrs?: Attribute[];
   headers?: boolean;
   long?: boolean;
   json?: boolean;
 
   // Sort
-  'sort-by': Attribute[];
+  'sort-by'?: Attribute[];
 }
 
 // Constants
@@ -138,7 +138,6 @@ export class ListCommand extends InkCommand<IListCommandArgs> {
       .option('attrs', {
         type: 'array',
         choices: ['name', 'version', 'root', 'slug'] as const,
-        coerce: (arr) => arr ?? [],
         group: 'Format:',
         desc: 'Select printed attributes'
       })
@@ -164,7 +163,6 @@ export class ListCommand extends InkCommand<IListCommandArgs> {
         alias: 's',
         type: 'array',
         choices: ['name', 'version', 'root', 'slug'] as const,
-        coerce: (arr) => arr ?? [],
         group: 'Sort:',
         desc: 'Sort output by given attribute. By default sorts by name if printed'
       });
@@ -172,7 +170,8 @@ export class ListCommand extends InkCommand<IListCommandArgs> {
 
   async *render(args: ArgumentsCamelCase<IListCommandArgs>) {
     // Apply defaults
-    let attrs = args.attrs;
+    let attrs = args.attrs ?? [];
+    let sortBy = args.sortBy ?? [];
 
     if (attrs.length === 0) {
       if (args.long) {
@@ -185,15 +184,17 @@ export class ListCommand extends InkCommand<IListCommandArgs> {
     }
 
     // Check sorted attributes
-    const miss = args.sortBy.filter((attr) => !attrs.includes(attr));
+    if (attrs.length > 0 && sortBy.length > 0) {
+      const miss = sortBy.filter((attr) => !attrs.includes(attr));
 
-    if (miss.length > 0) {
-      this.logger.error`Cannot sort by non printed attributes. Missing ${miss.join(', ')}.`;
-      throw new ExitException(1);
+      if (miss.length > 0) {
+        this.logger.error`Cannot sort by non printed attributes. Missing ${miss.join(', ')}.`;
+        throw new ExitException(1);
+      }
     }
 
-    if (args.sortBy.length === 0 && attrs.includes('name')) {
-      args.sortBy = ['name'];
+    if (sortBy.length === 0 && attrs.includes('name')) {
+      sortBy = ['name'];
     }
 
     // Setup pipeline
@@ -225,9 +226,9 @@ export class ListCommand extends InkCommand<IListCommandArgs> {
     // Build data
     const data = workspaces.map(wks => buildExtractor(attrs)(wks, args.json || false));
 
-    if (args.sortBy.length > 0) {
+    if (sortBy.length > 0) {
       data.sort((a, b) => {
-        for (const attr of args.sortBy) {
+        for (const attr of sortBy) {
           const diff = COMPARATORS[attr](a[attr], b[attr]);
 
           if (diff !== 0) {
