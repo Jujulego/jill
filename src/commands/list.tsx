@@ -138,7 +138,7 @@ export class ListCommand extends InkCommand<IListCommandArgs> {
       .option('attrs', {
         type: 'array',
         choices: ['name', 'version', 'root', 'slug'] as const,
-        default: [],
+        coerce: (arr) => arr ?? [],
         group: 'Format:',
         desc: 'Select printed attributes'
       })
@@ -164,7 +164,7 @@ export class ListCommand extends InkCommand<IListCommandArgs> {
         alias: 's',
         type: 'array',
         choices: ['name', 'version', 'root', 'slug'] as const,
-        default: [],
+        coerce: (arr) => arr ?? [],
         group: 'Sort:',
         desc: 'Sort output by given attribute. By default sorts by name if printed'
       });
@@ -225,17 +225,19 @@ export class ListCommand extends InkCommand<IListCommandArgs> {
     // Build data
     const data = workspaces.map(wks => buildExtractor(attrs)(wks, args.json || false));
 
-    data.sort((a, b) => {
-      for (const attr of args.sortBy) {
-        const diff = COMPARATORS[attr](a[attr], b[attr]);
+    if (args.sortBy.length > 0) {
+      data.sort((a, b) => {
+        for (const attr of args.sortBy) {
+          const diff = COMPARATORS[attr](a[attr], b[attr]);
 
-        if (diff !== 0) {
-          return diff;
+          if (diff !== 0) {
+            return diff;
+          }
         }
-      }
 
-      return 0;
-    });
+        return 0;
+      });
+    }
 
     // Print list
     if (args.json) {
