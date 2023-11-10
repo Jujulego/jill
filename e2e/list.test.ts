@@ -49,9 +49,9 @@ describe('jill list', () => {
       expect(res.code).toBe(0);
       expect(res.screen.screen).toEqualLines([
         'main',
-        'wks-c',
+        'wks-a',
         'wks-b',
-        'wks-a'
+        'wks-c'
       ]);
     });
 
@@ -62,9 +62,9 @@ describe('jill list', () => {
       expect(res.screen.screen).toEqualLines([
         expect.ignoreColor('Name   Version  Root'),
         expect.ignoreColor('main   1.0.0    .'),
-        expect.ignoreColor('wks-c  1.0.0    wks-c'),
-        expect.ignoreColor('wks-b  1.0.0    wks-b'),
         expect.ignoreColor('wks-a  1.0.0    wks-a'),
+        expect.ignoreColor('wks-b  1.0.0    wks-b'),
+        expect.ignoreColor('wks-c  1.0.0    wks-c'),
       ]);
     });
 
@@ -81,10 +81,10 @@ describe('jill list', () => {
           root: prjDir,
         },
         {
-          name: 'wks-c',
+          name: 'wks-a',
           version: '1.0.0',
-          slug: 'wks-c',
-          root: path.join(prjDir, 'wks-c'),
+          slug: 'wks-a',
+          root: path.join(prjDir, 'wks-a'),
         },
         {
           name: 'wks-b',
@@ -93,10 +93,10 @@ describe('jill list', () => {
           root: path.join(prjDir, 'wks-b'),
         },
         {
-          name: 'wks-a',
+          name: 'wks-c',
           version: '1.0.0',
-          slug: 'wks-a',
-          root: path.join(prjDir, 'wks-a'),
+          slug: 'wks-c',
+          root: path.join(prjDir, 'wks-c'),
         },
       ]));
     });
@@ -136,8 +136,8 @@ describe('jill list', () => {
         expect(res.code).toBe(0);
         expect(res.screen.screen).toEqualLines([
           'main',
-          'wks-b',
-          'wks-a'
+          'wks-a',
+          'wks-b'
         ]);
       });
     });
