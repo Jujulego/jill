@@ -26,7 +26,7 @@ export type Data = Partial<Record<Attribute, string>>;
 
 type Extractor<T> = (wks: Workspace, json: boolean) => T;
 
-export interface IListCommandArgs {
+export interface ListCommandArgs {
   // Filters
   private?: boolean;
   'with-script'?: string[];
@@ -87,7 +87,7 @@ function buildExtractor(attrs: Attribute[]): Extractor<Data> {
     LoadProject,
   ]
 })
-export class ListCommand extends InkCommand<IListCommandArgs> {
+export class ListCommand extends InkCommand<ListCommandArgs> {
   // Lazy injections
   @LazyCurrentProject()
   readonly project: Project;
@@ -101,7 +101,7 @@ export class ListCommand extends InkCommand<IListCommandArgs> {
   }
 
   // Methods
-  builder(parser: Argv): Argv<IListCommandArgs> {
+  builder(parser: Argv): Argv<ListCommandArgs> {
     return parser
       // Filters
       .option('private', {
@@ -168,15 +168,47 @@ export class ListCommand extends InkCommand<IListCommandArgs> {
       });
   }
 
-  async *render(args: ArgumentsCamelCase<IListCommandArgs>) {
-    // Apply defaults
-    let attrs = args.attrs ?? [];
-    let sortBy = args.sortBy ?? [];
+  async *render(args: ArgumentsCamelCase<ListCommandArgs>) {
+    const { attrs, sortBy } = this._applyDefaults(args);
+
+    // Load workspaces
+    const pipeline = this._preparePipeline(args);
+    const workspaces: Workspace[] = [];
+
+    for await (const wks of pipeline.filter(this.project.workspaces())) {
+      workspaces.push(wks);
+    }
+
+    // Build data
+    const data = workspaces.map(wks => buildExtractor(attrs)(wks, args.json || false));
+
+    if (sortBy.length > 0) {
+      data.sort(this._dataComparator(sortBy));
+    }
+
+    // Print list
+    if (args.json) {
+      printJson(data);
+    } else {
+      for (const d of data) {
+        if (d.root) {
+          d.root = path.relative(process.cwd(), d.root) || '.';
+        }
+      }
+
+      yield <List items={data} headers={args.headers ?? (attrs.length > 1)} />;
+    }
+  }
+
+  private _applyDefaults(argv: ArgumentsCamelCase<ListCommandArgs>): { attrs: Attribute[], sortBy: Attribute[] } {
+    // Compute attributes
+    let attrs = argv.attrs ?? [];
+    let sortBy = argv.sortBy ?? [];
 
     if (attrs.length === 0) {
-      if (args.long) {
+      if (argv.long) {
         attrs = LONG_ATTRIBUTES;
-      } else if (args.json) {
+      } else if (argv.json) {
         attrs = JSON_ATTRIBUTES;
       } else {
         attrs = DEFAULT_ATTRIBUTES;
@@ -197,60 +229,42 @@ export class ListCommand extends InkCommand<IListCommandArgs> {
       sortBy = ['name'];
     }
 
-    // Setup pipeline
+    return { attrs, sortBy };
+  }
+
+  private _preparePipeline(argv: ArgumentsCamelCase<ListCommandArgs>): Pipeline {
     const pipeline = new Pipeline();
 
-    if (args.private !== undefined) {
-      pipeline.add(new PrivateFilter(args.private));
+    if (argv.private !== undefined) {
+      pipeline.add(new PrivateFilter(argv.private));
     }
 
-    if (args.withScript) {
-      pipeline.add(new ScriptsFilter(args.withScript));
+    if (argv.withScript) {
+      pipeline.add(new ScriptsFilter(argv.withScript));
     }
 
-    if (args.affected !== undefined) {
+    if (argv.affected !== undefined) {
       pipeline.add(new AffectedFilter(
-        args.affected,
-        args.affectedRevFallback,
-        args.affectedRevSort
+        argv.affected,
+        argv.affectedRevFallback,
+        argv.affectedRevSort
       ));
     }
 
-    // Load workspaces
-    const workspaces: Workspace[] = [];
+    return pipeline;
+  }
 
-    for await (const wks of pipeline.filter(this.project.workspaces())) {
-      workspaces.push(wks);
-    }
+  private _dataComparator(sortBy: Attribute[]) {
+    return (a: Data, b: Data) => {
+      for (const attr of sortBy) {
+        const diff = COMPARATORS[attr](a[attr], b[attr]);
 
-    // Build data
-    const data = workspaces.map(wks => buildExtractor(attrs)(wks, args.json || false));
-
-    if (sortBy.length > 0) {
-      data.sort((a, b) => {
-        for (const attr of sortBy) {
-          const diff = COMPARATORS[attr](a[attr], b[attr]);
-
-          if (diff !== 0) {
-            return diff;
-          }
-        }
-
-        return 0;
-      });
-    }
-
-    // Print list
-    if (args.json) {
-      printJson(data);
-    } else {
-      for (const d of data) {
-        if (d.root) {
-          d.root = path.relative(process.cwd(), d.root) || '.';
+        if (diff !== 0) {
+          return diff;
         }
       }
 
-      yield <List items={data} headers={args.headers ?? (attrs.length > 1)} />;
-    }
+      return 0;
+    };
   }
 }
