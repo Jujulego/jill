@@ -180,7 +180,7 @@ describe('jill each', () => {
     // Run command
     await yargs().command(command)
       .fail(false)
-      .parse('each cmd --allow-no-matching-workspaces');
+      .parse('each cmd --allow-no-workspaces');
 
     expect(spinner.failed).toHaveBeenCalledWith('No matching workspace found !');
   });
