@@ -26,6 +26,8 @@ export interface IEachCommandArgs {
   affected: string;
   'affected-rev-fallback': string;
   'affected-rev-sort'?: string;
+
+  'allow-no-matching-workspaces'?: boolean;
 }
 
 // Command
@@ -93,6 +95,13 @@ export class EachCommand extends TaskCommand<IEachCommandArgs> {
         desc: 'Fallback revision, used if no revision matching the given format is found',
       })
 
+      .option('allow-no-matching-workspaces', {
+        type: 'boolean',
+        default: false,
+        group: 'Filters:',
+        desc: 'Allow no workspaces. By default, jill will throw when no affected workspaces are found',
+      })
+
       // Config
       .strict(false)
       .parserConfiguration({
@@ -142,7 +151,7 @@ export class EachCommand extends TaskCommand<IEachCommandArgs> {
         }
       }
 
-      if (empty) {
+      if (empty && args.allowNoMatchingWorkspaces === false) {
         this.spinner.failed('No matching workspace found !');
         throw new ExitException(1);
       }
