@@ -2,7 +2,7 @@ import { Logger } from '@jujulego/logger';
 import chalk from 'chalk';
 import { inject } from 'inversify';
 import path from 'node:path';
-import { compare } from 'semver';
+import { compare, parse } from 'semver';
 import slugify from 'slugify';
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
 
@@ -23,6 +23,7 @@ import { printJson } from '@/src/utils/json.ts';
 // Types
 export type Attribute = 'name' | 'version' | 'root' | 'slug';
 export type Data = Partial<Record<Attribute, string>>;
+export type Order = 'asc' | 'desc';
 
 type Extractor<T> = (wks: Workspace, json: boolean) => T;
 
@@ -44,6 +45,7 @@ export interface ListCommandArgs {
 
   // Sort
   'sort-by'?: Attribute[];
+  order: Order;
 }
 
 // Constants
@@ -60,7 +62,7 @@ const EXTRACTORS = {
 
 const COMPARATORS = {
   name: (a = '', b = '') => a.localeCompare(b),
-  version: (a = '0.0.0', b = '0.0.0') => compare(a, b),
+  version: (a, b) => compare(parse(a) ?? '0.0.0', parse(b) ?? '0.0.0'),
   root: (a = '', b = '') => a.localeCompare(b),
   slug: (a = '', b = '') => a.localeCompare(b),
 } satisfies Record<Attribute, (a: string | undefined, b: string | undefined) => number>;
@@ -165,6 +167,14 @@ export class ListCommand extends InkCommand<ListCommandArgs> {
         choices: ['name', 'version', 'root', 'slug'] as const,
         group: 'Sort:',
         desc: 'Sort output by given attribute. By default sorts by name if printed'
+      })
+      .option('order', {
+        alias: 'o',
+        type: 'string',
+        choices: ['asc', 'desc'] as const,
+        default: 'asc' as const,
+        group: 'Sort:',
+        desc: 'Sort order'
       });
   }
 
@@ -183,7 +193,7 @@ export class ListCommand extends InkCommand<ListCommandArgs> {
     const data = workspaces.map(wks => buildExtractor(attrs)(wks, args.json || false));
 
     if (sortBy.length > 0) {
-      data.sort(this._dataComparator(sortBy));
+      data.sort(this._dataComparator(sortBy, args.order));
     }
 
     // Print list
@@ -254,13 +264,15 @@ export class ListCommand extends InkCommand<ListCommandArgs> {
     return pipeline;
   }
 
-  private _dataComparator(sortBy: Attribute[]) {
+  private _dataComparator(sortBy: Attribute[], order: Order) {
+    const factor = order === 'asc' ? 1 : -1;
+
     return (a: Data, b: Data) => {
       for (const attr of sortBy) {
         const diff = COMPARATORS[attr](a[attr], b[attr]);
 
         if (diff !== 0) {
-          return diff;
+          return factor * diff;
         }
       }
 
