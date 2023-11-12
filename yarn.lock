@@ -386,26 +386,27 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jujulego/aegis@npm:^2.0.0-beta.5":
-  version: 2.0.0
-  resolution: "@jujulego/aegis@npm:2.0.0"
+"@jujulego/aegis@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "@jujulego/aegis@npm:2.1.0"
   dependencies:
-    "@jujulego/event-tree": ^4.1.1
+    "@jujulego/event-tree": ^4.3.0
     "@jujulego/utils": ^2.0.0
+    immer: ^10.0.3
   dependenciesMeta:
     vitest@0.34.5:
       unplugged: true
-  checksum: 600a05f58853bb69fe61b78431647ef9c07384e6cd7defa80bdc41e9631bc88d13d6a1618275b712fc93a2673decd89449826b4ce9525306564c0486517f6fa0
+  checksum: 07633dbb2fdd04ded7f2c819a70a76832058a7cdeb5631ee57a8876b2366ff6fdc4d8585707b8ec18d0ff16c2a990ab0eba73f504e9a4b29268b84201b3f2472
   languageName: node
   linkType: hard
 
-"@jujulego/event-tree@npm:^4.1.0, @jujulego/event-tree@npm:^4.1.1, @jujulego/event-tree@npm:^4.2.0":
-  version: 4.2.0
-  resolution: "@jujulego/event-tree@npm:4.2.0"
+"@jujulego/event-tree@npm:^4.1.0, @jujulego/event-tree@npm:^4.1.1, @jujulego/event-tree@npm:^4.2.0, @jujulego/event-tree@npm:^4.3.0":
+  version: 4.3.0
+  resolution: "@jujulego/event-tree@npm:4.3.0"
   dependenciesMeta:
     vitest@0.34.6:
       unplugged: true
-  checksum: 1b6f43c00db9ae6f66aaf66c1767f6ddabc2e303137f4834c14b8752654f18a7b4b597782b363639ff96eee361583612757fe00cd590867e1fbadde03c928268
+  checksum: f94dd683f37ab0a4ea71ac74c5ddaea23f428facbb181da58ff6289a193c77bf56fab92a00efc6b49af12f9458f3fb9f17bfd81d953af9e3824f2eb07eee22d5
   languageName: node
   linkType: hard
 
@@ -414,8 +415,8 @@ __metadata:
   resolution: "@jujulego/jill@workspace:."
   dependencies:
     "@jujulego/2d-maths": 1.6.0
-    "@jujulego/aegis": ^2.0.0-beta.5
-    "@jujulego/event-tree": ^4.2.0
+    "@jujulego/aegis": ^2.1.0
+    "@jujulego/event-tree": ^4.3.0
     "@jujulego/logger": ^0.2.4
     "@jujulego/quick-tag": ^0.3.3
     "@jujulego/tasks": ^2.2.0
@@ -2850,6 +2851,13 @@ __metadata:
   version: 5.2.4
   resolution: "ignore@npm:5.2.4"
   checksum: 3d4c309c6006e2621659311783eaea7ebcd41fe4ca1d78c91c473157ad6666a57a2df790fe0d07a12300d9aac2888204d7be8d59f9aaf665b1c7fcdb432517ef
+  languageName: node
+  linkType: hard
+
+"immer@npm:^10.0.3":
+  version: 10.0.3
+  resolution: "immer@npm:10.0.3"
+  checksum: 76acabe6f40e752028313762ba477a5d901e57b669f3b8fb406b87b9bb9b14e663a6fbbf5a6d1ab323737dd38f4b2494a4e28002045b88948da8dbf482309f28
   languageName: node
   linkType: hard
 
