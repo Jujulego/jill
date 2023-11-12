@@ -213,7 +213,6 @@ export class ListCommand extends InkCommand<ListCommandArgs> {
   private _applyDefaults(argv: ArgumentsCamelCase<ListCommandArgs>): { attrs: Attribute[], sortBy: Attribute[] } {
     // Compute attributes
     let attrs = argv.attrs ?? [];
-    let sortBy = argv.sortBy ?? [];
 
     if (attrs.length === 0) {
       if (argv.long) {
@@ -221,16 +220,18 @@ export class ListCommand extends InkCommand<ListCommandArgs> {
       } else if (argv.json) {
         attrs = JSON_ATTRIBUTES;
       } else {
-        attrs = DEFAULT_ATTRIBUTES;
+        attrs = argv.sortBy ?? DEFAULT_ATTRIBUTES;
       }
     }
 
     // Check sorted attributes
+    let sortBy = argv.sortBy ?? [];
+
     if (attrs.length > 0 && sortBy.length > 0) {
       const miss = sortBy.filter((attr) => !attrs.includes(attr));
 
       if (miss.length > 0) {
-        this.logger.error`Cannot sort by non printed attributes. Missing ${miss.join(', ')}.`;
+        this.logger.error(`Cannot sort by non printed attributes. Missing ${miss.join(', ')}.`);
         throw new ExitException(1);
       }
     }
