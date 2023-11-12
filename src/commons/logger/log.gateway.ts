@@ -14,7 +14,7 @@ import { JillLog } from './types.ts';
 // Utils
 export const jillLogFormat = qlevelColor(
   quick.wrap(chalkTemplateStderr)
-    .function<JillLog>`#?:${qprop('label')}{grey [#$]} ?#${qprop('message')}`
+    .function<JillLog>`#?:${qprop('label')}{grey [#$]} ?#${qprop('message')}#?:${qprop('error')}\n#!error$?#`
 );
 
 // Service
