@@ -170,6 +170,21 @@ describe('jill each', () => {
     expect(logger.error).toHaveBeenCalledWith(`${symbols.error} No matching workspace found !`);
   });
 
+  it('should exit 0 if no matching workspace is found when appropriate flag is enabled', async () => {
+    context.reset({});
+    vi.spyOn(logger, 'error');
+
+    // Setup tasks
+    vi.spyOn(manager, 'tasks', 'get').mockReturnValue([]);
+
+    // Run command
+    await yargs().command(command)
+      .fail(false)
+      .parse('each cmd --allow-no-workspaces');
+
+    expect(logger.error).toHaveBeenCalledWith(`${symbols.error} No matching workspace found !`);
+  });
+
   it('should pass down unknown arguments', async () => {
     context.reset({});
 

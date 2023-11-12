@@ -19,6 +19,7 @@ export interface IEachCommandArgs {
   script: string;
   'build-script': string;
   'deps-mode': WorkspaceDepsMode;
+  'allow-no-workspaces'?: boolean;
 
   // Filters
   private?: boolean;
@@ -67,6 +68,11 @@ export class EachCommand extends TaskCommand<IEachCommandArgs> {
           ' - all = dependencies AND devDependencies\n' +
           ' - prod = dependencies\n' +
           ' - none = nothing'
+      })
+      .option('allow-no-workspaces', {
+        type: 'boolean',
+        default: false,
+        desc: 'Allow no matching workspaces. By default, jill will throw when no affected workspaces are found',
       })
 
       // Filters
@@ -142,7 +148,10 @@ export class EachCommand extends TaskCommand<IEachCommandArgs> {
 
     if (empty) {
       this.logger.error(`${symbols.error} No matching workspace found !`);
-      throw new ExitException(1);
+
+      if (args.allowNoWorkspaces === false) {
+        throw new ExitException(1);
+      }
     }
   }
 }
