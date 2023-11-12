@@ -9,7 +9,7 @@ import { jill } from './utils.js';
 // Constants
 // language=javascript
 const PLUGIN_CODE = `
-import { Command, Plugin } from ${JSON.stringify(url.pathToFileURL(path.resolve(__dirname, '../dist/index.mjs')))};
+import { Command, Plugin } from ${JSON.stringify(url.pathToFileURL(path.resolve(__dirname, '../dist/index.js')))};
 
 // Command
 class TestCommand {
