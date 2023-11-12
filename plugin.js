@@ -1,4 +1,4 @@
-import { Command, Plugin } from './dist/index.mjs';
+import { Command, Plugin } from '@jujulego/jill';
 
 // Command
 class TestCommand {
