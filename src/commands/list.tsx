@@ -17,7 +17,6 @@ import { type Project } from '@/src/project/project.ts';
 import { type Workspace } from '@/src/project/workspace.ts';
 import List from '@/src/ui/list.tsx';
 import { ExitException } from '@/src/utils/exit.ts';
-import { fixDefaultExport } from '@/src/utils/import.ts';
 import { printJson } from '@/src/utils/json.ts';
 
 // Types
@@ -57,7 +56,7 @@ const EXTRACTORS = {
   name: wks => wks.name,
   version: (wks, json) => wks.manifest.version || (json ? undefined : chalk.grey('unset')),
   root: wks => wks.cwd,
-  slug: wks => fixDefaultExport(slugify)(wks.name)
+  slug: wks => slugify.default(wks.name)
 } satisfies Record<Attribute, Extractor<string | undefined>>;
 
 const COMPARATORS = {
