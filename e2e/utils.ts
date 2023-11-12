@@ -5,7 +5,7 @@ import { InkScreen } from '@/tools/ink-screen.js';
 import { splitCommandLine } from '@/src/utils/string.js';
 
 // Constants
-export const MAIN = path.join(__dirname, '../bin/jill.mjs');
+export const MAIN = path.join(__dirname, '../bin/jill.js');
 
 // Type
 export interface SpawnResult {

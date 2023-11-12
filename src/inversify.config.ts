@@ -9,4 +9,4 @@ import { fixDefaultExport } from './utils/import.ts';
 export const container = new Container();
 
 // Utilities
-export const { lazyInject, lazyInjectNamed } = fixDefaultExport(getDecorators)(container);
+export const { lazyInject, lazyInjectNamed } = getDecorators.default(container);
