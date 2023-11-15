@@ -525,11 +525,11 @@ __metadata:
   linkType: hard
 
 "@jujulego/utils@npm:^2.0.0, @jujulego/utils@npm:^2.0.1":
-  version: 2.0.2
-  resolution: "@jujulego/utils@npm:2.0.2"
+  version: 2.1.1
+  resolution: "@jujulego/utils@npm:2.1.1"
   dependencies:
     "@jujulego/event-tree": ^4.1.0
-  checksum: c360e3a6191f466dd313c19644c52aed20a85404b088385e836dfae3d8b9dbf87e0e6149e9fd5abd3c65f2511f9e621c78401c02d249c7ac5cefeaf2942df947
+  checksum: 22bb6295c21dcd7b3f370b1adc1fc507fd22a4a9321e2003fa1a893556b4c6f2052c3df708165ba7b283eae6dc2164a9cf1508d60b90c2ee5098f8e8bb03d78c
   languageName: node
   linkType: hard
 
