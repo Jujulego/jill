@@ -83,11 +83,11 @@ describe('TaskExprService.parse', () => {
   });
 
   it('should return complex tree with 2 operators', () => {
-    expect(service.parse('(toto // tata) -> tutu'))
+    expect(service.parse('(toto // tata) && tutu'))
       .toEqual({
         roots: [
           {
-            operator: '->',
+            operator: '&&',
             tasks: [
               {
                 operator: '//',
@@ -104,11 +104,11 @@ describe('TaskExprService.parse', () => {
   });
 
   it('should return complex tree with 2 operators and arguments', () => {
-    expect(service.parse('(toto --arg 1 // tata --arg 2) -> tutu --arg 3'))
+    expect(service.parse('(toto --arg 1 // tata --arg 2) && tutu --arg 3'))
       .toEqual({
         roots: [
           {
-            operator: '->',
+            operator: '&&',
             tasks: [
               {
                 operator: '//',
@@ -173,7 +173,7 @@ describe('TaskExprService.buildTask', () => {
 
   it('should create a sequence group', async () => {
     const tree: GroupNode = {
-      operator: '->',
+      operator: '&&',
       tasks: [
         { script: 'test1', args: [] },
         { script: 'test2', args: [] },
