@@ -29,6 +29,8 @@ export class TaskExprService {
     return 'script' in node;
   }
 
+  private static _sequenceOperatorWarn = true;
+
   // Constructor
   constructor(
     @inject(Logger)
@@ -58,12 +60,12 @@ export class TaskExprService {
       operator: {
         rparen: ')',
         whitespace: /[ \t]+/,
-        operator: { match: ['->', '//', '||'], pop: 1 },
+        operator: { match: ['->', '&&', '//', '||'], pop: 1 },
       },
       operatorOrArgument: {
         rparen: ')',
         whitespace: /[ \t]+/,
-        operator: { match: ['->', '//', '||'], pop: 1 },
+        operator: { match: ['->', '&&', '//', '||'], pop: 1 },
         argument: [
           { match: /[-_:a-zA-Z0-9]+/ },
           { // single cotted
@@ -205,6 +207,11 @@ export class TaskExprService {
           logger: this._logger,
         });
       } else {
+        if (node.operator === '->' && TaskExprService._sequenceOperatorWarn) {
+          this._logger.warn('Sequence operator -> is deprecated in favor of &&. It will be removed in a next major release.');
+          TaskExprService._sequenceOperatorWarn = true;
+        }
+
         group = new SequenceGroup('In sequence', {}, {
           logger: this._logger,
         });
