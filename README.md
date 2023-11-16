@@ -29,14 +29,14 @@ This feature can be disabled using the `--no-hooks` option: `jill run --no-hooks
 
 #### Task syntax _(only supported by `jill group` command yet)_
 Allows to instruct multiple tasks with the given orchestration. The orchestration is given by the following operators:
-- `->` in sequence
+- `&&` in sequence
 - `||` fallbacks
 - `//` in parallel
 
 ##### Examples:
 - This will run scripts **taskA**, **taskB** and **taskC** in order, one after another.
   ```shell
-  jill group 'taskA -> taskB -> taskC'
+  jill group 'taskA && taskB && taskC'
   ```
 
 - This will run first **taskA**, if it fails it will run **taskB**, then **taskC** in order, until one succeed.
@@ -51,7 +51,7 @@ Allows to instruct multiple tasks with the given orchestration. The orchestratio
 
 - And you can create more complex flows: this will run **taskA** and **taskB** in parallel, and then **taskC** when both tasks are ended
   ```shell
-  jill group '(taskA // taskB) -> taskC'
+  jill group '(taskA // taskB) && taskC'
   ```
 
 ## Installation
