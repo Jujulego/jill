@@ -7,18 +7,18 @@ import { TaskCommand } from '@/src/modules/task-command.tsx';
 import { LoadProject } from '@/src/middlewares/load-project.ts';
 import { LazyCurrentWorkspace, LoadWorkspace } from '@/src/middlewares/load-workspace.ts';
 import { type Workspace, type WorkspaceDepsMode } from '@/src/project/workspace.ts';
-import { ExitException } from '@/src/utils/exit.ts';
+import { TaskExprService } from '@/src/tasks/task-expr.service.ts';
 
 // Types
 export interface IRunCommandArgs {
-  script: string;
+  expr: string;
   'build-script': string;
   'deps-mode': WorkspaceDepsMode;
 }
 
 // Command
 @Command({
-  command: 'run <script>',
+  command: 'run <expr>',
   describe: 'Run script inside workspace',
   middlewares: [
     LoadProject,
@@ -34,6 +34,8 @@ export class RunCommand extends TaskCommand<IRunCommandArgs> {
   constructor(
     @inject(Logger)
     private readonly logger: Logger,
+    @inject(TaskExprService)
+    private readonly taskExpr: TaskExprService,
   ) {
     super();
   }
@@ -41,7 +43,11 @@ export class RunCommand extends TaskCommand<IRunCommandArgs> {
   // Methods
   builder(parser: Argv) {
     return this.addTaskOptions(parser)
-      .positional('script', { type: 'string', demandOption: true })
+      .positional('expr', {
+        type: 'string',
+        demandOption: true,
+        desc: 'Script or task expression',
+      })
       .option('build-script', {
         default: 'build',
         desc: 'Script to use to build dependencies'
@@ -64,24 +70,21 @@ export class RunCommand extends TaskCommand<IRunCommandArgs> {
   }
 
   async *prepare(args: ArgumentsCamelCase<IRunCommandArgs>) {
-    // Extract arguments
-    const rest = args._.map(arg => arg.toString());
+    // Extract expression
+    const expr = args._.map(arg => arg.toString());
 
-    if (rest[0] === 'run') {
-      rest.splice(0, 1);
+    if (expr[0] === 'run') {
+      expr.splice(0, 1);
     }
 
-    // Run script in workspace
-    const task = await this.workspace.run(args.script, rest, {
+    expr.unshift(args.expr);
+
+    // Parse task expression
+    const tree = this.taskExpr.parse(expr.join(' '));
+
+    yield await this.taskExpr.buildTask(tree.roots[0], this.workspace, {
       buildScript: args.buildScript,
       buildDeps: args.depsMode,
     });
-
-    if (task) {
-      yield task;
-    } else {
-      this.logger.error(`Workspace ${this.workspace.name} have no ${args.script} script`);
-      throw new ExitException(1);
-    }
   }
 }
