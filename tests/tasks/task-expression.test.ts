@@ -4,19 +4,19 @@ import { vi } from 'vitest';
 import { container } from '@/src/inversify.config.js';
 import { type Workspace } from '@/src/project/workspace.js';
 import { ScriptTask } from '@/src/tasks/script-task.js';
-import { type GroupNode, TaskExprService, type TaskNode } from '@/src/tasks/task-expr.service.js';
+import { type GroupNode, TaskExpressionService, type TaskNode } from '@/src/tasks/task-expression.service.js';
 
 import { TestBed } from '@/tools/test-bed.js';
 
 // Setup
-let service: TaskExprService;
+let service: TaskExpressionService;
 
 let bed: TestBed;
 let wks: Workspace;
 
 beforeEach(() => {
   container.snapshot();
-  service = container.get(TaskExprService);
+  service = container.get(TaskExpressionService);
 
   bed = new TestBed();
   wks = bed.addWorkspace('wks');
@@ -27,7 +27,7 @@ afterEach(() => {
 });
 
 // Tests
-describe('TaskExprService.parse', () => {
+describe('TaskExpressionService.parse', () => {
   it('should return simple task (inline syntax)', () => {
     expect(service.parse('toto:dev'))
       .toEqual({
@@ -125,7 +125,7 @@ describe('TaskExprService.parse', () => {
   });
 });
 
-describe('TaskExprService.buildTask', () => {
+describe('TaskExpressionService.buildTask', () => {
   it('should use workspace to create simple task', async () => {
     const tree: TaskNode = { script: 'test', args: [] };
     const task = new ScriptTask(wks, 'test', []);

@@ -7,7 +7,7 @@ import { TaskCommand } from '@/src/modules/task-command.tsx';
 import { LoadProject } from '@/src/middlewares/load-project.ts';
 import { LazyCurrentWorkspace, LoadWorkspace } from '@/src/middlewares/load-workspace.ts';
 import { type Workspace, type WorkspaceDepsMode } from '@/src/project/workspace.ts';
-import { TaskExprService } from '@/src/tasks/task-expr.service.ts';
+import { TaskExpressionService } from '@/src/tasks/task-expression.service.ts';
 import { TaskExpressionError, TaskSyntaxError } from '@/src/tasks/errors.ts';
 import { ExitException } from '@/src/utils/exit.ts';
 
@@ -36,8 +36,8 @@ export class RunCommand extends TaskCommand<IRunCommandArgs> {
   constructor(
     @inject(Logger)
     private readonly logger: Logger,
-    @inject(TaskExprService)
-    private readonly taskExpr: TaskExprService,
+    @inject(TaskExpressionService)
+    private readonly taskExpr: TaskExpressionService,
   ) {
     super();
   }

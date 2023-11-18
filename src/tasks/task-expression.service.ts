@@ -24,7 +24,7 @@ export interface TaskTree {
 
 // Service
 @Service()
-export class TaskExprService {
+export class TaskExpressionService {
   // Statics
   static isTaskNode(node: TaskNode | GroupNode): node is TaskNode {
     return 'script' in node;
@@ -100,12 +100,12 @@ export class TaskExprService {
       if (token.type === 'argument') {
         if (!node) {
           throw new TaskSyntaxError(lexer.formatError(token, 'Unexpected argument'));
-        } else if (TaskExprService.isTaskNode(node)) {
+        } else if (TaskExpressionService.isTaskNode(node)) {
           node.args.push(token.value);
         } else {
           const lastTask = node.tasks[node.tasks.length - 1];
 
-          if (!lastTask || !TaskExprService.isTaskNode(lastTask)) {
+          if (!lastTask || !TaskExpressionService.isTaskNode(lastTask)) {
             throw new TaskSyntaxError(lexer.formatError(token, 'Unexpected argument'));
           } else {
             lastTask.args.push(token.value);
@@ -121,7 +121,7 @@ export class TaskExprService {
 
         if (!node) {
           throw new TaskSyntaxError(lexer.formatError(token, 'Unexpected operator'));
-        } else if (TaskExprService.isTaskNode(node)) {
+        } else if (TaskExpressionService.isTaskNode(node)) {
           node = { operator, tasks: [node] };
 
           continue;
@@ -156,7 +156,7 @@ export class TaskExprService {
 
       if (!node) {
         node = child;
-      } else if (TaskExprService.isTaskNode(node)) {
+      } else if (TaskExpressionService.isTaskNode(node)) {
         throw new TaskSyntaxError(lexer.formatError(token, 'Unexpected token, expected an operator'));
       } else {
         node.tasks.push(child);
@@ -188,7 +188,7 @@ export class TaskExprService {
   }
 
   async buildTask(node: TaskNode | GroupNode, workspace: Workspace, opts?: WorkspaceRunOptions): Promise<Task> {
-    if (TaskExprService.isTaskNode(node)) {
+    if (TaskExpressionService.isTaskNode(node)) {
       const task = await workspace.run(node.script, node.args, opts);
 
       if (!task) {
@@ -208,9 +208,9 @@ export class TaskExprService {
           logger: this._logger,
         });
       } else {
-        if (node.operator === '->' && TaskExprService._sequenceOperatorWarn) {
+        if (node.operator === '->' && TaskExpressionService._sequenceOperatorWarn) {
           this._logger.warn('Sequence operator -> is deprecated in favor of &&. It will be removed in a next major release.');
-          TaskExprService._sequenceOperatorWarn = true;
+          TaskExpressionService._sequenceOperatorWarn = true;
         }
 
         group = new SequenceGroup('In sequence', {}, {
