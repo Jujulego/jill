@@ -9,7 +9,7 @@ import { ContextService } from '@/src/commons/context.service.js';
 import { INK_APP } from '@/src/ink.config.js';
 import { container } from '@/src/inversify.config.js';
 import { type Workspace } from '@/src/project/workspace.js';
-import { TaskExprService } from '@/src/tasks/task-expr.service.js';
+import { TaskExpressionService } from '@/src/tasks/task-expression.service.js';
 import { TASK_MANAGER } from '@/src/tasks/task-manager.config.js';
 import Layout from '@/src/ui/layout.js';
 
@@ -22,7 +22,7 @@ let app: ReturnType<typeof render>;
 let command: CommandModule;
 let context: ContextService;
 let manager: TaskManager;
-let taskExpr: TaskExprService;
+let taskExpr: TaskExpressionService;
 
 let bed: TestBed;
 let wks: Workspace;
@@ -50,7 +50,7 @@ beforeEach(async () => {
 
   context = container.get(ContextService);
   manager = container.get(TASK_MANAGER);
-  taskExpr = container.get(TaskExprService);
+  taskExpr = container.get(TaskExpressionService);
 
   // Mocks
   vi.restoreAllMocks();

@@ -33,7 +33,7 @@ export * from './project/types.ts';
 export * from './inversify.config.ts';
 export * from './tasks/command-task.ts';
 export * from './tasks/script-task.ts';
-export * from './tasks/task-expr.service.ts';
+export * from './tasks/task-expression.service.ts';
 export * from './tasks/task-manager.config.ts';
 
 export { CONFIG } from './config/config-loader.ts';

@@ -5,6 +5,7 @@ import moo from 'moo';
 
 import { Service } from '@/src/modules/service.ts';
 import { type Workspace, type WorkspaceRunOptions } from '@/src/project/workspace.ts';
+import { TaskExpressionError, TaskSyntaxError } from './errors.ts';
 
 // Interfaces
 export interface TaskNode {
@@ -23,7 +24,7 @@ export interface TaskTree {
 
 // Service
 @Service()
-export class TaskExprService {
+export class TaskExpressionService {
   // Statics
   static isTaskNode(node: TaskNode | GroupNode): node is TaskNode {
     return 'script' in node;
@@ -98,14 +99,14 @@ export class TaskExprService {
       // Handle argument
       if (token.type === 'argument') {
         if (!node) {
-          throw new Error(lexer.formatError(token, 'Unexpected argument'));
-        } else if (TaskExprService.isTaskNode(node)) {
+          throw new TaskSyntaxError(lexer.formatError(token, 'Unexpected argument'));
+        } else if (TaskExpressionService.isTaskNode(node)) {
           node.args.push(token.value);
         } else {
           const lastTask = node.tasks[node.tasks.length - 1];
 
-          if (!lastTask || !TaskExprService.isTaskNode(lastTask)) {
-            throw new Error(lexer.formatError(token, 'Unexpected argument'));
+          if (!lastTask || !TaskExpressionService.isTaskNode(lastTask)) {
+            throw new TaskSyntaxError(lexer.formatError(token, 'Unexpected argument'));
           } else {
             lastTask.args.push(token.value);
           }
@@ -119,8 +120,8 @@ export class TaskExprService {
         const operator = token.value;
 
         if (!node) {
-          throw new Error(lexer.formatError(token, 'Unexpected operator'));
-        } else if (TaskExprService.isTaskNode(node)) {
+          throw new TaskSyntaxError(lexer.formatError(token, 'Unexpected operator'));
+        } else if (TaskExpressionService.isTaskNode(node)) {
           node = { operator, tasks: [node] };
 
           continue;
@@ -145,18 +146,18 @@ export class TaskExprService {
         const res = this._nextNode(lexer, i+1);
 
         if (!res) {
-          throw new Error(lexer.formatError(token, 'Empty group found'));
+          throw new TaskSyntaxError(lexer.formatError(token, 'Empty group found'));
         }
 
         child = res;
       } else {
-        throw new Error(lexer.formatError(token, 'Unexpected token'));
+        throw new TaskSyntaxError(lexer.formatError(token, 'Unexpected token'));
       }
 
       if (!node) {
         node = child;
-      } else if (TaskExprService.isTaskNode(node)) {
-        throw new Error(lexer.formatError(token, 'Unexpected token, expected an operator'));
+      } else if (TaskExpressionService.isTaskNode(node)) {
+        throw new TaskSyntaxError(lexer.formatError(token, 'Unexpected token, expected an operator'));
       } else {
         node.tasks.push(child);
       }
@@ -187,11 +188,11 @@ export class TaskExprService {
   }
 
   async buildTask(node: TaskNode | GroupNode, workspace: Workspace, opts?: WorkspaceRunOptions): Promise<Task> {
-    if (TaskExprService.isTaskNode(node)) {
+    if (TaskExpressionService.isTaskNode(node)) {
       const task = await workspace.run(node.script, node.args, opts);
 
       if (!task) {
-        throw new Error(`Workspace ${workspace.name} have no ${node.script} script`);
+        throw new TaskExpressionError(`Workspace ${workspace.name} have no ${node.script} script`);
       }
 
       return task;
@@ -207,9 +208,9 @@ export class TaskExprService {
           logger: this._logger,
         });
       } else {
-        if (node.operator === '->' && TaskExprService._sequenceOperatorWarn) {
+        if (node.operator === '->' && TaskExpressionService._sequenceOperatorWarn) {
           this._logger.warn('Sequence operator -> is deprecated in favor of &&. It will be removed in a next major release.');
-          TaskExprService._sequenceOperatorWarn = true;
+          TaskExpressionService._sequenceOperatorWarn = true;
         }
 
         group = new SequenceGroup('In sequence', {}, {
