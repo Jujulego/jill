@@ -37,7 +37,7 @@ export class RunCommand extends TaskCommand<IRunCommandArgs> {
     @inject(Logger)
     private readonly logger: Logger,
     @inject(TaskExpressionService)
-    private readonly taskExpr: TaskExpressionService,
+    private readonly taskExpression: TaskExpressionService,
   ) {
     super();
   }
@@ -83,9 +83,9 @@ export class RunCommand extends TaskCommand<IRunCommandArgs> {
 
     // Parse task expression
     try {
-      const tree = this.taskExpr.parse(expr.join(' '));
+      const tree = this.taskExpression.parse(expr.join(' '));
 
-      yield await this.taskExpr.buildTask(tree.roots[0], this.workspace, {
+      yield await this.taskExpression.buildTask(tree.roots[0], this.workspace, {
         buildScript: args.buildScript,
         buildDeps: args.depsMode,
       });

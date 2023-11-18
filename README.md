@@ -13,8 +13,7 @@ That done it can offer you various utilities:
 - `jill list` prints a list of all your workspaces, with many useful filters
 - `jill run` Run a task expression in a workspace, after having built all its dependencies.
 - `jill group` Deprecated in favor of run
-- `jill each` do the same as `run` but for a list of workspaces, optimizing builds.<br />
-  Supports the same filters as `list`.
+- `jill each` Run a task expression in many workspace, after having built all theirs dependencies.
 - `jill tree` prints current workspace's local dependency tree
 
 It supports both `npm` and `yarn`.
