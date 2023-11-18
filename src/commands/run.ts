@@ -19,7 +19,7 @@ export interface IRunCommandArgs {
 // Command
 @Command({
   command: 'run <expr>',
-  describe: 'Run script inside workspace',
+  describe: 'Run a task expression in a workspace, after having built all its dependencies.',
   middlewares: [
     LoadProject,
     LoadWorkspace
