@@ -1,6 +1,7 @@
 {
   "jsc": {
     "loose": true,
+    "externalHelpers": true,
     "parser": {
       "syntax": "typescript",
       "tsx": true,
