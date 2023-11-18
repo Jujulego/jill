@@ -19,6 +19,7 @@ export interface IGroupCommandArgs {
 @Command({
   command: 'group <script..>',
   describe: 'Run many scripts inside a workspace (experimental)',
+  deprecated: true,
   middlewares: [
     LoadProject,
     LoadWorkspace
