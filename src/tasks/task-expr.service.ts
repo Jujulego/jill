@@ -5,6 +5,7 @@ import moo from 'moo';
 
 import { Service } from '@/src/modules/service.ts';
 import { type Workspace, type WorkspaceRunOptions } from '@/src/project/workspace.ts';
+import { TaskExpressionError, TaskSyntaxError } from './errors.ts';
 
 // Interfaces
 export interface TaskNode {
@@ -98,14 +99,14 @@ export class TaskExprService {
       // Handle argument
       if (token.type === 'argument') {
         if (!node) {
-          throw new Error(lexer.formatError(token, 'Unexpected argument'));
+          throw new TaskSyntaxError(lexer.formatError(token, 'Unexpected argument'));
         } else if (TaskExprService.isTaskNode(node)) {
           node.args.push(token.value);
         } else {
           const lastTask = node.tasks[node.tasks.length - 1];
 
           if (!lastTask || !TaskExprService.isTaskNode(lastTask)) {
-            throw new Error(lexer.formatError(token, 'Unexpected argument'));
+            throw new TaskSyntaxError(lexer.formatError(token, 'Unexpected argument'));
           } else {
             lastTask.args.push(token.value);
           }
@@ -119,7 +120,7 @@ export class TaskExprService {
         const operator = token.value;
 
         if (!node) {
-          throw new Error(lexer.formatError(token, 'Unexpected operator'));
+          throw new TaskSyntaxError(lexer.formatError(token, 'Unexpected operator'));
         } else if (TaskExprService.isTaskNode(node)) {
           node = { operator, tasks: [node] };
 
@@ -145,18 +146,18 @@ export class TaskExprService {
         const res = this._nextNode(lexer, i+1);
 
         if (!res) {
-          throw new Error(lexer.formatError(token, 'Empty group found'));
+          throw new TaskSyntaxError(lexer.formatError(token, 'Empty group found'));
         }
 
         child = res;
       } else {
-        throw new Error(lexer.formatError(token, 'Unexpected token'));
+        throw new TaskSyntaxError(lexer.formatError(token, 'Unexpected token'));
       }
 
       if (!node) {
         node = child;
       } else if (TaskExprService.isTaskNode(node)) {
-        throw new Error(lexer.formatError(token, 'Unexpected token, expected an operator'));
+        throw new TaskSyntaxError(lexer.formatError(token, 'Unexpected token, expected an operator'));
       } else {
         node.tasks.push(child);
       }
@@ -191,7 +192,7 @@ export class TaskExprService {
       const task = await workspace.run(node.script, node.args, opts);
 
       if (!task) {
-        throw new Error(`Workspace ${workspace.name} have no ${node.script} script`);
+        throw new TaskExpressionError(`Workspace ${workspace.name} have no ${node.script} script`);
       }
 
       return task;

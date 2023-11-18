@@ -8,6 +8,8 @@ import { LoadProject } from '@/src/middlewares/load-project.ts';
 import { LazyCurrentWorkspace, LoadWorkspace } from '@/src/middlewares/load-workspace.ts';
 import { type Workspace, type WorkspaceDepsMode } from '@/src/project/workspace.ts';
 import { TaskExprService } from '@/src/tasks/task-expr.service.ts';
+import { TaskExpressionError, TaskSyntaxError } from '@/src/tasks/errors.ts';
+import { ExitException } from '@/src/utils/exit.ts';
 
 // Types
 export interface IRunCommandArgs {
@@ -80,11 +82,25 @@ export class RunCommand extends TaskCommand<IRunCommandArgs> {
     expr.unshift(args.expr);
 
     // Parse task expression
-    const tree = this.taskExpr.parse(expr.join(' '));
+    try {
+      const tree = this.taskExpr.parse(expr.join(' '));
 
-    yield await this.taskExpr.buildTask(tree.roots[0], this.workspace, {
-      buildScript: args.buildScript,
-      buildDeps: args.depsMode,
-    });
+      yield await this.taskExpr.buildTask(tree.roots[0], this.workspace, {
+        buildScript: args.buildScript,
+        buildDeps: args.depsMode,
+      });
+    } catch (err) {
+      if (err instanceof TaskExpressionError) {
+        this.logger.error(err.message);
+        throw new ExitException(1);
+      }
+
+      if (err instanceof TaskSyntaxError) {
+        this.logger.error(`Syntax error in task expression: ${err.message}`);
+        throw new ExitException(1);
+      }
+
+      throw err;
+    }
   }
 }
