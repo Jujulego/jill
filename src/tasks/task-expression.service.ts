@@ -187,6 +187,20 @@ export class TaskExpressionService {
     return tree;
   }
 
+  *extractScripts(node: TaskTree | TaskNode | GroupNode): Generator<string> {
+    if ('roots' in node) {
+      for (const child of node.roots) {
+        yield* this.extractScripts(child);
+      }
+    } else if (TaskExpressionService.isTaskNode(node)) {
+      yield node.script;
+    } else {
+      for (const child of node.tasks) {
+        yield* this.extractScripts(child);
+      }
+    }
+  }
+
   async buildTask(node: TaskNode | GroupNode, workspace: Workspace, opts?: WorkspaceRunOptions): Promise<Task> {
     if (TaskExpressionService.isTaskNode(node)) {
       const task = await workspace.run(node.script, node.args, opts);
