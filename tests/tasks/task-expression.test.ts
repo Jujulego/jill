@@ -1,5 +1,5 @@
 import { ParallelGroup, SequenceGroup } from '@jujulego/tasks';
-import { vi } from 'vitest';
+import { describe, vi } from 'vitest';
 
 import { container } from '@/src/inversify.config.js';
 import { type Workspace } from '@/src/project/workspace.js';
@@ -122,6 +122,30 @@ describe('TaskExpressionService.parse', () => {
           }
         ]
       });
+  });
+});
+
+describe('TaskExpressionService.extractScripts', () => {
+  it('should yield all scripts involved in task tree', () => {
+    const tree = {
+      roots: [
+        {
+          operator: '&&',
+          tasks: [
+            {
+              operator: '//',
+              tasks: [
+                { script: 'toto', args: ['--arg', '1'] },
+                { script: 'tata', args: ['--arg', '2'] },
+              ]
+            },
+            { script: 'tutu', args: ['--arg', '3'] }
+          ]
+        }
+      ]
+    };
+
+    expect(service.extractScripts(tree)).toYield(['toto', 'tata', 'tutu']);
   });
 });
 
