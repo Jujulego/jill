@@ -62,7 +62,7 @@
     "@types/node": "16.18.63",
     "@types/normalize-package-data": "2.4.4",
     "@types/react": "18.2.38",
-    "@types/semver": "7.5.5",
+    "@types/semver": "7.5.6",
     "@types/webpack-bundle-analyzer": "4.6.3",
     "@types/yargs": "17.0.31",
     "@typescript-eslint/eslint-plugin": "6.12.0",
