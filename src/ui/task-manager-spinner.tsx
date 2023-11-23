@@ -1,4 +1,5 @@
 import { GroupTask, Task, type TaskManager } from '@jujulego/tasks';
+import { Box } from 'ink';
 import { useLayoutEffect, useState } from 'react';
 
 import GroupTaskSpinner from './group-task-spinner.tsx';
@@ -42,7 +43,7 @@ export default function TaskManagerSpinner({ manager }: TasksSpinnerProps) {
   }, [manager]);
 
   return (
-    <>
+    <Box flexDirection="column" flexShrink={0}>
       { tasks.map((task) =>
         (task instanceof GroupTask) ? (
           <GroupTaskSpinner key={task.id} group={task} />
@@ -50,6 +51,6 @@ export default function TaskManagerSpinner({ manager }: TasksSpinnerProps) {
           <TaskSpinner key={task.id} task={task} />
         )
       ) }
-    </>
+    </Box>
   );
 }

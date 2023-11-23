@@ -1,6 +1,6 @@
 import { GroupTask } from '@jujulego/tasks';
 import { Box } from 'ink';
-import { Fragment, useLayoutEffect, useMemo, useState } from 'react';
+import { useLayoutEffect, useMemo, useState } from 'react';
 
 import { CONFIG } from '@/src/config/config-loader.ts';
 import { container } from '@/src/inversify.config.ts';
@@ -68,16 +68,14 @@ export default function GroupTaskSpinner({ group }: GroupTaskSpinnerProps) {
     <>
       <TaskSpinner task={group} />
       { isReduced || (
-        <Box flexDirection="column" marginLeft={2}>
-          { tasks.map((task) => (
-            <Fragment key={task.id}>
-              { (task instanceof GroupTask) ? (
-                <GroupTaskSpinner group={task} />
-              ) : (
-                <TaskSpinner task={task} />
-              ) }
-            </Fragment>
-          )) }
+        <Box flexDirection="column" flexShrink={0} marginLeft={2}>
+          { tasks.map((task) =>
+            (task instanceof GroupTask) ? (
+              <GroupTaskSpinner key={task.id} group={task} />
+            ) : (
+              <TaskSpinner key={task.id} task={task} />
+            )
+          ) }
         </Box>
       ) }
     </>
