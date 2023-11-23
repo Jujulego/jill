@@ -10,7 +10,7 @@ import { isScriptCtx } from '@/src/tasks/script-task.ts';
 import { TASK_MANAGER } from '@/src/tasks/task-manager.config.ts';
 import { type AwaitableGenerator } from '@/src/types.ts';
 import List from '@/src/ui/list.tsx';
-import TaskManagerSpinner from '@/src/ui/task-manager-spinner.tsx';
+import TaskTreeSpinner from '@/src/ui/task-tree-spinner.tsx';
 import { ExitException } from '@/src/utils/exit.ts';
 import { printJson } from '@/src/utils/json.ts';
 
@@ -73,7 +73,7 @@ export abstract class TaskCommand<A = unknown> extends InkCommand<A> {
       }
     } else if (tasks.tasks.length > 0) {
       // Render
-      yield <TaskManagerSpinner manager={this.manager} />;
+      yield <TaskTreeSpinner manager={this.manager} />;
 
       // Start tasks
       tasks.start(this.manager);
