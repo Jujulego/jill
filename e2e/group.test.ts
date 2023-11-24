@@ -77,6 +77,7 @@ describe('jill group', () => {
           expect.ignoreColor(/^. In parallel \(took [0-9.]+m?s\)$/),
           expect.ignoreColor(/^ {2}. Run test1 in wks-c \(took [0-9.]+m?s\)$/),
           expect.ignoreColor(/^ {2}. Run test2 in wks-c \(took [0-9.]+m?s\)$/),
+          expect.ignoreColor(/^. 2 done$/),
         ]);
 
         // Check script result
@@ -95,6 +96,7 @@ describe('jill group', () => {
           expect.ignoreColor(/^ {2}. Run test1 in wks-c \(took [0-9.]+m?s\)$/),
           expect.ignoreColor(/^ {2}. Run fails in wks-c \(took [0-9.]+m?s\)$/),
           expect.ignoreColor(/^ {4}.( yarn exec)? node -e "process.exit\(1\)" \(took [0-9.]+m?s\)$/),
+          expect.ignoreColor(/^. 1 done, . 1 failed$/),
         ]);
 
         // Check script result
@@ -113,6 +115,7 @@ describe('jill group', () => {
           expect.ignoreColor(/^ {2}. Run test1 in wks-b \(took [0-9.]+m?s\)$/),
           expect.ignoreColor(/^ {2}. Run test2 in wks-b \(took [0-9.]+m?s\)$/),
           expect.ignoreColor(/^. Run build in wks-c \(took [0-9.]+m?s\)$/),
+          expect.ignoreColor(/^. 3 done$/),
         ]);
 
         // Check script result
@@ -135,6 +138,7 @@ describe('jill group', () => {
           expect.ignoreColor(/^. In sequence \(took [0-9.]+m?s\)$/),
           expect.ignoreColor(/^ {2}. Run test1 in wks-c \(took [0-9.]+m?s\)$/),
           expect.ignoreColor(/^ {2}. Run test2 in wks-c \(took [0-9.]+m?s\)$/),
+          expect.ignoreColor(/^. 2 done$/),
         ]);
 
         // Check script result
@@ -153,6 +157,7 @@ describe('jill group', () => {
           expect.ignoreColor(/^ {2}. Run test1 in wks-c \(took [0-9.]+m?s\)$/),
           expect.ignoreColor(/^ {2}. Run fails in wks-c \(took [0-9.]+m?s\)$/),
           expect.ignoreColor(/^ {4}.( yarn exec)? node -e "process.exit\(1\)" \(took [0-9.]+m?s\)$/),
+          expect.ignoreColor(/^. 1 done, . 1 failed$/),
         ]);
 
         // Check script result
@@ -171,6 +176,7 @@ describe('jill group', () => {
           expect.ignoreColor(/^ {2}. Run test1 in wks-b \(took [0-9.]+m?s\)$/),
           expect.ignoreColor(/^ {2}. Run test2 in wks-b \(took [0-9.]+m?s\)$/),
           expect.ignoreColor(/^. Run build in wks-c \(took [0-9.]+m?s\)$/),
+          expect.ignoreColor(/^. 3 done$/),
         ]);
 
         // Check script result
@@ -193,6 +199,7 @@ describe('jill group', () => {
           expect.ignoreColor(/^. Fallbacks \(took [0-9.]+m?s\)$/),
           expect.ignoreColor(/^ {2}. Run test1 in wks-c \(took [0-9.]+m?s\)$/),
           expect.ignoreColor(/^ {2}. Run fails in wks-c$/),
+          expect.ignoreColor(/^. 1 done$/),
         ]);
 
         // Check script result
@@ -211,6 +218,7 @@ describe('jill group', () => {
           expect.ignoreColor(/^ {2}. Run fails in wks-c \(took [0-9.]+m?s\)$/),
           expect.ignoreColor(/^ {4}.( yarn exec)? node -e "process.exit\(1\)" \(took [0-9.]+m?s\)$/),
           expect.ignoreColor(/^ {2}. Run test2 in wks-c \(took [0-9.]+m?s\)$/),
+          expect.ignoreColor(/^. 1 done, . 1 failed$/),
         ]);
 
         // Check script result
@@ -230,6 +238,7 @@ describe('jill group', () => {
           expect.ignoreColor(/^ {4}.( yarn exec)? node -e "process.exit\(1\)" \(took [0-9.]+m?s\)$/),
           expect.ignoreColor(/^ {2}. Run fails2 in wks-c \(took [0-9.]+m?s\)$/),
           expect.ignoreColor(/^ {4}.( yarn exec)? node -e "process.exit\(1\)" \(took [0-9.]+m?s\)$/),
+          expect.ignoreColor(/^. 2 failed/),
         ]);
       });
 
@@ -245,6 +254,7 @@ describe('jill group', () => {
           expect.ignoreColor(/^ {4}.( yarn exec)? node -e "process.exit\(1\)" \(took [0-9.]+m?s\)$/),
           expect.ignoreColor(/^ {2}. Run test2 in wks-b \(took [0-9.]+m?s\)$/),
           expect.ignoreColor(/^. Run build in wks-c \(took [0-9.]+m?s\)$/),
+          expect.ignoreColor(/^. 2 done, . 1 failed$/),
         ]);
 
         // Check script result

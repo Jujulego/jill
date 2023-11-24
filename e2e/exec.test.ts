@@ -57,6 +57,7 @@ describe('jill exec', () => {
 
       expect(res.screen.screen).toMatchLines([
         expect.ignoreColor(/^.( yarn exec)? node -e "require\('node:fs'\).+ \(took [0-9.]+m?s\)/),
+        expect.ignoreColor(/^. 1 done$/),
       ]);
 
       // Check script result
@@ -72,6 +73,7 @@ describe('jill exec', () => {
 
       expect(res.screen.screen).toMatchLines([
         expect.ignoreColor(/^.( yarn exec)? echo toto \(took [0-9.]+m?s\)/),
+        expect.ignoreColor(/^. 1 done$/),
       ]);
 
       expect(res.stderr).toMatchLines([
@@ -98,6 +100,7 @@ describe('jill exec', () => {
 
       expect(res.screen.screen).toMatchLines([
         expect.ignoreColor(/^.( yarn exec)? node -e "process.exit\(1\)" \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^. 1 failed$/),
       ]);
     });
 
@@ -110,6 +113,7 @@ describe('jill exec', () => {
       expect(res.screen.screen).toMatchLines([
         expect.ignoreColor(/^. Run build in wks-c \(took [0-9.]+m?s\)$/),
         expect.ignoreColor(/^.( yarn exec)? node -e "require\('node:fs'\).+ \(took [0-9.]+m?s\)/),
+        expect.ignoreColor(/^. 2 done$/),
       ]);
 
       // Check scripts result
