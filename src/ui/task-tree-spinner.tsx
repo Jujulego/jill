@@ -1,11 +1,12 @@
-import { FallbackGroup, GroupTask, SequenceGroup, Task, TaskManager } from '@jujulego/tasks';
+import { GroupTask, Task, TaskManager } from '@jujulego/tasks';
 import { Box } from 'ink';
 import { useLayoutEffect, useMemo, useState } from 'react';
 
 import { CONFIG } from '@/src/config/config-loader.ts';
 import { container } from '@/src/inversify.config.ts';
-import { isCommandCtx } from '@/src/tasks/command-task.ts';
-import { isScriptCtx } from '@/src/tasks/script-task.ts';
+import { Workspace } from '@/src/project/workspace.ts';
+import { CommandTask, isCommandCtx } from '@/src/tasks/command-task.ts';
+import { ScriptTask } from '@/src/tasks/script-task.ts';
 import TaskSpinner from '@/src/ui/task-spinner.tsx';
 
 // Types
@@ -15,18 +16,26 @@ export interface TaskTreeSpinnerProps {
 
 // Utils
 function comparator(a: Task, b: Task) {
-  // 1 - compare workspaces
-  const wksA = isScriptCtx(a.context) ? a.context.workspace.name : '';
-  const wksB = isScriptCtx(b.context) ? b.context.workspace.name : '';
+  // 1 - compare kind
+  const kindA = a instanceof CommandTask ? 0 : 1;
+  const kindB = b instanceof CommandTask ? 0 : 1;
+
+  if (kindA !== kindB) {
+    return kindB - kindA;
+  }
+
+  // 2 - compare workspaces
+  const wksA = 'workspace' in a.context ? (a.context.workspace as Workspace).name : '\uffff';
+  const wksB = 'workspace' in b.context ? (b.context.workspace as Workspace).name : '\uffff';
   const wksDiff = wksA.localeCompare(wksB);
 
   if (wksDiff !== 0) {
     return wksDiff;
   }
 
-  // 2 - compare scripts
-  const scriptA = isScriptCtx(a.context) ? a.context.script : '';
-  const scriptB = isScriptCtx(b.context) ? b.context.script : '';
+  // 1 - compare scripts
+  const scriptA = 'script' in a.context ? a.context.script as string : '\uffff';
+  const scriptB = 'script' in b.context ? b.context.script as string : '\uffff';
 
   return scriptA.localeCompare(scriptB);
 }
@@ -47,7 +56,7 @@ function *extractTasks(groupId: string | undefined, tasks: readonly Task[], isVe
       if (isVerbose || isCommandGroup || hasFailed || isStarted) {
         let tasks = task.tasks;
 
-        if (!(task instanceof SequenceGroup || task instanceof FallbackGroup)) {
+        if (task instanceof ScriptTask) {
           tasks = [...tasks].sort(comparator);
         }
 

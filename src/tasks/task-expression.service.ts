@@ -214,11 +214,11 @@ export class TaskExpressionService {
       let group: GroupTask;
 
       if (node.operator === '//') {
-        group = new ParallelGroup('In parallel', {}, {
+        group = new ParallelGroup('In parallel', { workspace }, {
           logger: this._logger,
         });
       } else if (node.operator === '||') {
-        group = new FallbackGroup('Fallbacks', {}, {
+        group = new FallbackGroup('Fallbacks', { workspace }, {
           logger: this._logger,
         });
       } else {
@@ -227,7 +227,7 @@ export class TaskExpressionService {
           TaskExpressionService._sequenceOperatorWarn = true;
         }
 
-        group = new SequenceGroup('In sequence', {}, {
+        group = new SequenceGroup('In sequence', { workspace }, {
           logger: this._logger,
         });
       }

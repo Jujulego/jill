@@ -164,8 +164,8 @@ describe('jill run', () => {
       expect(res.code).toBe(0);
 
       expect(res.screen.screen).toMatchLines([
-        expect.ignoreColor(/^. Run build in wks-c \(took [0-9.]+m?s\)$/),
         expect.ignoreColor(/^. Run start in wks-b \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^. Run build in wks-c \(took [0-9.]+m?s\)$/),
       ]);
 
       // Check scripts result
