@@ -54,7 +54,7 @@ export default function TaskTreeStats({ manager }: TaskTreeStatsProps) {
   return (
     <Text>
       { (stats.running !== 0) && (
-        <><Spinner type="sand" /> <Text bold>{ stats.running }</Text> running</>
+        <><Spinner type={'sand' as 'dots'} /> <Text bold>{ stats.running }</Text> running</>
       ) }
       { (stats.running !== 0 && stats.done !== 0) && (<>, </>) }
       { (stats.done !== 0) && (
