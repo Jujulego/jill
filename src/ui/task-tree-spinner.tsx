@@ -1,4 +1,4 @@
-import { GroupTask, Task, TaskManager } from '@jujulego/tasks';
+import { FallbackGroup, GroupTask, SequenceGroup, Task, TaskManager } from '@jujulego/tasks';
 import { Box } from 'ink';
 import { useLayoutEffect, useMemo, useState } from 'react';
 
@@ -31,19 +31,27 @@ function comparator(a: Task, b: Task) {
   return scriptA.localeCompare(scriptB);
 }
 
-function *extractTasks(tasks: readonly Task[], isVerbose: boolean, level = 0): Generator<{ task: Task, level: number }> {
-  for (const task of [...tasks].sort(comparator)) {
-    if (level !== 0 || !task.group) {
-      yield { task, level };
+function *extractTasks(groupId: string | undefined, tasks: readonly Task[], isVerbose: boolean, level = 0): Generator<{ task: Task, level: number }> {
+  for (const task of tasks) {
+    if (task.group?.id !== groupId) {
+      continue;
     }
+
+    yield { task, level };
 
     if (task instanceof GroupTask) {
       const isCommandGroup = task.tasks.some((t) => !isCommandCtx(t.context));
       const hasFailed = task.tasks.some((t) => t.status === 'failed');
-      const isStarted = task.status === 'starting' || task.status === 'running';
+      const isStarted = task.status === 'running';
 
       if (isVerbose || isCommandGroup || hasFailed || isStarted) {
-        yield* extractTasks(task.tasks, isVerbose, level + 1);
+        let tasks = task.tasks;
+
+        if (!(task instanceof SequenceGroup || task instanceof FallbackGroup)) {
+          tasks = [...tasks].sort(comparator);
+        }
+
+        yield* extractTasks(task.id, tasks, isVerbose, level + 1);
       }
     }
   }
@@ -63,11 +71,12 @@ export default function TaskTreeSpinner({ manager }: TaskTreeSpinnerProps) {
   }, []);
 
   // Extract all tasks
-  const [tasks, setTasks] = useState([...manager.tasks]);
+  const [tasks, setTasks] = useState([...manager.tasks].sort(comparator));
+  const [version, setVersion] = useState(0);
 
   const flat = useMemo(() => {
-    return Array.from(extractTasks(tasks, isVerbose));
-  }, [tasks, isVerbose]);
+    return Array.from(extractTasks(undefined, tasks, isVerbose));
+  }, [tasks, isVerbose, version]);
 
   useLayoutEffect(() => {
     let dirty = false;
@@ -77,10 +86,31 @@ export default function TaskTreeSpinner({ manager }: TaskTreeSpinnerProps) {
         dirty = true;
 
         queueMicrotask(() => {
-          setTasks([...manager.tasks]);
+          setTasks([...manager.tasks].sort(comparator));
           dirty = false;
         });
       }
+    });
+  }, [manager]);
+
+  useLayoutEffect(() => {
+    let dirty = false;
+
+    return manager.on('started', () => {
+      if (!dirty) {
+        dirty = true;
+
+        setTimeout(() => {
+          setVersion((old) => ++old);
+          dirty = false;
+        });
+      }
+    });
+  }, [manager]);
+
+  useLayoutEffect(() => {
+    return manager.on('completed', () => {
+      setVersion((old) => ++old);
     });
   }, [manager]);
 
