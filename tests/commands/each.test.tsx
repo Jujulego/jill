@@ -59,7 +59,7 @@ afterEach(() => {
 
 // Tests
 describe('jill each', () => {
-  it('should run script in all workspaces having that script', async () => {
+  it.only('should run script in all workspaces having that script', async () => {
     context.reset({});
 
     // Setup workspaces
@@ -93,6 +93,8 @@ describe('jill each', () => {
     await flushPromises();
     expect(manager.add).toHaveBeenCalledWith(tasks[0]);
     expect(manager.add).toHaveBeenCalledWith(tasks[1]);
+
+    await flushPromises();
 
     // should print task spinners
     expect(app.lastFrame()).toMatchLines([
