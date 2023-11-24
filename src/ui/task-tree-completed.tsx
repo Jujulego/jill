@@ -5,6 +5,7 @@ import { useMemo } from 'react';
 import { flatTasks, taskComparator } from '@/src/ui/hooks/useFlatTaskTree.ts';
 import { useIsVerbose } from '@/src/ui/hooks/useIsVerbose.ts';
 import TaskSpinner from '@/src/ui/task-spinner.tsx';
+import TaskTreeStats from '@/src/ui/task-tree-stats.tsx';
 
 // Types
 export interface TaskTreeCompletedProps {
@@ -23,12 +24,15 @@ export default function TaskTreeCompleted({ manager }: TaskTreeCompletedProps) {
 
   // Render
   return (
-    <Static items={flat}>
-      { ({ task, level }) => (
-        <Box key={task.id} marginLeft={level * 2} flexShrink={0}>
-          <TaskSpinner task={task} />
-        </Box>
-      ) }
-    </Static>
+    <>
+      <Static items={flat}>
+        { ({ task, level }) => (
+          <Box key={task.id} marginLeft={level * 2} flexShrink={0}>
+            <TaskSpinner task={task} />
+          </Box>
+        ) }
+      </Static>
+      <TaskTreeStats manager={manager} />
+    </>
   );
 }

@@ -1,12 +1,11 @@
 import { TaskManager } from '@jujulego/tasks';
 import { Box, Text, useInput } from 'ink';
-import Spinner from 'ink-spinner';
-import symbols from 'log-symbols';
-import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { useStdoutDimensions } from '@/src/ui/hooks/useStdoutDimensions.ts';
 import { useFlatTaskTree } from '@/src/ui/hooks/useFlatTaskTree.ts';
 import TaskSpinner from '@/src/ui/task-spinner.tsx';
+import TaskTreeStats from '@/src/ui/task-tree-stats.tsx';
 
 // Types
 export interface TaskTreeSpinnerProps {
@@ -16,29 +15,9 @@ export interface TaskTreeSpinnerProps {
 // Component
 export default function TaskTreeSpinner({ manager }: TaskTreeSpinnerProps) {
   // Extract all tasks
-  const [stats, setStats] = useState({ running: 0, done: 0, failed: 0 });
   const flat = useFlatTaskTree(manager);
 
-  useLayoutEffect(() => {
-    return manager.on('started', (task) => {
-      setStats((old) => ({
-        ...old,
-        running: old.running + task.weight
-      }));
-    });
-  }, [manager]);
-
-  useLayoutEffect(() => {
-    return manager.on('completed', (task) => {
-      setStats((old) => ({
-        running: old.running - task.weight,
-        done: task.status === 'done' ? old.done + task.weight : old.done,
-        failed: task.status === 'failed' ? old.failed + task.weight : old.failed,
-      }));
-    });
-  }, [manager]);
-
-  // Scroll
+  // Manage scroll
   const [start, setStart] = useState(0);
 
   const { rows: termHeight } = useStdoutDimensions();
@@ -70,17 +49,7 @@ export default function TaskTreeSpinner({ manager }: TaskTreeSpinnerProps) {
         )) }
       </Box>
       <Text>
-        { (stats.running !== 0) && (
-          <><Spinner type="sand" /> <Text bold>{ stats.running }</Text> running</>
-        ) }
-        { (stats.running !== 0 && stats.done !== 0) && (<>, </>) }
-        { (stats.done !== 0) && (
-          <><Text color="green">{ symbols.success } { stats.done } done</Text></>
-        ) }
-        { (stats.running + stats.done !== 0 && stats.failed !== 0) && (<>, </>) }
-        { (stats.failed !== 0) && (
-          <><Text color="red">{ symbols.error } { stats.failed } failed</Text></>
-        ) }
+        <TaskTreeStats manager={manager} />
         { (maxHeight < flat.length) && (<Text color="grey"> - use keyboard arrows to scroll</Text>) }
       </Text>
     </>
