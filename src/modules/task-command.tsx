@@ -10,6 +10,7 @@ import { isScriptCtx } from '@/src/tasks/script-task.ts';
 import { TASK_MANAGER } from '@/src/tasks/task-manager.config.ts';
 import { type AwaitableGenerator } from '@/src/types.ts';
 import List from '@/src/ui/list.tsx';
+import TaskTreeCompleted from '@/src/ui/task-tree-completed.tsx';
 import TaskTreeSpinner from '@/src/ui/task-tree-spinner.tsx';
 import { ExitException } from '@/src/utils/exit.ts';
 import { printJson } from '@/src/utils/json.ts';
@@ -79,6 +80,9 @@ export abstract class TaskCommand<A = unknown> extends InkCommand<A> {
       tasks.start(this.manager);
 
       const result = await waitFor$(tasks, 'finished');
+
+      this.app.clear();
+      yield <TaskTreeCompleted manager={this.manager} />;
 
       if (result.failed > 0) {
         throw new ExitException(1);
