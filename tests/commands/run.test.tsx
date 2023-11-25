@@ -95,8 +95,7 @@ describe('jill run', () => {
     // should print task completed
     expect(app.lastFrame()).toEqualLines([
       expect.ignoreColor(`${symbols.success} Run cmd in wks (took 100ms)`),
-      expect.ignoreColor(`${symbols.success} 1 done²
-      `),
+      expect.ignoreColor(`${symbols.success} 1 done`),
     ]);
   });
 
