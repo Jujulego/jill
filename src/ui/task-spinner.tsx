@@ -19,7 +19,7 @@ export interface TaskSpinnerProps {
 export default function TaskSpinner({ task }: TaskSpinnerProps) {
   // State
   const [status, setStatus] = useState(task.status);
-  const [time, setTime] = useState(0);
+  const [time, setTime] = useState(task.duration);
 
   // Effects
   useLayoutEffect(() => {

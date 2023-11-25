@@ -1,9 +1,9 @@
+import { Logger, withLabel } from '@jujulego/logger';
 import { type Task } from '@jujulego/tasks';
 import { inject, injectable, type interfaces as int } from 'inversify';
 import yargs, { type Argv, type CommandModule } from 'yargs';
 
 import { ContextService, type Context } from '@/src/commons/context.service.ts';
-import { Logger } from '@/src/commons/logger.service.ts';
 import { applyConfigOptions } from '@/src/config/config-options.ts';
 import { CURRENT } from '@/src/constants.ts';
 import { container, lazyInjectNamed } from '@/src/inversify.config.ts';
@@ -57,7 +57,7 @@ export class JillApplication {
   }
 
   private async _loadPlugins(): Promise<void> {
-    this.logger.child({ label: 'plugin' }).verbose('Loading plugin <core>');
+    this.logger.child(withLabel('plugin')).verbose('Loading plugin <core>');
 
     const { CorePlugin } = await import('@/src/core.plugin.ts');
     this.container.load(getModule(CorePlugin, true));

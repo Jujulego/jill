@@ -1,10 +1,10 @@
+import { Logger } from '@jujulego/logger';
 import { ParallelGroup, SpawnTask, type Task, type TaskManager } from '@jujulego/tasks';
 import { cleanup, render } from 'ink-testing-library';
 import { injectable } from 'inversify';
 import symbols from 'log-symbols';
 import { vi } from 'vitest';
 
-import { Logger } from '@/src/commons/logger.service.js';
 import { INK_APP } from '@/src/ink.config.js';
 import { container } from '@/src/inversify.config.js';
 import { TaskCommand } from '@/src/modules/task-command.js';
@@ -44,9 +44,10 @@ beforeEach(async () => {
 
   bed = new TestBed();
   wks = bed.addWorkspace('wks');
-  task = new TestScriptTask(wks, 'cmd', [], { logger: spyLogger });
+  task = new TestScriptTask(wks, 'cmd', [], { logger: spyLogger, weight: 1 });
 
   app = render(<Layout/>);
+  Object.assign(app.stdin, { ref: () => this, unref: () => this });
   container.rebind(INK_APP).toConstantValue(wrapInkTestApp(app));
 
   command = container.resolve(TestTaskCommand);
@@ -84,13 +85,18 @@ describe('TaskCommand', () => {
 
       // complete task
       vi.spyOn(task, 'status', 'get').mockReturnValue('done');
+      vi.spyOn(task, 'duration', 'get').mockReturnValue(100);
+
       task.emit('status.done', { status: 'done', previous: 'running' });
       task.emit('completed', { status: 'done', duration: 100 });
 
       await prom;
 
       // should print task completed
-      expect(app.lastFrame()).toEqual(expect.ignoreColor(`${symbols.success} Run cmd in wks (took 100ms)`));
+      expect(app.lastFrame()).toEqualLines([
+        expect.ignoreColor(`${symbols.success} Run cmd in wks (took 100ms)`),
+        expect.ignoreColor(`${symbols.success} 1 done`),
+      ]);
     });
 
     it('should exit 1 if a task fails', async () => {
@@ -100,19 +106,24 @@ describe('TaskCommand', () => {
 
       // complete task
       vi.spyOn(task, 'status', 'get').mockReturnValue('failed');
+      vi.spyOn(task, 'duration', 'get').mockReturnValue(100);
+
       task.emit('status.failed', { status: 'failed', previous: 'running' });
       task.emit('completed', { status: 'failed', duration: 100 });
 
       await expect(prom).rejects.toEqual(new ExitException(1));
 
       // should print task failed
-      expect(app.lastFrame()).toEqual(expect.ignoreColor(`${symbols.error} Run cmd in wks (took 100ms)`));
+      expect(app.lastFrame()).toEqualLines([
+        expect.ignoreColor(`${symbols.error} Run cmd in wks (took 100ms)`),
+        expect.ignoreColor(`${symbols.error} 1 failed`)
+      ]);
     });
 
     it('should log and exit if no task were yielded', async () => {
       const logger = container.get(Logger);
 
-      vi.spyOn(logger, 'warn').mockReturnValue(undefined);
+      vi.spyOn(logger, 'warning').mockReturnValue(undefined);
       vi.mocked(command.prepare).mockImplementation(function* () {});
 
       // Run command
@@ -120,7 +131,7 @@ describe('TaskCommand', () => {
 
       // should have only logged
       expect(manager.add).not.toHaveBeenCalled();
-      expect(logger.warn).toHaveBeenCalledWith(['No task found']);
+      expect(logger.warning).toHaveBeenCalledWith('No task found');
     });
   });
 

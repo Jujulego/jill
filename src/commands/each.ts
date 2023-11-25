@@ -1,7 +1,8 @@
+import { Logger } from '@jujulego/logger';
 import { inject } from 'inversify';
+import symbols from 'log-symbols';
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
 
-import { SpinnerService } from '@/src/commons/spinner.service.ts';
 import { AffectedFilter } from '@/src/filters/affected.filter.ts';
 import { Pipeline } from '@/src/filters/pipeline.ts';
 import { PrivateFilter } from '@/src/filters/private.filter.ts';
@@ -11,13 +12,16 @@ import { Command } from '@/src/modules/command.ts';
 import { TaskCommand } from '@/src/modules/task-command.tsx';
 import { type Project } from '@/src/project/project.ts';
 import { type WorkspaceDepsMode } from '@/src/project/workspace.ts';
+import { TaskExpressionError, TaskSyntaxError } from '@/src/tasks/errors.ts';
+import { TaskExpressionService } from '@/src/tasks/task-expression.service.ts';
 import { ExitException } from '@/src/utils/exit.ts';
 
 // Types
-export interface IEachCommandArgs {
-  script: string;
+export interface EachCommandArgs {
+  expr: string;
   'build-script': string;
   'deps-mode': WorkspaceDepsMode;
+  'allow-no-workspaces'?: boolean;
 
   // Filters
   private?: boolean;
@@ -26,36 +30,40 @@ export interface IEachCommandArgs {
   affected: string;
   'affected-rev-fallback': string;
   'affected-rev-sort'?: string;
-
-  'allow-no-workspaces'?: boolean;
 }
 
 // Command
 @Command({
-  command: 'each <script>',
-  describe: 'Run script on many workspaces',
+  command: 'each <expr>',
+  describe: 'Run a task expression in many workspace, after having built all theirs dependencies.',
   middlewares: [
     LoadProject
   ]
 })
-export class EachCommand extends TaskCommand<IEachCommandArgs> {
+export class EachCommand extends TaskCommand<EachCommandArgs> {
   // Lazy injections
   @LazyCurrentProject()
   readonly project: Project;
 
   // Constructor
   constructor(
-    @inject(SpinnerService)
-    private readonly spinner: SpinnerService,
+    @inject(Logger)
+    private readonly logger: Logger,
+    @inject(TaskExpressionService)
+    private readonly taskExpression: TaskExpressionService,
   ) {
     super();
   }
 
   // Methods
-  builder(parser: Argv): Argv<IEachCommandArgs> {
+  builder(parser: Argv): Argv<EachCommandArgs> {
     return this.addTaskOptions(parser)
       // Run options
-      .positional('script', { type: 'string', demandOption: true })
+      .positional('expr', {
+        type: 'string',
+        demandOption: true,
+        desc: 'Script or task expression',
+      })
       .option('build-script', {
         default: 'build',
         desc: 'Script to use to build dependencies'
@@ -68,6 +76,11 @@ export class EachCommand extends TaskCommand<IEachCommandArgs> {
           ' - all = dependencies AND devDependencies\n' +
           ' - prod = dependencies\n' +
           ' - none = nothing'
+      })
+      .option('allow-no-workspaces', {
+        type: 'boolean',
+        default: false,
+        desc: 'Allow no matching workspaces. Without it jill will exit with code 1 if no workspace matches',
       })
 
       // Filters
@@ -95,12 +108,6 @@ export class EachCommand extends TaskCommand<IEachCommandArgs> {
         desc: 'Fallback revision, used if no revision matching the given format is found',
       })
 
-      .option('allow-no-workspaces', {
-        type: 'boolean',
-        default: false,
-        desc: 'Allow no matching workspaces. By default, jill will throw when no affected workspaces are found',
-      })
-
       // Config
       .strict(false)
       .parserConfiguration({
@@ -108,40 +115,29 @@ export class EachCommand extends TaskCommand<IEachCommandArgs> {
       });
   }
 
-  async *prepare(args: ArgumentsCamelCase<IEachCommandArgs>) {
+  async *prepare(argv: ArgumentsCamelCase<EachCommandArgs>) {
+    let empty = true;
+
     try {
-      this.spinner.spin('Loading workspaces ...');
+      // Extract expression
+      const expr = argv._.map(arg => arg.toString());
 
-      // Setup pipeline
-      const pipeline = new Pipeline();
-      pipeline.add(new ScriptsFilter([args.script]));
-
-      if (args.private !== undefined) {
-        pipeline.add(new PrivateFilter(args.private));
+      if (expr[0] === 'each') {
+        expr.splice(0, 1);
       }
 
-      if (args.affected !== undefined) {
-        pipeline.add(new AffectedFilter(
-          args.affected,
-          args.affectedRevFallback,
-          args.affectedRevSort
-        ));
-      }
+      expr.unshift(argv.expr);
 
-      // Extract arguments
-      const rest = args._.map(arg => arg.toString());
-
-      if (rest[0] === 'each') {
-        rest.splice(0, 1);
-      }
+      const tree = this.taskExpression.parse(expr.join(' '));
+      const scripts = Array.from(this.taskExpression.extractScripts(tree));
 
       // Create script tasks
-      let empty = true;
+      const pipeline = this._preparePipeline(argv, scripts);
 
       for await (const wks of pipeline.filter(this.project.workspaces())) {
-        const task = await wks.run(args.script, rest, {
-          buildScript: args.buildScript,
-          buildDeps: args.depsMode,
+        const task = await this.taskExpression.buildTask(tree.roots[0], wks, {
+          buildScript: argv.buildScript,
+          buildDeps: argv.depsMode,
         });
 
         if (task) {
@@ -149,15 +145,45 @@ export class EachCommand extends TaskCommand<IEachCommandArgs> {
           empty = false;
         }
       }
-
-      if (empty) {
-        this.spinner.failed('No matching workspace found !');
-        if (args.allowNoWorkspaces === false) {
-          throw new ExitException(1);
-        }
+    } catch (err) {
+      if (err instanceof TaskExpressionError) {
+        this.logger.error(err.message);
+        throw new ExitException(1);
       }
-    } finally {
-      this.spinner.stop();
+
+      if (err instanceof TaskSyntaxError) {
+        this.logger.error(`Syntax error in task expression: ${err.message}`);
+        throw new ExitException(1);
+      }
+
+      throw err;
     }
+
+    if (empty) {
+      this.logger.error(`${symbols.error} No matching workspace found !`);
+
+      if (argv.allowNoWorkspaces === false) {
+        throw new ExitException(1);
+      }
+    }
+  }
+
+  private _preparePipeline(argv: ArgumentsCamelCase<EachCommandArgs>, scripts: string[]): Pipeline {
+    const pipeline = new Pipeline();
+    pipeline.add(new ScriptsFilter(scripts, true));
+
+    if (argv.private !== undefined) {
+      pipeline.add(new PrivateFilter(argv.private));
+    }
+
+    if (argv.affected !== undefined) {
+      pipeline.add(new AffectedFilter(
+        argv.affected,
+        argv.affectedRevFallback,
+        argv.affectedRevSort
+      ));
+    }
+
+    return pipeline;
   }
 }

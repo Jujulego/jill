@@ -1,3 +1,4 @@
+import { Logger } from '@jujulego/logger';
 import { cleanup, render } from 'ink-testing-library';
 import path from 'node:path';
 import { vi } from 'vitest';
@@ -11,11 +12,13 @@ import Layout from '@/src/ui/layout.js';
 import { TestBed } from '@/tools/test-bed.js';
 import { wrapInkTestApp } from '@/tools/utils.js';
 import { ContextService } from '@/src/commons/context.service.js';
+import { ExitException } from '@/src/utils/exit.js';
 
 // Setup
 let app: ReturnType<typeof render>;
 let command: CommandModule;
 let context: ContextService;
+let logger: Logger;
 
 let bed: TestBed;
 
@@ -32,6 +35,7 @@ beforeEach(async () => {
   // Project
   bed = new TestBed();
   context = container.get(ContextService);
+  logger = container.get(Logger);
 
   app = render(<Layout />);
   container.rebind(INK_APP).toConstantValue(wrapInkTestApp(app));
@@ -225,6 +229,66 @@ describe('jill list', () => {
           { name: 'wks-3', version: '1.0.0', slug: 'wks-3', root: path.resolve('./test/wks-3'), },
         ]),
       );
+    });
+  });
+
+  describe('sort', () => {
+    it('should sort workspaces by version then by name (--sort-by version name)', async () => {
+      context.reset({});
+
+      // Setup workspaces
+      bed.addWorkspace('wks-1', { version: '1.2.0' });
+      bed.addWorkspace('wks-2', { version: '1.0.0' });
+      bed.addWorkspace('wks-3', { version: '1.0.0' });
+
+      // Run command
+      await yargs().command(command)
+        .parse('list --sort-by version name');
+
+      expect(app.lastFrame()).toEqualLines([
+        expect.ignoreColor('Version  Name'),
+        '1.0.0    wks-2',
+        '1.0.0    wks-3',
+        '1.2.0    wks-1',
+      ]);
+    });
+
+    it('should sort workspaces by name in desc order (--order desc)', async () => {
+      context.reset({});
+
+      // Setup workspaces
+      bed.addWorkspace('wks-1');
+      bed.addWorkspace('wks-2');
+      bed.addWorkspace('wks-3');
+
+      // Run command
+      await yargs().command(command)
+        .parse('list --order desc');
+
+      expect(app.lastFrame()).toEqualLines([
+        'wks-3',
+        'wks-2',
+        'wks-1',
+      ]);
+    });
+
+    it('should throw if trying to sort with a non printed attribute', async () => {
+      context.reset({});
+      vi.spyOn(logger, 'error');
+
+      // Setup workspaces
+      bed.addWorkspace('wks-1');
+      bed.addWorkspace('wks-2');
+      bed.addWorkspace('wks-3');
+
+      // Run command
+      await expect(
+        yargs().command(command)
+          .fail(false)
+          .parse('list --attrs name --sort-by version')
+      ).rejects.toEqual(new ExitException(1));
+
+      expect(logger.error).toHaveBeenCalledWith('Cannot sort by non printed attributes. Missing version.');
     });
   });
 });

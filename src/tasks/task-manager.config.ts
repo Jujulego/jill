@@ -1,7 +1,7 @@
+import { Logger } from '@jujulego/logger';
 import { TaskManager } from '@jujulego/tasks';
 import { type interfaces as int } from 'inversify';
 
-import { Logger } from '@/src/commons/logger.service.ts';
 import { CONFIG } from '@/src/config/config-loader.ts';
 import { container } from '@/src/inversify.config.ts';
 

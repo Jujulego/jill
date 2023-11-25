@@ -1,6 +1,7 @@
-import chalk from 'chalk';
+import { Logger } from '@jujulego/logger';
 import { hideBin } from 'yargs/helpers';
 
+import '@/src/commons/logger.service.ts';
 import { container } from '@/src/inversify.config.ts';
 import { JillApplication } from '@/src/jill.application.ts';
 import { ExitException } from '@/src/utils/exit.ts';
@@ -16,7 +17,11 @@ import { ExitException } from '@/src/utils/exit.ts';
       process.exit(err.code);
     } else {
       console.error(await app.parser.getHelp());
-      console.error(chalk.red(err.message));
+
+      if (err.message) {
+        const logger = container.get(Logger);
+        logger.error(err.message);
+      }
 
       process.exit(1);
     }

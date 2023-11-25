@@ -4,5 +4,5 @@ export async function dynamicImport(filepath: string) {
 }
 
 export function fixDefaultExport<T extends { default: unknown }>(mod: T): T['default'] {
-  return mod as T['default'];
+  return ('default' in mod ? mod.default : mod) as T['default'];
 }

@@ -1,31 +1,45 @@
 import fs from 'node:fs/promises';
-import path from 'path';
+import path from 'node:path';
 
 import { TestBed } from '@/tools/test-bed.js';
 import { shell } from '@/tools/utils.js';
 
 import { jill } from './utils.js';
 
+// Setup
+const bed = new TestBed();
+
+beforeAll(() => {
+  const wksC = bed.addWorkspace('wks-c');
+  const wksB = bed.addWorkspace('wks-b')
+    .addDependency(wksC, true);
+
+  bed.addWorkspace('wks-a')
+    .addDependency(wksB)
+    .addDependency(wksC, true);
+});
+
+// Tests
 describe('jill list', () => {
   describe.each(['npm', 'yarn'] as const)('using %s', (packageManager) => {
     // Setup
+    let baseDir: string;
+    let tmpDir: string;
     let prjDir: string;
 
-    beforeEach(async () => {
-      const bed = new TestBed();
-
-      const wksC = bed.addWorkspace('wks-c');
-      const wksB = bed.addWorkspace('wks-b')
-        .addDependency(wksC, true);
-      bed.addWorkspace('wks-a')
-        .addDependency(wksB)
-        .addDependency(wksC, true);
-
-      prjDir = await bed.createProjectPackage(packageManager);
+    beforeAll(async () => {
+      baseDir = await bed.createProjectPackage(packageManager);
+      tmpDir = path.dirname(baseDir);
     }, 15000);
 
-    afterEach(async () => {
-      await fs.rm(prjDir, { recursive: true });
+    beforeEach(async (ctx) => {
+      prjDir = path.join(tmpDir, ctx.task.id);
+
+      await fs.cp(baseDir, prjDir, { force: true, recursive: true });
+    });
+
+    afterAll(async () => {
+      await fs.rm(tmpDir, { recursive: true });
     });
 
     // Tests
@@ -35,9 +49,9 @@ describe('jill list', () => {
       expect(res.code).toBe(0);
       expect(res.screen.screen).toEqualLines([
         'main',
-        'wks-c',
+        'wks-a',
         'wks-b',
-        'wks-a'
+        'wks-c'
       ]);
     });
 
@@ -48,9 +62,9 @@ describe('jill list', () => {
       expect(res.screen.screen).toEqualLines([
         expect.ignoreColor('Name   Version  Root'),
         expect.ignoreColor('main   1.0.0    .'),
-        expect.ignoreColor('wks-c  1.0.0    wks-c'),
-        expect.ignoreColor('wks-b  1.0.0    wks-b'),
         expect.ignoreColor('wks-a  1.0.0    wks-a'),
+        expect.ignoreColor('wks-b  1.0.0    wks-b'),
+        expect.ignoreColor('wks-c  1.0.0    wks-c'),
       ]);
     });
 
@@ -58,34 +72,33 @@ describe('jill list', () => {
       const res = await jill('list --json', { cwd: prjDir });
 
       expect(res.code).toBe(0);
-      expect(res.stdout).toEqual([
-        expect.jsonMatching([
-          {
-            name: 'main',
-            version: '1.0.0',
-            slug: 'main',
-            root: prjDir,
-          },
-          {
-            name: 'wks-c',
-            version: '1.0.0',
-            slug: 'wks-c',
-            root: path.join(prjDir, 'wks-c'),
-          },
-          {
-            name: 'wks-b',
-            version: '1.0.0',
-            slug: 'wks-b',
-            root: path.join(prjDir, 'wks-b'),
-          },
-          {
-            name: 'wks-a',
-            version: '1.0.0',
-            slug: 'wks-a',
-            root: path.join(prjDir, 'wks-a'),
-          },
-        ])
-      ]);
+
+      expect(res.stdout.join('\n')).toEqual(expect.jsonMatching([
+        {
+          name: 'main',
+          version: '1.0.0',
+          slug: 'main',
+          root: prjDir,
+        },
+        {
+          name: 'wks-a',
+          version: '1.0.0',
+          slug: 'wks-a',
+          root: path.join(prjDir, 'wks-a'),
+        },
+        {
+          name: 'wks-b',
+          version: '1.0.0',
+          slug: 'wks-b',
+          root: path.join(prjDir, 'wks-b'),
+        },
+        {
+          name: 'wks-c',
+          version: '1.0.0',
+          slug: 'wks-c',
+          root: path.join(prjDir, 'wks-c'),
+        },
+      ]));
     });
 
     describe('affected filter (--affected)', () => {
@@ -123,8 +136,8 @@ describe('jill list', () => {
         expect(res.code).toBe(0);
         expect(res.screen.screen).toEqualLines([
           'main',
-          'wks-b',
-          'wks-a'
+          'wks-a',
+          'wks-b'
         ]);
       });
     });

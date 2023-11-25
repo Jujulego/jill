@@ -23,19 +23,9 @@ afterEach(() => {
 // Tests
 describe('INK_APP', () => {
   it('should call render on stdout', () => {
-    Object.assign(process.stdout, { isTTY: true });
-
     container.get(INK_APP);
 
-    expect(render).toHaveBeenCalledWith(expect.anything(), { stdout: process.stdout });
-  });
-
-  it('should call render on stderr if stdout is not a tty', () => {
-    Object.assign(process.stdout, { isTTY: false });
-
-    container.get(INK_APP);
-
-    expect(render).toHaveBeenCalledWith(expect.anything(), { stdout: process.stderr });
+    expect(render).toHaveBeenCalledWith(expect.anything());
   });
 
   it('should fail outside of main thread', () => {

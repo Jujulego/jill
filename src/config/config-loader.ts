@@ -1,9 +1,10 @@
+import { Logger, LogLevel, withLabel } from '@jujulego/logger';
 import { type interfaces as int } from 'inversify';
 import os from 'node:os';
 import path from 'node:path';
 
 import { AJV } from '@/src/ajv.config.ts';
-import { Logger } from '@/src/commons/logger.service.ts';
+import { LogGateway } from '@/src/commons/logger/log.gateway.ts';
 import { container } from '@/src/inversify.config.ts';
 import { ExitException } from '@/src/utils/exit.ts';
 import { workerCache } from '@/src/utils/worker-cache.ts';
@@ -17,7 +18,7 @@ export const CONFIG: int.ServiceIdentifier<IConfig> = Symbol('jujulego:jill:conf
 
 // Loader
 export async function configLoader() {
-  const logger = container.get(Logger).child({ label: 'config' });
+  const logger = container.get(Logger).child(withLabel('config'));
 
   const options = container.get(CONFIG_OPTIONS);
   const explorer = container.get(CONFIG_EXPLORER);
@@ -30,22 +31,24 @@ export async function configLoader() {
   // Apply options from cli
   if (options.jobs) config.jobs = options.jobs;
   if (options.verbose) config.verbose = options.verbose;
+  if (options.hooks !== undefined) config.hooks = options.hooks;
 
-  // Apply default
+  // Apply defaults
   config.jobs ??= (os.cpus().length - 1);
+  config.hooks ??= true;
 
   // Validate
   if (!validator(config)) {
     const ajv = container.get(AJV);
     const errors = ajv.errorsText(validator.errors, { separator: '\n- ', dataVar: 'config' });
 
-    logger.error`Errors in config file:\n- ${errors}`;
+    logger.error(`Errors in config file:\n- ${errors}`);
     throw new ExitException(1);
   }
 
   // Apply on logger
   if (config.verbose) {
-    container.get(Logger).level = config.verbose;
+    container.get(LogGateway).level = LogLevel[config.verbose];
   }
 
   if (loaded) {
@@ -53,10 +56,10 @@ export async function configLoader() {
     const base = path.dirname(loaded.filepath);
     config.plugins = config.plugins?.map((plugin) => path.resolve(base, plugin));
 
-    logger.verbose`Loaded ${loaded.filepath} config file`;
+    logger.verbose(`Loaded ${loaded.filepath} config file`);
   }
 
-  logger.debug`Loaded config:\n${JSON.stringify(config, null, 2)}`;
+  logger.debug`Loaded config:\n#!json:${config}`;
 
   return config;
 }

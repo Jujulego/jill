@@ -1,7 +1,7 @@
+import { Logger, withLabel } from '@jujulego/logger';
 import { inject } from 'inversify';
 import { AsyncLocalStorage } from 'node:async_hooks';
 
-import { Logger } from '@/src/commons/logger.service.ts';
 import { Service } from '@/src/modules/service.ts';
 import { type Project } from '@/src/project/project.ts';
 import { type Workspace } from '@/src/project/workspace.ts';
@@ -23,7 +23,7 @@ export class ContextService implements Context {
 
   // Constructor
   constructor(@inject(Logger) logger: Logger) {
-    this._logger = logger.child({ label: 'context' });
+    this._logger = logger.child(withLabel('context'));
     this.reset();
   }
 
@@ -36,7 +36,7 @@ export class ContextService implements Context {
     const ctx = this._storage.getStore();
 
     if (!ctx) {
-      this._logger.warn('Trying to access uninitialized context');
+      this._logger.warning('Trying to access uninitialized context');
       return {};
     }
 

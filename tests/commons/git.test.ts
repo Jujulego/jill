@@ -1,9 +1,9 @@
+import { Logger } from '@jujulego/logger';
 import { type TaskManager } from '@jujulego/tasks';
 import { describe, vi } from 'vitest';
 
 import { GitService, type GitContext } from '@/src/commons/git.service.js';
 import { container } from '@/src/inversify.config.js';
-import { Logger } from '@/src/commons/logger.service.js';
 import { TASK_MANAGER } from '@/src/tasks/task-manager.config.js';
 
 import { type TestSpawnTask } from '@/tools/test-tasks.js';

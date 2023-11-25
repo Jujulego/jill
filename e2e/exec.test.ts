@@ -6,32 +6,46 @@ import { fileExists } from '@/tools/utils.js';
 
 import { jill } from './utils.js';
 
+// Setup
+const bed = new TestBed();
+
+beforeAll(() => {
+  const wksC = bed.addWorkspace('wks-c', {
+    scripts: {
+      // language=bash
+      build: 'node -e "require(\'node:fs\').writeFileSync(\'script.txt\', \'build\')"',
+    }
+  });
+
+  const wksB = bed.addWorkspace('wks-b')
+    .addDependency(wksC, true);
+
+  bed.addWorkspace('wks-a')
+    .addDependency(wksB)
+    .addDependency(wksC, true);
+});
+
 // Tests
 describe('jill exec', () => {
   describe.each(['npm', 'yarn'] as const)('using %s', (packageManager) => {
     // Setup
+    let baseDir: string;
+    let tmpDir: string;
     let prjDir: string;
 
-    beforeEach(async () => {
-      const bed = new TestBed();
-
-      const wksC = bed.addWorkspace('wks-c', {
-        scripts: {
-          // language=bash
-          build: 'node -e "require(\'node:fs\').writeFileSync(\'script.txt\', \'build\')"',
-        }
-      });
-      const wksB = bed.addWorkspace('wks-b')
-        .addDependency(wksC, true);
-      bed.addWorkspace('wks-a')
-        .addDependency(wksB)
-        .addDependency(wksC, true);
-
-      prjDir = await bed.createProjectPackage(packageManager);
+    beforeAll(async () => {
+      baseDir = await bed.createProjectPackage(packageManager);
+      tmpDir = path.dirname(baseDir);
     }, 15000);
 
-    afterEach(async () => {
-      await fs.rm(prjDir, { recursive: true });
+    beforeEach(async (ctx) => {
+      prjDir = path.join(tmpDir, ctx.task.id);
+
+      await fs.cp(baseDir, prjDir, { force: true, recursive: true });
+    });
+
+    afterAll(async () => {
+      await fs.rm(tmpDir, { recursive: true });
     });
 
     // Tests
@@ -43,6 +57,7 @@ describe('jill exec', () => {
 
       expect(res.screen.screen).toMatchLines([
         expect.ignoreColor(/^.( yarn exec)? node -e "require\('node:fs'\).+ \(took [0-9.]+m?s\)/),
+        expect.ignoreColor(/^. 1 done$/),
       ]);
 
       // Check script result
@@ -50,15 +65,19 @@ describe('jill exec', () => {
         .resolves.toBe('node');
     });
 
-    it('should run ls in wks-c', async () => {
-      const res = await jill('exec -w wks-c ls', { cwd: prjDir, keepQuotes: true });
+    it('should run echo in wks-c', async () => {
+      const res = await jill('exec -w wks-c echo toto', { cwd: prjDir, keepQuotes: true });
 
       // Check jill output
       expect(res.code).toBe(0);
 
       expect(res.screen.screen).toMatchLines([
-        expect.ignoreColor(/^\[wks-c\$ls] package\.json/),
-        expect.ignoreColor(/^.( yarn exec)? ls \(took [0-9.]+m?s\)/),
+        expect.ignoreColor(/^.( yarn exec)? echo toto \(took [0-9.]+m?s\)/),
+        expect.ignoreColor(/^. 1 done$/),
+      ]);
+
+      expect(res.stderr).toMatchLines([
+        expect.ignoreColor(/^\[wks-c\$echo] toto/),
       ]);
     });
 
@@ -81,6 +100,7 @@ describe('jill exec', () => {
 
       expect(res.screen.screen).toMatchLines([
         expect.ignoreColor(/^.( yarn exec)? node -e "process.exit\(1\)" \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^. 1 failed$/),
       ]);
     });
 
@@ -93,6 +113,7 @@ describe('jill exec', () => {
       expect(res.screen.screen).toMatchLines([
         expect.ignoreColor(/^. Run build in wks-c \(took [0-9.]+m?s\)$/),
         expect.ignoreColor(/^.( yarn exec)? node -e "require\('node:fs'\).+ \(took [0-9.]+m?s\)/),
+        expect.ignoreColor(/^. 2 done$/),
       ]);
 
       // Check scripts result
@@ -108,9 +129,8 @@ describe('jill exec', () => {
 
       // Check jill plan
       expect(res.code).toBe(0);
-      expect(res.stdout).toHaveLength(1);
 
-      const plan = JSON.parse(res.stdout[0]);
+      const plan = JSON.parse(res.stdout.join('\n'));
       expect(plan).toHaveLength(3);
 
       expect(plan[0]).toMatchObject({

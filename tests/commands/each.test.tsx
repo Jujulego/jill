@@ -1,18 +1,17 @@
-import { type TaskManager } from '@jujulego/tasks';
+import { Logger } from '@jujulego/logger';
 import { cleanup, render } from 'ink-testing-library';
 import symbols from 'log-symbols';
 import { vi } from 'vitest';
 import yargs, { type CommandModule } from 'yargs';
 
 import { EachCommand } from '@/src/commands/each.js';
-import { SpinnerService } from '@/src/commons/spinner.service.js';
 import { INK_APP } from '@/src/ink.config.js';
 import { container } from '@/src/inversify.config.js';
 import { TASK_MANAGER } from '@/src/tasks/task-manager.config.js';
 import Layout from '@/src/ui/layout.js';
 
 import { TestBed } from '@/tools/test-bed.js';
-import { TestScriptTask } from '@/tools/test-tasks.js';
+import { TestScriptTask, TestTaskManager } from '@/tools/test-tasks.js';
 import { flushPromises, spyLogger, wrapInkTestApp } from '@/tools/utils.js';
 import { ExitException } from '@/src/utils/exit.js';
 import { ContextService } from '@/src/commons/context.service.js';
@@ -20,9 +19,9 @@ import { ContextService } from '@/src/commons/context.service.js';
 // Setup
 let app: ReturnType<typeof render>;
 let command: CommandModule;
-let manager: TaskManager;
+let manager: TestTaskManager;
 let context: ContextService;
-let spinner: SpinnerService;
+let logger: Logger;
 
 let bed: TestBed;
 
@@ -39,13 +38,17 @@ beforeEach(async () => {
   // Project
   bed = new TestBed();
 
+  logger = container.get(Logger);
+  context = container.get(ContextService);
+
+  manager = new TestTaskManager({ logger });
+  container.rebind(TASK_MANAGER).toConstantValue(manager);
+
   app = render(<Layout />);
+  Object.assign(app.stdin, { ref: () => this, unref: () => this });
   container.rebind(INK_APP).toConstantValue(wrapInkTestApp(app));
 
   command = await bed.prepareCommand(EachCommand);
-  manager = container.get(TASK_MANAGER);
-  context = container.get(ContextService);
-  spinner = container.get(SpinnerService);
 
   // Mocks
   vi.restoreAllMocks();
@@ -71,8 +74,8 @@ describe('jill each', () => {
 
     // Setup tasks
     const tasks = [
-      new TestScriptTask(workspaces[0], 'cmd', [], { logger: spyLogger }),
-      new TestScriptTask(workspaces[1], 'cmd', [], { logger: spyLogger }),
+      new TestScriptTask(workspaces[0], 'cmd', [], { logger: spyLogger, weight: 1 }),
+      new TestScriptTask(workspaces[1], 'cmd', [], { logger: spyLogger, weight: 1 }),
     ];
 
     vi.spyOn(manager, 'tasks', 'get').mockReturnValue(tasks);
@@ -97,12 +100,14 @@ describe('jill each', () => {
     // should print task spinners
     expect(app.lastFrame()).toMatchLines([
       expect.ignoreColor(/^. Run cmd in wks-1$/),
-      expect.ignoreColor(/^. Run cmd in wks-2$/),
+      expect.ignoreColor(/^. Run cmd in wks-2$/)
     ]);
 
     // complete tasks
     for (const task of tasks) {
       vi.spyOn(task, 'status', 'get').mockReturnValue('done');
+      vi.spyOn(task, 'duration', 'get').mockReturnValue(100);
+
       task.emit('status.done', { status: 'done', previous: 'running' });
       task.emit('completed', { status: 'done', duration: 100 });
     }
@@ -113,6 +118,7 @@ describe('jill each', () => {
     expect(app.lastFrame()).toEqualLines([
       expect.ignoreColor(`${symbols.success} Run cmd in wks-1 (took 100ms)`),
       expect.ignoreColor(`${symbols.success} Run cmd in wks-2 (took 100ms)`),
+      expect.ignoreColor(`${symbols.success} 2 done`),
     ]);
   });
 
@@ -155,7 +161,7 @@ describe('jill each', () => {
 
   it('should exit 1 if no matching workspace is found', async () => {
     context.reset({});
-    vi.spyOn(spinner, 'failed');
+    vi.spyOn(logger, 'error');
 
     // Setup tasks
     vi.spyOn(manager, 'tasks', 'get').mockReturnValue([]);
@@ -167,12 +173,12 @@ describe('jill each', () => {
         .parse('each cmd')
     ).rejects.toEqual(new ExitException(1));
 
-    expect(spinner.failed).toHaveBeenCalledWith('No matching workspace found !');
+    expect(logger.error).toHaveBeenCalledWith(`${symbols.error} No matching workspace found !`);
   });
 
   it('should exit 0 if no matching workspace is found when appropriate flag is enabled', async () => {
     context.reset({});
-    vi.spyOn(spinner, 'failed');
+    vi.spyOn(logger, 'error');
 
     // Setup tasks
     vi.spyOn(manager, 'tasks', 'get').mockReturnValue([]);
@@ -182,7 +188,7 @@ describe('jill each', () => {
       .fail(false)
       .parse('each cmd --allow-no-workspaces');
 
-    expect(spinner.failed).toHaveBeenCalledWith('No matching workspace found !');
+    expect(logger.error).toHaveBeenCalledWith(`${symbols.error} No matching workspace found !`);
   });
 
   it('should pass down unknown arguments', async () => {

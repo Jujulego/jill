@@ -6,45 +6,74 @@ import { fileExists } from '@/tools/utils.js';
 
 import { jill } from './utils.js';
 
+// Setup
+const bed = new TestBed();
+
+beforeAll(() => {
+  const wksC = bed.addWorkspace('wks-c', {
+    scripts: {
+      // language=bash
+      build: 'node -e "require(\'node:fs\').writeFileSync(\'build.txt\', \'built\')"',
+      // language=bash
+      prehooked: 'node -e "require(\'node:fs\').writeFileSync(\'pre-hook.txt\', \'hooked\')"',
+      // language=bash
+      hooked: 'node -e "require(\'node:fs\').writeFileSync(\'hook.txt\', \'hooked\')"',
+      // language=bash
+      posthooked: 'node -e "require(\'node:fs\').writeFileSync(\'post-hook.txt\', \'hooked\')"',
+    }
+  });
+
+  const wksB = bed.addWorkspace('wks-b', {
+    scripts: {
+      // language=bash
+      build: 'node -e "require(\'node:fs\').writeFileSync(\'build.txt\', \'built\')"',
+      // language=bash
+      start: 'node -e "require(\'node:fs\').writeFileSync(\'start.txt\', \'started\')"',
+      // language=bash
+      prehooked: 'node -e "require(\'node:fs\').writeFileSync(\'pre-hook.txt\', \'hooked\')"',
+      // language=bash
+      hooked: 'node -e "require(\'node:fs\').writeFileSync(\'hook.txt\', \'hooked\')"',
+      // language=bash
+      posthooked: 'node -e "require(\'node:fs\').writeFileSync(\'post-hook.txt\', \'hooked\')"',
+      // language=bash
+      fails: 'node -e "process.exit(1)"',
+    }
+  })
+    .addDependency(wksC, true);
+
+  bed.addWorkspace('wks-a', {
+    scripts: {
+      // language=bash
+      build: 'node -e "require(\'node:fs\').writeFileSync(\'build.txt\', \'built\')"',
+      // language=bash
+      start: 'node -e "require(\'node:fs\').writeFileSync(\'start.txt\', \'started\')"'
+    }
+  })
+    .addDependency(wksB)
+    .addDependency(wksC, true);
+});
+
+// Tests
 describe('jill each', () => {
   describe.each(['npm', 'yarn'] as const)('using %s', (packageManager) => {
-    // Setup
+    // Create project folder
+    let baseDir: string;
+    let tmpDir: string;
     let prjDir: string;
 
-    beforeEach(async () => {
-      const bed = new TestBed();
-
-      const wksC = bed.addWorkspace('wks-c', {
-        scripts: {
-          // language=bash
-          build: 'node -e "require(\'node:fs\').writeFileSync(\'build.txt\', \'built\')"',
-        }
-      });
-      const wksB = bed.addWorkspace('wks-b', {
-        scripts: {
-          // language=bash
-          build: 'node -e "require(\'node:fs\').writeFileSync(\'build.txt\', \'built\')"',
-          // language=bash
-          start: 'node -e "require(\'node:fs\').writeFileSync(\'start.txt\', \'started\')"',
-          // language=bash
-          fails: 'node -e "process.exit(1)"',
-        }
-      })
-        .addDependency(wksC, true);
-      bed.addWorkspace('wks-a', {
-        scripts: {
-          // language=bash
-          start: 'node -e "require(\'node:fs\').writeFileSync(\'start.txt\', \'started\')"'
-        }
-      })
-        .addDependency(wksB)
-        .addDependency(wksC, true);
-
-      prjDir = await bed.createProjectPackage(packageManager);
+    beforeAll(async () => {
+      baseDir = await bed.createProjectPackage(packageManager);
+      tmpDir = path.dirname(baseDir);
     }, 15000);
 
-    afterEach(async () => {
-      await fs.rm(prjDir, { recursive: true });
+    beforeEach(async (ctx) => {
+      prjDir = path.join(tmpDir, ctx.task.id);
+
+      await fs.cp(baseDir, prjDir, { force: true, recursive: true });
+    });
+
+    afterAll(async () => {
+      await fs.rm(tmpDir, { recursive: true });
     });
 
     // Tests
@@ -55,10 +84,11 @@ describe('jill each', () => {
       expect(res.code).toBe(0);
 
       expect(res.screen.screen).toMatchLines([
-        expect.ignoreColor(/^. Run build in wks-c \(took [0-9.]+m?s\)$/),
-        expect.ignoreColor(/^. Run start in wks-b \(took [0-9.]+m?s\)$/),
-        expect.ignoreColor(/^. Run build in wks-b \(took [0-9.]+m?s\)$/),
         expect.ignoreColor(/^. Run start in wks-a \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^. Run build in wks-b \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^. Run start in wks-b \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^. Run build in wks-c \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^. 4 done$/),
       ]);
 
       // Check script result
@@ -75,6 +105,76 @@ describe('jill each', () => {
         .resolves.toBe('started');
     });
 
+    it('should run build and start script on each workspace (and build dependencies)', async () => {
+      const res = await jill('each "build && start"', { cwd: prjDir });
+
+      // Check jill output
+      expect(res.code).toBe(0);
+
+      expect(res.screen.screen).toMatchLines([
+        expect.ignoreColor(/^. In sequence \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^ {2}. Run build in wks-a \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^ {2}. Run start in wks-a \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^. In sequence \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^ {2}. Run build in wks-b \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^ {2}. Run start in wks-b \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^. Run build in wks-c \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^. 5 done$/),
+      ]);
+
+      // Check script result
+      await expect(fs.readFile(path.join(prjDir, 'wks-c', 'build.txt'), 'utf8'))
+        .resolves.toBe('built');
+
+      await expect(fs.readFile(path.join(prjDir, 'wks-b', 'build.txt'), 'utf8'))
+        .resolves.toBe('built');
+
+      await expect(fs.readFile(path.join(prjDir, 'wks-b', 'start.txt'), 'utf8'))
+        .resolves.toBe('started');
+
+      await expect(fs.readFile(path.join(prjDir, 'wks-a', 'build.txt'), 'utf8'))
+        .resolves.toBe('built');
+
+      await expect(fs.readFile(path.join(prjDir, 'wks-a', 'start.txt'), 'utf8'))
+        .resolves.toBe('started');
+    });
+
+    it('should run hooked script with its hooks on each workspace (and build dependencies)', async () => {
+      const res = await jill('each hooked', { cwd: prjDir });
+
+      // Check jill output
+      expect(res.code).toBe(0);
+
+      expect(res.screen.screen).toMatchLines([
+        expect.ignoreColor(/^. Run hooked in wks-b \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^. Run build in wks-c \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^. Run hooked in wks-c \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^. 7 done$/),
+      ]);
+
+      // Check script result
+      await expect(fs.readFile(path.join(prjDir, 'wks-c', 'pre-hook.txt'), 'utf8'))
+        .resolves.toBe('hooked');
+
+      await expect(fs.readFile(path.join(prjDir, 'wks-c', 'hook.txt'), 'utf8'))
+        .resolves.toBe('hooked');
+
+      await expect(fs.readFile(path.join(prjDir, 'wks-c', 'post-hook.txt'), 'utf8'))
+        .resolves.toBe('hooked');
+
+      await expect(fs.readFile(path.join(prjDir, 'wks-c', 'build.txt'), 'utf8'))
+        .resolves.toBe('built');
+
+      await expect(fs.readFile(path.join(prjDir, 'wks-b', 'pre-hook.txt'), 'utf8'))
+        .resolves.toBe('hooked');
+
+      await expect(fs.readFile(path.join(prjDir, 'wks-b', 'hook.txt'), 'utf8'))
+        .resolves.toBe('hooked');
+
+      await expect(fs.readFile(path.join(prjDir, 'wks-b', 'post-hook.txt'), 'utf8'))
+        .resolves.toBe('hooked');
+    });
+
     it('should run fails script on each workspace (and build dependencies)', async () => {
       const res = await jill('each fails', { cwd: prjDir });
 
@@ -82,9 +182,10 @@ describe('jill each', () => {
       expect(res.code).toBe(1);
 
       expect(res.screen.screen).toMatchLines([
-        expect.ignoreColor(/^. Run build in wks-c \(took [0-9.]+m?s\)$/),
         expect.ignoreColor(/^. Run fails in wks-b \(took [0-9.]+m?s\)$/),
         expect.ignoreColor(/^ {2}.( yarn exec)? node -e "process.exit\(1\)" \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^. Run build in wks-c \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^. 1 done, . 1 failed$/),
       ]);
 
       // Check script result
@@ -106,7 +207,7 @@ describe('jill each', () => {
 
       // Check jill output
       expect(res.code).toBe(1);
-      expect(res.screen.screen).toMatchLines([
+      expect(res.stderr).toMatchLines([
         expect.ignoreColor(/^. No matching workspace found !$/),
       ]);
 
@@ -129,9 +230,8 @@ describe('jill each', () => {
 
       // Check jill output
       expect(res.code).toBe(0);
-      expect(res.stdout).toHaveLength(1);
 
-      const plan = JSON.parse(res.stdout[0]);
+      const plan = JSON.parse(res.stdout.join('\n'));
       expect(plan).toHaveLength(8);
 
       expect(plan[0]).toMatchObject({
@@ -240,8 +340,8 @@ describe('jill each', () => {
         }
       });
 
-      await expect(fileExists(path.join(prjDir, 'wks-c', 'script.txt'))).resolves.toBe(false);
-      await expect(fileExists(path.join(prjDir, 'wks-b', 'script.txt'))).resolves.toBe(false);
+      await expect(fileExists(path.join(prjDir, 'wks-c', 'hook.txt'))).resolves.toBe(false);
+      await expect(fileExists(path.join(prjDir, 'wks-b', 'hook.txt'))).resolves.toBe(false);
       await expect(fileExists(path.join(prjDir, 'wks-b', 'start.txt'))).resolves.toBe(false);
       await expect(fileExists(path.join(prjDir, 'wks-a', 'start.txt'))).resolves.toBe(false);
     });

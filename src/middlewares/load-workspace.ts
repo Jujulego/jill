@@ -1,8 +1,9 @@
+import { Logger } from '@jujulego/logger';
 import { inject } from 'inversify';
+import symbols from 'log-symbols';
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
 
 import { ContextService } from '@/src/commons/context.service.ts';
-import { SpinnerService } from '@/src/commons/spinner.service.ts';
 import { CURRENT } from '@/src/constants.ts';
 import { container, lazyInjectNamed } from '@/src/inversify.config.ts';
 import { type IMiddleware, Middleware } from '@/src/modules/middleware.ts';
@@ -26,10 +27,10 @@ export class LoadWorkspace implements IMiddleware<ILoadWorkspaceArgs> {
 
   // Constructor
   constructor(
-    @inject(SpinnerService)
-    private readonly spinner: SpinnerService,
     @inject(ContextService)
     private readonly context: ContextService,
+    @inject(Logger)
+    private readonly logger: Logger,
   ) {}
 
   // Methods
@@ -43,29 +44,23 @@ export class LoadWorkspace implements IMiddleware<ILoadWorkspaceArgs> {
   }
 
   async handler(args: ArgumentsCamelCase<ILoadWorkspaceArgs>): Promise<void> {
-    try {
-      this.spinner.spin(`Loading "${args.workspace || '.'}" workspace ...`);
+    let workspace = this.context.workspace ?? null;
 
-      let workspace = this.context.workspace ?? null;
-
-      if (!workspace || args.workspace) {
-        if (args.workspace) {
-          workspace = await this.project.workspace(args.workspace);
-        } else if (process.cwd().startsWith(this.project.root)) {
-          workspace = await this.project.currentWorkspace();
-        } else {
-          workspace = await this.project.mainWorkspace();
-        }
-      }
-
-      if (!workspace) {
-        this.spinner.failed(`Workspace "${args.workspace || '.'}" not found`);
-        throw new ExitException(1, 'Workspace not found');
+    if (!workspace || args.workspace) {
+      if (args.workspace) {
+        workspace = await this.project.workspace(args.workspace);
+      } else if (process.cwd().startsWith(this.project.root)) {
+        workspace = await this.project.currentWorkspace();
       } else {
-        this.context.workspace = workspace;
+        workspace = await this.project.mainWorkspace();
       }
-    } finally {
-      this.spinner.stop();
+    }
+
+    if (!workspace) {
+      this.logger.error(`${symbols.error} Workspace "${args.workspace || '.'}" not found`);
+      throw new ExitException(1, 'Workspace not found');
+    } else {
+      this.context.workspace = workspace;
     }
   }
 }

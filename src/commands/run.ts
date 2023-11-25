@@ -1,25 +1,27 @@
+import { Logger } from '@jujulego/logger';
 import { inject } from 'inversify';
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
 
-import { Logger } from '@/src/commons/logger.service.ts';
 import { Command } from '@/src/modules/command.ts';
 import { TaskCommand } from '@/src/modules/task-command.tsx';
 import { LoadProject } from '@/src/middlewares/load-project.ts';
 import { LazyCurrentWorkspace, LoadWorkspace } from '@/src/middlewares/load-workspace.ts';
 import { type Workspace, type WorkspaceDepsMode } from '@/src/project/workspace.ts';
+import { TaskExpressionService } from '@/src/tasks/task-expression.service.ts';
+import { TaskExpressionError, TaskSyntaxError } from '@/src/tasks/errors.ts';
 import { ExitException } from '@/src/utils/exit.ts';
 
 // Types
 export interface IRunCommandArgs {
-  script: string;
+  expr: string;
   'build-script': string;
   'deps-mode': WorkspaceDepsMode;
 }
 
 // Command
 @Command({
-  command: 'run <script>',
-  describe: 'Run script inside workspace',
+  command: 'run <expr>',
+  describe: 'Run a task expression in a workspace, after having built all its dependencies.',
   middlewares: [
     LoadProject,
     LoadWorkspace
@@ -34,6 +36,8 @@ export class RunCommand extends TaskCommand<IRunCommandArgs> {
   constructor(
     @inject(Logger)
     private readonly logger: Logger,
+    @inject(TaskExpressionService)
+    private readonly taskExpression: TaskExpressionService,
   ) {
     super();
   }
@@ -41,7 +45,11 @@ export class RunCommand extends TaskCommand<IRunCommandArgs> {
   // Methods
   builder(parser: Argv) {
     return this.addTaskOptions(parser)
-      .positional('script', { type: 'string', demandOption: true })
+      .positional('expr', {
+        type: 'string',
+        demandOption: true,
+        desc: 'Script or task expression',
+      })
       .option('build-script', {
         default: 'build',
         desc: 'Script to use to build dependencies'
@@ -64,24 +72,35 @@ export class RunCommand extends TaskCommand<IRunCommandArgs> {
   }
 
   async *prepare(args: ArgumentsCamelCase<IRunCommandArgs>) {
-    // Extract arguments
-    const rest = args._.map(arg => arg.toString());
+    // Extract expression
+    const expr = args._.map(arg => arg.toString());
 
-    if (rest[0] === 'run') {
-      rest.splice(0, 1);
+    if (expr[0] === 'run') {
+      expr.splice(0, 1);
     }
 
-    // Run script in workspace
-    const task = await this.workspace.run(args.script, rest, {
-      buildScript: args.buildScript,
-      buildDeps: args.depsMode,
-    });
+    expr.unshift(args.expr);
 
-    if (task) {
-      yield task;
-    } else {
-      this.logger.error`Workspace ${this.workspace.name} have no ${args.script} script`;
-      throw new ExitException(1);
+    // Parse task expression
+    try {
+      const tree = this.taskExpression.parse(expr.join(' '));
+
+      yield await this.taskExpression.buildTask(tree.roots[0], this.workspace, {
+        buildScript: args.buildScript,
+        buildDeps: args.depsMode,
+      });
+    } catch (err) {
+      if (err instanceof TaskExpressionError) {
+        this.logger.error(err.message);
+        throw new ExitException(1);
+      }
+
+      if (err instanceof TaskSyntaxError) {
+        this.logger.error(`Syntax error in task expression: ${err.message}`);
+        throw new ExitException(1);
+      }
+
+      throw err;
     }
   }
 }

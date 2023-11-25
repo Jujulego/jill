@@ -1,9 +1,9 @@
+import { Logger } from '@jujulego/logger';
 import { fs, vol } from 'memfs';
 import path from 'node:path';
 import { vi } from 'vitest';
 
 import { GitService } from '@/src/commons/git.service.js';
-import { Logger } from '@/src/commons/logger.service.js';
 import { container } from '@/src/inversify.config.js';
 import { Project } from '@/src/project/project.js';
 import { Workspace } from '@/src/project/workspace.js';

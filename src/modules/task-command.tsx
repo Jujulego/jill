@@ -1,16 +1,17 @@
 import { waitFor$ } from '@jujulego/event-tree';
+import { Logger } from '@jujulego/logger';
 import { plan as extractPlan, type Task, type TaskManager, TaskSet, type TaskSummary } from '@jujulego/tasks';
 import { injectable } from 'inversify';
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
 
-import { Logger } from '@/src/commons/logger.service.ts';
 import { container, lazyInject } from '@/src/inversify.config.ts';
 import { isCommandCtx } from '@/src/tasks/command-task.ts';
 import { isScriptCtx } from '@/src/tasks/script-task.ts';
 import { TASK_MANAGER } from '@/src/tasks/task-manager.config.ts';
 import { type AwaitableGenerator } from '@/src/types.ts';
 import List from '@/src/ui/list.tsx';
-import TaskManagerSpinner from '@/src/ui/task-manager-spinner.tsx';
+import TaskTreeCompleted from '@/src/ui/task-tree-completed.tsx';
+import TaskTreeSpinner from '@/src/ui/task-tree-spinner.tsx';
 import { ExitException } from '@/src/utils/exit.ts';
 import { printJson } from '@/src/utils/json.ts';
 
@@ -73,19 +74,22 @@ export abstract class TaskCommand<A = unknown> extends InkCommand<A> {
       }
     } else if (tasks.tasks.length > 0) {
       // Render
-      yield <TaskManagerSpinner manager={this.manager} />;
+      yield <TaskTreeSpinner manager={this.manager} />;
 
       // Start tasks
       tasks.start(this.manager);
 
       const result = await waitFor$(tasks, 'finished');
 
+      this.app.clear();
+      yield <TaskTreeCompleted manager={this.manager} />;
+
       if (result.failed > 0) {
         throw new ExitException(1);
       }
     } else {
       const logger = container.get(Logger);
-      logger.warn`No task found`;
+      logger.warning('No task found');
     }
   }
 }

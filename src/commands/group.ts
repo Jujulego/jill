@@ -6,7 +6,7 @@ import { TaskCommand } from '@/src/modules/task-command.tsx';
 import { LoadProject } from '@/src/middlewares/load-project.ts';
 import { LazyCurrentWorkspace, LoadWorkspace } from '@/src/middlewares/load-workspace.ts';
 import { type Workspace, type WorkspaceDepsMode } from '@/src/project/workspace.ts';
-import { TaskExprService, type TaskTree } from '@/src/tasks/task-expr.service.ts';
+import { TaskExpressionService, type TaskTree } from '@/src/tasks/task-expression.service.ts';
 
 // Types
 export interface IGroupCommandArgs {
@@ -19,6 +19,7 @@ export interface IGroupCommandArgs {
 @Command({
   command: 'group <script..>',
   describe: 'Run many scripts inside a workspace (experimental)',
+  deprecated: true,
   middlewares: [
     LoadProject,
     LoadWorkspace
@@ -31,8 +32,8 @@ export class GroupCommand extends TaskCommand<IGroupCommandArgs> {
 
   // Constructor
   constructor(
-    @inject(TaskExprService)
-    private readonly taskExpr: TaskExprService,
+    @inject(TaskExpressionService)
+    private readonly taskExpr: TaskExpressionService,
   ) {
     super();
   }
@@ -42,9 +43,8 @@ export class GroupCommand extends TaskCommand<IGroupCommandArgs> {
     return this.addTaskOptions(parser)
       .positional('script', {
         demandOption: true,
-        coerce: (expr: string[]) => {
-          return this.taskExpr.parse(expr.join(' '));
-        }
+        desc: 'Task expression',
+        coerce: (expr: string[]) => this.taskExpr.parse(expr.join(' ')),
       })
       .option('build-script', {
         default: 'build',

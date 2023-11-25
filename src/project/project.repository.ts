@@ -1,8 +1,8 @@
+import { Logger, withLabel } from '@jujulego/logger';
 import { inject } from 'inversify';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
-import { Logger } from '@/src/commons/logger.service.ts';
 import { Service } from '@/src/modules/service.ts';
 
 import { Project, type ProjectOptions } from './project.ts';
@@ -27,7 +27,7 @@ export class ProjectRepository {
 
   // Constructor
   constructor(@inject(Logger) logger: Logger) {
-    this._logger = logger.child({ label: 'projects' });
+    this._logger = logger.child(withLabel('projects'));
   }
 
   // Methods
@@ -86,9 +86,9 @@ export class ProjectRepository {
 
     // Log it
     if (foundManifest) {
-      this._logger.debug`Project root found at #cwd:${projectRoot}`;
+      this._logger.debug`Project root found at #!cwd:${projectRoot}`;
     } else {
-      this._logger.debug`Project root not found, keeping #cwd:${projectRoot}`;
+      this._logger.debug`Project root not found, keeping #!cwd:${projectRoot}`;
     }
 
     return projectRoot;

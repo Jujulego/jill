@@ -1,3 +1,5 @@
+import '@/src/commons/logger.service.ts';
+
 export * from './commons/git.service.ts';
 export * from './types.ts';
 
@@ -29,30 +31,20 @@ export * from './project/types.ts';
 
 // Services
 export * from './inversify.config.ts';
-export * from './commons/spinner.service.ts';
 export * from './tasks/command-task.ts';
 export * from './tasks/script-task.ts';
-export * from './tasks/task-expr.service.ts';
+export * from './tasks/task-expression.service.ts';
 export * from './tasks/task-manager.config.ts';
 
 export { CONFIG } from './config/config-loader.ts';
 export { type IConfig } from './config/types.ts';
 
-export { Logger } from './commons/logger.service.ts';
-export { $log } from './commons/logger/log.tag.ts';
-
 // Ui
-export { default as GroupTaskSpinner } from './ui/group-task-spinner.tsx';
-export * from './ui/group-task-spinner.tsx';
-
 export { default as Layout } from './ui/layout.tsx';
 export * from './ui/layout.tsx';
 
 export { default as List } from './ui/list.tsx';
 export * from './ui/list.tsx';
-
-export { default as TaskManagerSpinner } from './ui/task-manager-spinner.tsx';
-export * from './ui/task-manager-spinner.tsx';
 
 export { default as TaskName } from './ui/task-name.tsx';
 export * from './ui/task-name.tsx';

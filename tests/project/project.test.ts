@@ -1,9 +1,9 @@
+import { Logger, withLabel } from '@jujulego/logger';
 import { fs, vol } from 'memfs';
 import path from 'node:path';
 import { vi } from 'vitest';
 
 import { container } from '@/src/inversify.config.js';
-import { Logger } from '@/src/commons/logger.service.js';
 import { Project } from '@/src/project/project.js';
 import { Workspace } from '@/src/project/workspace.js';
 
@@ -61,7 +61,7 @@ beforeEach(async () => {
   }, '/test');
 
   // Initiate project
-  logger = container.get(Logger).child({ label: 'projects' });
+  logger = container.get(Logger).child(withLabel('projects'));
   project = new Project('/test', logger);
 });
 
