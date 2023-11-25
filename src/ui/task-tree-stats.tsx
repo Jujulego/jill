@@ -58,11 +58,11 @@ export default function TaskTreeStats({ manager }: TaskTreeStatsProps) {
       ) }
       { (stats.running !== 0 && stats.done !== 0) && (<>, </>) }
       { (stats.done !== 0) && (
-        <><Text color="green">{ symbols.success } { stats.done } done</Text></>
+        <Text color="green">{ symbols.success } { stats.done } done</Text>
       ) }
       { (stats.running + stats.done !== 0 && stats.failed !== 0) && (<>, </>) }
       { (stats.failed !== 0) && (
-        <><Text color="red">{ symbols.error } { stats.failed } failed</Text></>
+        <Text color="red">{ symbols.error } { stats.failed } failed</Text>
       ) }
     </Text>
   );
