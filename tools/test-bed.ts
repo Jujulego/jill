@@ -1,9 +1,9 @@
-import { type Package } from 'normalize-package-data';
 import { ContainerModule } from 'inversify';
-import { type CommandModule } from 'yargs';
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
+import { type Package } from 'normalize-package-data';
+import { type CommandModule } from 'yargs';
 
 import { ContextService } from '@/src/commons/context.service.ts';
 import { CONFIG } from '@/src/config/config-loader.ts';

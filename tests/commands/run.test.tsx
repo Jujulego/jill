@@ -1,4 +1,4 @@
-import { type TaskManager } from '@jujulego/tasks';
+import { Logger } from '@jujulego/logger';
 import { cleanup, render } from 'ink-testing-library';
 import symbols from 'log-symbols';
 import yargs, { type CommandModule } from 'yargs';
@@ -14,14 +14,14 @@ import Layout from '@/src/ui/layout.js';
 import { ExitException } from '@/src/utils/exit.js';
 
 import { TestBed } from '@/tools/test-bed.js';
-import { TestScriptTask } from '@/tools/test-tasks.js';
+import { TestScriptTask, TestTaskManager } from '@/tools/test-tasks.js';
 import { flushPromises, spyLogger, wrapInkTestApp } from '@/tools/utils.js';
 
 // Setup
 let app: ReturnType<typeof render>;
 let command: CommandModule;
 let context: ContextService;
-let manager: TaskManager;
+let manager: TestTaskManager;
 
 let bed: TestBed;
 let wks: Workspace;
@@ -37,14 +37,19 @@ beforeEach(async () => {
 
   bed = new TestBed();
   wks = bed.addWorkspace('wks');
-  task = new TestScriptTask(wks, 'cmd', [], { logger: spyLogger });
+  task = new TestScriptTask(wks, 'cmd', [], { logger: spyLogger, weight: 1 });
+
+  const logger = container.get(Logger);
+  context = container.get(ContextService);
+
+  manager = new TestTaskManager({ logger });
+  container.rebind(TASK_MANAGER).toConstantValue(manager);
 
   app = render(<Layout />);
+  Object.assign(app.stdin, { ref: () => this, unref: () => this });
   container.rebind(INK_APP).toConstantValue(wrapInkTestApp(app));
 
   command = await bed.prepareCommand(RunCommand, wks);
-  context = container.get(ContextService);
-  manager = container.get(TASK_MANAGER);
 
   // Mocks
   vi.restoreAllMocks();
@@ -80,13 +85,19 @@ describe('jill run', () => {
 
     // complete task
     vi.spyOn(task, 'status', 'get').mockReturnValue('done');
+    vi.spyOn(task, 'duration', 'get').mockReturnValue(100);
+
     task.emit('status.done', { status: 'done', previous: 'running' });
     task.emit('completed', { status: 'done', duration: 100 });
 
     await prom;
 
     // should print task completed
-    expect(app.lastFrame()).toEqual(expect.ignoreColor(`${symbols.success} Run cmd in wks (took 100ms)`));
+    expect(app.lastFrame()).toEqualLines([
+      expect.ignoreColor(`${symbols.success} Run cmd in wks (took 100ms)`),
+      expect.ignoreColor(`${symbols.success} 1 done²
+      `),
+    ]);
   });
 
   it('should use given dependency selection mode', async () => {

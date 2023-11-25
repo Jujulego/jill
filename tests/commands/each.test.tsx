@@ -1,5 +1,4 @@
 import { Logger } from '@jujulego/logger';
-import { type TaskManager } from '@jujulego/tasks';
 import { cleanup, render } from 'ink-testing-library';
 import symbols from 'log-symbols';
 import { vi } from 'vitest';
@@ -12,7 +11,7 @@ import { TASK_MANAGER } from '@/src/tasks/task-manager.config.js';
 import Layout from '@/src/ui/layout.js';
 
 import { TestBed } from '@/tools/test-bed.js';
-import { TestScriptTask } from '@/tools/test-tasks.js';
+import { TestScriptTask, TestTaskManager } from '@/tools/test-tasks.js';
 import { flushPromises, spyLogger, wrapInkTestApp } from '@/tools/utils.js';
 import { ExitException } from '@/src/utils/exit.js';
 import { ContextService } from '@/src/commons/context.service.js';
@@ -20,7 +19,7 @@ import { ContextService } from '@/src/commons/context.service.js';
 // Setup
 let app: ReturnType<typeof render>;
 let command: CommandModule;
-let manager: TaskManager;
+let manager: TestTaskManager;
 let context: ContextService;
 let logger: Logger;
 
@@ -39,13 +38,17 @@ beforeEach(async () => {
   // Project
   bed = new TestBed();
 
+  logger = container.get(Logger);
+  context = container.get(ContextService);
+
+  manager = new TestTaskManager({ logger });
+  container.rebind(TASK_MANAGER).toConstantValue(manager);
+
   app = render(<Layout />);
+  Object.assign(app.stdin, { ref: () => this, unref: () => this });
   container.rebind(INK_APP).toConstantValue(wrapInkTestApp(app));
 
   command = await bed.prepareCommand(EachCommand);
-  manager = container.get(TASK_MANAGER);
-  context = container.get(ContextService);
-  logger = container.get(Logger);
 
   // Mocks
   vi.restoreAllMocks();
@@ -59,7 +62,7 @@ afterEach(() => {
 
 // Tests
 describe('jill each', () => {
-  it.only('should run script in all workspaces having that script', async () => {
+  it('should run script in all workspaces having that script', async () => {
     context.reset({});
 
     // Setup workspaces
@@ -71,8 +74,8 @@ describe('jill each', () => {
 
     // Setup tasks
     const tasks = [
-      new TestScriptTask(workspaces[0], 'cmd', [], { logger: spyLogger }),
-      new TestScriptTask(workspaces[1], 'cmd', [], { logger: spyLogger }),
+      new TestScriptTask(workspaces[0], 'cmd', [], { logger: spyLogger, weight: 1 }),
+      new TestScriptTask(workspaces[1], 'cmd', [], { logger: spyLogger, weight: 1 }),
     ];
 
     vi.spyOn(manager, 'tasks', 'get').mockReturnValue(tasks);
@@ -94,17 +97,17 @@ describe('jill each', () => {
     expect(manager.add).toHaveBeenCalledWith(tasks[0]);
     expect(manager.add).toHaveBeenCalledWith(tasks[1]);
 
-    await flushPromises();
-
     // should print task spinners
     expect(app.lastFrame()).toMatchLines([
       expect.ignoreColor(/^. Run cmd in wks-1$/),
-      expect.ignoreColor(/^. Run cmd in wks-2$/),
+      expect.ignoreColor(/^. Run cmd in wks-2$/)
     ]);
 
     // complete tasks
     for (const task of tasks) {
       vi.spyOn(task, 'status', 'get').mockReturnValue('done');
+      vi.spyOn(task, 'duration', 'get').mockReturnValue(100);
+
       task.emit('status.done', { status: 'done', previous: 'running' });
       task.emit('completed', { status: 'done', duration: 100 });
     }
@@ -115,6 +118,7 @@ describe('jill each', () => {
     expect(app.lastFrame()).toEqualLines([
       expect.ignoreColor(`${symbols.success} Run cmd in wks-1 (took 100ms)`),
       expect.ignoreColor(`${symbols.success} Run cmd in wks-2 (took 100ms)`),
+      expect.ignoreColor(`${symbols.success} 2 done`),
     ]);
   });
 
