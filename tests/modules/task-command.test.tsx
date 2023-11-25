@@ -44,9 +44,10 @@ beforeEach(async () => {
 
   bed = new TestBed();
   wks = bed.addWorkspace('wks');
-  task = new TestScriptTask(wks, 'cmd', [], { logger: spyLogger });
+  task = new TestScriptTask(wks, 'cmd', [], { logger: spyLogger, weight: 1 });
 
   app = render(<Layout/>);
+  Object.assign(app.stdin, { ref: () => this, unref: () => this });
   container.rebind(INK_APP).toConstantValue(wrapInkTestApp(app));
 
   command = container.resolve(TestTaskCommand);
@@ -84,13 +85,18 @@ describe('TaskCommand', () => {
 
       // complete task
       vi.spyOn(task, 'status', 'get').mockReturnValue('done');
+      vi.spyOn(task, 'duration', 'get').mockReturnValue(100);
+
       task.emit('status.done', { status: 'done', previous: 'running' });
       task.emit('completed', { status: 'done', duration: 100 });
 
       await prom;
 
       // should print task completed
-      expect(app.lastFrame()).toEqual(expect.ignoreColor(`${symbols.success} Run cmd in wks (took 100ms)`));
+      expect(app.lastFrame()).toEqualLines([
+        expect.ignoreColor(`${symbols.success} Run cmd in wks (took 100ms)`),
+        expect.ignoreColor(`${symbols.success} 1 done`),
+      ]);
     });
 
     it('should exit 1 if a task fails', async () => {
@@ -100,13 +106,18 @@ describe('TaskCommand', () => {
 
       // complete task
       vi.spyOn(task, 'status', 'get').mockReturnValue('failed');
+      vi.spyOn(task, 'duration', 'get').mockReturnValue(100);
+
       task.emit('status.failed', { status: 'failed', previous: 'running' });
       task.emit('completed', { status: 'failed', duration: 100 });
 
       await expect(prom).rejects.toEqual(new ExitException(1));
 
       // should print task failed
-      expect(app.lastFrame()).toEqual(expect.ignoreColor(`${symbols.error} Run cmd in wks (took 100ms)`));
+      expect(app.lastFrame()).toEqualLines([
+        expect.ignoreColor(`${symbols.error} Run cmd in wks (took 100ms)`),
+        expect.ignoreColor(`${symbols.error} 1 failed`)
+      ]);
     });
 
     it('should log and exit if no task were yielded', async () => {
