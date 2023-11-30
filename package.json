@@ -82,7 +82,7 @@
     "eslint-plugin-workspaces": "0.10.0",
     "ink-testing-library": "3.0.0",
     "memfs": "4.6.0",
-    "rollup": "4.6.0",
+    "rollup": "4.6.1",
     "shx": "0.3.4",
     "ts-node": "10.9.1",
     "typescript": "5.3.2",
