@@ -436,8 +436,8 @@ __metadata:
     "@typescript-eslint/eslint-plugin": 6.13.1
     "@typescript-eslint/parser": 6.13.1
     "@vitest/coverage-v8": 0.34.6
-    "@vitest/expect": 0.34.6
-    "@vitest/spy": 0.34.6
+    "@vitest/expect": 0.34.7
+    "@vitest/spy": 0.34.7
     ajv: ^8.12.0
     browserslist: 4.22.2
     chalk: ^5.3.0
@@ -1162,6 +1162,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@vitest/expect@npm:0.34.7":
+  version: 0.34.7
+  resolution: "@vitest/expect@npm:0.34.7"
+  dependencies:
+    "@vitest/spy": 0.34.7
+    "@vitest/utils": 0.34.7
+    chai: ^4.3.10
+  checksum: 1acf3dffb7f9604f834d1abdeafad54a042ee4a932f3434cfdb5b63280135ef2b52b6aa76cb7348f52d62c80e9123792aa1c19e2dbdfa750cd04442022b862bb
+  languageName: node
+  linkType: hard
+
 "@vitest/runner@npm:0.34.6":
   version: 0.34.6
   resolution: "@vitest/runner@npm:0.34.6"
@@ -1193,6 +1204,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@vitest/spy@npm:0.34.7":
+  version: 0.34.7
+  resolution: "@vitest/spy@npm:0.34.7"
+  dependencies:
+    tinyspy: ^2.1.1
+  checksum: 4d6c62e153bc37cef5d9691c602e829d53ed5f1ae858ce0b00c8583c902b8736d27da8fdb01d405a3c736463077f7807ecbf831a02c609d612d936a6b576d6dc
+  languageName: node
+  linkType: hard
+
 "@vitest/utils@npm:0.34.6":
   version: 0.34.6
   resolution: "@vitest/utils@npm:0.34.6"
@@ -1201,6 +1221,17 @@ __metadata:
     loupe: ^2.3.6
     pretty-format: ^29.5.0
   checksum: acf716af2bab66037e49bd6d3e8bae40b605b9bff515d4926c46d6f8cc2366decfac5a1756ea55029968e71fba1da1f992764c3a57c9b46eccce3f6db7197bd6
+  languageName: node
+  linkType: hard
+
+"@vitest/utils@npm:0.34.7":
+  version: 0.34.7
+  resolution: "@vitest/utils@npm:0.34.7"
+  dependencies:
+    diff-sequences: ^29.4.3
+    loupe: ^2.3.6
+    pretty-format: ^29.5.0
+  checksum: d98b8809ada19c207ace43c88d452685adde6966b00e223ac2308b2ea7d0694bdd4d6ff9518ea505e2b5bd4d1b51f44bae430e22fa83ca32c77ad28b61209bc4
   languageName: node
   linkType: hard
 
