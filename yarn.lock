@@ -430,7 +430,7 @@ __metadata:
     "@types/moo": 0.5.9
     "@types/node": 16.18.68
     "@types/normalize-package-data": 2.4.4
-    "@types/react": 18.2.44
+    "@types/react": 18.2.45
     "@types/semver": 7.5.6
     "@types/yargs": 17.0.32
     "@typescript-eslint/eslint-plugin": 6.13.2
@@ -960,14 +960,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:18.2.44":
-  version: 18.2.44
-  resolution: "@types/react@npm:18.2.44"
+"@types/react@npm:18.2.45":
+  version: 18.2.45
+  resolution: "@types/react@npm:18.2.45"
   dependencies:
     "@types/prop-types": "*"
     "@types/scheduler": "*"
     csstype: ^3.0.2
-  checksum: 3844158535e1f6c773b5518578a83973330880d7f2a23a3119d25db63d2c8aad917bea90e5e8177d4b42739441bbeffbb4ce38d242c213f366ce84c8d0fc383c
+  checksum: 40b256bdce67b026348022b4f8616a693afdad88cf493b77f7b4e6c5f4b0e4ba13a6068e690b9b94572920840ff30d501ea3d8518e1f21cc8fb8204d4b140c8a
   languageName: node
   linkType: hard
 
