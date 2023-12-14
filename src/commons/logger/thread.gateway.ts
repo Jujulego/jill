@@ -36,9 +36,9 @@ export class ThreadGateway implements Source<JillLog> {
   }
 
   // Methods
-  next(data: JillLog): void {
+  next = (data: JillLog): void => {
     this.channel.postMessage(data);
-  }
+  };
 
   readonly subscribe = this._source.subscribe;
   readonly unsubscribe = this._source.unsubscribe;

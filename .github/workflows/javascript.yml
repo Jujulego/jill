@@ -83,9 +83,6 @@ jobs:
       - name: Install dependencies
         run: yarn install --immutable
 
-#      - name: Type check tests
-#        run: yarn test:types --pass-with-no-tests
-
       - name: Run tests
         run: yarn test --coverage
 
@@ -139,7 +136,7 @@ jobs:
           git config --global user.email github-actions@github.com
 
       - name: Run E2E tests
-        run: yarn e2e --threads --single-thread -t ${{ matrix.packageManager }}
+        run: yarn e2e -t ${{ matrix.packageManager }}
 
   complete:
     if: ${{ github.event_name == 'pull_request' && always() }}

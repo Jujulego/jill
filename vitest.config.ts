@@ -6,7 +6,6 @@ export default defineConfig({
   test: {
     globals: true,
     setupFiles: ['tools/setup.ts'],
-    threads: false,
     coverage: {
       include: ['src/**', 'tools/**'],
       reporter: ['text', 'lcovonly'],
