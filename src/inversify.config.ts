@@ -1,7 +1,7 @@
 import { Container } from 'inversify';
 import getDecorators from 'inversify-inject-decorators';
 
-import 'reflect-metadata';
+import 'reflect-metadata/lite';
 
 import { fixDefaultExport } from '@/src/utils/import.ts';
 
