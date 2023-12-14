@@ -26,6 +26,7 @@ container
   .bind(CONFIG_EXPLORER)
   .toDynamicValue(() => {
     return cosmiconfig('jill', {
+      searchStrategy: 'global',
       loaders: {
         '.cjs': (filepath) => dynamicImport(filepath).then((mod) => mod.default),
         '.js': (filepath) => dynamicImport(filepath).then((mod) => mod.default),
