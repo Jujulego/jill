@@ -17,20 +17,20 @@ beforeEach(() => {
 afterEach(() => {
   container.restore();
 
-  Object.assign(wt, { isMainThread: true });
+  Object.assign(wt, { isMainThread: false });
 });
 
 // Tests
 describe('INK_APP', () => {
   it('should call render on stdout', () => {
+    Object.assign(wt, { isMainThread: true });
+
     container.get(INK_APP);
 
     expect(render).toHaveBeenCalledWith(expect.anything());
   });
 
   it('should fail outside of main thread', () => {
-    Object.assign(wt, { isMainThread: false });
-
     expect(() => container.get(INK_APP))
       .toThrow(new Error('Ink should only be used in main thread'));
 
