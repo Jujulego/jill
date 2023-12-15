@@ -84,7 +84,7 @@ jobs:
         run: yarn install --immutable
 
       - name: Run tests
-        run: yarn test --coverage
+        run: yarn test --coverage --typecheck
 
       - name: Upload coverage artifacts
         uses: actions/upload-artifact@v4
