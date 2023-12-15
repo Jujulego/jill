@@ -447,7 +447,7 @@ __metadata:
     "@jujulego/logger": ^0.2.4
     "@jujulego/quick-tag": ^0.3.3
     "@jujulego/tasks": ^2.2.0
-    "@jujulego/utils": ^2.0.2
+    "@jujulego/utils": ^3.0.0
     "@jujulego/vite-plugin-swc": 1.1.1
     "@microsoft/eslint-formatter-sarif": 3.0.0
     "@rollup/plugin-json": 6.1.0
@@ -538,12 +538,22 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jujulego/utils@npm:^2.0.0, @jujulego/utils@npm:^2.0.2":
+"@jujulego/utils@npm:^2.0.0":
   version: 2.1.1
   resolution: "@jujulego/utils@npm:2.1.1"
   dependencies:
     "@jujulego/event-tree": ^4.1.0
   checksum: 22bb6295c21dcd7b3f370b1adc1fc507fd22a4a9321e2003fa1a893556b4c6f2052c3df708165ba7b283eae6dc2164a9cf1508d60b90c2ee5098f8e8bb03d78c
+  languageName: node
+  linkType: hard
+
+"@jujulego/utils@npm:^3.0.0":
+  version: 3.0.4
+  resolution: "@jujulego/utils@npm:3.0.4"
+  dependencies:
+    "@swc/helpers": ^0.5.3
+    kyrielle: ^0.6.0
+  checksum: 476703d8987de4d1e639e20e3144504c76e8ca11ebcf86a5538020bf33d097dfda23c0c6b656b87e5b3795426bfcb23646950b93d593a225b81677ddf01d76ee
   languageName: node
   linkType: hard
 
@@ -3594,6 +3604,18 @@ __metadata:
   dependencies:
     json-buffer: 3.0.1
   checksum: 74a24395b1c34bd44ad5cb2b49140d087553e170625240b86755a6604cd65aa16efdbdeae5cdb17ba1284a0fbb25ad06263755dbc71b8d8b06f74232ce3cdd72
+  languageName: node
+  linkType: hard
+
+"kyrielle@npm:^0.6.0":
+  version: 0.6.0
+  resolution: "kyrielle@npm:0.6.0"
+  dependencies:
+    immer: ^10.0.3
+  dependenciesMeta:
+    vitest@0.34.6:
+      unplugged: true
+  checksum: a124f2a4218a4dccd2209b41a1e72da524fa4c446801921f24620187758b0862205904a81b0105d0c563417f33310cd6271f8f037ffb0105b68cdedaa4ad23db
   languageName: node
   linkType: hard
 
