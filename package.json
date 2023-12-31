@@ -78,7 +78,7 @@
     "eslint": "8.56.0",
     "eslint-plugin-react": "7.33.2",
     "eslint-plugin-react-hooks": "4.6.0",
-    "eslint-plugin-vitest": "0.3.19",
+    "eslint-plugin-vitest": "0.3.20",
     "eslint-plugin-workspaces": "0.10.0",
     "ink-testing-library": "3.0.0",
     "memfs": "4.6.0",
