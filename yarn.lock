@@ -444,7 +444,7 @@ __metadata:
     "@jujulego/2d-maths": 1.6.0
     "@jujulego/aegis": ^2.1.0
     "@jujulego/event-tree": ^4.3.0
-    "@jujulego/logger": ^0.2.4
+    "@jujulego/logger": ^0.4.0
     "@jujulego/quick-tag": ^0.3.3
     "@jujulego/tasks": ^2.2.0
     "@jujulego/utils": ^3.0.0
@@ -504,7 +504,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jujulego/logger@npm:^0.2.2, @jujulego/logger@npm:^0.2.4":
+"@jujulego/logger@npm:^0.2.2":
   version: 0.2.4
   resolution: "@jujulego/logger@npm:0.2.4"
   dependencies:
@@ -516,6 +516,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@jujulego/logger@npm:^0.4.0":
+  version: 0.4.0
+  resolution: "@jujulego/logger@npm:0.4.0"
+  dependencies:
+    "@jujulego/quick-tag": ^0.4.0
+    "@swc/helpers": ^0.5.3
+    chalk: ^5.3.0
+    chalk-template: ^1.1.0
+    kyrielle: ^0.9.0
+  checksum: a196f9b5032c0eae9334883173597fe381d161eed0fb3722ac748e5d5d5822b33c7ff1e7535cfd47202874d4cdc4bf43d3b953f95b7d51812d58f7677a6dd904
+  languageName: node
+  linkType: hard
+
 "@jujulego/quick-tag@npm:^0.3.3":
   version: 0.3.3
   resolution: "@jujulego/quick-tag@npm:0.3.3"
@@ -523,6 +536,18 @@ __metadata:
     vitest@0.34.6:
       unplugged: true
   checksum: 4e92934a0cf8cc1dd783c42885067317b702826f1d4042a5a976802a67dc0bb6ac2784b23e3d2c97b0e0abece3d4d6720005b1f4be2db0a4dd6f64902057b2ee
+  languageName: node
+  linkType: hard
+
+"@jujulego/quick-tag@npm:^0.4.0":
+  version: 0.4.0
+  resolution: "@jujulego/quick-tag@npm:0.4.0"
+  dependencies:
+    "@swc/helpers": ^0.5.3
+  dependenciesMeta:
+    vitest@1.1.1:
+      unplugged: true
+  checksum: 36852c93391d54e78c9ae995fde5693012e4e3deeeaf45954ed13764775dade2cb1d11c09df3b4e8002aac58e6d2cabc22bb8d0ed8365a3e1a451d0d5e5a898b
   languageName: node
   linkType: hard
 
@@ -3627,6 +3652,19 @@ __metadata:
     vitest@0.34.6:
       unplugged: true
   checksum: a124f2a4218a4dccd2209b41a1e72da524fa4c446801921f24620187758b0862205904a81b0105d0c563417f33310cd6271f8f037ffb0105b68cdedaa4ad23db
+  languageName: node
+  linkType: hard
+
+"kyrielle@npm:^0.9.0":
+  version: 0.9.0
+  resolution: "kyrielle@npm:0.9.0"
+  dependencies:
+    "@swc/helpers": ^0.5.3
+    immer: ^10.0.3
+  dependenciesMeta:
+    vitest@1.1.1:
+      unplugged: true
+  checksum: 75f88f23a8fd87bd4659e0cee1cf3f61939fd1dc7ab5cdc244190aeac4944663b4b1e2fa2b223c980da63093c4fab0f76414c3f7105759a4cfc6fdd6a871f5cb
   languageName: node
   linkType: hard
 
