@@ -2,6 +2,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import url from 'node:url';
 
+import '@/src/commons/logger.service.js';
 import { TestBed } from '@/tools/test-bed.js';
 
 import { jill } from './utils.js';

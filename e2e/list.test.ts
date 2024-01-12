@@ -1,6 +1,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
+import '@/src/commons/logger.service.js';
 import { TestBed } from '@/tools/test-bed.js';
 import { shell } from '@/tools/utils.js';
 
