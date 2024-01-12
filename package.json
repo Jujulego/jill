@@ -71,9 +71,9 @@
     "@types/yargs": "17.0.32",
     "@typescript-eslint/eslint-plugin": "6.18.1",
     "@typescript-eslint/parser": "6.18.1",
-    "@vitest/coverage-v8": "1.1.1",
-    "@vitest/expect": "1.1.1",
-    "@vitest/spy": "1.1.1",
+    "@vitest/coverage-v8": "1.2.0",
+    "@vitest/expect": "1.2.0",
+    "@vitest/spy": "1.2.0",
     "browserslist": "4.22.2",
     "eslint": "8.56.0",
     "eslint-plugin-react": "7.33.2",
@@ -88,7 +88,7 @@
     "typescript": "5.3.3",
     "vite": "5.0.11",
     "vite-tsconfig-paths": "4.2.3",
-    "vitest": "1.1.1"
+    "vitest": "1.2.0"
   },
   "packageManager": "yarn@3.7.0"
 }
