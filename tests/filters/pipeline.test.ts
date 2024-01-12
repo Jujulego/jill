@@ -1,5 +1,6 @@
 import { vi } from 'vitest';
 
+import '@/src/commons/logger.service.js';
 import { type PipelineFilter, Pipeline } from '@/src/filters/pipeline.js';
 import { TestBed } from '@/tools/test-bed.js';
 

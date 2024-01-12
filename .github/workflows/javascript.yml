@@ -136,7 +136,7 @@ jobs:
           git config --global user.email github-actions@github.com
 
       - name: Run E2E tests
-        run: yarn e2e -t ${{ matrix.packageManager }}
+        run: yarn e2e -t ${{ matrix.packageManager }} --no-file-parallelism
 
   complete:
     if: ${{ github.event_name == 'pull_request' && always() }}

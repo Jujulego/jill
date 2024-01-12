@@ -4,6 +4,7 @@ import path from 'node:path';
 import { vi } from 'vitest';
 import yargs, { type CommandModule } from 'yargs';
 
+import '@/src/commons/logger.service.js';
 import { ListCommand } from '@/src/commands/list.js';
 import { INK_APP } from '@/src/ink.config.js';
 import { container } from '@/src/inversify.config.js';

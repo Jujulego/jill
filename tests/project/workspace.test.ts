@@ -3,7 +3,9 @@ import { fs, vol } from 'memfs';
 import path from 'node:path';
 import { vi } from 'vitest';
 
+import '@/src/commons/logger.service.js';
 import { GitService } from '@/src/commons/git.service.js';
+import { CONFIG } from '@/src/config/config-loader.js';
 import { container } from '@/src/inversify.config.js';
 import { Project } from '@/src/project/project.js';
 import { Workspace } from '@/src/project/workspace.js';
@@ -13,6 +15,9 @@ import { TestBed } from '@/tools/test-bed.js';
 // Mocks
 vi.mock('node:fs', () => ({ default: fs }));
 vi.mock('node:fs/promises', () => ({ default: fs.promises }));
+
+// Setup global config
+container.rebind(CONFIG).toConstantValue({ jobs: 1 });
 
 // Setup
 let bed: TestBed;

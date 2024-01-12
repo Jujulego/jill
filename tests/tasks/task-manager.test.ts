@@ -1,3 +1,4 @@
+import '@/src/commons/logger.service.js';
 import { container } from '@/src/inversify.config.js';
 import { CONFIG } from '@/src/config/config-loader.js';
 import { TASK_MANAGER } from '@/src/tasks/task-manager.config.js';

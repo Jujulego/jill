@@ -2,6 +2,7 @@ import { cleanup, render } from 'ink-testing-library';
 import yargs, { type CommandModule } from 'yargs';
 import { vi } from 'vitest';
 
+import '@/src/commons/logger.service.js';
 import { TreeCommand } from '@/src/commands/tree.js';
 import { ContextService } from '@/src/commons/context.service.js';
 import { INK_APP } from '@/src/ink.config.js';

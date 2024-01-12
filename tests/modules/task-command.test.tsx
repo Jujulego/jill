@@ -5,6 +5,8 @@ import { injectable } from 'inversify';
 import symbols from 'log-symbols';
 import { vi } from 'vitest';
 
+import '@/src/commons/logger.service.js';
+import { CONFIG } from '@/src/config/config-loader.js';
 import { INK_APP } from '@/src/ink.config.js';
 import { container } from '@/src/inversify.config.js';
 import { TaskCommand } from '@/src/modules/task-command.js';
@@ -17,6 +19,9 @@ import { printJson } from '@/src/utils/json.js';
 import { TestBed } from '@/tools/test-bed.js';
 import { TestScriptTask } from '@/tools/test-tasks.js';
 import { flushPromises, spyLogger, wrapInkTestApp } from '@/tools/utils.js';
+
+// Setup global config
+container.rebind(CONFIG).toConstantValue({ jobs: 1 });
 
 // Class
 @injectable()

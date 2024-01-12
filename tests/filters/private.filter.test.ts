@@ -1,3 +1,4 @@
+import '@/src/commons/logger.service.js';
 import { PrivateFilter } from '@/src/filters/private.filter.js';
 
 import { TestBed } from '@/tools/test-bed.js';

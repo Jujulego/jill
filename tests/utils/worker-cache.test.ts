@@ -65,8 +65,8 @@ describe('workerCache', () => {
       value: 'toto',
     });
 
-    await flushPromises();
-
-    expect(getEnvironmentData(KEY)).toBe('toto');
+    await vi.waitFor(() => {
+      expect(getEnvironmentData(KEY)).toBe('toto');
+    });
   });
 });

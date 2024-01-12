@@ -40,9 +40,7 @@ export class LogGateway implements Observable<JillLog>, OnServiceActivate {
       this.connect(threadGtw);
     } else {
       // Redirect logs to thread gateway
-      flow$(this._source,
-        threadGtw
-      );
+      flow$(this._source, threadGtw);
     }
   }
 

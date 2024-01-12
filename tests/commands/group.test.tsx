@@ -4,8 +4,10 @@ import symbols from 'log-symbols';
 import yargs, { type CommandModule } from 'yargs';
 import { vi } from 'vitest';
 
+import '@/src/commons/logger.service.js';
 import { GroupCommand } from '@/src/commands/group.js';
 import { ContextService } from '@/src/commons/context.service.js';
+import { CONFIG } from '@/src/config/config-loader.js';
 import { INK_APP } from '@/src/ink.config.js';
 import { container } from '@/src/inversify.config.js';
 import { type Workspace } from '@/src/project/workspace.js';
@@ -16,6 +18,9 @@ import Layout from '@/src/ui/layout.js';
 import { TestBed } from '@/tools/test-bed.js';
 import { TestParallelGroup, TestScriptTask, TestTaskManager } from '@/tools/test-tasks.js';
 import { flushPromises, spyLogger, wrapInkTestApp } from '@/tools/utils.js';
+
+// Setup global config
+container.rebind(CONFIG).toConstantValue({ jobs: 1 });
 
 // Setup
 let app: ReturnType<typeof render>;

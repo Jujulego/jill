@@ -3,6 +3,7 @@ import path from 'node:path';
 import yargs, { Argv } from 'yargs';
 import { vi } from 'vitest';
 
+import '@/src/commons/logger.service.js';
 import { CURRENT } from '@/src/constants.js';
 import { ContextService } from '@/src/commons/context.service.js';
 import { container } from '@/src/inversify.config.js';

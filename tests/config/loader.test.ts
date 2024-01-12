@@ -3,6 +3,7 @@ import { ValidateFunction } from 'ajv';
 import { vi } from 'vitest';
 import path from 'node:path';
 
+import '@/src/commons/logger.service.js';
 import { configLoader } from '@/src/config/config-loader.js';
 import { type IConfig, type IConfigExplorer } from '@/src/config/types.js';
 import { CONFIG_EXPLORER, CONFIG_VALIDATOR } from '@/src/config/utils.js';
