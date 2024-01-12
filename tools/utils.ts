@@ -3,7 +3,6 @@ import { Instance } from 'ink';
 import { type render } from 'ink-testing-library';
 import { vi } from 'vitest';
 import cp from 'node:child_process';
-import fs from 'node:fs/promises';
 
 import { splitCommandLine } from '@/src/utils/string.js';
 
@@ -33,19 +32,6 @@ export function noColor(str = ''): string {
 
 export function flushPromises(timeout = 0): Promise<void> {
   return new Promise<void>((resolve) => setTimeout(resolve, timeout));
-}
-
-export async function fileExists(file: string): Promise<boolean> {
-  try {
-    await fs.access(file);
-    return true;
-  } catch (err) {
-    if (err.code === 'ENOENT') {
-      return false;
-    }
-
-    throw err;
-  }
 }
 
 export interface ShellOptions {

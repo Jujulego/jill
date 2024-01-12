@@ -1,4 +1,5 @@
 import cp from 'node:child_process';
+import fs from 'node:fs/promises';
 import path from 'node:path';
 
 import { InkScreen } from '@/tools/ink-screen.js';
@@ -62,4 +63,17 @@ export function jill(args: string, opts: SpawnOptions = {}): Promise<SpawnResult
 
     proc.on('error', reject);
   });
+}
+
+export async function fileExists(file: string): Promise<boolean> {
+  try {
+    await fs.access(file);
+    return true;
+  } catch (err) {
+    if (err.code === 'ENOENT') {
+      return false;
+    }
+
+    throw err;
+  }
 }

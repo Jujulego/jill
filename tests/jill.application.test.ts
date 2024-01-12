@@ -1,7 +1,9 @@
 import { SpawnTask } from '@jujulego/tasks';
 import { vi } from 'vitest';
 
+import '@/src/commons/logger.service.js';
 import { ContextService } from '@/src/commons/context.service.ts';
+import { CONFIG } from '@/src/config/config-loader.js';
 import { CURRENT } from '@/src/constants.ts';
 import { CorePlugin } from '@/src/core.plugin.ts';
 import { container } from '@/src/inversify.config.ts';
@@ -21,6 +23,9 @@ vi.mock('@/src/modules/module', async (importOriginal) => {
     getModule: vi.fn(mod.getModule),
   };
 });
+
+// Setup global config
+container.rebind(CONFIG).toConstantValue({ jobs: 1 });
 
 // Setup
 let application: JillApplication;

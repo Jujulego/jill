@@ -2,6 +2,7 @@ import { Logger, LogLevel } from '@jujulego/logger';
 import { render } from 'ink-testing-library';
 import { vi } from 'vitest';
 
+import '@/src/commons/logger.service.js';
 import { LogGateway } from '@/src/commons/logger/log.gateway.js';
 import { container } from '@/src/inversify.config.js';
 import StaticLogs from '@/src/ui/static-logs.js';

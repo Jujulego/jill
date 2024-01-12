@@ -1,5 +1,6 @@
 import { vi } from 'vitest';
 
+import '@/src/commons/logger.service.js';
 import { container } from '@/src/inversify.config.js';
 import { PluginLoaderService } from '@/src/modules/plugin-loader.service.js';
 import { dynamicImport } from '@/src/utils/import.js';
@@ -8,7 +9,14 @@ import { Command, type ICommand } from '@/src/modules/command.js';
 import { Plugin } from '@/src/modules/plugin.js';
 
 // Mocks
-vi.mock('@/src/utils/import');
+vi.mock('@/src/utils/import', async (importOriginal) => {
+  const mod: typeof import('@/src/utils/import.ts') = await importOriginal();
+
+  return {
+    ...mod,
+    dynamicImport: vi.fn(mod.dynamicImport),
+  };
+});
 
 // Utils
 @Command({

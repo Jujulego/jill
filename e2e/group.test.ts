@@ -2,9 +2,8 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 
 import { TestBed } from '@/tools/test-bed.js';
-import { fileExists } from '@/tools/utils.js';
 
-import { jill } from './utils.js';
+import { fileExists, jill } from './utils.js';
 
 // Setup
 const bed = new TestBed();

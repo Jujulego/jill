@@ -1,10 +1,15 @@
 import { vi } from 'vitest';
 
+import '@/src/commons/logger.service.js';
 import { GitService } from '@/src/commons/git.service.js';
+import { CONFIG } from '@/src/config/config-loader.js';
 import { AffectedFilter } from '@/src/filters/affected.filter.js';
 import { container } from '@/src/inversify.config.js';
 import { type Workspace } from '@/src/project/workspace.js';
 import { TestBed } from '@/tools/test-bed.js';
+
+// Setup global config
+container.rebind(CONFIG).toConstantValue({ jobs: 1 });
 
 // Setup
 let bed: TestBed;

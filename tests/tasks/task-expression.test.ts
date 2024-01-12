@@ -1,6 +1,7 @@
 import { ParallelGroup, SequenceGroup } from '@jujulego/tasks';
 import { describe, vi } from 'vitest';
 
+import '@/src/commons/logger.service.js';
 import { container } from '@/src/inversify.config.js';
 import { type Workspace } from '@/src/project/workspace.js';
 import { ScriptTask } from '@/src/tasks/script-task.js';

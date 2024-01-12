@@ -1,6 +1,7 @@
 import { Logger } from '@jujulego/logger';
 import { vi } from 'vitest';
 
+import '@/src/commons/logger.service.js';
 import { container } from '@/src/inversify.config.js';
 import { LogGateway } from '@/src/commons/logger/log.gateway.js';
 

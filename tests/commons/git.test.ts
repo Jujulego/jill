@@ -2,6 +2,8 @@ import { Logger } from '@jujulego/logger';
 import { type TaskManager } from '@jujulego/tasks';
 import { describe, vi } from 'vitest';
 
+import '@/src/commons/logger.service.js';
+import { CONFIG } from '@/src/config/config-loader.js';
 import { GitService, type GitContext } from '@/src/commons/git.service.js';
 import { container } from '@/src/inversify.config.js';
 import { TASK_MANAGER } from '@/src/tasks/task-manager.config.js';
@@ -24,6 +26,9 @@ vi.mock('@jujulego/tasks', async (importOriginal) => {
 let logger: Logger;
 let manager: TaskManager;
 let git: GitService;
+
+// Setup global config
+container.rebind(CONFIG).toConstantValue({ jobs: 1 });
 
 beforeEach(() => {
   vi.restoreAllMocks();

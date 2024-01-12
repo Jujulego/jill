@@ -2,6 +2,8 @@ import { Task } from '@jujulego/tasks';
 import { waitFor$ } from '@jujulego/event-tree';
 import { vi } from 'vitest';
 
+import '@/src/commons/logger.service.js';
+import { CONFIG } from '@/src/config/config-loader.js';
 import { container } from '@/src/inversify.config.js';
 import { JillApplication } from '@/src/jill.application.js';
 import { type Workspace } from '@/src/project/workspace.js';
@@ -10,6 +12,9 @@ import { ScriptTask } from '@/src/tasks/script-task.js';
 
 import { TestBed } from '@/tools/test-bed.js';
 import { TestCommandTask, TestScriptTask } from '@/tools/test-tasks.js';
+
+// Setup global config
+container.rebind(CONFIG).toConstantValue({ jobs: 1 });
 
 // Setup
 let bed: TestBed;
