@@ -78,6 +78,7 @@ export class Project {
 
   async packageManager(): Promise<PackageManager> {
     if (!this._packageManager) {
+      this._logger.debug`Searching lockfile from #!cwd:${this.root}`;
       const files = await this._scurry.readdir(this.root, { withFileTypes: false });
 
       if (files.includes('yarn.lock')) {
