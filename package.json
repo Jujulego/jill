@@ -81,7 +81,7 @@
     "eslint-plugin-vitest": "0.3.22",
     "eslint-plugin-workspaces": "0.10.0",
     "ink-testing-library": "3.0.0",
-    "memfs": "4.6.0",
+    "memfs": "4.7.0",
     "rollup": "4.9.6",
     "shx": "0.3.4",
     "ts-node": "10.9.2",
