@@ -66,6 +66,7 @@ export function buildCommandModule(cmd: ICommand, opts: ICommandOpts): CommandMo
           const logger = container.get(Logger);
           logger.error('Error while running command:', err);
         }
+        console.error(err);
 
         throw new ExitException(1);
       }

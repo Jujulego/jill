@@ -9,7 +9,6 @@ import { LazyCurrentProject, LoadProject } from '@/src/middlewares/load-project.
 import { LazyCurrentWorkspace, LoadWorkspace } from '@/src/middlewares/load-workspace.ts';
 import type { Project } from '@/src/project/project.ts';
 import { type Workspace, type WorkspaceDepsMode } from '@/src/project/workspace.ts';
-import Layout from '@/src/ui/layout.tsx';
 import { ExitException } from '@/src/utils/exit.ts';
 import { combine } from '@/src/utils/streams.ts';
 
@@ -84,7 +83,7 @@ export class ExecCommand extends TaskCommand<IExecCommandArgs> {
     // Generators
     const generators: AsyncGenerator<Workspace, void>[] = [];
 
-    switch (args.buildDeps ?? 'all') {
+    switch (args.depsMode ?? 'all') {
       case 'all':
         generators.unshift(this.workspace.devDependencies());
 
@@ -107,15 +106,7 @@ export class ExecCommand extends TaskCommand<IExecCommandArgs> {
   }
 
   async handler(args: ArgumentsCamelCase<IExecCommandArgs & ITaskCommandArgs>): Promise<void> {
-    const pm = await this.project.packageManager();
-
-    for await (const children of this.render(args)) {
-      this.app.rerender(
-        <Layout>
-          { children }
-        </Layout>
-      );
-    }
+    await super.handler(args);
 
     if (!args.plan) {
       this.app.unmount();
@@ -128,6 +119,7 @@ export class ExecCommand extends TaskCommand<IExecCommandArgs> {
       }
 
       // Execute command
+      const pm = await this.project.packageManager();
       let command = args.command;
 
       if (pm === 'yarn') {
@@ -153,7 +145,9 @@ export class ExecCommand extends TaskCommand<IExecCommandArgs> {
         });
       });
 
-      throw new ExitException(code);
+      if (code) {
+        throw new ExitException(code);
+      }
     } else {
       await this.app.waitUntilExit();
     }
