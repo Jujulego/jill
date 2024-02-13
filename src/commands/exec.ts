@@ -148,8 +148,6 @@ export class ExecCommand extends TaskCommand<IExecCommandArgs> {
       if (code) {
         throw new ExitException(code);
       }
-    } else {
-      await this.app.waitUntilExit();
     }
   }
 }
