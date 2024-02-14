@@ -54,9 +54,6 @@ describe('jill exec', () => {
       const res = await jill('exec -w wks-c node -e "require(\'node:fs\').writeFileSync(\'script.txt\', \'node\')"', { cwd: prjDir, keepQuotes: true });
 
       // Check jill output
-      console.log(res.stdout);
-      console.log(res.stderr);
-
       expect(res.code).toBe(0);
 
       expect(res.screen.screen).toMatchLines(['']);
