@@ -32,7 +32,5 @@ export abstract class InkCommand<A = unknown> implements ICommand<A> {
         </Layout>
       );
     }
-
-    await this.app.waitUntilExit();
   }
 }

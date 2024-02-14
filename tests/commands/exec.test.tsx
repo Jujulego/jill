@@ -1,8 +1,9 @@
 import { Logger } from '@jujulego/logger';
 import { cleanup, render } from 'ink-testing-library';
-import symbols from 'log-symbols';
+import cp from 'node:child_process';
+import EventEmitter from 'node:events';
 import yargs, { type CommandModule } from 'yargs';
-import { vi } from 'vitest';
+import { expect, vi } from 'vitest';
 
 import '@/src/commons/logger.service.js';
 import { ExecCommand } from '@/src/commands/exec.js';
@@ -15,8 +16,8 @@ import { TASK_MANAGER } from '@/src/tasks/task-manager.config.js';
 import Layout from '@/src/ui/layout.js';
 
 import { TestBed } from '@/tools/test-bed.js';
-import { TestCommandTask, TestTaskManager } from '@/tools/test-tasks.js';
-import { flushPromises, spyLogger, wrapInkTestApp } from '@/tools/utils.js';
+import { TestTaskManager } from '@/tools/test-tasks.js';
+import { wrapInkTestApp } from '@/tools/utils.js';
 
 // Setup global config
 container.rebind(CONFIG).toConstantValue({ jobs: 1 });
@@ -29,7 +30,7 @@ let manager: TestTaskManager;
 
 let bed: TestBed;
 let wks: Workspace;
-let task: TestCommandTask;
+let child: cp.ChildProcess;
 
 beforeAll(() => {
   container.snapshot();
@@ -41,7 +42,6 @@ beforeEach(async () => {
 
   bed = new TestBed();
   wks = bed.addWorkspace('wks');
-  task = new TestCommandTask(wks, 'cmd', [], { logger: spyLogger, weight: 1 });
 
   const logger = container.get(Logger);
   context = container.get(ContextService);
@@ -55,13 +55,15 @@ beforeEach(async () => {
 
   command = await bed.prepareCommand(ExecCommand, wks);
 
+  child = new EventEmitter() as cp.ChildProcess;
+
   // Mocks
   vi.restoreAllMocks();
 
-  vi.spyOn(wks, 'exec').mockResolvedValue(task);
+  vi.spyOn(cp, 'spawn').mockReturnValue(child);
 
-  vi.spyOn(manager, 'add').mockReturnValue(undefined);
-  vi.spyOn(manager, 'tasks', 'get').mockReturnValue([task]);
+  vi.spyOn(wks, 'dependencies');
+  vi.spyOn(wks, 'devDependencies');
 });
 
 afterEach(() => {
@@ -78,29 +80,22 @@ describe('jill exec', () => {
       .fail(false)
       .parse('cmd');
 
-    await flushPromises();
+    // Should exec command using spawn
+    await vi.waitFor(() => {
+      expect(cp.spawn).toHaveBeenCalledWith('cmd', [], expect.objectContaining({
+        cwd: wks.cwd,
+        shell: true,
+        stdio: 'inherit',
+      }));
+    });
 
-    // should create script task then add it to manager
-    expect(wks.exec).toHaveBeenCalledWith('cmd', [], { buildDeps: 'all', buildScript: 'build' });
-    expect(manager.add).toHaveBeenCalledWith(task);
-
-    // should print task spinner
-    expect(app.lastFrame()).toEqual(expect.ignoreColor(/^. cmd/));
-
-    // complete task
-    vi.spyOn(task, 'status', 'get').mockReturnValue('done');
-    vi.spyOn(task, 'duration', 'get').mockReturnValue(100);
-
-    task.emit('status.done', { status: 'done', previous: 'running' });
-    task.emit('completed', { status: 'done', duration: 100 });
+    child.emit('close', 0);
 
     await prom;
 
-    // should print task completed
-    expect(app.lastFrame()).toEqualLines([
-      expect.ignoreColor(`${symbols.success} cmd (took 100ms)`),
-      expect.ignoreColor(`${symbols.success} 1 done`),
-    ]);
+    // Should have used dependencies generator
+    expect(wks.dependencies).toHaveBeenCalled();
+    expect(wks.devDependencies).toHaveBeenCalled();
   });
 
   it('should use given dependency selection mode', async () => {
@@ -111,17 +106,18 @@ describe('jill exec', () => {
       .fail(false)
       .parse('exec -d prod cmd');
 
-    await flushPromises();
+    // Should exec command using spawn
+    await vi.waitFor(() => {
+      expect(cp.spawn).toHaveBeenCalled();
+    });
 
-    // should create script task than add it to manager
-    expect(wks.exec).toHaveBeenCalledWith('cmd', [], { buildDeps: 'prod', buildScript: 'build' });
-
-    // complete task
-    vi.spyOn(task, 'status', 'get').mockReturnValue('done');
-    task.emit('status.done', { status: 'done', previous: 'running' });
-    task.emit('completed', { status: 'done', duration: 100 });
+    child.emit('close', 0);
 
     await prom;
+
+    // Should have used dependencies generator
+    expect(wks.dependencies).toHaveBeenCalled();
+    expect(wks.devDependencies).not.toHaveBeenCalled();
   });
 
   it('should pass down unknown arguments', async () => {
@@ -132,15 +128,12 @@ describe('jill exec', () => {
       .fail(false)
       .parse('cmd --arg');
 
-    await flushPromises();
+    // Should exec command using spawn
+    await vi.waitFor(() => {
+      expect(cp.spawn).toHaveBeenCalledWith('cmd', ['--arg'], expect.anything());
+    });
 
-    // should create script task than add it to manager
-    expect(wks.exec).toHaveBeenCalledWith('cmd', ['--arg'], { buildDeps: 'all', buildScript: 'build' });
-
-    // complete task
-    vi.spyOn(task, 'status', 'get').mockReturnValue('done');
-    task.emit('status.done', { status: 'done', previous: 'running' });
-    task.emit('completed', { status: 'done', duration: 100 });
+    child.emit('close', 0);
 
     await prom;
   });
@@ -153,16 +146,17 @@ describe('jill exec', () => {
       .fail(false)
       .parse('cmd -- -d toto');
 
-    await flushPromises();
+    // Should exec command using spawn
+    await vi.waitFor(() => {
+      expect(cp.spawn).toHaveBeenCalledWith('cmd', ['-d', 'toto'], expect.anything());
+    });
 
-    // should create script task than add it to manager
-    expect(wks.exec).toHaveBeenCalledWith('cmd', ['-d', 'toto'], { buildDeps: 'all', buildScript: 'build' });
-
-    // complete task
-    vi.spyOn(task, 'status', 'get').mockReturnValue('done');
-    task.emit('status.done', { status: 'done', previous: 'running' });
-    task.emit('completed', { status: 'done', duration: 100 });
+    child.emit('close', 0);
 
     await prom;
+
+    // Should have used dependencies generator
+    expect(wks.dependencies).toHaveBeenCalled();
+    expect(wks.devDependencies).toHaveBeenCalled();
   });
 });

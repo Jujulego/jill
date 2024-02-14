@@ -1,10 +1,16 @@
+import { Logger, withLabel } from '@jujulego/logger';
+import { inject } from 'inversify';
+import cp from 'node:child_process';
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
 
 import { Command } from '@/src/modules/command.ts';
-import { TaskCommand } from '@/src/modules/task-command.tsx';
-import { LoadProject } from '@/src/middlewares/load-project.ts';
+import { ITaskCommandArgs, TaskCommand } from '@/src/modules/task-command.tsx';
+import { LazyCurrentProject, LoadProject } from '@/src/middlewares/load-project.ts';
 import { LazyCurrentWorkspace, LoadWorkspace } from '@/src/middlewares/load-workspace.ts';
+import type { Project } from '@/src/project/project.ts';
 import { type Workspace, type WorkspaceDepsMode } from '@/src/project/workspace.ts';
+import { ExitException } from '@/src/utils/exit.ts';
+import { combine } from '@/src/utils/streams.ts';
 
 // Types
 export interface IExecCommandArgs {
@@ -24,9 +30,24 @@ export interface IExecCommandArgs {
   ]
 })
 export class ExecCommand extends TaskCommand<IExecCommandArgs> {
+  // Attributes
+  private _logger: Logger;
+
   // Lazy injections
+  @LazyCurrentProject()
+  readonly project: Project;
+
   @LazyCurrentWorkspace()
   readonly workspace: Workspace;
+
+  // Constructor
+  constructor(
+    @inject(Logger) logger: Logger,
+  ) {
+    super();
+
+    this._logger = logger.child(withLabel('exec'));
+  }
 
   // Methods
   builder(parser: Argv) {
@@ -59,19 +80,75 @@ export class ExecCommand extends TaskCommand<IExecCommandArgs> {
   }
 
   async *prepare(args: ArgumentsCamelCase<IExecCommandArgs>) {
-    // Extract arguments
-    const rest = args._.map(arg => arg.toString());
+    // Generators
+    const generators: AsyncGenerator<Workspace, void>[] = [];
 
-    if (rest[0] === 'exec') {
-      rest.splice(0, 1);
+    switch (args.depsMode ?? 'all') {
+      case 'all':
+        generators.unshift(this.workspace.devDependencies());
+
+      // eslint-disable-next no-fallthrough
+      case 'prod':
+        generators.unshift(this.workspace.dependencies());
     }
 
-    // Run script in workspace
-    const task = await this.workspace.exec(args.command, rest, {
-      buildScript: args.buildScript,
-      buildDeps: args.depsMode,
-    });
+    // Build deps
+    for await (const dep of combine(...generators)) {
+      const build = await dep.build({
+        buildScript: args.buildScript,
+        buildDeps: args.depsMode,
+      });
 
-    yield task;
+      if (build) {
+        yield build;
+      }
+    }
+  }
+
+  async handler(args: ArgumentsCamelCase<IExecCommandArgs & ITaskCommandArgs>): Promise<void> {
+    await super.handler(args);
+
+    if (!args.plan) {
+      this.app.unmount();
+
+      // Extract arguments
+      const rest = args._.map(arg => arg.toString());
+
+      if (rest[0] === 'exec') {
+        rest.splice(0, 1);
+      }
+
+      // Execute command
+      const pm = await this.project.packageManager();
+      let command = args.command;
+
+      if (pm === 'yarn') {
+        command = 'yarn';
+        rest.unshift('exec', args.command);
+      }
+
+      this._logger.debug`${command} ${rest.join(' ')}`;
+
+      const child = cp.spawn(command, rest, {
+        stdio: 'inherit',
+        cwd: this.workspace.cwd,
+        env: {
+          ...process.env,
+          FORCE_COLOR: '1',
+        },
+        shell: true,
+        windowsHide: true,
+      });
+
+      const code = await new Promise<number>((resolve) => {
+        child.on('close', (code) => {
+          resolve(code ?? 0);
+        });
+      });
+
+      if (code) {
+        throw new ExitException(code);
+      }
+    }
   }
 }
