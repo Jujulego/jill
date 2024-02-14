@@ -106,6 +106,7 @@ describe('JillApplication.taskOf', () => {
     expect(taskCommand.prepare).toHaveBeenCalledWith({
       $0: 'jill',
       _: ['task'],
+      plan: true,
     });
   });
 });
