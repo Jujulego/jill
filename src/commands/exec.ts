@@ -1,6 +1,7 @@
 import { Logger, withLabel } from '@jujulego/logger';
 import { inject } from 'inversify';
 import cp from 'node:child_process';
+import process from 'node:process';
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
 
 import { Command } from '@/src/modules/command.ts';
@@ -114,7 +115,10 @@ export class ExecCommand extends TaskCommand<IExecCommandArgs> {
       const child = cp.spawn(this._finalTask.cmd, this._finalTask.args, {
         stdio: 'inherit',
         cwd: this._finalTask.cwd,
-        env: this._finalTask.env,
+        env: {
+          ...process.env,
+          ...this._finalTask.env
+        },
         shell: true,
         windowsHide: true,
       });
