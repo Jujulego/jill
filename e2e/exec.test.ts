@@ -54,6 +54,8 @@ describe('jill exec', () => {
       const res = await jill('exec -w wks-c node -e "require(\'node:fs\').writeFileSync(\'script.txt\', \'node\')"', { cwd: prjDir, keepQuotes: true });
 
       // Check jill output
+      console.log(res.stderr);
+      console.log(res.stdout);
       expect(res.code).toBe(0);
 
       expect(res.screen.screen).toMatchLines(['']);
@@ -72,7 +74,7 @@ describe('jill exec', () => {
       // Check jill output
       expect(res.code).toBe(0);
 
-      expect(res.stdout).toMatchLines(['toto']);
+      expect(res.screen.screen).toMatchLines(['toto']);
       expect(res.stderr).toMatchLines([
         expect.ignoreColor('No task found')
       ]);

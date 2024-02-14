@@ -133,6 +133,7 @@ export class ExecCommand extends TaskCommand<IExecCommandArgs> {
         stdio: 'inherit',
         cwd: this.workspace.cwd,
         env: {
+          ...process.env,
           FORCE_COLOR: '1',
         },
         shell: true,
