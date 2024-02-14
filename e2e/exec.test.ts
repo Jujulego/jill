@@ -3,6 +3,7 @@ import path from 'node:path';
 
 import '@/src/commons/logger.service.js';
 import { TestBed } from '@/tools/test-bed.js';
+import { expect } from 'vitest';
 
 import { fileExists, jill } from './utils.js';
 
@@ -55,9 +56,9 @@ describe('jill exec', () => {
       // Check jill output
       expect(res.code).toBe(0);
 
-      expect(res.screen.screen).toMatchLines([
-        expect.ignoreColor(/^.( yarn exec)? node -e "require\('node:fs'\).+ \(took [0-9.]+m?s\)/),
-        expect.ignoreColor(/^. 1 done$/),
+      expect(res.screen.screen).toMatchLines(['']);
+      expect(res.stderr).toMatchLines([
+        expect.ignoreColor('No task found')
       ]);
 
       // Check script result
@@ -71,13 +72,9 @@ describe('jill exec', () => {
       // Check jill output
       expect(res.code).toBe(0);
 
-      expect(res.screen.screen).toMatchLines([
-        expect.ignoreColor(/^.( yarn exec)? echo toto \(took [0-9.]+m?s\)/),
-        expect.ignoreColor(/^. 1 done$/),
-      ]);
-
+      expect(res.stdout).toMatchLines(['toto']);
       expect(res.stderr).toMatchLines([
-        expect.ignoreColor(/^\[wks-c\$echo] toto/),
+        expect.ignoreColor('No task found')
       ]);
     });
 
@@ -97,11 +94,6 @@ describe('jill exec', () => {
 
       // Check jill output
       expect(res.code).toBe(1);
-
-      expect(res.screen.screen).toMatchLines([
-        expect.ignoreColor(/^.( yarn exec)? node -e "process.exit\(1\)" \(took [0-9.]+m?s\)$/),
-        expect.ignoreColor(/^. 1 failed$/),
-      ]);
     });
 
     it('should run wks-b start script and build script', async () => {
@@ -112,8 +104,7 @@ describe('jill exec', () => {
 
       expect(res.screen.screen).toMatchLines([
         expect.ignoreColor(/^. Run build in wks-c \(took [0-9.]+m?s\)$/),
-        expect.ignoreColor(/^.( yarn exec)? node -e "require\('node:fs'\).+ \(took [0-9.]+m?s\)/),
-        expect.ignoreColor(/^. 2 done$/),
+        expect.ignoreColor(/^. 1 done$/),
       ]);
 
       // Check scripts result
@@ -131,7 +122,7 @@ describe('jill exec', () => {
       expect(res.code).toBe(0);
 
       const plan = JSON.parse(res.stdout.join('\n'));
-      expect(plan).toHaveLength(3);
+      expect(plan).toHaveLength(2);
 
       expect(plan[0]).toMatchObject({
         id: expect.stringMatching(/[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}/),
@@ -153,20 +144,6 @@ describe('jill exec', () => {
           workspace: {
             name: 'wks-c',
             cwd: path.join(prjDir, 'wks-c')
-          }
-        }
-      });
-
-      expect(plan[2]).toMatchObject({
-        id: expect.stringMatching(/[0-9a-f]{32}/),
-        dependenciesIds: [
-          plan[0].id
-        ],
-        context: {
-          command: 'node',
-          workspace: {
-            name: 'wks-b',
-            cwd: path.join(prjDir, 'wks-b')
           }
         }
       });
