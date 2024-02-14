@@ -93,7 +93,7 @@ export class JillApplication {
           if (cmd instanceof TaskCommand) {
             const tasks: Task[] = [];
 
-            for await (const tsk of cmd.prepare(args)) {
+            for await (const tsk of cmd.prepare({ ...args, plan: true })) {
               tasks.push(tsk);
             }
 
