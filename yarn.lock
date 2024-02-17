@@ -482,7 +482,7 @@ __metadata:
     inversify: ^6.0.1
     inversify-inject-decorators: ^3.1.0
     log-symbols: ^6.0.0
-    memfs: 4.7.0
+    memfs: 4.7.1
     moo: ^0.5.2
     normalize-package-data: ^6.0.0
     path-scurry: ^1.10.1
@@ -3873,15 +3873,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"memfs@npm:4.7.0":
-  version: 4.7.0
-  resolution: "memfs@npm:4.7.0"
+"memfs@npm:4.7.1":
+  version: 4.7.1
+  resolution: "memfs@npm:4.7.1"
   dependencies:
     json-joy: ^11.0.0
     thingies: ^1.11.1
   peerDependencies:
     tslib: 2
-  checksum: b78d0d8d6173a122a7aabd2eae80817a4a3521ac431a1a18bb1d8724053d8edbd304617bfa4c2f9bc8268a77412e284668a8cb19701ae9f079069363ca4332ec
+  checksum: 4f539b6f27848f0067b9d31697b3f046aa88b4072fbc927e4bc271be552338387d762dc5e6cd2a5aef4adfc61808dd88fca692c789b4629deedb61ef98f2e918
   languageName: node
   linkType: hard
 
