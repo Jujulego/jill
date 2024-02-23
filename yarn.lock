@@ -482,7 +482,7 @@ __metadata:
     inversify: ^6.0.1
     inversify-inject-decorators: ^3.1.0
     log-symbols: ^6.0.0
-    memfs: 4.7.6
+    memfs: 4.7.7
     moo: ^0.5.2
     normalize-package-data: ^6.0.0
     path-scurry: ^1.10.1
@@ -3835,12 +3835,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"memfs@npm:4.7.6":
-  version: 4.7.6
-  resolution: "memfs@npm:4.7.6"
+"memfs@npm:4.7.7":
+  version: 4.7.7
+  resolution: "memfs@npm:4.7.7"
   dependencies:
     tslib: ^2.0.0
-  checksum: b46fedf292029719290867b17cfeaf273ccbe18a6f770efba166959492f533cd50a33fc985963dea4c0e96accf2f0ae9dfef10d2d67f4554bea7cb6c2725fc48
+  checksum: 060d54fba6103ad19cda65a5e416527fdf3ca1d756e9bb250f176a2628fbfa96da647c8d1567c575f241ab1a6362caac1a318091159657432094089cf6dac16f
   languageName: node
   linkType: hard
 
