@@ -58,7 +58,7 @@
   },
   "devDependencies": {
     "@jujulego/2d-maths": "1.6.0",
-    "@jujulego/vite-plugin-swc": "1.1.1",
+    "@jujulego/vite-plugin-swc": "1.2.0",
     "@microsoft/eslint-formatter-sarif": "3.0.0",
     "@rollup/plugin-json": "6.1.0",
     "@rollup/plugin-node-resolve": "15.2.3",
