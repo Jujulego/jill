@@ -455,7 +455,7 @@ __metadata:
     "@swc/core": 1.4.6
     "@swc/helpers": ^0.5.3
     "@types/moo": 0.5.9
-    "@types/node": 16.18.87
+    "@types/node": 16.18.88
     "@types/normalize-package-data": 2.4.4
     "@types/react": 18.2.64
     "@types/semver": 7.5.8
@@ -972,10 +972,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:16.18.87":
-  version: 16.18.87
-  resolution: "@types/node@npm:16.18.87"
-  checksum: 86b75acc212d2c428d3510913dda1ab739688e2992968f1495f561f375b5eb7fa7d181a03a195fd238cb785533c637114d40924d022b9099389867958ecbd256
+"@types/node@npm:16.18.88":
+  version: 16.18.88
+  resolution: "@types/node@npm:16.18.88"
+  checksum: 93d1460e4c0843552220952f8feefdc970d1cdc464dd64ed624811fdde51007f133532bf4ac6c58b497f91aaf98ea53e475214edb1008f35ea75602dec24a555
   languageName: node
   linkType: hard
 
