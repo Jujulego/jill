@@ -502,7 +502,7 @@ __metadata:
     slugify: ^1.6.6
     ts-node: 10.9.2
     typescript: 5.4.3
-    vite: 5.2.2
+    vite: 5.2.3
     vite-tsconfig-paths: 4.3.2
     vitest: 1.4.0
     yargs: ^17.7.2
@@ -5589,9 +5589,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite@npm:5.2.2, vite@npm:^5.0.0":
-  version: 5.2.2
-  resolution: "vite@npm:5.2.2"
+"vite@npm:5.2.3, vite@npm:^5.0.0":
+  version: 5.2.3
+  resolution: "vite@npm:5.2.3"
   dependencies:
     esbuild: ^0.20.1
     fsevents: ~2.3.3
@@ -5625,7 +5625,7 @@ __metadata:
       optional: true
   bin:
     vite: bin/vite.js
-  checksum: ef20480a0d4145f05378d33d295917995679c75205c19872346f18ad847cca8ac90794b7cfb280f787c0db60a90afcc1ae2c2e5ccedfe4751fb4a3c0ff07be69
+  checksum: 5848cb110c37a7d6ddd8b9c58c18749611770b9a28ffe150ef0e748b6e2018f905ca2d8c53c5eb8ba80c70656f72e68e604f802eddd42987b20c82de874fa3c0
   languageName: node
   linkType: hard
 
