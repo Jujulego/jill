@@ -64,7 +64,7 @@
     "@rollup/plugin-node-resolve": "15.2.3",
     "@swc/core": "1.4.8",
     "@types/moo": "0.5.9",
-    "@types/node": "16.18.93",
+    "@types/node": "16.18.94",
     "@types/normalize-package-data": "2.4.4",
     "@types/react": "18.2.74",
     "@types/semver": "7.5.8",
