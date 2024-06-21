@@ -456,7 +456,7 @@ __metadata:
     "@jujulego/tasks": ^2.2.0
     "@jujulego/utils": ^3.0.0
     "@jujulego/vite-plugin-swc": 1.2.0
-    "@microsoft/eslint-formatter-sarif": 3.0.0
+    "@microsoft/eslint-formatter-sarif": 3.1.0
     "@rollup/plugin-json": 6.1.0
     "@rollup/plugin-node-resolve": 15.2.3
     "@swc/core": 1.4.11
@@ -575,15 +575,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@microsoft/eslint-formatter-sarif@npm:3.0.0":
-  version: 3.0.0
-  resolution: "@microsoft/eslint-formatter-sarif@npm:3.0.0"
+"@microsoft/eslint-formatter-sarif@npm:3.1.0":
+  version: 3.1.0
+  resolution: "@microsoft/eslint-formatter-sarif@npm:3.1.0"
   dependencies:
     eslint: ^8.9.0
     jschardet: latest
     lodash: ^4.17.14
     utf8: ^3.0.0
-  checksum: 47c5d2e356285b085aa5f1937ec9c4692b9518a80835561e402057017a15b35be0bab83cbccb69853d200c016c03bbd0a6860da33950ce05b1089a03ac7aae3e
+  checksum: fab1923979ff3fb3667f80693814754babcbd6a774ec1e23b44e04e23ce063bd7aacae2308ddc5961a6d94eca0a7ec996db82fcbb8231907f2408cb4461a4392
   languageName: node
   linkType: hard
 
