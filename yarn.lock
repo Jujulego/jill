@@ -481,7 +481,7 @@ __metadata:
     eslint-plugin-react: 7.34.1
     eslint-plugin-react-hooks: 4.6.0
     eslint-plugin-vitest: 0.4.1
-    eslint-plugin-workspaces: 0.10.0
+    eslint-plugin-workspaces: 0.10.1
     glob: ^10.3.10
     ink: ^4.3.0
     ink-spinner: ^5.0.0
@@ -2369,12 +2369,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-workspaces@npm:0.10.0":
-  version: 0.10.0
-  resolution: "eslint-plugin-workspaces@npm:0.10.0"
+"eslint-plugin-workspaces@npm:0.10.1":
+  version: 0.10.1
+  resolution: "eslint-plugin-workspaces@npm:0.10.1"
   dependencies:
     find-workspaces: ^0.3.0
-  checksum: 9e4d1aea7c903614d89271a97212a5a5a302939b56f746ebf6d021820804b2e15c348902946ada4bddfaa8446dcce07b9dc1328d93f080fa0b0b8de9b794eea7
+  checksum: 1484bc34a0506490550051d6c9e1c8a29d1d5f2d115f40798685bc4ac10b17304da7e435ed5d95163f0deab0fdab4976c8fe3f2afba34543ecf783ded36330e1
   languageName: node
   linkType: hard
 
