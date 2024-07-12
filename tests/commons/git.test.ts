@@ -1,6 +1,6 @@
 import { Logger } from '@jujulego/logger';
 import { type TaskManager } from '@jujulego/tasks';
-import { describe, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import '@/src/commons/logger.service.js';
 import { CONFIG } from '@/src/config/config-loader.js';

@@ -1,3 +1,5 @@
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+
 import '@/src/commons/logger.service.js';
 import { container } from '@/src/inversify.config.js';
 import { CONFIG } from '@/src/config/config-loader.js';

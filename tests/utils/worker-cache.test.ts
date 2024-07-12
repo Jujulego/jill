@@ -1,4 +1,4 @@
-import { vi } from 'vitest';
+import { afterAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { BroadcastChannel, getEnvironmentData, setEnvironmentData } from 'node:worker_threads';
 
 import { workerCache } from '@/src/utils/worker-cache.js';

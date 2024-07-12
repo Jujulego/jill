@@ -1,4 +1,5 @@
 import { render } from 'ink-testing-library';
+import { describe, expect, it } from 'vitest';
 
 import List from '@/src/ui/list.js';
 

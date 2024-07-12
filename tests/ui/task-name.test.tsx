@@ -1,7 +1,7 @@
 import { SpawnTask } from '@jujulego/tasks';
 import { render } from 'ink-testing-library';
 import { Text } from 'ink';
-import { vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import '@/src/commons/logger.service.js';
 import { ScriptTask } from '@/src/tasks/script-task.js';

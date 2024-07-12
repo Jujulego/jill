@@ -1,3 +1,5 @@
+import { beforeEach, describe, expect, it } from 'vitest';
+
 import '@/src/commons/logger.service.js';
 import { PrivateFilter } from '@/src/filters/private.filter.js';
 

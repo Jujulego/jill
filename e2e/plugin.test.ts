@@ -1,6 +1,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import url from 'node:url';
+import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 
 import '@/src/commons/logger.service.js';
 import { TestBed } from '@/tools/test-bed.js';

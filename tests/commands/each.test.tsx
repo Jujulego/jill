@@ -1,7 +1,7 @@
 import { Logger } from '@jujulego/logger';
 import { cleanup, render } from 'ink-testing-library';
 import symbols from 'log-symbols';
-import { vi } from 'vitest';
+import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import yargs, { type CommandModule } from 'yargs';
 
 import '@/src/commons/logger.service.js';

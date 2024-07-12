@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { capitalize, splitCommandLine } from '@/src/utils/string.js';
 
 // Tests
