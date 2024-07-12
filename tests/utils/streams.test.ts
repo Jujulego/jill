@@ -1,5 +1,5 @@
 import { iterate$ } from '@jujulego/event-tree';
-import { vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { combine, streamLines } from '@/src/utils/streams.js';
 

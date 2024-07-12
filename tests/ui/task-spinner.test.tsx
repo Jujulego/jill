@@ -1,6 +1,6 @@
 import { render, cleanup } from 'ink-testing-library';
 import symbols from 'log-symbols';
-import { vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import TaskSpinner from '@/src/ui/task-spinner.js';
 

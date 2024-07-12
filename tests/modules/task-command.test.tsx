@@ -3,7 +3,7 @@ import { ParallelGroup, SpawnTask, type Task, type TaskManager } from '@jujulego
 import { cleanup, render } from 'ink-testing-library';
 import { injectable } from 'inversify';
 import symbols from 'log-symbols';
-import { vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import '@/src/commons/logger.service.js';
 import { CONFIG } from '@/src/config/config-loader.js';

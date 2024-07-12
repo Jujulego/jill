@@ -1,4 +1,4 @@
-import { vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { linesFrom } from '@/src/utils/events.js';
 import { TestSpawnTask } from '@/tools/test-tasks.js';

@@ -4,7 +4,6 @@ import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   test: {
-    globals: true,
     setupFiles: ['tools/setup.ts'],
     coverage: {
       include: ['src/**', 'tools/**'],

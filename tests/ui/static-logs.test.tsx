@@ -1,6 +1,6 @@
 import { Logger, LogLevel } from '@jujulego/logger';
 import { render } from 'ink-testing-library';
-import { vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import '@/src/commons/logger.service.js';
 import { LogGateway } from '@/src/commons/logger/log.gateway.js';
