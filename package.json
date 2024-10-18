@@ -75,7 +75,7 @@
     "@vitest/expect": "1.6.0",
     "@vitest/spy": "1.6.0",
     "browserslist": "4.23.2",
-    "eslint": "8.57.0",
+    "eslint": "9.13.0",
     "eslint-plugin-react": "7.34.4",
     "eslint-plugin-react-hooks": "4.6.2",
     "eslint-plugin-vitest": "0.4.1",
