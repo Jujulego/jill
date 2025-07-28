@@ -662,7 +662,7 @@ __metadata:
     "@types/moo": "npm:0.5.10"
     "@types/node": "npm:22.13.14"
     "@types/normalize-package-data": "npm:2.4.4"
-    "@types/react": "npm:18.3.14"
+    "@types/react": "npm:18.3.23"
     "@types/semver": "npm:7.5.8"
     "@types/yargs": "npm:17.0.33"
     "@typescript-eslint/eslint-plugin": "npm:7.18.0"
@@ -1383,13 +1383,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:18.3.14":
-  version: 18.3.14
-  resolution: "@types/react@npm:18.3.14"
+"@types/react@npm:18.3.23":
+  version: 18.3.23
+  resolution: "@types/react@npm:18.3.23"
   dependencies:
     "@types/prop-types": "npm:*"
     csstype: "npm:^3.0.2"
-  checksum: 10/683927b1e24293276cf62f60f1baa666b7f1053c87ec8d8c79d2d4bc105b99e0492482f801ffce7cdef9d656c11294faa423051807a500c7475f4fbd7661bd8d
+  checksum: 10/4b965dffe34a1f8aac8e2d7e976f113373f38134f9e37239f7e75d7ac6b3c2e1333a8df21febf1fe7749640f8de5708f7668cdfc70bffebda1cc4d3346724fd5
   languageName: node
   linkType: hard
 
