@@ -104,7 +104,6 @@ jobs:
           - 'windows-latest'
           - 'macos-latest'
         node:
-          - 16
           - 18
           - 20
           - 22
