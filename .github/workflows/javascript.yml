@@ -19,10 +19,10 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Use Node.js 16.x
+      - name: Use Node.js 22.x
         uses: actions/setup-node@v4
         with:
-          node-version: 16
+          node-version: 22
           cache: yarn
 
       - name: Install dependencies
@@ -48,10 +48,10 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Use Node.js 16.x
+      - name: Use Node.js 22.x
         uses: actions/setup-node@v4
         with:
-          node-version: 16
+          node-version: 22
           cache: yarn
 
       - name: Install dependencies
@@ -74,10 +74,10 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Use Node.js 16.x
+      - name: Use Node.js 22.x
         uses: actions/setup-node@v4
         with:
-          node-version: 16
+          node-version: 22
           cache: yarn
 
       - name: Install dependencies
@@ -107,6 +107,7 @@ jobs:
           - 16
           - 18
           - 20
+          - 22
         packageManager:
           - npm
           - yarn
@@ -164,10 +165,10 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Use Node.js 16.x
+      - name: Use Node.js 22.x
         uses: actions/setup-node@v4
         with:
-          node-version: 16
+          node-version: 22
           registry-url: https://registry.npmjs.org
           cache: yarn
 
