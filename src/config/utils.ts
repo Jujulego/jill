@@ -3,7 +3,7 @@ import { type ValidateFunction } from 'ajv';
 import { cosmiconfig, defaultLoaders } from 'cosmiconfig';
 
 import { AJV } from '@/src/ajv.config.ts';
-import schema from '@/src/config/schema.json';
+import schema from '@/src/config/schema.json' with { type: 'json' };
 import { container } from '@/src/inversify.config.ts';
 import { dynamicImport } from '@/src/utils/import.ts';
 
