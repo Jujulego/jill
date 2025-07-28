@@ -63,7 +63,7 @@
     "@rollup/plugin-json": "6.1.0",
     "@rollup/plugin-node-resolve": "15.3.0",
     "@swc/core": "1.13.2",
-    "@types/moo": "0.5.9",
+    "@types/moo": "0.5.10",
     "@types/node": "22.13.14",
     "@types/normalize-package-data": "2.4.4",
     "@types/react": "18.3.14",
