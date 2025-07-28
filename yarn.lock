@@ -659,7 +659,7 @@ __metadata:
     "@rollup/plugin-node-resolve": "npm:15.3.0"
     "@swc/core": "npm:1.13.2"
     "@swc/helpers": "npm:^0.5.3"
-    "@types/moo": "npm:0.5.9"
+    "@types/moo": "npm:0.5.10"
     "@types/node": "npm:22.13.14"
     "@types/normalize-package-data": "npm:2.4.4"
     "@types/react": "npm:18.3.14"
@@ -1353,10 +1353,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/moo@npm:0.5.9":
-  version: 0.5.9
-  resolution: "@types/moo@npm:0.5.9"
-  checksum: 10/8cc7680861d5bf64a12f4b8f97fef859440b294313ad24fe25d43e5f3e0870299899cbc7a5fb24114e977db6dc9a390ea4007af5318e5e52c6269991802441aa
+"@types/moo@npm:0.5.10":
+  version: 0.5.10
+  resolution: "@types/moo@npm:0.5.10"
+  checksum: 10/f547b889f7a352b7133b597aa4f7169c1852e6110364548699c9dfb08da4c443267d8ff926c1bcb2c119830da7fb2d7652523bafe9bbbc1cc3d6b84fbc5f3ce8
   languageName: node
   linkType: hard
 
