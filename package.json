@@ -80,7 +80,7 @@
     "eslint-plugin-workspaces": "0.10.1",
     "ink-testing-library": "3.0.0",
     "memfs": "4.24.0",
-    "rollup": "4.28.1",
+    "rollup": "4.46.2",
     "shx": "0.3.4",
     "ts-node": "10.9.2",
     "typescript": "5.7.2",
