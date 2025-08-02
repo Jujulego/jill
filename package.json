@@ -81,7 +81,7 @@
     "ink-testing-library": "3.0.0",
     "memfs": "4.24.0",
     "rollup": "4.46.2",
-    "shx": "0.3.4",
+    "shx": "0.4.0",
     "ts-node": "10.9.2",
     "typescript": "5.8.3",
     "vite": "5.4.11",
