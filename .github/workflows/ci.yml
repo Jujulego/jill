@@ -8,36 +8,40 @@ on:
     branches: [ latest, next ]
 
 concurrency:
-  group: javascript-${{ github.ref }}
+  group: ci-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
   build:
+    name: 'Build'
     runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+    permissions:
+      contents: read
 
-      - name: Use Node.js 22.x
-        uses: actions/setup-node@v4
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4.2.2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4.4.0
         with:
-          node-version: 22
+          node-version: 22.x
           cache: yarn
 
-      - name: Install dependencies
+      - name: Install
         run: yarn install --immutable
 
       - name: Build
         run: yarn build
 
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4.6.2
         with:
           name: build
           path: dist
 
   lint:
+    name: 'Lint'
     runs-on: ubuntu-latest
 
     permissions:
@@ -45,16 +49,16 @@ jobs:
       security-events: write
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4.2.2
 
-      - name: Use Node.js 22.x
-        uses: actions/setup-node@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4.4.0
         with:
-          node-version: 22
+          node-version: 22.x
           cache: yarn
 
-      - name: Install dependencies
+      - name: Install
         run: yarn install --immutable
 
       - name: Lint
@@ -62,35 +66,53 @@ jobs:
         run: yarn lint -f @microsoft/sarif -o eslint-results.sarif
 
       - name: Upload analysis results to GitHub
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v3.29.5
         with:
           sarif_file: eslint-results.sarif
           wait-for-processing: true
 
   tests:
+    name: 'Test'
     runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+    permissions:
+      contents: read
 
-      - name: Use Node.js 22.x
-        uses: actions/setup-node@v4
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4.2.2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4.4.0
         with:
-          node-version: 22
+          node-version: 22.x
           cache: yarn
 
-      - name: Install dependencies
+      - name: Install
         run: yarn install --immutable
+
+#      - name: Check tests typings
+#        run: yarn test:types
+#
+#      - name: Run tests
+#        run: yarn test --coverage
 
       - name: Run tests
         run: yarn test --coverage --typecheck
 
-      - name: Upload coverage artifacts
-        uses: actions/upload-artifact@v4
+      - name: Upload results to Codecov
+        uses: codecov/codecov-action@v5
         with:
-          name: coverage
-          path: coverage
+          flags: unit
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Upload test results to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/test-results-action@v1
+        with:
+          files: junit-report.xml
+          flags: unit
+          token: ${{ secrets.CODECOV_TOKEN }}
 
   e2e:
     runs-on: ${{ matrix.os }}
@@ -135,8 +157,19 @@ jobs:
           git config --global user.name github-actions
           git config --global user.email github-actions@github.com
 
+#      - name: Check tests typings
+#        run: yarn e2e:types
+
       - name: Run E2E tests
         run: yarn e2e -t ${{ matrix.packageManager }} --no-file-parallelism
+
+      - name: Upload test results to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/test-results-action@v1
+        with:
+          files: junit-report.xml
+          flags: e2e,${{ matrix.os }},node-${{ matrix.node }},${{ matrix.packageManager }}
+          token: ${{ secrets.CODECOV_TOKEN }}
 
   complete:
     if: ${{ github.event_name == 'pull_request' && always() }}
@@ -154,20 +187,23 @@ jobs:
 
   publish:
     if: ${{ github.event_name == 'push' }}
-    name: Publish to npm
+    name: 'Publish to npm'
 
     runs-on: ubuntu-latest
     environment: npm
     needs: [ lint, tests, e2e ]
 
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+    permissions:
+      contents: read
 
-      - name: Use Node.js 22.x
-        uses: actions/setup-node@v4
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4.2.2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4.4.0
         with:
-          node-version: 22
+          node-version: 22.x
           registry-url: https://registry.npmjs.org
           cache: yarn
 
@@ -175,48 +211,19 @@ jobs:
         run: yarn install --immutable
 
       - name: Download build artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v4.3.0
         with:
           name: build
           path: dist
 
-      - name: Publish ${{ github.ref_name }}
+      - name: Publish
         run: yarn npm publish --access public --tag ${{ github.ref_name }} --tolerate-republish
         env:
           YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-  sonarcloud:
-    if: ${{ !startsWith(github.head_ref, 'dependabot/') && !startsWith(github.head_ref, 'renovate/') }}
-    runs-on: ubuntu-latest
-    needs: [ tests ]
-
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Download coverage artifacts
-        uses: actions/download-artifact@v4
-        continue-on-error: true
-        with:
-          name: coverage
-          path: coverage
-
-      - name: Load package.json
-        id: info
-        run: echo "version=$(jq -r ".version" package.json)" >> $GITHUB_OUTPUT
-
-      - name: Sonarcloud
-        uses: sonarsource/sonarcloud-github-action@v2.1.1
-        with:
-          args: >
-            -Dsonar.projectVersion=${{ steps.info.outputs.version }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
   release:
     if: ${{ github.event_name == 'push' }}
+    name: 'Publish release'
 
     runs-on: ubuntu-latest
     needs: [ publish ]
@@ -225,7 +232,8 @@ jobs:
       contents: write
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4.2.2
 
       - name: Read package.json
         id: info
@@ -260,5 +268,4 @@ jobs:
         with:
           name: ${{ steps.info.outputs.version }}
           tag_name: v${{ steps.info.outputs.version }}
-          draft: true
           generate_release_notes: true

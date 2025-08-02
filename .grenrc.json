@@ -1,9 +1,0 @@
-{
-  "dataSource": "prs",
-  "ignoreLabels": ["cli", "core", "yarn-plugin"],
-  "groupBy": {
-    "Enhancements:": ["enhancement"],
-    "Bug Fixes:": ["bug"],
-    "Documentation:": ["documentation"]
-  }
-}
