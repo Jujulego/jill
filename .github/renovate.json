@@ -1,23 +1,59 @@
 {
   "extends": [
-    "config:base"
+    "config:recommended"
   ],
-  "baseBranches": ["next"],
-  "labels": ["dependencies"],
+  "baseBranchPatterns": [
+    "next"
+  ],
+  "labels": [
+    "dependencies"
+  ],
   "packageRules": [
     {
-      "matchDepTypes": ["devDependencies"],
-      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "matchCategories": [
+        "ci"
+      ],
+      "addLabels": [
+        "github-actions"
+      ]
+    },
+    {
+      "matchCategories": [
+        "js"
+      ],
+      "addLabels": [
+        "javascript"
+      ],
+      "postUpdateOptions": [
+        "yarnDedupeHighest"
+      ]
+    },
+    {
+      "matchDepTypes": [
+        "dependencies"
+      ],
+      "matchUpdateTypes": [
+        "patch",
+        "pin",
+        "digest"
+      ],
+      "automerge": true,
+      "automergeType": "pr",
+      "platformAutomerge": true
+    },
+    {
+      "matchDepTypes": [
+        "devDependencies"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch",
+        "pin",
+        "digest"
+      ],
       "automerge": true,
       "automergeType": "pr",
       "platformAutomerge": true
     }
-  ],
-  "js": {
-    "addLabels": ["javascript"],
-    "postUpdateOptions": ["yarnDedupeHighest"]
-  },
-  "github-actions": {
-    "addLabels": ["github-actions"]
-  }
+  ]
 }
