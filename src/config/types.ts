@@ -31,9 +31,4 @@ export interface Config {
    * Paths to plugin files.
    */
   readonly plugins: readonly string[];
-
-  /**
-   * Verbosity level.
-   */
-  readonly verbose?: 'info' | 'verbose' | 'debug';
 }

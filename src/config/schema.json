@@ -20,11 +20,6 @@
       "items": {
         "type": "string"
       }
-    },
-    "verbose": {
-      "type": "string",
-      "description": "Verbosity level.",
-      "enum": ["info", "verbose", "debug"]
     }
   }
 }
