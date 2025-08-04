@@ -16,8 +16,9 @@
   "scripts": {
     "lint": "eslint .",
     "clean": "shx rm -rf dist",
-    "build": "yarn run build:bundle && yarn run build:types",
+    "build": "yarn run build:bundle && yarn run build:dts && yarn run build:types",
     "build:bundle": "rollup -c",
+    "build:dts": "tsc -p tsconfig.dts.json",
     "build:types": "tsc -p tsconfig.build.json",
     "watch": "rollup -c --watch",
     "test": "vitest run tests tools",

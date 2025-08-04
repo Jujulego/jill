@@ -6,12 +6,13 @@ import { defineConfig } from 'vitest/config';
 export default defineConfig({
   cacheDir: '.vite',
   test: {
-    reporters: ['default', 'junit'],
-    setupFiles: ['tools/setup.ts'],
     coverage: {
       include: ['src/**', 'tools/**'],
       reporter: ['text', 'lcovonly'],
     },
+    globals: true,
+    reporters: ['default', 'junit'],
+    setupFiles: ['tools/setup.ts'],
     outputFile: {
       junit: 'junit-report.xml'
     }
