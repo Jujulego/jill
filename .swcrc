@@ -1,6 +1,8 @@
 {
+  "env": {
+    "targets": "node 18"
+  },
   "jsc": {
-    "loose": true,
     "externalHelpers": true,
     "parser": {
       "syntax": "typescript",
@@ -9,21 +11,23 @@
       "dynamicImport": true
     },
     "transform": {
+      "decoratorVersion": "2022-03",
       "react": {
         "runtime": "automatic"
       }
     },
     "baseUrl": "./",
     "paths": {
-      "@/src/*": ["./src/*"],
-      "@/tools/*": ["./tools/*"]
+      "@/src/*": [
+        "./src/*"
+      ],
+      "@/tools/*": [
+        "./tools/*"
+      ]
     }
   },
   "module": {
     "type": "es6"
   },
-  "sourceMaps": true,
-  "env": {
-    "targets": "node 16"
-  }
+  "sourceMaps": true
 }
