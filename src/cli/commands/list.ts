@@ -1,3 +1,4 @@
+import { loadCurrentProject } from '@/src/cli/middlewares/current-project.middleware.js';
 import type { Order } from '../../utils/types.js';
 import type { CommandModule } from 'yargs';
 
@@ -6,7 +7,7 @@ const command: CommandModule<unknown, ListArgs> = {
   command: 'list',
   aliases: ['ls'],
   describe: 'List project workspaces',
-  builder: (parser) => parser
+  builder: (parser) => loadCurrentProject(parser)
     .option('affected', {
       alias: 'a',
       type: 'string',
