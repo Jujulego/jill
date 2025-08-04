@@ -1,8 +1,7 @@
-import yargs, { type Argv } from 'yargs';
-import { type interfaces as int } from 'inversify';
-import { hideBin } from 'yargs/helpers';
-
 import { container } from '@/src/inversify.config.js';
+import { type interfaces as int } from 'inversify';
+import yargs, { type Argv } from 'yargs';
+import { hideBin } from 'yargs/helpers';
 
 import { type IConfig } from './types.js';
 

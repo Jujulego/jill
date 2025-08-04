@@ -3,13 +3,15 @@
   "type": "object",
   "additionalProperties": false,
   "properties": {
-    "jobs": {
-      "type": "number"
-    },
     "hooks": {
       "type": "boolean",
       "default": true,
-      "description": "Run hook scripts"
+      "description": "Instructs jill to run hook scripts."
+    },
+    "jobs": {
+      "type": "number",
+      "default": -1,
+      "description": "Number of allowed parallel tasks, defaults to CPU number."
     },
     "plugins": {
       "type": "array",
@@ -19,6 +21,7 @@
     },
     "verbose": {
       "type": "string",
+      "description": "Verbosity level.",
       "enum": ["info", "verbose", "debug"]
     }
   }
