@@ -1,29 +1,17 @@
-import { Logger } from '@jujulego/logger';
+import process from 'node:process';
+import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
-
-import '@/src/commons/logger.service.js';
-import { container } from '@/src/inversify.config.js';
-import { JillApplication } from '@/src/jill.application.js';
-import { ExitException } from '@/src/utils/exit.js';
+import { version } from '../package.json' with { type: 'json' };
+import { configMiddleware } from './cli/middlewares/config.middleware.js';
+import { loggerMiddleware } from './cli/middlewares/logger.middleware.js';
+import 'reflect-metadata/lite';
 
 // Bootstrap
-(async () => {
-  const app = await container.getAsync(JillApplication);
+const parser = yargs(hideBin(process.argv))
+  .scriptName('jill')
+  .version(version);
 
-  try {
-    await app.run(hideBin(process.argv));
-  } catch (err) {
-    if (err instanceof ExitException) {
-      process.exit(err.code);
-    } else {
-      console.error(await app.parser.getHelp());
+loggerMiddleware(parser);
+configMiddleware(parser);
 
-      if (err.message) {
-        const logger = container.get(Logger);
-        logger.error(err.message);
-      }
-
-      process.exit(1);
-    }
-  }
-})();
+await parser.parseAsync();

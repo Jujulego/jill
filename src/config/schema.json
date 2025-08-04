@@ -3,23 +3,23 @@
   "type": "object",
   "additionalProperties": false,
   "properties": {
-    "jobs": {
-      "type": "number"
-    },
     "hooks": {
       "type": "boolean",
       "default": true,
-      "description": "Run hook scripts"
+      "description": "Instructs jill to run hook scripts."
+    },
+    "jobs": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of allowed parallel tasks, defaults to CPU number."
     },
     "plugins": {
       "type": "array",
+      "default": [],
+      "description": "Paths to plugin files.",
       "items": {
         "type": "string"
       }
-    },
-    "verbose": {
-      "type": "string",
-      "enum": ["info", "verbose", "debug"]
     }
   }
 }

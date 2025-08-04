@@ -674,10 +674,12 @@ __metadata:
     "@jujulego/aegis": "npm:^2.1.0"
     "@jujulego/event-tree": "npm:^4.3.0"
     "@jujulego/logger": "npm:^0.2.4"
-    "@jujulego/quick-tag": "npm:^0.3.3"
+    "@jujulego/quick-tag": "npm:^1.0.3"
     "@jujulego/tasks": "npm:^2.2.0"
     "@jujulego/utils": "npm:^3.0.0"
     "@jujulego/vite-plugin-swc": "npm:1.2.0"
+    "@kyrielle/injector": "npm:^1.0.0"
+    "@kyrielle/logger": "npm:^2.0.0"
     "@microsoft/eslint-formatter-sarif": "npm:3.1.0"
     "@rollup/plugin-json": "npm:6.1.0"
     "@rollup/plugin-node-resolve": "npm:16.0.1"
@@ -693,7 +695,7 @@ __metadata:
     "@vitest/coverage-v8": "npm:3.2.4"
     "@vitest/eslint-plugin": "npm:1.3.4"
     ajv: "npm:^8.12.0"
-    chalk: "npm:^5.3.0"
+    chalk: "npm:^5.5.0"
     chalk-template: "npm:^1.1.0"
     cosmiconfig: "npm:^9.0.0"
     eslint: "npm:9.32.0"
@@ -707,6 +709,7 @@ __metadata:
     inversify: "npm:^6.0.1"
     inversify-inject-decorators: "npm:^3.1.0"
     jiti: "npm:2.5.1"
+    kyrielle: "npm:^2.4.0"
     log-symbols: "npm:^6.0.0"
     memfs: "npm:4.24.0"
     moo: "npm:^0.5.2"
@@ -725,7 +728,7 @@ __metadata:
     vite: "npm:7.0.6"
     vite-tsconfig-paths: "npm:5.1.4"
     vitest: "npm:3.2.4"
-    yargs: "npm:^17.7.2"
+    yargs: "npm:^18.0.0"
   bin:
     jill: ./bin/jill.js
   languageName: unknown
@@ -750,6 +753,19 @@ __metadata:
     vitest@0.34.6:
       unplugged: true
   checksum: 10/bd8d2e936c160b3e45eccf86f93104390a1d1fc7b908f595e01cf4a1442124e25bb3501e9137f676fcdf28d5c322c10e836b5d0c24376690689cead29b9be6a9
+  languageName: node
+  linkType: hard
+
+"@jujulego/quick-tag@npm:^1.0.1, @jujulego/quick-tag@npm:^1.0.3":
+  version: 1.0.3
+  resolution: "@jujulego/quick-tag@npm:1.0.3"
+  dependencies:
+    "@swc/helpers": "npm:^0.5.3"
+    safe-stable-stringify: "npm:^2.4.3"
+  dependenciesMeta:
+    vitest@1.4.0:
+      unplugged: true
+  checksum: 10/7575cddfbe25a154712ac87d004331d16d9f787e1c162ff8e0f97b924c8ee50edf7693882c08d278e90bb5c4f67330f8f8baa7018cd11e3203ff146487d73e36
   languageName: node
   linkType: hard
 
@@ -792,6 +808,33 @@ __metadata:
   peerDependencies:
     "@swc/core": ^1.3.0
   checksum: 10/53f979af16c8081729235d2c189f68bd7c1cc6801ee128cbdee3aee0ffa97ffa99526fc585dcd37101f814a7511b824563076a8943ae01bb3e77619727995159
+  languageName: node
+  linkType: hard
+
+"@kyrielle/injector@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "@kyrielle/injector@npm:1.0.0"
+  dependencies:
+    "@swc/helpers": "npm:^0.5.3"
+  dependenciesMeta:
+    vitest@2.1.4:
+      unplugged: true
+  checksum: 10/f87b04859213e743dedc88fac5f34c8aca9de4e586e41548e6fc3de0bae0a7d51474787f669df9277ddefb410150493827bfa771c20ceeece6aad8b0682ccdee
+  languageName: node
+  linkType: hard
+
+"@kyrielle/logger@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "@kyrielle/logger@npm:2.0.0"
+  dependencies:
+    "@jujulego/quick-tag": "npm:^1.0.1"
+    "@swc/helpers": "npm:^0.5.3"
+    kyrielle: "npm:^2.2.1"
+    pretty-ms: "npm:^9.0.0"
+  dependenciesMeta:
+    vitest@2.1.4:
+      unplugged: true
+  checksum: 10/fde1361a1eb2aabcaffb58eaa4fdf8fecb621b8504b935ae8f07ade8717d8a519e75beedad01f99bfc72fe1f7a158981cc309fc0633c448df4f1431cadc65358
   languageName: node
   linkType: hard
 
@@ -967,6 +1010,13 @@ __metadata:
   version: 0.11.0
   resolution: "@pkgjs/parseargs@npm:0.11.0"
   checksum: 10/115e8ceeec6bc69dff2048b35c0ab4f8bbee12d8bb6c1f4af758604586d802b6e669dcb02dda61d078de42c2b4ddce41b3d9e726d7daa6b4b850f4adbf7333ff
+  languageName: node
+  linkType: hard
+
+"@repeaterjs/repeater@npm:^3.0.5":
+  version: 3.0.6
+  resolution: "@repeaterjs/repeater@npm:3.0.6"
+  checksum: 10/25698e822847b776006428f31e2d31fbcb4faccf30c1c8d68d6e1308e58b49afb08764d1dd15536ddd67775cd01fd6c2fb22f039c05a71865448fbcfb2246af2
   languageName: node
   linkType: hard
 
@@ -2136,10 +2186,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chalk@npm:^5.2.0, chalk@npm:^5.3.0":
-  version: 5.4.1
-  resolution: "chalk@npm:5.4.1"
-  checksum: 10/29df3ffcdf25656fed6e95962e2ef86d14dfe03cd50e7074b06bad9ffbbf6089adbb40f75c00744d843685c8d008adaf3aed31476780312553caf07fa86e5bc7
+"chalk@npm:^5.2.0, chalk@npm:^5.3.0, chalk@npm:^5.5.0":
+  version: 5.5.0
+  resolution: "chalk@npm:5.5.0"
+  checksum: 10/19f6905b47b628541976a534e2f39c3779f7f9276ff9693cb8f7cdb3e3e09ee5dee16e0c3768632fbb41c2a1f1653ee0041ea7730428b804068945eb0bab09c4
   languageName: node
   linkType: hard
 
@@ -2197,14 +2247,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cliui@npm:^8.0.1":
-  version: 8.0.1
-  resolution: "cliui@npm:8.0.1"
+"cliui@npm:^9.0.1":
+  version: 9.0.1
+  resolution: "cliui@npm:9.0.1"
   dependencies:
-    string-width: "npm:^4.2.0"
-    strip-ansi: "npm:^6.0.1"
-    wrap-ansi: "npm:^7.0.0"
-  checksum: 10/eaa5561aeb3135c2cddf7a3b3f562fc4238ff3b3fc666869ef2adf264be0f372136702f16add9299087fb1907c2e4ec5dbfe83bd24bce815c70a80c6c1a2e950
+    string-width: "npm:^7.2.0"
+    strip-ansi: "npm:^7.1.0"
+    wrap-ansi: "npm:^9.0.0"
+  checksum: 10/df43d8d1c6e3254cbb64b1905310d5f6672c595496a3cbe76946c6d24777136886470686f2772ac9edfe547a74bb70e8017530b3554715aee119efd7752fc0d9
   languageName: node
   linkType: hard
 
@@ -4292,6 +4342,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"kyrielle@npm:^2.2.1, kyrielle@npm:^2.4.0":
+  version: 2.4.0
+  resolution: "kyrielle@npm:2.4.0"
+  dependencies:
+    "@repeaterjs/repeater": "npm:^3.0.5"
+    "@swc/helpers": "npm:^0.5.3"
+  dependenciesMeta:
+    vitest@3.2.4:
+      unplugged: true
+  checksum: 10/182906ed4555897d61dc106af70020bd448b4d2ac1a5e16e0af840ef50a78f3d56772d902162f67c97aec20ab8ea0863f045c41086b82ed281adbf1cb95eb45d
+  languageName: node
+  linkType: hard
+
 "levn@npm:^0.4.1":
   version: 0.4.1
   resolution: "levn@npm:0.4.1"
@@ -5134,13 +5197,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"require-directory@npm:^2.1.1":
-  version: 2.1.1
-  resolution: "require-directory@npm:2.1.1"
-  checksum: 10/a72468e2589270d91f06c7d36ec97a88db53ae5d6fe3787fadc943f0b0276b10347f89b363b2a82285f650bdcc135ad4a257c61bdd4d00d6df1fa24875b0ddaf
-  languageName: node
-  linkType: hard
-
 "require-from-string@npm:^2.0.2":
   version: 2.0.2
   resolution: "require-from-string@npm:2.0.2"
@@ -5364,6 +5420,13 @@ __metadata:
     es-errors: "npm:^1.3.0"
     is-regex: "npm:^1.2.1"
   checksum: 10/ebdb61f305bf4756a5b023ad86067df5a11b26898573afe9e52a548a63c3bd594825d9b0e2dde2eb3c94e57e0e04ac9929d4107c394f7b8e56a4613bed46c69a
+  languageName: node
+  linkType: hard
+
+"safe-stable-stringify@npm:^2.4.3":
+  version: 2.5.0
+  resolution: "safe-stable-stringify@npm:2.5.0"
+  checksum: 10/2697fa186c17c38c3ca5309637b4ac6de2f1c3d282da27cd5e1e3c88eca0fb1f9aea568a6aabdf284111592c8782b94ee07176f17126031be72ab1313ed46c5c
   languageName: node
   linkType: hard
 
@@ -5726,7 +5789,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"string-width-cjs@npm:string-width@^4.2.0, string-width@npm:^1.0.2 || 2 || 3 || 4, string-width@npm:^4.1.0, string-width@npm:^4.2.0, string-width@npm:^4.2.3":
+"string-width-cjs@npm:string-width@^4.2.0, string-width@npm:^1.0.2 || 2 || 3 || 4, string-width@npm:^4.1.0, string-width@npm:^4.2.3":
   version: 4.2.3
   resolution: "string-width@npm:4.2.3"
   dependencies:
@@ -6567,7 +6630,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"wrap-ansi-cjs@npm:wrap-ansi@^7.0.0, wrap-ansi@npm:^7.0.0":
+"wrap-ansi-cjs@npm:wrap-ansi@^7.0.0":
   version: 7.0.0
   resolution: "wrap-ansi@npm:7.0.0"
   dependencies:
@@ -6636,25 +6699,24 @@ __metadata:
   languageName: node
   linkType: hard
 
-"yargs-parser@npm:^21.1.1":
-  version: 21.1.1
-  resolution: "yargs-parser@npm:21.1.1"
-  checksum: 10/9dc2c217ea3bf8d858041252d43e074f7166b53f3d010a8c711275e09cd3d62a002969a39858b92bbda2a6a63a585c7127014534a560b9c69ed2d923d113406e
+"yargs-parser@npm:^22.0.0":
+  version: 22.0.0
+  resolution: "yargs-parser@npm:22.0.0"
+  checksum: 10/f13c42bad6ebed1a587a72f2db5694f5fa772bcaf409a701691d13cf74eb5adfcf61a2611de08807e319b829d3e5e6e1578b16ebe174cae8e8be3bf7b8e7a19e
   languageName: node
   linkType: hard
 
-"yargs@npm:^17.7.2":
-  version: 17.7.2
-  resolution: "yargs@npm:17.7.2"
+"yargs@npm:^18.0.0":
+  version: 18.0.0
+  resolution: "yargs@npm:18.0.0"
   dependencies:
-    cliui: "npm:^8.0.1"
+    cliui: "npm:^9.0.1"
     escalade: "npm:^3.1.1"
     get-caller-file: "npm:^2.0.5"
-    require-directory: "npm:^2.1.1"
-    string-width: "npm:^4.2.3"
+    string-width: "npm:^7.2.0"
     y18n: "npm:^5.0.5"
-    yargs-parser: "npm:^21.1.1"
-  checksum: 10/abb3e37678d6e38ea85485ed86ebe0d1e3464c640d7d9069805ea0da12f69d5a32df8e5625e370f9c96dd1c2dc088ab2d0a4dd32af18222ef3c4224a19471576
+    yargs-parser: "npm:^22.0.0"
+  checksum: 10/5af36234871390386b31cac99f00e79fcbc2ead858a61b30a8ca381c5fde5df8af0b407c36b000d3f774bcbe4aec5833f2f1c915f6ddc49ce97b78176b651801
   languageName: node
   linkType: hard
 

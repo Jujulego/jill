@@ -36,8 +36,9 @@ export * from './tasks/script-task.js';
 export * from './tasks/task-expression.service.js';
 export * from './tasks/task-manager.config.js';
 
+export * from './config/config.service.js';
 export { CONFIG } from './config/config-loader.js';
-export { type IConfig } from './config/types.js';
+export { type IConfig, type Config } from './config/types.js';
 
 // Ui
 export { default as Layout } from './ui/layout.jsx';
