@@ -674,10 +674,12 @@ __metadata:
     "@jujulego/aegis": "npm:^2.1.0"
     "@jujulego/event-tree": "npm:^4.3.0"
     "@jujulego/logger": "npm:^0.2.4"
-    "@jujulego/quick-tag": "npm:^0.3.3"
+    "@jujulego/quick-tag": "npm:^1.0.3"
     "@jujulego/tasks": "npm:^2.2.0"
     "@jujulego/utils": "npm:^3.0.0"
     "@jujulego/vite-plugin-swc": "npm:1.2.0"
+    "@kyrielle/injector": "npm:^1.0.0"
+    "@kyrielle/logger": "npm:^2.0.0"
     "@microsoft/eslint-formatter-sarif": "npm:3.1.0"
     "@rollup/plugin-json": "npm:6.1.0"
     "@rollup/plugin-node-resolve": "npm:16.0.1"
@@ -693,7 +695,7 @@ __metadata:
     "@vitest/coverage-v8": "npm:3.2.4"
     "@vitest/eslint-plugin": "npm:1.3.4"
     ajv: "npm:^8.12.0"
-    chalk: "npm:^5.3.0"
+    chalk: "npm:^5.5.0"
     chalk-template: "npm:^1.1.0"
     cosmiconfig: "npm:^9.0.0"
     eslint: "npm:9.32.0"
@@ -707,6 +709,7 @@ __metadata:
     inversify: "npm:^6.0.1"
     inversify-inject-decorators: "npm:^3.1.0"
     jiti: "npm:2.5.1"
+    kyrielle: "npm:^2.4.0"
     log-symbols: "npm:^6.0.0"
     memfs: "npm:4.24.0"
     moo: "npm:^0.5.2"
@@ -753,6 +756,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@jujulego/quick-tag@npm:^1.0.1, @jujulego/quick-tag@npm:^1.0.3":
+  version: 1.0.3
+  resolution: "@jujulego/quick-tag@npm:1.0.3"
+  dependencies:
+    "@swc/helpers": "npm:^0.5.3"
+    safe-stable-stringify: "npm:^2.4.3"
+  dependenciesMeta:
+    vitest@1.4.0:
+      unplugged: true
+  checksum: 10/7575cddfbe25a154712ac87d004331d16d9f787e1c162ff8e0f97b924c8ee50edf7693882c08d278e90bb5c4f67330f8f8baa7018cd11e3203ff146487d73e36
+  languageName: node
+  linkType: hard
+
 "@jujulego/tasks@npm:^2.2.0":
   version: 2.2.0
   resolution: "@jujulego/tasks@npm:2.2.0"
@@ -792,6 +808,33 @@ __metadata:
   peerDependencies:
     "@swc/core": ^1.3.0
   checksum: 10/53f979af16c8081729235d2c189f68bd7c1cc6801ee128cbdee3aee0ffa97ffa99526fc585dcd37101f814a7511b824563076a8943ae01bb3e77619727995159
+  languageName: node
+  linkType: hard
+
+"@kyrielle/injector@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "@kyrielle/injector@npm:1.0.0"
+  dependencies:
+    "@swc/helpers": "npm:^0.5.3"
+  dependenciesMeta:
+    vitest@2.1.4:
+      unplugged: true
+  checksum: 10/f87b04859213e743dedc88fac5f34c8aca9de4e586e41548e6fc3de0bae0a7d51474787f669df9277ddefb410150493827bfa771c20ceeece6aad8b0682ccdee
+  languageName: node
+  linkType: hard
+
+"@kyrielle/logger@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "@kyrielle/logger@npm:2.0.0"
+  dependencies:
+    "@jujulego/quick-tag": "npm:^1.0.1"
+    "@swc/helpers": "npm:^0.5.3"
+    kyrielle: "npm:^2.2.1"
+    pretty-ms: "npm:^9.0.0"
+  dependenciesMeta:
+    vitest@2.1.4:
+      unplugged: true
+  checksum: 10/fde1361a1eb2aabcaffb58eaa4fdf8fecb621b8504b935ae8f07ade8717d8a519e75beedad01f99bfc72fe1f7a158981cc309fc0633c448df4f1431cadc65358
   languageName: node
   linkType: hard
 
@@ -967,6 +1010,13 @@ __metadata:
   version: 0.11.0
   resolution: "@pkgjs/parseargs@npm:0.11.0"
   checksum: 10/115e8ceeec6bc69dff2048b35c0ab4f8bbee12d8bb6c1f4af758604586d802b6e669dcb02dda61d078de42c2b4ddce41b3d9e726d7daa6b4b850f4adbf7333ff
+  languageName: node
+  linkType: hard
+
+"@repeaterjs/repeater@npm:^3.0.5":
+  version: 3.0.6
+  resolution: "@repeaterjs/repeater@npm:3.0.6"
+  checksum: 10/25698e822847b776006428f31e2d31fbcb4faccf30c1c8d68d6e1308e58b49afb08764d1dd15536ddd67775cd01fd6c2fb22f039c05a71865448fbcfb2246af2
   languageName: node
   linkType: hard
 
@@ -2136,10 +2186,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chalk@npm:^5.2.0, chalk@npm:^5.3.0":
-  version: 5.4.1
-  resolution: "chalk@npm:5.4.1"
-  checksum: 10/29df3ffcdf25656fed6e95962e2ef86d14dfe03cd50e7074b06bad9ffbbf6089adbb40f75c00744d843685c8d008adaf3aed31476780312553caf07fa86e5bc7
+"chalk@npm:^5.2.0, chalk@npm:^5.3.0, chalk@npm:^5.5.0":
+  version: 5.5.0
+  resolution: "chalk@npm:5.5.0"
+  checksum: 10/19f6905b47b628541976a534e2f39c3779f7f9276ff9693cb8f7cdb3e3e09ee5dee16e0c3768632fbb41c2a1f1653ee0041ea7730428b804068945eb0bab09c4
   languageName: node
   linkType: hard
 
@@ -4292,6 +4342,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"kyrielle@npm:^2.2.1, kyrielle@npm:^2.4.0":
+  version: 2.4.0
+  resolution: "kyrielle@npm:2.4.0"
+  dependencies:
+    "@repeaterjs/repeater": "npm:^3.0.5"
+    "@swc/helpers": "npm:^0.5.3"
+  dependenciesMeta:
+    vitest@3.2.4:
+      unplugged: true
+  checksum: 10/182906ed4555897d61dc106af70020bd448b4d2ac1a5e16e0af840ef50a78f3d56772d902162f67c97aec20ab8ea0863f045c41086b82ed281adbf1cb95eb45d
+  languageName: node
+  linkType: hard
+
 "levn@npm:^0.4.1":
   version: 0.4.1
   resolution: "levn@npm:0.4.1"
@@ -5357,6 +5420,13 @@ __metadata:
     es-errors: "npm:^1.3.0"
     is-regex: "npm:^1.2.1"
   checksum: 10/ebdb61f305bf4756a5b023ad86067df5a11b26898573afe9e52a548a63c3bd594825d9b0e2dde2eb3c94e57e0e04ac9929d4107c394f7b8e56a4613bed46c69a
+  languageName: node
+  linkType: hard
+
+"safe-stable-stringify@npm:^2.4.3":
+  version: 2.5.0
+  resolution: "safe-stable-stringify@npm:2.5.0"
+  checksum: 10/2697fa186c17c38c3ca5309637b4ac6de2f1c3d282da27cd5e1e3c88eca0fb1f9aea568a6aabdf284111592c8782b94ee07176f17126031be72ab1313ed46c5c
   languageName: node
   linkType: hard
 
