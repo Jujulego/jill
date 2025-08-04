@@ -1,8 +1,8 @@
 import { TaskManager } from '@jujulego/tasks';
 import { useStdin } from 'ink';
 
-import TaskTreeScrollableSpinner from '@/src/ui/task-tree-scrollable-spinner.tsx';
-import TaskTreeFullSpinner from '@/src/ui/task-tree-full-spinner.tsx';
+import TaskTreeScrollableSpinner from '@/src/ui/task-tree-scrollable-spinner.jsx';
+import TaskTreeFullSpinner from '@/src/ui/task-tree-full-spinner.jsx';
 
 // Types
 export interface TaskTreeSpinnerProps {

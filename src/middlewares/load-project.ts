@@ -1,13 +1,13 @@
 import { inject } from 'inversify';
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
 
-import { CURRENT } from '@/src/constants.ts';
-import { ContextService } from '@/src/commons/context.service.ts';
-import { container, lazyInjectNamed } from '@/src/inversify.config.ts';
-import { type IMiddleware, Middleware } from '@/src/modules/middleware.ts';
-import { Project } from '@/src/project/project.ts';
-import { ProjectRepository } from '@/src/project/project.repository.ts';
-import { type PackageManager } from '@/src/project/types.ts';
+import { CURRENT } from '@/src/constants.js';
+import { ContextService } from '@/src/commons/context.service.js';
+import { container, lazyInjectNamed } from '@/src/inversify.config.js';
+import { type IMiddleware, Middleware } from '@/src/modules/middleware.js';
+import { Project } from '@/src/project/project.js';
+import { ProjectRepository } from '@/src/project/project.repository.js';
+import { type PackageManager } from '@/src/project/types.js';
 
 // Types
 export interface ILoadProjectArgs {

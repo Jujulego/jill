@@ -1,13 +1,13 @@
 import { Logger, withLabel } from '@jujulego/logger';
 import { type ContainerModule, inject, type interfaces as int } from 'inversify';
 
-import { CONFIG } from '@/src/config/config-loader.ts';
-import { type IConfig } from '@/src/config/types.ts';
-import { container } from '@/src/inversify.config.ts';
-import { dynamicImport } from '@/src/utils/import.ts';
+import { CONFIG } from '@/src/config/config-loader.js';
+import { type IConfig } from '@/src/config/types.js';
+import { container } from '@/src/inversify.config.js';
+import { dynamicImport } from '@/src/utils/import.js';
 
-import { getModule } from './module.ts';
-import { Service } from './service.ts';
+import { getModule } from './module.js';
+import { Service } from './service.js';
 
 // Class
 @Service()

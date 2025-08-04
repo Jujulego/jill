@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 
-import { CONFIG } from '@/src/config/config-loader.ts';
-import { container } from '@/src/inversify.config.ts';
+import { CONFIG } from '@/src/config/config-loader.js';
+import { container } from '@/src/inversify.config.js';
 
 export function useIsVerbose() {
   return useMemo(() => {

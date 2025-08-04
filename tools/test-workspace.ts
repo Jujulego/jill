@@ -1,4 +1,4 @@
-import { Workspace } from '@/src/project/workspace.ts';
+import { Workspace } from '@/src/project/workspace.js';
 
 // Class
 export class TestWorkspace extends Workspace {

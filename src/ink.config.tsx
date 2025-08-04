@@ -3,8 +3,8 @@ import { render } from 'ink';
 import { type interfaces as int } from 'inversify';
 import wt from 'node:worker_threads';
 
-import { container } from '@/src/inversify.config.ts';
-import Layout from '@/src/ui/layout.tsx';
+import { container } from '@/src/inversify.config.js';
+import Layout from '@/src/ui/layout.jsx';
 
 // Constants
 export const INK_APP: int.ServiceIdentifier<Instance> = Symbol.for('jujulego:jill:ink-app');

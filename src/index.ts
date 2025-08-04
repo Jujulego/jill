@@ -1,65 +1,65 @@
-import '@/src/commons/logger.service.ts';
+import '@/src/commons/logger.service.js';
 
-export * from './commons/git.service.ts';
-export * from './types.ts';
+export * from './commons/git.service.js';
+export * from './types.js';
 
 // Filters
-export * from './filters/affected.filter.ts';
-export * from './filters/pipeline.ts';
-export * from './filters/private.filter.ts';
-export * from './filters/scripts.filter.ts';
+export * from './filters/affected.filter.js';
+export * from './filters/pipeline.js';
+export * from './filters/private.filter.js';
+export * from './filters/scripts.filter.js';
 
 // Middlewares
-export * from './middlewares/load-project.ts';
-export * from './middlewares/load-workspace.ts';
+export * from './middlewares/load-project.js';
+export * from './middlewares/load-workspace.js';
 
 // Modules
-export * from './modules/command.ts';
-export * from './modules/ink-command.tsx';
-export * from './modules/middleware.ts';
-export * from './modules/module.ts';
-export * from './modules/plugin.ts';
-export * from './modules/plugin-loader.service.ts';
-export * from './modules/service.ts';
+export * from './modules/command.js';
+export * from './modules/ink-command.jsx';
+export * from './modules/middleware.js';
+export * from './modules/module.js';
+export * from './modules/plugin.js';
+export * from './modules/plugin-loader.service.js';
+export * from './modules/service.js';
 
 // Project
-export * from './constants.ts';
-export * from './project/project.ts';
-export * from './project/project.repository.ts';
-export * from './project/workspace.ts';
-export * from './project/types.ts';
+export * from './constants.js';
+export * from './project/project.js';
+export * from './project/project.repository.js';
+export * from './project/workspace.js';
+export * from './project/types.js';
 
 // Services
-export * from './inversify.config.ts';
-export * from './tasks/command-task.ts';
-export * from './tasks/script-task.ts';
-export * from './tasks/task-expression.service.ts';
-export * from './tasks/task-manager.config.ts';
+export * from './inversify.config.js';
+export * from './tasks/command-task.js';
+export * from './tasks/script-task.js';
+export * from './tasks/task-expression.service.js';
+export * from './tasks/task-manager.config.js';
 
-export { CONFIG } from './config/config-loader.ts';
-export { type IConfig } from './config/types.ts';
+export { CONFIG } from './config/config-loader.js';
+export { type IConfig } from './config/types.js';
 
 // Ui
-export { default as Layout } from './ui/layout.tsx';
-export * from './ui/layout.tsx';
+export { default as Layout } from './ui/layout.jsx';
+export * from './ui/layout.jsx';
 
-export { default as List } from './ui/list.tsx';
-export * from './ui/list.tsx';
+export { default as List } from './ui/list.jsx';
+export * from './ui/list.jsx';
 
-export { default as TaskName } from './ui/task-name.tsx';
-export * from './ui/task-name.tsx';
+export { default as TaskName } from './ui/task-name.jsx';
+export * from './ui/task-name.jsx';
 
-export { default as TaskSpinner } from './ui/task-spinner.tsx';
-export * from './ui/task-spinner.tsx';
+export { default as TaskSpinner } from './ui/task-spinner.jsx';
+export * from './ui/task-spinner.jsx';
 
-export { default as WorkspaceTree } from './ui/workspace-tree.tsx';
-export * from './ui/workspace-tree.tsx';
+export { default as WorkspaceTree } from './ui/workspace-tree.jsx';
+export * from './ui/workspace-tree.jsx';
 
 // Utils
-export * from './utils/events.ts';
-export * from './utils/exit.ts';
-export * from './utils/import.ts';
-export * from './utils/json.ts';
-export * from './utils/streams.ts';
-export * from './utils/string.ts';
-export * from './utils/worker-cache.ts';
+export * from './utils/events.js';
+export * from './utils/exit.js';
+export * from './utils/import.js';
+export * from './utils/json.js';
+export * from './utils/streams.js';
+export * from './utils/string.js';
+export * from './utils/worker-cache.js';

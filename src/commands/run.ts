@@ -2,14 +2,14 @@ import { Logger } from '@jujulego/logger';
 import { inject } from 'inversify';
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
 
-import { Command } from '@/src/modules/command.ts';
-import { TaskCommand } from '@/src/modules/task-command.tsx';
-import { LoadProject } from '@/src/middlewares/load-project.ts';
-import { LazyCurrentWorkspace, LoadWorkspace } from '@/src/middlewares/load-workspace.ts';
-import { type Workspace, type WorkspaceDepsMode } from '@/src/project/workspace.ts';
-import { TaskExpressionService } from '@/src/tasks/task-expression.service.ts';
-import { TaskExpressionError, TaskSyntaxError } from '@/src/tasks/errors.ts';
-import { ExitException } from '@/src/utils/exit.ts';
+import { Command } from '@/src/modules/command.js';
+import { TaskCommand } from '@/src/modules/task-command.jsx';
+import { LoadProject } from '@/src/middlewares/load-project.js';
+import { LazyCurrentWorkspace, LoadWorkspace } from '@/src/middlewares/load-workspace.js';
+import { type Workspace, type WorkspaceDepsMode } from '@/src/project/workspace.js';
+import { TaskExpressionService } from '@/src/tasks/task-expression.service.js';
+import { TaskExpressionError, TaskSyntaxError } from '@/src/tasks/errors.js';
+import { ExitException } from '@/src/utils/exit.js';
 
 // Types
 export interface IRunCommandArgs {

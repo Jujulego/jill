@@ -5,10 +5,10 @@ import symbols from 'log-symbols';
 import ms from 'pretty-ms';
 import { useLayoutEffect, useState } from 'react';
 
-import { isCommandCtx } from '@/src/tasks/command-task.ts';
-import { isScriptCtx } from '@/src/tasks/script-task.ts';
+import { isCommandCtx } from '@/src/tasks/command-task.js';
+import { isScriptCtx } from '@/src/tasks/script-task.js';
 
-import TaskName from './task-name.tsx';
+import TaskName from './task-name.jsx';
 
 // Types
 export interface TaskSpinnerProps {

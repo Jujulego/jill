@@ -7,8 +7,8 @@ import path from 'node:path';
 import normalize, { type Package } from 'normalize-package-data';
 import { PathScurry } from 'path-scurry';
 
-import { Workspace } from './workspace.ts';
-import { type PackageManager } from './types.ts';
+import { Workspace } from './workspace.js';
+import { type PackageManager } from './types.js';
 
 // Types
 export interface ProjectOptions {

@@ -1,10 +1,10 @@
 import { Logger, withLabel } from '@jujulego/logger';
 
-import { GitService } from '@/src/commons/git.service.ts';
-import { type Workspace } from '@/src/project/workspace.ts';
-import { lazyInject } from '@/src/inversify.config.ts';
+import { GitService } from '@/src/commons/git.service.js';
+import { type Workspace } from '@/src/project/workspace.js';
+import { lazyInject } from '@/src/inversify.config.js';
 
-import { type PipelineFilter } from './pipeline.ts';
+import { type PipelineFilter } from './pipeline.js';
 
 // Class
 export class AffectedFilter implements PipelineFilter {

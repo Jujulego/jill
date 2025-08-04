@@ -1,10 +1,10 @@
-import { EachCommand } from '@/src/commands/each.ts';
-import { ExecCommand } from '@/src/commands/exec.ts';
-import { GroupCommand } from '@/src/commands/group.ts';
-import { ListCommand } from '@/src/commands/list.tsx';
-import { RunCommand } from '@/src/commands/run.ts';
-import { TreeCommand } from '@/src/commands/tree.tsx';
-import { Plugin } from '@/src/modules/plugin.ts';
+import { EachCommand } from '@/src/commands/each.js';
+import { ExecCommand } from '@/src/commands/exec.js';
+import { GroupCommand } from '@/src/commands/group.js';
+import { ListCommand } from '@/src/commands/list.jsx';
+import { RunCommand } from '@/src/commands/run.js';
+import { TreeCommand } from '@/src/commands/tree.jsx';
+import { Plugin } from '@/src/modules/plugin.js';
 
 // Plugin
 @Plugin({

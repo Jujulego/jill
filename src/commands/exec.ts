@@ -4,14 +4,14 @@ import cp from 'node:child_process';
 import process from 'node:process';
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
 
-import { Command } from '@/src/modules/command.ts';
-import { ITaskCommandArgs, TaskCommand } from '@/src/modules/task-command.tsx';
-import { LazyCurrentProject, LoadProject } from '@/src/middlewares/load-project.ts';
-import { LazyCurrentWorkspace, LoadWorkspace } from '@/src/middlewares/load-workspace.ts';
-import type { Project } from '@/src/project/project.ts';
-import { type Workspace, type WorkspaceDepsMode } from '@/src/project/workspace.ts';
-import { type CommandTask } from '@/src/tasks/command-task.ts';
-import { ExitException } from '@/src/utils/exit.ts';
+import { Command } from '@/src/modules/command.js';
+import { ITaskCommandArgs, TaskCommand } from '@/src/modules/task-command.jsx';
+import { LazyCurrentProject, LoadProject } from '@/src/middlewares/load-project.js';
+import { LazyCurrentWorkspace, LoadWorkspace } from '@/src/middlewares/load-workspace.js';
+import type { Project } from '@/src/project/project.js';
+import { type Workspace, type WorkspaceDepsMode } from '@/src/project/workspace.js';
+import { type CommandTask } from '@/src/tasks/command-task.js';
+import { ExitException } from '@/src/utils/exit.js';
 
 // Types
 export interface IExecCommandArgs {

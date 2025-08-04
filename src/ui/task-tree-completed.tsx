@@ -2,10 +2,10 @@ import { TaskManager } from '@jujulego/tasks';
 import { Box, Static } from 'ink';
 import { useMemo } from 'react';
 
-import { flatTasks, taskComparator } from '@/src/ui/hooks/useFlatTaskTree.ts';
-import { useIsVerbose } from '@/src/ui/hooks/useIsVerbose.ts';
-import TaskSpinner from '@/src/ui/task-spinner.tsx';
-import TaskTreeStats from '@/src/ui/task-tree-stats.tsx';
+import { flatTasks, taskComparator } from '@/src/ui/hooks/useFlatTaskTree.js';
+import { useIsVerbose } from '@/src/ui/hooks/useIsVerbose.js';
+import TaskSpinner from '@/src/ui/task-spinner.jsx';
+import TaskTreeStats from '@/src/ui/task-tree-stats.jsx';
 
 // Types
 export interface TaskTreeCompletedProps {

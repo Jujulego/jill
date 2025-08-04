@@ -4,18 +4,18 @@ import { plan as extractPlan, type Task, type TaskManager, TaskSet, type TaskSum
 import { injectable } from 'inversify';
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
 
-import { container, lazyInject } from '@/src/inversify.config.ts';
-import { isCommandCtx } from '@/src/tasks/command-task.ts';
-import { isScriptCtx } from '@/src/tasks/script-task.ts';
-import { TASK_MANAGER } from '@/src/tasks/task-manager.config.ts';
-import { type AwaitableGenerator } from '@/src/types.ts';
-import List from '@/src/ui/list.tsx';
-import TaskTreeCompleted from '@/src/ui/task-tree-completed.tsx';
-import TaskTreeSpinner from '@/src/ui/task-tree-spinner.tsx';
-import { ExitException } from '@/src/utils/exit.ts';
-import { printJson } from '@/src/utils/json.ts';
+import { container, lazyInject } from '@/src/inversify.config.js';
+import { isCommandCtx } from '@/src/tasks/command-task.js';
+import { isScriptCtx } from '@/src/tasks/script-task.js';
+import { TASK_MANAGER } from '@/src/tasks/task-manager.config.js';
+import { type AwaitableGenerator } from '@/src/types.js';
+import List from '@/src/ui/list.jsx';
+import TaskTreeCompleted from '@/src/ui/task-tree-completed.jsx';
+import TaskTreeSpinner from '@/src/ui/task-tree-spinner.jsx';
+import { ExitException } from '@/src/utils/exit.js';
+import { printJson } from '@/src/utils/json.js';
 
-import { InkCommand } from './ink-command.tsx';
+import { InkCommand } from './ink-command.jsx';
 
 // Types
 export interface ITaskCommandArgs {

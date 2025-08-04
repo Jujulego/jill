@@ -6,18 +6,18 @@ import { compare, parse } from 'semver';
 import slugify from 'slugify';
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
 
-import { AffectedFilter } from '@/src/filters/affected.filter.ts';
-import { Pipeline } from '@/src/filters/pipeline.ts';
-import { PrivateFilter } from '@/src/filters/private.filter.ts';
-import { ScriptsFilter } from '@/src/filters/scripts.filter.ts';
-import { LazyCurrentProject, LoadProject } from '@/src/middlewares/load-project.ts';
-import { Command } from '@/src/modules/command.ts';
-import { InkCommand } from '@/src/modules/ink-command.tsx';
-import { type Project } from '@/src/project/project.ts';
-import { type Workspace } from '@/src/project/workspace.ts';
-import List from '@/src/ui/list.tsx';
-import { ExitException } from '@/src/utils/exit.ts';
-import { printJson } from '@/src/utils/json.ts';
+import { AffectedFilter } from '@/src/filters/affected.filter.js';
+import { Pipeline } from '@/src/filters/pipeline.js';
+import { PrivateFilter } from '@/src/filters/private.filter.js';
+import { ScriptsFilter } from '@/src/filters/scripts.filter.js';
+import { LazyCurrentProject, LoadProject } from '@/src/middlewares/load-project.js';
+import { Command } from '@/src/modules/command.js';
+import { InkCommand } from '@/src/modules/ink-command.jsx';
+import { type Project } from '@/src/project/project.js';
+import { type Workspace } from '@/src/project/workspace.js';
+import List from '@/src/ui/list.jsx';
+import { ExitException } from '@/src/utils/exit.js';
+import { printJson } from '@/src/utils/json.js';
 
 // Types
 export type Attribute = 'name' | 'version' | 'root' | 'slug';

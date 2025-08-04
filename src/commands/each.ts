@@ -3,18 +3,18 @@ import { inject } from 'inversify';
 import symbols from 'log-symbols';
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
 
-import { AffectedFilter } from '@/src/filters/affected.filter.ts';
-import { Pipeline } from '@/src/filters/pipeline.ts';
-import { PrivateFilter } from '@/src/filters/private.filter.ts';
-import { ScriptsFilter } from '@/src/filters/scripts.filter.ts';
-import { LazyCurrentProject, LoadProject } from '@/src/middlewares/load-project.ts';
-import { Command } from '@/src/modules/command.ts';
-import { TaskCommand } from '@/src/modules/task-command.tsx';
-import { type Project } from '@/src/project/project.ts';
-import { type WorkspaceDepsMode } from '@/src/project/workspace.ts';
-import { TaskExpressionError, TaskSyntaxError } from '@/src/tasks/errors.ts';
-import { TaskExpressionService } from '@/src/tasks/task-expression.service.ts';
-import { ExitException } from '@/src/utils/exit.ts';
+import { AffectedFilter } from '@/src/filters/affected.filter.js';
+import { Pipeline } from '@/src/filters/pipeline.js';
+import { PrivateFilter } from '@/src/filters/private.filter.js';
+import { ScriptsFilter } from '@/src/filters/scripts.filter.js';
+import { LazyCurrentProject, LoadProject } from '@/src/middlewares/load-project.js';
+import { Command } from '@/src/modules/command.js';
+import { TaskCommand } from '@/src/modules/task-command.jsx';
+import { type Project } from '@/src/project/project.js';
+import { type WorkspaceDepsMode } from '@/src/project/workspace.js';
+import { TaskExpressionError, TaskSyntaxError } from '@/src/tasks/errors.js';
+import { TaskExpressionService } from '@/src/tasks/task-expression.service.js';
+import { ExitException } from '@/src/utils/exit.js';
 
 // Types
 export interface EachCommandArgs {

@@ -3,10 +3,10 @@ import { Logger } from '@jujulego/logger';
 import { SpawnTask, type SpawnTaskOptions, TaskContext, type TaskManager } from '@jujulego/tasks';
 import { inject } from 'inversify';
 
-import { TASK_MANAGER } from '@/src/tasks/task-manager.config.ts';
-import { streamLines } from '@/src/utils/streams.ts';
-import { Service } from '@/src/modules/service.ts';
-import { TaskUIContext } from '@/src/types.ts';
+import { TASK_MANAGER } from '@/src/tasks/task-manager.config.js';
+import { streamLines } from '@/src/utils/streams.js';
+import { Service } from '@/src/modules/service.js';
+import { TaskUIContext } from '@/src/types.js';
 
 // Types
 export interface GitContext extends TaskContext, TaskUIContext {

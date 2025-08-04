@@ -3,15 +3,15 @@ import { type interfaces as int } from 'inversify';
 import os from 'node:os';
 import path from 'node:path';
 
-import { AJV } from '@/src/ajv.config.ts';
-import { LogGateway } from '@/src/commons/logger/log.gateway.ts';
-import { container } from '@/src/inversify.config.ts';
-import { ExitException } from '@/src/utils/exit.ts';
-import { workerCache } from '@/src/utils/worker-cache.ts';
+import { AJV } from '@/src/ajv.config.js';
+import { LogGateway } from '@/src/commons/logger/log.gateway.js';
+import { container } from '@/src/inversify.config.js';
+import { ExitException } from '@/src/utils/exit.js';
+import { workerCache } from '@/src/utils/worker-cache.js';
 
-import { CONFIG_OPTIONS } from './config-options.ts';
-import { type IConfig } from './types.ts';
-import { CONFIG_EXPLORER, CONFIG_VALIDATOR } from './utils.ts';
+import { CONFIG_OPTIONS } from './config-options.js';
+import { type IConfig } from './types.js';
+import { CONFIG_EXPLORER, CONFIG_VALIDATOR } from './utils.js';
 
 // Symbols
 export const CONFIG: int.ServiceIdentifier<IConfig> = Symbol('jujulego:jill:config');

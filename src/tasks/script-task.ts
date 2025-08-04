@@ -1,10 +1,10 @@
 import { waitFor$ } from '@jujulego/event-tree';
 import { GroupTask, type Task, type TaskContext, type TaskOptions, TaskSet } from '@jujulego/tasks';
 
-import { container } from '@/src/inversify.config.ts';
-import { type Workspace } from '@/src/project/workspace.ts';
-import { CommandTask } from '@/src/tasks/command-task.ts';
-import { splitCommandLine } from '@/src/utils/string.ts';
+import { container } from '@/src/inversify.config.js';
+import { type Workspace } from '@/src/project/workspace.js';
+import { CommandTask } from '@/src/tasks/command-task.js';
+import { splitCommandLine } from '@/src/utils/string.js';
 
 // Types
 export interface ScriptContext extends TaskContext {

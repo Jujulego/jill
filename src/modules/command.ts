@@ -2,12 +2,12 @@ import { Logger } from '@jujulego/logger';
 import { decorate, injectable, type interfaces as int } from 'inversify';
 import { type ArgumentsCamelCase, type Argv, type CommandModule } from 'yargs';
 
-import { container } from '@/src/inversify.config.ts';
-import { setRegistry } from '@/src/modules/module.ts';
-import { type Awaitable, type Class, type Type } from '@/src/types.ts';
-import { ExitException } from '@/src/utils/exit.ts';
+import { container } from '@/src/inversify.config.js';
+import { setRegistry } from '@/src/modules/module.js';
+import { type Awaitable, type Class, type Type } from '@/src/types.js';
+import { ExitException } from '@/src/utils/exit.js';
 
-import { applyMiddlewares, type IMiddleware } from './middleware.ts';
+import { applyMiddlewares, type IMiddleware } from './middleware.js';
 
 // Symbols
 const COMMAND_OPTS = Symbol('jujulego:jill:command-opts');

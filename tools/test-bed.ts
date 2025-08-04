@@ -5,23 +5,23 @@ import path from 'node:path';
 import { type Package } from 'normalize-package-data';
 import { type CommandModule } from 'yargs';
 
-import { ContextService } from '@/src/commons/context.service.ts';
-import { CONFIG } from '@/src/config/config-loader.ts';
-import { type IConfig } from '@/src/config/types.ts';
-import { container } from '@/src/inversify.config.ts';
-import { buildCommandModule, getCommandOpts, type ICommand } from '@/src/modules/command.ts';
-import { type IMiddleware } from '@/src/modules/middleware.ts';
-import { getRegistry } from '@/src/modules/module.ts';
-import { LoadProject } from '@/src/middlewares/load-project.ts';
-import { LoadWorkspace } from '@/src/middlewares/load-workspace.ts';
-import { type Project } from '@/src/project/project.ts';
-import { Workspace } from '@/src/project/workspace.ts';
-import { type PackageManager } from '@/src/project/types.ts';
-import { type Class } from '@/src/types.ts';
+import { ContextService } from '@/src/commons/context.service.js';
+import { CONFIG } from '@/src/config/config-loader.js';
+import { type IConfig } from '@/src/config/types.js';
+import { container } from '@/src/inversify.config.js';
+import { buildCommandModule, getCommandOpts, type ICommand } from '@/src/modules/command.js';
+import { type IMiddleware } from '@/src/modules/middleware.js';
+import { getRegistry } from '@/src/modules/module.js';
+import { LoadProject } from '@/src/middlewares/load-project.js';
+import { LoadWorkspace } from '@/src/middlewares/load-workspace.js';
+import { type Project } from '@/src/project/project.js';
+import { Workspace } from '@/src/project/workspace.js';
+import { type PackageManager } from '@/src/project/types.js';
+import { type Class } from '@/src/types.js';
 
-import { TestProject } from './test-project.ts';
-import { TestWorkspace } from './test-workspace.ts';
-import { shell } from './utils.ts';
+import { TestProject } from './test-project.js';
+import { TestWorkspace } from './test-workspace.js';
+import { shell } from './utils.js';
 
 // Bed
 export class TestBed {

@@ -1,9 +1,9 @@
-import { Command } from '@/src/modules/command.ts';
-import { InkCommand } from '@/src/modules/ink-command.tsx';
-import { LoadProject } from '@/src/middlewares/load-project.ts';
-import { LazyCurrentWorkspace, LoadWorkspace } from '@/src/middlewares/load-workspace.ts';
-import { type Workspace } from '@/src/project/workspace.ts';
-import WorkspaceTree from '@/src/ui/workspace-tree.tsx';
+import { Command } from '@/src/modules/command.js';
+import { InkCommand } from '@/src/modules/ink-command.jsx';
+import { LoadProject } from '@/src/middlewares/load-project.js';
+import { LazyCurrentWorkspace, LoadWorkspace } from '@/src/middlewares/load-workspace.js';
+import { type Workspace } from '@/src/project/workspace.js';
+import WorkspaceTree from '@/src/ui/workspace-tree.jsx';
 
 // Command
 @Command({

@@ -2,10 +2,10 @@ import { Logger, withLabel } from '@jujulego/logger';
 import { inject } from 'inversify';
 import { AsyncLocalStorage } from 'node:async_hooks';
 
-import { Service } from '@/src/modules/service.ts';
-import { type Project } from '@/src/project/project.ts';
-import { type Workspace } from '@/src/project/workspace.ts';
-import { type JillApplication } from '@/src/jill.application.ts';
+import { Service } from '@/src/modules/service.js';
+import { type Project } from '@/src/project/project.js';
+import { type Workspace } from '@/src/project/workspace.js';
+import { type JillApplication } from '@/src/jill.application.js';
 
 // Types
 export interface Context {

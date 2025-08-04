@@ -3,15 +3,15 @@ import { type Task } from '@jujulego/tasks';
 import { inject, injectable, type interfaces as int } from 'inversify';
 import yargs, { type Argv, type CommandModule } from 'yargs';
 
-import { ContextService, type Context } from '@/src/commons/context.service.ts';
-import { applyConfigOptions } from '@/src/config/config-options.ts';
-import { CURRENT } from '@/src/constants.ts';
-import { container, lazyInjectNamed } from '@/src/inversify.config.ts';
-import { buildCommandModule, COMMAND, COMMAND_MODULE, getCommandOpts, type ICommand } from '@/src/modules/command.ts';
-import { getModule } from '@/src/modules/module.ts';
-import { PluginLoaderService } from '@/src/modules/plugin-loader.service.ts';
-import { TaskCommand } from '@/src/modules/task-command.tsx';
-import { type Class } from '@/src/types.ts';
+import { ContextService, type Context } from '@/src/commons/context.service.js';
+import { applyConfigOptions } from '@/src/config/config-options.js';
+import { CURRENT } from '@/src/constants.js';
+import { container, lazyInjectNamed } from '@/src/inversify.config.js';
+import { buildCommandModule, COMMAND, COMMAND_MODULE, getCommandOpts, type ICommand } from '@/src/modules/command.js';
+import { getModule } from '@/src/modules/module.js';
+import { PluginLoaderService } from '@/src/modules/plugin-loader.service.js';
+import { TaskCommand } from '@/src/modules/task-command.jsx';
+import { type Class } from '@/src/types.js';
 
 // @ts-ignore: Outside of typescript's rootDir in build
 import pkg from '../package.json';

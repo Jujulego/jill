@@ -1,12 +1,12 @@
 import { inject } from 'inversify';
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
 
-import { Command } from '@/src/modules/command.ts';
-import { TaskCommand } from '@/src/modules/task-command.tsx';
-import { LoadProject } from '@/src/middlewares/load-project.ts';
-import { LazyCurrentWorkspace, LoadWorkspace } from '@/src/middlewares/load-workspace.ts';
-import { type Workspace, type WorkspaceDepsMode } from '@/src/project/workspace.ts';
-import { TaskExpressionService, type TaskTree } from '@/src/tasks/task-expression.service.ts';
+import { Command } from '@/src/modules/command.js';
+import { TaskCommand } from '@/src/modules/task-command.jsx';
+import { LoadProject } from '@/src/middlewares/load-project.js';
+import { LazyCurrentWorkspace, LoadWorkspace } from '@/src/middlewares/load-workspace.js';
+import { type Workspace, type WorkspaceDepsMode } from '@/src/project/workspace.js';
+import { TaskExpressionService, type TaskTree } from '@/src/tasks/task-expression.service.js';
 
 // Types
 export interface IGroupCommandArgs {

@@ -1,8 +1,8 @@
-import { container } from '@/src/inversify.config.ts';
+import { container } from '@/src/inversify.config.js';
 import { Logger, withLabel } from '@jujulego/logger';
-import { Project, type ProjectOptions } from '@/src/project/project.ts';
+import { Project, type ProjectOptions } from '@/src/project/project.js';
 
-import { TestWorkspace } from './test-workspace.ts';
+import { TestWorkspace } from './test-workspace.js';
 
 // Class
 export class TestProject extends Project {

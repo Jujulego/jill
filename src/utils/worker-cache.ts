@@ -1,6 +1,6 @@
 import { BroadcastChannel, getEnvironmentData, type Serializable, setEnvironmentData } from 'node:worker_threads';
 
-import { type Awaitable } from '@/src/types.ts';
+import { type Awaitable } from '@/src/types.js';
 
 // Types
 interface CacheUpdate {

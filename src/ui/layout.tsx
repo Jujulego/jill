@@ -1,6 +1,6 @@
 import { type ReactNode } from 'react';
 
-import StaticLogs from './static-logs.tsx';
+import StaticLogs from './static-logs.jsx';
 
 // Types
 export interface LayoutProps {

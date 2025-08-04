@@ -1,6 +1,6 @@
-import { type Workspace } from '@/src/project/workspace.ts';
+import { type Workspace } from '@/src/project/workspace.js';
 
-import { type PipelineFilter } from './pipeline.ts';
+import { type PipelineFilter } from './pipeline.js';
 
 // Filter
 export class PrivateFilter implements PipelineFilter {

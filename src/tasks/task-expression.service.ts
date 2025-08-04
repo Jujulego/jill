@@ -3,9 +3,9 @@ import { FallbackGroup, type GroupTask, ParallelGroup, SequenceGroup, type Task 
 import { inject } from 'inversify';
 import moo from 'moo';
 
-import { Service } from '@/src/modules/service.ts';
-import { type Workspace, type WorkspaceRunOptions } from '@/src/project/workspace.ts';
-import { TaskExpressionError, TaskSyntaxError } from './errors.ts';
+import { Service } from '@/src/modules/service.js';
+import { type Workspace, type WorkspaceRunOptions } from '@/src/project/workspace.js';
+import { TaskExpressionError, TaskSyntaxError } from './errors.js';
 
 // Interfaces
 export interface TaskNode {

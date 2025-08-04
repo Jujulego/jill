@@ -1,10 +1,10 @@
 import { GroupTask, Task, TaskManager } from '@jujulego/tasks';
 import { useLayoutEffect, useMemo, useState } from 'react';
 
-import { Workspace } from '@/src/project/workspace.ts';
-import { CommandTask, isCommandCtx } from '@/src/tasks/command-task.ts';
-import { ScriptTask } from '@/src/tasks/script-task.ts';
-import { useIsVerbose } from '@/src/ui/hooks/useIsVerbose.ts';
+import { Workspace } from '@/src/project/workspace.js';
+import { CommandTask, isCommandCtx } from '@/src/tasks/command-task.js';
+import { ScriptTask } from '@/src/tasks/script-task.js';
+import { useIsVerbose } from '@/src/ui/hooks/useIsVerbose.js';
 
 // Types
 export interface FlatTask {

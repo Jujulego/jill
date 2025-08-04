@@ -2,8 +2,8 @@ import { Logger } from '@jujulego/logger';
 import { TaskManager } from '@jujulego/tasks';
 import { type interfaces as int } from 'inversify';
 
-import { CONFIG } from '@/src/config/config-loader.ts';
-import { container } from '@/src/inversify.config.ts';
+import { CONFIG } from '@/src/config/config-loader.js';
+import { container } from '@/src/inversify.config.js';
 
 // Symbols
 export const TASK_MANAGER: int.ServiceIdentifier<TaskManager> = Symbol('jujulego:jill:TaskManager');

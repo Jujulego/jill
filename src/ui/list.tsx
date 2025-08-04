@@ -1,6 +1,6 @@
 import { Box, Text } from 'ink';
 
-import { capitalize } from '@/src/utils/string.ts';
+import { capitalize } from '@/src/utils/string.js';
 
 // Types
 export interface ListProps<T extends Record<string, unknown>> {

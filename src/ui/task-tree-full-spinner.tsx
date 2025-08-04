@@ -1,9 +1,9 @@
 import { TaskManager } from '@jujulego/tasks';
 import { Box, Text } from 'ink';
 
-import { useFlatTaskTree } from '@/src/ui/hooks/useFlatTaskTree.ts';
-import TaskSpinner from '@/src/ui/task-spinner.tsx';
-import TaskTreeStats from '@/src/ui/task-tree-stats.tsx';
+import { useFlatTaskTree } from '@/src/ui/hooks/useFlatTaskTree.js';
+import TaskSpinner from '@/src/ui/task-spinner.jsx';
+import TaskTreeStats from '@/src/ui/task-tree-stats.jsx';
 
 // Types
 export interface TaskTreeFullSpinnerProps {

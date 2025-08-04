@@ -1,8 +1,8 @@
 import { useStderr } from 'ink';
 import { useLayoutEffect, } from 'react';
 
-import { container } from '@/src/inversify.config.ts';
-import { jillLogFormat, LogGateway } from '@/src/commons/logger/log.gateway.ts';
+import { container } from '@/src/inversify.config.js';
+import { jillLogFormat, LogGateway } from '@/src/commons/logger/log.gateway.js';
 
 // Component
 export default function StaticLogs() {

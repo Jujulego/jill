@@ -1,7 +1,7 @@
 import { Logger, logger$, withTimestamp } from '@jujulego/logger';
 
-import { container } from '@/src/inversify.config.ts';
-import { LogGateway } from '@/src/commons/logger/log.gateway.ts';
+import { container } from '@/src/inversify.config.js';
+import { LogGateway } from '@/src/commons/logger/log.gateway.js';
 
 // Service
 container.bind(Logger).toDynamicValue(() => logger$(withTimestamp()))

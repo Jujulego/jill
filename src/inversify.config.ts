@@ -3,7 +3,7 @@ import getDecorators from 'inversify-inject-decorators';
 
 import 'reflect-metadata/lite';
 
-import { fixDefaultExport } from '@/src/utils/import.ts';
+import { fixDefaultExport } from '@/src/utils/import.js';
 
 // Container
 export const container = new Container();

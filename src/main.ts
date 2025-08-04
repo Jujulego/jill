@@ -1,10 +1,10 @@
 import { Logger } from '@jujulego/logger';
 import { hideBin } from 'yargs/helpers';
 
-import '@/src/commons/logger.service.ts';
-import { container } from '@/src/inversify.config.ts';
-import { JillApplication } from '@/src/jill.application.ts';
-import { ExitException } from '@/src/utils/exit.ts';
+import '@/src/commons/logger.service.js';
+import { container } from '@/src/inversify.config.js';
+import { JillApplication } from '@/src/jill.application.js';
+import { ExitException } from '@/src/utils/exit.js';
 
 // Bootstrap
 (async () => {

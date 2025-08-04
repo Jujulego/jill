@@ -3,9 +3,9 @@ import { inject } from 'inversify';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
-import { Service } from '@/src/modules/service.ts';
+import { Service } from '@/src/modules/service.js';
 
-import { Project, type ProjectOptions } from './project.ts';
+import { Project, type ProjectOptions } from './project.js';
 
 // Constants
 const MANIFEST = 'package.json';

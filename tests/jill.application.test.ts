@@ -2,17 +2,17 @@ import { SpawnTask } from '@jujulego/tasks';
 import { vi } from 'vitest';
 
 import '@/src/commons/logger.service.js';
-import { ContextService } from '@/src/commons/context.service.ts';
+import { ContextService } from '@/src/commons/context.service.js';
 import { CONFIG } from '@/src/config/config-loader.js';
-import { CURRENT } from '@/src/constants.ts';
-import { CorePlugin } from '@/src/core.plugin.ts';
-import { container } from '@/src/inversify.config.ts';
-import { JillApplication } from '@/src/jill.application.ts';
-import { getModule } from '@/src/modules/module.ts';
-import { PluginLoaderService } from '@/src/modules/plugin-loader.service.ts';
+import { CURRENT } from '@/src/constants.js';
+import { CorePlugin } from '@/src/core.plugin.js';
+import { container } from '@/src/inversify.config.js';
+import { JillApplication } from '@/src/jill.application.js';
+import { getModule } from '@/src/modules/module.js';
+import { PluginLoaderService } from '@/src/modules/plugin-loader.service.js';
 
-import { MockCommand } from '@/tools/mocks/mock.command.ts';
-import { MockTaskCommand } from '@/tools/mocks/mock-task.command.ts';
+import { MockCommand } from '@/tools/mocks/mock.command.js';
+import { MockTaskCommand } from '@/tools/mocks/mock-task.command.js';
 
 // Mocks
 vi.mock('@/src/modules/module', async (importOriginal) => {

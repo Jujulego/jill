@@ -1,6 +1,6 @@
 import { decorate, injectable, interfaces as int } from 'inversify';
 
-import { container } from '@/src/inversify.config.ts';
+import { container } from '@/src/inversify.config.js';
 
 // Types
 export interface OnServiceActivate {

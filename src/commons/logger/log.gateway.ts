@@ -6,10 +6,10 @@ import { chalkTemplateStderr } from 'chalk-template';
 import { interfaces as int } from 'inversify';
 import wt from 'node:worker_threads';
 
-import { OnServiceActivate, Service } from '@/src/modules/service.ts';
+import { OnServiceActivate, Service } from '@/src/modules/service.js';
 
-import { ThreadGateway } from './thread.gateway.ts';
-import { JillLog } from './types.ts';
+import { ThreadGateway } from './thread.gateway.js';
+import { JillLog } from './types.js';
 
 // Utils
 export const jillLogFormat = qlevelColor(

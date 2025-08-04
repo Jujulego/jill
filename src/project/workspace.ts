@@ -5,15 +5,15 @@ import path from 'node:path';
 import { type Package } from 'normalize-package-data';
 import { satisfies } from 'semver';
 
-import { GitService } from '@/src/commons/git.service.ts';
-import { CONFIG } from '@/src/config/config-loader.ts';
-import { type IConfig } from '@/src/config/types.ts';
-import { container, lazyInject } from '@/src/inversify.config.ts';
-import { CommandTask } from '@/src/tasks/command-task.ts';
-import { ScriptTask } from '@/src/tasks/script-task.ts';
-import { combine } from '@/src/utils/streams.ts';
+import { GitService } from '@/src/commons/git.service.js';
+import { CONFIG } from '@/src/config/config-loader.js';
+import { type IConfig } from '@/src/config/types.js';
+import { container, lazyInject } from '@/src/inversify.config.js';
+import { CommandTask } from '@/src/tasks/command-task.js';
+import { ScriptTask } from '@/src/tasks/script-task.js';
+import { combine } from '@/src/utils/streams.js';
 
-import { type Project } from './project.ts';
+import { type Project } from './project.js';
 
 // Types
 export type WorkspaceDepsMode = 'all' | 'prod' | 'none';

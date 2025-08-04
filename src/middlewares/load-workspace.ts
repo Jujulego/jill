@@ -3,15 +3,15 @@ import { inject } from 'inversify';
 import symbols from 'log-symbols';
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
 
-import { ContextService } from '@/src/commons/context.service.ts';
-import { CURRENT } from '@/src/constants.ts';
-import { container, lazyInjectNamed } from '@/src/inversify.config.ts';
-import { type IMiddleware, Middleware } from '@/src/modules/middleware.ts';
-import { type Project } from '@/src/project/project.ts';
-import { Workspace } from '@/src/project/workspace.ts';
-import { ExitException } from '@/src/utils/exit.ts';
+import { ContextService } from '@/src/commons/context.service.js';
+import { CURRENT } from '@/src/constants.js';
+import { container, lazyInjectNamed } from '@/src/inversify.config.js';
+import { type IMiddleware, Middleware } from '@/src/modules/middleware.js';
+import { type Project } from '@/src/project/project.js';
+import { Workspace } from '@/src/project/workspace.js';
+import { ExitException } from '@/src/utils/exit.js';
 
-import { ILoadProjectArgs, LazyCurrentProject } from './load-project.ts';
+import { ILoadProjectArgs, LazyCurrentProject } from './load-project.js';
 
 // Types
 export interface ILoadWorkspaceArgs extends ILoadProjectArgs {
