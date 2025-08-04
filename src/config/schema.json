@@ -10,7 +10,7 @@
     },
     "jobs": {
       "type": "number",
-      "default": -1,
+      "default": 0,
       "description": "Number of allowed parallel tasks, defaults to CPU number."
     },
     "plugins": {

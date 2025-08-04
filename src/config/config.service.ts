@@ -50,8 +50,8 @@ export class ConfigService {
     }
 
     // Correct jobs value
-    while (config.jobs < 0) {
-      Object.assign(config, { jobs: config.jobs + CPU_COUNT });
+    if (!config.jobs || config.jobs < 0) {
+      Object.assign(config, { jobs: Math.max(CPU_COUNT - 1, 1) });
     }
 
     this._logger.debug`Loaded config:\n${qjson(config, { pretty: true })}`;

@@ -1,15 +1,14 @@
-import { Logger, LogLevel } from '@jujulego/logger';
-import { ValidateFunction } from 'ajv';
-import { vi } from 'vitest';
-import path from 'node:path';
-
-import '@/src/commons/logger.service.js';
+import { LogGateway } from '@/src/commons/logger/log.gateway.js';
 import { configLoader } from '@/src/config/config-loader.js';
 import { type IConfig, type IConfigExplorer } from '@/src/config/types.js';
 import { CONFIG_EXPLORER, CONFIG_VALIDATOR } from '@/src/config/utils.js';
 import { container } from '@/src/inversify.config.js';
 import { ExitException } from '@/src/utils/exit.js';
-import { LogGateway } from '@/src/commons/logger/log.gateway.js';
+import { Logger, LogLevel } from '@jujulego/logger';
+import type { ValidateFunction } from 'ajv';
+import path from 'node:path';
+import '@/src/commons/logger.service.js';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Setup
 let logger: Logger;
