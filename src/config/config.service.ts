@@ -3,6 +3,7 @@ import { inject$ } from '@kyrielle/injector';
 import { type Logger, withLabel } from '@kyrielle/logger';
 import Ajv from 'ajv';
 import os from 'node:os';
+import path from 'node:path';
 import process from 'node:process';
 import { ConfigExplorer } from './config-explorer.js';
 import schema from './schema.json' with { type: 'json' };
@@ -50,9 +51,14 @@ export class ConfigService {
     }
 
     // Correct jobs value
-    if (!config.jobs || config.jobs < 0) {
+    if (config.jobs <= 0) {
       Object.assign(config, { jobs: Math.max(CPU_COUNT - 1, 1) });
     }
+
+    // Resolve plugin paths
+    Object.assign(config, {
+      plugins: config.plugins.map((plugin) => path.resolve(this.baseDir, plugin))
+    });
 
     this._logger.debug`Loaded config:\n${qjson(config, { pretty: true })}`;
 
@@ -90,6 +96,10 @@ export class ConfigService {
   }
 
   // Attributes
+  get baseDir(): string {
+    return this._filepath ? path.dirname(this._filepath) : process.cwd();
+  }
+
   get config(): Config | undefined {
     return this._config;
   }

@@ -14,6 +14,7 @@ import { type IConfig } from './types.js';
 import { CONFIG_EXPLORER, CONFIG_VALIDATOR } from './utils.js';
 
 // Symbols
+/** @deprecated use {@link ConfigService} instead */
 export const CONFIG: int.ServiceIdentifier<IConfig> = Symbol('jujulego:jill:config');
 
 // Loader

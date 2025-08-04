@@ -27,7 +27,10 @@ export interface Config {
    */
   readonly jobs: number;
 
-  readonly plugins?: readonly string[];
+  /**
+   * Paths to plugin files.
+   */
+  readonly plugins: readonly string[];
 
   /**
    * Verbosity level.
