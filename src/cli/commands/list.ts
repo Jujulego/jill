@@ -1,3 +1,4 @@
+import type { Order } from '../../utils/types.js';
 import type { CommandModule } from 'yargs';
 
 // Command
@@ -82,7 +83,6 @@ export default command;
 
 // Types
 export type ListAttr = 'name' | 'version' | 'root' | 'slug';
-export type Order = 'asc' | 'desc';
 
 interface ListArgs {
   readonly affected: string | undefined;

@@ -27,7 +27,6 @@ export * from './constants.js';
 export * from './project/project.js';
 export * from './project/project.repository.js';
 export * from './project/workspace.js';
-export * from './project/types.js';
 
 // Services
 export * from './inversify.config.js';
@@ -64,3 +63,4 @@ export * from './utils/json.js';
 export * from './utils/streams.js';
 export * from './utils/string.js';
 export * from './utils/worker-cache.js';
+export * from './utils/types.js';

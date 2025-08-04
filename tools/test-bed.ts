@@ -16,7 +16,7 @@ import { LoadProject } from '@/src/middlewares/load-project.js';
 import { LoadWorkspace } from '@/src/middlewares/load-workspace.js';
 import { type Project } from '@/src/project/project.js';
 import { Workspace } from '@/src/project/workspace.js';
-import { type PackageManager } from '@/src/project/types.js';
+import { type PackageManager } from '@/src/utils/types.js';
 import { type Class } from '@/src/types.js';
 
 import { TestProject } from './test-project.js';

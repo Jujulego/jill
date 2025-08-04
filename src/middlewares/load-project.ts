@@ -7,7 +7,7 @@ import { container, lazyInjectNamed } from '@/src/inversify.config.js';
 import { type IMiddleware, Middleware } from '@/src/modules/middleware.js';
 import { Project } from '@/src/project/project.js';
 import { ProjectRepository } from '@/src/project/project.repository.js';
-import { type PackageManager } from '@/src/project/types.js';
+import { type PackageManager } from '@/src/utils/types.js';
 
 // Types
 export interface ILoadProjectArgs {
