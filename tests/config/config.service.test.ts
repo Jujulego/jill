@@ -2,7 +2,6 @@ import { ConfigExplorer } from '@/src/config/config-explorer.js';
 import { ConfigService } from '@/src/config/config.service.js';
 import schema from '@/src/config/schema.json' with { type: 'json' };
 import { globalScope$, inject$ } from '@kyrielle/injector';
-import { type Logger, logger$ } from '@kyrielle/logger';
 import Ajv, { type ValidateFunction } from 'ajv';
 import { type PublicExplorer } from 'cosmiconfig';
 import os from 'node:os';
@@ -13,13 +12,11 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 vi.mock('ajv');
 
 // Setup
-let logger: Logger;
 let configExplorer: PublicExplorer;
 let configService: ConfigService;
 
 beforeEach(() => {
-  logger = logger$();
-  configService = new ConfigService(logger);
+  configService = new ConfigService();
   configExplorer = inject$(ConfigExplorer);
 
   vi.mocked(Ajv.prototype.compile)
