@@ -45,7 +45,7 @@ export class ConfigService {
     if (!validator(config)) {
       const errors = ajv.errorsText(validator.errors, { separator: '\n- ', dataVar: 'config' });
 
-      this._logger.error(`Errors in config file:\n- ${errors}`);
+      this._logger.error(`errors in config file:\n- ${errors}`);
       throw new Error('Error in config file');
     }
 
@@ -59,7 +59,7 @@ export class ConfigService {
       plugins: config.plugins.map((plugin) => path.resolve(this.baseDir, plugin))
     });
 
-    this._logger.debug`Loaded config:\n${qjson(config, { pretty: true })}`;
+    this._logger.debug`loaded config:\n${qjson(config, { pretty: true })}`;
 
     return config;
   }
@@ -68,11 +68,11 @@ export class ConfigService {
     const loaded = await this._explorer.search();
 
     if (loaded) {
-      this._logger.verbose`Loaded file ${loaded.filepath}`;
+      this._logger.verbose`loaded file ${loaded.filepath}`;
       this._filepath = loaded.filepath;
       this._config = this._validateConfig(loaded.config);
     } else {
-      this._logger.error`No config file found`;
+      this._logger.error`no config file found`;
       throw new Error('No config file found');
     }
 
@@ -83,11 +83,11 @@ export class ConfigService {
     const loaded = await this._explorer.load(filepath);
 
     if (loaded) {
-      this._logger.verbose`Loaded file ${loaded.filepath}`;
+      this._logger.verbose`loaded file ${loaded.filepath}`;
       this._filepath = loaded.filepath;
       this._config = this._validateConfig(loaded.config);
     } else {
-      this._logger.error`Config file ${filepath} not found`;
+      this._logger.error`config file ${filepath} not found`;
       throw new Error('Config file not found');
     }
 

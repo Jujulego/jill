@@ -1,5 +1,7 @@
-import { type Argv } from 'yargs';
-import type { PackageManager } from '../../utils/types.js';
+import { inject$ } from '@kyrielle/injector';
+import { type ArgumentsCamelCase, type Argv } from 'yargs';
+import { ProjectsRepository } from '../../projects/projects.repository.js';
+import type { PackageManager, Writable } from '../../utils/types.js';
 
 /**
  * Loads a projects.
@@ -9,6 +11,7 @@ export function loadCurrentProject<T = unknown>(parser: Argv<T>): Argv<T & LoadP
     .option('project', {
       alias: 'p',
       type: 'string',
+      default: process.cwd(),
       description: 'Project root directory'
     })
     .option('package-manager', {
@@ -16,13 +19,14 @@ export function loadCurrentProject<T = unknown>(parser: Argv<T>): Argv<T & LoadP
       type: 'string',
       description: 'Force package manager'
     })
-    .middleware((args) => {
-      console.log(args);
+    .middleware(async (args: ArgumentsCamelCase<Writable<LoadProjectArgs>>) => {
+      const repository = inject$(ProjectsRepository);
+      args.project = await repository.searchProjectRoot(args.project);
     });
 }
 
 // Types
 export interface LoadProjectArgs {
-  readonly project: string | undefined;
+  readonly project: string;
   readonly 'package-manager': PackageManager | undefined;
 }

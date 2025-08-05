@@ -54,7 +54,7 @@ export function loggerMiddleware(parser: Argv) {
       flow$(
         inject$(Logger),
         filter$((log) => log.level >= logLevel),
-        logDebugFilter$(),
+        // logDebugFilter$(),
         logDelay$(),
         logGateway,
       );

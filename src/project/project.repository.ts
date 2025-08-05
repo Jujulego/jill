@@ -18,6 +18,7 @@ export interface IsProjectRoot {
 }
 
 // Class
+/** @deprecated use {@link ProjectsRepository} instead */
 @Service()
 export class ProjectRepository {
   // Attributes

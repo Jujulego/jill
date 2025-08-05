@@ -1,4 +1,4 @@
-import { Logger, withLabel } from '@jujulego/logger';
+import { type Logger, withLabel } from '@jujulego/logger';
 import { Lock } from '@jujulego/utils';
 import { Glob } from 'glob';
 import { injectable } from 'inversify';
