@@ -2,12 +2,14 @@ import { inject$ } from '@kyrielle/injector';
 import { withLabel } from '@kyrielle/logger';
 import path from 'node:path';
 import { Logger, PathScurry } from '../tokens.js';
+import { Project, type ProjectOptions } from './project.js';
 
 /**
  * Helps detecting projects folders
  */
 export class ProjectsRepository {
   // Attributes
+  private readonly _cache = new Map<string, Project>();
   private readonly _logger = inject$(Logger).child(withLabel('projects'));
   private readonly _scurry = inject$(PathScurry);
 
@@ -60,16 +62,16 @@ export class ProjectsRepository {
     return projectRoot;
   }
 
-  // getProject(root: string, opts?: ProjectOptions): Project {
-  //   let project = this._cache.get(root);
-  //
-  //   if (!project) {
-  //     project = new Project(root, this._logger, opts);
-  //     this._cache.set(root, project);
-  //   }
-  //
-  //   return project;
-  // }
+  getProject(root: string, opts?: ProjectOptions): Project {
+    let project = this._cache.get(root);
+
+    if (!project) {
+      project = new Project(root, opts);
+      this._cache.set(root, project);
+    }
+
+    return project;
+  }
 }
 
 // Constants

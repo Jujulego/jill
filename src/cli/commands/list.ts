@@ -1,4 +1,6 @@
-import { loadCurrentProject } from '@/src/cli/middlewares/current-project.middleware.js';
+import { type LoadProjectArgs, loadProject } from '@/src/cli/middlewares/load-project.middleware.js';
+import { ProjectsRepository } from '@/src/projects/projects.repository.js';
+import { inject$ } from '@kyrielle/injector';
 import type { Order } from '../../utils/types.js';
 import type { CommandModule } from 'yargs';
 
@@ -7,7 +9,7 @@ const command: CommandModule<unknown, ListArgs> = {
   command: 'list',
   aliases: ['ls'],
   describe: 'List project workspaces',
-  builder: (parser) => loadCurrentProject(parser)
+  builder: (parser) => loadProject(parser)
     .option('affected', {
       alias: 'a',
       type: 'string',
@@ -76,7 +78,12 @@ const command: CommandModule<unknown, ListArgs> = {
       desc: 'Print only workspaces having the given script',
     }),
   handler(args) {
-    console.log(args);
+    const repository = inject$(ProjectsRepository);
+    const project = repository.getProject(args.project, {
+      packageManager: args.packageManager
+    });
+
+    console.log(project);
   }
 };
 
@@ -85,7 +92,7 @@ export default command;
 // Types
 export type ListAttr = 'name' | 'version' | 'root' | 'slug';
 
-interface ListArgs {
+interface ListArgs extends LoadProjectArgs {
   readonly affected: string | undefined;
   readonly 'affected-rev-fallback': string;
   readonly 'affected-rev-sort': string | undefined;

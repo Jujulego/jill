@@ -4,9 +4,9 @@ import { ProjectsRepository } from '../../projects/projects.repository.js';
 import type { PackageManager, Writable } from '../../utils/types.js';
 
 /**
- * Loads a projects.
+ * Loads a project.
  */
-export function loadCurrentProject<T = unknown>(parser: Argv<T>): Argv<T & LoadProjectArgs> {
+export function loadProject<T = unknown>(parser: Argv<T>): Argv<T & LoadProjectArgs> {
   return parser
     .option('project', {
       alias: 'p',
