@@ -1,26 +1,20 @@
-import { container } from '@/src/inversify.config.js';
-import { Project } from '@/src/project/project.js';
-import { ProjectRepository } from '@/src/project/project.repository.js';
+import { Project } from '@/src/projects/project.js';
+import { ProjectsRepository } from '@/src/projects/projects.repository';
+import { inject$ } from '@kyrielle/injector';
 import { fs, vol } from 'memfs';
 import path from 'node:path';
-import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import '@/src/commons/logger.service.js';
 
 // Mocks
+vi.mock('node:fs', () => ({ default: fs }));
 vi.mock('node:fs/promises', () => ({ default: fs.promises }));
 
 // Setup
-let repository: ProjectRepository;
-
-beforeAll(() => {
-  container.snapshot();
-});
+let repository: ProjectsRepository;
 
 beforeEach(() => {
-  container.restore();
-  container.snapshot();
-
-  repository = container.get(ProjectRepository);
+  repository = inject$(ProjectsRepository);
 
   // Create project structure
   vol.fromNestedJSON({
@@ -66,7 +60,7 @@ afterEach(() => {
 });
 
 // Tests
-describe('ProjectRepository.searchProjectRoot', () => {
+describe('ProjectsRepository.searchProjectRoot', () => {
   // root search
   it('should return /test for /test (yarn lockfile)', async ()=> {
     vi.spyOn(repository, 'isProjectRoot');
@@ -195,7 +189,7 @@ describe('ProjectRepository.searchProjectRoot', () => {
   });
 });
 
-describe('ProjectRepository.getProject', () => {
+describe('ProjectsRepository.getProject', () => {
   it('should create a Project with given parameters', () => {
     const prj = repository.getProject('/test');
 
