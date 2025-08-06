@@ -20,7 +20,7 @@ export default tsEslint.config(
   /* Javascript/Typescript/React rules */
   eslint.configs.recommended,
   tsEslint.configs.recommendedTypeChecked
-    .map((cfg) => ({ ...cfg, files: ['**/*.{ts,tsx}'] })),
+    .map((cfg) => ({ ...cfg, files: ['**/*.{js,jsx,ts,tsx}'] })),
   {
     files: ['**/*.{js,jsx,ts,tsx}'],
     ...react.configs.flat.recommended,
