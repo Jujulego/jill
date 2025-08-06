@@ -1,7 +1,6 @@
 import { token$ } from '@kyrielle/injector';
 import { logger$, withTimestamp } from '@kyrielle/logger';
 import fs from 'node:fs';
-import process from 'node:process';
 import { PathScurry } from 'path-scurry';
 
 // Tokens

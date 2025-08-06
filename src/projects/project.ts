@@ -1,4 +1,3 @@
-import { semaphore$, with$ } from '@/src/utils/kyrielle';
 import { inject$ } from '@kyrielle/injector';
 import { withLabel } from '@kyrielle/logger';
 import { Glob } from 'glob';
@@ -6,8 +5,9 @@ import fs from 'node:fs';
 import path from 'node:path';
 import normalize, { type Package } from 'normalize-package-data';
 import { LOGGER, PATH_SCURRY } from '../tokens.js';
+import { semaphore$, with$ } from '../utils/kyrielle.js';
 import type { PackageManager } from '../utils/types.js';
-import { Workspace } from './workspace';
+import { Workspace } from './workspace.js';
 
 export class Project {
   // Attributes

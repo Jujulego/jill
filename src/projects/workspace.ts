@@ -1,9 +1,9 @@
-import type { Project } from '@/src/projects/project';
-import { LOGGER } from '@/src/tokens';
 import { inject$ } from '@kyrielle/injector';
-import { withLabel, type Logger } from '@kyrielle/logger';
+import { type Logger, withLabel } from '@kyrielle/logger';
 import path from 'node:path';
 import type { Package } from 'normalize-package-data';
+import { LOGGER } from '../tokens.js';
+import type { Project } from './project.js';
 
 export class Workspace {
   // Attributes

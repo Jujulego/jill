@@ -29,7 +29,7 @@ const command: CommandModule<unknown, ListArgs> = {
       desc: 'Sort applied to git tag / git branch command',
     })
     .option('attr', {
-      alias: ['attrs'],
+      alias: 'attrs',
       type: 'array',
       choices: ['name', 'version', 'root', 'slug'] as const,
       group: 'Format:',
@@ -83,25 +83,25 @@ const command: CommandModule<unknown, ListArgs> = {
       // Compute attributes
       if (!argv.attr?.length) {
         if (argv.json) {
-          argv.attr = ['name', 'version', 'slug', 'root'];
+          argv.attrs = argv.attr = ['name', 'version', 'slug', 'root'];
         } else if (argv.long) {
-          argv.attr = ['name', 'version', 'root'];
+          argv.attrs = argv.attr = ['name', 'version', 'root'];
         } else {
-          argv.attr = ['name'];
+          argv.attrs = argv.attr = ['name'];
         }
       }
     }, true)
     .check((argv) => {
-      if (argv.attr.length > 0 && argv.sortBy?.length) {
-        const miss = argv.sortBy.filter((attr) => !argv.attr.includes(attr));
+      if (argv.attr.length > 0 && argv['sort-by']?.length) {
+        const miss = argv['sort-by'].filter((attr) => !argv.attr.includes(attr));
 
         if (miss.length > 0) {
           throw new Error(`Cannot sort by non printed attributes. Missing ${miss.join(', ')}.`);
         }
       }
 
-      if (!argv.sortBy?.length && argv.attr.length > 0) {
-        argv.sortBy = [argv.attr[0]];
+      if (!argv['sort-by']?.length && argv.attr.length > 0) {
+        argv['sort-by'] = argv.sortBy = argv.s = [argv.attr[0]!];
       }
 
       return true;
