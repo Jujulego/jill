@@ -5,6 +5,7 @@ import { container } from '@/src/inversify.config.js';
 import { jillLogFormat, LogGateway } from '@/src/commons/logger/log.gateway.js';
 
 // Component
+/** @deprecated */
 export default function StaticLogs() {
   // State
   const { write } = useStderr();

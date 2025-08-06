@@ -57,11 +57,11 @@ export default tsEslint.config(
       '@typescript-eslint/no-unused-expressions': ['error', {
         allowTaggedTemplates: true
       }],
-      quotes: ['error', 'single'],
-      semi: ['error', 'always'],
       'no-console': ['error', {
         allow: ['warn', 'error'],
       }],
+      quotes: ['error', 'single'],
+      semi: ['error', 'always'],
     }
   },
   /* Vitest rules */
@@ -82,6 +82,7 @@ export default tsEslint.config(
   {
     files: ['**/*.test.{ts,tsx}', '**/*.test-d.{ts,tsx}'],
     rules: {
+      '@typescript-eslint/no-unsafe-assignment': ['off'],
       '@typescript-eslint/no-unused-vars': ['off'],
       '@typescript-eslint/prefer-promise-reject-errors': ['off'],
       '@typescript-eslint/require-await': ['off'],

@@ -16,6 +16,7 @@ export interface ILoadProjectArgs {
 }
 
 // Middleware
+/** @deprecated */
 @Middleware()
 export class LoadProject implements IMiddleware<ILoadProjectArgs> {
   // Constructor

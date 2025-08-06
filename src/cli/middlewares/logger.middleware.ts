@@ -1,18 +1,7 @@
-import { inject$ } from '@kyrielle/injector';
 import { defineQuickFormat, q$, qarg, qerror, qprop, qwrap } from '@jujulego/quick-tag';
-import type {
-  Log,
-  LogLevelKey,
-  WithDelay
-} from '@kyrielle/logger';
-import {
-  logDebugFilter$,
-  logDelay$,
-  LogGateway,
-  LogLevel,
-  qLogDelay,
-  toStderr
-} from '@kyrielle/logger';
+import { inject$ } from '@kyrielle/injector';
+import type { Log, LogLevelKey, WithDelay } from '@kyrielle/logger';
+import { logDelay$, LogGateway, LogLevel, qLogDelay, toStderr } from '@kyrielle/logger';
 import type { ColorName, ModifierName } from 'chalk';
 import { chalkTemplateStderr } from 'chalk-template';
 import { filter$, flow$ } from 'kyrielle';
@@ -54,7 +43,6 @@ export function loggerMiddleware(parser: Argv) {
       flow$(
         inject$(Logger),
         filter$((log) => log.level >= logLevel),
-        // logDebugFilter$(),
         logDelay$(),
         logGateway,
       );
