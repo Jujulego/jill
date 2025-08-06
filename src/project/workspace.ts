@@ -24,6 +24,7 @@ export interface WorkspaceRunOptions extends Omit<TaskOptions, 'logger'> {
 }
 
 // Class
+/** @deprecated */
 @injectable()
 export class Workspace {
   // Attributes

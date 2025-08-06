@@ -5,7 +5,7 @@ import Ajv from 'ajv';
 import os from 'node:os';
 import path from 'node:path';
 import process from 'node:process';
-import { Logger } from '../tokens.js';
+import { LOGGER } from '../tokens.js';
 import { ConfigExplorer } from './config-explorer.js';
 import schema from './schema.json' with { type: 'json' };
 import type { Config } from './types';
@@ -21,7 +21,7 @@ export class ConfigService {
   private _filepath?: string;
   private _config?: Config;
 
-  private readonly _logger = inject$(Logger).child(withLabel('config'));
+  private readonly _logger = inject$(LOGGER).child(withLabel('config'));
   private readonly _explorer = inject$(ConfigExplorer);
 
   // Constructor

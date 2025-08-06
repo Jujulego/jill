@@ -7,7 +7,7 @@ import { chalkTemplateStderr } from 'chalk-template';
 import { filter$, flow$ } from 'kyrielle';
 import os from 'node:os';
 import type { Argv } from 'yargs';
-import { Logger } from '../../tokens.js';
+import { LOGGER } from '../../tokens.js';
 
 // Utils
 const VERBOSITY_LEVEL: Record<number, LogLevelKey> = {
@@ -41,7 +41,7 @@ export function loggerMiddleware(parser: Argv) {
       const logGateway = inject$(LogGateway);
 
       flow$(
-        inject$(Logger),
+        inject$(LOGGER),
         filter$((log) => log.level >= logLevel),
         logDelay$(),
         logGateway,

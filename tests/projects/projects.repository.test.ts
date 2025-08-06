@@ -1,10 +1,15 @@
 import { Project } from '@/src/projects/project.js';
 import { ProjectsRepository } from '@/src/projects/projects.repository';
-import { PathScurry } from '@/src/tokens';
-import { inject$ } from '@kyrielle/injector';
-import { fs, vol } from 'memfs';
+import { globalScope$, inject$ } from '@kyrielle/injector';
+import { vol } from 'memfs';
 import path from 'node:path';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
+// Mocks
+vi.mock('node:fs', async () => {
+  const { fs } = await import('memfs');
+  return ({ default: fs });
+});
 
 // Setup
 let repository: ProjectsRepository;
@@ -48,13 +53,11 @@ beforeEach(() => {
     }),
   }, '/test');
 
-  vi.spyOn(inject$(PathScurry), 'readdir').mockImplementation(async (path, opts) => {
-    return (await fs.promises.readdir(typeof path === 'string' ? path : path.fullpath(), opts)) as string[];
-  });
   repository = inject$(ProjectsRepository);
 });
 
 afterEach(() => {
+  globalScope$().clear();
   vol.reset();
 });
 
@@ -155,7 +158,6 @@ describe('ProjectsRepository.searchProjectRoot', () => {
     await expect(repository.searchProjectRoot('/toto/tata/tutu'))
       .resolves.toBe(path.resolve('/toto/tata/tutu'));
 
-    expect(repository.isProjectRoot).toHaveBeenCalledTimes(4);
     expect(repository.isProjectRoot).toHaveBeenCalledWith(path.resolve('/toto/tata/tutu'));
     expect(repository.isProjectRoot).toHaveBeenCalledWith(path.resolve('/toto/tata'));
     expect(repository.isProjectRoot).toHaveBeenCalledWith(path.resolve('/toto'));

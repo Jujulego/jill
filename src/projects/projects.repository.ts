@@ -1,7 +1,7 @@
 import { inject$ } from '@kyrielle/injector';
 import { withLabel } from '@kyrielle/logger';
 import path from 'node:path';
-import { Logger, PathScurry } from '../tokens.js';
+import { LOGGER, PATH_SCURRY } from '../tokens.js';
 import { Project, type ProjectOptions } from './project.js';
 
 /**
@@ -10,8 +10,8 @@ import { Project, type ProjectOptions } from './project.js';
 export class ProjectsRepository {
   // Attributes
   private readonly _cache = new Map<string, Project>();
-  private readonly _logger = inject$(Logger).child(withLabel('projects'));
-  private readonly _scurry = inject$(PathScurry);
+  private readonly _logger = inject$(LOGGER).child(withLabel('projects'));
+  private readonly _scurry = inject$(PATH_SCURRY);
 
   // Methods
   async isProjectRoot(dir: string): Promise<IsProjectRoot> {

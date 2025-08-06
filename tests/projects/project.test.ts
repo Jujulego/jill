@@ -1,27 +1,19 @@
-import { container } from '@/src/inversify.config.js';
-import { Project } from '@/src/project/project.js';
-import { Workspace } from '@/src/project/workspace.js';
-import { Logger, withLabel } from '@jujulego/logger';
-import { fs, vol } from 'memfs';
+import { Project } from '@/src/projects/project.js';
+import { globalScope$ } from '@kyrielle/injector';
+import { vol } from 'memfs';
 import path from 'node:path';
-import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import '@/src/commons/logger.service.js';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mocks
-vi.mock('node:fs', () => ({ default: fs }));
-vi.mock('node:fs/promises', () => ({ default: fs.promises }));
+vi.mock('node:fs', async () => {
+  const { fs } = await import('memfs');
+  return ({ default: fs });
+});
 
 // Setup
 let project: Project;
-let logger: Logger;
-
-beforeAll(async () => {
-  container.snapshot();
-});
 
 beforeEach(async () => {
-  container.snapshot();
-
   // Create project structure
   vol.fromNestedJSON({
     'workspaces': {
@@ -61,44 +53,36 @@ beforeEach(async () => {
   }, '/test');
 
   // Initiate project
-  logger = container.get(Logger).child(withLabel('projects'));
-  project = new Project('/test', logger);
+  project = new Project('/test');
 });
 
 afterEach(() => {
+  globalScope$().clear();
   vol.reset();
-  container.restore();
 });
 
 // Test suites
 describe('Project.mainWorkspace', () => {
   // Tests
   it('should return root workspace', async () => {
-    await expect(project.mainWorkspace())
-      .resolves.toBeInstanceOf(Workspace);
+    const wks = await project.mainWorkspace();
 
-    await expect(project.mainWorkspace())
-      .resolves.toMatchObject({
-        cwd: path.resolve('/test'),
-        name: 'main',
-        project: project
-      });
+    expect(wks.root).toBe(path.resolve('/test'));
+    expect(wks.name).toBe('main');
+    expect(wks.project).toBe(project);
   });
 });
 
 describe('Project.currentWorkspace', () => {
   it('should return wks-a', async () => {
-    await expect(project.currentWorkspace('/test/workspaces/wks-a/src'))
-      .resolves.toMatchObject({
-        name: 'wks-a'
-      });
+    const wks = await project.currentWorkspace('/test/workspaces/wks-a/src');
+
+    expect(wks?.name).toBe('wks-a');
   });
 
   it('should return main workspace', async () => {
-    await expect(project.currentWorkspace('/test/tools'))
-      .resolves.toMatchObject({
-        name: 'main'
-      });
+    const wks = await project.currentWorkspace('/test/tools');
+    expect(wks?.name).toBe('main');
   });
 
   it('should return null', async () => {
@@ -124,19 +108,17 @@ describe('Project.workspace', () => {
   it('should return current directory workspace', async () => {
     vi.spyOn(process, 'cwd').mockReturnValue('/test/workspaces/wks-a');
 
-    await expect(project.workspace())
-      .resolves.toMatchObject({
-        name: 'wks-a',
-        cwd: path.resolve('/test/workspaces/wks-a')
-      });
+    const wks = await project.workspace();
+
+    expect(wks?.name).toBe('wks-a');
+    expect(wks?.root).toBe(path.resolve('/test/workspaces/wks-a'));
   });
 
   it('should return named workspace', async () => {
-    await expect(project.workspace('wks-a'))
-      .resolves.toMatchObject({
-        name: 'wks-a',
-        cwd: path.resolve('/test/workspaces/wks-a')
-      });
+    const wks = await project.workspace('wks-a');
+
+    expect(wks?.name).toBe('wks-a');
+    expect(wks?.root).toBe(path.resolve('/test/workspaces/wks-a'));
   });
 
   it('should return null for unknown workspace', async () => {
@@ -173,7 +155,7 @@ describe('Project.packageManager', () => {
   });
 
   it('should return packageManager from options', async () => {
-    const prj = new Project('/test', logger, { packageManager: 'yarn' });
+    const prj = new Project('/test', { packageManager: 'yarn' });
 
     // Test
     await expect(prj.packageManager())
