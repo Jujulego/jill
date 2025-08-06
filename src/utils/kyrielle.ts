@@ -1,29 +1,23 @@
-import { source$, waitFor$ } from 'kyrielle';
+import { var$, waitFor$ } from 'kyrielle';
 
-export function semaphore$(): Lock {
-  let count = 0;
-  const release = source$<void>();
+export function mutex$(): Lock {
+  const count$ = var$(0);
 
   return {
     async acquire() {
-      while (count > 0) {
-        await waitFor$(release);
+      let cnt = count$.defer();
+
+      while (cnt > 0) {
+        cnt = await waitFor$(count$);
       }
 
-      count++;
-
-      return {
-        // eslint-disable-next-line @typescript-eslint/unbound-method
-        [Symbol.dispose]: this.release,
-      };
+      count$.mutate(cnt + 1);
     },
     release() {
-      if (count > 0) {
-        count--;
+      let cnt = count$.defer();
 
-        if (count === 0) {
-          release.next();
-        }
+      if (cnt > 0) {
+        count$.mutate(cnt - 1);
       }
     },
   };
@@ -38,7 +32,7 @@ export async function with$<R>(lock: Lock, fn: () => R): Promise<Awaited<R>> {
   }
 }
 
-export interface Lock{
-  acquire(): Promise<Disposable>;
-  release(): void;
+export interface Lock {
+  acquire(this: void): Promise<void>;
+  release(this: void): void;
 }

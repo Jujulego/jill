@@ -5,14 +5,14 @@ import fs from 'node:fs';
 import path from 'node:path';
 import normalize, { type Package } from 'normalize-package-data';
 import { LOGGER, PATH_SCURRY } from '../tokens.js';
-import { semaphore$, with$ } from '../utils/kyrielle.js';
+import { mutex$, with$ } from '../utils/kyrielle.js';
 import type { PackageManager } from '../utils/types.js';
 import { Workspace } from './workspace.js';
 
 export class Project {
   // Attributes
   private _isFullyLoaded = false;
-  private _lock = semaphore$();
+  private _lock = mutex$();
   private _mainWorkspace?: Workspace;
   private _packageManager?: PackageManager;
   private _workspaceGlob?: Glob<{ withFileTypes: true }>;
