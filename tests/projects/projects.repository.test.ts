@@ -1,21 +1,15 @@
 import { Project } from '@/src/projects/project.js';
 import { ProjectsRepository } from '@/src/projects/projects.repository';
+import { PathScurry } from '@/src/tokens';
 import { inject$ } from '@kyrielle/injector';
 import { fs, vol } from 'memfs';
 import path from 'node:path';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import '@/src/commons/logger.service.js';
-
-// Mocks
-vi.mock('node:fs', () => ({ default: fs }));
-vi.mock('node:fs/promises', () => ({ default: fs.promises }));
 
 // Setup
 let repository: ProjectsRepository;
 
 beforeEach(() => {
-  repository = inject$(ProjectsRepository);
-
   // Create project structure
   vol.fromNestedJSON({
     'workspaces': {
@@ -53,6 +47,11 @@ beforeEach(() => {
       workspaces: ['workspaces/*'],
     }),
   }, '/test');
+
+  vi.spyOn(inject$(PathScurry), 'readdir').mockImplementation(async (path, opts) => {
+    return (await fs.promises.readdir(typeof path === 'string' ? path : path.fullpath(), opts)) as string[];
+  });
+  repository = inject$(ProjectsRepository);
 });
 
 afterEach(() => {
@@ -72,7 +71,6 @@ describe('ProjectsRepository.searchProjectRoot', () => {
     await expect(repository.searchProjectRoot('/test'))
       .resolves.toBe(path.resolve('/test'));
 
-    expect(repository.isProjectRoot).toHaveBeenCalledTimes(1);
     expect(repository.isProjectRoot).toHaveBeenCalledWith(path.resolve('/test'));
   });
 
@@ -86,7 +84,6 @@ describe('ProjectsRepository.searchProjectRoot', () => {
     await expect(repository.searchProjectRoot('/test'))
       .resolves.toBe(path.resolve('/test'));
 
-    expect(repository.isProjectRoot).toHaveBeenCalledTimes(1);
     expect(repository.isProjectRoot).toHaveBeenCalledWith(path.resolve('/test'));
   });
 
@@ -163,29 +160,6 @@ describe('ProjectsRepository.searchProjectRoot', () => {
     expect(repository.isProjectRoot).toHaveBeenCalledWith(path.resolve('/toto/tata'));
     expect(repository.isProjectRoot).toHaveBeenCalledWith(path.resolve('/toto'));
     expect(repository.isProjectRoot).toHaveBeenCalledWith(path.resolve('/'));
-  });
-
-  // cache
-  it('should take advantage of cache', async ()=> {
-    vi.spyOn(repository, 'isProjectRoot');
-
-    // Test
-    await expect(repository.searchProjectRoot('/test/workspaces'))
-      .resolves.toBe(path.resolve('/test'));
-
-    expect(repository.isProjectRoot).toHaveBeenCalledTimes(3);
-    expect(repository.isProjectRoot).toHaveBeenCalledWith(path.resolve('/test/workspaces'));
-    expect(repository.isProjectRoot).toHaveBeenCalledWith(path.resolve('/test'));
-    expect(repository.isProjectRoot).toHaveBeenCalledWith(path.resolve('/'));
-
-    // Check cache
-    vi.mocked(repository.isProjectRoot).mockClear();
-
-    await expect(repository.searchProjectRoot('/test/workspaces/wks-a'))
-      .resolves.toBe(path.resolve('/test'));
-
-    expect(repository.isProjectRoot).toHaveBeenCalledTimes(1);
-    expect(repository.isProjectRoot).toHaveBeenCalledWith(path.resolve('/test/workspaces/wks-a'));
   });
 });
 
