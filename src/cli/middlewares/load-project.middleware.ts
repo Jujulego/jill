@@ -12,7 +12,8 @@ export function loadProject<T = unknown>(parser: Argv<T>): Argv<T & LoadProjectA
       alias: 'p',
       type: 'string',
       default: process.cwd(),
-      description: 'Project root directory'
+      description: 'Project root directory',
+      normalize: true,
     })
     .option('package-manager', {
       choices: ['yarn', 'npm'] as const,

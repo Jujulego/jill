@@ -1,8 +1,8 @@
-import { type LoadProjectArgs, loadProject } from '@/src/cli/middlewares/load-project.middleware.js';
+import { loadProject, type LoadProjectArgs } from '@/src/cli/middlewares/load-project.middleware.js';
 import { ProjectsRepository } from '@/src/projects/projects.repository.js';
 import { inject$ } from '@kyrielle/injector';
-import type { Order } from '../../utils/types.js';
 import type { CommandModule } from 'yargs';
+import type { Order } from '../../utils/types.js';
 
 // Command
 const command: CommandModule<unknown, ListArgs> = {
@@ -33,6 +33,7 @@ const command: CommandModule<unknown, ListArgs> = {
       type: 'array',
       choices: ['name', 'version', 'root', 'slug'] as const,
       group: 'Format:',
+      required: true,
       desc: 'Select printed attributes'
     })
     .option('headers', {
@@ -69,6 +70,7 @@ const command: CommandModule<unknown, ListArgs> = {
       type: 'array',
       choices: ['name', 'version', 'root', 'slug'] as const,
       group: 'Sort:',
+      default: [],
       desc: 'Sort output by given attribute. By default sorts by name if printed'
     })
     .option('with-script', {
@@ -76,6 +78,33 @@ const command: CommandModule<unknown, ListArgs> = {
       string: true,
       group: 'Filters:',
       desc: 'Print only workspaces having the given script',
+    })
+    .middleware((argv) => {
+      // Compute attributes
+      if (!argv.attr?.length) {
+        if (argv.json) {
+          argv.attr = ['name', 'version', 'slug', 'root'];
+        } else if (argv.long) {
+          argv.attr = ['name', 'version', 'root'];
+        } else {
+          argv.attr = ['name'];
+        }
+      }
+    }, true)
+    .check((argv) => {
+      if (argv.attr.length > 0 && argv.sortBy?.length) {
+        const miss = argv.sortBy.filter((attr) => !argv.attr.includes(attr));
+
+        if (miss.length > 0) {
+          throw new Error(`Cannot sort by non printed attributes. Missing ${miss.join(', ')}.`);
+        }
+      }
+
+      if (!argv.sortBy?.length && argv.attr.length > 0) {
+        argv.sortBy = [argv.attr[0]];
+      }
+
+      return true;
     }),
   handler(args) {
     const repository = inject$(ProjectsRepository);
@@ -83,7 +112,7 @@ const command: CommandModule<unknown, ListArgs> = {
       packageManager: args.packageManager
     });
 
-    console.log(project);
+    console.log(args);
   }
 };
 
@@ -96,7 +125,7 @@ interface ListArgs extends LoadProjectArgs {
   readonly affected: string | undefined;
   readonly 'affected-rev-fallback': string;
   readonly 'affected-rev-sort': string | undefined;
-  readonly attr: readonly ListAttr[] | undefined;
+  readonly attr: readonly ListAttr[];
   readonly headers: boolean | undefined;
   readonly long: boolean | undefined;
   readonly json: boolean | undefined;
