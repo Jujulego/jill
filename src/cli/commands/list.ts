@@ -1,13 +1,13 @@
-import { inject$ } from '@kyrielle/injector';
+import type { Attribute } from '@/src/commands/list';
 import chalk from 'chalk';
 import { collect$, map$, pipe$, waitFor$ } from 'kyrielle';
+import { compare, parse } from 'semver';
 import slugify from 'slugify';
 import type { ArgumentsCamelCase, CommandModule } from 'yargs';
-import { ProjectsRepository } from '../../projects/projects.repository.js';
 import type { Workspace } from '../../projects/workspace.js';
 import { printJson } from '../../utils/json.js';
 import type { Order } from '../../utils/types.js';
-import { loadProject, type LoadProjectArgs } from '../middlewares/load-project.middleware.js';
+import { currentProject, loadProject, type LoadProjectArgs } from '../middlewares/load-project.middleware.js';
 
 // Command
 const command: CommandModule<unknown, ListArgs> = {
@@ -59,14 +59,6 @@ const command: CommandModule<unknown, ListArgs> = {
       default: false,
       desc: 'Prints data as a JSON array',
     })
-    .option('order', {
-      alias: 'o',
-      type: 'string',
-      choices: ['asc', 'desc'] as const,
-      default: 'asc' as const,
-      group: 'Sort:',
-      desc: 'Sort order'
-    })
     .option('private', {
       type: 'boolean',
       group: 'Filters:',
@@ -79,6 +71,14 @@ const command: CommandModule<unknown, ListArgs> = {
       group: 'Sort:',
       default: [],
       desc: 'Sort output by given attribute. By default sorts by name if printed'
+    })
+    .option('sort-order', {
+      alias: ['o', 'order'],
+      type: 'string',
+      choices: ['asc', 'desc'] as const,
+      default: 'asc' as const,
+      group: 'Sort:',
+      desc: 'Sort order'
     })
     .option('with-script', {
       type: 'array',
@@ -114,18 +114,17 @@ const command: CommandModule<unknown, ListArgs> = {
       return true;
     }),
   async handler(args) {
-    // Load project
-    const repository = inject$(ProjectsRepository);
-    const project = repository.getProject(args.project, {
-      packageManager: args.packageManager
-    });
-
     // Load workspaces
+    const project = currentProject(args);
     const workspaces = await waitFor$(pipe$(
       project.workspaces(),
       map$(buildExtractor(args)),
       collect$(),
     ));
+
+    if (args.sortBy.length > 0) {
+      workspaces.sort(buildComparator(args));
+    }
 
     printJson(workspaces);
   }
@@ -144,9 +143,9 @@ interface ListArgs extends LoadProjectArgs {
   readonly headers: boolean | undefined;
   readonly long: boolean;
   readonly json: boolean;
-  readonly order: Order;
   readonly private: boolean | undefined;
-  readonly 'sort-by': readonly ListAttr[] | undefined;
+  readonly 'sort-by': readonly ListAttr[];
+  readonly 'sort-order': Order;
   readonly 'with-script': readonly string[] | undefined;
 }
 
@@ -161,6 +160,13 @@ const EXTRACTORS = {
   slug: (wks) => slugify(wks.name)
 } satisfies Record<ListAttr, Extractor<string | undefined>>;
 
+const COMPARATORS = {
+  name: (a = '', b = '') => a.localeCompare(b),
+  version: (a, b) => compare(parse(a) ?? '0.0.0', parse(b) ?? '0.0.0'),
+  root: (a = '', b = '') => a.localeCompare(b),
+  slug: (a = '', b = '') => a.localeCompare(b),
+} satisfies Record<Attribute, (a: string | undefined, b: string | undefined) => number>;
+
 function buildExtractor(args: ArgumentsCamelCase<ListArgs>) {
   return (wks: Workspace): Readonly<ExtractedData> => {
     const data = {} as ExtractedData;
@@ -171,4 +177,20 @@ function buildExtractor(args: ArgumentsCamelCase<ListArgs>) {
 
     return data;
   };
+}
+
+function buildComparator(args: ArgumentsCamelCase<ListArgs>) {
+  const factor = args.sortOrder === 'asc' ? 1 : -1;
+
+  return (a: Readonly<ExtractedData>, b: Readonly<ExtractedData>) => {
+    for (const attr of args.sortBy) {
+      const diff = COMPARATORS[attr](a[attr], b[attr]);
+
+      if (diff !== 0) {
+        return diff * factor;
+      }
+    }
+
+    return 0;
+  }
 }

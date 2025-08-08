@@ -56,7 +56,7 @@
     "pretty-ms": "^9.0.0",
     "react": "^19.1.0",
     "reflect-metadata": "^0.2.0",
-    "semver": "^7.5.4",
+    "semver": "^7.7.2",
     "slugify": "^1.6.6",
     "yargs": "^18.0.0"
   },

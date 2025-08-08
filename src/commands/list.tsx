@@ -21,7 +21,7 @@ import { printJson } from '@/src/utils/json.js';
 
 // Types
 export type Attribute = 'name' | 'version' | 'root' | 'slug';
-export type Data = Partial<Record<Attribute, string>>;
+export type Data = Partial<Record<Attribute, string | undefined>>;
 export type Order = 'asc' | 'desc';
 
 type Extractor<T> = (wks: Workspace, json: boolean) => T;
@@ -56,7 +56,7 @@ const EXTRACTORS = {
   name: wks => wks.name,
   version: (wks, json) => wks.manifest.version || (json ? undefined : chalk.grey('unset')),
   root: wks => wks.cwd,
-  slug: wks => slugify.default(wks.name)
+  slug: wks => slugify(wks.name)
 } satisfies Record<Attribute, Extractor<string | undefined>>;
 
 const COMPARATORS = {
@@ -119,7 +119,7 @@ export class ListCommand extends InkCommand<ListCommandArgs> {
       .option('affected', {
         alias: 'a',
         type: 'string',
-        coerce: (rev) => rev === '' ? 'master' : rev,
+        coerce: (rev: string) => rev === '' ? 'master' : rev,
         group: 'Filters:',
         desc: 'Print only affected workspaces towards given git revision. If no revision is given, it will check towards master. Replaces %name by workspace name.',
       })
