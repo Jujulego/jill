@@ -1,8 +1,13 @@
-import { loadProject, type LoadProjectArgs } from '@/src/cli/middlewares/load-project.middleware.js';
-import { ProjectsRepository } from '@/src/projects/projects.repository.js';
 import { inject$ } from '@kyrielle/injector';
-import type { CommandModule } from 'yargs';
+import chalk from 'chalk';
+import { collect$, map$, pipe$, waitFor$ } from 'kyrielle';
+import slugify from 'slugify';
+import type { ArgumentsCamelCase, CommandModule } from 'yargs';
+import { ProjectsRepository } from '../../projects/projects.repository.js';
+import type { Workspace } from '../../projects/workspace.js';
+import { printJson } from '../../utils/json.js';
 import type { Order } from '../../utils/types.js';
+import { loadProject, type LoadProjectArgs } from '../middlewares/load-project.middleware.js';
 
 // Command
 const command: CommandModule<unknown, ListArgs> = {
@@ -45,11 +50,13 @@ const command: CommandModule<unknown, ListArgs> = {
       alias: 'l',
       type: 'boolean',
       group: 'Format:',
+      default: false,
       desc: 'Prints name, version and root of all workspaces',
     })
     .option('json', {
       type: 'boolean',
       group: 'Format:',
+      default: false,
       desc: 'Prints data as a JSON array',
     })
     .option('order', {
@@ -106,13 +113,21 @@ const command: CommandModule<unknown, ListArgs> = {
 
       return true;
     }),
-  handler(args) {
+  async handler(args) {
+    // Load project
     const repository = inject$(ProjectsRepository);
     const project = repository.getProject(args.project, {
       packageManager: args.packageManager
     });
 
-    console.log(args);
+    // Load workspaces
+    const workspaces = await waitFor$(pipe$(
+      project.workspaces(),
+      map$(buildExtractor(args)),
+      collect$(),
+    ));
+
+    printJson(workspaces);
   }
 };
 
@@ -127,10 +142,33 @@ interface ListArgs extends LoadProjectArgs {
   readonly 'affected-rev-sort': string | undefined;
   readonly attr: readonly ListAttr[];
   readonly headers: boolean | undefined;
-  readonly long: boolean | undefined;
-  readonly json: boolean | undefined;
+  readonly long: boolean;
+  readonly json: boolean;
   readonly order: Order;
   readonly private: boolean | undefined;
   readonly 'sort-by': readonly ListAttr[] | undefined;
   readonly 'with-script': readonly string[] | undefined;
+}
+
+// Utils
+type Extractor<T> = (wks: Workspace, json: boolean) => T;
+type ExtractedData = Record<ListAttr, string | undefined>;
+
+const EXTRACTORS = {
+  name: (wks) => wks.name,
+  version: (wks, json) => wks.manifest.version || (json ? undefined : chalk.grey('unset')),
+  root: (wks) => wks.root,
+  slug: (wks) => slugify(wks.name)
+} satisfies Record<ListAttr, Extractor<string | undefined>>;
+
+function buildExtractor(args: ArgumentsCamelCase<ListArgs>) {
+  return (wks: Workspace): Readonly<ExtractedData> => {
+    const data = {} as ExtractedData;
+
+    for (const attr of args.attr) {
+      data[attr] = EXTRACTORS[attr](wks, args.json);
+    }
+
+    return data;
+  };
 }

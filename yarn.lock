@@ -725,7 +725,7 @@ __metadata:
     inversify: "npm:^6.0.1"
     inversify-inject-decorators: "npm:^3.1.0"
     jiti: "npm:2.5.1"
-    kyrielle: "npm:^2.4.0"
+    kyrielle: "npm:^2.5.0"
     log-symbols: "npm:^6.0.0"
     memfs: "npm:4.36.0"
     moo: "npm:^0.5.2"
@@ -4383,16 +4383,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"kyrielle@npm:^2.2.1, kyrielle@npm:^2.4.0":
-  version: 2.4.0
-  resolution: "kyrielle@npm:2.4.0"
+"kyrielle@npm:^2.2.1, kyrielle@npm:^2.5.0":
+  version: 2.5.0
+  resolution: "kyrielle@npm:2.5.0"
   dependencies:
     "@repeaterjs/repeater": "npm:^3.0.5"
     "@swc/helpers": "npm:^0.5.3"
   dependenciesMeta:
     vitest@3.2.4:
       unplugged: true
-  checksum: 10/182906ed4555897d61dc106af70020bd448b4d2ac1a5e16e0af840ef50a78f3d56772d902162f67c97aec20ab8ea0863f045c41086b82ed281adbf1cb95eb45d
+  checksum: 10/8fd2426f75ce5b8485bb5cc0f8e0fe0d4222e28541096365ddf49ac02be68a71b978ad10d32b38d9e55d978af494394202f80d4e45df7d11cc16b2077b2bd0c7
   languageName: node
   linkType: hard
 
