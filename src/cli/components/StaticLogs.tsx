@@ -3,7 +3,7 @@ import { LogGateway, type WithDelay } from '@kyrielle/logger';
 import { useStderr } from 'ink';
 import { observer$ } from 'kyrielle';
 import { useLayoutEffect } from 'react';
-import { logFormat } from '../middlewares/logger.middleware.js';
+import { logFormat } from '../../utils/logger.js';
 
 // Component
 export default function StaticLogs() {

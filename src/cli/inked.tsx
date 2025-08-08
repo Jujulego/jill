@@ -21,7 +21,7 @@ export function inked<P, R>(stepper: InkedStepper<P, R>): InkedComponent<P, R> {
       while (!result.done) {
         app.rerender(
           <>
-            <StaticLogs/>
+            <StaticLogs />
             { result.value }
           </>
         );

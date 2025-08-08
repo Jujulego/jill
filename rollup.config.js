@@ -1,4 +1,4 @@
-import { codecovRollupPlugin } from "@codecov/rollup-plugin";
+import { codecovRollupPlugin } from '@codecov/rollup-plugin';
 import { swc } from '@jujulego/vite-plugin-swc';
 import json from '@rollup/plugin-json';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
@@ -15,7 +15,10 @@ const options = {
     format: 'esm',
     sourcemap: true,
     chunkFileNames: '[name].js',
-    generatedCode: 'es5'
+    generatedCode: 'es5',
+    manualChunks: {
+      'utils-logger': ['./src/utils/logger.js'],
+    }
   },
   plugins: [
     nodeResolve({ exportConditions: ['node'] }),

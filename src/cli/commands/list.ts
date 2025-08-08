@@ -45,6 +45,7 @@ const command: CommandModule<unknown, ListArgs> = {
     .option('headers', {
       type: 'boolean',
       group: 'Format:',
+      default: false,
       desc: 'Prints columns headers'
     })
     .option('long', {
@@ -129,12 +130,15 @@ const command: CommandModule<unknown, ListArgs> = {
 
     if (args.json) {
       printJson(workspaces);
-    } else {
+    } else if (workspaces.length > 0) {
       for (const data of workspaces) {
         if (data.root) {
           data.root = path.relative(process.cwd(), data.root) || '.';
         }
       }
+
+      const { default: ListInk } = await import('./list.ink.jsx');
+      await ListInk({ attributes: args.attr, headers: args.headers, workspaces });
     }
   }
 };
@@ -149,7 +153,7 @@ interface ListArgs extends LoadProjectArgs {
   readonly 'affected-rev-fallback': string;
   readonly 'affected-rev-sort': string | undefined;
   readonly attr: readonly ListAttr[];
-  readonly headers: boolean | undefined;
+  readonly headers: boolean;
   readonly long: boolean;
   readonly json: boolean;
   readonly private: boolean | undefined;
@@ -161,7 +165,7 @@ interface ListArgs extends LoadProjectArgs {
 // Utils
 type Comparator<T> = (a: T, b: T) => number;
 type Extractor<T> = (wks: Workspace, json: boolean) => T;
-type ExtractedData = Record<ListAttr, string | undefined>;
+export type ExtractedData = Record<ListAttr, string | undefined>;
 
 const EXTRACTORS = {
   name: (wks) => wks.name,

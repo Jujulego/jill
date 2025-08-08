@@ -1,5 +1,6 @@
 import '@/src/commons/logger.service.js';
 
+export * from './constants.js';
 export * from './commons/git.service.js';
 export * from './types.js';
 
@@ -23,7 +24,6 @@ export * from './modules/plugin-loader.service.js';
 export * from './modules/service.js';
 
 // Project
-export * from './constants.js';
 export * from './project/project.js';
 export * from './project/project.repository.js';
 export * from './project/workspace.js';
@@ -36,15 +36,10 @@ export * from './tasks/task-expression.service.js';
 export * from './tasks/task-manager.config.js';
 
 export * from './config/config.service.js';
-export { CONFIG } from './config/config-loader.js';
-export { type IConfig, type Config } from './config/types.js';
 
 // Ui
 export { default as Layout } from './ui/layout.jsx';
 export * from './ui/layout.jsx';
-
-export { default as List } from './ui/list.jsx';
-export * from './ui/list.jsx';
 
 export { default as TaskName } from './ui/task-name.jsx';
 export * from './ui/task-name.jsx';
