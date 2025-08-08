@@ -1,6 +1,7 @@
 import type { Attribute } from '@/src/commands/list';
 import chalk from 'chalk';
 import { collect$, map$, pipe$, waitFor$ } from 'kyrielle';
+import path from 'node:path';
 import { compare, parse } from 'semver';
 import slugify from 'slugify';
 import type { ArgumentsCamelCase, CommandModule } from 'yargs';
@@ -126,7 +127,15 @@ const command: CommandModule<unknown, ListArgs> = {
       workspaces.sort(buildComparator(args));
     }
 
-    printJson(workspaces);
+    if (args.json) {
+      printJson(workspaces);
+    } else {
+      for (const data of workspaces) {
+        if (data.root) {
+          data.root = path.relative(process.cwd(), data.root) || '.';
+        }
+      }
+    }
   }
 };
 
@@ -150,6 +159,7 @@ interface ListArgs extends LoadProjectArgs {
 }
 
 // Utils
+type Comparator<T> = (a: T, b: T) => number;
 type Extractor<T> = (wks: Workspace, json: boolean) => T;
 type ExtractedData = Record<ListAttr, string | undefined>;
 
@@ -165,10 +175,10 @@ const COMPARATORS = {
   version: (a, b) => compare(parse(a) ?? '0.0.0', parse(b) ?? '0.0.0'),
   root: (a = '', b = '') => a.localeCompare(b),
   slug: (a = '', b = '') => a.localeCompare(b),
-} satisfies Record<Attribute, (a: string | undefined, b: string | undefined) => number>;
+} satisfies Record<Attribute, Comparator<string | undefined>>;
 
 function buildExtractor(args: ArgumentsCamelCase<ListArgs>) {
-  return (wks: Workspace): Readonly<ExtractedData> => {
+  return (wks: Workspace): ExtractedData => {
     const data = {} as ExtractedData;
 
     for (const attr of args.attr) {
@@ -179,10 +189,10 @@ function buildExtractor(args: ArgumentsCamelCase<ListArgs>) {
   };
 }
 
-function buildComparator(args: ArgumentsCamelCase<ListArgs>) {
+function buildComparator(args: ArgumentsCamelCase<ListArgs>): Comparator<ExtractedData> {
   const factor = args.sortOrder === 'asc' ? 1 : -1;
 
-  return (a: Readonly<ExtractedData>, b: Readonly<ExtractedData>) => {
+  return (a, b) => {
     for (const attr of args.sortBy) {
       const diff = COMPARATORS[attr](a[attr], b[attr]);
 
@@ -192,5 +202,5 @@ function buildComparator(args: ArgumentsCamelCase<ListArgs>) {
     }
 
     return 0;
-  }
+  };
 }
