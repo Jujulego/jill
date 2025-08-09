@@ -2,12 +2,14 @@ import { type Workspace } from '@/src/project/workspace.js';
 import { type Awaitable } from '@/src/types.js';
 
 // Interface
+/** @deprecated */
 export interface PipelineFilter {
   // Methods
   test(workspace: Workspace): Awaitable<boolean>;
 }
 
 // Class
+/** @deprecated */
 export class Pipeline {
   // Attributes
   private _filters: PipelineFilter[] = [];

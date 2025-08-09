@@ -1,10 +1,12 @@
-import type { Attribute } from '@/src/commands/list';
 import chalk from 'chalk';
-import { collect$, map$, pipe$, waitFor$ } from 'kyrielle';
+import { asyncIterator$, collect$, map$, pipe$, type SimpleAsyncIterator, waitFor$ } from 'kyrielle';
 import path from 'node:path';
 import { compare, parse } from 'semver';
 import slugify from 'slugify';
 import type { ArgumentsCamelCase, CommandModule } from 'yargs';
+import { pipeline$ } from '../../filters/pipeline$.js';
+import { isPrivate$ } from '../../filters/private.filter.js';
+import { hasSomeScript$ } from '../../filters/scripts.filter.js';
 import type { Workspace } from '../../projects/workspace.js';
 import { printJson } from '../../utils/json.js';
 import type { Order } from '../../utils/types.js';
@@ -116,10 +118,21 @@ const command: CommandModule<unknown, ListArgs> = {
       return true;
     }),
   async handler(args) {
+    let filters = pipeline$<SimpleAsyncIterator<Workspace>>();
+
+    if (args.private !== undefined) {
+      filters = filters.add(isPrivate$(args.private));
+    }
+
+    if (args.withScript) {
+      filters = filters.add(hasSomeScript$(args.withScript));
+    }
+
     // Load workspaces
     const project = currentProject(args);
     const workspaces = await waitFor$(pipe$(
-      project.workspaces(),
+      asyncIterator$(project.workspaces()),
+      filters.build(),
       map$(buildExtractor(args)),
       collect$(),
     ));
@@ -179,7 +192,7 @@ const COMPARATORS = {
   version: (a, b) => compare(parse(a) ?? '0.0.0', parse(b) ?? '0.0.0'),
   root: (a = '', b = '') => a.localeCompare(b),
   slug: (a = '', b = '') => a.localeCompare(b),
-} satisfies Record<Attribute, Comparator<string | undefined>>;
+} satisfies Record<ListAttr, Comparator<string | undefined>>;
 
 function buildExtractor(args: ArgumentsCamelCase<ListArgs>) {
   return (wks: Workspace): ExtractedData => {
