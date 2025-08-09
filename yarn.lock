@@ -670,7 +670,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jujulego/event-tree@npm:^4.1.0, @jujulego/event-tree@npm:^4.1.1, @jujulego/event-tree@npm:^4.2.0, @jujulego/event-tree@npm:^4.3.0":
+"@jujulego/event-tree@npm:^4.1.0, @jujulego/event-tree@npm:^4.1.1, @jujulego/event-tree@npm:^4.3.0":
   version: 4.3.0
   resolution: "@jujulego/event-tree@npm:4.3.0"
   dependenciesMeta:
@@ -691,7 +691,7 @@ __metadata:
     "@jujulego/event-tree": "npm:^4.3.0"
     "@jujulego/logger": "npm:^0.2.4"
     "@jujulego/quick-tag": "npm:^1.0.3"
-    "@jujulego/tasks": "npm:^2.2.0"
+    "@jujulego/tasks": "npm:^3.0.0-alpha.1"
     "@jujulego/utils": "npm:^3.0.0"
     "@jujulego/vite-plugin-swc": "npm:1.2.0"
     "@kyrielle/injector": "npm:^1.0.0"
@@ -750,7 +750,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jujulego/logger@npm:^0.2.2, @jujulego/logger@npm:^0.2.4":
+"@jujulego/logger@npm:^0.2.4":
   version: 0.2.4
   resolution: "@jujulego/logger@npm:0.2.4"
   dependencies:
@@ -785,15 +785,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jujulego/tasks@npm:^2.2.0":
-  version: 2.2.0
-  resolution: "@jujulego/tasks@npm:2.2.0"
+"@jujulego/tasks@npm:^3.0.0-alpha.1":
+  version: 3.0.0-alpha.1
+  resolution: "@jujulego/tasks@npm:3.0.0-alpha.1"
   dependencies:
-    "@jujulego/event-tree": "npm:^4.2.0"
-    "@jujulego/logger": "npm:^0.2.2"
-    "@jujulego/utils": "npm:^2.0.0"
+    "@kyrielle/logger": "npm:^2.0.0"
+    "@swc/helpers": "npm:^0.5.3"
+    kyrielle: "npm:^2.4.0"
     tree-kill: "npm:^1.2.2"
-  checksum: 10/28d47a9f58bd753975109a867f924f8f12e67a6dd51c63d409cabcad54c339f067d85ea5c40b34b3ac43c9572237c470bdc40b8ea045ec82f173690d84c16847
+  dependenciesMeta:
+    vitest@3.2.4:
+      unplugged: true
+  checksum: 10/c46ae71ee6a29015f7de7c24d4cf08462e276077badac2bd80e09e5c572a2f6418c47237d48318d55d191518235dc8e9f66ef1c07ab218c88bb4d0f0fd1cae1f
   languageName: node
   linkType: hard
 
@@ -4383,7 +4386,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"kyrielle@npm:^2.2.1, kyrielle@npm:^2.5.0":
+"kyrielle@npm:^2.2.1, kyrielle@npm:^2.4.0, kyrielle@npm:^2.5.0":
   version: 2.5.0
   resolution: "kyrielle@npm:2.5.0"
   dependencies:

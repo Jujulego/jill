@@ -2,6 +2,7 @@ import { qjson } from '@jujulego/quick-tag';
 import { inject$ } from '@kyrielle/injector';
 import { withLabel } from '@kyrielle/logger';
 import Ajv from 'ajv';
+import { var$, type Ref, type Observable } from 'kyrielle';
 import os from 'node:os';
 import path from 'node:path';
 import process from 'node:process';
@@ -19,15 +20,20 @@ const CPU_COUNT = os.cpus().length;
 export class ConfigService {
   // Attributes
   private _filepath?: string;
-  private _config?: Config;
 
+  private readonly _config = var$<Config>();
   private readonly _logger = inject$(LOGGER).child(withLabel('config'));
   private readonly _explorer = inject$(ConfigExplorer);
 
   // Constructor
-  constructor(state?: ConfigState) {
-    if (state?.filepath) { this._filepath = state.filepath; }
-    if (state?.config)   { this._config   = state.config;   }
+  constructor(state: ConfigState = {}) {
+    if (state.filepath) {
+      this._filepath = state.filepath;
+    }
+
+    if (state.config) {
+      this._config.mutate(state.config);
+    }
   }
 
   // Methods
@@ -70,13 +76,15 @@ export class ConfigService {
     if (loaded) {
       this._logger.verbose`loaded file ${loaded.filepath}`;
       this._filepath = loaded.filepath;
-      this._config = this._validateConfig(loaded.config);
+
+      const config = this._validateConfig(loaded.config);
+      this._config.mutate(config);
+
+      return config;
     } else {
       this._logger.error`no config file found`;
       throw new Error('No config file found');
     }
-
-    return this._config;
   }
 
   async loadConfig(filepath: string): Promise<Config> {
@@ -85,13 +93,15 @@ export class ConfigService {
     if (loaded) {
       this._logger.verbose`loaded file ${loaded.filepath}`;
       this._filepath = loaded.filepath;
-      this._config = this._validateConfig(loaded.config);
+
+      const config = this._validateConfig(loaded.config);
+      this._config.mutate(config);
+
+      return config;
     } else {
       this._logger.error`config file ${filepath} not found`;
       throw new Error('Config file not found');
     }
-
-    return this._config;
   }
 
   // Attributes
@@ -99,8 +109,12 @@ export class ConfigService {
     return this._filepath ? path.dirname(this._filepath) : process.cwd();
   }
 
-  get config(): Config | undefined {
+  get config$(): Ref<Config | undefined> & Observable<Config> {
     return this._config;
+  }
+
+  get config(): Config | undefined {
+    return this._config.defer();
   }
 
   get state(): ConfigState {

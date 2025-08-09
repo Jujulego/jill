@@ -118,6 +118,7 @@ const command: CommandModule<unknown, ListArgs> = {
       return true;
     }),
   async handler(args) {
+    // Prepare filters
     let filters = pipeline$<SimpleAsyncIterator<Workspace>>();
 
     if (args.private !== undefined) {

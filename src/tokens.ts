@@ -1,8 +1,15 @@
-import { token$ } from '@kyrielle/injector';
+import { TaskManager } from '@jujulego/tasks';
+import { inject$, token$ } from '@kyrielle/injector';
 import { logger$, withTimestamp } from '@kyrielle/logger';
+import { waitFor$ } from 'kyrielle';
 import fs from 'node:fs';
 import { PathScurry } from 'path-scurry';
+import { ConfigService } from './config/config.service.js';
 
 // Tokens
 export const LOGGER = token$('Logger', () => logger$(withTimestamp()));
-export const PATH_SCURRY = token$('PathSCurry', () => new PathScurry('/', { fs }));
+export const PATH_SCURRY = token$('PathScurry', () => new PathScurry('/', { fs }));
+export const TASK_MANAGER = token$('TaskManager', async () => new TaskManager({
+  jobs: (await waitFor$(inject$(ConfigService).config$)).jobs,
+  logger: inject$(LOGGER),
+}));

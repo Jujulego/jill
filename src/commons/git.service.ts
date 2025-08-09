@@ -1,28 +1,14 @@
-import { once$ } from '@jujulego/event-tree';
-import { Logger } from '@jujulego/logger';
-import { SpawnTask, type SpawnTaskOptions, TaskContext, type TaskManager } from '@jujulego/tasks';
-import { inject } from 'inversify';
+import { SpawnTask, type SpawnTaskOptions, type TaskContext } from '@jujulego/tasks';
+import { inject$ } from '@kyrielle/injector';
+import { collect$, once$, pipe$, waitFor$ } from 'kyrielle';
+import { LOGGER, TASK_MANAGER } from '../tokens.js';
+import type { TaskUIContext } from '../types.js';
+import { streamLines$ } from '../utils/streams.js';
 
-import { TASK_MANAGER } from '@/src/tasks/task-manager.config.js';
-import { streamLines } from '@/src/utils/streams.js';
-import { Service } from '@/src/modules/service.js';
-import { TaskUIContext } from '@/src/types.js';
-
-// Types
-export interface GitContext extends TaskContext, TaskUIContext {
-  command: string;
-}
-
-// Git commands
-@Service()
 export class GitService {
-  // Constructor
-  constructor(
-    @inject(TASK_MANAGER)
-    private readonly manager: TaskManager,
-    @inject(Logger)
-    private readonly logger: Logger,
-  ) {}
+  // Attributes
+  private readonly _manager = inject$(TASK_MANAGER);
+  private readonly _logger = inject$(LOGGER);
 
   // Methods
   /**
@@ -32,14 +18,14 @@ export class GitService {
    * @param args
    * @param options
    */
-  command(cmd: string, args: string[], options: SpawnTaskOptions = {}): SpawnTask<GitContext> {
-    const opts = { logger: this.logger, ...options };
+  async command(cmd: string, args: string[], options: SpawnTaskOptions = {}): Promise<SpawnTask<GitContext>> {
+    const opts = { logger: this._logger, ...options };
 
     // Create task
     const task = new SpawnTask('git', [cmd, ...args], { command: cmd, hidden: true }, opts);
-    task.on('stream', ({ data }) => opts.logger.debug(data.toString('utf-8')));
+    task.events$.on('stream', ({ data }) => opts.logger.debug(data.toString('utf-8')));
 
-    this.manager.add(task);
+    (await this._manager).add(task);
 
     return task;
   }
@@ -50,7 +36,7 @@ export class GitService {
    * @param args
    * @param options
    */
-  branch(args: string[], options?: SpawnTaskOptions): SpawnTask<GitContext> {
+  branch(args: string[], options?: SpawnTaskOptions): Promise<SpawnTask<GitContext>> {
     return this.command('branch', args, options);
   }
 
@@ -60,7 +46,7 @@ export class GitService {
    * @param args
    * @param options
    */
-  diff(args: string[], options?: SpawnTaskOptions): SpawnTask<GitContext> {
+  diff(args: string[], options?: SpawnTaskOptions): Promise<SpawnTask<GitContext>> {
     return this.command('diff', args, options);
   }
 
@@ -70,7 +56,7 @@ export class GitService {
    * @param args
    * @param options
    */
-  tag(args: string[], options?: SpawnTaskOptions): SpawnTask<GitContext> {
+  tag(args: string[], options?: SpawnTaskOptions): Promise<SpawnTask<GitContext>> {
     return this.command('tag', args, options);
   }
 
@@ -81,12 +67,12 @@ export class GitService {
    * @param files
    * @param opts
    */
-  isAffected(reference: string, files: string[] = [], opts?: SpawnTaskOptions): Promise<boolean> {
-    return new Promise((resolve, reject) => {
-      const task = this.diff(['--quiet', reference, '--', ...files], opts);
+  async isAffected(reference: string, files: string[] = [], opts?: SpawnTaskOptions): Promise<boolean> {
+    const task = await this.diff(['--quiet', reference, '--', ...files], opts);
 
-      once$(task, 'status.done', () => resolve(false));
-      once$(task, 'status.failed', () => {
+    return new Promise((resolve, reject) => {
+      once$(task.events$, 'status.done', () => resolve(false));
+      once$(task.events$, 'status.failed', () => {
         if (task.exitCode) {
           resolve(true);
         } else {
@@ -103,14 +89,8 @@ export class GitService {
    * @param opts
    */
   async listBranches(args: string[] = [], opts?: SpawnTaskOptions): Promise<string[]> {
-    const task = this.branch(['-l', ...args], opts);
-    const result: string[] = [];
-
-    for await (const line of streamLines(task, 'stdout')) {
-      result.push(line.replace(/^[ *] /, ''));
-    }
-
-    return result;
+    const task = await this.branch(['-l', ...args], opts);
+    return waitFor$(pipe$(streamLines$(task), collect$()));
   }
 
   /**
@@ -120,13 +100,12 @@ export class GitService {
    * @param opts
    */
   async listTags(args: string[] = [], opts?: SpawnTaskOptions): Promise<string[]> {
-    const task = this.tag(['-l', ...args], opts);
-    const result: string[] = [];
-
-    for await (const line of streamLines(task, 'stdout')) {
-      result.push(line);
-    }
-
-    return result;
+    const task = await this.tag(['-l', ...args], opts);
+    return waitFor$(pipe$(streamLines$(task), collect$()));
   }
+}
+
+// Types
+export interface GitContext extends TaskContext, TaskUIContext {
+  command: string;
 }

@@ -11,12 +11,12 @@ export function configMiddleware(parser: Argv) {
       description: 'Configuration file'
     })
     .middleware(async (args) => {
-      const config = inject$(ConfigService);
+      const configService = inject$(ConfigService);
 
       if (args.configFile) {
-        await config.loadConfig(args.configFile);
+        await configService.loadConfig(args.configFile);
       } else {
-        await config.searchConfig();
+        await configService.searchConfig();
       }
     });
 }

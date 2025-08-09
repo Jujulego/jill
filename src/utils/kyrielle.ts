@@ -14,7 +14,7 @@ export function mutex$(): Lock {
       count$.mutate(cnt + 1);
     },
     release() {
-      let cnt = count$.defer();
+      const cnt = count$.defer();
 
       if (cnt > 0) {
         count$.mutate(cnt - 1);
@@ -32,6 +32,7 @@ export async function with$<R>(lock: Lock, fn: () => R): Promise<Awaited<R>> {
   }
 }
 
+// Types
 export interface Lock {
   acquire(this: void): Promise<void>;
   release(this: void): void;
