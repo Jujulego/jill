@@ -48,7 +48,7 @@
     "ink-spinner": "^5.0.0",
     "inversify": "^6.0.1",
     "inversify-inject-decorators": "^3.1.0",
-    "kyrielle": "^2.5.0",
+    "kyrielle": "^2.5.1",
     "log-symbols": "^6.0.0",
     "moo": "^0.5.2",
     "normalize-package-data": "^8.0.0",

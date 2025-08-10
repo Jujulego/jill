@@ -1,6 +1,6 @@
 import { SpawnTask, type SpawnTaskOptions, type TaskContext } from '@jujulego/tasks';
 import { inject$ } from '@kyrielle/injector';
-import { collect$, once$, pipe$, waitFor$ } from 'kyrielle';
+import { collect$, map$, once$, pipe$, waitFor$ } from 'kyrielle';
 import { LOGGER, TASK_MANAGER } from '../tokens.js';
 import type { TaskUIContext } from '../types.js';
 import { streamLines$ } from '../utils/streams.js';
@@ -90,7 +90,12 @@ export class GitService {
    */
   async listBranches(args: string[] = [], opts?: SpawnTaskOptions): Promise<string[]> {
     const task = await this.branch(['-l', ...args], opts);
-    return waitFor$(pipe$(streamLines$(task), collect$()));
+
+    return waitFor$(pipe$(
+      streamLines$(task),
+      map$((line) => line.replace(/^[ *] /, '')),
+      collect$()
+    ));
   }
 
   /**
@@ -101,6 +106,7 @@ export class GitService {
    */
   async listTags(args: string[] = [], opts?: SpawnTaskOptions): Promise<string[]> {
     const task = await this.tag(['-l', ...args], opts);
+
     return waitFor$(pipe$(streamLines$(task), collect$()));
   }
 }

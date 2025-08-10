@@ -44,16 +44,14 @@ export function streamLines$(task: SpawnTask): Observable<string> {
     let current = '';
 
     // Abort
-    off.add(once$(task.events$, 'completed', () => {
-      observer.next(current);
+    function abort() {
+      if (current) observer.next(current);
       observer.complete();
       off.unsubscribe();
-    }));
-    signal.addEventListener('abort', () => {
-      observer.next(current);
-      observer.complete();
-      off.unsubscribe();
-    }, { once: true });
+    }
+
+    off.add(once$(task.events$, 'completed', abort));
+    signal.addEventListener('abort', abort, { once: true });
 
     // Steam
     off.add(task.events$.on('stream.stdout', (chunk) => {
