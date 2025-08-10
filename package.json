@@ -51,7 +51,7 @@
     "kyrielle": "^2.4.0",
     "log-symbols": "^6.0.0",
     "moo": "^0.5.2",
-    "normalize-package-data": "^6.0.0",
+    "normalize-package-data": "^8.0.0",
     "path-scurry": "^1.10.1",
     "pretty-ms": "^9.0.0",
     "react": "^19.1.0",
