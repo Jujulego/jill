@@ -4,6 +4,7 @@ import path from 'node:path';
 import { compare, parse } from 'semver';
 import slugify from 'slugify';
 import type { ArgumentsCamelCase, CommandModule } from 'yargs';
+import { isAffected$ } from '../../filters/affected.filter.js';
 import { pipeline$ } from '../../filters/pipeline$.js';
 import { isPrivate$ } from '../../filters/private.filter.js';
 import { hasSomeScript$ } from '../../filters/scripts.filter.js';
@@ -127,6 +128,14 @@ const command: CommandModule<unknown, ListArgs> = {
 
     if (args.withScript) {
       filters = filters.add(hasSomeScript$(args.withScript));
+    }
+
+    if (args.affected !== undefined) {
+      filters = filters.add(isAffected$({
+        format: args.affected,
+        fallback: args.affectedRevFallback,
+        sort: args.affectedRevSort,
+      }));
     }
 
     // Load workspaces
