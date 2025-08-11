@@ -1,5 +1,5 @@
-import { type Workspace as LegacyWorkspace } from '../project/workspace.js';
 import { filter$, type SimpleAsyncIterator } from 'kyrielle';
+import { type Workspace as LegacyWorkspace } from '../project/workspace.js';
 import { type Workspace } from '../projects/workspace.js';
 import { type PipelineFilter } from './pipeline.js';
 

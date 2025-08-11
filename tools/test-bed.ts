@@ -1,24 +1,22 @@
+import { ContextService } from '@/src/commons/context.service.js';
+import { CONFIG } from '@/src/config/config-loader.js';
+import { type Config } from '@/src/config/types.js';
+import { container } from '@/src/inversify.config.js';
+import { LoadProject } from '@/src/middlewares/load-project.js';
+import { LoadWorkspace } from '@/src/middlewares/load-workspace.js';
+import { buildCommandModule, getCommandOpts, type ICommand } from '@/src/modules/command.js';
+import { type IMiddleware } from '@/src/modules/middleware.js';
+import { getRegistry } from '@/src/modules/module.js';
+import { type Project } from '@/src/projects/project.js';
+import { Workspace } from '@/src/projects/workspace.js';
+import { type Class } from '@/src/types.js';
+import { type PackageManager } from '@/src/utils/types.js';
 import { ContainerModule } from 'inversify';
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { type Package } from 'normalize-package-data';
 import { type CommandModule } from 'yargs';
-
-import { ContextService } from '@/src/commons/context.service.js';
-import { CONFIG } from '@/src/config/config-loader.js';
-import { type IConfig } from '@/src/config/types.js';
-import { container } from '@/src/inversify.config.js';
-import { buildCommandModule, getCommandOpts, type ICommand } from '@/src/modules/command.js';
-import { type IMiddleware } from '@/src/modules/middleware.js';
-import { getRegistry } from '@/src/modules/module.js';
-import { LoadProject } from '@/src/middlewares/load-project.js';
-import { LoadWorkspace } from '@/src/middlewares/load-workspace.js';
-import { type Project } from '@/src/project/project.js';
-import { Workspace } from '@/src/project/workspace.js';
-import { type PackageManager } from '@/src/utils/types.js';
-import { type Class } from '@/src/types.js';
-
 import { TestProject } from './test-project.js';
 import { TestWorkspace } from './test-workspace.js';
 import { shell } from './utils.js';
@@ -26,7 +24,11 @@ import { shell } from './utils.js';
 // Bed
 export class TestBed {
   // Attributes
-  private _config: IConfig = {};
+  private _config: Config = {
+    hooks: true,
+    jobs: 1,
+    plugins: [],
+  };
 
   readonly project = new TestProject('./test');
 
@@ -141,7 +143,7 @@ export class TestBed {
   }
 
   // Properties
-  get config(): Readonly<IConfig> {
+  get config(): Readonly<Config> {
     return this._config;
   }
 

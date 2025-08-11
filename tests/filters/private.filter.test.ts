@@ -1,7 +1,7 @@
-import '@/src/commons/logger.service.js';
-import { PrivateFilter } from '@/src/filters/private.filter.js';
-
+import { isPrivate$ } from '@/src/filters/private.filter.js';
 import { TestBed } from '@/tools/test-bed.js';
+import { asyncIterator$, collect$, pipe$, waitFor$ } from 'kyrielle';
+import { beforeEach, describe, expect, it } from 'vitest';
 
 // Setup
 let bed: TestBed;
@@ -11,48 +11,29 @@ beforeEach(() => {
 });
 
 // Tests
-describe('PrivateFilter (value = true)', () => {
-  it('should return false by default (public by default)', () => {
-    const filter = new PrivateFilter(true);
-    const wks = bed.addWorkspace('wks-1');
+describe('isPrivate$', () => {
+  it('should only keep the private workspace (public by default)', async () => {
+    const workspaces = [
+      bed.addWorkspace('wks-1'),
+      bed.addWorkspace('wks-2', { private: false }),
+      bed.addWorkspace('wks-3', { private: true }),
+    ];
 
-    expect(filter.test(wks)).toBe(false);
+    expect(await waitFor$(pipe$(asyncIterator$(workspaces), isPrivate$(true), collect$()))).toStrictEqual([
+      workspaces[2],
+    ]);
   });
 
-  it('should return true if workspace is private', () => {
-    const filter = new PrivateFilter(true);
-    const wks = bed.addWorkspace('wks-1', { private: true });
+  it('should only keep the public workspaces (public by default)', async () => {
+    const workspaces = [
+      bed.addWorkspace('wks-1'),
+      bed.addWorkspace('wks-2', { private: false }),
+      bed.addWorkspace('wks-3', { private: true }),
+    ];
 
-    expect(filter.test(wks)).toBe(true);
-  });
-
-  it('should return false only if workspace is explicitly public', () => {
-    const filter = new PrivateFilter(true);
-    const wks = bed.addWorkspace('wks-1', { private: false });
-
-    expect(filter.test(wks)).toBe(false);
-  });
-});
-
-describe('PrivateFilter (value = false)', () => {
-  it('should return true by default (public by default)', () => {
-    const filter = new PrivateFilter(false);
-    const wks = bed.addWorkspace('wks-1');
-
-    expect(filter.test(wks)).toBe(true);
-  });
-
-  it('should return false if workspace is private', () => {
-    const filter = new PrivateFilter(false);
-    const wks = bed.addWorkspace('wks-1', { private: true });
-
-    expect(filter.test(wks)).toBe(false);
-  });
-
-  it('should return true only if workspace is explicitly public', () => {
-    const filter = new PrivateFilter(false);
-    const wks = bed.addWorkspace('wks-1', { private: false });
-
-    expect(filter.test(wks)).toBe(true);
+    expect(await waitFor$(pipe$(asyncIterator$(workspaces), isPrivate$(false), collect$()))).toStrictEqual([
+      workspaces[0],
+      workspaces[1],
+    ]);
   });
 });
