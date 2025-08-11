@@ -4343,15 +4343,15 @@ __metadata:
   linkType: hard
 
 "kyrielle@npm:^2.2.1, kyrielle@npm:^2.4.0":
-  version: 2.4.0
-  resolution: "kyrielle@npm:2.4.0"
+  version: 2.5.2
+  resolution: "kyrielle@npm:2.5.2"
   dependencies:
     "@repeaterjs/repeater": "npm:^3.0.5"
     "@swc/helpers": "npm:^0.5.3"
   dependenciesMeta:
     vitest@3.2.4:
       unplugged: true
-  checksum: 10/182906ed4555897d61dc106af70020bd448b4d2ac1a5e16e0af840ef50a78f3d56772d902162f67c97aec20ab8ea0863f045c41086b82ed281adbf1cb95eb45d
+  checksum: 10/310accd4c435f746ba81c42433112eefcc7c13d530516e4f5f23e90225f877fecbabf08242ea0193963bbcd3cd207b3e19aca85d74165aff2ddd76bd10b6cc64
   languageName: node
   linkType: hard
 
