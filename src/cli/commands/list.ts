@@ -11,7 +11,7 @@ import { hasSomeScript$ } from '../../filters/scripts.filter.js';
 import type { Workspace } from '../../projects/workspace.js';
 import { printJson } from '../../utils/json.js';
 import type { Order } from '../../utils/types.js';
-import { loadProject, withProject, type LoadProjectArgs } from '../middlewares/load-project.middleware.js';
+import { loadProject, withProject, type ProjectArgs } from '../middlewares/project.middleware.js';
 
 // Command
 const command: CommandModule<unknown, ListArgs> = {
@@ -171,7 +171,7 @@ export default command;
 // Types
 export type ListAttr = 'name' | 'version' | 'root' | 'slug';
 
-interface ListArgs extends LoadProjectArgs {
+interface ListArgs extends ProjectArgs {
   readonly affected: string | undefined;
   readonly 'affected-rev-fallback': string;
   readonly 'affected-rev-sort': string | undefined;

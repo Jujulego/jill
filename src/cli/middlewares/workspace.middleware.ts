@@ -1,15 +1,14 @@
 import { inject$ } from '@kyrielle/injector';
-import symbols from 'log-symbols';
 import process from 'node:process';
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
 import type { Workspace } from '../../projects/workspace.js';
 import { LOGGER } from '../../tokens.js';
-import { loadProject, type LoadProjectArgs, withProject } from './load-project.middleware.js';
+import { loadProject, type ProjectArgs, withProject } from './project.middleware.js';
 
 /**
  * Adds arguments to load a workspace.
  */
-export function withWorkspace<T = unknown>(parser: Argv<T>): Argv<T & LoadWorkspaceArgs> {
+export function withWorkspace<T = unknown>(parser: Argv<T>): Argv<T & WorkspaceArgs> {
   return withProject(parser)
     .option('workspace', {
       alias: 'w',
@@ -21,7 +20,7 @@ export function withWorkspace<T = unknown>(parser: Argv<T>): Argv<T & LoadWorksp
 /**
  * Loads a workspace, based on arguments.
  */
-export async function loadWorkspace(args: ArgumentsCamelCase<LoadWorkspaceArgs>): Promise<Workspace> {
+export async function loadWorkspace(args: ArgumentsCamelCase<WorkspaceArgs>): Promise<Workspace> {
   const logger = inject$(LOGGER);
   const project = loadProject(args);
   let workspace: Workspace | null;
@@ -38,13 +37,13 @@ export async function loadWorkspace(args: ArgumentsCamelCase<LoadWorkspaceArgs>)
   }
 
   if (!workspace) {
-    throw new Error(`'${symbols.error} workspace "${args.workspace || '.'}" not found'`);
+    throw new Error(`Workspace "${args.workspace || '.'}" not found`);
   }
 
   return workspace;
 }
 
 // Types
-export interface LoadWorkspaceArgs extends LoadProjectArgs {
+export interface WorkspaceArgs extends ProjectArgs {
   readonly workspace: string | undefined;
 }
