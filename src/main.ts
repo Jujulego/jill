@@ -15,9 +15,10 @@ const parser = yargs(hideBin(process.argv))
 loggerMiddleware(parser);
 configMiddleware(parser);
 
-parser.command(commands.list)
+parser.strictCommands()
+  .command(commands.list)
+  .command(commands.tree)
   .demandCommand()
-  .strictCommands()
   .recommendCommands();
 
 await parser.parseAsync();

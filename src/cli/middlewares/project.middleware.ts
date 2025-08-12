@@ -5,9 +5,9 @@ import { ProjectsRepository } from '../../projects/projects.repository.js';
 import type { PackageManager, Writable } from '../../utils/types.js';
 
 /**
- * Loads a project.
+ * Adds arguments to load a project.
  */
-export function loadProject<T = unknown>(parser: Argv<T>): Argv<T & LoadProjectArgs> {
+export function withProject<T = unknown>(parser: Argv<T>): Argv<T & ProjectArgs> {
   return parser
     .option('project', {
       alias: 'p',
@@ -21,16 +21,16 @@ export function loadProject<T = unknown>(parser: Argv<T>): Argv<T & LoadProjectA
       type: 'string',
       description: 'Force package manager'
     })
-    .middleware(async (args: ArgumentsCamelCase<Writable<LoadProjectArgs>>) => {
+    .middleware(async (args: ArgumentsCamelCase<Writable<ProjectArgs>>) => {
       const repository = inject$(ProjectsRepository);
       args.project = await repository.searchProjectRoot(args.project);
     });
 }
 
 /**
- * Returns loaded project.
+ * Loads a project, based on arguments.
  */
-export function currentProject(args: ArgumentsCamelCase<LoadProjectArgs>): Project {
+export function loadProject(args: ArgumentsCamelCase<ProjectArgs>): Project {
   const repository = inject$(ProjectsRepository);
   return repository.getProject(args.project, {
     packageManager: args.packageManager
@@ -38,7 +38,7 @@ export function currentProject(args: ArgumentsCamelCase<LoadProjectArgs>): Proje
 }
 
 // Types
-export interface LoadProjectArgs {
+export interface ProjectArgs {
   readonly project: string;
   readonly 'package-manager': PackageManager | undefined;
 }

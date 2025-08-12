@@ -10,6 +10,7 @@ import { ProjectRepository } from '@/src/project/project.repository.js';
 import { type PackageManager } from '@/src/utils/types.js';
 
 // Types
+/** @deprecated */
 export interface ILoadProjectArgs {
   project?: string;
   'package-manager'?: PackageManager;
@@ -56,6 +57,7 @@ export class LoadProject implements IMiddleware<ILoadProjectArgs> {
 }
 
 // Lazy injection
+/** @deprecated */
 export function LazyCurrentProject() {
   return lazyInjectNamed(Project, CURRENT);
 }

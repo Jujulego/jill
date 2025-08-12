@@ -710,6 +710,7 @@ __metadata:
     "@typescript-eslint/utils": "npm:8.39.1"
     "@vitest/coverage-v8": "npm:3.2.4"
     "@vitest/eslint-plugin": "npm:1.3.4"
+    "@vitest/expect": "npm:3.2.4"
     ajv: "npm:^8.12.0"
     chalk: "npm:^5.5.0"
     chalk-template: "npm:^1.1.0"

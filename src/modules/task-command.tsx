@@ -70,7 +70,7 @@ export abstract class TaskCommand<A = unknown> extends InkCommand<A> {
           'depends on': tsk.dependenciesIds.map(id => id.substring(0, 6)).join(', ')
         }));
 
-        yield <List items={data} headers/>;
+        yield <List items={data} headers />;
       }
     } else if (tasks.tasks.length > 0) {
       // Render

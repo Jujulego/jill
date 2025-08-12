@@ -1,12 +1,8 @@
-import { vi } from 'vitest';
-import { render, cleanup } from 'ink-testing-library';
-
-import '@/src/commons/logger.service.js';
-import { type Workspace } from '@/src/project/workspace.js';
-import WorkspaceTree from '@/src/ui/workspace-tree.js';
-
+import { type Workspace } from '@/src/projects/workspace.js';
+import WorkspaceTree from '@/src/ui/WorkspaceTree.js';
 import { TestBed } from '@/tools/test-bed.js';
-import { flushPromises } from '@/tools/utils.js';
+import { cleanup, render } from 'ink-testing-library';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Setup
 let bed: TestBed;
@@ -41,25 +37,22 @@ describe('<WorkspaceTree>', () => {
   it('should print workspace and all it\'s dependencies', async () => {
     const { lastFrame } = render(<WorkspaceTree workspace={wksA} />);
 
-    // Load dependencies
-    await flushPromises();
+    await vi.waitFor(() => {
+      expect(lastFrame()).toEqualLines([
+        expect.ignoreColor('wks-a@1.0.0'),
+        expect.ignoreColor('├─ wks-b@1.0.0'),
+        expect.ignoreColor('│  └─ wks-c@1.0.0'),
+        expect.ignoreColor('└─ wks-c@1.0.0')
+      ]);
+    });
+
     expect(wksA.dependencies).toHaveBeenCalled();
     expect(wksA.devDependencies).toHaveBeenCalled();
 
-    await flushPromises();
     expect(wksB.dependencies).toHaveBeenCalled();
     expect(wksB.devDependencies).toHaveBeenCalled();
 
-    await flushPromises();
     expect(wksC.dependencies).toHaveBeenCalled();
     expect(wksC.devDependencies).toHaveBeenCalled();
-
-    // Final render !
-    expect(lastFrame()).toEqualLines([
-      expect.ignoreColor('wks-a@1.0.0'),
-      expect.ignoreColor('├─ wks-b@1.0.0'),
-      expect.ignoreColor('│  └─ wks-c@1.0.0'),
-      expect.ignoreColor('└─ wks-c@1.0.0')
-    ]);
   });
 });
