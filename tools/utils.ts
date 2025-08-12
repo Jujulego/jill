@@ -1,11 +1,9 @@
-import { logger$ } from '@jujulego/logger';
-import { Instance } from 'ink';
-import { type render } from 'ink-testing-library';
-import { vi } from 'vitest';
-import cp from 'node:child_process';
-
 import { splitCommandLine } from '@/src/utils/string.js';
-
+import { logger$ } from '@jujulego/logger';
+import type { Instance } from 'ink';
+import type { render } from 'ink-testing-library';
+import cp from 'node:child_process';
+import { vi } from 'vitest';
 import { ESC } from './ink-screen.js';
 
 // Logger
@@ -31,7 +29,7 @@ export function noColor(str = ''): string {
 }
 
 export function flushPromises(timeout = 0): Promise<void> {
-  return new Promise<void>((resolve) => setTimeout(resolve, timeout));
+  return new Promise((resolve) => setTimeout(resolve, timeout));
 }
 
 export interface ShellOptions {

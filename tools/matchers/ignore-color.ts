@@ -1,6 +1,5 @@
-import type { ExpectationResult, MatcherState } from '@vitest/expect';
-
 import { noColor } from '@/tools/utils.js';
+import type { ExpectationResult, MatcherState } from '@vitest/expect';
 
 // Matcher
 export function ignoreColor(this: MatcherState, received: string, expected: unknown): ExpectationResult {
