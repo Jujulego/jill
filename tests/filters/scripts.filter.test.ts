@@ -1,6 +1,7 @@
-import '@/src/commons/logger.service.js';
-import { ScriptsFilter } from '@/src/filters/scripts.filter.js';
+import { hasEveryScript$, hasSomeScript$ } from '@/src/filters/scripts.filter.js';
 import { TestBed } from '@/tools/test-bed.js';
+import { asyncIterator$, collect$, pipe$, waitFor$ } from 'kyrielle';
+import { beforeEach, describe, expect, it } from 'vitest';
 
 // Setup
 let bed: TestBed;
@@ -10,48 +11,31 @@ beforeEach(() => {
 });
 
 // Tests
-describe('Scripts (one script)', () => {
-  it('should return false by default (no script by default)', () => {
-    const filter = new ScriptsFilter(['test']);
-    const wks = bed.addWorkspace('wks-1');
+describe('hasSomeScript$', () => {
+  it('should only keep the workspace having the script', async () => {
+    const workspaces = [
+      bed.addWorkspace('wks-1'),
+      bed.addWorkspace('wks-2', { scripts: { lint: 'eslint' } }),
+      bed.addWorkspace('wks-3', { scripts: { lint: 'eslint', test: 'vitest' } }),
+    ];
 
-    expect(filter.test(wks)).toBe(false);
-  });
-
-  it('should return true if workspace has the script', () => {
-    const filter = new ScriptsFilter(['test']);
-    const wks = bed.addWorkspace('wks-1', { scripts: { test: 'jest' } });
-
-    expect(filter.test(wks)).toBe(true);
-  });
-
-  it('should return false if workspace has not the script', () => {
-    const filter = new ScriptsFilter(['test']);
-    const wks = bed.addWorkspace('wks-1', { scripts: { lint: 'eslint .' } });
-
-    expect(filter.test(wks)).toBe(false);
+    expect(await waitFor$(pipe$(asyncIterator$(workspaces), hasSomeScript$(['lint']), collect$()))).toStrictEqual([
+      workspaces[1],
+      workspaces[2],
+    ]);
   });
 });
 
-describe('Scripts (many scripts)', () => {
-  it('should return false by default (no script by default)', () => {
-    const filter = new ScriptsFilter(['build', 'test', 'start']);
-    const wks = bed.addWorkspace('wks-1');
+describe('hasEveryScript$', () => {
+  it('should only keep the workspace having the script', async () => {
+    const workspaces = [
+      bed.addWorkspace('wks-1'),
+      bed.addWorkspace('wks-2', { scripts: { lint: 'eslint' } }),
+      bed.addWorkspace('wks-3', { scripts: { lint: 'eslint', test: 'vitest' } }),
+    ];
 
-    expect(filter.test(wks)).toBe(false);
-  });
-
-  it('should return true if workspace has the script', () => {
-    const filter = new ScriptsFilter(['build', 'test', 'start']);
-    const wks = bed.addWorkspace('wks-1', { scripts: { test: 'jest' } });
-
-    expect(filter.test(wks)).toBe(true);
-  });
-
-  it('should return false if workspace has not the script', () => {
-    const filter = new ScriptsFilter(['build', 'test', 'start']);
-    const wks = bed.addWorkspace('wks-1', { scripts: { lint: 'eslint .' } });
-
-    expect(filter.test(wks)).toBe(false);
+    expect(await waitFor$(pipe$(asyncIterator$(workspaces), hasEveryScript$(['lint', 'test']), collect$()))).toStrictEqual([
+      workspaces[2],
+    ]);
   });
 });
