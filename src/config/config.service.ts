@@ -1,10 +1,12 @@
 import { qjson } from '@jujulego/quick-tag';
 import { inject$ } from '@kyrielle/injector';
-import { type Logger, withLabel } from '@kyrielle/logger';
+import { withLabel } from '@kyrielle/logger';
 import Ajv from 'ajv';
+import { var$, type Ref, type Observable } from 'kyrielle';
 import os from 'node:os';
 import path from 'node:path';
 import process from 'node:process';
+import { LOGGER } from '../tokens.js';
 import { ConfigExplorer } from './config-explorer.js';
 import schema from './schema.json' with { type: 'json' };
 import type { Config } from './types';
@@ -18,17 +20,20 @@ const CPU_COUNT = os.cpus().length;
 export class ConfigService {
   // Attributes
   private _filepath?: string;
-  private _config?: Config;
 
-  private readonly _logger: Logger;
+  private readonly _config = var$<Config>();
+  private readonly _logger = inject$(LOGGER).child(withLabel('config'));
   private readonly _explorer = inject$(ConfigExplorer);
 
   // Constructor
-  constructor(logger: Logger, state?: ConfigState) {
-    this._logger = logger.child(withLabel('config'));
+  constructor(state: ConfigState = {}) {
+    if (state.filepath) {
+      this._filepath = state.filepath;
+    }
 
-    if (state?.filepath) { this._filepath = state.filepath; }
-    if (state?.config)   { this._config   = state.config;   }
+    if (state.config) {
+      this._config.mutate(state.config);
+    }
   }
 
   // Methods
@@ -46,7 +51,7 @@ export class ConfigService {
     if (!validator(config)) {
       const errors = ajv.errorsText(validator.errors, { separator: '\n- ', dataVar: 'config' });
 
-      this._logger.error(`Errors in config file:\n- ${errors}`);
+      this._logger.error(`errors in config file:\n- ${errors}`);
       throw new Error('Error in config file');
     }
 
@@ -60,7 +65,7 @@ export class ConfigService {
       plugins: config.plugins.map((plugin) => path.resolve(this.baseDir, plugin))
     });
 
-    this._logger.debug`Loaded config:\n${qjson(config, { pretty: true })}`;
+    this._logger.debug`loaded config:\n${qjson(config, { pretty: true })}`;
 
     return config;
   }
@@ -69,30 +74,34 @@ export class ConfigService {
     const loaded = await this._explorer.search();
 
     if (loaded) {
-      this._logger.verbose`Loaded file ${loaded.filepath}`;
+      this._logger.verbose`loaded file ${loaded.filepath}`;
       this._filepath = loaded.filepath;
-      this._config = this._validateConfig(loaded.config);
+
+      const config = this._validateConfig(loaded.config);
+      this._config.mutate(config);
+
+      return config;
     } else {
-      this._logger.error`No config file found`;
+      this._logger.error`no config file found`;
       throw new Error('No config file found');
     }
-
-    return this._config;
   }
 
   async loadConfig(filepath: string): Promise<Config> {
     const loaded = await this._explorer.load(filepath);
 
     if (loaded) {
-      this._logger.verbose`Loaded file ${loaded.filepath}`;
+      this._logger.verbose`loaded file ${loaded.filepath}`;
       this._filepath = loaded.filepath;
-      this._config = this._validateConfig(loaded.config);
+
+      const config = this._validateConfig(loaded.config);
+      this._config.mutate(config);
+
+      return config;
     } else {
-      this._logger.error`Config file ${filepath} not found`;
+      this._logger.error`config file ${filepath} not found`;
       throw new Error('Config file not found');
     }
-
-    return this._config;
   }
 
   // Attributes
@@ -100,8 +109,12 @@ export class ConfigService {
     return this._filepath ? path.dirname(this._filepath) : process.cwd();
   }
 
-  get config(): Config | undefined {
+  get config$(): Ref<Config | undefined> & Observable<Config> {
     return this._config;
+  }
+
+  get config(): Config | undefined {
+    return this._config.defer();
   }
 
   get state(): ConfigState {

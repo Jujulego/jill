@@ -1,6 +1,6 @@
+import { ConfigService } from '../../config/config.service.js';
 import { inject$ } from '@kyrielle/injector';
 import type { Argv } from 'yargs';
-import { CliConfigService } from '../cli-tokens.js';
 
 // Middleware
 export function configMiddleware(parser: Argv) {
@@ -11,12 +11,12 @@ export function configMiddleware(parser: Argv) {
       description: 'Configuration file'
     })
     .middleware(async (args) => {
-      const config = inject$(CliConfigService);
+      const configService = inject$(ConfigService);
 
       if (args.configFile) {
-        await config.loadConfig(args.configFile);
+        await configService.loadConfig(args.configFile);
       } else {
-        await config.searchConfig();
+        await configService.searchConfig();
       }
     });
 }

@@ -1,4 +1,4 @@
-import { Logger, withLabel } from '@jujulego/logger';
+import { type Logger, withLabel } from '@jujulego/logger';
 import { Lock } from '@jujulego/utils';
 import { Glob } from 'glob';
 import { injectable } from 'inversify';
@@ -6,16 +6,17 @@ import fs from 'node:fs';
 import path from 'node:path';
 import normalize, { type Package } from 'normalize-package-data';
 import { PathScurry } from 'path-scurry';
-
+import { type PackageManager } from '../utils/types.js';
 import { Workspace } from './workspace.js';
-import { type PackageManager } from './types.js';
 
 // Types
+/** @deprecated */
 export interface ProjectOptions {
   packageManager?: PackageManager | undefined;
 }
 
 // Class
+/** @deprecated */
 @injectable()
 export class Project {
   // Attributes
@@ -24,7 +25,7 @@ export class Project {
   private readonly _workspaces = new Map<string, Workspace>();
 
   private readonly _scurry: PathScurry;
-  private _workspaceGlob?: Glob<{ scurry: PathScurry, withFileTypes: true }>;
+  private _workspaceGlob?: Glob<{ withFileTypes: true }>;
 
   private _packageManager?: PackageManager;
   private _isFullyLoaded = false;
@@ -142,7 +143,7 @@ export class Project {
             yield await this._loadWorkspace(dir.fullpath());
           }
         } catch (error) {
-          if (error.code === 'ENOENT') {
+          if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
             continue;
           }
 

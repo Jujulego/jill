@@ -1,5 +1,5 @@
-import { iterate$, off$, once$ } from '@jujulego/event-tree';
-import { type SpawnTask, type SpawnTaskStream } from '@jujulego/tasks';
+import { type SpawnTask } from '@jujulego/tasks';
+import { type Observable, observable$, off$, once$ } from 'kyrielle';
 
 // Utils
 export async function* combine<T>(...generators: AsyncGenerator<T>[]): AsyncGenerator<T> {
@@ -8,32 +8,31 @@ export async function* combine<T>(...generators: AsyncGenerator<T>[]): AsyncGene
   }
 }
 
-export async function *streamLines(task: SpawnTask, stream: SpawnTaskStream): AsyncGenerator<string> {
-  // Abort
-  const off = off$();
-  once$(task, 'completed', off);
+export function streamLines$(task: SpawnTask): Observable<string> {
+  return observable$((observer, signal) => {
+    const off = off$();
+    let current = '';
 
-  // Stream
-  let current = '';
+    // End
+    off.add(once$(task.events$, 'completed', () => {
+      if (current) observer.next(current);
+      observer.complete();
+      off.unsubscribe();
+    }));
 
-  try {
-    for await (const chunk of iterate$(task, `stream.${stream}`, { off })) {
+    // Abort
+    signal.addEventListener('abort', () => off.unsubscribe(), { once: true });
+
+    // Steam
+    off.add(task.events$.on('stream.stdout', (chunk) => {
       const data = current + chunk.data.toString('utf-8');
       const lines = data.split(/\r?\n/);
 
       current = lines.pop() ?? '';
 
       for (const line of lines) {
-        yield line;
+        observer.next(line);
       }
-    }
-  } catch (err) {
-    if (err.message !== 'Unsubscribed !') {
-      throw err;
-    }
-
-    if (current) {
-      yield current;
-    }
-  }
+    }));
+  });
 }

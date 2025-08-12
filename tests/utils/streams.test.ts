@@ -1,19 +1,6 @@
-import { iterate$ } from '@jujulego/event-tree';
-import { vi } from 'vitest';
-
-import { combine, streamLines } from '@/src/utils/streams.js';
-
-import { TestSpawnTask } from '@/tools/test-tasks.js';
-
-// Mocks
-vi.mock('@jujulego/event-tree', async (importOriginal) => {
-  const mod: typeof import('@jujulego/event-tree') = await importOriginal();
-
-  return {
-    ...mod,
-    iterate$: vi.fn(mod.iterate$)
-  };
-});
+import { combine, streamLines$ } from '@/src/utils/streams.js';
+import { SpawnTask } from '@jujulego/tasks';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Tests
 describe('combine', () => {
@@ -32,54 +19,46 @@ describe('combine', () => {
   });
 });
 
-describe('streamLines', () => {
-  let task: TestSpawnTask;
+describe('streamLines$', () => {
+  let task: SpawnTask;
 
   beforeEach(() => {
-    task = new TestSpawnTask('cmd', [], {});
+    task = new SpawnTask('cmd', [], {});
   });
 
   it('should emit all received content, line by line', async () => {
-    vi.spyOn(task, 'exitCode', 'get')
-      .mockReturnValue(0);
-
+    // Data emitted
     setTimeout(() => {
-      task.emit('stream.stdout', { data: Buffer.from('first line\n'), stream: 'stdout' });
+      task.events$.emit('stream.stdout', { data: Buffer.from('first line\n'), stream: 'stdout' });
     }, 0);
 
     setTimeout(() => {
-      task.emit('stream.stdout', { data: Buffer.from('second'), stream: 'stdout' });
+      task.events$.emit('stream.stdout', { data: Buffer.from('second'), stream: 'stdout' });
     }, 20);
 
     setTimeout(() => {
-      task.emit('stream.stdout', { data: Buffer.from(' line\nth'), stream: 'stdout' });
+      task.events$.emit('stream.stdout', { data: Buffer.from(' line\nth'), stream: 'stdout' });
     }, 40);
 
     setTimeout(() => {
-      task.emit('stream.stdout', { data: Buffer.from('ird line'), stream: 'stdout' });
+      task.events$.emit('stream.stdout', { data: Buffer.from('ird line'), stream: 'stdout' });
     }, 60);
 
     setTimeout(() => {
-      task.emit('completed', { status: 'done', duration: 100 });
+      task.events$.emit('completed', { status: 'done', duration: 100 });
     }, 100);
 
-    await expect(streamLines(task, 'stdout'))
-      .toYield(['first line', 'second line', 'third line']);
-  });
+    // Checks
+    const spyNext = vi.fn();
+    const spyComplete = vi.fn();
 
-  it('should throw error thrown by streamEvents', async () => {
-    vi.mocked(iterate$)
-      // eslint-disable-next-line require-yield
-      .mockImplementation(async function* () { throw new Error('aborted'); });
+    streamLines$(task).subscribe({ next: spyNext, complete: spyComplete });
 
-    const use = vi.fn();
+    await vi.waitFor(() => expect(spyNext).toHaveBeenCalledWith('first line'));
+    await vi.waitFor(() => expect(spyNext).toHaveBeenCalledWith('second line'));
+    await vi.waitFor(() => expect(spyNext).toHaveBeenCalledWith('third line'));
+    await vi.waitFor(() => expect(spyComplete).toHaveBeenCalledOnce());
 
-    await expect(
-      (async function () {
-        for await (const line of streamLines(task, 'stdout')) {
-          use(line);
-        }
-      })()
-    ).rejects.toThrow('aborted');
+    expect(spyNext).toHaveBeenCalledTimes(3);
   });
 });

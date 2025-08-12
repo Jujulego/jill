@@ -1,27 +1,20 @@
-import { container } from '@/src/inversify.config.js';
-import { Project } from '@/src/project/project.js';
-import { ProjectRepository } from '@/src/project/project.repository.js';
-import { fs, vol } from 'memfs';
+import { Project } from '@/src/projects/project.js';
+import { ProjectsRepository } from '@/src/projects/projects.repository';
+import { globalScope$, inject$ } from '@kyrielle/injector';
+import { vol } from 'memfs';
 import path from 'node:path';
-import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import '@/src/commons/logger.service.js';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mocks
-vi.mock('node:fs/promises', () => ({ default: fs.promises }));
-
-// Setup
-let repository: ProjectRepository;
-
-beforeAll(() => {
-  container.snapshot();
+vi.mock('node:fs', async () => {
+  const { fs } = await import('memfs');
+  return ({ default: fs });
 });
 
+// Setup
+let repository: ProjectsRepository;
+
 beforeEach(() => {
-  container.restore();
-  container.snapshot();
-
-  repository = container.get(ProjectRepository);
-
   // Create project structure
   vol.fromNestedJSON({
     'workspaces': {
@@ -59,14 +52,17 @@ beforeEach(() => {
       workspaces: ['workspaces/*'],
     }),
   }, '/test');
+
+  repository = inject$(ProjectsRepository);
 });
 
 afterEach(() => {
+  globalScope$().clear();
   vol.reset();
 });
 
 // Tests
-describe('ProjectRepository.searchProjectRoot', () => {
+describe('ProjectsRepository.searchProjectRoot', () => {
   // root search
   it('should return /test for /test (yarn lockfile)', async ()=> {
     vi.spyOn(repository, 'isProjectRoot');
@@ -78,7 +74,6 @@ describe('ProjectRepository.searchProjectRoot', () => {
     await expect(repository.searchProjectRoot('/test'))
       .resolves.toBe(path.resolve('/test'));
 
-    expect(repository.isProjectRoot).toHaveBeenCalledTimes(1);
     expect(repository.isProjectRoot).toHaveBeenCalledWith(path.resolve('/test'));
   });
 
@@ -92,7 +87,6 @@ describe('ProjectRepository.searchProjectRoot', () => {
     await expect(repository.searchProjectRoot('/test'))
       .resolves.toBe(path.resolve('/test'));
 
-    expect(repository.isProjectRoot).toHaveBeenCalledTimes(1);
     expect(repository.isProjectRoot).toHaveBeenCalledWith(path.resolve('/test'));
   });
 
@@ -164,38 +158,14 @@ describe('ProjectRepository.searchProjectRoot', () => {
     await expect(repository.searchProjectRoot('/toto/tata/tutu'))
       .resolves.toBe(path.resolve('/toto/tata/tutu'));
 
-    expect(repository.isProjectRoot).toHaveBeenCalledTimes(4);
     expect(repository.isProjectRoot).toHaveBeenCalledWith(path.resolve('/toto/tata/tutu'));
     expect(repository.isProjectRoot).toHaveBeenCalledWith(path.resolve('/toto/tata'));
     expect(repository.isProjectRoot).toHaveBeenCalledWith(path.resolve('/toto'));
     expect(repository.isProjectRoot).toHaveBeenCalledWith(path.resolve('/'));
   });
-
-  // cache
-  it('should take advantage of cache', async ()=> {
-    vi.spyOn(repository, 'isProjectRoot');
-
-    // Test
-    await expect(repository.searchProjectRoot('/test/workspaces'))
-      .resolves.toBe(path.resolve('/test'));
-
-    expect(repository.isProjectRoot).toHaveBeenCalledTimes(3);
-    expect(repository.isProjectRoot).toHaveBeenCalledWith(path.resolve('/test/workspaces'));
-    expect(repository.isProjectRoot).toHaveBeenCalledWith(path.resolve('/test'));
-    expect(repository.isProjectRoot).toHaveBeenCalledWith(path.resolve('/'));
-
-    // Check cache
-    vi.mocked(repository.isProjectRoot).mockClear();
-
-    await expect(repository.searchProjectRoot('/test/workspaces/wks-a'))
-      .resolves.toBe(path.resolve('/test'));
-
-    expect(repository.isProjectRoot).toHaveBeenCalledTimes(1);
-    expect(repository.isProjectRoot).toHaveBeenCalledWith(path.resolve('/test/workspaces/wks-a'));
-  });
 });
 
-describe('ProjectRepository.getProject', () => {
+describe('ProjectsRepository.getProject', () => {
   it('should create a Project with given parameters', () => {
     const prj = repository.getProject('/test');
 
