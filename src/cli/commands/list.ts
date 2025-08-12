@@ -37,8 +37,8 @@ const command: CommandModule<unknown, ListArgs> = {
       group: 'Filters:',
       desc: 'Sort applied to git tag / git branch command',
     })
-    .option('attr', {
-      alias: 'attrs',
+    .option('attribute', {
+      alias: ['attr', 'attrs'],
       type: 'array',
       choices: ['name', 'version', 'root', 'slug'] as const,
       group: 'Format:',
@@ -93,27 +93,29 @@ const command: CommandModule<unknown, ListArgs> = {
     })
     .middleware((argv) => {
       // Compute attributes
-      if (!argv.attr?.length) {
+      if (!argv.attribute?.length) {
         if (argv.json) {
-          argv.attrs = argv.attr = ['name', 'version', 'slug', 'root'];
+          argv.attrs = argv.attr = argv.attribute = ['name', 'version', 'slug', 'root'];
         } else if (argv.long) {
-          argv.attrs = argv.attr = ['name', 'version', 'root'];
+          argv.attrs = argv.attr = argv.attribute = ['name', 'version', 'root'];
+        } else if (argv.sortBy?.length) {
+          argv.attrs = argv.attr = argv.attribute = argv.sortBy;
         } else {
-          argv.attrs = argv.attr = ['name'];
+          argv.attrs = argv.attr = argv.attribute = ['name'];
         }
       }
     }, true)
     .check((argv) => {
-      if (argv.attr.length > 0 && argv['sort-by']?.length) {
-        const miss = argv['sort-by'].filter((attr) => !argv.attr.includes(attr));
+      if (argv.attribute.length > 0 && argv['sort-by']?.length) {
+        const miss = argv['sort-by'].filter((attr) => !argv.attribute.includes(attr));
 
         if (miss.length > 0) {
           throw new Error(`Cannot sort by non printed attributes. Missing ${miss.join(', ')}.`);
         }
       }
 
-      if (!argv['sort-by']?.length && argv.attr.length > 0) {
-        argv['sort-by'] = argv.sortBy = argv.s = [argv.attr[0]!];
+      if (!argv['sort-by']?.length && argv.attribute.length > 0) {
+        argv['sort-by'] = argv.sortBy = argv.s = [argv.attribute[0]!];
       }
 
       return true;
@@ -161,7 +163,7 @@ const command: CommandModule<unknown, ListArgs> = {
       }
 
       const { default: ListInk } = await import('./list.ink.jsx');
-      await ListInk({ attributes: args.attr, headers: args.headers, workspaces });
+      await ListInk({ attributes: args.attribute, headers: args.headers, workspaces });
     }
   }
 };
@@ -171,11 +173,11 @@ export default command;
 // Types
 export type ListAttr = 'name' | 'version' | 'root' | 'slug';
 
-interface ListArgs extends ProjectArgs {
+export interface ListArgs extends ProjectArgs {
   readonly affected: string | undefined;
   readonly 'affected-rev-fallback': string;
   readonly 'affected-rev-sort': string | undefined;
-  readonly attr: readonly ListAttr[];
+  readonly attribute: readonly ListAttr[];
   readonly headers: boolean;
   readonly long: boolean;
   readonly json: boolean;
@@ -208,7 +210,7 @@ function buildExtractor(args: ArgumentsCamelCase<ListArgs>) {
   return (wks: Workspace): ExtractedData => {
     const data = {} as ExtractedData;
 
-    for (const attr of args.attr) {
+    for (const attr of args.attribute) {
       data[attr] = EXTRACTORS[attr](wks, args.json);
     }
 
