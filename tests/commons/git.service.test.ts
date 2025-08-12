@@ -3,10 +3,10 @@ import { ConfigService } from '@/src/config/config.service.js';
 import { LOGGER, TASK_MANAGER } from '@/src/tokens.js';
 import { type TestSpawnTask } from '@/tools/test-tasks.js';
 import { type TaskManager } from '@jujulego/tasks';
-import { inject$ } from '@kyrielle/injector';
+import { globalScope$, inject$ } from '@kyrielle/injector';
 import type { Logger } from '@kyrielle/logger';
 import { var$ } from 'kyrielle';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Setup
 let logger: Logger;
@@ -27,6 +27,10 @@ beforeEach(async () => {
 
   // Mocks
   vi.spyOn(manager, 'add').mockReturnValue(undefined);
+});
+
+afterEach(() => {
+  globalScope$().clear();
 });
 
 // Test suites

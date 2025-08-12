@@ -19,9 +19,10 @@ describe('isPrivate$', () => {
       bed.addWorkspace('wks-3', { private: true }),
     ];
 
-    expect(await waitFor$(pipe$(asyncIterator$(workspaces), isPrivate$(true), collect$()))).toStrictEqual([
-      workspaces[2],
-    ]);
+    await expect(waitFor$(pipe$(asyncIterator$(workspaces), isPrivate$(true), collect$())))
+      .resolves.toStrictEqual([
+        workspaces[2],
+      ]);
   });
 
   it('should only keep the public workspaces (public by default)', async () => {
@@ -31,9 +32,10 @@ describe('isPrivate$', () => {
       bed.addWorkspace('wks-3', { private: true }),
     ];
 
-    expect(await waitFor$(pipe$(asyncIterator$(workspaces), isPrivate$(false), collect$()))).toStrictEqual([
-      workspaces[0],
-      workspaces[1],
+    await expect(waitFor$(pipe$(asyncIterator$(workspaces), isPrivate$(false), collect$())))
+      .resolves.toStrictEqual([
+        workspaces[0],
+        workspaces[1],
     ]);
   });
 });

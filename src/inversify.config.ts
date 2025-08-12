@@ -6,6 +6,7 @@ import 'reflect-metadata/lite';
 import { fixDefaultExport } from '@/src/utils/import.js';
 
 // Container
+/** @deprecated */
 export const container = new Container();
 
 // Utilities

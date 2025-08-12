@@ -1,15 +1,11 @@
-import { vi } from 'vitest';
-
-import '@/src/commons/logger.service.js';
 import { GitService } from '@/src/commons/git.service.js';
-import { CONFIG } from '@/src/config/config-loader.js';
-import { AffectedFilter } from '@/src/filters/affected.filter.js';
-import { container } from '@/src/inversify.config.js';
-import { type Workspace } from '@/src/project/workspace.js';
+import { ConfigService } from '@/src/config/config.service.js';
+import { isAffected$ } from '@/src/filters/affected.filter.js';
+import { type Workspace } from '@/src/projects/workspace.js';
 import { TestBed } from '@/tools/test-bed.js';
-
-// Setup global config
-container.rebind(CONFIG).toConstantValue({ jobs: 1 });
+import { globalScope$, inject$ } from '@kyrielle/injector';
+import { asyncIterator$, collect$, pipe$, var$, waitFor$ } from 'kyrielle';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Setup
 let bed: TestBed;
@@ -17,7 +13,11 @@ let wks: Workspace;
 let git: GitService;
 
 beforeEach(() => {
-  container.snapshot();
+  vi.restoreAllMocks();
+
+  // Setup config
+  vi.spyOn(inject$(ConfigService), 'config$', 'get')
+    .mockReturnValue(var$({ jobs: 1, hooks: true, plugins: [] }));
 
   // Workspaces
   bed = new TestBed();
@@ -26,7 +26,7 @@ beforeEach(() => {
   // Mocks
   vi.restoreAllMocks();
 
-  git = container.get(GitService);
+  git = inject$(GitService);
   vi.spyOn(git, 'listBranches');
   vi.spyOn(git, 'listTags');
 
@@ -34,28 +34,34 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  container.restore();
+  globalScope$().clear();
 });
 
 // Test suites
-describe('AffectedFilter', () => {
+describe('isAffected$', () => {
   it('should test against format', async () => {
-    const filter = new AffectedFilter('format', 'fallback');
+    const filtered = pipe$(
+      asyncIterator$([wks]),
+      isAffected$({ format: 'revision', fallback: 'fallback' }),
+      collect$()
+    );
 
-    await expect(filter.test(wks))
-      .resolves.toBe(true);
+    await expect(waitFor$(filtered)).resolves.toStrictEqual([wks]);
 
     // Check
-    expect(wks.isAffected).toHaveBeenCalledWith('format');
+    expect(wks.isAffected).toHaveBeenCalledWith('revision');
     expect(git.listBranches).not.toHaveBeenCalled();
     expect(git.listTags).not.toHaveBeenCalled();
   });
 
   it('should test against env-wks', async () => {
-    const filter = new AffectedFilter('env-%name', 'fallback');
+    const filtered = pipe$(
+      asyncIterator$([wks]),
+      isAffected$({ format: 'env-%name', fallback: 'fallback' }),
+      collect$()
+    );
 
-    await expect(filter.test(wks))
-      .resolves.toBe(true);
+    await expect(waitFor$(filtered)).resolves.toStrictEqual([wks]);
 
     // Check
     expect(wks.isAffected).toHaveBeenCalledWith('env-wks');
@@ -64,10 +70,13 @@ describe('AffectedFilter', () => {
   });
 
   it('should test against env-%name', async () => {
-    const filter = new AffectedFilter('env-\\%name', 'fallback');
+    const filtered = pipe$(
+      asyncIterator$([wks]),
+      isAffected$({ format: 'env-\\%name', fallback: 'fallback' }),
+      collect$()
+    );
 
-    await expect(filter.test(wks))
-      .resolves.toBe(true);
+    await expect(waitFor$(filtered)).resolves.toStrictEqual([wks]);
 
     // Check
     expect(wks.isAffected).toHaveBeenCalledWith('env-%name');
@@ -76,10 +85,13 @@ describe('AffectedFilter', () => {
   });
 
   it('should test against env-\\wks', async () => {
-    const filter = new AffectedFilter('env-\\\\%name', 'fallback');
+    const filtered = pipe$(
+      asyncIterator$([wks]),
+      isAffected$({ format: 'env-\\\\%name', fallback: 'fallback' }),
+      collect$()
+    );
 
-    await expect(filter.test(wks))
-      .resolves.toBe(true);
+    await expect(waitFor$(filtered)).resolves.toStrictEqual([wks]);
 
     // Check
     expect(wks.isAffected).toHaveBeenCalledWith('env-\\wks');
@@ -88,61 +100,73 @@ describe('AffectedFilter', () => {
   });
 
   it('should test against branch-2', async () => {
-    const filter = new AffectedFilter('branch-*', 'fallback');
-
     vi.mocked(git.listBranches).mockResolvedValue(['branch-1', 'branch-2']);
 
-    await expect(filter.test(wks))
-      .resolves.toBe(true);
+    const filtered = pipe$(
+      asyncIterator$([wks]),
+      isAffected$({ format: 'branch-*', fallback: 'fallback' }),
+      collect$()
+    );
+
+    await expect(waitFor$(filtered)).resolves.toStrictEqual([wks]);
 
     // Check
     expect(wks.isAffected).toHaveBeenCalledWith('branch-2');
-    expect(git.listBranches).toHaveBeenCalledWith(['branch-*'], expect.objectContaining({ cwd: wks.cwd }));
+    expect(git.listBranches).toHaveBeenCalledWith(['branch-*'], expect.objectContaining({ cwd: wks.root }));
     expect(git.listTags).not.toHaveBeenCalled();
   });
 
   it('should test against tag-2', async () => {
-    const filter = new AffectedFilter('tag-*', 'fallback');
-
     vi.mocked(git.listBranches).mockResolvedValue([]);
     vi.mocked(git.listTags).mockResolvedValue(['tag-1', 'tag-2']);
 
-    await expect(filter.test(wks))
-      .resolves.toBe(true);
+    const filtered = pipe$(
+      asyncIterator$([wks]),
+      isAffected$({ format: 'tag-*', fallback: 'fallback' }),
+      collect$()
+    );
+
+    await expect(waitFor$(filtered)).resolves.toStrictEqual([wks]);
 
     // Check
     expect(wks.isAffected).toHaveBeenCalledWith('tag-2');
-    expect(git.listBranches).toHaveBeenCalledWith(['tag-*'], expect.objectContaining({ cwd: wks.cwd }));
-    expect(git.listTags).toHaveBeenCalledWith(['tag-*'], expect.objectContaining({ cwd: wks.cwd }));
+    expect(git.listBranches).toHaveBeenCalledWith(['tag-*'], expect.objectContaining({ cwd: wks.root }));
+    expect(git.listTags).toHaveBeenCalledWith(['tag-*'], expect.objectContaining({ cwd: wks.root }));
   });
 
   it('should test against fallback', async () => {
-    const filter = new AffectedFilter('tag-*', 'fallback');
-
     vi.mocked(git.listBranches).mockResolvedValue([]);
     vi.mocked(git.listTags).mockResolvedValue([]);
 
-    await expect(filter.test(wks))
-      .resolves.toBe(true);
+    const filtered = pipe$(
+      asyncIterator$([wks]),
+      isAffected$({ format: 'tag-*', fallback: 'fallback' }),
+      collect$()
+    );
+
+    await expect(waitFor$(filtered)).resolves.toStrictEqual([wks]);
 
     // Check
     expect(wks.isAffected).toHaveBeenCalledWith('fallback');
-    expect(git.listBranches).toHaveBeenCalledWith(['tag-*'], expect.objectContaining({ cwd: wks.cwd }));
-    expect(git.listTags).toHaveBeenCalledWith(['tag-*'], expect.objectContaining({ cwd: wks.cwd }));
+    expect(git.listBranches).toHaveBeenCalledWith(['tag-*'], expect.objectContaining({ cwd: wks.root }));
+    expect(git.listTags).toHaveBeenCalledWith(['tag-*'], expect.objectContaining({ cwd: wks.root }));
   });
 
   it('should use sort arguments', async () => {
-    const filter = new AffectedFilter('tag-*', 'fallback', 'v:refname');
-
     vi.mocked(git.listBranches).mockResolvedValue([]);
     vi.mocked(git.listTags).mockResolvedValue(['tag-1', 'tag-2']);
 
-    await expect(filter.test(wks))
-      .resolves.toBe(true);
+    const filtered = pipe$(
+      asyncIterator$([wks]),
+      isAffected$({ format: 'tag-*', fallback: 'fallback', sort: 'v:refname' }),
+      collect$()
+    );
+
+    await expect(waitFor$(filtered)).resolves.toStrictEqual([wks]);
 
     // Check
     expect(wks.isAffected).toHaveBeenCalledWith('tag-2');
-    expect(git.listBranches).toHaveBeenCalledWith(['--sort', 'v:refname', 'tag-*'], expect.objectContaining({ cwd: wks.cwd }));
-    expect(git.listTags).toHaveBeenCalledWith(['--sort', 'v:refname', 'tag-*'], expect.objectContaining({ cwd: wks.cwd }));
+    expect(git.listBranches).toHaveBeenCalledWith(['--sort', 'v:refname', 'tag-*'], expect.objectContaining({ cwd: wks.root }));
+    expect(git.listTags).toHaveBeenCalledWith(['--sort', 'v:refname', 'tag-*'], expect.objectContaining({ cwd: wks.root }));
   });
 });
