@@ -5,9 +5,9 @@ import { ProjectsRepository } from '../../projects/projects.repository.js';
 import type { PackageManager, Writable } from '../../utils/types.js';
 
 /**
- * Loads a project.
+ * Adds arguments to load a project.
  */
-export function loadProject<T = unknown>(parser: Argv<T>): Argv<T & LoadProjectArgs> {
+export function withProject<T = unknown>(parser: Argv<T>): Argv<T & LoadProjectArgs> {
   return parser
     .option('project', {
       alias: 'p',
@@ -28,9 +28,9 @@ export function loadProject<T = unknown>(parser: Argv<T>): Argv<T & LoadProjectA
 }
 
 /**
- * Returns loaded project.
+ * Loads a project, based on arguments.
  */
-export function currentProject(args: ArgumentsCamelCase<LoadProjectArgs>): Project {
+export function loadProject(args: ArgumentsCamelCase<LoadProjectArgs>): Project {
   const repository = inject$(ProjectsRepository);
   return repository.getProject(args.project, {
     packageManager: args.packageManager

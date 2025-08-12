@@ -11,14 +11,14 @@ import { hasSomeScript$ } from '../../filters/scripts.filter.js';
 import type { Workspace } from '../../projects/workspace.js';
 import { printJson } from '../../utils/json.js';
 import type { Order } from '../../utils/types.js';
-import { currentProject, loadProject, type LoadProjectArgs } from '../middlewares/load-project.middleware.js';
+import { loadProject, withProject, type LoadProjectArgs } from '../middlewares/load-project.middleware.js';
 
 // Command
 const command: CommandModule<unknown, ListArgs> = {
   command: 'list',
   aliases: ['ls'],
   describe: 'List project workspaces',
-  builder: (parser) => loadProject(parser)
+  builder: (parser) => withProject(parser)
     .option('affected', {
       alias: 'a',
       type: 'string',
@@ -139,7 +139,7 @@ const command: CommandModule<unknown, ListArgs> = {
     }
 
     // Load workspaces
-    const project = currentProject(args);
+    const project = loadProject(args);
     const workspaces = await waitFor$(pipe$(
       asyncIterator$(project.workspaces()),
       filters.build(),

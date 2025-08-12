@@ -1,8 +1,3 @@
-import { Logger } from '@jujulego/logger';
-import { inject } from 'inversify';
-import symbols from 'log-symbols';
-import { type ArgumentsCamelCase, type Argv } from 'yargs';
-
 import { ContextService } from '@/src/commons/context.service.js';
 import { CURRENT } from '@/src/constants.js';
 import { container, lazyInjectNamed } from '@/src/inversify.config.js';
@@ -10,15 +5,20 @@ import { type IMiddleware, Middleware } from '@/src/modules/middleware.js';
 import { type Project } from '@/src/project/project.js';
 import { Workspace } from '@/src/project/workspace.js';
 import { ExitException } from '@/src/utils/exit.js';
-
+import { Logger } from '@jujulego/logger';
+import { inject } from 'inversify';
+import symbols from 'log-symbols';
+import { type ArgumentsCamelCase, type Argv } from 'yargs';
 import { ILoadProjectArgs, LazyCurrentProject } from './load-project.js';
 
 // Types
+/** @deprecated */
 export interface ILoadWorkspaceArgs extends ILoadProjectArgs {
   workspace?: string;
 }
 
 // Middleware
+/** @deprecated */
 @Middleware()
 export class LoadWorkspace implements IMiddleware<ILoadWorkspaceArgs> {
   // Lazy injections
@@ -66,6 +66,7 @@ export class LoadWorkspace implements IMiddleware<ILoadWorkspaceArgs> {
 }
 
 // Decorators
+/** @deprecated */
 export function LazyCurrentWorkspace() {
   return lazyInjectNamed(Workspace, CURRENT);
 }
