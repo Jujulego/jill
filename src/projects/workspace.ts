@@ -34,7 +34,7 @@ export class Workspace {
         if (ws._satisfies(this, range)) {
           yield ws;
         } else {
-          this._logger.warning(`Ignoring ${kind} ${ws.reference} as it does not match requirement ${range}`);
+          this._logger.warning(`ignoring ${kind} ${ws.reference} as it does not match requirement ${range}`);
         }
       }
     }

@@ -3,7 +3,7 @@ import { render, cleanup } from 'ink-testing-library';
 
 import '@/src/commons/logger.service.js';
 import { type Workspace } from '@/src/project/workspace.js';
-import WorkspaceTree from '@/src/ui/workspace-tree.js';
+import WorkspaceTree from '@/src/ui/WorkspaceTree.js';
 
 import { TestBed } from '@/tools/test-bed.js';
 import { flushPromises } from '@/tools/utils.js';

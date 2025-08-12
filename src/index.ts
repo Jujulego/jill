@@ -47,8 +47,8 @@ export * from './ui/task-name.jsx';
 export { default as TaskSpinner } from './ui/task-spinner.jsx';
 export * from './ui/task-spinner.jsx';
 
-export { default as WorkspaceTree } from './ui/workspace-tree.jsx';
-export * from './ui/workspace-tree.jsx';
+export { default as WorkspaceTree } from './ui/WorkspaceTree.jsx';
+export * from './ui/WorkspaceTree.jsx';
 
 // Utils
 export * from './utils/events.js';

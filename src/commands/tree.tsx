@@ -3,7 +3,7 @@ import { InkCommand } from '@/src/modules/ink-command.jsx';
 import { LoadProject } from '@/src/middlewares/load-project.js';
 import { LazyCurrentWorkspace, LoadWorkspace } from '@/src/middlewares/load-workspace.js';
 import { type Workspace } from '@/src/project/workspace.js';
-import WorkspaceTree from '@/src/ui/workspace-tree.jsx';
+import WorkspaceTree from '../ui/WorkspaceTree.jsx';
 
 // Command
 @Command({

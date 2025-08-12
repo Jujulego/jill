@@ -31,7 +31,6 @@ export function inked<P, R>(stepper: InkedStepper<P, R>): InkedComponent<P, R> {
 
       return result.value;
     } finally {
-      app.clear();
       app.unmount();
     }
   };

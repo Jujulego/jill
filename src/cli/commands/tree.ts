@@ -8,7 +8,9 @@ const command: CommandModule<unknown, TreeArgs> = {
   builder: withWorkspace,
   async handler(args) {
     const workspace = await loadWorkspace(args);
-    console.log(workspace);
+    const { default: TreeInk } = await import('./tree.ink.jsx');
+
+    await TreeInk({ workspace });
   }
 };
 
