@@ -536,6 +536,32 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@inversifyjs/common@npm:1.4.0":
+  version: 1.4.0
+  resolution: "@inversifyjs/common@npm:1.4.0"
+  checksum: 10/39745f440c97fab25b1068a59c415a08620049c99502405840590c29c0e96cd8ebb544100da7f1fc933d9aa03ad14297df0120097b74bd3363e215b80a7e74e2
+  languageName: node
+  linkType: hard
+
+"@inversifyjs/core@npm:1.3.5":
+  version: 1.3.5
+  resolution: "@inversifyjs/core@npm:1.3.5"
+  dependencies:
+    "@inversifyjs/common": "npm:1.4.0"
+    "@inversifyjs/reflect-metadata-utils": "npm:0.2.4"
+  checksum: 10/890993e6dcf93b0e362afaf662e8f5db16bf3934611685acb58cd88963fdfc3ec6774db7cb6b89f0458f8a2c4388e5435b18712a7045ea48c756c21bab085291
+  languageName: node
+  linkType: hard
+
+"@inversifyjs/reflect-metadata-utils@npm:0.2.4":
+  version: 0.2.4
+  resolution: "@inversifyjs/reflect-metadata-utils@npm:0.2.4"
+  peerDependencies:
+    reflect-metadata: 0.2.2
+  checksum: 10/83d657d3bfdd86b1a5f96820fed9e790493dc8d178aee432839ee4e9f2b071f159e78c21b71157ebb798a37e6e2a0948110f9cc0512ca1224690d1d4bba2d515
+  languageName: node
+  linkType: hard
+
 "@isaacs/balanced-match@npm:^4.0.1":
   version: 4.0.1
   resolution: "@isaacs/balanced-match@npm:4.0.1"
@@ -3877,9 +3903,14 @@ __metadata:
   linkType: hard
 
 "inversify@npm:^6.0.1":
-  version: 6.0.2
-  resolution: "inversify@npm:6.0.2"
-  checksum: 10/0e4d07fb2dac82d21f55c711cdf35f9f75656c3f4651b8dd27f5aa3dcb154ad492ebdd0a66fbe394ac090aac0728da999d2a1c7ed62b5d8c772cad06e1684483
+  version: 6.2.2
+  resolution: "inversify@npm:6.2.2"
+  dependencies:
+    "@inversifyjs/common": "npm:1.4.0"
+    "@inversifyjs/core": "npm:1.3.5"
+  peerDependencies:
+    reflect-metadata: ~0.2.2
+  checksum: 10/25a1f823550c3765b7f4a11b505d76c70cab6e3f9a08414f76891823c68819ed5067b917ccf61bbfa24c7be6bc26080bdc7fe02c3c9dd5da7cb5b01708b843d3
   languageName: node
   linkType: hard
 
