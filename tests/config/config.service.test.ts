@@ -5,7 +5,6 @@ import { globalScope$, inject$ } from '@kyrielle/injector';
 import Ajv, { type ValidateFunction } from 'ajv';
 import { type PublicExplorer } from 'cosmiconfig';
 import os from 'node:os';
-import path from 'node:path';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mocks
@@ -35,7 +34,6 @@ describe('ConfigService.searchConfig', () => {
       config: {
         hook: true,
         jobs: 0,
-        plugins: ['plugin.js'],
       },
     });
   });
@@ -44,7 +42,6 @@ describe('ConfigService.searchConfig', () => {
     const result = {
       hook: true,
       jobs: os.cpus().length - 1,
-      plugins: [path.resolve('/test/plugin.js')],
     };
 
     await expect(configService.searchConfig()).resolves.toStrictEqual(result);
@@ -84,7 +81,6 @@ describe('ConfigService.loadConfig', () => {
       config: {
         hook: true,
         jobs: 0,
-        plugins: ['plugin.js'],
       },
     });
   });
@@ -93,7 +89,6 @@ describe('ConfigService.loadConfig', () => {
     const result = {
       hook: true,
       jobs: os.cpus().length - 1,
-      plugins: [path.resolve('/test/plugin.js')],
     };
 
     await expect(configService.loadConfig('/test/.jillrc.yml')).resolves.toStrictEqual(result);
