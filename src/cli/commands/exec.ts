@@ -1,9 +1,11 @@
+import { TaskSet } from '@jujulego/tasks';
 import type { CommandModule } from 'yargs';
 import type { WorkspaceDepsMode } from '../../projects/workspace.js';
+import type { LoggerArgs } from '../middlewares/logger.middleware.js';
 import { loadWorkspace, withWorkspace, type WorkspaceArgs } from '../middlewares/workspace.middleware.js';
 
 // Command
-const command: CommandModule<unknown, ExecArgs> = {
+const command: CommandModule<LoggerArgs, ExecArgs> = {
   command: 'exec <command>',
   aliases: ['$0'],
   describe: 'Run command inside workspace, after all its dependencies has been built.',
@@ -35,13 +37,32 @@ const command: CommandModule<unknown, ExecArgs> = {
     }),
   async handler(args) {
     const workspace = await loadWorkspace(args);
+
+    // Extract arguments
+    const rest = args._.map(arg => arg.toString());
+
+    if (rest[0] === 'exec') {
+      rest.splice(0, 1);
+    }
+
+    // Run script in workspace
+    const tasks = new TaskSet();
+    const task = await workspace.exec(args.command, rest, {
+      buildScript: args.buildScript,
+      buildDeps: args.depsMode,
+    });
+
+    tasks.add(task);
+
+    const { default: ExecInk } = await import('./exec.ink.jsx');
+    await ExecInk({ tasks, verbose: ['verbose', 'debug'].includes(args.verbose) });
   },
 };
 
 export default command;
 
 // Types
-export interface ExecArgs extends WorkspaceArgs {
+export interface ExecArgs extends LoggerArgs, WorkspaceArgs {
   readonly command: string;
   readonly 'build-script': string;
   readonly 'deps-mode': WorkspaceDepsMode;

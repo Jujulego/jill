@@ -1,18 +1,12 @@
-import { TaskManager } from '@jujulego/tasks';
+import type { TaskManager } from '@jujulego/tasks';
 import { Box, Text } from 'ink';
-
-import { useFlatTaskTree } from '@/src/ui/hooks/useFlatTaskTree.js';
-import TaskSpinner from '@/src/ui/task-spinner.jsx';
-import TaskTreeStats from '@/src/ui/task-tree-stats.jsx';
-
-// Types
-export interface TaskTreeFullSpinnerProps {
-  readonly manager: TaskManager;
-}
+import { useFlatTaskTree } from './hooks/useFlatTaskTree.js';
+import TaskSpinner from './task-spinner.jsx';
+import TaskTreeStats from './task-tree-stats.jsx';
 
 // Component
-export default function TaskTreeFullSpinner({ manager }: TaskTreeFullSpinnerProps) {
-  const flat = useFlatTaskTree(manager);
+export default function TaskTreeFullSpinner({ manager, verbose }: TaskTreeFullSpinnerProps) {
+  const flat = useFlatTaskTree(manager, verbose);
 
   // Render
   return (
@@ -29,4 +23,10 @@ export default function TaskTreeFullSpinner({ manager }: TaskTreeFullSpinnerProp
       </Text>
     </>
   );
+}
+
+// Types
+export interface TaskTreeFullSpinnerProps {
+  readonly manager: TaskManager;
+  readonly verbose?: boolean;
 }

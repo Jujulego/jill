@@ -12,11 +12,12 @@ const parser = yargs(hideBin(process.argv))
   .scriptName('jill')
   .version(version);
 
-loggerMiddleware(parser);
+loggerMiddleware(parser)
+  .command(commands.exec);
+
 configMiddleware(parser);
 
 parser.strictCommands()
-  .command(commands.exec)
   .command(commands.list)
   .command(commands.tree)
   .demandCommand()

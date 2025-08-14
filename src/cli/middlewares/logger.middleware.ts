@@ -17,6 +17,7 @@ export function loggerMiddleware(parser: Argv) {
   return parser
     .option('verbose', {
       alias: 'v',
+      default: 'info',
       type: 'count',
       description: 'Set verbosity level',
       coerce: (cnt: number) => VERBOSITY_LEVEL[Math.min(cnt, 2)]
@@ -34,4 +35,9 @@ export function loggerMiddleware(parser: Argv) {
 
       logGateway.connect('console', toStderr(logFormat));
     });
+}
+
+// Types
+export interface LoggerArgs {
+  readonly verbose: LogLevelKey;
 }
