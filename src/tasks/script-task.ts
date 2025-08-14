@@ -1,25 +1,8 @@
-import { waitFor$ } from '@jujulego/event-tree';
+import { waitFor$ } from 'kyrielle';
 import { GroupTask, type Task, type TaskContext, type TaskOptions, TaskSet } from '@jujulego/tasks';
-
-import { container } from '@/src/inversify.config.js';
-import { type Workspace } from '@/src/project/workspace.js';
-import { CommandTask } from '@/src/tasks/command-task.js';
-import { splitCommandLine } from '@/src/utils/string.js';
-
-// Types
-export interface ScriptContext extends TaskContext {
-  workspace: Workspace;
-  script: string;
-}
-
-export interface ScriptOpts extends TaskOptions {
-  runHooks?: boolean;
-}
-
-// Utils
-export function isScriptCtx(ctx: Readonly<TaskContext>): ctx is Readonly<ScriptContext> {
-  return 'workspace' in ctx && 'script' in ctx;
-}
+import type { Workspace } from '../projects/workspace.js';
+import { splitCommandLine } from '../utils/string.js';
+import { CommandTask } from './command-task.js';
 
 // Class
 export class ScriptTask extends GroupTask<ScriptContext> {
@@ -50,35 +33,39 @@ export class ScriptTask extends GroupTask<ScriptContext> {
 
     // Create command task for script
     const [command, ...commandArgs] = splitCommandLine(line);
+    const set = new TaskSet();
 
-    if (command === 'jill') {
-      this._logger.debug(`Interpreting ${line}`);
-      const argv = commandArgs.map(arg => arg.replace(/^["'](.+)["']$/, '$1'));
-
-      const { JillApplication } = await import('@/src/jill.application.ts');
-      const app = container.get(JillApplication);
-      const tasks = await app.tasksOf(argv, {
-        project: this.project,
-        workspace: this.workspace,
-      });
-
-      if (tasks.length) {
-        const set = new TaskSet();
-
-        for (const tsk of tasks) {
-          set.add(tsk);
-        }
-
-        return set;
-      }
+    if (!command) {
+      return set;
     }
+
+    // if (command === 'jill') {
+    //   this.logger$.debug(`interpreting ${line}`);
+    //   const argv = commandArgs.map(arg => arg.replace(/^["'](.+)["']$/, '$1'));
+    //
+    //   const { JillApplication } = await import('@/src/jill.application.ts');
+    //   const app = container.get(JillApplication);
+    //   const tasks = await app.tasksOf(argv, {
+    //     project: this.project
+    //     workspace: this.workspace,
+    //   });
+    //
+    //   if (tasks.length) {
+    //     const set = new TaskSet();
+    //
+    //     for (const tsk of tasks) {
+    //       set.add(tsk);
+    //     }
+    //
+    //     return set;
+    //   }
+    // }
 
     const pm = await this.workspace.project.packageManager();
 
-    const set = new TaskSet();
     set.add(
       new CommandTask(this.workspace, command, [...commandArgs, ...args], {
-        logger: this._logger,
+        logger: this.logger$,
         superCommand: pm === 'yarn' ? ['yarn', 'exec'] : undefined,
       })
     );
@@ -102,7 +89,7 @@ export class ScriptTask extends GroupTask<ScriptContext> {
 
     // Add tasks to group
     if (this._preHookTasks) {
-      this._logger.verbose(`Found pre-hook script "pre${this.script}"`);
+      this.logger$.verbose(`found pre-hook script "pre${this.script}"`);
 
       for (const tsk of this._preHookTasks) {
         this.add(tsk);
@@ -114,7 +101,7 @@ export class ScriptTask extends GroupTask<ScriptContext> {
     }
 
     if (this._postHookTasks) {
-      this._logger.verbose(`Found post-hook script "post${this.script}"`);
+      this.logger$.verbose(`found post-hook script "post${this.script}"`);
 
       for (const tsk of this._postHookTasks) {
         this.add(tsk);
@@ -122,7 +109,7 @@ export class ScriptTask extends GroupTask<ScriptContext> {
     }
   }
 
-  protected async *_orchestrate(): AsyncGenerator<Task, void, undefined> {
+  protected async *onOrchestrate(): AsyncGenerator<Task, void, undefined> {
     if (!this._scriptTasks) {
       throw new Error('ScriptTask needs to be prepared. Call prepare before starting it');
     }
@@ -156,15 +143,15 @@ export class ScriptTask extends GroupTask<ScriptContext> {
   }
 
   private async _hasFailed(set: TaskSet): Promise<boolean> {
-    const results = await waitFor$(set, 'finished');
+    const results = await waitFor$(set.events$, 'finished');
     return results.failed > 0;
   }
 
-  protected _stop(): void {
+  protected async onStop(): Promise<void> {
     if (!this._scriptTasks) return;
 
     for (const tsk of this._scriptTasks) {
-      tsk.stop();
+      await tsk.stop();
     }
   }
 
@@ -184,4 +171,19 @@ export class ScriptTask extends GroupTask<ScriptContext> {
   get project() {
     return this.workspace.project;
   }
+}
+
+// Types
+export interface ScriptContext extends TaskContext {
+  workspace: Workspace;
+  script: string;
+}
+
+export interface ScriptOpts extends TaskOptions {
+  runHooks?: boolean;
+}
+
+// Utils
+export function isScriptCtx(ctx: Readonly<TaskContext>): ctx is Readonly<ScriptContext> {
+  return 'workspace' in ctx && 'script' in ctx;
 }

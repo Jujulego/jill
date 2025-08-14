@@ -3,21 +3,6 @@ import { off$, once$ } from 'kyrielle';
 import type { Workspace } from '../projects/workspace.js';
 import { streamLines$ } from '../utils/streams.js';
 
-// Types
-export interface CommandContext extends TaskContext {
-  workspace: Workspace;
-  command: string;
-}
-
-export interface CommandOptions extends Omit<SpawnTaskOptions, 'cwd'> {
-  superCommand?: string | string[];
-}
-
-// Utils
-export function isCommandCtx(ctx: Readonly<TaskContext>): ctx is Readonly<CommandContext> {
-  return 'workspace' in ctx && 'command' in ctx;
-}
-
 // Class
 export class CommandTask extends SpawnTask<CommandContext> {
   // Constructor
@@ -58,4 +43,19 @@ export class CommandTask extends SpawnTask<CommandContext> {
       off.unsubscribe();
     });
   }
+}
+
+// Types
+export interface CommandContext extends TaskContext {
+  workspace: Workspace;
+  command: string;
+}
+
+export interface CommandOptions extends Omit<SpawnTaskOptions, 'cwd'> {
+  superCommand?: string | readonly string[] | undefined;
+}
+
+// Utils
+export function isCommandCtx(ctx: Readonly<TaskContext>): ctx is Readonly<CommandContext> {
+  return 'workspace' in ctx && 'command' in ctx;
 }

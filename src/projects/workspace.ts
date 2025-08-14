@@ -100,6 +100,11 @@ export class Workspace {
     }
   }
 
+  getScript(script: string): string | null {
+    const { scripts = {} } = this.manifest;
+    return scripts[script] || null;
+  }
+
   // Properties
   get name(): string {
     return this.manifest.name;
