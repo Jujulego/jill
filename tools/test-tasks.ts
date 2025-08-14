@@ -16,26 +16,22 @@ export class TestParallelGroup<C extends TaskContext = TaskContext> extends Para
 
 export class TestScriptTask extends ScriptTask {
   // Methods
-  readonly emit = this._groupEvents.emit;
-
-  protected _start() {
+  protected onStart() {
     return;
   }
 
-  async* _orchestrate() {
-    yield* super._orchestrate();
+  async* onOrchestrate() {
+    yield* super.onOrchestrate();
   }
 
-  _stop() {
-    super._stop();
+  async onStop() {
+    await super.onStop();
   }
 }
 
 export class TestCommandTask extends CommandTask {
   // Methods
-  readonly emit = this._spawnEvents.emit;
-
-  protected _start() {
+  protected onStart() {
     return;
   }
 }

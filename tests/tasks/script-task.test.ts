@@ -1,42 +1,25 @@
-import { Task } from '@jujulego/tasks';
-import { waitFor$ } from '@jujulego/event-tree';
-import { vi } from 'vitest';
-
-import '@/src/commons/logger.service.js';
-import { CONFIG } from '@/src/config/config-loader.js';
-import { container } from '@/src/inversify.config.js';
+import { ConfigService } from '@/src/config/config.service.js';
 import { JillApplication } from '@/src/jill.application.js';
-import { type Workspace } from '@/src/project/workspace.js';
+import { type Workspace } from '@/src/projects/workspace.js';
 import { CommandTask } from '@/src/tasks/command-task.js';
 import { ScriptTask } from '@/src/tasks/script-task.js';
-
 import { TestBed } from '@/tools/test-bed.js';
 import { TestCommandTask, TestScriptTask } from '@/tools/test-tasks.js';
-
-// Setup global config
-container.rebind(CONFIG).toConstantValue({ jobs: 1 });
+import { Task } from '@jujulego/tasks';
+import { globalScope$, inject$ } from '@kyrielle/injector';
+import { var$ } from 'kyrielle';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Setup
 let bed: TestBed;
 let wks: Workspace;
 
-vi.mock('@jujulego/event-tree', async (importOriginal) => {
-  const mod: typeof import('@jujulego/event-tree') = await importOriginal();
-
-  return {
-    ...mod,
-    waitFor$: vi.fn(mod.waitFor$),
-  };
-});
-
-beforeAll(() => {
-  container.snapshot();
-});
-
 beforeEach(() => {
-  container.restore();
-  container.snapshot();
+  // Setup config
+  vi.spyOn(inject$(ConfigService), 'config$', 'get')
+    .mockReturnValue(var$({ jobs: 1, hooks: true }));
 
+  // Setup project
   bed = new TestBed();
   wks = bed.addWorkspace('wks');
 
@@ -44,6 +27,11 @@ beforeEach(() => {
   vi.spyOn(wks.project, 'packageManager').mockResolvedValue('npm');
 });
 
+afterEach(() => {
+  globalScope$().clear();
+});
+
+// Tests
 describe('new ScriptTask', () => {
   it('should set task context', () => {
     const task = new ScriptTask(wks, 'test', []);
@@ -191,19 +179,19 @@ describe('ScriptTask.prepare', () => {
   });
 });
 
-describe('ScriptTask._orchestrate', () => {
+describe('ScriptTask.onOrchestrate', () => {
   it('should yield all prepared tasks and gain status done when they are done', async () => {
     const script = new TestScriptTask(wks, 'test', ['--arg']);
     await script.prepare();
 
-    const it = script._orchestrate();
+    const it = script.onOrchestrate();
 
     // It emits one task
     let next = await it.next();
     expect(next).toEqual({ done: false, value: expect.any(Task) });
 
-    // Then wait for it to finish
-    vi.mocked(waitFor$).mockResolvedValue({ failed: 0 });
+    // Then when it finishes
+    setTimeout(() => next.value!.events$.emit('status.done', { status: 'done', previous: 'running' }), 0);
 
     next = await it.next();
     expect(next).toEqual({ done: true });
@@ -219,31 +207,31 @@ describe('ScriptTask._orchestrate', () => {
     const script = new TestScriptTask(wks, 'test', []);
     await script.prepare();
 
-    const it = script._orchestrate();
+    const it = script.onOrchestrate();
 
     // First it emits the pre hook task
     let next = await it.next();
     expect(next.done).toBe(false);
     expect((next.value as Task)).toMatchObject({ cmd: 'echo', args: ['pre-hook'] });
 
-    // Then wait for it to finish
-    vi.mocked(waitFor$).mockResolvedValue({ failed: 0 });
+    // Then when it finishes
+    setTimeout(() => next.value!.events$.emit('status.done', { status: 'done', previous: 'running' }), 0);
 
     // Then it emits the script task
     next = await it.next();
     expect(next.done).toBe(false);
     expect((next.value as Task)).toMatchObject({ cmd: 'jest', args: ['--script'] });
 
-    // Then wait for it to finish
-    vi.mocked(waitFor$).mockResolvedValue({ failed: 0 });
+    // Then when it finishes
+    setTimeout(() => next.value!.events$.emit('status.done', { status: 'done', previous: 'running' }), 0);
 
     // Finally it emits the post hook task
     next = await it.next();
     expect(next.done).toBe(false);
     expect((next.value as Task)).toMatchObject({ cmd: 'echo', args: ['post-hook'] });
 
-    // Then wait for it to finish
-    vi.mocked(waitFor$).mockResolvedValue({ failed: 0 });
+    // Then when it finishes
+    setTimeout(() => next.value!.events$.emit('status.done', { status: 'done', previous: 'running' }), 0);
 
     next = await it.next();
     expect(next).toEqual({ done: true });
@@ -255,14 +243,14 @@ describe('ScriptTask._orchestrate', () => {
     const script = new TestScriptTask(wks, 'test', ['--arg']);
     await script.prepare();
 
-    const it = script._orchestrate();
+    const it = script.onOrchestrate();
 
     // It emits one task
     let next = await it.next();
     expect(next).toEqual({ done: false, value: expect.any(Task) });
 
-    // Then wait for it to finish
-    vi.mocked(waitFor$).mockResolvedValue({ failed: 1 });
+    // Then when it finishes
+    setTimeout(() => next.value!.events$.emit('status.failed', { status: 'failed', previous: 'running' }), 0);
 
     next = await it.next();
     expect(next).toEqual({ done: true });
@@ -273,7 +261,7 @@ describe('ScriptTask._orchestrate', () => {
   it('should throw if script is not yet prepared', async () => {
     const script = new TestScriptTask(wks, 'test', ['--arg']);
 
-    const it = script._orchestrate();
+    const it = script.onOrchestrate();
     await expect(it.next())
       .rejects.toEqual(new Error('ScriptTask needs to be prepared. Call prepare before starting it'));
   });
@@ -285,7 +273,7 @@ describe('ScriptTask._stop', () => {
     await script.prepare();
 
     vi.spyOn(script.tasks[0], 'stop');
-    script._stop();
+    await script.onStop();
 
     expect(script.tasks[0].stop).toHaveBeenCalled();
   });
