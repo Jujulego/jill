@@ -18,7 +18,7 @@ beforeEach(async () => {
 
   // Setup config
   vi.spyOn(inject$(ConfigService), 'config$', 'get')
-    .mockReturnValue(var$({ jobs: 1, hooks: true, plugins: [] }));
+    .mockReturnValue(var$({ jobs: 1, hooks: true }));
 
   // Services
   logger = inject$(LOGGER);

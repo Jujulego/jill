@@ -12,7 +12,7 @@ import { Workspace } from '@/src/projects/workspace.js';
 import { type Class } from '@/src/types.js';
 import { type PackageManager } from '@/src/utils/types.js';
 import { ContainerModule } from 'inversify';
-import fs from 'node:fs/promises';
+import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { type Package } from 'normalize-package-data';
@@ -27,7 +27,6 @@ export class TestBed {
   private _config: Config = {
     hooks: true,
     jobs: 1,
-    plugins: [],
   };
 
   readonly project = new TestProject('./test');
@@ -53,7 +52,7 @@ export class TestBed {
   async writeManifest(path: string, wks: Workspace): Promise<void> {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { _id: _, ...manifest } = wks.manifest;
-    await fs.writeFile(path, JSON.stringify(manifest));
+    await fs.promises.writeFile(path, JSON.stringify(manifest));
   }
 
   /**
@@ -95,27 +94,27 @@ export class TestBed {
    */
   async createProjectDirectory(): Promise<string> {
     // Ensure tmp dir exists (for mocked fs)
-    await fs.mkdir(os.tmpdir(), { recursive: true });
+    await fs.promises.mkdir(os.tmpdir(), { recursive: true });
 
-    let tmp = await fs.mkdtemp(path.join(os.tmpdir(), 'jill-test-'));
+    let tmp = await fs.promises.mkdtemp(path.join(os.tmpdir(), 'jill-test-'));
 
     // Corrects path on macOS => see https://github.com/nodejs/node/issues/11422
-    tmp = await fs.realpath(tmp);
+    tmp = await fs.promises.realpath(tmp);
 
     // Create project directory
     const prjDir = path.join(tmp, 'test');
 
-    await fs.mkdir(prjDir);
+    await fs.promises.mkdir(prjDir);
     await this.writeManifest(path.join(prjDir, 'package.json'), await this.project.mainWorkspace());
 
     // Add config file
-    await fs.writeFile(path.join(prjDir, '.jillrc.json'), JSON.stringify(this._config));
+    await fs.promises.writeFile(path.join(prjDir, '.jillrc.json'), JSON.stringify(this._config));
 
     // Create workspaces
     for await (const wks of this.project.workspaces()) {
       const wksDir = path.join(prjDir, wks.name);
 
-      await fs.mkdir(wksDir);
+      await fs.promises.mkdir(wksDir);
       await this.writeManifest(path.join(wksDir, 'package.json'), wks);
     }
 
