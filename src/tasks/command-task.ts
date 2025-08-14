@@ -15,7 +15,7 @@ export class CommandTask extends SpawnTask<CommandContext> {
       }
 
       if (opts.superCommand.length > 0) {
-        cmd = opts.superCommand[0]!;
+        cmd = opts.superCommand[0];
         args = [...opts.superCommand.slice(1), command, ...args];
       }
     }
