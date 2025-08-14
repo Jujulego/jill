@@ -16,6 +16,7 @@ loggerMiddleware(parser);
 configMiddleware(parser);
 
 parser.strictCommands()
+  .command(commands.exec)
   .command(commands.list)
   .command(commands.tree)
   .demandCommand()
