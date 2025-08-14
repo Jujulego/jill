@@ -26,9 +26,4 @@ export interface Config {
    * Number of allowed parallel tasks, defaults to CPU number - 1.
    */
   readonly jobs: number;
-
-  /**
-   * Paths to plugin files.
-   */
-  readonly plugins: readonly string[];
 }
