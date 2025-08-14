@@ -3811,8 +3811,8 @@ __metadata:
   linkType: hard
 
 "ink@npm:^6.1.0":
-  version: 6.1.1
-  resolution: "ink@npm:6.1.1"
+  version: 6.2.0
+  resolution: "ink@npm:6.2.0"
   dependencies:
     "@alcalzone/ansi-tokenize": "npm:^0.1.3"
     ansi-escapes: "npm:^7.0.0"
@@ -3847,7 +3847,7 @@ __metadata:
       optional: true
     react-devtools-core:
       optional: true
-  checksum: 10/9253665d6b14b98cd0c6213c8a7fa46040f0eea79680ede4e2f3e5bec53099de7bd71e0c4cb7f6e847123ade3cbb8a5481f6fab064be9add18ba9496049d581d
+  checksum: 10/337e34ab2789ee204debeeae2837c50156bb2ad83de4bdf4b0eb3d96b252c804741b7e1a7e52aec5e4ecde16d3cd7e1e2c58365acfe7d98921dba777bbf51b3b
   languageName: node
   linkType: hard
 
