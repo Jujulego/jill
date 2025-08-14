@@ -8,7 +8,7 @@ export async function* combine<T>(...generators: AsyncGenerator<T>[]): AsyncGene
   }
 }
 
-export function streamLines$(task: SpawnTask): Observable<string> {
+export function streamLines$(task: SpawnTask, stream: 'stdout' | 'stderr' = 'stdout'): Observable<string> {
   return observable$((observer, signal) => {
     const off = off$();
     let current = '';
@@ -24,7 +24,7 @@ export function streamLines$(task: SpawnTask): Observable<string> {
     signal.addEventListener('abort', () => off.unsubscribe(), { once: true });
 
     // Steam
-    off.add(task.events$.on('stream.stdout', (chunk) => {
+    off.add(task.events$.on(`stream.${stream}`, (chunk) => {
       const data = current + chunk.data.toString('utf-8');
       const lines = data.split(/\r?\n/);
 

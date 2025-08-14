@@ -1,7 +1,7 @@
 import { SpawnTask, type SpawnTaskOptions, type TaskContext } from '@jujulego/tasks';
-
-import { type Workspace } from '@/src/project/workspace.js';
-import { linesFrom } from '@/src/utils/events.js';
+import { off$, once$ } from 'kyrielle';
+import type { Workspace } from '../projects/workspace.js';
+import { streamLines$ } from '../utils/streams.js';
 
 // Types
 export interface CommandContext extends TaskContext {
@@ -30,14 +30,14 @@ export class CommandTask extends SpawnTask<CommandContext> {
       }
 
       if (opts.superCommand.length > 0) {
-        cmd = opts.superCommand[0];
+        cmd = opts.superCommand[0]!;
         args = [...opts.superCommand.slice(1), command, ...args];
       }
     }
 
     super(cmd, args, { workspace, command }, {
       ...opts,
-      cwd: workspace.cwd,
+      cwd: workspace.root,
       env: {
         FORCE_COLOR: '1',
         ...opts.env
@@ -49,8 +49,13 @@ export class CommandTask extends SpawnTask<CommandContext> {
 
   // Methods
   private _logStreams() {
-    // TODO: clean up this subscriptions
-    linesFrom(this, 'stdout').subscribe((line) => this._logger.info(line));
-    linesFrom(this, 'stderr').subscribe((line) => this._logger.info(line));
+    const off = off$(
+      streamLines$(this, 'stdout').subscribe((line) => this.logger$.info(line)),
+      streamLines$(this, 'stderr').subscribe((line) => this.logger$.info(line)),
+    );
+
+    once$(this.events$, 'completed', () => {
+      off.unsubscribe();
+    });
   }
 }
