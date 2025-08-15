@@ -787,8 +787,8 @@ __metadata:
   linkType: hard
 
 "@jujulego/tasks@npm:^3.0.0-alpha.1":
-  version: 3.0.0-alpha.1
-  resolution: "@jujulego/tasks@npm:3.0.0-alpha.1"
+  version: 3.0.0-alpha.2
+  resolution: "@jujulego/tasks@npm:3.0.0-alpha.2"
   dependencies:
     "@kyrielle/logger": "npm:^2.0.0"
     "@swc/helpers": "npm:^0.5.3"
@@ -797,7 +797,7 @@ __metadata:
   dependenciesMeta:
     vitest@3.2.4:
       unplugged: true
-  checksum: 10/c46ae71ee6a29015f7de7c24d4cf08462e276077badac2bd80e09e5c572a2f6418c47237d48318d55d191518235dc8e9f66ef1c07ab218c88bb4d0f0fd1cae1f
+  checksum: 10/749c8259b7b0fbc9c368ec0167af84cfa7c32bdf426dcc358dd0f84f75595a25c3a4e2668b694f32fa87e6d41e697040a8422cd270fae43a3b7326755368e7ba
   languageName: node
   linkType: hard
 
