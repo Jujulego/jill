@@ -184,6 +184,14 @@ export class Workspace {
     return task;
   }
 
+  toJSON() {
+    return {
+      name: this.name,
+      version: this.version,
+      root: this.root,
+    };
+  }
+
   // Properties
   get name(): string {
     return this.manifest.name;
