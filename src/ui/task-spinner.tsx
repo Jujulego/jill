@@ -43,7 +43,9 @@ export default function TaskSpinner({ task }: TaskSpinnerProps) {
         <Box>
           <Text color="grey">{'\u00B7'}</Text>
           <Box paddingLeft={1}>
-            <Text color="grey" wrap="truncate"><TaskName task={task} /></Text>
+            <Text color="grey" wrap="truncate">
+              <TaskName task={task} withWorkspace />
+            </Text>
           </Box>
         </Box>
       );
@@ -56,7 +58,7 @@ export default function TaskSpinner({ task }: TaskSpinnerProps) {
           </Text>
           <Box paddingLeft={1}>
             <Text dimColor={isScriptChild} wrap="truncate">
-              <TaskName task={task} />
+              <TaskName task={task} withWorkspace />
             </Text>
           </Box>
         </Box>
@@ -67,7 +69,9 @@ export default function TaskSpinner({ task }: TaskSpinnerProps) {
         <Box>
           <Text color="green">{ symbols.success }</Text>
           <Box paddingLeft={1}>
-            <Text dimColor={isScriptChild} wrap="truncate"><TaskName task={task} /></Text>
+            <Text dimColor={isScriptChild} wrap="truncate">
+              <TaskName task={task} withWorkspace />
+            </Text>
           </Box>
           <Box paddingLeft={1} flexShrink={0}>
             <Text color={isScriptChild ? 'grey' : 'dim'}>(took {ms(time)})</Text>
@@ -80,7 +84,9 @@ export default function TaskSpinner({ task }: TaskSpinnerProps) {
         <Box>
           <Text color="red">{ symbols.error }</Text>
           <Box paddingLeft={1}>
-            <Text dimColor={isScriptChild} wrap="truncate"><TaskName task={task} /></Text>
+            <Text dimColor={isScriptChild} wrap="truncate">
+              <TaskName task={task} withWorkspace />
+            </Text>
           </Box>
           <Box paddingLeft={1} flexShrink={0}>
             <Text color={isScriptChild ? 'grey' : 'dim'}>(took {ms(time)})</Text>

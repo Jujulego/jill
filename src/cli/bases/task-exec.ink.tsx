@@ -7,7 +7,7 @@ import TaskTreeCompleted from '../../ui/task-tree-completed.jsx';
 import TaskTreeSpinner from '../../ui/task-tree-spinner.jsx';
 import { inked } from '../inked.jsx';
 
-const TaskModuleInk = inked(async function* ({ tasks, verbose }: TaskModuleInkProps) {
+const TaskExecInk = inked(async function* ({ tasks, verbose }: TaskExecInkProps) {
   const manager = await inject$(TASK_MANAGER);
 
   yield <TaskTreeSpinner manager={manager} verbose={verbose} />;
@@ -21,10 +21,10 @@ const TaskModuleInk = inked(async function* ({ tasks, verbose }: TaskModuleInkPr
   }
 });
 
-export default TaskModuleInk;
+export default TaskExecInk;
 
 // Types
-export interface TaskModuleInkProps {
+export interface TaskExecInkProps {
   readonly tasks: TaskSet;
   readonly verbose?: boolean;
 }

@@ -1,5 +1,8 @@
-import type { TaskSet } from '@jujulego/tasks';
+import { plan, type TaskSet } from '@jujulego/tasks';
+import { inject$ } from '@kyrielle/injector';
 import type { ArgumentsCamelCase, Argv, CommandModule } from 'yargs';
+import { LOGGER } from '../../tokens.js';
+import { printJson } from '../../utils/json.js';
 import type { LoggerArgs } from '../middlewares/logger.middleware.js';
 import { command } from './command-module.js';
 
@@ -42,8 +45,20 @@ export function executeCommand<T extends TaskModuleArgs>(module: TaskModule<T>) 
     async handler(args) {
       const tasks = await prepare(args);
 
-      const { default: TaskModuleInk } = await import('./task-module.ink.jsx');
-      await TaskModuleInk({ tasks, verbose: ['verbose', 'debug'].includes(args.verbose) });
+      if (args.plan) {
+        if (args.planMode === 'json') {
+          printJson(Array.from(plan(tasks)));
+        } else {
+          const { default: TaskPlanInk } = await import('./task-plan.ink.jsx');
+          await TaskPlanInk({ tasks });
+        }
+      } else if (tasks.tasks.length > 0) {
+        const { default: TaskExecInk } = await import('./task-exec.ink.jsx');
+        await TaskExecInk({ tasks, verbose: ['verbose', 'debug'].includes(args.verbose) });
+      } else {
+        const logger = inject$(LOGGER);
+        logger.warning('No task found');
+      }
     }
   });
 }
