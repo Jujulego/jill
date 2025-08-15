@@ -25,4 +25,6 @@ const parser = pipe$(
   command(commands.tree)
 );
 
+parser.wrap(parser.terminalWidth());
+
 await parser.parseAsync();

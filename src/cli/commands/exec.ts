@@ -1,7 +1,6 @@
 import { TaskSet } from '@jujulego/tasks';
 import type { WorkspaceDepsMode } from '../../projects/workspace.js';
-import type { TaskModule } from '../bases/task-module.js';
-import type { LoggerArgs } from '../middlewares/logger.middleware.js';
+import type { TaskModule, TaskModuleArgs } from '../bases/task-module.js';
 import { loadWorkspace, withWorkspace, type WorkspaceArgs } from '../middlewares/workspace.middleware.js';
 
 // Command
@@ -60,7 +59,7 @@ const command: TaskModule<ExecArgs> = {
 export default command;
 
 // Types
-export interface ExecArgs extends LoggerArgs, WorkspaceArgs {
+export interface ExecArgs extends TaskModuleArgs, WorkspaceArgs {
   readonly command: string;
   readonly 'build-script': string;
   readonly 'deps-mode': WorkspaceDepsMode;
