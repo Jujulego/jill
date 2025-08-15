@@ -13,7 +13,7 @@ const VERBOSITY_LEVEL: Record<number, LogLevelKey> = {
 };
 
 // Middleware
-export function loggerMiddleware(parser: Argv) {
+export function loggerMiddleware<T>(parser: Argv<T>) {
   return parser
     .option('verbose', {
       alias: 'v',

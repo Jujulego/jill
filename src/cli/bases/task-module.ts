@@ -1,6 +1,7 @@
 import type { TaskSet } from '@jujulego/tasks';
 import type { ArgumentsCamelCase, CommandModule } from 'yargs';
 import type { LoggerArgs } from '../middlewares/logger.middleware.js';
+import { command } from './command-module.js';
 
 // Module
 export interface TaskModule<T extends LoggerArgs> extends Omit<CommandModule<LoggerArgs, T>, 'handler'> {
@@ -11,10 +12,10 @@ export interface TaskModule<T extends LoggerArgs> extends Omit<CommandModule<Log
 }
 
 // Utils
-export function executeCommand<T extends LoggerArgs>(module: TaskModule<T>): CommandModule<LoggerArgs, T> {
+export function executeCommand<T extends LoggerArgs>(module: TaskModule<T>) {
   const { prepare, ...rest } = module;
 
-  return {
+  return command<LoggerArgs, T>({
     ...rest,
     async handler(args) {
       const tasks = await prepare(args);
@@ -22,5 +23,5 @@ export function executeCommand<T extends LoggerArgs>(module: TaskModule<T>): Com
       const { default: TaskModuleInk } = await import('./task-module.ink.jsx');
       await TaskModuleInk({ tasks, verbose: ['verbose', 'debug'].includes(args.verbose) });
     }
-  };
+  });
 }

@@ -3,7 +3,7 @@ import { inject$ } from '@kyrielle/injector';
 import type { Argv } from 'yargs';
 
 // Middleware
-export function configMiddleware(parser: Argv) {
+export function configMiddleware<T>(parser: Argv<T>) {
   return parser
     .option('config-file', {
       alias: 'c',
