@@ -1,4 +1,4 @@
-import { plan, type TaskSet } from '@jujulego/tasks';
+import { plan, TaskSet } from '@jujulego/tasks';
 import { inject$ } from '@kyrielle/injector';
 import type { Mutator } from 'kyrielle';
 import type { ArgumentsCamelCase, Argv, CommandModule } from 'yargs';
@@ -8,7 +8,7 @@ import type { LoggerArgs } from '../middlewares/logger.middleware.js';
 import { command } from './command-module.js';
 
 // Module
-export interface TaskModule<T extends PlanModeArgs> extends Omit<CommandModule<PlanModeArgs, T>, 'builder' | 'handler'> {
+export interface TaskModule<T extends PlanModeArgs = PlanModeArgs> extends Omit<CommandModule<PlanModeArgs, T>, 'builder' | 'handler'> {
   builder?: (args: Argv<PlanModeArgs>) => Argv<T>,
 
   /**
@@ -53,11 +53,13 @@ export function executeCommand<T extends LoggerArgs, U extends PlanModeArgs>(mod
   });
 }
 
-export function planCommand<T extends LoggerArgs, U extends PlanModeArgs>(module: CommandModule<T, U> | TaskModule<U>, tasks$: Mutator<TaskSet>) {
+export function planCommand<T, U>(module: CommandModule<T, U>, tasks$: Mutator<TaskSet>): <V extends T>(parser: Argv<V>) => Argv<V>;
+export function planCommand<T extends PlanModeArgs>(module: TaskModule<T>, tasks$: Mutator<TaskSet>): <V extends LoggerArgs>(parser: Argv<V>) => Argv<V>;
+export function planCommand(module: CommandModule | TaskModule, tasks$: Mutator<TaskSet>) {
   if ('prepare' in module) {
     const { prepare, ...rest } = module;
 
-    return command<T, U>({
+    return command<LoggerArgs, PlanModeArgs>({
       ...rest,
       builder(base) {
         const parser = withPlanMode(base);
@@ -65,7 +67,7 @@ export function planCommand<T extends LoggerArgs, U extends PlanModeArgs>(module
         if (rest.builder) {
           return rest.builder(parser);
         } else {
-          return parser as Argv<U>;
+          return parser;
         }
       },
       async handler(args) {
@@ -73,9 +75,9 @@ export function planCommand<T extends LoggerArgs, U extends PlanModeArgs>(module
       }
     });
   } else {
-    return command<T, U>({
+    return command({
       ...module,
-      handler: () => null, // <= prevents command execution
+      handler: () => undefined
     });
   }
 }
@@ -85,7 +87,6 @@ export interface PlanModeArgs extends LoggerArgs {
   readonly plan: boolean;
   readonly 'plan-mode': 'json' | 'list';
 }
-
 
 // Utils
 export function withPlanMode<T>(parser: Argv<T>) {

@@ -20,3 +20,8 @@ export function configMiddleware<T>(parser: Argv<T>) {
       }
     });
 }
+
+// Types
+export interface ConfigArgs {
+  readonly 'config-file'?: string;
+}

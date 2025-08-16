@@ -1,5 +1,6 @@
-import { waitFor$ } from 'kyrielle';
 import { GroupTask, type Task, type TaskContext, type TaskOptions, TaskSet } from '@jujulego/tasks';
+import { inject$ } from '@kyrielle/injector';
+import { waitFor$ } from 'kyrielle';
 import type { Workspace } from '../projects/workspace.js';
 import { splitCommandLine } from '../utils/string.js';
 import { CommandTask } from './command-task.js';
@@ -39,27 +40,18 @@ export class ScriptTask extends GroupTask<ScriptContext> {
       return set;
     }
 
-    // if (command === 'jill') {
-    //   this.logger$.debug(`interpreting ${line}`);
-    //   const argv = commandArgs.map(arg => arg.replace(/^["'](.+)["']$/, '$1'));
-    //
-    //   const { JillApplication } = await import('@/src/jill.application.ts');
-    //   const app = container.get(JillApplication);
-    //   const tasks = await app.tasksOf(argv, {
-    //     project: this.project
-    //     workspace: this.workspace,
-    //   });
-    //
-    //   if (tasks.length) {
-    //     const set = new TaskSet();
-    //
-    //     for (const tsk of tasks) {
-    //       set.add(tsk);
-    //     }
-    //
-    //     return set;
-    //   }
-    // }
+    if (command === 'jill') {
+      this.logger$.debug(`interpreting ${line}`);
+      const argv = commandArgs.map(arg => arg.replace(/^["'](.+)["']$/, '$1'));
+
+      const { PlannerService } = await import('../cli/services/planner.service.js');
+      const plannerService = inject$(PlannerService);
+      const tasks = await plannerService.plan(argv);
+
+      if (tasks) {
+        return tasks;
+      }
+    }
 
     const pm = await this.workspace.project.packageManager();
 

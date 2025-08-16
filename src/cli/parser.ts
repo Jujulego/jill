@@ -1,4 +1,5 @@
-import { pipe$ } from 'kyrielle';
+import type { TaskSet } from '@jujulego/tasks';
+import { type Mutator, pipe$ } from 'kyrielle';
 import process from 'node:process';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
@@ -38,11 +39,11 @@ export function executeParser() {
 /**
  * Prepare parser planning commands
  */
-export function planParser() {
+export function planParser(tasks$: Mutator<TaskSet>) {
   return pipe$(
     baseParser(),
-    planCommand(commands.exec),
-    planCommand(commands.list),
-    planCommand(commands.tree)
+    planCommand(commands.exec, tasks$),
+    planCommand(commands.list, tasks$),
+    planCommand(commands.tree, tasks$)
   );
 }
