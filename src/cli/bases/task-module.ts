@@ -1,4 +1,4 @@
-import { plan, TaskSet } from '@jujulego/tasks';
+import { plan, type TaskSet } from '@jujulego/tasks';
 import { inject$ } from '@kyrielle/injector';
 import type { Mutator } from 'kyrielle';
 import type { ArgumentsCamelCase, Argv, CommandModule } from 'yargs';
