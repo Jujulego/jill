@@ -4,10 +4,8 @@ import Spinner from 'ink-spinner';
 import symbols from 'log-symbols';
 import ms from 'pretty-ms';
 import { useLayoutEffect, useState } from 'react';
-
-import { isCommandCtx } from '@/src/tasks/command-task.js';
-import { isScriptCtx } from '@/src/tasks/script-task.js';
-
+import { isCommandCtx } from '../tasks/command-task.js';
+import { isScriptCtx } from '../tasks/script-task.js';
 import TaskName from './task-name.jsx';
 
 // Types
@@ -23,19 +21,19 @@ export default function TaskSpinner({ task }: TaskSpinnerProps) {
 
   // Effects
   useLayoutEffect(() => {
-    return task.on('status', (event) => {
+    return task.events$.on('status', (event) => {
       setStatus(event.status);
-    });
+    }).unsubscribe;
   }, [task]);
 
   useLayoutEffect(() => {
-    return task.on('completed', ({ duration }) => {
+    return task.events$.on('completed', ({ duration }) => {
       setTime(duration);
-    });
+    }).unsubscribe;
   }, [task]);
 
   // Render
-  const isScriptChild = isCommandCtx(task.context) && task.group && isScriptCtx(task.group.context);
+  const isScriptChild = (isCommandCtx(task.context) && task.group && isScriptCtx(task.group.context)) ?? false;
 
   switch (status) {
     case 'blocked':
@@ -45,7 +43,9 @@ export default function TaskSpinner({ task }: TaskSpinnerProps) {
         <Box>
           <Text color="grey">{'\u00B7'}</Text>
           <Box paddingLeft={1}>
-            <Text color="grey" wrap="truncate"><TaskName task={task} /></Text>
+            <Text color="grey" wrap="truncate">
+              <TaskName task={task} withWorkspace />
+            </Text>
           </Box>
         </Box>
       );
@@ -53,12 +53,12 @@ export default function TaskSpinner({ task }: TaskSpinnerProps) {
     case 'running':
       return (
         <Box>
-          <Text color={isScriptChild ? 'dim' : undefined}>
+          <Text dimColor={isScriptChild}>
             <Spinner />
           </Text>
           <Box paddingLeft={1}>
-            <Text color={isScriptChild ? 'dim' : undefined} wrap="truncate">
-              <TaskName task={task} />
+            <Text dimColor={isScriptChild} wrap="truncate">
+              <TaskName task={task} withWorkspace />
             </Text>
           </Box>
         </Box>
@@ -69,7 +69,9 @@ export default function TaskSpinner({ task }: TaskSpinnerProps) {
         <Box>
           <Text color="green">{ symbols.success }</Text>
           <Box paddingLeft={1}>
-            <Text color={isScriptChild ? 'dim' : undefined} wrap="truncate"><TaskName task={task} /></Text>
+            <Text dimColor={isScriptChild} wrap="truncate">
+              <TaskName task={task} withWorkspace />
+            </Text>
           </Box>
           <Box paddingLeft={1} flexShrink={0}>
             <Text color={isScriptChild ? 'grey' : 'dim'}>(took {ms(time)})</Text>
@@ -82,7 +84,9 @@ export default function TaskSpinner({ task }: TaskSpinnerProps) {
         <Box>
           <Text color="red">{ symbols.error }</Text>
           <Box paddingLeft={1}>
-            <Text color={isScriptChild ? 'dim' : undefined} wrap="truncate"><TaskName task={task} /></Text>
+            <Text dimColor={isScriptChild} wrap="truncate">
+              <TaskName task={task} withWorkspace />
+            </Text>
           </Box>
           <Box paddingLeft={1} flexShrink={0}>
             <Text color={isScriptChild ? 'grey' : 'dim'}>(took {ms(time)})</Text>

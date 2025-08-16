@@ -1,10 +1,8 @@
-import { GroupTask, Task, TaskManager } from '@jujulego/tasks';
+import { GroupTask, type Task, type TaskManager } from '@jujulego/tasks';
 import { useLayoutEffect, useMemo, useState } from 'react';
-
-import { Workspace } from '@/src/project/workspace.js';
-import { CommandTask, isCommandCtx } from '@/src/tasks/command-task.js';
-import { ScriptTask } from '@/src/tasks/script-task.js';
-import { useIsVerbose } from '@/src/ui/hooks/useIsVerbose.js';
+import type { Workspace } from '../../projects/workspace.js';
+import { CommandTask, isCommandCtx } from '../../tasks/command-task.js';
+import { ScriptTask } from '../../tasks/script-task.js';
 
 // Types
 export interface FlatTask {
@@ -44,7 +42,7 @@ export function taskComparator(a: Task, b: Task) {
 /**
  * Extract tasks to be printed, with their level in the tree
  */
-export function * flatTasks(tasks: readonly Task[], isVerbose: boolean, groupId?: string, level = 0): Generator<FlatTask> {
+export function* flatTasks(tasks: readonly Task[], isVerbose: boolean, groupId?: string, level = 0): Generator<FlatTask> {
   for (const task of tasks) {
     if (task.group?.id !== groupId) {
       continue;
@@ -71,16 +69,14 @@ export function * flatTasks(tasks: readonly Task[], isVerbose: boolean, groupId?
 }
 
 // Hook
-export function useFlatTaskTree(manager: TaskManager): FlatTask[] {
-  const isVerbose = useIsVerbose();
-
+export function useFlatTaskTree(manager: TaskManager, isVerbose: boolean = false): FlatTask[] {
   const [tasks, setTasks] = useState([...manager.tasks].sort(taskComparator));
   const [version, setVersion] = useState(0);
 
   useLayoutEffect(() => {
     let dirty = false;
 
-    return manager.on('added', () => {
+    return manager.events$.on('added', () => {
       if (!dirty) {
         dirty = true;
 
@@ -89,13 +85,13 @@ export function useFlatTaskTree(manager: TaskManager): FlatTask[] {
           dirty = false;
         });
       }
-    });
+    }).unsubscribe;
   }, [manager]);
 
   useLayoutEffect(() => {
     let dirty = false;
 
-    return manager.on('started', () => {
+    return manager.events$.on('started', () => {
       if (!dirty) {
         dirty = true;
 
@@ -104,13 +100,13 @@ export function useFlatTaskTree(manager: TaskManager): FlatTask[] {
           dirty = false;
         });
       }
-    });
+    }).unsubscribe;
   }, [manager]);
 
   useLayoutEffect(() => {
     let dirty = false;
 
-    return manager.on('completed', () => {
+    return manager.events$.on('completed', () => {
       if (!dirty) {
         dirty = true;
 
@@ -119,10 +115,10 @@ export function useFlatTaskTree(manager: TaskManager): FlatTask[] {
           dirty = false;
         });
       }
-    });
+    }).unsubscribe;
   }, [manager]);
 
   return useMemo(() => {
     return Array.from(flatTasks(tasks, isVerbose));
-  }, [tasks, isVerbose, version]);
+  }, [tasks, isVerbose, version]); // eslint-disable-line react-hooks/exhaustive-deps
 }

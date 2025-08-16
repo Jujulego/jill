@@ -101,7 +101,7 @@ async function formatRevision(opts: IsAffectedOpts, workspace: Workspace) {
     const branches = await git.listBranches([...sortArgs, result], { cwd: workspace.root, logger: logger });
 
     if (branches.length > 0) {
-      result = branches[branches.length - 1]!;
+      result = branches[branches.length - 1];
     }
   }
 
@@ -110,7 +110,7 @@ async function formatRevision(opts: IsAffectedOpts, workspace: Workspace) {
     const tags = await git.listTags([...sortArgs, result], { cwd: workspace.root, logger: logger });
 
     if (tags.length > 0) {
-      result = tags[tags.length - 1]!;
+      result = tags[tags.length - 1];
     }
   }
 

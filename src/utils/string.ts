@@ -11,7 +11,7 @@ export function splitCommandLine(line: string): string[] {
   let last = 0;
 
   for (let i = 1; i < line.length; ++i) {
-    const c = line[i]!;
+    const c = line[i];
 
     if (current_cote) {
       if (c === current_cote) {

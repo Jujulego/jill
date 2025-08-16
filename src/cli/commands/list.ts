@@ -115,7 +115,7 @@ const command: CommandModule<unknown, ListArgs> = {
       }
 
       if (!argv['sort-by']?.length && argv.attribute.length > 0) {
-        argv['sort-by'] = argv.sortBy = argv.s = [argv.attribute[0]!];
+        argv['sort-by'] = argv.sortBy = argv.s = [argv.attribute[0]];
       }
 
       return true;

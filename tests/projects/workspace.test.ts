@@ -1,23 +1,19 @@
-import { Logger } from '@jujulego/logger';
-import { fs, vol } from 'memfs';
-import path from 'node:path';
-import { vi } from 'vitest';
-
-import '@/src/commons/logger.service.js';
 import { GitService } from '@/src/commons/git.service.js';
-import { CONFIG } from '@/src/config/config-loader.js';
-import { container } from '@/src/inversify.config.js';
-import { Project } from '@/src/project/project.js';
-import { Workspace } from '@/src/project/workspace.js';
-
+import { ConfigService } from '@/src/config/config.service.js';
+import { Project } from '@/src/projects/project.js';
+import { Workspace } from '@/src/projects/workspace.js';
 import { TestBed } from '@/tools/test-bed.js';
+import { globalScope$, inject$ } from '@kyrielle/injector';
+import { var$ } from 'kyrielle';
+import { vol } from 'memfs';
+import path from 'node:path';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mocks
-vi.mock('node:fs', () => ({ default: fs }));
-vi.mock('node:fs/promises', () => ({ default: fs.promises }));
-
-// Setup global config
-container.rebind(CONFIG).toConstantValue({ jobs: 1 });
+vi.mock('node:fs', async () => {
+  const { fs } = await import('memfs');
+  return ({ default: fs });
+});
 
 // Setup
 let bed: TestBed;
@@ -27,14 +23,9 @@ let wksC: Workspace;
 let prjDir: string;
 
 let git: GitService;
-let logger: Logger;
-
-beforeAll(() => {
-  container.snapshot();
-});
 
 beforeEach(async () => {
-  container.snapshot();
+  vi.resetAllMocks();
 
   // Build fake project
   bed = new TestBed();
@@ -48,16 +39,17 @@ beforeEach(async () => {
 
   prjDir = await bed.createProjectDirectory();
 
-  // Mocks
-  vi.resetAllMocks();
+  // Setup config
+  vi.spyOn(inject$(ConfigService), 'config$', 'get')
+    .mockReturnValue(var$({ jobs: 1, hooks: true }));
 
-  git = container.get(GitService);
-  logger = container.get(Logger);
+  // Mocks
+  git = inject$(GitService);
 });
 
 afterEach(() => {
+  globalScope$().clear();
   vol.reset();
-  container.restore();
 });
 
 // Test suites
@@ -66,7 +58,7 @@ describe('Workspace.dependencies', () => {
 
   beforeEach(() => {
     // Create test project
-    project = new Project(prjDir, logger);
+    project = new Project(prjDir);
 
     // Mocks
     vi.spyOn(project, 'workspace');
@@ -74,7 +66,7 @@ describe('Workspace.dependencies', () => {
 
   // Tests
   it('should yield all workspace\'s dependencies', async () => {
-    const workspace = new Workspace(wksA.cwd, wksA.manifest, project);
+    const workspace = new Workspace(wksA.root, wksA.manifest, project);
 
     await expect(workspace.dependencies()).toYield([
       expect.objectContaining({ name: 'wks-b' })
@@ -85,7 +77,7 @@ describe('Workspace.dependencies', () => {
   });
 
   it('should yield nothing if devDependencies empty', async () => {
-    const workspace = new Workspace(wksC.cwd, wksC.manifest, project);
+    const workspace = new Workspace(wksC.root, wksC.manifest, project);
 
     await expect(workspace.dependencies()).toYield([]);
 
@@ -98,7 +90,7 @@ describe('Workspace.devDependencies', () => {
 
   beforeEach(() => {
     // Create test project
-    project = new Project(prjDir, logger);
+    project = new Project(prjDir);
 
     // Mocks
     vi.spyOn(project, 'workspace');
@@ -106,7 +98,7 @@ describe('Workspace.devDependencies', () => {
 
   // Tests
   it('should yield all workspace\'s devDependencies', async () => {
-    const workspace = new Workspace(wksA.cwd, wksA.manifest, project);
+    const workspace = new Workspace(wksA.root, wksA.manifest, project);
 
     await expect(workspace.devDependencies()).toYield([
       expect.objectContaining({ name: 'wks-c' }),
@@ -117,7 +109,7 @@ describe('Workspace.devDependencies', () => {
   });
 
   it('should yield nothing if devDependencies empty', async () => {
-    const workspace = new Workspace(wksC.cwd, wksC.manifest, project);
+    const workspace = new Workspace(wksC.root, wksC.manifest, project);
 
     await expect(workspace.devDependencies()).toYield([]);
 

@@ -1,4 +1,4 @@
-import { TaskManager } from '@jujulego/tasks';
+import type { TaskManager } from '@jujulego/tasks';
 import { Text } from 'ink';
 import Spinner from 'ink-spinner';
 import symbols from 'log-symbols';
@@ -35,20 +35,24 @@ export default function TaskTreeStats({ manager }: TaskTreeStatsProps) {
     return base;
   });
 
-  useLayoutEffect(() => manager.on('started', (task) => {
-    setStats((old) => ({
-      ...old,
-      running: old.running + task.weight
-    }));
-  }), [manager]);
+  useLayoutEffect(() => {
+    return manager.events$.on('started', (task) => {
+      setStats((old) => ({
+        ...old,
+        running: old.running + task.weight
+      }));
+    }).unsubscribe;
+  }, [manager]);
 
-  useLayoutEffect(() => manager.on('completed', (task) => {
-    setStats((old) => ({
-      running: old.running - task.weight,
-      done: task.status === 'done' ? old.done + task.weight : old.done,
-      failed: task.status === 'failed' ? old.failed + task.weight : old.failed,
-    }));
-  }), [manager]);
+  useLayoutEffect(() => {
+    return manager.events$.on('completed', (task) => {
+      setStats((old) => ({
+        running: old.running - task.weight,
+        done: task.status === 'done' ? old.done + task.weight : old.done,
+        failed: task.status === 'failed' ? old.failed + task.weight : old.failed,
+      }));
+    }).unsubscribe;
+  }, [manager]);
 
   // Render
   return (

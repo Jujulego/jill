@@ -1,8 +1,7 @@
 import { type GitContext, GitService } from '@/src/commons/git.service.js';
 import { ConfigService } from '@/src/config/config.service.js';
 import { LOGGER, TASK_MANAGER } from '@/src/tokens.js';
-import { type TestSpawnTask } from '@/tools/test-tasks.js';
-import { type TaskManager } from '@jujulego/tasks';
+import { type SpawnTask, type TaskManager } from '@jujulego/tasks';
 import { globalScope$, inject$ } from '@kyrielle/injector';
 import type { Logger } from '@kyrielle/logger';
 import { var$ } from 'kyrielle';
@@ -18,7 +17,7 @@ beforeEach(async () => {
 
   // Setup config
   vi.spyOn(inject$(ConfigService), 'config$', 'get')
-    .mockReturnValue(var$({ jobs: 1, hooks: true, plugins: [] }));
+    .mockReturnValue(var$({ jobs: 1, hooks: true }));
 
   // Services
   logger = inject$(LOGGER);
@@ -50,7 +49,7 @@ describe('GitService.command', () => {
   it('should redirect stdout data to logger (debug level)', async () => {
     vi.spyOn(logger, 'debug');
 
-    const task = await git.command('cmd', ['arg1', 'arg2']) as TestSpawnTask<GitContext>;
+    const task = await git.command('cmd', ['arg1', 'arg2']);
     task.events$.emit('stream.stdout', { stream: 'stdout', data: Buffer.from('test') });
 
     expect(logger.debug).toHaveBeenCalledWith('test');
@@ -59,7 +58,7 @@ describe('GitService.command', () => {
   it('should redirect stderr data to logger (debug level)', async () => {
     vi.spyOn(logger, 'debug');
 
-    const task = await git.command('cmd', ['arg1', 'arg2']) as TestSpawnTask<GitContext>;
+    const task = await git.command('cmd', ['arg1', 'arg2']);
     task.events$.emit('stream.stderr', { stream: 'stderr', data: Buffer.from('test') });
 
     expect(logger.debug).toHaveBeenCalledWith('test');
@@ -93,7 +92,7 @@ describe('GitService.isAffected', () => {
     expect(git.diff).toHaveBeenCalledWith(['--quiet', 'master', '--'], undefined);
 
     // Task complete
-    const task = await vi.mocked(git.diff).mock.results[0]!.value as TestSpawnTask<GitContext>;
+    const task = await vi.mocked(git.diff).mock.results[0].value as SpawnTask<GitContext>;
     task.events$.emit('status.done', { status: 'done', previous: 'running' });
 
     await expect(prom).resolves.toBe(false);
@@ -106,7 +105,7 @@ describe('GitService.isAffected', () => {
     expect(git.diff).toHaveBeenCalledWith(['--quiet', 'master', '--'], undefined);
 
     // Task complete
-    const task = await vi.mocked(git.diff).mock.results[0]!.value as TestSpawnTask<GitContext>;
+    const task = await vi.mocked(git.diff).mock.results[0].value as SpawnTask<GitContext>;
 
     vi.spyOn(task, 'exitCode', 'get').mockReturnValue(1);
     task.events$.emit('status.failed', { status: 'failed', previous: 'running' });
@@ -121,7 +120,7 @@ describe('GitService.isAffected', () => {
     expect(git.diff).toHaveBeenCalledWith(['--quiet', 'master', '--'], undefined);
 
     // Task complete
-    const task = await vi.mocked(git.diff).mock.results[0]!.value as TestSpawnTask<GitContext>;
+    const task = await vi.mocked(git.diff).mock.results[0].value as SpawnTask<GitContext>;
     task.events$.emit('status.failed', { status: 'failed', previous: 'running' });
 
     await expect(prom).rejects.toEqual(new Error(`Task ${task.name} failed`));
@@ -141,7 +140,7 @@ describe('GitService.listBranches', () => {
     expect(git.branch).toHaveBeenCalledWith(['-l'], undefined);
 
     // Complete task
-    const task = await vi.mocked(git.branch).mock.results[0]!.value as TestSpawnTask<GitContext>;
+    const task = await vi.mocked(git.branch).mock.results[0].value as SpawnTask<GitContext>;
 
     task.events$.emit('stream.stdout', { stream: 'stdout', data: Buffer.from(
       '  dev\n' +
@@ -173,7 +172,7 @@ describe('git.listTags', () => {
     expect(git.tag).toHaveBeenCalledWith(['-l'], undefined);
 
     // Complete task
-    const task = await vi.mocked(git.tag).mock.results[0]!.value as TestSpawnTask<GitContext>;
+    const task = await vi.mocked(git.tag).mock.results[0].value as SpawnTask<GitContext>;
 
     task.events$.emit('stream.stdout', { stream: 'stdout', data: Buffer.from(
       '1.0.0\n' +

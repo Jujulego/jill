@@ -691,10 +691,10 @@ __metadata:
     "@jujulego/event-tree": "npm:^4.3.0"
     "@jujulego/logger": "npm:^0.2.4"
     "@jujulego/quick-tag": "npm:^1.0.3"
-    "@jujulego/tasks": "npm:^3.0.0-alpha.1"
+    "@jujulego/tasks": "npm:^3.0.0-alpha.2"
     "@jujulego/utils": "npm:^3.0.0"
     "@jujulego/vite-plugin-swc": "npm:1.2.0"
-    "@kyrielle/injector": "npm:^1.0.0"
+    "@kyrielle/injector": "npm:^1.1.0"
     "@kyrielle/logger": "npm:^2.0.0"
     "@microsoft/eslint-formatter-sarif": "npm:3.1.0"
     "@rollup/plugin-json": "npm:6.1.0"
@@ -727,12 +727,12 @@ __metadata:
     inversify-inject-decorators: "npm:^3.1.0"
     jiti: "npm:2.5.1"
     kyrielle: "npm:^2.5.2"
-    log-symbols: "npm:^6.0.0"
+    log-symbols: "npm:^7.0.1"
     memfs: "npm:4.36.0"
     moo: "npm:^0.5.2"
     normalize-package-data: "npm:^8.0.0"
     path-scurry: "npm:^2.0.0"
-    pretty-ms: "npm:^9.0.0"
+    pretty-ms: "npm:^9.2.0"
     react: "npm:^19.1.0"
     reflect-metadata: "npm:^0.2.0"
     rollup: "npm:4.46.2"
@@ -786,9 +786,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jujulego/tasks@npm:^3.0.0-alpha.1":
-  version: 3.0.0-alpha.1
-  resolution: "@jujulego/tasks@npm:3.0.0-alpha.1"
+"@jujulego/tasks@npm:^3.0.0-alpha.2":
+  version: 3.0.0-alpha.2
+  resolution: "@jujulego/tasks@npm:3.0.0-alpha.2"
   dependencies:
     "@kyrielle/logger": "npm:^2.0.0"
     "@swc/helpers": "npm:^0.5.3"
@@ -797,7 +797,7 @@ __metadata:
   dependenciesMeta:
     vitest@3.2.4:
       unplugged: true
-  checksum: 10/c46ae71ee6a29015f7de7c24d4cf08462e276077badac2bd80e09e5c572a2f6418c47237d48318d55d191518235dc8e9f66ef1c07ab218c88bb4d0f0fd1cae1f
+  checksum: 10/749c8259b7b0fbc9c368ec0167af84cfa7c32bdf426dcc358dd0f84f75595a25c3a4e2668b694f32fa87e6d41e697040a8422cd270fae43a3b7326755368e7ba
   languageName: node
   linkType: hard
 
@@ -831,15 +831,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@kyrielle/injector@npm:^1.0.0":
-  version: 1.0.0
-  resolution: "@kyrielle/injector@npm:1.0.0"
+"@kyrielle/injector@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "@kyrielle/injector@npm:1.1.0"
   dependencies:
     "@swc/helpers": "npm:^0.5.3"
   dependenciesMeta:
-    vitest@2.1.4:
+    vitest@3.2.4:
       unplugged: true
-  checksum: 10/f87b04859213e743dedc88fac5f34c8aca9de4e586e41548e6fc3de0bae0a7d51474787f669df9277ddefb410150493827bfa771c20ceeece6aad8b0682ccdee
+  checksum: 10/3665d4304932b5ae0212676ed0aacca7a78ce5d5ff598c992a2b25338ab535806142df97fe527313c57126c08e91d5beb77cff469d7930690d26a43d0472c2bd
   languageName: node
   linkType: hard
 
@@ -4156,10 +4156,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"is-unicode-supported@npm:^1.3.0":
-  version: 1.3.0
-  resolution: "is-unicode-supported@npm:1.3.0"
-  checksum: 10/20a1fc161afafaf49243551a5ac33b6c4cf0bbcce369fcd8f2951fbdd000c30698ce320de3ee6830497310a8f41880f8066d440aa3eb0a853e2aa4836dd89abc
+"is-unicode-supported@npm:^2.0.0":
+  version: 2.1.0
+  resolution: "is-unicode-supported@npm:2.1.0"
+  checksum: 10/f254e3da6b0ab1a57a94f7273a7798dd35d1d45b227759f600d0fa9d5649f9c07fa8d3c8a6360b0e376adf916d151ec24fc9a50c5295c58bae7ca54a76a063f9
   languageName: node
   linkType: hard
 
@@ -4440,13 +4440,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"log-symbols@npm:^6.0.0":
-  version: 6.0.0
-  resolution: "log-symbols@npm:6.0.0"
+"log-symbols@npm:^7.0.1":
+  version: 7.0.1
+  resolution: "log-symbols@npm:7.0.1"
   dependencies:
-    chalk: "npm:^5.3.0"
-    is-unicode-supported: "npm:^1.3.0"
-  checksum: 10/510cdda36700cbcd87a2a691ea08d310a6c6b449084018f7f2ec4f732ca5e51b301ff1327aadd96f53c08318e616276c65f7fe22f2a16704fb0715d788bc3c33
+    is-unicode-supported: "npm:^2.0.0"
+    yoctocolors: "npm:^2.1.1"
+  checksum: 10/0862313d84826b551582e39659b8586c56b65130c5f4f976420e2c23985228334f2a26fc4251ac22bf0a5b415d9430e86bf332557d934c10b036f9a549d63a09
   languageName: node
   linkType: hard
 
@@ -5131,12 +5131,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pretty-ms@npm:^9.0.0":
-  version: 9.0.0
-  resolution: "pretty-ms@npm:9.0.0"
+"pretty-ms@npm:^9.0.0, pretty-ms@npm:^9.2.0":
+  version: 9.2.0
+  resolution: "pretty-ms@npm:9.2.0"
   dependencies:
     parse-ms: "npm:^4.0.0"
-  checksum: 10/b11e1eda41a2efcc16aab218392c8e457a8ae5c8edf63aafba0477123426b1268136b9b532cbfd84625bcb826739120ec8490286dab66102b9f09e717bdb4e45
+  checksum: 10/a65a1d81560867f4f7128862fdbf0e1c2d3c5607bf75cae7758bf8111e2c4b744be46e084704125a38ba918bb43defa7a53aaff0f48c5c2d95367d3148c980d9
   languageName: node
   linkType: hard
 
@@ -6801,6 +6801,13 @@ __metadata:
   version: 0.1.0
   resolution: "yocto-queue@npm:0.1.0"
   checksum: 10/f77b3d8d00310def622123df93d4ee654fc6a0096182af8bd60679ddcdfb3474c56c6c7190817c84a2785648cdee9d721c0154eb45698c62176c322fb46fc700
+  languageName: node
+  linkType: hard
+
+"yoctocolors@npm:^2.1.1":
+  version: 2.1.1
+  resolution: "yoctocolors@npm:2.1.1"
+  checksum: 10/563fbec88bce9716d1044bc98c96c329e1d7a7c503e6f1af68f1ff914adc3ba55ce953c871395e2efecad329f85f1632f51a99c362032940321ff80c42a6f74d
   languageName: node
   linkType: hard
 

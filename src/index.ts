@@ -51,7 +51,6 @@ export { default as WorkspaceTree } from './ui/WorkspaceTree.jsx';
 export * from './ui/WorkspaceTree.jsx';
 
 // Utils
-export * from './utils/events.js';
 export * from './utils/exit.js';
 export * from './utils/import.js';
 export * from './utils/json.js';

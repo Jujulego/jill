@@ -60,11 +60,6 @@ export class ConfigService {
       Object.assign(config, { jobs: Math.max(CPU_COUNT - 1, 1) });
     }
 
-    // Resolve plugin paths
-    Object.assign(config, {
-      plugins: config.plugins.map((plugin) => path.resolve(this.baseDir, plugin))
-    });
-
     this._logger.debug`loaded config:\n${qjson(config, { pretty: true })}`;
 
     return config;
