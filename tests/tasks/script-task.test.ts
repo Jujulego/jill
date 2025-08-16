@@ -1,11 +1,11 @@
+import { PlannerService } from '@/src/cli/services/planner.service.js';
 import { ConfigService } from '@/src/config/config.service.js';
-import { JillApplication } from '@/src/jill.application.js';
 import { type Workspace } from '@/src/projects/workspace.js';
 import { CommandTask } from '@/src/tasks/command-task.js';
 import { ScriptTask } from '@/src/tasks/script-task.js';
 import { TestBed } from '@/tools/test-bed.js';
 import { TestCommandTask, TestScriptTask } from '@/tools/test-tasks.js';
-import { Task } from '@jujulego/tasks';
+import { Task, TaskSet } from '@jujulego/tasks';
 import { globalScope$, inject$ } from '@kyrielle/injector';
 import { var$ } from 'kyrielle';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -142,18 +142,21 @@ describe('ScriptTask.prepare', () => {
   it('should interpret jill command, to get its tasks', async () => {
     vi.spyOn(wks, 'getScript').mockImplementation((script) => ({ test: 'jill run test' })[script] ?? null);
 
-    const childTsk = new TestCommandTask(wks, 'jest', ['--script', '--arg']);
-    vi.spyOn(JillApplication.prototype, 'tasksOf').mockResolvedValue([childTsk]);
+    const childTask = new TestCommandTask(wks, 'jest', ['--script', '--arg']);
+    const childTasks = new TaskSet();
+    childTasks.add(childTask);
+
+    vi.spyOn(inject$(PlannerService), 'plan').mockResolvedValue(childTasks);
 
     const script = new ScriptTask(wks, 'test', ['--arg']);
     await script.prepare();
 
     expect(script.tasks).toHaveLength(1);
-    expect(script.tasks).toContain(childTsk);
+    expect(script.tasks).toContain(childTask);
   });
 
   it('should create a task spawning jill command, if it generates no tasks', async () => {
-    vi.spyOn(JillApplication.prototype, 'tasksOf').mockResolvedValue([]);
+    vi.spyOn(inject$(PlannerService), 'plan');
     vi.spyOn(wks, 'getScript').mockImplementation((script) => ({ test: 'jill tree' })[script] ?? null);
 
     const script = new ScriptTask(wks, 'test', ['--arg']);
