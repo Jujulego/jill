@@ -1,5 +1,5 @@
 import { ConfigService } from '../../config/config.service.js';
-import { inject$ } from '@kyrielle/injector';
+import { asyncScope$, inject$ } from '@kyrielle/injector';
 import type { Argv } from 'yargs';
 
 // Middleware
@@ -11,7 +11,7 @@ export function configMiddleware<T>(parser: Argv<T>) {
       description: 'Configuration file'
     })
     .middleware(async (args) => {
-      const configService = inject$(ConfigService);
+      const configService = inject$(ConfigService, asyncScope$());
 
       if (args.configFile) {
         await configService.loadConfig(args.configFile);

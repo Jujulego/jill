@@ -694,7 +694,7 @@ __metadata:
     "@jujulego/tasks": "npm:^3.0.0-alpha.2"
     "@jujulego/utils": "npm:^3.0.0"
     "@jujulego/vite-plugin-swc": "npm:1.2.0"
-    "@kyrielle/injector": "npm:^1.0.0"
+    "@kyrielle/injector": "npm:^1.1.0"
     "@kyrielle/logger": "npm:^2.0.0"
     "@microsoft/eslint-formatter-sarif": "npm:3.1.0"
     "@rollup/plugin-json": "npm:6.1.0"
@@ -831,15 +831,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@kyrielle/injector@npm:^1.0.0":
-  version: 1.0.0
-  resolution: "@kyrielle/injector@npm:1.0.0"
+"@kyrielle/injector@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "@kyrielle/injector@npm:1.1.0"
   dependencies:
     "@swc/helpers": "npm:^0.5.3"
   dependenciesMeta:
-    vitest@2.1.4:
+    vitest@3.2.4:
       unplugged: true
-  checksum: 10/f87b04859213e743dedc88fac5f34c8aca9de4e586e41548e6fc3de0bae0a7d51474787f669df9277ddefb410150493827bfa771c20ceeece6aad8b0682ccdee
+  checksum: 10/3665d4304932b5ae0212676ed0aacca7a78ce5d5ff598c992a2b25338ab535806142df97fe527313c57126c08e91d5beb77cff469d7930690d26a43d0472c2bd
   languageName: node
   linkType: hard
 

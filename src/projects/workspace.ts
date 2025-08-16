@@ -1,15 +1,13 @@
 import type { Task, TaskOptions } from '@jujulego/tasks';
-import { inject$ } from '@kyrielle/injector';
+import { asyncScope$, inject$ } from '@kyrielle/injector';
 import { type Logger, withLabel } from '@kyrielle/logger';
-import { waitFor$ } from 'kyrielle';
 import path from 'node:path';
 import type { Package } from 'normalize-package-data';
 import { satisfies } from 'semver';
 import { GitService } from '../commons/git.service.js';
-import { ConfigService } from '../config/config.service.js';
 import { CommandTask } from '../tasks/command-task.js';
 import { ScriptTask } from '../tasks/script-task.js';
-import { LOGGER } from '../tokens.js';
+import { CONFIG, LOGGER } from '../tokens.js';
 import { combine } from '../utils/streams.js';
 import type { Project } from './project.js';
 
@@ -167,7 +165,7 @@ export class Workspace {
     let task = this._tasks.get(script);
 
     if (!task) {
-      const config = await waitFor$(inject$(ConfigService).config$);
+      const config = await inject$(CONFIG, asyncScope$());
 
       task = new ScriptTask(this, script, args, {
         ...opts,

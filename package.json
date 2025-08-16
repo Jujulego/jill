@@ -36,7 +36,7 @@
     "@jujulego/quick-tag": "^1.0.3",
     "@jujulego/tasks": "^3.0.0-alpha.2",
     "@jujulego/utils": "^3.0.0",
-    "@kyrielle/injector": "^1.0.0",
+    "@kyrielle/injector": "^1.1.0",
     "@kyrielle/logger": "^2.0.0",
     "@swc/helpers": "^0.5.3",
     "ajv": "^8.12.0",
