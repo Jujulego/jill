@@ -3,7 +3,7 @@ import { Box, Text } from 'ink';
 import { collect$, map$, pipe$ } from 'kyrielle';
 import { isCommandCtx } from '../../tasks/command-task.js';
 import { isScriptCtx } from '../../tasks/script-task.js';
-import TaskName from '../../ui/task-name.jsx';
+import TaskName from '../components/TaskName.jsx';
 import { inked } from '../inked.jsx';
 
 const TaskPlanInk = inked(function* ({ tasks }: TaskPlanInkProps) {

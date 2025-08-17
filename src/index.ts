@@ -41,8 +41,8 @@ export * from './config/config.service.js';
 export { default as Layout } from './ui/layout.jsx';
 export * from './ui/layout.jsx';
 
-export { default as TaskName } from './ui/task-name.jsx';
-export * from './ui/task-name.jsx';
+export { default as TaskName } from './cli/components/TaskName.jsx';
+export * from './cli/components/TaskName.jsx';
 
 export { default as TaskSpinner } from './ui/task-spinner.jsx';
 export * from './ui/task-spinner.jsx';

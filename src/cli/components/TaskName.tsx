@@ -1,6 +1,6 @@
 import { type Task, type TaskSummary } from '@jujulego/tasks';
 import { Text } from 'ink';
-import { isScriptCtx } from '../tasks/script-task.js';
+import { isScriptCtx } from '../../tasks/script-task.js';
 
 // Components
 export default function TaskName({ task, withWorkspace }: TaskNameProps) {

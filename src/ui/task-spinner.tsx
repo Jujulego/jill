@@ -6,7 +6,7 @@ import ms from 'pretty-ms';
 import { useLayoutEffect, useState } from 'react';
 import { isCommandCtx } from '../tasks/command-task.js';
 import { isScriptCtx } from '../tasks/script-task.js';
-import TaskName from './task-name.jsx';
+import TaskName from '../cli/components/TaskName.jsx';
 
 // Types
 export interface TaskSpinnerProps {
