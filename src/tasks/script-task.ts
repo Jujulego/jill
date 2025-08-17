@@ -41,12 +41,11 @@ export class ScriptTask extends GroupTask<ScriptContext> {
     }
 
     if (command === 'jill') {
-      this.logger$.debug(`interpreting ${line}`);
       const argv = commandArgs.map(arg => arg.replace(/^["'](.+)["']$/, '$1'));
 
       const { PlannerService } = await import('../cli/services/planner.service.js');
       const plannerService = inject$(PlannerService);
-      const tasks = await plannerService.plan(argv);
+      const tasks = await plannerService.plan(argv, this.workspace.root);
 
       if (tasks) {
         return tasks;

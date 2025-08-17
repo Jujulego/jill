@@ -3,7 +3,7 @@ import { asyncScope$, inject$ } from '@kyrielle/injector';
 import { withLabel } from '@kyrielle/logger';
 import { var$ } from 'kyrielle';
 import { ConfigService } from '../../config/config.service.js';
-import { LOGGER } from '../../tokens.js';
+import { CWD, LOGGER } from '../../tokens.js';
 import { planParser } from '../parser.js';
 
 export class PlannerService {
@@ -14,17 +14,17 @@ export class PlannerService {
   /**
    * Returns a task set if any task should be run by given command.
    * Tasks that do not execute tasks will return `null`
-   *
-   * @param args
    */
-  async plan(args: string[]): Promise<TaskSet | null> {
+  async plan(args: string[], cwd: string): Promise<TaskSet | null> {
     this._logger.debug(`interpreting jill ${args.join(' ')}`);
 
     const argv = args.map(arg => arg.replace(/^["'](.+)["']$/, '$1'));
     const tasks = var$<TaskSet>();
 
     await asyncScope$(async () => {
+      asyncScope$().set(CWD, cwd);
       asyncScope$().set(ConfigService, new ConfigService()); // <= injects an empty ConfigService, forcing config discovery
+
       await planParser(tasks).parseAsync(argv);
     });
 

@@ -6,7 +6,6 @@ import { loadWorkspace, withWorkspace, type WorkspaceArgs } from '../middlewares
 // Command
 const command: TaskModule<ExecArgs> = {
   command: 'exec <command>',
-  aliases: ['$0'],
   describe: 'Run command inside workspace, after all its dependencies has been built.',
   builder: (args) => withWorkspace(args)
     .positional('command', { type: 'string', demandOption: true })

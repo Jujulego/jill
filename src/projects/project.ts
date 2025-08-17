@@ -1,10 +1,10 @@
-import { inject$ } from '@kyrielle/injector';
+import { asyncScope$, inject$ } from '@kyrielle/injector';
 import { withLabel } from '@kyrielle/logger';
 import { Glob } from 'glob';
 import fs from 'node:fs';
 import path from 'node:path';
 import normalize, { type Package } from 'normalize-package-data';
-import { LOGGER, PATH_SCURRY } from '../tokens.js';
+import { CWD, LOGGER, PATH_SCURRY } from '../tokens.js';
 import { mutex$, with$ } from '../utils/kyrielle.js';
 import type { PackageManager } from '../utils/types.js';
 import { Workspace } from './workspace.js';
@@ -68,7 +68,7 @@ export class Project {
     });
   }
 
-  async currentWorkspace(cwd = process.cwd()): Promise<Workspace | null> {
+  async currentWorkspace(cwd = inject$(CWD, asyncScope$())): Promise<Workspace | null> {
     let workspace: Workspace | null = null;
     cwd = path.resolve(cwd);
 
@@ -117,7 +117,7 @@ export class Project {
   async workspace(name?: string): Promise<Workspace | null> {
     // With current directory
     if (!name) {
-      const dir = path.relative(this.root, process.cwd());
+      const dir = path.relative(this.root, inject$(CWD, asyncScope$()));
       return this._loadWorkspace(dir);
     }
 

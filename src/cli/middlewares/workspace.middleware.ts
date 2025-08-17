@@ -1,8 +1,8 @@
-import { inject$ } from '@kyrielle/injector';
+import { asyncScope$, inject$ } from '@kyrielle/injector';
 import process from 'node:process';
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
 import type { Workspace } from '../../projects/workspace.js';
-import { LOGGER } from '../../tokens.js';
+import { CWD, LOGGER } from '../../tokens.js';
 import { loadProject, type ProjectArgs, withProject } from './project.middleware.js';
 
 /**
@@ -28,9 +28,9 @@ export async function loadWorkspace(args: ArgumentsCamelCase<WorkspaceArgs>): Pr
   if (args.workspace) {
     logger.debug(`loading workspace "${args.workspace}"`);
     workspace = await project.workspace(args.workspace);
-  } else if (process.cwd().startsWith(project.root)) {
+  } else if (inject$(CWD, asyncScope$()).startsWith(project.root)) {
     logger.debug('loading workspace containing current directory');
-    workspace = await project.currentWorkspace(process.cwd());
+    workspace = await project.currentWorkspace(inject$(CWD, asyncScope$()));
   } else {
     logger.debug('loading main workspace');
     workspace = await project.mainWorkspace();
