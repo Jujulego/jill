@@ -3,14 +3,18 @@ import { ScriptTask } from '@/src/tasks/script-task.js';
 import { TestBed } from '@/tools/test-bed.js';
 import { SpawnTask } from '@jujulego/tasks';
 import { Text } from 'ink';
-import { render } from 'ink-testing-library';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { cleanup, render } from 'ink-testing-library';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Setup
 let bed: TestBed;
 
 beforeEach(() => {
   bed = new TestBed();
+});
+
+afterEach(() => {
+  cleanup();
 });
 
 // Tests

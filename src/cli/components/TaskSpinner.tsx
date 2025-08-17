@@ -4,9 +4,9 @@ import Spinner from 'ink-spinner';
 import symbols from 'log-symbols';
 import ms from 'pretty-ms';
 import { useLayoutEffect, useState } from 'react';
-import { isCommandCtx } from '../tasks/command-task.js';
-import { isScriptCtx } from '../tasks/script-task.js';
-import TaskName from '../cli/components/TaskName.jsx';
+import { isCommandCtx } from '../../tasks/command-task.js';
+import { isScriptCtx } from '../../tasks/script-task.js';
+import TaskName from './TaskName.jsx';
 
 // Types
 export interface TaskSpinnerProps {
@@ -68,7 +68,7 @@ export default function TaskSpinner({ task }: TaskSpinnerProps) {
       return (
         <Box>
           <Text color="green">{ symbols.success }</Text>
-          <Box paddingLeft={1}>
+          <Box>
             <Text dimColor={isScriptChild} wrap="truncate">
               <TaskName task={task} withWorkspace />
             </Text>
@@ -83,7 +83,7 @@ export default function TaskSpinner({ task }: TaskSpinnerProps) {
       return (
         <Box>
           <Text color="red">{ symbols.error }</Text>
-          <Box paddingLeft={1}>
+          <Box>
             <Text dimColor={isScriptChild} wrap="truncate">
               <TaskName task={task} withWorkspace />
             </Text>

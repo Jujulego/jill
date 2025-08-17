@@ -3,7 +3,7 @@ import { Box, Text, useInput } from 'ink';
 import { useEffect, useMemo, useState } from 'react';
 import { useFlatTaskTree } from './hooks/useFlatTaskTree.js';
 import { useStdoutDimensions } from './hooks/useStdoutDimensions.js';
-import TaskSpinner from './task-spinner.jsx';
+import TaskSpinner from '../cli/components/TaskSpinner.jsx';
 import TaskTreeStats from './task-tree-stats.jsx';
 
 // Component

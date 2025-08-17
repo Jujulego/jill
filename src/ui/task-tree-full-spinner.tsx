@@ -1,7 +1,7 @@
 import type { TaskManager } from '@jujulego/tasks';
 import { Box, Text } from 'ink';
 import { useFlatTaskTree } from './hooks/useFlatTaskTree.js';
-import TaskSpinner from './task-spinner.jsx';
+import TaskSpinner from '../cli/components/TaskSpinner.jsx';
 import TaskTreeStats from './task-tree-stats.jsx';
 
 // Component

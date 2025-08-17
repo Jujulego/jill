@@ -44,8 +44,8 @@ export * from './ui/layout.jsx';
 export { default as TaskName } from './cli/components/TaskName.jsx';
 export * from './cli/components/TaskName.jsx';
 
-export { default as TaskSpinner } from './ui/task-spinner.jsx';
-export * from './ui/task-spinner.jsx';
+export { default as TaskSpinner } from './cli/components/TaskSpinner.jsx';
+export * from './cli/components/TaskSpinner.jsx';
 
 export { default as WorkspaceTree } from './ui/WorkspaceTree.jsx';
 export * from './ui/WorkspaceTree.jsx';
