@@ -1,10 +1,10 @@
 import { GitService } from '@/src/commons/git.service.js';
-import { ConfigService } from '@/src/config/config.service.js';
 import { isAffected$ } from '@/src/filters/affected.filter.js';
 import { type Workspace } from '@/src/projects/workspace.js';
+import { CONFIG } from '@/src/tokens.js';
 import { TestBed } from '@/tools/test-bed.js';
 import { globalScope$, inject$ } from '@kyrielle/injector';
-import { asyncIterator$, collect$, pipe$, var$, waitFor$ } from 'kyrielle';
+import { asyncIterator$, collect$, pipe$, waitFor$ } from 'kyrielle';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Setup
@@ -16,8 +16,7 @@ beforeEach(() => {
   vi.restoreAllMocks();
 
   // Setup config
-  vi.spyOn(inject$(ConfigService), 'config$', 'get')
-    .mockReturnValue(var$({ jobs: 1, hooks: true }));
+  globalScope$().set(CONFIG, Promise.resolve({ jobs: 1, hooks: true }));
 
   // Workspaces
   bed = new TestBed();

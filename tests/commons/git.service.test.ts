@@ -1,10 +1,8 @@
 import { type GitContext, GitService } from '@/src/commons/git.service.js';
-import { ConfigService } from '@/src/config/config.service.js';
-import { LOGGER, TASK_MANAGER } from '@/src/tokens.js';
+import { CONFIG, LOGGER, TASK_MANAGER } from '@/src/tokens.js';
 import { type SpawnTask, type TaskManager } from '@jujulego/tasks';
 import { globalScope$, inject$ } from '@kyrielle/injector';
 import type { Logger } from '@kyrielle/logger';
-import { var$ } from 'kyrielle';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Setup
@@ -16,8 +14,7 @@ beforeEach(async () => {
   vi.restoreAllMocks();
 
   // Setup config
-  vi.spyOn(inject$(ConfigService), 'config$', 'get')
-    .mockReturnValue(var$({ jobs: 1, hooks: true }));
+  globalScope$().set(CONFIG, Promise.resolve({ jobs: 1, hooks: true }));
 
   // Services
   logger = inject$(LOGGER);
