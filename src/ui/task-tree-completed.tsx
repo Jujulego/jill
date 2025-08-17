@@ -1,7 +1,7 @@
 import type { TaskManager } from '@jujulego/tasks';
 import { Box, Static } from 'ink';
 import { useMemo } from 'react';
-import { flatTasks, taskComparator } from './hooks/useFlatTaskTree.js';
+import { flatTasks, taskComparator } from '../cli/hooks/useFlatTaskTree.js';
 import TaskSpinner from '../cli/components/TaskSpinner.jsx';
 import TaskTreeStats from './task-tree-stats.jsx';
 
