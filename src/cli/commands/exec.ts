@@ -1,7 +1,7 @@
 import { TaskSet } from '@jujulego/tasks';
 import type { WorkspaceDepsMode } from '../../projects/workspace.js';
 import type { TaskModule, PlanModeArgs } from '../bases/task-module.js';
-import { loadWorkspace, withWorkspace, type WorkspaceArgs } from '../middlewares/workspace.middleware.js';
+import { loadWorkspace, withWorkspace, type WorkspaceArgs } from '../middlewares/workspace.js';
 
 // Command
 const command: TaskModule<ExecArgs> = {

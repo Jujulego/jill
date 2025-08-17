@@ -7,7 +7,7 @@ import { isPrivate$ } from '../../filters/private.filter.js';
 import { hasEveryScript$ } from '../../filters/scripts.filter.js';
 import type { Workspace, WorkspaceDepsMode } from '../../projects/workspace.js';
 import type { PlanModeArgs, TaskModule } from '../bases/task-module.js';
-import { loadProject, type ProjectArgs, withProject } from '../middlewares/project.middleware.js';
+import { loadProject, type ProjectArgs, withProject } from '../middlewares/project.js';
 import { TaskParserService } from '../services/task-parser.service.js';
 
 // Command

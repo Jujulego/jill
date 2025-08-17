@@ -11,7 +11,7 @@ import { hasSomeScript$ } from '../../filters/scripts.filter.js';
 import type { Workspace } from '../../projects/workspace.js';
 import { printJson } from '../../utils/json.js';
 import type { Order } from '../../utils/types.js';
-import { loadProject, withProject, type ProjectArgs } from '../middlewares/project.middleware.js';
+import { loadProject, withProject, type ProjectArgs } from '../middlewares/project.js';
 
 // Command
 const command: CommandModule<unknown, ListArgs> = {

@@ -1,7 +1,7 @@
 import { planCommand } from '@/src/cli/bases/task-module.js';
 import { exec } from '@/src/cli/commands.js';
 import { loggerMiddleware } from '@/src/cli/middlewares/logger.middleware.js';
-import { loadWorkspace, withWorkspace, type WorkspaceArgs } from '@/src/cli/middlewares/workspace.middleware.js';
+import { loadWorkspace, withWorkspace, type WorkspaceArgs } from '@/src/cli/middlewares/workspace.js';
 import type { Workspace } from '@/src/projects/workspace.js';
 import { TestBed } from '@/tools/test-bed.js';
 import { TestCommandTask } from '@/tools/test-tasks.js';
@@ -12,7 +12,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import yargs, { type Argv } from 'yargs';
 
 // Mocks
-vi.mock('@/src/cli/middlewares/workspace.middleware.js');
+vi.mock('@/src/cli/middlewares/workspace.js');
 
 // Setup
 let bed: TestBed;

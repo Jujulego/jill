@@ -2,7 +2,7 @@ import { TaskSet } from '@jujulego/tasks';
 import { inject$ } from '@kyrielle/injector';
 import type { WorkspaceDepsMode } from '../../projects/workspace.js';
 import type { PlanModeArgs, TaskModule } from '../bases/task-module.js';
-import { loadWorkspace, withWorkspace, type WorkspaceArgs } from '../middlewares/workspace.middleware.js';
+import { loadWorkspace, withWorkspace, type WorkspaceArgs } from '../middlewares/workspace.js';
 import { TaskParserService } from '../services/task-parser.service.js';
 
 // Command

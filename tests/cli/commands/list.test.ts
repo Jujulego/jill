@@ -1,6 +1,6 @@
 import { list } from '@/src/cli/commands.js';
 import ListInk from '@/src/cli/commands/list.ink.js';
-import { loadProject, type ProjectArgs, withProject } from '@/src/cli/middlewares/project.middleware.js';
+import { loadProject, type ProjectArgs, withProject } from '@/src/cli/middlewares/project.js';
 import { isAffected$ } from '@/src/filters/affected.filter.js';
 import { isPrivate$ } from '@/src/filters/private.filter.js';
 import { hasSomeScript$ } from '@/src/filters/scripts.filter.js';

@@ -1,9 +1,8 @@
 import { asyncScope$, inject$ } from '@kyrielle/injector';
-import process from 'node:process';
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
 import type { Workspace } from '../../projects/workspace.js';
 import { CWD, LOGGER } from '../../tokens.js';
-import { loadProject, type ProjectArgs, withProject } from './project.middleware.js';
+import { loadProject, type ProjectArgs, withProject } from './project.js';
 
 /**
  * Adds arguments to load a workspace.

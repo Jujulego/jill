@@ -1,5 +1,5 @@
 import type { CommandModule } from 'yargs';
-import { loadWorkspace, withWorkspace, type WorkspaceArgs } from '../middlewares/workspace.middleware.js';
+import { loadWorkspace, withWorkspace, type WorkspaceArgs } from '../middlewares/workspace.js';
 
 // Command
 const command: CommandModule<unknown, TreeArgs> = {
