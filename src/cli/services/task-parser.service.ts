@@ -1,11 +1,10 @@
-import { Logger } from '@jujulego/logger';
 import { FallbackGroup, type GroupTask, ParallelGroup, SequenceGroup, type Task } from '@jujulego/tasks';
-import { inject } from 'inversify';
+import { inject$ } from '@kyrielle/injector';
+import { withLabel } from '@kyrielle/logger';
 import moo from 'moo';
-
-import { Service } from '@/src/modules/service.js';
-import { type Workspace, type WorkspaceRunOptions } from '@/src/project/workspace.js';
-import { TaskExpressionError, TaskSyntaxError } from './errors.js';
+import type { Workspace, WorkspaceRunOptions } from '../../projects/workspace.js';
+import { LOGGER } from '../../tokens.js';
+import { TaskExpressionError, TaskSyntaxError } from '../../tasks/errors.js';
 
 // Interfaces
 export interface TaskNode {
@@ -23,20 +22,16 @@ export interface TaskTree {
 }
 
 // Service
-@Service()
-export class TaskExpressionService {
+export class TaskParserService {
+  // Attributes
+  private readonly _logger = inject$(LOGGER).child(withLabel('task-parser'));
+
   // Statics
   static isTaskNode(node: TaskNode | GroupNode): node is TaskNode {
     return 'script' in node;
   }
 
   private static _sequenceOperatorWarn = true;
-
-  // Constructor
-  constructor(
-    @inject(Logger)
-    private readonly _logger: Logger
-  ) {}
 
   // Methods
   private _lexer(): moo.Lexer {
@@ -100,12 +95,12 @@ export class TaskExpressionService {
       if (token.type === 'argument') {
         if (!node) {
           throw new TaskSyntaxError(lexer.formatError(token, 'Unexpected argument'));
-        } else if (TaskExpressionService.isTaskNode(node)) {
+        } else if (TaskParserService.isTaskNode(node)) {
           node.args.push(token.value);
         } else {
           const lastTask = node.tasks[node.tasks.length - 1];
 
-          if (!lastTask || !TaskExpressionService.isTaskNode(lastTask)) {
+          if (!lastTask || !TaskParserService.isTaskNode(lastTask)) {
             throw new TaskSyntaxError(lexer.formatError(token, 'Unexpected argument'));
           } else {
             lastTask.args.push(token.value);
@@ -121,7 +116,7 @@ export class TaskExpressionService {
 
         if (!node) {
           throw new TaskSyntaxError(lexer.formatError(token, 'Unexpected operator'));
-        } else if (TaskExpressionService.isTaskNode(node)) {
+        } else if (TaskParserService.isTaskNode(node)) {
           node = { operator, tasks: [node] };
 
           continue;
@@ -156,7 +151,7 @@ export class TaskExpressionService {
 
       if (!node) {
         node = child;
-      } else if (TaskExpressionService.isTaskNode(node)) {
+      } else if (TaskParserService.isTaskNode(node)) {
         throw new TaskSyntaxError(lexer.formatError(token, 'Unexpected token, expected an operator'));
       } else {
         node.tasks.push(child);
@@ -173,7 +168,6 @@ export class TaskExpressionService {
       roots: [],
     };
 
-    // eslint-disable-next-line no-constant-condition
     while (true) {
       const node = this._nextNode(lexer);
 
@@ -192,7 +186,7 @@ export class TaskExpressionService {
       for (const child of node.roots) {
         yield* this.extractScripts(child);
       }
-    } else if (TaskExpressionService.isTaskNode(node)) {
+    } else if (TaskParserService.isTaskNode(node)) {
       yield node.script;
     } else {
       for (const child of node.tasks) {
@@ -202,7 +196,7 @@ export class TaskExpressionService {
   }
 
   async buildTask(node: TaskNode | GroupNode, workspace: Workspace, opts?: WorkspaceRunOptions): Promise<Task> {
-    if (TaskExpressionService.isTaskNode(node)) {
+    if (TaskParserService.isTaskNode(node)) {
       const task = await workspace.run(node.script, node.args, opts);
 
       if (!task) {
@@ -222,9 +216,9 @@ export class TaskExpressionService {
           logger: this._logger,
         });
       } else {
-        if (node.operator === '->' && TaskExpressionService._sequenceOperatorWarn) {
+        if (node.operator === '->' && TaskParserService._sequenceOperatorWarn) {
           this._logger.warn('Sequence operator -> is deprecated in favor of &&. It will be removed in a next major release.');
-          TaskExpressionService._sequenceOperatorWarn = true;
+          TaskParserService._sequenceOperatorWarn = true;
         }
 
         group = new SequenceGroup('In sequence', { workspace }, {

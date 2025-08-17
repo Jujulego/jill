@@ -7,7 +7,7 @@ import { TaskCommand } from '@/src/modules/task-command.jsx';
 import { LoadProject } from '@/src/middlewares/load-project.js';
 import { LazyCurrentWorkspace, LoadWorkspace } from '@/src/middlewares/load-workspace.js';
 import { type Workspace, type WorkspaceDepsMode } from '@/src/project/workspace.js';
-import { TaskExpressionService } from '@/src/tasks/task-expression.service.js';
+import { TaskParserService } from '../cli/services/task-parser.service.js';
 import { TaskExpressionError, TaskSyntaxError } from '@/src/tasks/errors.js';
 import { ExitException } from '@/src/utils/exit.js';
 
@@ -36,8 +36,8 @@ export class RunCommand extends TaskCommand<IRunCommandArgs> {
   constructor(
     @inject(Logger)
     private readonly logger: Logger,
-    @inject(TaskExpressionService)
-    private readonly taskExpression: TaskExpressionService,
+    @inject(TaskParserService)
+    private readonly taskExpression: TaskParserService,
   ) {
     super();
   }
