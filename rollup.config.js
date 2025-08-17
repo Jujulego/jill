@@ -17,7 +17,7 @@ const options = {
     chunkFileNames: '[name].js',
     generatedCode: 'es5',
     manualChunks: {
-      'logger': ['./src/utils/logger.js'],
+     // 'logger': ['./src/utils/logger.js'],
     }
   },
   plugins: [
