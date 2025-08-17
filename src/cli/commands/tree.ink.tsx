@@ -1,6 +1,6 @@
 import { source$, waitFor$ } from 'kyrielle';
 import type { Workspace } from '../../projects/workspace.js';
-import WorkspaceTree from '../../ui/WorkspaceTree.jsx';
+import WorkspaceTree from '../components/WorkspaceTree.jsx';
 import { inked } from '../inked.jsx';
 
 const TreeInk = inked(async function* (props: TreeInkProps) {

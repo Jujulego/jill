@@ -2,7 +2,7 @@ import { Newline, Text, type TextProps } from 'ink';
 import Spinner from 'ink-spinner';
 import { filter$, once$, pipe$, var$ } from 'kyrielle';
 import { type ReactElement, Suspense, use, useCallback, useEffect, useRef } from 'react';
-import type { Workspace } from '../projects/workspace.js';
+import type { Workspace } from '../../projects/workspace.js';
 
 // Component
 export default function WorkspaceTree(props: WorkspaceTreeProps) {
