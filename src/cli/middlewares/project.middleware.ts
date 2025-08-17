@@ -1,7 +1,8 @@
-import { inject$ } from '@kyrielle/injector';
+import { asyncScope$, inject$ } from '@kyrielle/injector';
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
 import type { Project } from '../../projects/project.js';
 import { ProjectsRepository } from '../../projects/projects.repository.js';
+import { CWD } from '../../tokens.js';
 import type { PackageManager, Writable } from '../../utils/types.js';
 
 /**
@@ -12,7 +13,8 @@ export function withProject<T = unknown>(parser: Argv<T>): Argv<T & ProjectArgs>
     .option('project', {
       alias: 'p',
       type: 'string',
-      default: process.cwd(),
+      default: '',
+      defaultDescription: 'current working directory',
       description: 'Project root directory',
       normalize: true,
     })
@@ -23,7 +25,7 @@ export function withProject<T = unknown>(parser: Argv<T>): Argv<T & ProjectArgs>
     })
     .middleware(async (args: ArgumentsCamelCase<Writable<ProjectArgs>>) => {
       const repository = inject$(ProjectsRepository);
-      args.project = await repository.searchProjectRoot(args.project);
+      args.project = await repository.searchProjectRoot(args.project || inject$(CWD, asyncScope$()));
     });
 }
 

@@ -13,7 +13,7 @@ import { TaskCommand } from '@/src/modules/task-command.jsx';
 import { type Project } from '@/src/project/project.js';
 import { type WorkspaceDepsMode } from '@/src/project/workspace.js';
 import { TaskExpressionError, TaskSyntaxError } from '@/src/tasks/errors.js';
-import { TaskExpressionService } from '@/src/tasks/task-expression.service.js';
+import { TaskParserService } from '../cli/services/task-parser.service.js';
 import { ExitException } from '@/src/utils/exit.js';
 
 // Types
@@ -49,8 +49,8 @@ export class EachCommand extends TaskCommand<EachCommandArgs> {
   constructor(
     @inject(Logger)
     private readonly logger: Logger,
-    @inject(TaskExpressionService)
-    private readonly taskExpression: TaskExpressionService,
+    @inject(TaskParserService)
+    private readonly taskExpression: TaskParserService,
   ) {
     super();
   }

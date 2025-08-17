@@ -1,30 +1,26 @@
-import { ParallelGroup, SequenceGroup } from '@jujulego/tasks';
-import { describe, vi } from 'vitest';
-
-import '@/src/commons/logger.service.js';
-import { container } from '@/src/inversify.config.js';
-import { type Workspace } from '@/src/project/workspace.js';
+import { type GroupNode, TaskParserService, type TaskNode } from '@/src/cli/services/task-parser.service.js';
+import type { Workspace } from '@/src/projects/workspace.js';
 import { ScriptTask } from '@/src/tasks/script-task.js';
-import { type GroupNode, TaskExpressionService, type TaskNode } from '@/src/tasks/task-expression.service.js';
-
 import { TestBed } from '@/tools/test-bed.js';
+import { ParallelGroup, SequenceGroup } from '@jujulego/tasks';
+import { globalScope$, inject$ } from '@kyrielle/injector';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Setup
-let service: TaskExpressionService;
+let service: TaskParserService;
 
 let bed: TestBed;
 let wks: Workspace;
 
 beforeEach(() => {
-  container.snapshot();
-  service = container.get(TaskExpressionService);
+  service = inject$(TaskParserService);
 
   bed = new TestBed();
   wks = bed.addWorkspace('wks');
 });
 
 afterEach(() => {
-  container.restore();
+  globalScope$().clear();
 });
 
 // Tests
@@ -127,7 +123,7 @@ describe('TaskExpressionService.parse', () => {
 });
 
 describe('TaskExpressionService.extractScripts', () => {
-  it('should yield all scripts involved in task tree', () => {
+  it('should yield all scripts involved in task tree', async () => {
     const tree = {
       roots: [
         {
@@ -146,7 +142,7 @@ describe('TaskExpressionService.extractScripts', () => {
       ]
     };
 
-    expect(service.extractScripts(tree)).toYield(['toto', 'tata', 'tutu']);
+    await expect(service.extractScripts(tree)).toYield(['toto', 'tata', 'tutu']);
   });
 });
 

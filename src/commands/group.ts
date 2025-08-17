@@ -6,7 +6,7 @@ import { TaskCommand } from '@/src/modules/task-command.jsx';
 import { LoadProject } from '@/src/middlewares/load-project.js';
 import { LazyCurrentWorkspace, LoadWorkspace } from '@/src/middlewares/load-workspace.js';
 import { type Workspace, type WorkspaceDepsMode } from '@/src/project/workspace.js';
-import { TaskExpressionService, type TaskTree } from '@/src/tasks/task-expression.service.js';
+import { TaskParserService, type TaskTree } from '../cli/services/task-parser.service.js';
 
 // Types
 export interface IGroupCommandArgs {
@@ -32,8 +32,8 @@ export class GroupCommand extends TaskCommand<IGroupCommandArgs> {
 
   // Constructor
   constructor(
-    @inject(TaskExpressionService)
-    private readonly taskExpr: TaskExpressionService,
+    @inject(TaskParserService)
+    private readonly taskExpr: TaskParserService,
   ) {
     super();
   }

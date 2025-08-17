@@ -11,7 +11,7 @@ import { CONFIG } from '@/src/config/config-loader.js';
 import { INK_APP } from '@/src/ink.config.js';
 import { container } from '@/src/inversify.config.js';
 import { type Workspace } from '@/src/project/workspace.js';
-import { TaskExpressionService } from '@/src/tasks/task-expression.service.js';
+import { TaskParserService } from '@/src/cli/services/task-parser.service.js';
 import { TASK_MANAGER } from '@/src/tasks/task-manager.config.js';
 import Layout from '@/src/ui/layout.js';
 
@@ -27,7 +27,7 @@ let app: ReturnType<typeof render>;
 let command: CommandModule;
 let context: ContextService;
 let manager: TestTaskManager;
-let taskExpr: TaskExpressionService;
+let taskExpr: TaskParserService;
 
 let bed: TestBed;
 let wks: Workspace;
@@ -50,7 +50,7 @@ beforeEach(async () => {
 
   const logger = container.get(Logger);
   context = container.get(ContextService);
-  taskExpr = container.get(TaskExpressionService);
+  taskExpr = container.get(TaskParserService);
 
   manager = new TestTaskManager({ logger });
   container.rebind(TASK_MANAGER).toConstantValue(manager);

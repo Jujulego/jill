@@ -32,7 +32,8 @@ export function executeParser() {
     baseParser(),
     executeCommand(commands.exec),
     command(commands.list),
-    command(commands.tree)
+    executeCommand(commands.run),
+    command(commands.tree),
   );
 }
 
@@ -44,6 +45,7 @@ export function planParser(tasks$: Mutator<TaskSet>) {
     baseParser(),
     planCommand(commands.exec, tasks$),
     planCommand(commands.list, tasks$),
-    planCommand(commands.tree, tasks$)
+    planCommand(commands.run, tasks$),
+    planCommand(commands.tree, tasks$),
   );
 }

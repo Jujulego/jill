@@ -1,12 +1,12 @@
 import { qjson } from '@jujulego/quick-tag';
-import { inject$ } from '@kyrielle/injector';
+import { asyncScope$, inject$ } from '@kyrielle/injector';
 import { withLabel } from '@kyrielle/logger';
 import Ajv from 'ajv';
 import { var$, type Ref, type Observable } from 'kyrielle';
 import os from 'node:os';
 import path from 'node:path';
 import process from 'node:process';
-import { LOGGER } from '../tokens.js';
+import { CWD, LOGGER } from '../tokens.js';
 import { ConfigExplorer } from './config-explorer.js';
 import schema from './schema.json' with { type: 'json' };
 import type { Config } from './types';
@@ -65,8 +65,8 @@ export class ConfigService {
     return config;
   }
 
-  async searchConfig(): Promise<Config> {
-    const loaded = await this._explorer.search();
+  async searchConfig() {
+    const loaded = await this._explorer.search(inject$(CWD, asyncScope$()));
 
     if (loaded) {
       this._logger.verbose`loaded file ${loaded.filepath}`;
@@ -74,15 +74,10 @@ export class ConfigService {
 
       const config = this._validateConfig(loaded.config);
       this._config.mutate(config);
-
-      return config;
-    } else {
-      this._logger.error`no config file found`;
-      throw new Error('No config file found');
     }
   }
 
-  async loadConfig(filepath: string): Promise<Config> {
+  async loadConfig(filepath: string) {
     const loaded = await this._explorer.load(filepath);
 
     if (loaded) {
@@ -91,17 +86,12 @@ export class ConfigService {
 
       const config = this._validateConfig(loaded.config);
       this._config.mutate(config);
-
-      return config;
-    } else {
-      this._logger.error`config file ${filepath} not found`;
-      throw new Error('Config file not found');
     }
   }
 
   // Attributes
   get baseDir(): string {
-    return this._filepath ? path.dirname(this._filepath) : process.cwd();
+    return this._filepath ? path.dirname(this._filepath) : inject$(CWD, asyncScope$());
   }
 
   get config$(): Ref<Config | undefined> & Observable<Config> {

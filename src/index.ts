@@ -32,7 +32,7 @@ export * from './project/workspace.js';
 export * from './inversify.config.js';
 export * from './tasks/command-task.js';
 export * from './tasks/script-task.js';
-export * from './tasks/task-expression.service.js';
+export * from './cli/services/task-parser.service.js';
 export * from './tasks/task-manager.config.js';
 
 export * from './config/config.service.js';
