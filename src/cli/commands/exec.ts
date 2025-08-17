@@ -24,9 +24,9 @@ const command: TaskModule<ExecArgs> = {
     })
 
     // Documentation
-    .example('jill eslint', '')
-    .example('jill eslint --env-info', 'Unknown arguments are passed down to command. Here it would run eslint --env-info')
-    .example('jill eslint -- -v', 'You can use -- to stop argument parsing. Here it would run eslint -v')
+    .example('jill exec eslint', '')
+    .example('jill exec eslint --env-info', 'Unknown arguments are passed down to command. Here it would run eslint --env-info')
+    .example('jill exec eslint -- -v', 'You can use -- to stop argument parsing. Here it would run eslint -v')
 
     // Config
     .strict(false)
