@@ -1,9 +1,6 @@
 import { TaskSet } from '@jujulego/tasks';
 import { inject$ } from '@kyrielle/injector';
 import type { WorkspaceDepsMode } from '../../projects/workspace.js';
-import { TaskExpressionError, TaskSyntaxError } from '../../tasks/errors.js';
-import { LOGGER } from '../../tokens.js';
-import { ExitException } from '../../utils/exit.js';
 import type { PlanModeArgs, TaskModule } from '../bases/task-module.js';
 import { loadWorkspace, withWorkspace, type WorkspaceArgs } from '../middlewares/workspace.middleware.js';
 import { TaskParserService } from '../services/task-parser.service.js';
@@ -38,8 +35,7 @@ const command: TaskModule<RunArgs> = {
     .parserConfiguration({
       'unknown-options-as-args': true,
     }),
-  async prepare(args): Promise<TaskSet> {
-    const taskParser = inject$(TaskParserService);
+  async prepare(args) {
     const workspace = await loadWorkspace(args);
 
     // Extract expression
@@ -52,31 +48,16 @@ const command: TaskModule<RunArgs> = {
     expr.unshift(args.expr);
 
     // Parse task expression
-    try {
-      const tasks = new TaskSet();
-      const tree = taskParser.parse(expr.join(' '));
+    const taskParser = inject$(TaskParserService);
+    const tree = taskParser.parse(expr.join(' '));
 
-      tasks.add(await taskParser.buildTask(tree.roots[0], workspace, {
-        buildScript: args.buildScript,
-        buildDeps: args.depsMode,
-      }));
+    const tasks = new TaskSet();
+    tasks.add(await taskParser.buildTask(tree.roots[0], workspace, {
+      buildScript: args.buildScript,
+      buildDeps: args.depsMode,
+    }));
 
-      return tasks;
-    } catch (err) {
-      const logger = inject$(LOGGER);
-
-      if (err instanceof TaskExpressionError) {
-        logger.error(err.message);
-        throw new ExitException(1);
-      }
-
-      if (err instanceof TaskSyntaxError) {
-        logger.error(`Syntax error in task expression: ${err.message}`);
-        throw new ExitException(1);
-      }
-
-      throw err;
-    }
+    return tasks;
   }
 };
 
