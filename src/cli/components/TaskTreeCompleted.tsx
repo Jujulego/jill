@@ -1,9 +1,9 @@
 import type { TaskManager } from '@jujulego/tasks';
 import { Box, Static } from 'ink';
 import { useMemo } from 'react';
-import { flatTasks, taskComparator } from '../cli/hooks/useFlatTaskTree.js';
-import TaskSpinner from '../cli/components/TaskSpinner.jsx';
-import TaskTreeStats from './task-tree-stats.jsx';
+import TaskTreeStats from '../../ui/task-tree-stats.jsx';
+import { flatTasks, taskComparator } from '../hooks/useFlatTaskTree.js';
+import TaskSpinner from './TaskSpinner.jsx';
 
 // Component
 export default function TaskTreeCompleted({ manager, verbose }: TaskTreeCompletedProps) {
