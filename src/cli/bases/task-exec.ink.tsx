@@ -3,8 +3,8 @@ import { inject$ } from '@kyrielle/injector';
 import { waitFor$ } from 'kyrielle';
 import process from 'node:process';
 import { TASK_MANAGER } from '../../tokens.js';
-import TaskTreeSpinner from '../../ui/task-tree-spinner.jsx';
 import TaskTreeCompleted from '../components/TaskTreeCompleted.jsx';
+import TaskTreeSpinner from '../components/TaskTreeSpinner.jsx';
 import { inked } from '../inked.jsx';
 
 const TaskExecInk = inked(async function* ({ tasks, verbose }: TaskExecInkProps) {

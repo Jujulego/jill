@@ -1,7 +1,7 @@
 import { type TaskManager } from '@jujulego/tasks';
 import { useStdin } from 'ink';
-import TaskTreeFullSpinner from '../cli/components/TaskTreeFullSpinner.jsx';
-import TaskTreeScrollableSpinner from '../cli/components/TaskTreeScrollableSpinner.jsx';
+import TaskTreeFullSpinner from './TaskTreeFullSpinner.jsx';
+import TaskTreeScrollableSpinner from './TaskTreeScrollableSpinner.jsx';
 
 // Component
 export default function TaskTreeSpinner({ manager, verbose }: TaskTreeSpinnerProps) {

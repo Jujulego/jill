@@ -11,7 +11,7 @@ import { TASK_MANAGER } from '@/src/tasks/task-manager.config.js';
 import { type AwaitableGenerator } from '@/src/types.js';
 import List from '@/src/ui/list.jsx';
 import TaskTreeCompleted from '../cli/components/TaskTreeCompleted.jsx';
-import TaskTreeSpinner from '@/src/ui/task-tree-spinner.jsx';
+import TaskTreeSpinner from '../cli/components/TaskTreeSpinner.jsx';
 import { ExitException } from '@/src/utils/exit.js';
 import { printJson } from '@/src/utils/json.js';
 
