@@ -1,128 +1,16 @@
-import { Logger, withLabel } from '@jujulego/logger';
-import { type Task } from '@jujulego/tasks';
-import { inject, injectable, type interfaces as int } from 'inversify';
-import yargs, { type Argv, type CommandModule } from 'yargs';
-
-import { ContextService, type Context } from '@/src/commons/context.service.js';
-import { applyConfigOptions } from '@/src/config/config-options.js';
+import { ContextService } from '@/src/commons/context.service.js';
 import { CURRENT } from '@/src/constants.js';
-import { container, lazyInjectNamed } from '@/src/inversify.config.js';
-import { buildCommandModule, COMMAND, COMMAND_MODULE, getCommandOpts, type ICommand } from '@/src/modules/command.js';
-import { getModule } from '@/src/modules/module.js';
-import { PluginLoaderService } from '@/src/modules/plugin-loader.service.js';
-import { TaskCommand } from '@/src/modules/task-command.jsx';
-import { type Class } from '@/src/types.js';
-
-// @ts-ignore: Outside of typescript's rootDir in build
-import pkg from '../package.json';
+import { container } from '@/src/inversify.config.js';
+import { injectable } from 'inversify';
 
 // Application
 @injectable()
-export class JillApplication {
-  // Attributes
-  readonly container: int.Container;
-  readonly parser: Argv;
-
-  // Constructor
-  constructor(
-    @inject(ContextService)
-    private readonly context: ContextService,
-    @inject(PluginLoaderService)
-    private readonly plugins: PluginLoaderService,
-    @inject(Logger)
-    private readonly logger: Logger,
-  ) {
-    // Create container
-    this.container = container.createChild();
-
-    // Create parser
-    this.parser = yargs()
-      .scriptName('jill')
-      .completion('completion', 'Generate bash completion script')
-      .help('help', 'Show help for a command')
-      .version('version', 'Show version', pkg.version)
-      .wrap(process.stdout.columns)
-      .exitProcess(false);
-  }
-
-  // Methods
-  private _prepareParser(commands: CommandModule[]): Argv {
-    applyConfigOptions(this.parser);
-
-    return this.parser
-      .command(commands)
-      .recommendCommands()
-      .strict()
-      .fail(false);
-  }
-
-  private async _loadPlugins(): Promise<void> {
-    this.logger.child(withLabel('plugin')).verbose('Loading plugin <core>');
-
-    const { CorePlugin } = await import('@/src/core.plugin.ts');
-    this.container.load(getModule(CorePlugin, true));
-
-    await this.plugins.loadPlugins(this.container);
-  }
-
-  async run(argv: string | readonly string[]): Promise<void> {
-    this.context.reset({ application: this });
-    await this._loadPlugins();
-
-    // Parse command
-    const commands = await this.container.getAllAsync(COMMAND_MODULE);
-
-    await this._prepareParser(commands).parseAsync(argv);
-  }
-
-  async tasksOf(argv: string[], ctx: Omit<Context, 'application'> = {}): Promise<Task[]> {
-    this.context.reset({ ...ctx, application: this });
-    await this._loadPlugins();
-
-    // Prepare commands
-    const commands = await this.container.getAllAsync(COMMAND);
-
-    return new Promise<Task[]>((resolve, reject) => {
-      const modules: CommandModule[] = [];
-
-      for (const cmd of commands) {
-        const opts = getCommandOpts(cmd.constructor as Class<ICommand>);
-        const mod = buildCommandModule(cmd, opts);
-
-        mod.handler = async (args) => {
-          if (cmd instanceof TaskCommand) {
-            const tasks: Task[] = [];
-
-            for await (const tsk of cmd.prepare({ ...args, plan: true })) {
-              tasks.push(tsk);
-            }
-
-            resolve(tasks);
-          } else {
-            resolve([]);
-          }
-        };
-
-        modules.push(mod);
-      }
-
-      // Parse command
-      this._prepareParser(modules)
-        .parseAsync(argv)
-        .catch(reject);
-    });
-  }
-}
+export class JillApplication {}
 
 container.bind(JillApplication)
   .toSelf()
   .inTransientScope()
   .whenTargetIsDefault();
-
-// Lazy injection
-export function LazyCurrentApplication() {
-  return lazyInjectNamed(JillApplication, CURRENT);
-}
 
 container.bind(JillApplication)
   .toDynamicValue(({ container }) => {

@@ -19,8 +19,6 @@ export * from './modules/command.js';
 export * from './modules/ink-command.jsx';
 export * from './modules/middleware.js';
 export * from './modules/module.js';
-export * from './modules/plugin.js';
-export * from './modules/plugin-loader.service.js';
 export * from './modules/service.js';
 
 // Project
