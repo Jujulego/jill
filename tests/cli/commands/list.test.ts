@@ -14,7 +14,7 @@ import yargs, { type Argv } from 'yargs';
 
 // Mocks
 vi.mock('@/src/cli/commands/list.ink.jsx');
-vi.mock('@/src/cli/middlewares/project.middleware.js');
+vi.mock('@/src/cli/middlewares/project.js');
 vi.mock('@/src/filters/affected.filter.js');
 vi.mock('@/src/filters/private.filter.js');
 vi.mock('@/src/filters/scripts.filter.js');
