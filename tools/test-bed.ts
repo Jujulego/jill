@@ -3,7 +3,6 @@ import { CONFIG } from '@/src/config/config-loader.js';
 import { type Config } from '@/src/config/types.js';
 import { container } from '@/src/inversify.config.js';
 import { LoadProject } from '@/src/middlewares/load-project.js';
-import { LoadWorkspace } from '@/src/middlewares/load-workspace.js';
 import { buildCommandModule, getCommandOpts, type ICommand } from '@/src/modules/command.js';
 import { type IMiddleware } from '@/src/modules/middleware.js';
 import { getRegistry } from '@/src/modules/module.js';
@@ -72,17 +71,10 @@ export class TestBed {
 
     // Inject mocks
     const prj = within instanceof Workspace ? within.project : within;
-    const wks = within instanceof Workspace ? within : await within.mainWorkspace();
 
     container.rebind<IMiddleware>(LoadProject).toConstantValue({
       handler() {
         container.get(ContextService).project = prj;
-      }
-    });
-
-    container.rebind<IMiddleware>(LoadWorkspace).toConstantValue({
-      handler() {
-        container.get(ContextService).workspace = wks;
       }
     });
 

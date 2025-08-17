@@ -12,7 +12,6 @@ export * from './filters/scripts.filter.js';
 
 // Middlewares
 export * from './middlewares/load-project.js';
-export * from './middlewares/load-workspace.js';
 
 // Modules
 export * from './modules/command.js';
