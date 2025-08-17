@@ -1,10 +1,10 @@
 import { type TaskManager } from '@jujulego/tasks';
 import { Box, Text, useInput } from 'ink';
 import { useEffect, useMemo, useState } from 'react';
-import { useFlatTaskTree } from './hooks/useFlatTaskTree.js';
-import { useStdoutDimensions } from './hooks/useStdoutDimensions.js';
-import TaskSpinner from './task-spinner.jsx';
-import TaskTreeStats from './task-tree-stats.jsx';
+import { useFlatTaskTree } from '../hooks/useFlatTaskTree.js';
+import { useStdoutDimensions } from '../hooks/useStdoutDimensions.js';
+import TaskSpinner from './TaskSpinner.jsx';
+import TaskTreeStats from './TaskTreeStats.jsx';
 
 // Component
 export default function TaskTreeScrollableSpinner({ manager, verbose }: TaskTreeScrollableSpinnerProps) {

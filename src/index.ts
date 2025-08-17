@@ -41,14 +41,14 @@ export * from './config/config.service.js';
 export { default as Layout } from './ui/layout.jsx';
 export * from './ui/layout.jsx';
 
-export { default as TaskName } from './ui/task-name.jsx';
-export * from './ui/task-name.jsx';
+export { default as TaskName } from './cli/components/TaskName.jsx';
+export * from './cli/components/TaskName.jsx';
 
-export { default as TaskSpinner } from './ui/task-spinner.jsx';
-export * from './ui/task-spinner.jsx';
+export { default as TaskSpinner } from './cli/components/TaskSpinner.jsx';
+export * from './cli/components/TaskSpinner.jsx';
 
-export { default as WorkspaceTree } from './ui/WorkspaceTree.jsx';
-export * from './ui/WorkspaceTree.jsx';
+export { default as WorkspaceTree } from './cli/components/WorkspaceTree.jsx';
+export * from './cli/components/WorkspaceTree.jsx';
 
 // Utils
 export * from './utils/exit.js';

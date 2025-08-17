@@ -1,5 +1,5 @@
+import WorkspaceTree from '@/src/cli/components/WorkspaceTree.jsx';
 import { type Workspace } from '@/src/projects/workspace.js';
-import WorkspaceTree from '@/src/ui/WorkspaceTree.js';
 import { TestBed } from '@/tools/test-bed.js';
 import { cleanup, render } from 'ink-testing-library';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';

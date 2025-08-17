@@ -1,7 +1,6 @@
-import { ParallelGroup, SpawnTask, type TaskContext, TaskManager } from '@jujulego/tasks';
-
 import { CommandTask } from '@/src/tasks/command-task.js';
 import { ScriptTask } from '@/src/tasks/script-task.js';
+import { ParallelGroup, type TaskContext, TaskManager } from '@jujulego/tasks';
 
 // Classes
 export class TestTaskManager extends TaskManager {
@@ -34,9 +33,4 @@ export class TestCommandTask extends CommandTask {
   protected onStart() {
     return;
   }
-}
-
-export class TestSpawnTask<C extends TaskContext = TaskContext> extends SpawnTask<C> {
-  // Methods
-  readonly emit = this._spawnEvents.emit;
 }
