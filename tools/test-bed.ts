@@ -1,6 +1,4 @@
-import { CONFIG } from '@/src/config/config-loader.js';
 import type { Config } from '@/src/config/types.js';
-import { container } from '@/src/inversify.config.js';
 import type { Workspace } from '@/src/projects/workspace.js';
 import type { PackageManager } from '@/src/utils/types.js';
 import fs from 'node:fs';
@@ -95,16 +93,5 @@ export class TestBed {
     }
 
     return prjDir;
-  }
-
-  // Properties
-  get config(): Readonly<Config> {
-    return this._config;
-  }
-
-  set config(config) {
-    this._config = config;
-
-    container.rebind(CONFIG).toConstantValue(config);
   }
 }

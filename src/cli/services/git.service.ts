@@ -1,9 +1,9 @@
 import { SpawnTask, type SpawnTaskOptions, type TaskContext } from '@jujulego/tasks';
 import { inject$ } from '@kyrielle/injector';
 import { collect$, map$, once$, pipe$, waitFor$ } from 'kyrielle';
-import { LOGGER, TASK_MANAGER } from '../tokens.js';
-import type { TaskUIContext } from '../types.js';
-import { streamLines$ } from '../utils/streams.js';
+import { LOGGER, TASK_MANAGER } from '../../tokens.js';
+import { streamLines$ } from '../../utils/streams.js';
+import type { TaskUIContext } from '../../utils/types.js';
 
 export class GitService {
   // Attributes

@@ -1,16 +1,4 @@
-import { type cosmiconfig } from 'cosmiconfig';
-
 // Types
-/** @deprecated use Config instead */
-export interface IConfig {
-  jobs?: number;
-  hooks?: boolean;
-  plugins?: string[];
-  verbose?: 'info' | 'verbose' | 'debug';
-}
-
-export type IConfigExplorer = ReturnType<typeof cosmiconfig>;
-
 /**
  * Jill configuration
  */

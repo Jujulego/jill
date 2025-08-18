@@ -1,4 +1,4 @@
-import { type GitContext, GitService } from '@/src/commons/git.service.js';
+import { type GitContext, GitService } from '@/src/cli/services/git.service.js';
 import { CONFIG, LOGGER, TASK_MANAGER } from '@/src/tokens.js';
 import { type SpawnTask, type TaskManager } from '@jujulego/tasks';
 import { globalScope$, inject$ } from '@kyrielle/injector';

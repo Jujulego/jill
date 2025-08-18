@@ -1,4 +1,4 @@
-import { GitService } from '@/src/commons/git.service.js';
+import { GitService } from '@/src/cli/services/git.service.js';
 import { Project } from '@/src/projects/project.js';
 import { Workspace } from '@/src/projects/workspace.js';
 import { CONFIG } from '@/src/tokens.js';
