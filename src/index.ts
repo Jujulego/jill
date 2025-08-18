@@ -8,11 +8,6 @@ export * from './types.js';
 export * from './modules/middleware.js';
 export * from './modules/service.js';
 
-// Project
-export * from './project/project.js';
-export * from './project/project.repository.js';
-export * from './project/workspace.js';
-
 // Services
 export * from './inversify.config.js';
 export * from './tasks/command-task.js';
