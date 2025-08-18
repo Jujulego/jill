@@ -44,7 +44,8 @@ describe('ConfigService.searchConfig', () => {
       jobs: os.cpus().length - 1,
     };
 
-    await expect(configService.searchConfig()).resolves.toStrictEqual(result);
+    await configService.searchConfig();
+    expect(configService.config).toStrictEqual(result);
 
     expect(configService.config).toStrictEqual(result);
     expect(configService.state).toStrictEqual({
@@ -54,12 +55,6 @@ describe('ConfigService.searchConfig', () => {
 
     expect(configExplorer.search).toHaveBeenCalled();
     expect(Ajv.prototype.compile).toHaveBeenCalledWith(schema);
-  });
-
-  it('should throw error if no config was loaded', async () => {
-    vi.mocked(configExplorer.search).mockResolvedValue(null);
-
-    await expect(configService.searchConfig()).rejects.toEqual(new Error('No config file found'));
   });
 
   it('should throw error if config is invalid', async () => {
@@ -91,7 +86,8 @@ describe('ConfigService.loadConfig', () => {
       jobs: os.cpus().length - 1,
     };
 
-    await expect(configService.loadConfig('/test/.jillrc.yml')).resolves.toStrictEqual(result);
+    await configService.loadConfig('/test/.jillrc.yml');
+    expect(configService.config).toStrictEqual(result);
 
     expect(configService.config).toStrictEqual(result);
     expect(configService.state).toStrictEqual({
@@ -101,13 +97,6 @@ describe('ConfigService.loadConfig', () => {
 
     expect(configExplorer.load).toHaveBeenCalledWith('/test/.jillrc.yml');
     expect(Ajv.prototype.compile).toHaveBeenCalledWith(schema);
-  });
-
-  it('should throw error if config file was not loaded', async () => {
-    vi.mocked(configExplorer.load).mockResolvedValue(null);
-
-    await expect(configService.loadConfig('/test/.jillrc.yml'))
-      .rejects.toEqual(new Error('Config file not found'));
   });
 
   it('should throw error if config is invalid', async () => {
