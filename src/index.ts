@@ -4,9 +4,6 @@ export * from './constants.js';
 export * from './commons/git.service.js';
 export * from './types.js';
 
-// Middlewares
-export * from './middlewares/load-project.js';
-
 // Modules
 export * from './modules/middleware.js';
 export * from './modules/service.js';
