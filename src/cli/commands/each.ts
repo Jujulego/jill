@@ -60,6 +60,12 @@ const command: TaskModule<EachArgs> = {
       type: 'boolean',
       group: 'Filters:',
       describe: 'Print only private workspaces',
+    })
+
+    // Config
+    .strict(false)
+    .parserConfiguration({
+      'unknown-options-as-args': true,
     }),
   async prepare(args) {
     // Extract expression
