@@ -1,22 +1,10 @@
-import { ContextService } from '@/src/commons/context.service.js';
-import { CONFIG } from '@/src/config/config-loader.js';
-import { type Config } from '@/src/config/types.js';
-import { container } from '@/src/inversify.config.js';
-import { LoadProject } from '@/src/middlewares/load-project.js';
-import { LoadWorkspace } from '@/src/middlewares/load-workspace.js';
-import { buildCommandModule, getCommandOpts, type ICommand } from '@/src/modules/command.js';
-import { type IMiddleware } from '@/src/modules/middleware.js';
-import { getRegistry } from '@/src/modules/module.js';
-import { type Project } from '@/src/projects/project.js';
-import { Workspace } from '@/src/projects/workspace.js';
-import { type Class } from '@/src/types.js';
-import { type PackageManager } from '@/src/utils/types.js';
-import { ContainerModule } from 'inversify';
+import type { Config } from '@/src/config/types.js';
+import type { Workspace } from '@/src/projects/workspace.js';
+import type { PackageManager } from '@/src/utils/types.js';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { type Package } from 'normalize-package-data';
-import { type CommandModule } from 'yargs';
+import type { Package } from 'normalize-package-data';
 import { TestProject } from './test-project.js';
 import { TestWorkspace } from './test-workspace.js';
 import { shell } from './utils.js';
@@ -53,40 +41,6 @@ export class TestBed {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { _id: _, ...manifest } = wks.manifest;
     await fs.promises.writeFile(path, JSON.stringify(manifest));
-  }
-
-  /**
-   * Loads command, and mock LoadProject & LoadWorkspace middlewares
-   *
-   * @param command Command to prepare
-   * @param within project or workspace where the comme will be run
-   */
-  async prepareCommand(command: Class<ICommand>, within: Project | Workspace = this.project): Promise<CommandModule> {
-    // Load metadata
-    const opts = getCommandOpts(command);
-    const registry = getRegistry(command);
-
-    // Create command
-    container.load(new ContainerModule(registry));
-    const cmd = await container.getAsync<ICommand>(command);
-
-    // Inject mocks
-    const prj = within instanceof Workspace ? within.project : within;
-    const wks = within instanceof Workspace ? within : await within.mainWorkspace();
-
-    container.rebind<IMiddleware>(LoadProject).toConstantValue({
-      handler() {
-        container.get(ContextService).project = prj;
-      }
-    });
-
-    container.rebind<IMiddleware>(LoadWorkspace).toConstantValue({
-      handler() {
-        container.get(ContextService).workspace = wks;
-      }
-    });
-
-    return buildCommandModule(cmd, opts);
   }
 
   /**
@@ -139,16 +93,5 @@ export class TestBed {
     }
 
     return prjDir;
-  }
-
-  // Properties
-  get config(): Readonly<Config> {
-    return this._config;
-  }
-
-  set config(config) {
-    this._config = config;
-
-    container.rebind(CONFIG).toConstantValue(config);
   }
 }

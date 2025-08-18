@@ -4,7 +4,7 @@ import { type Logger, withLabel } from '@kyrielle/logger';
 import path from 'node:path';
 import type { Package } from 'normalize-package-data';
 import { satisfies } from 'semver';
-import { GitService } from '../commons/git.service.js';
+import { GitService } from '../cli/services/git.service.js';
 import { CommandTask } from '../tasks/command-task.js';
 import { ScriptTask } from '../tasks/script-task.js';
 import { CONFIG, LOGGER } from '../tokens.js';

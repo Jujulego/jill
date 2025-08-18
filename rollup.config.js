@@ -8,7 +8,6 @@ import pkg from './package.json' with { type: 'json' };
 const options = {
   input: {
     main: 'src/main.ts',
-    index: 'src/index.ts',
   },
   output: {
     dir: 'dist',
@@ -17,7 +16,7 @@ const options = {
     chunkFileNames: '[name].js',
     generatedCode: 'es5',
     manualChunks: {
-      'logger': ['./src/utils/logger.js'],
+     'parser': ['./src/cli/parser.js'],
     }
   },
   plugins: [

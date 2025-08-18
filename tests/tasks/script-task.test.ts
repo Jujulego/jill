@@ -1,13 +1,12 @@
 import { PlannerService } from '@/src/cli/services/planner.service.js';
-import { ConfigService } from '@/src/config/config.service.js';
 import { type Workspace } from '@/src/projects/workspace.js';
 import { CommandTask } from '@/src/tasks/command-task.js';
 import { ScriptTask } from '@/src/tasks/script-task.js';
+import { CONFIG } from '@/src/tokens.js';
 import { TestBed } from '@/tools/test-bed.js';
 import { TestCommandTask, TestScriptTask } from '@/tools/test-tasks.js';
 import { Task, TaskSet } from '@jujulego/tasks';
 import { globalScope$, inject$ } from '@kyrielle/injector';
-import { var$ } from 'kyrielle';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Setup
@@ -16,8 +15,7 @@ let wks: Workspace;
 
 beforeEach(() => {
   // Setup config
-  vi.spyOn(inject$(ConfigService), 'config$', 'get')
-    .mockReturnValue(var$({ jobs: 1, hooks: true }));
+  globalScope$().set(CONFIG, Promise.resolve({ jobs: 1, hooks: true }));
 
   // Setup project
   bed = new TestBed();
