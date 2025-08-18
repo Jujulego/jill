@@ -1,35 +1,10 @@
 import { splitCommandLine } from '@/src/utils/string.js';
-import { logger$ } from '@jujulego/logger';
-import type { Instance } from 'ink';
-import type { render } from 'ink-testing-library';
 import cp from 'node:child_process';
-import { vi } from 'vitest';
 import { ESC } from './ink-screen.js';
-
-// Logger
-export const spyLogger = logger$();
-vi.spyOn(spyLogger, 'debug');
-vi.spyOn(spyLogger, 'verbose');
-vi.spyOn(spyLogger, 'info');
-vi.spyOn(spyLogger, 'warning');
-vi.spyOn(spyLogger, 'error');
-
-// Ink
-export function wrapInkTestApp(app: ReturnType<typeof render>): Instance {
-  return {
-    ...app,
-    waitUntilExit: vi.fn() as Instance['waitUntilExit'],
-    clear: vi.fn() as Instance['clear'],
-  } as Instance;
-}
 
 // Utils
 export function noColor(str = ''): string {
   return str.replace(new RegExp(`${ESC}\\[(\\d{1,2};)*\\d{1,2}m`, 'g'), '');
-}
-
-export function flushPromises(timeout = 0): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, timeout));
 }
 
 export interface ShellOptions {

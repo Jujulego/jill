@@ -656,30 +656,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jujulego/aegis@npm:^2.1.0":
-  version: 2.1.1
-  resolution: "@jujulego/aegis@npm:2.1.1"
-  dependencies:
-    "@jujulego/event-tree": "npm:^4.3.0"
-    "@jujulego/utils": "npm:^2.0.0"
-    immer: "npm:^10.0.3"
-  dependenciesMeta:
-    vitest@0.34.5:
-      unplugged: true
-  checksum: 10/7c6dfc3043401026c3a79f409e9f63a21f094a6dc8f2f1194f84d6483b4a3fe8b9b59713752fbd13f41bcc0ac0bd7bad90d07cf611e192224fae210529203a38
-  languageName: node
-  linkType: hard
-
-"@jujulego/event-tree@npm:^4.1.0, @jujulego/event-tree@npm:^4.1.1, @jujulego/event-tree@npm:^4.3.0":
-  version: 4.3.0
-  resolution: "@jujulego/event-tree@npm:4.3.0"
-  dependenciesMeta:
-    vitest@0.34.6:
-      unplugged: true
-  checksum: 10/b8b1c50ba83dbb82f70b6dbcb6ba8b59964f54a7c836c62a883cced57d388def83c981dd0a5338d6af1f04d088d046b6f96b93a946313413d4136bb7a503bfde
-  languageName: node
-  linkType: hard
-
 "@jujulego/jill@workspace:.":
   version: 0.0.0-use.local
   resolution: "@jujulego/jill@workspace:."
@@ -687,12 +663,8 @@ __metadata:
     "@codecov/rollup-plugin": "npm:1.9.1"
     "@eslint/js": "npm:9.33.0"
     "@jujulego/2d-maths": "npm:1.6.0"
-    "@jujulego/aegis": "npm:^2.1.0"
-    "@jujulego/event-tree": "npm:^4.3.0"
-    "@jujulego/logger": "npm:^0.2.4"
     "@jujulego/quick-tag": "npm:^1.0.3"
     "@jujulego/tasks": "npm:^3.0.0-alpha.2"
-    "@jujulego/utils": "npm:^3.0.0"
     "@jujulego/vite-plugin-swc": "npm:1.2.0"
     "@kyrielle/injector": "npm:^1.1.0"
     "@kyrielle/logger": "npm:^2.0.0"
@@ -723,8 +695,6 @@ __metadata:
     ink: "npm:^6.1.0"
     ink-spinner: "npm:^5.0.0"
     ink-testing-library: "npm:4.0.0"
-    inversify: "npm:^6.0.1"
-    inversify-inject-decorators: "npm:^3.1.0"
     jiti: "npm:2.5.1"
     kyrielle: "npm:^2.5.2"
     log-symbols: "npm:^7.0.1"
@@ -734,7 +704,6 @@ __metadata:
     path-scurry: "npm:^2.0.0"
     pretty-ms: "npm:^9.2.0"
     react: "npm:^19.1.0"
-    reflect-metadata: "npm:^0.2.0"
     rollup: "npm:4.46.2"
     semver: "npm:^7.7.2"
     shx: "npm:0.4.0"
@@ -750,28 +719,6 @@ __metadata:
     jill: ./bin/jill.js
   languageName: unknown
   linkType: soft
-
-"@jujulego/logger@npm:^0.2.4":
-  version: 0.2.4
-  resolution: "@jujulego/logger@npm:0.2.4"
-  dependencies:
-    "@jujulego/event-tree": "npm:^4.1.1"
-    "@jujulego/quick-tag": "npm:^0.3.3"
-    chalk: "npm:^5.3.0"
-    chalk-template: "npm:^1.1.0"
-  checksum: 10/a34b4e9fe45cc1ce867e7f1bb19a78f8e0446c0e6a70caa983aefcc89851cf4ec659a673df7cac3ba28f720c494ff7041aef26b43c5232386735f4bd78ba9177
-  languageName: node
-  linkType: hard
-
-"@jujulego/quick-tag@npm:^0.3.3":
-  version: 0.3.3
-  resolution: "@jujulego/quick-tag@npm:0.3.3"
-  dependenciesMeta:
-    vitest@0.34.6:
-      unplugged: true
-  checksum: 10/bd8d2e936c160b3e45eccf86f93104390a1d1fc7b908f595e01cf4a1442124e25bb3501e9137f676fcdf28d5c322c10e836b5d0c24376690689cead29b9be6a9
-  languageName: node
-  linkType: hard
 
 "@jujulego/quick-tag@npm:^1.0.1, @jujulego/quick-tag@npm:^1.0.3":
   version: 1.0.3
@@ -798,25 +745,6 @@ __metadata:
     vitest@3.2.4:
       unplugged: true
   checksum: 10/749c8259b7b0fbc9c368ec0167af84cfa7c32bdf426dcc358dd0f84f75595a25c3a4e2668b694f32fa87e6d41e697040a8422cd270fae43a3b7326755368e7ba
-  languageName: node
-  linkType: hard
-
-"@jujulego/utils@npm:^2.0.0":
-  version: 2.1.1
-  resolution: "@jujulego/utils@npm:2.1.1"
-  dependencies:
-    "@jujulego/event-tree": "npm:^4.1.0"
-  checksum: 10/16ad5be2ac5708b2922e9a07a5b1b450c9848f02e29d8af7c4805de1b2879766ac8e1c20036c1c3043eee3e4768907b8330e8b08df6a974df4a37854af5f7bb2
-  languageName: node
-  linkType: hard
-
-"@jujulego/utils@npm:^3.0.0":
-  version: 3.0.4
-  resolution: "@jujulego/utils@npm:3.0.4"
-  dependencies:
-    "@swc/helpers": "npm:^0.5.3"
-    kyrielle: "npm:^0.6.0"
-  checksum: 10/259e8c2979e48ec3c4c24cba9f33ba99a3f2ae0e0c65e017c93b5721dca598cb56d467b856fdf05060a03010797cf8cc325251c8ebfbe8b8c593c588eee2a523
   languageName: node
   linkType: hard
 
@@ -3731,13 +3659,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"immer@npm:^10.0.3":
-  version: 10.0.3
-  resolution: "immer@npm:10.0.3"
-  checksum: 10/0be07be2f278bd1988112613648e0cf9a64fc316d5b4817f273b519fbfed0f1714275b041911f0b8c560c199b2e3430824ce620c23262c96c9d4efc9909ff1cc
-  languageName: node
-  linkType: hard
-
 "import-fresh@npm:^3.2.1, import-fresh@npm:^3.3.0":
   version: 3.3.0
   resolution: "import-fresh@npm:3.3.0"
@@ -3866,20 +3787,6 @@ __metadata:
   version: 1.4.0
   resolution: "interpret@npm:1.4.0"
   checksum: 10/5beec568d3f60543d0f61f2c5969d44dffcb1a372fe5abcdb8013968114d4e4aaac06bc971a4c9f5bd52d150881d8ebad72a8c60686b1361f5f0522f39c0e1a3
-  languageName: node
-  linkType: hard
-
-"inversify-inject-decorators@npm:^3.1.0":
-  version: 3.1.0
-  resolution: "inversify-inject-decorators@npm:3.1.0"
-  checksum: 10/26a6512a0c6681db74f0f20d53536dfb685e60c18ede3ca440859e688c2874ad7977d3db5dbf8e414d46033a98b46986a5b7d62d7dd4abddc0afa080d13f12e9
-  languageName: node
-  linkType: hard
-
-"inversify@npm:^6.0.1":
-  version: 6.0.2
-  resolution: "inversify@npm:6.0.2"
-  checksum: 10/0e4d07fb2dac82d21f55c711cdf35f9f75656c3f4651b8dd27f5aa3dcb154ad492ebdd0a66fbe394ac090aac0728da999d2a1c7ed62b5d8c772cad06e1684483
   languageName: node
   linkType: hard
 
@@ -4372,18 +4279,6 @@ __metadata:
   dependencies:
     json-buffer: "npm:3.0.1"
   checksum: 10/167eb6ef64cc84b6fa0780ee50c9de456b422a1e18802209234f7c2cf7eae648c7741f32e50d7e24ccb22b24c13154070b01563d642755b156c357431a191e75
-  languageName: node
-  linkType: hard
-
-"kyrielle@npm:^0.6.0":
-  version: 0.6.0
-  resolution: "kyrielle@npm:0.6.0"
-  dependencies:
-    immer: "npm:^10.0.3"
-  dependenciesMeta:
-    vitest@0.34.6:
-      unplugged: true
-  checksum: 10/7045240dbb778d939cd40267fddad5354a509789f8b7424dcbba3a096fb01141ebbefdfd0fec0a832857449a1e88b76f57889193e29642d0bbf2893ca43fd15c
   languageName: node
   linkType: hard
 
@@ -5227,13 +5122,6 @@ __metadata:
   dependencies:
     resolve: "npm:^1.1.6"
   checksum: 10/fe76bf9c21875ac16e235defedd7cbd34f333c02a92546142b7911a0f7c7059d2e16f441fe6fb9ae203f459c05a31b2bcf26202896d89e390eda7514d5d2702b
-  languageName: node
-  linkType: hard
-
-"reflect-metadata@npm:^0.2.0":
-  version: 0.2.2
-  resolution: "reflect-metadata@npm:0.2.2"
-  checksum: 10/1c93f9ac790fea1c852fde80c91b2760420069f4862f28e6fae0c00c6937a56508716b0ed2419ab02869dd488d123c4ab92d062ae84e8739ea7417fae10c4745
   languageName: node
   linkType: hard
 
