@@ -1,4 +1,5 @@
 import { asyncScope$, inject$ } from '@kyrielle/injector';
+import path from 'node:path';
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
 import type { Project } from '../../projects/project.js';
 import { ProjectsRepository } from '../../projects/projects.repository.js';
@@ -25,7 +26,9 @@ export function withProject<T = unknown>(parser: Argv<T>): Argv<T & ProjectArgs>
     })
     .middleware(async (args: ArgumentsCamelCase<Writable<ProjectArgs>>) => {
       const repository = inject$(ProjectsRepository);
-      args.project = await repository.searchProjectRoot(args.project || inject$(CWD, asyncScope$()));
+      const directory = path.resolve(inject$(CWD, asyncScope$()), args.project);
+
+      args.project = await repository.searchProjectRoot(directory);
     });
 }
 
@@ -34,6 +37,7 @@ export function withProject<T = unknown>(parser: Argv<T>): Argv<T & ProjectArgs>
  */
 export function loadProject(args: ArgumentsCamelCase<ProjectArgs>): Project {
   const repository = inject$(ProjectsRepository);
+
   return repository.getProject(args.project, {
     packageManager: args.packageManager
   });
