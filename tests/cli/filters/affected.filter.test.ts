@@ -1,5 +1,5 @@
 import { GitService } from '@/src/commons/git.service.js';
-import { isAffected$ } from '@/src/filters/affected.filter.js';
+import { isAffected$ } from '@/src/cli/filters/is-affected.js';
 import { type Workspace } from '@/src/projects/workspace.js';
 import { CONFIG } from '@/src/tokens.js';
 import { TestBed } from '@/tools/test-bed.js';

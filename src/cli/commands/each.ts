@@ -1,14 +1,14 @@
 import { TaskSet } from '@jujulego/tasks';
 import { inject$ } from '@kyrielle/injector';
 import { asyncIterator$, pipe$, type SimpleAsyncIterator } from 'kyrielle';
-import { isAffected$ } from '../../filters/affected.filter.js';
-import { pipeline$ } from '../../filters/pipeline$.js';
-import { isPrivate$ } from '../../filters/private.filter.js';
-import { hasEveryScript$ } from '../../filters/scripts.filter.js';
 import type { Workspace, WorkspaceDepsMode } from '../../projects/workspace.js';
 import type { PlanModeArgs, TaskModule } from '../bases/task-module.js';
+import { hasEveryScript$ } from '../filters/has-scripts.js';
+import { isAffected$ } from '../filters/is-affected.js';
+import { isPrivate$ } from '../filters/is-private.js';
 import { loadProject, type ProjectArgs, withProject } from '../middlewares/project.js';
 import { TaskParserService } from '../services/task-parser.service.js';
+import { pipeline$ } from '../utils/pipeline$.js';
 
 // Command
 const command: TaskModule<EachArgs> = {

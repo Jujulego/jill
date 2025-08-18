@@ -1,4 +1,4 @@
-import { isPrivate$ } from '@/src/filters/private.filter.js';
+import { isPrivate$ } from '@/src/cli/filters/is-private.js';
 import { TestBed } from '@/tools/test-bed.js';
 import { asyncIterator$, collect$, pipe$, waitFor$ } from 'kyrielle';
 import { beforeEach, describe, expect, it } from 'vitest';

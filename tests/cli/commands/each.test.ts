@@ -1,10 +1,10 @@
 import { planCommand } from '@/src/cli/bases/task-module.js';
 import { each } from '@/src/cli/commands.js';
+import { hasEveryScript$ } from '@/src/cli/filters/has-scripts.js';
+import { isPrivate$ } from '@/src/cli/filters/is-private.js';
 import { loggerMiddleware } from '@/src/cli/middlewares/logger.middleware.js';
 import { loadProject, type ProjectArgs, withProject } from '@/src/cli/middlewares/project.js';
-import { isAffected$ } from '@/src/filters/affected.filter.js';
-import { isPrivate$ } from '@/src/filters/private.filter.js';
-import { hasEveryScript$ } from '@/src/filters/scripts.filter.js';
+import { isAffected$ } from '@/src/cli/filters/is-affected.js';
 import { TestBed } from '@/tools/test-bed.js';
 import { TestScriptTask } from '@/tools/test-tasks.js';
 import type { TaskSet } from '@jujulego/tasks';
@@ -15,9 +15,9 @@ import yargs, { type Argv } from 'yargs';
 
 // Mocks
 vi.mock('@/src/cli/middlewares/project.js');
-vi.mock('@/src/filters/affected.filter.js');
-vi.mock('@/src/filters/private.filter.js');
-vi.mock('@/src/filters/scripts.filter.js');
+vi.mock('@/src/cli/filters/has-scripts.js');
+vi.mock('@/src/cli/filters/is-affected.js');
+vi.mock('@/src/cli/filters/is-private.js');
 
 // Setup
 let bed: TestBed;

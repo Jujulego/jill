@@ -4,12 +4,6 @@ export * from './constants.js';
 export * from './commons/git.service.js';
 export * from './types.js';
 
-// Filters
-export * from './filters/affected.filter.js';
-export * from './filters/pipeline.js';
-export * from './filters/private.filter.js';
-export * from './filters/scripts.filter.js';
-
 // Middlewares
 export * from './middlewares/load-project.js';
 
