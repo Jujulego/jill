@@ -1,6 +1,11 @@
 import isUnicodeSupported from 'is-unicode-supported';
 
-const isSupported = isUnicodeSupported();
+const isSupported = !isUnicodeSupported();
 
-export const success = isSupported ? '✔' : '√ ';
-export const error = isSupported ? '✖' : '× ';
+export function success(fixed = false) {
+  return isSupported ? '✔' : (fixed ? '√ ' : '√');
+}
+
+export function error(fixed = false) {
+  return isSupported ? '✖' : (fixed ? '× ' : '×');
+}

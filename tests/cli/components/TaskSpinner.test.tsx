@@ -43,7 +43,7 @@ describe('<TaskSpinner>', () => {
     task.events$.emit('completed', { status: 'done', duration: 100 });
 
     await vi.waitFor(() => {
-      expect(lastFrame()).toEqual(expect.ignoreColor(`${symbols.success} cmd (took 100ms)`));
+      expect(lastFrame()).toEqual(expect.ignoreColor(`${symbols.success()} cmd (took 100ms)`));
     });
   });
 
@@ -55,7 +55,7 @@ describe('<TaskSpinner>', () => {
     task.events$.emit('completed', { status: 'failed', duration: 100 });
 
     await vi.waitFor(() => {
-      expect(lastFrame()).toEqual(expect.ignoreColor(`${symbols.error} cmd (took 100ms)`));
+      expect(lastFrame()).toEqual(expect.ignoreColor(`${symbols.error()} cmd (took 100ms)`));
     });
   });
 });
