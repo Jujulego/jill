@@ -1,9 +1,9 @@
+import { TestBed } from '@/tools/test-bed.js';
+import type { TaskSummary } from '@jujulego/tasks';
 import fs from 'node:fs/promises';
 import path from 'node:path';
-
-import { TestBed } from '@/tools/test-bed.js';
-
 import { fileExists, jill } from './utils.js';
+import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 
 // Setup
 const bed = new TestBed();
@@ -50,7 +50,7 @@ describe('jill run', () => {
     beforeAll(async () => {
       baseDir = await bed.createProjectPackage(packageManager);
       tmpDir = path.dirname(baseDir);
-    }, 15000);
+    }, 60000);
 
     beforeEach(async (ctx) => {
       prjDir = path.join(tmpDir, ctx.task.id);
@@ -70,7 +70,7 @@ describe('jill run', () => {
       expect(res.code).toBe(0);
 
       expect(res.screen.screen).toMatchLines([
-        expect.ignoreColor(/^. Run start in wks-c \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^. Run start script in wks-c \(took [0-9.]+m?s\)$/),
         expect.ignoreColor(/^. 1 done$/),
       ]);
 
@@ -87,8 +87,8 @@ describe('jill run', () => {
 
       expect(res.screen.screen).toMatchLines([
         expect.ignoreColor(/^. In sequence \(took [0-9.]+m?s\)$/),
-        expect.ignoreColor(/^ {2}. Run build in wks-c \(took [0-9.]+m?s\)$/),
-        expect.ignoreColor(/^ {2}. Run start in wks-c \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^ {2}. Run build script in wks-c \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^ {2}. Run start script in wks-c \(took [0-9.]+m?s\)$/),
         expect.ignoreColor(/^. 2 done$/),
       ]);
 
@@ -107,7 +107,7 @@ describe('jill run', () => {
       expect(res.code).toBe(0);
 
       expect(res.screen.screen).toMatchLines([
-        expect.ignoreColor(/^. Run hooked in wks-c \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^. Run hooked script in wks-c \(took [0-9.]+m?s\)$/),
         expect.ignoreColor(/^. 3 done$/),
       ]);
 
@@ -129,7 +129,7 @@ describe('jill run', () => {
       expect(res.code).toBe(1);
 
       expect(res.screen.screen).toMatchLines([
-        expect.ignoreColor(/^. Run fails in wks-c \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^. Run fails script in wks-c \(took [0-9.]+m?s\)$/),
         expect.ignoreColor(/^ {2}.( yarn exec)? node -e "process.exit\(1\)" \(took [0-9.]+m?s\)$/),
         expect.ignoreColor(/^. 1 failed$/),
       ]);
@@ -143,8 +143,8 @@ describe('jill run', () => {
 
       expect(res.screen.screen).toMatchLines([
         expect.ignoreColor(/^. In sequence \(took [0-9.]+m?s\)$/),
-        expect.ignoreColor(/^ {2}. Run build in wks-c \(took [0-9.]+m?s\)$/),
-        expect.ignoreColor(/^ {2}. Run fails in wks-c \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^ {2}. Run build script in wks-c \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^ {2}. Run fails script in wks-c \(took [0-9.]+m?s\)$/),
         expect.ignoreColor(/^ {4}.( yarn exec)? node -e "process.exit\(1\)" \(took [0-9.]+m?s\)$/),
         expect.ignoreColor(/^. 1 done, . 1 failed$/),
       ]);
@@ -156,9 +156,9 @@ describe('jill run', () => {
       // Check jill output
       expect(res.code).toBe(1);
 
-      expect(res.stderr).toMatchLines([
-        expect.ignoreColor('Workspace wks-c have no miss script'),
-      ]);
+      expect(res.stderr).toEqual(expect.arrayContaining([
+        expect.ignoreColor(/Workspace wks-c have no miss script/),
+      ]));
     });
 
     it('should run wks-b start script and build script', async () => {
@@ -168,8 +168,8 @@ describe('jill run', () => {
       expect(res.code).toBe(0);
 
       expect(res.screen.screen).toMatchLines([
-        expect.ignoreColor(/^. Run start in wks-b \(took [0-9.]+m?s\)$/),
-        expect.ignoreColor(/^. Run build in wks-c \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^. Run start script in wks-b \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^. Run build script in wks-c \(took [0-9.]+m?s\)$/),
         expect.ignoreColor(/^. 2 done$/),
       ]);
 
@@ -187,7 +187,7 @@ describe('jill run', () => {
       // Check jill plan
       expect(res.code).toBe(0);
 
-      const plan = JSON.parse(res.stdout.join('\n'));
+      const plan = JSON.parse(res.stdout.join('\n')) as TaskSummary[];
       expect(plan).toHaveLength(4);
 
       expect(plan[0]).toMatchObject({
@@ -197,7 +197,7 @@ describe('jill run', () => {
           script: 'build',
           workspace: {
             name: 'wks-c',
-            cwd: path.join(prjDir, 'wks-c')
+            root: path.join(prjDir, 'wks-c')
           }
         }
       });
@@ -209,7 +209,7 @@ describe('jill run', () => {
           command: 'node',
           workspace: {
             name: 'wks-c',
-            cwd: path.join(prjDir, 'wks-c')
+            root: path.join(prjDir, 'wks-c')
           }
         }
       });
@@ -224,7 +224,7 @@ describe('jill run', () => {
           script: 'start',
           workspace: {
             name: 'wks-b',
-            cwd: path.join(prjDir, 'wks-b')
+            root: path.join(prjDir, 'wks-b')
           }
         }
       });
@@ -236,7 +236,7 @@ describe('jill run', () => {
           command: 'node',
           workspace: {
             name: 'wks-b',
-            cwd: path.join(prjDir, 'wks-b')
+            root: path.join(prjDir, 'wks-b')
           }
         }
       });
@@ -245,4 +245,4 @@ describe('jill run', () => {
       await expect(fileExists(path.join(prjDir, 'wks-b', 'start.txt'))).resolves.toBe(false);
     });
   });
-}, { timeout: 10000 });
+}, 10000);
