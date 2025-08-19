@@ -1,8 +1,8 @@
 import TaskSpinner from '@/src/cli/components/TaskSpinner.jsx';
+import * as symbols from '@/src/utils/symbols.js';
 import { noColor } from '@/tools/utils.js';
 import { SpawnTask } from '@jujulego/tasks';
 import { cleanup, render } from 'ink-testing-library';
-import symbols from 'log-symbols';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Setup

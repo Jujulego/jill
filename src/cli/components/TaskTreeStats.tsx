@@ -1,8 +1,8 @@
 import type { TaskManager } from '@jujulego/tasks';
 import { Text } from 'ink';
 import Spinner from 'ink-spinner';
-import symbols from 'log-symbols';
 import { useLayoutEffect, useState } from 'react';
+import * as symbols from '../../utils/symbols.js';
 
 // Types
 export interface TaskTreeStatsProps {

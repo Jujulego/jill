@@ -1,11 +1,11 @@
 import { type Task } from '@jujulego/tasks';
 import { Box, Text } from 'ink';
 import Spinner from 'ink-spinner';
-import symbols from 'log-symbols';
 import ms from 'pretty-ms';
 import { useLayoutEffect, useState } from 'react';
 import { isCommandCtx } from '../../tasks/command-task.js';
 import { isScriptCtx } from '../../tasks/script-task.js';
+import * as symbols from '../../utils/symbols.js';
 import TaskName from './TaskName.jsx';
 
 // Types
