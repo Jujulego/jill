@@ -24,7 +24,7 @@ const command: CommandModule<unknown, ListArgs> = {
       type: 'string',
       coerce: (rev: string) => rev === '' ? 'master' : rev,
       group: 'Filters:',
-      desc: 'Print only affected workspaces towards given git revision. If no revision is given, it will check towards master. Replaces %name by workspace name.',
+      desc: `Print only affected workspaces towards given git revision. If no revision is given, it will check towards master. Replaces ${chalk.bold('%name')} by workspace name.`,
     })
     .option('affected-rev-fallback', {
       type: 'string',
@@ -42,8 +42,9 @@ const command: CommandModule<unknown, ListArgs> = {
       type: 'array',
       choices: ['name', 'version', 'root', 'slug'] as const,
       group: 'Format:',
-      required: true,
-      desc: 'Select printed attributes'
+      default: [] as ListAttr[],
+      description: 'Select printed attributes',
+      defaultDescription: '"name" only'
     })
     .option('headers', {
       type: 'boolean',
@@ -75,7 +76,8 @@ const command: CommandModule<unknown, ListArgs> = {
       choices: ['name', 'version', 'root', 'slug'] as const,
       group: 'Sort:',
       default: [],
-      desc: 'Sort output by given attribute. By default sorts by name if printed'
+      description: 'Sort output by given attribute',
+      defaultDescription: 'first attribute'
     })
     .option('sort-order', {
       alias: ['o', 'order'],
@@ -93,7 +95,7 @@ const command: CommandModule<unknown, ListArgs> = {
     })
     .middleware((argv) => {
       // Compute attributes
-      if (!argv.attribute?.length) {
+      if (!argv.attribute.length) {
         if (argv.json) {
           argv.attrs = argv.attr = argv.attribute = ['name', 'version', 'slug', 'root'];
         } else if (argv.long) {
