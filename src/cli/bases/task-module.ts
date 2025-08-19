@@ -1,6 +1,7 @@
 import { plan, type TaskSet } from '@jujulego/tasks';
 import { inject$ } from '@kyrielle/injector';
 import type { Mutator } from 'kyrielle';
+import process from 'node:process';
 import type { ArgumentsCamelCase, Argv, CommandModule } from 'yargs';
 import { LOGGER } from '../../tokens.js';
 import { printJson } from '../../utils/json.js';
@@ -56,6 +57,7 @@ export function executeCommand<T extends LoggerArgs, U extends PlanModeArgs>(mod
         } else {
           const logger = inject$(LOGGER);
           logger.warning('No task found');
+          process.exitCode = 1;
         }
       }
     }
