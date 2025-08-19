@@ -16,7 +16,6 @@ function baseParser() {
     yargs(hideBin(process.argv))
       .scriptName('jill')
       .version(version)
-      .strictCommands()
       .demandCommand()
       .recommendCommands(),
     loggerMiddleware,

@@ -21,9 +21,9 @@
     "build:types": "tsc -p tsconfig.build.json",
     "watch": "rollup -c --watch",
     "test": "vitest run tests tools",
-    "e2e": "vitest run e2e",
-    "e2e:npm": "yarn run e2e -t npm",
-    "e2e:yarn": "yarn run e2e -t yarn"
+    "e2e": "vitest run e2e --slow-test-threshold=2000",
+    "e2e:npm": "yarn run e2e -t npm --slow-test-threshold=2000",
+    "e2e:yarn": "yarn run e2e -t yarn --slow-test-threshold=2000"
   },
   "engines": {
     "node": "20.x || 22.x || 24.x"
