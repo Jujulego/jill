@@ -1,9 +1,8 @@
+import { TestBed } from '@/tools/test-bed.js';
+import type { TaskSummary } from '@jujulego/tasks';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-
-import { TestBed } from '@/tools/test-bed.js';
-
 import { fileExists, jill } from './utils.js';
 
 // Setup
@@ -56,9 +55,6 @@ describe('jill exec', () => {
       expect(res.code).toBe(0);
 
       expect(res.screen.screen).toMatchLines(['']);
-      expect(res.stderr).toMatchLines([
-        expect.ignoreColor('No task found')
-      ]);
 
       // Check script result
       await expect(fs.readFile(path.join(prjDir, 'wks-c', 'script.txt'), 'utf8'))
@@ -71,10 +67,7 @@ describe('jill exec', () => {
       // Check jill output
       expect(res.code).toBe(0);
 
-      expect(res.screen.screen).toMatchLines(['', 'toto']);
-      expect(res.stderr).toMatchLines([
-        expect.ignoreColor('No task found')
-      ]);
+      expect(res.screen.screen).toMatchLines(['toto']);
     });
 
     it('should be the default command', async () => {
@@ -102,7 +95,7 @@ describe('jill exec', () => {
       expect(res.code).toBe(0);
 
       expect(res.screen.screen).toMatchLines([
-        expect.ignoreColor(/^. Run build in wks-c \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^. Run build script in wks-c \(took [0-9.]+m?s\)$/),
         expect.ignoreColor(/^. 1 done$/),
       ]);
 
@@ -120,7 +113,7 @@ describe('jill exec', () => {
       // Check jill plan
       expect(res.code).toBe(0);
 
-      const plan = JSON.parse(res.stdout.join('\n'));
+      const plan = JSON.parse(res.stdout.join('\n')) as TaskSummary[];
       expect(plan).toHaveLength(3);
 
       expect(plan[0]).toMatchObject({
@@ -130,7 +123,7 @@ describe('jill exec', () => {
           script: 'build',
           workspace: {
             name: 'wks-c',
-            cwd: path.join(prjDir, 'wks-c')
+            root: path.join(prjDir, 'wks-c')
           }
         }
       });
@@ -142,7 +135,7 @@ describe('jill exec', () => {
           command: 'node',
           workspace: {
             name: 'wks-c',
-            cwd: path.join(prjDir, 'wks-c')
+            root: path.join(prjDir, 'wks-c')
           }
         }
       });
@@ -156,7 +149,7 @@ describe('jill exec', () => {
           command: 'node',
           workspace: {
             name: 'wks-b',
-            cwd: path.join(prjDir, 'wks-b')
+            root: path.join(prjDir, 'wks-b')
           }
         }
       });
@@ -165,4 +158,4 @@ describe('jill exec', () => {
       await expect(fileExists(path.join(prjDir, 'wks-b', 'script.txt'))).resolves.toBe(false);
     });
   });
-}, { timeout: 10000 });
+}, 10000);

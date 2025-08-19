@@ -1,11 +1,11 @@
 import { type Task } from '@jujulego/tasks';
 import { Box, Text } from 'ink';
 import Spinner from 'ink-spinner';
-import symbols from 'log-symbols';
 import ms from 'pretty-ms';
 import { useLayoutEffect, useState } from 'react';
 import { isCommandCtx } from '../../tasks/command-task.js';
 import { isScriptCtx } from '../../tasks/script-task.js';
+import * as symbols from '../../utils/symbols.js';
 import TaskName from './TaskName.jsx';
 
 // Types
@@ -67,7 +67,7 @@ export default function TaskSpinner({ task }: TaskSpinnerProps) {
     case 'done':
       return (
         <Box>
-          <Text color="green">{ symbols.success }</Text>
+          <Text color="green">{ symbols.success(true) }</Text>
           <Box>
             <Text dimColor={isScriptChild} wrap="truncate">
               <TaskName task={task} withWorkspace />
@@ -82,7 +82,7 @@ export default function TaskSpinner({ task }: TaskSpinnerProps) {
     case 'failed':
       return (
         <Box>
-          <Text color="red">{ symbols.error }</Text>
+          <Text color="red">{ symbols.error(true) }</Text>
           <Box>
             <Text dimColor={isScriptChild} wrap="truncate">
               <TaskName task={task} withWorkspace />

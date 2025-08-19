@@ -21,16 +21,16 @@
     "build:types": "tsc -p tsconfig.build.json",
     "watch": "rollup -c --watch",
     "test": "vitest run tests tools",
-    "e2e": "vitest run e2e",
-    "e2e:npm": "yarn run e2e -t npm",
-    "e2e:yarn": "yarn run e2e -t yarn"
+    "e2e": "vitest run e2e --slow-test-threshold=2000",
+    "e2e:npm": "yarn run e2e -t npm --slow-test-threshold=2000",
+    "e2e:yarn": "yarn run e2e -t yarn --slow-test-threshold=2000"
   },
   "engines": {
-    "node": "18.x || 20.x || 22.x"
+    "node": "20.x || 22.x || 24.x"
   },
   "dependencies": {
     "@jujulego/quick-tag": "^1.0.3",
-    "@jujulego/tasks": "^3.0.0-alpha.2",
+    "@jujulego/tasks": "^3.0.0-alpha.3",
     "@kyrielle/injector": "^1.1.0",
     "@kyrielle/logger": "^2.0.0",
     "@swc/helpers": "^0.5.3",
@@ -41,8 +41,8 @@
     "glob": "^11.0.3",
     "ink": "^6.1.0",
     "ink-spinner": "^5.0.0",
+    "is-unicode-supported": "^2.1.0",
     "kyrielle": "^2.5.2",
-    "log-symbols": "^7.0.1",
     "moo": "^0.5.2",
     "normalize-package-data": "^8.0.0",
     "path-scurry": "^2.0.0",

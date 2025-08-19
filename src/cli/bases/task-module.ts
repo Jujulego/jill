@@ -1,6 +1,7 @@
 import { plan, type TaskSet } from '@jujulego/tasks';
 import { inject$ } from '@kyrielle/injector';
 import type { Mutator } from 'kyrielle';
+import process from 'node:process';
 import type { ArgumentsCamelCase, Argv, CommandModule } from 'yargs';
 import { LOGGER } from '../../tokens.js';
 import { printJson } from '../../utils/json.js';
@@ -15,11 +16,16 @@ export interface TaskModule<T extends PlanModeArgs = PlanModeArgs> extends Omit<
    * Generates tasks to be run, but do not execute them.
    */
   prepare(this: void, args: ArgumentsCamelCase<T>): Promise<TaskSet> | TaskSet;
+
+  /**
+   * Allows to override default "execute" behavior
+   */
+  execute?: (this: void, args: ArgumentsCamelCase<T>, tasks: TaskSet) => Promise<void> | void;
 }
 
 // Utils
 export function executeCommand<T extends LoggerArgs, U extends PlanModeArgs>(module: TaskModule<U>) {
-  const { prepare, ...rest } = module;
+  const { prepare, execute, ...rest } = module;
 
   return command<T, U>({
     ...rest,
@@ -42,12 +48,17 @@ export function executeCommand<T extends LoggerArgs, U extends PlanModeArgs>(mod
           const { default: TaskPlanInk } = await import('./task-plan.ink.jsx');
           await TaskPlanInk({ tasks });
         }
-      } else if (tasks.tasks.length > 0) {
-        const { default: TaskExecInk } = await import('./task-exec.ink.jsx');
-        await TaskExecInk({ tasks, verbose: ['verbose', 'debug'].includes(args.verbose) });
       } else {
-        const logger = inject$(LOGGER);
-        logger.warning('No task found');
+        if (execute) {
+          await execute(args, tasks);
+        } else if (tasks.tasks.length > 0) {
+          const { default: TaskExecInk } = await import('./task-exec.ink.jsx');
+          await TaskExecInk({ tasks, verbose: ['verbose', 'debug'].includes(args.verbose) });
+        } else {
+          const logger = inject$(LOGGER);
+          logger.warning('No task found');
+          process.exitCode = 1;
+        }
       }
     }
   });

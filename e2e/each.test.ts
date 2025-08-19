@@ -1,8 +1,8 @@
+import { TestBed } from '@/tools/test-bed.js';
+import type { TaskSummary } from '@jujulego/tasks';
 import fs from 'node:fs/promises';
 import path from 'node:path';
-
-import { TestBed } from '@/tools/test-bed.js';
-
+import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { fileExists, jill } from './utils.js';
 
 // Setup
@@ -83,10 +83,10 @@ describe('jill each', () => {
       expect(res.code).toBe(0);
 
       expect(res.screen.screen).toMatchLines([
-        expect.ignoreColor(/^. Run start in wks-a \(took [0-9.]+m?s\)$/),
-        expect.ignoreColor(/^. Run build in wks-b \(took [0-9.]+m?s\)$/),
-        expect.ignoreColor(/^. Run start in wks-b \(took [0-9.]+m?s\)$/),
-        expect.ignoreColor(/^. Run build in wks-c \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^. Run start script in wks-a \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^. Run build script in wks-b \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^. Run start script in wks-b \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^. Run build script in wks-c \(took [0-9.]+m?s\)$/),
         expect.ignoreColor(/^. 4 done$/),
       ]);
 
@@ -112,12 +112,12 @@ describe('jill each', () => {
 
       expect(res.screen.screen).toMatchLines([
         expect.ignoreColor(/^. In sequence \(took [0-9.]+m?s\)$/),
-        expect.ignoreColor(/^ {2}. Run build in wks-a \(took [0-9.]+m?s\)$/),
-        expect.ignoreColor(/^ {2}. Run start in wks-a \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^ {2}. Run build script in wks-a \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^ {2}. Run start script in wks-a \(took [0-9.]+m?s\)$/),
         expect.ignoreColor(/^. In sequence \(took [0-9.]+m?s\)$/),
-        expect.ignoreColor(/^ {2}. Run build in wks-b \(took [0-9.]+m?s\)$/),
-        expect.ignoreColor(/^ {2}. Run start in wks-b \(took [0-9.]+m?s\)$/),
-        expect.ignoreColor(/^. Run build in wks-c \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^ {2}. Run build script in wks-b \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^ {2}. Run start script in wks-b \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^. Run build script in wks-c \(took [0-9.]+m?s\)$/),
         expect.ignoreColor(/^. 5 done$/),
       ]);
 
@@ -145,9 +145,9 @@ describe('jill each', () => {
       expect(res.code).toBe(0);
 
       expect(res.screen.screen).toMatchLines([
-        expect.ignoreColor(/^. Run hooked in wks-b \(took [0-9.]+m?s\)$/),
-        expect.ignoreColor(/^. Run build in wks-c \(took [0-9.]+m?s\)$/),
-        expect.ignoreColor(/^. Run hooked in wks-c \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^. Run hooked script in wks-b \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^. Run build script in wks-c \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^. Run hooked script in wks-c \(took [0-9.]+m?s\)$/),
         expect.ignoreColor(/^. 7 done$/),
       ]);
 
@@ -181,9 +181,9 @@ describe('jill each', () => {
       expect(res.code).toBe(1);
 
       expect(res.screen.screen).toMatchLines([
-        expect.ignoreColor(/^. Run fails in wks-b \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^. Run fails script in wks-b \(took [0-9.]+m?s\)$/),
         expect.ignoreColor(/^ {2}.( yarn exec)? node -e "process.exit\(1\)" \(took [0-9.]+m?s\)$/),
-        expect.ignoreColor(/^. Run build in wks-c \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^. Run build script in wks-c \(took [0-9.]+m?s\)$/),
         expect.ignoreColor(/^. 1 done, . 1 failed$/),
       ]);
 
@@ -207,7 +207,7 @@ describe('jill each', () => {
       // Check jill output
       expect(res.code).toBe(1);
       expect(res.stderr).toMatchLines([
-        expect.ignoreColor(/^. No matching workspace found !$/),
+        expect.ignoreColor(/^No task found \+[0-9.]+m?s$/),
       ]);
 
       // No new files
@@ -230,7 +230,7 @@ describe('jill each', () => {
       // Check jill output
       expect(res.code).toBe(0);
 
-      const plan = JSON.parse(res.stdout.join('\n'));
+      const plan = JSON.parse(res.stdout.join('\n')) as TaskSummary[];
       expect(plan).toHaveLength(8);
 
       expect(plan[0]).toMatchObject({
@@ -240,7 +240,7 @@ describe('jill each', () => {
           script: 'build',
           workspace: {
             name: 'wks-c',
-            cwd: path.join(prjDir, 'wks-c')
+            root: path.join(prjDir, 'wks-c')
           }
         }
       });
@@ -252,7 +252,7 @@ describe('jill each', () => {
           command: 'node',
           workspace: {
             name: 'wks-c',
-            cwd: path.join(prjDir, 'wks-c')
+            root: path.join(prjDir, 'wks-c')
           }
         }
       });
@@ -267,7 +267,7 @@ describe('jill each', () => {
           script: 'start',
           workspace: {
             name: 'wks-b',
-            cwd: path.join(prjDir, 'wks-b')
+            root: path.join(prjDir, 'wks-b')
           }
         }
       });
@@ -279,7 +279,7 @@ describe('jill each', () => {
           command: 'node',
           workspace: {
             name: 'wks-b',
-            cwd: path.join(prjDir, 'wks-b')
+            root: path.join(prjDir, 'wks-b')
           }
         }
       });
@@ -294,7 +294,7 @@ describe('jill each', () => {
           script: 'build',
           workspace: {
             name: 'wks-b',
-            cwd: path.join(prjDir, 'wks-b')
+            root: path.join(prjDir, 'wks-b')
           }
         }
       });
@@ -306,7 +306,7 @@ describe('jill each', () => {
           command: 'node',
           workspace: {
             name: 'wks-b',
-            cwd: path.join(prjDir, 'wks-b')
+            root: path.join(prjDir, 'wks-b')
           }
         }
       });
@@ -322,7 +322,7 @@ describe('jill each', () => {
           script: 'start',
           workspace: {
             name: 'wks-a',
-            cwd: path.join(prjDir, 'wks-a')
+            root: path.join(prjDir, 'wks-a')
           }
         }
       });
@@ -334,7 +334,7 @@ describe('jill each', () => {
           command: 'node',
           workspace: {
             name: 'wks-a',
-            cwd: path.join(prjDir, 'wks-a')
+            root: path.join(prjDir, 'wks-a')
           }
         }
       });
@@ -345,4 +345,4 @@ describe('jill each', () => {
       await expect(fileExists(path.join(prjDir, 'wks-a', 'start.txt'))).resolves.toBe(false);
     });
   });
-}, { timeout: 10000 });
+}, 10000);

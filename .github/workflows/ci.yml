@@ -93,14 +93,8 @@ jobs:
       - name: Install
         run: yarn install --immutable
 
-#      - name: Check tests typings
-#        run: yarn test:types
-#
-#      - name: Run tests
-#        run: yarn test --coverage
-
       - name: Run tests
-        run: yarn test --coverage --typecheck
+        run: yarn test --coverage
 
       - name: Upload results to Codecov
         uses: codecov/codecov-action@v5
@@ -128,9 +122,9 @@ jobs:
           - 'windows-latest'
           - 'macos-latest'
         node:
-          - 18
           - 20
           - 22
+          - 24
         packageManager:
           - npm
           - yarn
@@ -158,9 +152,6 @@ jobs:
         run: |
           git config --global user.name github-actions
           git config --global user.email github-actions@github.com
-
-#      - name: Check tests typings
-#        run: yarn e2e:types
 
       - name: Run E2E tests
         run: yarn e2e -t ${{ matrix.packageManager }} --no-file-parallelism

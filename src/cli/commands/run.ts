@@ -8,7 +8,6 @@ import { TaskParserService } from '../services/task-parser.service.js';
 // Command
 const command: TaskModule<RunArgs> = {
   command: 'run <expr>',
-  aliases: ['$0'],
   describe: 'Run a task expression in a workspace, after having built all its dependencies.',
   builder: (parser) => withWorkspace(parser)
     .positional('expr', {

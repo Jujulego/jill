@@ -691,7 +691,7 @@ __metadata:
     "@eslint/js": "npm:9.33.0"
     "@jujulego/2d-maths": "npm:1.6.0"
     "@jujulego/quick-tag": "npm:^1.0.3"
-    "@jujulego/tasks": "npm:^3.0.0-alpha.2"
+    "@jujulego/tasks": "npm:^3.0.0-alpha.3"
     "@jujulego/vite-plugin-swc": "npm:1.2.0"
     "@kyrielle/injector": "npm:^1.1.0"
     "@kyrielle/logger": "npm:^2.0.0"
@@ -722,9 +722,9 @@ __metadata:
     ink: "npm:^6.1.0"
     ink-spinner: "npm:^5.0.0"
     ink-testing-library: "npm:4.0.0"
+    is-unicode-supported: "npm:^2.1.0"
     jiti: "npm:2.5.1"
     kyrielle: "npm:^2.5.2"
-    log-symbols: "npm:^7.0.1"
     memfs: "npm:4.36.3"
     moo: "npm:^0.5.2"
     normalize-package-data: "npm:^8.0.0"
@@ -760,9 +760,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jujulego/tasks@npm:^3.0.0-alpha.2":
-  version: 3.0.0-alpha.2
-  resolution: "@jujulego/tasks@npm:3.0.0-alpha.2"
+"@jujulego/tasks@npm:^3.0.0-alpha.3":
+  version: 3.0.0-alpha.3
+  resolution: "@jujulego/tasks@npm:3.0.0-alpha.3"
   dependencies:
     "@kyrielle/logger": "npm:^2.0.0"
     "@swc/helpers": "npm:^0.5.3"
@@ -771,7 +771,7 @@ __metadata:
   dependenciesMeta:
     vitest@3.2.4:
       unplugged: true
-  checksum: 10/749c8259b7b0fbc9c368ec0167af84cfa7c32bdf426dcc358dd0f84f75595a25c3a4e2668b694f32fa87e6d41e697040a8422cd270fae43a3b7326755368e7ba
+  checksum: 10/5b8f9ff0f250b82d6501ba182c6dad1cb62b4799b07cf29ebc3a368ad954968bd5fcbff7320a3895a38f0a86d8a254bbf443880198d5d140e15ba4bc99ef1844
   languageName: node
   linkType: hard
 
@@ -3947,7 +3947,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"is-unicode-supported@npm:^2.0.0":
+"is-unicode-supported@npm:^2.1.0":
   version: 2.1.0
   resolution: "is-unicode-supported@npm:2.1.0"
   checksum: 10/f254e3da6b0ab1a57a94f7273a7798dd35d1d45b227759f600d0fa9d5649f9c07fa8d3c8a6360b0e376adf916d151ec24fc9a50c5295c58bae7ca54a76a063f9
@@ -4223,16 +4223,6 @@ __metadata:
   version: 4.17.21
   resolution: "lodash@npm:4.17.21"
   checksum: 10/c08619c038846ea6ac754abd6dd29d2568aa705feb69339e836dfa8d8b09abbb2f859371e86863eda41848221f9af43714491467b5b0299122431e202bb0c532
-  languageName: node
-  linkType: hard
-
-"log-symbols@npm:^7.0.1":
-  version: 7.0.1
-  resolution: "log-symbols@npm:7.0.1"
-  dependencies:
-    is-unicode-supported: "npm:^2.0.0"
-    yoctocolors: "npm:^2.1.1"
-  checksum: 10/0862313d84826b551582e39659b8586c56b65130c5f4f976420e2c23985228334f2a26fc4251ac22bf0a5b415d9430e86bf332557d934c10b036f9a549d63a09
   languageName: node
   linkType: hard
 
@@ -6520,13 +6510,6 @@ __metadata:
   version: 0.1.0
   resolution: "yocto-queue@npm:0.1.0"
   checksum: 10/f77b3d8d00310def622123df93d4ee654fc6a0096182af8bd60679ddcdfb3474c56c6c7190817c84a2785648cdee9d721c0154eb45698c62176c322fb46fc700
-  languageName: node
-  linkType: hard
-
-"yoctocolors@npm:^2.1.1":
-  version: 2.1.1
-  resolution: "yoctocolors@npm:2.1.1"
-  checksum: 10/563fbec88bce9716d1044bc98c96c329e1d7a7c503e6f1af68f1ff914adc3ba55ce953c871395e2efecad329f85f1632f51a99c362032940321ff80c42a6f74d
   languageName: node
   linkType: hard
 

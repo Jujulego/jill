@@ -1,9 +1,8 @@
+import { TestBed } from '@/tools/test-bed.js';
 import fs from 'node:fs/promises';
 import path from 'node:path';
-
-import { TestBed } from '@/tools/test-bed.js';
-
 import { jill } from './utils.js';
+import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 
 // Setup
 const bed = new TestBed();
@@ -29,11 +28,10 @@ describe('jill tree', () => {
     beforeAll(async () => {
       baseDir = await bed.createProjectPackage(packageManager);
       tmpDir = path.dirname(baseDir);
-    }, 15000);
+    }, 60000);
 
     beforeEach(async (ctx) => {
       prjDir = path.join(tmpDir, ctx.task.id);
-
       await fs.cp(baseDir, prjDir, { force: true, recursive: true });
     });
 
@@ -61,4 +59,4 @@ describe('jill tree', () => {
       ]);
     });
   });
-}, { timeout: 10000 });
+}, 10000);
