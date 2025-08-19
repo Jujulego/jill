@@ -67,7 +67,7 @@ export default function TaskSpinner({ task }: TaskSpinnerProps) {
     case 'done':
       return (
         <Box>
-          <Text color="green">{ symbols.success(true) }</Text>
+          <Text color="green">{ symbols.success }</Text>
           <Box>
             <Text dimColor={isScriptChild} wrap="truncate">
               <TaskName task={task} withWorkspace />
@@ -82,7 +82,7 @@ export default function TaskSpinner({ task }: TaskSpinnerProps) {
     case 'failed':
       return (
         <Box>
-          <Text color="red">{ symbols.error(true) }</Text>
+          <Text color="red">{ symbols.error }</Text>
           <Box>
             <Text dimColor={isScriptChild} wrap="truncate">
               <TaskName task={task} withWorkspace />
