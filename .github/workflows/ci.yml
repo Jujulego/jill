@@ -195,6 +195,7 @@ jobs:
     needs: [ lint, tests, e2e ]
 
     permissions:
+      id-token: write
       contents: read
 
     steps:
@@ -218,9 +219,9 @@ jobs:
           path: dist
 
       - name: Publish
-        run: yarn npm publish --access public --tag ${{ github.ref_name }} --tolerate-republish
-        env:
-          YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: yarn npm publish --access public --tag ${{ github.ref_name }} --tolerate-republish --provenance
+#        env:
+#          YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
   release:
     if: ${{ github.event_name == 'push' }}
