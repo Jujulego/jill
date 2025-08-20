@@ -1,4 +1,5 @@
 import { capitalize, splitCommandLine } from '@/src/utils/string.js';
+import { describe, expect, it } from 'vitest';
 
 // Tests
 describe('capitalize', () => {
