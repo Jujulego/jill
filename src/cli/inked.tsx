@@ -10,7 +10,7 @@ export function inked<P, R>(stepper: InkedStepper<P, R>): InkedComponent<P, R> {
   return (props: P): Promise<R> => startSpan({ name: 'inked', op: 'ui.ink' }, async () => {
     const controller = new AbortController();
 
-    const app = startSpan({ name: 'initial render', op: 'ui.ink.render' }, () => render(<StaticLogs />, { exitOnCtrlC: true }));
+    const app = render(<StaticLogs />, { exitOnCtrlC: true });
     void app.waitUntilExit().then(() => {
       controller.abort();
     });
@@ -20,19 +20,19 @@ export function inked<P, R>(stepper: InkedStepper<P, R>): InkedComponent<P, R> {
       let result = await generator.next();
 
       while (!result.done) {
-        startSpan({ name: 'render', op: 'ui.ink.render' }, () => app.rerender(
+        app.rerender(
           <>
             <StaticLogs />
             { result.value }
           </>
-        ));
+        );
 
         result = await generator.next();
       }
 
       return result.value;
     } finally {
-      startSpan({ name: 'unmount', op: 'ui.ink.unmount' }, () => app.unmount());
+      app.unmount();
     }
   });
 }

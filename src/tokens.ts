@@ -21,13 +21,16 @@ export const TASK_MANAGER = token$('TaskManager', async () => {
     logger: inject$(LOGGER),
   });
 
+  let rootSpan = getActiveSpan();
+  if (rootSpan) rootSpan = getRootSpan(rootSpan);
+
   const spans = new Map<string, Span>();
 
   manager.events$.on('added', (task) => {
     // Main span
     const span = startInactiveSpan({
       name: task.name,
-      parentSpan: (task.group && spans.get(task.group.id)) ?? getRootSpan(getActiveSpan()!),
+      parentSpan: (task.group && spans.get(task.group.id)) ?? rootSpan,
       op: 'task',
     });
     task.events$.on('completed', ({ status }) => {

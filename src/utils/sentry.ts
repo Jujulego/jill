@@ -15,7 +15,7 @@ export function instrumentCommand<T, U>(module: CommandModule<T, U>): CommandMod
         updateSpanName(getRootSpan(activeSpan), `jill ${command}`);
       }
 
-      await startSpan({ name: command, op: 'cli.handler' }, async () => module.handler(args));
+      await startSpan({ name: command, op: 'cli.handler' }, () => module.handler(args));
     }
   };
 }
@@ -24,6 +24,6 @@ export function instrumentAsyncIterator<I>(name: string, iterable: AnyAsyncItera
   const iterator = extractAwaitableIterator(iterable);
 
   return asyncIterator$<I>({
-    next: () => startSpan({ name, op: 'iterator.next' }, async () => await iterator.next())
+    next: async () => startSpan({ name, op: 'iterator.next' }, () => iterator.next())
   });
 }

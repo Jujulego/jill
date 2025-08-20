@@ -71,8 +71,8 @@ export class Project {
     });
   }
 
-  async currentWorkspace(cwd = inject$(CWD, asyncScope$())): Promise<Workspace | null> {
-    return await startSpan({ name: 'Project.currentWorkspace' }, async () => {
+  currentWorkspace(cwd = inject$(CWD, asyncScope$())): Promise<Workspace | null> {
+    return startSpan({ name: 'Project.currentWorkspace' }, async () => {
       let workspace: Workspace | null = null;
       cwd = path.resolve(cwd);
 
@@ -88,8 +88,8 @@ export class Project {
     });
   }
 
-  async mainWorkspace(): Promise<Workspace> {
-    return await startSpan({ name: 'Project.mainWorkspace' }, async () => {
+  mainWorkspace(): Promise<Workspace> {
+    return startSpan({ name: 'Project.mainWorkspace' }, async () => {
       if (!this._mainWorkspace) {
         const manifest = await this._loadManifest('.');
         this._mainWorkspace = new Workspace('.', manifest, this);
@@ -101,8 +101,8 @@ export class Project {
     });
   }
 
-  async packageManager(): Promise<PackageManager> {
-    return await startSpan({ name: 'Project.packageManager' }, async () => {
+  packageManager(): Promise<PackageManager> {
+    return startSpan({ name: 'Project.packageManager' }, async () => {
       if (!this._packageManager) {
         this._logger.debug`searching lockfile in ${this.root}`;
         const files = await this._scurry.readdir(this.root, { withFileTypes: false });
@@ -123,8 +123,8 @@ export class Project {
     });
   }
 
-  async workspace(name?: string): Promise<Workspace | null> {
-    return await startSpan({ name: 'Project.workspace' }, async () => {
+  workspace(name?: string): Promise<Workspace | null> {
+    return startSpan({ name: 'Project.workspace' }, async () => {
       // With current directory
       if (!name) {
         const dir = path.relative(this.root, inject$(CWD, asyncScope$()));

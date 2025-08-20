@@ -1,3 +1,4 @@
+import { startSpan } from '@sentry/node';
 import chalk from 'chalk';
 import { collect$, map$, pipe$, type SimpleAsyncIterator, waitFor$ } from 'kyrielle';
 import path from 'node:path';
@@ -165,7 +166,7 @@ const command = instrumentCommand<unknown, ListArgs>({
         }
       }
 
-      const { default: ListInk } = await import('./list.ink.jsx');
+      const { default: ListInk } = await startSpan({ name: 'load ListInk', op: 'import' }, () => import('./list.ink.jsx'));
       await ListInk({ attributes: args.attribute, headers: args.headers, workspaces });
     }
   }

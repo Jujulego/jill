@@ -41,20 +41,20 @@ export function executeCommand<T extends LoggerArgs, U extends PlanModeArgs>(mod
       }
     },
     async handler(args) {
-      const tasks = await startSpan({ name: 'command.prepare' }, async () => await prepare(args));
+      const tasks = await startSpan({ name: 'command.prepare' }, () => prepare(args));
 
       if (args.plan) {
         if (args.planMode === 'json') {
           printJson(Array.from(plan(tasks)));
         } else {
-          const { default: TaskPlanInk } = await import('./task-plan.ink.jsx');
+          const { default: TaskPlanInk } = await startSpan({ name: 'load TaskPlanInk', op: 'import' }, () => import('./task-plan.ink.jsx'));
           await TaskPlanInk({ tasks });
         }
       } else {
         if (execute) {
           await execute(args, tasks);
         } else if (tasks.tasks.length > 0) {
-          const { default: TaskExecInk } = await import('./task-exec.ink.jsx');
+          const { default: TaskExecInk } = await startSpan({ name: 'load TaskExecInk', op: 'import' }, () => import('./task-exec.ink.jsx'));
           await TaskExecInk({ tasks, verbose: ['verbose', 'debug'].includes(args.verbose) });
         } else {
           const logger = inject$(LOGGER);
@@ -84,7 +84,7 @@ export function planCommand(module: CommandModule | TaskModule, tasks$: Mutator<
         }
       },
       async handler(args) {
-        const tasks = await startSpan({ name: 'command.prepare' }, async () => await prepare(args));
+        const tasks = await startSpan({ name: 'command.prepare' }, () => prepare(args));
         tasks$.mutate(tasks);
       }
     }));

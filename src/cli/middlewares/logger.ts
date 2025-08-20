@@ -23,21 +23,19 @@ export function withLogger<T>(parser: Argv<T>) {
       description: 'Set verbosity level',
       coerce: (cnt: number) => VERBOSITY_LEVEL[Math.min(cnt, 2)]
     })
-    .middleware((args) => {
-      startSpan({ name: 'logger', op: 'cli.middleware' }, () => {
-        const logLevel = args.verbose ? LogLevel[args.verbose] : LogLevel.info;
-        const logGateway = inject$(LogGateway);
+    .middleware((args) => startSpan({ name: 'logger', op: 'cli.middleware' }, () => {
+      const logLevel = args.verbose ? LogLevel[args.verbose] : LogLevel.info;
+      const logGateway = inject$(LogGateway);
 
-        flow$(
-          inject$(LOGGER),
-          filter$((log) => log.level >= logLevel),
-          logDelay$(),
-          logGateway,
-        );
+      flow$(
+        inject$(LOGGER),
+        filter$((log) => log.level >= logLevel),
+        logDelay$(),
+        logGateway,
+      );
 
-        logGateway.connect('console', toStderr(logFormat));
-      });
-    });
+      logGateway.connect('console', toStderr(logFormat));
+    }));
 }
 
 // Types

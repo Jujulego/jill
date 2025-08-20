@@ -1,3 +1,4 @@
+import { startSpan } from '@sentry/node';
 import { instrumentCommand } from '../../utils/sentry.js';
 import { loadWorkspace, withWorkspace, type WorkspaceArgs } from '../middlewares/workspace.js';
 
@@ -8,7 +9,7 @@ const command = instrumentCommand<unknown, TreeArgs>({
   builder: withWorkspace,
   async handler(args) {
     const workspace = await loadWorkspace(args);
-    const { default: TreeInk } = await import('./tree.ink.jsx');
+    const { default: TreeInk } = await startSpan({ name: 'load TreeInk', op: 'import' }, () => import('./tree.ink.jsx'));
 
     await TreeInk({ workspace });
   }

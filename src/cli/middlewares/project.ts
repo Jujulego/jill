@@ -25,14 +25,12 @@ export function withProject<T = unknown>(parser: Argv<T>): Argv<T & ProjectArgs>
       type: 'string',
       description: 'Force package manager'
     })
-    .middleware(async (args: ArgumentsCamelCase<Writable<ProjectArgs>>) => {
-      await startSpan({ name: 'project', op: 'cli.middleware' }, async () => {
-        const repository = inject$(ProjectsRepository);
-        const directory = path.resolve(inject$(CWD, asyncScope$()), args.project);
+    .middleware((args: ArgumentsCamelCase<Writable<ProjectArgs>>) => startSpan({ name: 'project', op: 'cli.middleware' }, async () => {
+      const repository = inject$(ProjectsRepository);
+      const directory = path.resolve(inject$(CWD, asyncScope$()), args.project);
 
-        args.project = await repository.searchProjectRoot(directory);
-      });
-    });
+      args.project = await repository.searchProjectRoot(directory);
+    }));
 }
 
 /**

@@ -11,17 +11,15 @@ export function withConfig<T>(parser: Argv<T>) {
       type: 'string',
       description: 'Configuration file'
     })
-    .middleware(async (args) => {
-      await startSpan({ name: 'config', op: 'cli.middleware' }, async () => {
-        const configService = inject$(ConfigService, asyncScope$());
+    .middleware((args) => startSpan({ name: 'config', op: 'cli.middleware' }, async () => {
+      const configService = inject$(ConfigService, asyncScope$());
 
-        if (args.configFile) {
-          await configService.loadConfig(args.configFile);
-        } else {
-          await configService.searchConfig();
-        }
-      });
-    });
+      if (args.configFile) {
+        await configService.loadConfig(args.configFile);
+      } else {
+        await configService.searchConfig();
+      }
+    }));
 }
 
 // Types
