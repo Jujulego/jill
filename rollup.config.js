@@ -8,6 +8,7 @@ import pkg from './package.json' with { type: 'json' };
 const options = {
   input: {
     main: 'src/main.ts',
+    instrument: 'src/instrument.ts',
   },
   output: {
     dir: 'dist',
