@@ -8,6 +8,7 @@ import { GitService } from '../cli/services/git.service.js';
 import { CommandTask } from '../tasks/command-task.js';
 import { ScriptTask } from '../tasks/script-task.js';
 import { CONFIG, LOGGER } from '../tokens.js';
+import { instrument } from '../utils/sentry.js';
 import { combine } from '../utils/streams.js';
 import type { Project } from './project.js';
 

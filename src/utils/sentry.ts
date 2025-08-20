@@ -8,3 +8,17 @@ export function instrumentAsyncIterator<I>(name: string, iterable: AnyAsyncItera
     next: async () => startSpan({ name, op: 'iterator.next' }, () => iterator.next())
   });
 }
+
+export function instrument(name?: string) {
+  return <T, A extends unknown[], R>(
+    target: Method<T, A, R>,
+    context: ClassMethodDecoratorContext<T, Method<T, A, R>>
+  ) => {
+    return function(this: T, ...args: A) {
+      return startSpan({ name: name ?? context.name.toString() }, () => target.call(this, ...args));
+    };
+  };
+}
+
+// Types
+type Method<T, A extends unknown[], R> = (this: T, ...args: A) => R;

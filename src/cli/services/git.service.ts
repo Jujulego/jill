@@ -1,8 +1,8 @@
 import { SpawnTask, type SpawnTaskOptions, type TaskContext } from '@jujulego/tasks';
 import { inject$ } from '@kyrielle/injector';
-import { startInactiveSpan } from '@sentry/node';
 import { collect$, map$, once$, pipe$, waitFor$ } from 'kyrielle';
 import { LOGGER, TASK_MANAGER } from '../../tokens.js';
+import { instrument } from '../../utils/sentry.js';
 import { streamLines$ } from '../../utils/streams.js';
 import type { TaskUIContext } from '../../utils/types.js';
 
@@ -23,15 +23,7 @@ export class GitService {
     const opts = { logger: this._logger, ...options };
 
     // Create task
-    const span = startInactiveSpan({ name: `git ${cmd}`, op: 'subprocess', attributes: { args } });
     const task = new SpawnTask('git', [cmd, ...args], { command: cmd, hidden: true }, opts);
-
-    task.events$.on('stream', ({ data }) => opts.logger.debug(data.toString('utf-8')));
-    task.events$.on('completed', ({ status }) => {
-      span.setStatus({ code: status === 'done' ? 1 : 2 });
-      span.end();
-    });
-
     (await this._manager).add(task);
 
     return task;
@@ -74,6 +66,7 @@ export class GitService {
    * @param files
    * @param opts
    */
+  @instrument('GitService.isAffected')
   async isAffected(reference: string, files: string[] = [], opts?: SpawnTaskOptions): Promise<boolean> {
     const task = await this.diff(['--quiet', reference, '--', ...files], opts);
 
@@ -95,6 +88,7 @@ export class GitService {
    * @param args
    * @param opts
    */
+  @instrument('GitService.listBranches')
   async listBranches(args: string[] = [], opts?: SpawnTaskOptions): Promise<string[]> {
     const task = await this.branch(['-l', ...args], opts);
 
@@ -111,6 +105,7 @@ export class GitService {
    * @param args
    * @param opts
    */
+  @instrument('GitService.listTags')
   async listTags(args: string[] = [], opts?: SpawnTaskOptions): Promise<string[]> {
     const task = await this.tag(['-l', ...args], opts);
 

@@ -1,11 +1,11 @@
 import { FallbackGroup, type GroupTask, ParallelGroup, SequenceGroup, type Task } from '@jujulego/tasks';
 import { inject$ } from '@kyrielle/injector';
 import { withLabel } from '@kyrielle/logger';
-import { startSpan } from '@sentry/node';
 import moo from 'moo';
 import type { Workspace, WorkspaceRunOptions } from '../../projects/workspace.js';
-import { LOGGER } from '../../tokens.js';
 import { TaskExpressionError, TaskSyntaxError } from '../../tasks/errors.js';
+import { LOGGER } from '../../tokens.js';
+import { instrument } from '../../utils/sentry.js';
 
 // Interfaces
 export interface TaskNode {
@@ -162,26 +162,25 @@ export class TaskParserService {
     return node;
   }
 
+  @instrument('TaskParserService.parse')
   parse(expr: string): TaskTree {
-    return startSpan({ name: 'TaskParser.parse' }, () => {
-      const lexer = this._lexer().reset(expr);
+    const lexer = this._lexer().reset(expr);
 
-      const tree: TaskTree = {
-        roots: [],
-      };
+    const tree: TaskTree = {
+      roots: [],
+    };
 
-      while (true) {
-        const node = this._nextNode(lexer);
+    while (true) {
+      const node = this._nextNode(lexer);
 
-        if (node) {
-          tree.roots.push(node);
-        } else {
-          break;
-        }
+      if (node) {
+        tree.roots.push(node);
+      } else {
+        break;
       }
+    }
 
-      return tree;
-    });
+    return tree;
   }
 
   *extractScripts(node: TaskTree | TaskNode | GroupNode): Generator<string> {
@@ -198,6 +197,7 @@ export class TaskParserService {
     }
   }
 
+  @instrument('TaskParserService.buildTask')
   async buildTask(node: TaskNode | GroupNode, workspace: Workspace, opts?: WorkspaceRunOptions): Promise<Task> {
     if (TaskParserService.isTaskNode(node)) {
       const task = await workspace.run(node.script, node.args, opts);

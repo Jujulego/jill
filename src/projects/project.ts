@@ -1,6 +1,5 @@
 import { asyncScope$, inject$ } from '@kyrielle/injector';
 import { withLabel } from '@kyrielle/logger';
-import { startSpan } from '@sentry/node';
 import { Glob } from 'glob';
 import type { SimpleAsyncIterator } from 'kyrielle';
 import fs from 'node:fs';
@@ -8,7 +7,7 @@ import path from 'node:path';
 import normalize, { type Package } from 'normalize-package-data';
 import { CWD, LOGGER, PATH_SCURRY } from '../tokens.js';
 import { mutex$, with$ } from '../utils/kyrielle.js';
-import { instrumentAsyncIterator } from '../utils/sentry.js';
+import { instrument, instrumentAsyncIterator } from '../utils/sentry.js';
 import type { PackageManager } from '../utils/types.js';
 import { Workspace } from './workspace.js';
 
@@ -71,86 +70,82 @@ export class Project {
     });
   }
 
-  currentWorkspace(cwd = inject$(CWD, asyncScope$())): Promise<Workspace | null> {
-    return startSpan({ name: 'Project.currentWorkspace' }, async () => {
-      let workspace: Workspace | null = null;
-      cwd = path.resolve(cwd);
+  @instrument('Project.currentWorkspace')
+  async currentWorkspace(cwd = inject$(CWD, asyncScope$())): Promise<Workspace | null> {
+    let workspace: Workspace | null = null;
+    cwd = path.resolve(cwd);
 
-      for await (const wks of this.workspaces()) {
-        if (cwd.startsWith(wks.root)) {
-          workspace = wks;
+    for await (const wks of this.workspaces()) {
+      if (cwd.startsWith(wks.root)) {
+        workspace = wks;
 
-          if (wks.root !== this.root) return wks;
+        if (wks.root !== this.root) return wks;
+      }
+    }
+
+    return workspace;
+  }
+
+  @instrument('Project.mainWorkspace')
+  async mainWorkspace(): Promise<Workspace> {
+    if (!this._mainWorkspace) {
+      const manifest = await this._loadManifest('.');
+      this._mainWorkspace = new Workspace('.', manifest, this);
+
+      this._names.set(this._mainWorkspace.name, this._mainWorkspace);
+    }
+
+    return this._mainWorkspace;
+  }
+
+  @instrument('Project.packageManager')
+  async packageManager(): Promise<PackageManager> {
+    if (!this._packageManager) {
+      this._logger.debug`searching lockfile in ${this.root}`;
+      const files = await this._scurry.readdir(this.root, { withFileTypes: false });
+
+      if (files.includes('yarn.lock')) {
+        this._logger.debug`detected yarn in ${this.root}`;
+        this._packageManager = 'yarn';
+      } else if (files.includes('package-lock.json')) {
+        this._logger.debug`detected npm in ${this.root}`;
+        this._packageManager = 'npm';
+      } else {
+        this._logger.debug`no package manager recognized in ${this.root}, defaults to npm`;
+        this._packageManager = 'npm';
+      }
+    }
+
+    return this._packageManager;
+  }
+
+  @instrument('Project.workspace')
+  async workspace(name?: string): Promise<Workspace | null> {
+    // With current directory
+    if (!name) {
+      const dir = path.relative(this.root, inject$(CWD, asyncScope$()));
+      return this._loadWorkspace(dir);
+    }
+
+    // Try name index
+    const wks = this._names.get(name);
+
+    if (wks) {
+      return wks;
+    }
+
+    // Load workspaces
+    if (!this._isFullyLoaded) {
+      for await (const ws of this.workspaces()) {
+        if (ws.name === name) {
+          return ws;
         }
       }
 
-      return workspace;
-    });
-  }
+      this._isFullyLoaded = true;
+    }
 
-  mainWorkspace(): Promise<Workspace> {
-    return startSpan({ name: 'Project.mainWorkspace' }, async () => {
-      if (!this._mainWorkspace) {
-        const manifest = await this._loadManifest('.');
-        this._mainWorkspace = new Workspace('.', manifest, this);
-
-        this._names.set(this._mainWorkspace.name, this._mainWorkspace);
-      }
-
-      return this._mainWorkspace;
-    });
-  }
-
-  packageManager(): Promise<PackageManager> {
-    return startSpan({ name: 'Project.packageManager' }, async () => {
-      if (!this._packageManager) {
-        this._logger.debug`searching lockfile in ${this.root}`;
-        const files = await this._scurry.readdir(this.root, { withFileTypes: false });
-
-        if (files.includes('yarn.lock')) {
-          this._logger.debug`detected yarn in ${this.root}`;
-          this._packageManager = 'yarn';
-        } else if (files.includes('package-lock.json')) {
-          this._logger.debug`detected npm in ${this.root}`;
-          this._packageManager = 'npm';
-        } else {
-          this._logger.debug`no package manager recognized in ${this.root}, defaults to npm`;
-          this._packageManager = 'npm';
-        }
-      }
-
-      return this._packageManager;
-    });
-  }
-
-  workspace(name?: string): Promise<Workspace | null> {
-    return startSpan({ name: 'Project.workspace' }, async () => {
-      // With current directory
-      if (!name) {
-        const dir = path.relative(this.root, inject$(CWD, asyncScope$()));
-        return this._loadWorkspace(dir);
-      }
-
-      // Try name index
-      const wks = this._names.get(name);
-
-      if (wks) {
-        return wks;
-      }
-
-      // Load workspaces
-      if (!this._isFullyLoaded) {
-        for await (const ws of this.workspaces()) {
-          if (ws.name === name) {
-            return ws;
-          }
-        }
-
-        this._isFullyLoaded = true;
-      }
-
-      return null;
-    });
+    return null;
   }
 
   private async* _generateWorkspaces(): AsyncGenerator<Workspace> {
