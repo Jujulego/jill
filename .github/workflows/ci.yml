@@ -220,8 +220,8 @@ jobs:
 
       - name: Publish
         run: yarn npm publish --access public --tag ${{ github.ref_name }} --tolerate-republish --provenance
-#        env:
-#          YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        env:
+          YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
   release:
     if: ${{ github.event_name == 'push' }}
