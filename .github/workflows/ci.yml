@@ -1,4 +1,4 @@
-name: 'Javascript'
+name: 'CI'
 
 on:
   push:
@@ -74,7 +74,7 @@ jobs:
           wait-for-processing: true
 
   tests:
-    name: 'Test'
+    name: 'Tests'
     runs-on: ubuntu-latest
 
     permissions:
@@ -111,8 +111,12 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
 
   e2e:
+    name: 'E2E tests'
     runs-on: ${{ matrix.os }}
     needs: [ build ]
+
+    permissions:
+      contents: read
 
     strategy:
       fail-fast: false
@@ -167,8 +171,12 @@ jobs:
   complete:
     if: ${{ github.event_name == 'pull_request' && always() }}
 
+    name: 'Complete'
     runs-on: ubuntu-latest
     needs: [ lint, tests, e2e ]
+
+    permissions:
+      contents: read
 
     steps:
       - name: Failed
@@ -216,8 +224,8 @@ jobs:
 
   release:
     if: ${{ github.event_name == 'push' }}
-    name: 'Publish release'
 
+    name: 'Publish release'
     runs-on: ubuntu-latest
     needs: [ publish ]
 
