@@ -5,7 +5,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 
 // Constants
-export const JILL = path.join(__dirname, '../dist/main.js');
+export const JILL = path.join(__dirname, '../bin/jill.js');
 
 // Type
 export interface SpawnResult {

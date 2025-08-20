@@ -9,7 +9,12 @@ export function instrumentCommand<T, U>(module: CommandModule<T, U>): CommandMod
   return {
     ...module,
     async handler(args) {
-      updateSpanName(getRootSpan(getActiveSpan()!), `jill ${command}`);
+      const activeSpan = getActiveSpan();
+
+      if (activeSpan) {
+        updateSpanName(getRootSpan(activeSpan), `jill ${command}`);
+      }
+
       await startSpan({ name: command, op: 'cli.handler' }, async () => module.handler(args));
     }
   };
