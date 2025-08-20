@@ -1,4 +1,5 @@
 import { asyncScope$, inject$ } from '@kyrielle/injector';
+import { startSpan } from '@sentry/node';
 import path from 'node:path';
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
 import type { Project } from '../../projects/project.js';
@@ -25,10 +26,12 @@ export function withProject<T = unknown>(parser: Argv<T>): Argv<T & ProjectArgs>
       description: 'Force package manager'
     })
     .middleware(async (args: ArgumentsCamelCase<Writable<ProjectArgs>>) => {
-      const repository = inject$(ProjectsRepository);
-      const directory = path.resolve(inject$(CWD, asyncScope$()), args.project);
+      await startSpan({ name: 'project', op: 'cli.middleware' }, async () => {
+        const repository = inject$(ProjectsRepository);
+        const directory = path.resolve(inject$(CWD, asyncScope$()), args.project);
 
-      args.project = await repository.searchProjectRoot(directory);
+        args.project = await repository.searchProjectRoot(directory);
+      });
     });
 }
 

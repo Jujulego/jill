@@ -1,8 +1,8 @@
-import type { CommandModule } from 'yargs';
+import { instrumentCommand } from '../../utils/sentry.js';
 import { loadWorkspace, withWorkspace, type WorkspaceArgs } from '../middlewares/workspace.js';
 
 // Command
-const command: CommandModule<unknown, TreeArgs> = {
+const command = instrumentCommand<unknown, TreeArgs>({
   command: 'tree',
   describe: 'Print workspace dependency tree',
   builder: withWorkspace,
@@ -12,7 +12,7 @@ const command: CommandModule<unknown, TreeArgs> = {
 
     await TreeInk({ workspace });
   }
-};
+});
 
 export default command;
 

@@ -1,0 +1,27 @@
+import { getActiveSpan, getRootSpan, startSpan, updateSpanName } from '@sentry/node';
+import type { CommandModule } from 'yargs';
+
+export function instrumentCommand<T, U>(module: CommandModule<T, U>): CommandModule<T, U> {
+  const command = getCommandName(module);
+
+  return {
+    ...module,
+    async handler(args) {
+      updateSpanName(getRootSpan(getActiveSpan()!), `jill ${command}`);
+      await startSpan({ name: command, op: 'cli.handler' }, async () => module.handler(args));
+    }
+  };
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function getCommandName(module: CommandModule<any, any>): string {
+  if (!module.command) {
+    return '[unknown]';
+  }
+
+  if (typeof module.command === 'string') {
+    return module.command;
+  }
+
+  return module.command[0];
+}

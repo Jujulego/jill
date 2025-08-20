@@ -1,6 +1,7 @@
 import { inject$ } from '@kyrielle/injector';
 import type { LogLevelKey } from '@kyrielle/logger';
 import { logDelay$, LogGateway, LogLevel, toStderr } from '@kyrielle/logger';
+import { startSpan } from '@sentry/node';
 import { filter$, flow$ } from 'kyrielle';
 import type { Argv } from 'yargs';
 import { LOGGER } from '../../tokens.js';
@@ -13,7 +14,7 @@ const VERBOSITY_LEVEL: Record<number, LogLevelKey> = {
 };
 
 // Middleware
-export function loggerMiddleware<T>(parser: Argv<T>) {
+export function withLogger<T>(parser: Argv<T>) {
   return parser
     .option('verbose', {
       alias: 'v',
@@ -23,17 +24,19 @@ export function loggerMiddleware<T>(parser: Argv<T>) {
       coerce: (cnt: number) => VERBOSITY_LEVEL[Math.min(cnt, 2)]
     })
     .middleware((args) => {
-      const logLevel = args.verbose ? LogLevel[args.verbose] : LogLevel.info;
-      const logGateway = inject$(LogGateway);
+      startSpan({ name: 'logger', op: 'cli.middleware' }, () => {
+        const logLevel = args.verbose ? LogLevel[args.verbose] : LogLevel.info;
+        const logGateway = inject$(LogGateway);
 
-      flow$(
-        inject$(LOGGER),
-        filter$((log) => log.level >= logLevel),
-        logDelay$(),
-        logGateway,
-      );
+        flow$(
+          inject$(LOGGER),
+          filter$((log) => log.level >= logLevel),
+          logDelay$(),
+          logGateway,
+        );
 
-      logGateway.connect('console', toStderr(logFormat));
+        logGateway.connect('console', toStderr(logFormat));
+      });
     });
 }
 

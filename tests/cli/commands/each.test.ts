@@ -2,7 +2,7 @@ import { planCommand } from '@/src/cli/bases/task-module.js';
 import { each } from '@/src/cli/commands.js';
 import { hasEveryScript$ } from '@/src/cli/filters/has-scripts.js';
 import { isPrivate$ } from '@/src/cli/filters/is-private.js';
-import { loggerMiddleware } from '@/src/cli/middlewares/logger.middleware.js';
+import { withLogger } from '@/src/cli/middlewares/logger.js';
 import { loadProject, type ProjectArgs, withProject } from '@/src/cli/middlewares/project.js';
 import { isAffected$ } from '@/src/cli/filters/is-affected.js';
 import { TestBed } from '@/tools/test-bed.js';
@@ -54,7 +54,7 @@ describe('jill each', () => {
     vi.mocked(hasEveryScript$).mockReturnValue(filter$((wks) => wks !== wksC));
 
     const tasks$ = var$<TaskSet>();
-    await pipe$(yargs(), loggerMiddleware, planCommand(each, tasks$)).parseAsync('each test');
+    await pipe$(yargs(), withLogger, planCommand(each, tasks$)).parseAsync('each test');
 
     expect(tasks$.defer()?.tasks).toStrictEqual([tskA, tskB]);
 
@@ -79,7 +79,7 @@ describe('jill each', () => {
     // Run command
     vi.mocked(hasEveryScript$).mockReturnValue(filter$((wks) => wks !== wksC));
 
-    await pipe$(yargs(), loggerMiddleware, planCommand(each, var$())).parseAsync('each test -d prod');
+    await pipe$(yargs(), withLogger, planCommand(each, var$())).parseAsync('each test -d prod');
 
     expect(wksA.run).toHaveBeenCalledWith('test', [], { buildDeps: 'prod', buildScript: 'build' });
     expect(wksB.run).toHaveBeenCalledWith('test', [], { buildDeps: 'prod', buildScript: 'build' });
@@ -102,7 +102,7 @@ describe('jill each', () => {
     // Run command
     vi.mocked(hasEveryScript$).mockReturnValue(filter$((wks) => wks !== wksC));
 
-    await pipe$(yargs(), loggerMiddleware, planCommand(each, var$())).parseAsync('each test --arg');
+    await pipe$(yargs(), withLogger, planCommand(each, var$())).parseAsync('each test --arg');
 
     expect(wksA.run).toHaveBeenCalledWith('test', ['--arg'], { buildDeps: 'all', buildScript: 'build' });
     expect(wksB.run).toHaveBeenCalledWith('test', ['--arg'], { buildDeps: 'all', buildScript: 'build' });
@@ -125,7 +125,7 @@ describe('jill each', () => {
     // Run command
     vi.mocked(hasEveryScript$).mockReturnValue(filter$((wks) => wks !== wksC));
 
-    await pipe$(yargs(), loggerMiddleware, planCommand(each, var$())).parseAsync('each test -- -d toto');
+    await pipe$(yargs(), withLogger, planCommand(each, var$())).parseAsync('each test -- -d toto');
 
     expect(wksA.run).toHaveBeenCalledWith('test', ['-d', 'toto'], { buildDeps: 'all', buildScript: 'build' });
     expect(wksB.run).toHaveBeenCalledWith('test', ['-d', 'toto'], { buildDeps: 'all', buildScript: 'build' });
@@ -151,7 +151,7 @@ describe('jill each', () => {
       vi.mocked(hasEveryScript$).mockReturnValue(filter$((wks) => wks !== wksC));
 
       const tasks$ = var$<TaskSet>();
-      await pipe$(yargs(), loggerMiddleware, planCommand(each, tasks$)).parseAsync('each test --affected test');
+      await pipe$(yargs(), withLogger, planCommand(each, tasks$)).parseAsync('each test --affected test');
 
       expect(tasks$.defer()?.tasks).toStrictEqual([tskB]);
 
@@ -183,7 +183,7 @@ describe('jill each', () => {
       vi.mocked(hasEveryScript$).mockReturnValue(filter$((wks) => wks !== wksC));
 
       const tasks$ = var$<TaskSet>();
-      await pipe$(yargs(), loggerMiddleware, planCommand(each, tasks$)).parseAsync('each test --affected test --affected-rev-fallback main --affected-rev-sort v:refname');
+      await pipe$(yargs(), withLogger, planCommand(each, tasks$)).parseAsync('each test --affected test --affected-rev-fallback main --affected-rev-sort v:refname');
 
       expect(tasks$.defer()?.tasks).toStrictEqual([tskB]);
 
@@ -218,7 +218,7 @@ describe('jill each', () => {
       vi.mocked(hasEveryScript$).mockReturnValue(filter$((wks) => wks !== wksC));
 
       const tasks$ = var$<TaskSet>();
-      await pipe$(yargs(), loggerMiddleware, planCommand(each, tasks$)).parseAsync('each test --private');
+      await pipe$(yargs(), withLogger, planCommand(each, tasks$)).parseAsync('each test --private');
 
       expect(tasks$.defer()?.tasks).toStrictEqual([tskB]);
 
@@ -247,7 +247,7 @@ describe('jill each', () => {
       vi.mocked(hasEveryScript$).mockReturnValue(filter$((wks) => wks !== wksC));
 
       const tasks$ = var$<TaskSet>();
-      await pipe$(yargs(), loggerMiddleware, planCommand(each, tasks$)).parseAsync('each test --no-private');
+      await pipe$(yargs(), withLogger, planCommand(each, tasks$)).parseAsync('each test --no-private');
 
       expect(tasks$.defer()?.tasks).toStrictEqual([tskA]);
 

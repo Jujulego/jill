@@ -1,15 +1,20 @@
-import { captureException } from '@sentry/node';
+import { captureException, startSpan } from '@sentry/node';
+import { hideBin } from 'yargs/helpers';
 import { executeParser } from './cli/parser.js';
 
 // Bootstrap
-const parser = executeParser();
+const argv = hideBin(process.argv);
 
-await parser
-  .wrap(parser.terminalWidth())
-  .fail((msg, err) => {
-    captureException(err);
+await startSpan({ name: 'jill', op: 'cli.main', attributes: { 'cli.argv': argv } }, async () => {
+  const parser = executeParser();
 
-    parser.showHelp('error');
-    console.error('');
-  })
-  .parseAsync();
+  await parser
+    .wrap(parser.terminalWidth())
+    .fail((msg, err) => {
+      captureException(err);
+
+      parser.showHelp('error');
+      console.error('');
+    })
+    .parseAsync(argv);
+});

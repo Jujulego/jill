@@ -5,7 +5,8 @@ import process from 'node:process';
 import type { ArgumentsCamelCase, Argv, CommandModule } from 'yargs';
 import { LOGGER } from '../../tokens.js';
 import { printJson } from '../../utils/json.js';
-import type { LoggerArgs } from '../middlewares/logger.middleware.js';
+import { instrumentCommand } from '../../utils/sentry.js';
+import type { LoggerArgs } from '../middlewares/logger.js';
 import { command } from './command-module.js';
 
 // Module
@@ -27,7 +28,7 @@ export interface TaskModule<T extends PlanModeArgs = PlanModeArgs> extends Omit<
 export function executeCommand<T extends LoggerArgs, U extends PlanModeArgs>(module: TaskModule<U>) {
   const { prepare, execute, ...rest } = module;
 
-  return command<T, U>({
+  return command(instrumentCommand<T, U>({
     ...rest,
     builder(base) {
       const parser = withPlanMode(base);
@@ -61,7 +62,7 @@ export function executeCommand<T extends LoggerArgs, U extends PlanModeArgs>(mod
         }
       }
     }
-  });
+  }));
 }
 
 export function planCommand<T, U>(module: CommandModule<T, U>, tasks$: Mutator<TaskSet>): <V extends T>(parser: Argv<V>) => Argv<V>;
@@ -70,7 +71,7 @@ export function planCommand(module: CommandModule | TaskModule, tasks$: Mutator<
   if ('prepare' in module) {
     const { prepare, ...rest } = module;
 
-    return command<LoggerArgs, PlanModeArgs>({
+    return command(instrumentCommand<LoggerArgs, PlanModeArgs>({
       ...rest,
       builder(base) {
         const parser = withPlanMode(base);
@@ -84,7 +85,7 @@ export function planCommand(module: CommandModule | TaskModule, tasks$: Mutator<
       async handler(args) {
         tasks$.mutate(await prepare(args));
       }
-    });
+    }));
   } else {
     return command({
       ...module,

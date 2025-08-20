@@ -3,9 +3,10 @@ import { asyncIterator$, collect$, map$, pipe$, type SimpleAsyncIterator, waitFo
 import path from 'node:path';
 import { compare, parse } from 'semver';
 import slugify from 'slugify';
-import type { ArgumentsCamelCase, CommandModule } from 'yargs';
+import type { ArgumentsCamelCase } from 'yargs';
 import type { Workspace } from '../../projects/workspace.js';
 import { printJson } from '../../utils/json.js';
+import { instrumentCommand } from '../../utils/sentry.js';
 import type { Order } from '../../utils/types.js';
 import { hasSomeScript$ } from '../filters/has-scripts.js';
 import { isAffected$ } from '../filters/is-affected.js';
@@ -14,7 +15,7 @@ import { loadProject, type ProjectArgs, withProject } from '../middlewares/proje
 import { pipeline$ } from '../utils/pipeline$.js';
 
 // Command
-const command: CommandModule<unknown, ListArgs> = {
+const command = instrumentCommand<unknown, ListArgs>({
   command: 'list',
   aliases: ['ls'],
   describe: 'List project workspaces',
@@ -168,7 +169,7 @@ const command: CommandModule<unknown, ListArgs> = {
       await ListInk({ attributes: args.attribute, headers: args.headers, workspaces });
     }
   }
-};
+});
 
 export default command;
 
