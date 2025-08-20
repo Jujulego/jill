@@ -1,8 +1,10 @@
-import { getActiveSpan, getRootSpan, startSpan, updateSpanName } from '@sentry/node';
+import { getActiveSpan, getRootSpan, updateSpanName } from '@sentry/node';
 import type { Argv, CommandModule } from 'yargs';
+import { trace } from '../../utils/sentry.js';
 
 export function command<T, U>(module: CommandModule<T, U>) {
   const name = getCommandName(module);
+  const handler = trace(module.handler, 'cli.handler');
 
   return <V extends T>(parser: Argv<V>) => parser.command({
     ...module,
@@ -13,7 +15,7 @@ export function command<T, U>(module: CommandModule<T, U>) {
         updateSpanName(getRootSpan(activeSpan), `jill ${name}`);
       }
 
-      await startSpan({ name, op: 'cli.handler' }, () => module.handler(args));
+      await handler(args);
     }
   });
 }

@@ -6,7 +6,7 @@ import path from 'node:path';
 import normalize, { type Package } from 'normalize-package-data';
 import { CWD, LOGGER, PATH_SCURRY } from '../tokens.js';
 import { mutex$, with$ } from '../utils/kyrielle.js';
-import { asyncGenerator, instrument } from '../utils/sentry.js';
+import { traceAsyncGenerator, instrument } from '../utils/sentry.js';
 import type { PackageManager } from '../utils/types.js';
 import { Workspace } from './workspace.js';
 
@@ -147,7 +147,7 @@ export class Project {
     return null;
   }
 
-  @instrument({ name: 'Project.workspaces', use: asyncGenerator })
+  @instrument({ name: 'Project.workspaces', use: traceAsyncGenerator })
   async* workspaces(): AsyncGenerator<Workspace> {
     const main = await this.mainWorkspace();
     yield main;

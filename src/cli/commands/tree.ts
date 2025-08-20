@@ -1,6 +1,6 @@
 import { startSpan } from '@sentry/node';
 import type { CommandModule } from 'yargs';
-import { instrumentLoad } from '../../utils/sentry.js';
+import { traceLoad } from '../../utils/sentry.js';
 import { loadWorkspace, withWorkspace, type WorkspaceArgs } from '../middlewares/workspace.js';
 
 // Command
@@ -10,7 +10,7 @@ const command: CommandModule<unknown, TreeArgs> = {
   builder: withWorkspace,
   async handler(args) {
     const workspace = await loadWorkspace(args);
-    const { default: TreeInk } = await instrumentLoad('TreeInk', () => import('./tree.ink.jsx'));
+    const { default: TreeInk } = await traceLoad('TreeInk', () => import('./tree.ink.jsx'));
 
     await TreeInk({ workspace });
   }

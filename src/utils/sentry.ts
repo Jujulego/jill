@@ -1,6 +1,17 @@
-import { startSpan, updateSpanName } from '@sentry/node';
+import { startSpan } from '@sentry/node';
 import { pipe$ } from 'kyrielle';
-import type { InkedComponent } from '../cli/inked.js';
+
+export function trace<T, A extends unknown[], R>(fun: (this: T, ...args: A) => R, opts: string | InstrumentFunOpts<R>) {
+  const name = typeof opts === 'string' ? opts : (opts.name);
+  const use = typeof opts === 'object' ? opts.use : (_: string, r: R) => r;
+
+  return function(this: T, ...args: A) {
+    return pipe$(
+      startSpan({ name }, () => fun.call(this, ...args)),
+      (r) => use(name, r),
+    );
+  };
+}
 
 export function instrument<O>(opts?: string | InstrumentOpts<O>) {
   return <T, A extends unknown[], R extends O>(
@@ -10,16 +21,11 @@ export function instrument<O>(opts?: string | InstrumentOpts<O>) {
     const name = typeof opts === 'string' ? opts : (opts?.name ?? context.name.toString());
     const use = typeof opts === 'object' ? opts.use : (_: string, r: O) => r;
 
-    return function(this: T, ...args: A) {
-      return pipe$(
-        startSpan({ name }, () => target.call(this, ...args)),
-        (r) => use(name, r),
-      );
-    };
+    return trace(target, { name, use });
   };
 }
 
-export function asyncGenerator<T, R, N>(name: string, generator: AsyncGenerator<T, R, N>) {
+export function traceAsyncGenerator<T, R, N>(name: string, generator: AsyncGenerator<T, R, N>) {
   const instrumented = {
     ...generator,
     next: async () => startSpan({ name, op: 'iterator.next' }, () => generator.next()),
@@ -29,7 +35,7 @@ export function asyncGenerator<T, R, N>(name: string, generator: AsyncGenerator<
   return instrumented;
 }
 
-export function instrumentLoad<M>(name: string, loader: () => Promise<M>): Promise<M> {
+export function traceLoad<M>(name: string, loader: () => Promise<M>): Promise<M> {
   return startSpan({ name: `load ${name}`, op: 'import' }, loader);
 }
 
@@ -38,5 +44,9 @@ type Method<T, A extends unknown[], R> = (this: T, ...args: A) => R;
 
 interface InstrumentOpts<O> {
   name?: string;
+  use: (name: string, result: O) => O;
+}
+interface InstrumentFunOpts<O> {
+  name: string;
   use: (name: string, result: O) => O;
 }

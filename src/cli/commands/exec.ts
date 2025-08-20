@@ -1,11 +1,11 @@
 import { TaskSet } from '@jujulego/tasks';
 import { inject$ } from '@kyrielle/injector';
-import { startSpan } from '@sentry/node';
 import cp from 'node:child_process';
 import process from 'node:process';
 import type { WorkspaceDepsMode } from '../../projects/workspace.js';
 import type { CommandTask } from '../../tasks/command-task.js';
 import { LOGGER } from '../../tokens.js';
+import { traceLoad } from '../../utils/sentry.js';
 import type { PlanModeArgs, TaskModule } from '../bases/task-module.js';
 import { loadWorkspace, withWorkspace, type WorkspaceArgs } from '../middlewares/workspace.js';
 
@@ -71,7 +71,7 @@ const command: TaskModule<ExecArgs> = {
       }
 
       // Run dependencies first with spinners
-      const { default: TaskExecInk } = await startSpan({ name: 'load TaskExecInk', op: 'import' }, () => import('../bases/task-exec.ink.jsx'));
+      const { default: TaskExecInk } = await traceLoad('TaskExecInk', () => import('../bases/task-exec.ink.jsx'));
       await TaskExecInk({ tasks: dependencies, verbose: ['verbose', 'debug'].includes(args.verbose) });
     } else {
       const logger = inject$(LOGGER);

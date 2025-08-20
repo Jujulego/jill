@@ -6,7 +6,7 @@ import slugify from 'slugify';
 import type { ArgumentsCamelCase, CommandModule } from 'yargs';
 import type { Workspace } from '../../projects/workspace.js';
 import { printJson } from '../../utils/json.js';
-import { instrumentLoad } from '../../utils/sentry.js';
+import { traceLoad } from '../../utils/sentry.js';
 import type { Order } from '../../utils/types.js';
 import { hasSomeScript$ } from '../filters/has-scripts.js';
 import { isAffected$ } from '../filters/is-affected.js';
@@ -165,7 +165,7 @@ const command: CommandModule<unknown, ListArgs> = {
         }
       }
 
-      const { default: ListInk } = await instrumentLoad('ListInk', () => import('./list.ink.jsx'));
+      const { default: ListInk } = await traceLoad('ListInk', () => import('./list.ink.jsx'));
       await ListInk({ attributes: args.attribute, headers: args.headers, workspaces });
     }
   }
