@@ -1,13 +1,12 @@
 import { startSpan } from '@sentry/node';
 import chalk from 'chalk';
-import { collect$, map$, pipe$, type SimpleAsyncIterator, waitFor$ } from 'kyrielle';
+import { asyncIterator$, collect$, map$, pipe$, type SimpleAsyncIterator, waitFor$ } from 'kyrielle';
 import path from 'node:path';
 import { compare, parse } from 'semver';
 import slugify from 'slugify';
-import type { ArgumentsCamelCase } from 'yargs';
+import type { ArgumentsCamelCase, CommandModule } from 'yargs';
 import type { Workspace } from '../../projects/workspace.js';
 import { printJson } from '../../utils/json.js';
-import { instrumentCommand } from '../../utils/sentry.js';
 import type { Order } from '../../utils/types.js';
 import { hasSomeScript$ } from '../filters/has-scripts.js';
 import { isAffected$ } from '../filters/is-affected.js';
@@ -16,7 +15,7 @@ import { loadProject, type ProjectArgs, withProject } from '../middlewares/proje
 import { pipeline$ } from '../utils/pipeline$.js';
 
 // Command
-const command = instrumentCommand<unknown, ListArgs>({
+const command: CommandModule<unknown, ListArgs> = {
   command: 'list',
   aliases: ['ls'],
   describe: 'List project workspaces',
@@ -147,7 +146,7 @@ const command = instrumentCommand<unknown, ListArgs>({
     // Load workspaces
     const project = loadProject(args);
     const workspaces = await waitFor$(pipe$(
-      project.workspaces(),
+      asyncIterator$(project.workspaces()),
       filters.build(),
       map$(buildExtractor(args)),
       collect$(),
@@ -170,7 +169,7 @@ const command = instrumentCommand<unknown, ListArgs>({
       await ListInk({ attributes: args.attribute, headers: args.headers, workspaces });
     }
   }
-});
+};
 
 export default command;
 
