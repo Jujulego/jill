@@ -1,4 +1,5 @@
 import { codecovRollupPlugin } from '@codecov/rollup-plugin';
+import { sentryRollupPlugin } from '@sentry/rollup-plugin';
 import { swc } from '@jujulego/vite-plugin-swc';
 import json from '@rollup/plugin-json';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
@@ -28,6 +29,11 @@ const options = {
       enableBundleAnalysis: !!process.env.CODECOV_TOKEN,
       bundleName: 'jill',
       uploadToken: process.env.CODECOV_TOKEN,
+    }),
+    sentryRollupPlugin({
+      org: 'jujulego',
+      project: 'jill',
+      authToken: process.env.SENTRY_AUTH_TOKEN,
     })
   ],
   external: [
