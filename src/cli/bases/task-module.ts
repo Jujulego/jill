@@ -6,6 +6,7 @@ import process from 'node:process';
 import type { ArgumentsCamelCase, Argv, CommandModule } from 'yargs';
 import { LOGGER } from '../../tokens.js';
 import { printJson } from '../../utils/json.js';
+import { instrumentLoad } from '../../utils/sentry.js';
 import type { LoggerArgs } from '../middlewares/logger.js';
 import { command } from './command-module.js';
 
@@ -46,14 +47,14 @@ export function executeCommand<T extends LoggerArgs, U extends PlanModeArgs>(mod
         if (args.planMode === 'json') {
           printJson(Array.from(plan(tasks)));
         } else {
-          const { default: TaskPlanInk } = await startSpan({ name: 'load TaskPlanInk', op: 'import' }, () => import('./task-plan.ink.jsx'));
+          const { default: TaskPlanInk } = await instrumentLoad('TaskPlanInk', () => import('./task-plan.ink.jsx'));
           await TaskPlanInk({ tasks });
         }
       } else {
         if (execute) {
           await execute(args, tasks);
         } else if (tasks.tasks.length > 0) {
-          const { default: TaskExecInk } = await startSpan({ name: 'load TaskExecInk', op: 'import' }, () => import('./task-exec.ink.jsx'));
+          const { default: TaskExecInk } = await instrumentLoad('TaskExecInk', () => import('./task-exec.ink.jsx'));
           await TaskExecInk({ tasks, verbose: ['verbose', 'debug'].includes(args.verbose) });
         } else {
           const logger = inject$(LOGGER);

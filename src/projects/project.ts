@@ -1,13 +1,12 @@
 import { asyncScope$, inject$ } from '@kyrielle/injector';
 import { withLabel } from '@kyrielle/logger';
 import { Glob } from 'glob';
-import type { SimpleAsyncIterator } from 'kyrielle';
 import fs from 'node:fs';
 import path from 'node:path';
 import normalize, { type Package } from 'normalize-package-data';
 import { CWD, LOGGER, PATH_SCURRY } from '../tokens.js';
 import { mutex$, with$ } from '../utils/kyrielle.js';
-import { instrument, instrumentAsyncIterator } from '../utils/sentry.js';
+import { asyncGenerator, instrument } from '../utils/sentry.js';
 import type { PackageManager } from '../utils/types.js';
 import { Workspace } from './workspace.js';
 
@@ -148,7 +147,8 @@ export class Project {
     return null;
   }
 
-  private async* _generateWorkspaces(): AsyncGenerator<Workspace> {
+  @instrument({ name: 'Project.workspaces', use: asyncGenerator })
+  async* workspaces(): AsyncGenerator<Workspace> {
     const main = await this.mainWorkspace();
     yield main;
 
@@ -179,10 +179,6 @@ export class Project {
 
       this._isFullyLoaded = true;
     }
-  }
-
-  workspaces(): SimpleAsyncIterator<Workspace> {
-    return instrumentAsyncIterator<Workspace>('Project.workspaces', this._generateWorkspaces());
   }
 
   // Properties

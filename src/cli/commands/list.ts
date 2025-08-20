@@ -1,20 +1,12 @@
-import { startSpan } from '@sentry/node';
 import chalk from 'chalk';
-import {
-  type AnyAsyncIterable,
-  asyncIterator$,
-  collect$,
-  map$,
-  pipe$,
-  type SimpleAsyncIterator,
-  waitFor$
-} from 'kyrielle';
+import { asyncIterator$, collect$, map$, pipe$, type SimpleAsyncIterator, waitFor$ } from 'kyrielle';
 import path from 'node:path';
 import { compare, parse } from 'semver';
 import slugify from 'slugify';
 import type { ArgumentsCamelCase, CommandModule } from 'yargs';
 import type { Workspace } from '../../projects/workspace.js';
 import { printJson } from '../../utils/json.js';
+import { instrumentLoad } from '../../utils/sentry.js';
 import type { Order } from '../../utils/types.js';
 import { hasSomeScript$ } from '../filters/has-scripts.js';
 import { isAffected$ } from '../filters/is-affected.js';
@@ -154,7 +146,7 @@ const command: CommandModule<unknown, ListArgs> = {
     // Load workspaces
     const project = loadProject(args);
     const workspaces = await waitFor$(pipe$(
-      project.workspaces(),
+      asyncIterator$(project.workspaces()),
       filters.build(),
       map$(buildExtractor(args)),
       collect$(),
@@ -173,7 +165,7 @@ const command: CommandModule<unknown, ListArgs> = {
         }
       }
 
-      const { default: ListInk } = await startSpan({ name: 'load ListInk', op: 'import' }, () => import('./list.ink.jsx'));
+      const { default: ListInk } = await instrumentLoad('ListInk', () => import('./list.ink.jsx'));
       await ListInk({ attributes: args.attribute, headers: args.headers, workspaces });
     }
   }

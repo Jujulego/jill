@@ -1,6 +1,6 @@
 import { TaskSet } from '@jujulego/tasks';
 import { inject$ } from '@kyrielle/injector';
-import { pipe$, type SimpleAsyncIterator } from 'kyrielle';
+import { asyncIterator$, pipe$, type SimpleAsyncIterator } from 'kyrielle';
 import type { Workspace, WorkspaceDepsMode } from '../../projects/workspace.js';
 import type { PlanModeArgs, TaskModule } from '../bases/task-module.js';
 import { hasEveryScript$ } from '../filters/has-scripts.js';
@@ -101,7 +101,7 @@ const command: TaskModule<EachArgs> = {
     // Load workspaces
     const project = loadProject(args);
     const workspaces = pipe$(
-      project.workspaces(),
+      asyncIterator$(project.workspaces()),
       hasEveryScript$(scripts),
       filters.build(),
     );

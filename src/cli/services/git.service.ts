@@ -24,6 +24,8 @@ export class GitService {
 
     // Create task
     const task = new SpawnTask('git', [cmd, ...args], { command: cmd, hidden: true }, opts);
+    task.events$.on('stream', ({ data }) => opts.logger.debug(data.toString('utf-8')));
+
     (await this._manager).add(task);
 
     return task;
