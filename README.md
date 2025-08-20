@@ -2,8 +2,7 @@
 [![Version](https://img.shields.io/npm/v/@jujulego/jill)](https://www.npmjs.com/package/@jujulego/jill)
 ![Licence](https://img.shields.io/github/license/jujulego/jill)
 ![Language](https://img.shields.io/github/languages/top/jujulego/jill)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=jujulego_jill&metric=alert_status)](https://sonarcloud.io/dashboard?id=jujulego_jill)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=jujulego_jill&metric=coverage)](https://sonarcloud.io/dashboard?id=jujulego_jill)
+[![codecov](https://codecov.io/gh/Jujulego/jill/graph/badge.svg?token=Ug8TWPaPNA)](https://codecov.io/gh/Jujulego/jill)
 
 Zero-config monorepo cli
 
