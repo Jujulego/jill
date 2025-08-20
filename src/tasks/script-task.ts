@@ -21,6 +21,7 @@ export class ScriptTask extends GroupTask<ScriptContext> {
     opts?: ScriptOpts
   ) {
     super(script, { workspace, script }, opts);
+
     this._runHooks = opts?.runHooks ?? true;
   }
 

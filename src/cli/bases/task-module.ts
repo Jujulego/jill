@@ -1,5 +1,6 @@
 import { plan, type TaskSet } from '@jujulego/tasks';
 import { inject$ } from '@kyrielle/injector';
+import { startSpan } from '@sentry/node';
 import type { Mutator } from 'kyrielle';
 import process from 'node:process';
 import type { ArgumentsCamelCase, Argv, CommandModule } from 'yargs';
@@ -40,7 +41,7 @@ export function executeCommand<T extends LoggerArgs, U extends PlanModeArgs>(mod
       }
     },
     async handler(args) {
-      const tasks = await prepare(args);
+      const tasks = await startSpan({ name: 'command.prepare' }, async () => await prepare(args));
 
       if (args.plan) {
         if (args.planMode === 'json') {
@@ -83,7 +84,8 @@ export function planCommand(module: CommandModule | TaskModule, tasks$: Mutator<
         }
       },
       async handler(args) {
-        tasks$.mutate(await prepare(args));
+        const tasks = await startSpan({ name: 'command.prepare' }, async () => await prepare(args));
+        tasks$.mutate(tasks);
       }
     }));
   } else {

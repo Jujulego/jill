@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import { asyncIterator$, collect$, map$, pipe$, type SimpleAsyncIterator, waitFor$ } from 'kyrielle';
+import { collect$, map$, pipe$, type SimpleAsyncIterator, waitFor$ } from 'kyrielle';
 import path from 'node:path';
 import { compare, parse } from 'semver';
 import slugify from 'slugify';
@@ -146,7 +146,7 @@ const command = instrumentCommand<unknown, ListArgs>({
     // Load workspaces
     const project = loadProject(args);
     const workspaces = await waitFor$(pipe$(
-      asyncIterator$(project.workspaces()),
+      project.workspaces(),
       filters.build(),
       map$(buildExtractor(args)),
       collect$(),

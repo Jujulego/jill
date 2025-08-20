@@ -15,7 +15,7 @@ export function instrumentCommand<T, U>(module: CommandModule<T, U>): CommandMod
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function getCommandName(module: CommandModule<any, any>): string {
+export function getCommandName(module: CommandModule<any, any>): string {
   if (!module.command) {
     return '[unknown]';
   }

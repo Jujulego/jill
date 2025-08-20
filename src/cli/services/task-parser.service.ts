@@ -1,6 +1,7 @@
 import { FallbackGroup, type GroupTask, ParallelGroup, SequenceGroup, type Task } from '@jujulego/tasks';
 import { inject$ } from '@kyrielle/injector';
 import { withLabel } from '@kyrielle/logger';
+import { startSpan } from '@sentry/node';
 import moo from 'moo';
 import type { Workspace, WorkspaceRunOptions } from '../../projects/workspace.js';
 import { LOGGER } from '../../tokens.js';
@@ -162,23 +163,25 @@ export class TaskParserService {
   }
 
   parse(expr: string): TaskTree {
-    const lexer = this._lexer().reset(expr);
+    return startSpan({ name: 'TaskParser.parse' }, () => {
+      const lexer = this._lexer().reset(expr);
 
-    const tree: TaskTree = {
-      roots: [],
-    };
+      const tree: TaskTree = {
+        roots: [],
+      };
 
-    while (true) {
-      const node = this._nextNode(lexer);
+      while (true) {
+        const node = this._nextNode(lexer);
 
-      if (node) {
-        tree.roots.push(node);
-      } else {
-        break;
+        if (node) {
+          tree.roots.push(node);
+        } else {
+          break;
+        }
       }
-    }
 
-    return tree;
+      return tree;
+    });
   }
 
   *extractScripts(node: TaskTree | TaskNode | GroupNode): Generator<string> {

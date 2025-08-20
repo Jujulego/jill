@@ -1,5 +1,6 @@
 import { SpawnTask, type SpawnTaskOptions, type TaskContext } from '@jujulego/tasks';
 import { inject$ } from '@kyrielle/injector';
+import { startInactiveSpan } from '@sentry/node';
 import { collect$, map$, once$, pipe$, waitFor$ } from 'kyrielle';
 import { LOGGER, TASK_MANAGER } from '../../tokens.js';
 import { streamLines$ } from '../../utils/streams.js';
@@ -22,8 +23,14 @@ export class GitService {
     const opts = { logger: this._logger, ...options };
 
     // Create task
+    const span = startInactiveSpan({ name: `git ${cmd}`, op: 'subprocess', attributes: { args } });
     const task = new SpawnTask('git', [cmd, ...args], { command: cmd, hidden: true }, opts);
+
     task.events$.on('stream', ({ data }) => opts.logger.debug(data.toString('utf-8')));
+    task.events$.on('completed', ({ status }) => {
+      span.setStatus({ code: status === 'done' ? 1 : 2 });
+      span.end();
+    });
 
     (await this._manager).add(task);
 
