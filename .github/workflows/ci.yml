@@ -35,8 +35,8 @@ jobs:
       - name: Build
         run: yarn build
         env:
-          SENTRY_AUTH_TOKEN: ${{ sentry.SENTRY_AUTH_TOKEN }}
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
 
       - uses: actions/upload-artifact@v4.6.2
         with:
