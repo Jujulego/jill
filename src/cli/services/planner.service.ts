@@ -1,7 +1,6 @@
 import type { TaskSet } from '@jujulego/tasks';
 import { asyncScope$, inject$ } from '@kyrielle/injector';
 import { withLabel } from '@kyrielle/logger';
-import { startSpan } from '@sentry/node';
 import { var$ } from 'kyrielle';
 import { ConfigService } from '../../config/config.service.js';
 import { CWD, LOGGER } from '../../tokens.js';

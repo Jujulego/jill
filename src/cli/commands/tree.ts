@@ -1,4 +1,3 @@
-import { startSpan } from '@sentry/node';
 import type { CommandModule } from 'yargs';
 import { traceLoad } from '../../utils/sentry.js';
 import { loadWorkspace, withWorkspace, type WorkspaceArgs } from '../middlewares/workspace.js';
