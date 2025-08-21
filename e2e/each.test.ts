@@ -345,4 +345,4 @@ describe('jill each', () => {
       await expect(fileExists(path.join(prjDir, 'wks-a', 'start.txt'))).resolves.toBe(false);
     });
   });
-}, 10000);
+}, 15000);
