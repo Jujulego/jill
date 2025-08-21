@@ -1,5 +1,6 @@
 import { inject$ } from '@kyrielle/injector';
 import { captureException, captureMessage, startSpan } from '@sentry/node';
+import process from 'node:process';
 import { hideBin } from 'yargs/helpers';
 import { executeParser } from './cli/parser.js';
 import { ClientError } from './cli/utils/errors.js';
@@ -23,6 +24,8 @@ await startSpan({ name: 'jill', op: 'cli.main', attributes: { 'cli.argv': argv }
       captureException(err, { tags: { handled: false } });
       logger.error(err.message);
     }
+
+    process.exitCode = 1;
   })
   .parseAsync(argv)
   .catch(() => {})
