@@ -1,6 +1,9 @@
+import { inject$ } from '@kyrielle/injector';
 import { captureException, captureMessage, startSpan } from '@sentry/node';
 import { hideBin } from 'yargs/helpers';
 import { executeParser } from './cli/parser.js';
+import { ClientError } from './cli/utils/errors.js';
+import { LOGGER } from './tokens.js';
 
 // Bootstrap
 const argv = hideBin(process.argv);
@@ -9,11 +12,18 @@ const parser = executeParser();
 await startSpan({ name: 'jill', op: 'cli.main', attributes: { 'cli.argv': argv } }, () => parser
   .wrap(parser.terminalWidth())
   .fail((msg, err) => {
+    const logger = inject$(LOGGER);
+
     if (msg) {
-      captureMessage(msg, 'fatal');
+      logger.error(msg);
+      captureMessage(msg, { level: 'error' });
+    } else if (err instanceof ClientError) {
+      logger.warning(err.message);
     } else {
-      captureException(err);
+      captureException(err, { tags: { handled: false } });
+      logger.error(err.message);
     }
   })
   .parseAsync(argv)
+  .catch(() => {})
 );

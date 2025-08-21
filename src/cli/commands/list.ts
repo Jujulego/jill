@@ -12,6 +12,7 @@ import { hasSomeScript$ } from '../filters/has-scripts.js';
 import { isAffected$ } from '../filters/is-affected.js';
 import { isPrivate$ } from '../filters/is-private.js';
 import { loadProject, type ProjectArgs, withProject } from '../middlewares/project.js';
+import { ClientError } from '../utils/errors.js';
 import { pipeline$ } from '../utils/pipeline$.js';
 
 // Command
@@ -113,7 +114,7 @@ const command: CommandModule<unknown, ListArgs> = {
         const miss = argv['sort-by'].filter((attr) => !argv.attribute.includes(attr));
 
         if (miss.length > 0) {
-          throw new Error(`Cannot sort by non printed attributes. Missing ${miss.join(', ')}.`);
+          throw new ClientError(`Cannot sort by non printed attributes. Missing ${miss.join(', ')}.`);
         }
       }
 

@@ -35,14 +35,17 @@ const options = {
       project: 'jill',
       authToken: process.env.SENTRY_AUTH_TOKEN,
       silent: !process.env.SENTRY_AUTH_TOKEN,
-      release: {
-        name: pkg.version,
-      },
       bundleSizeOptimizations: {
         excludeDebugStatements: true,
         excludeReplayShadowDom: true,
         excludeReplayIframe: true,
         excludeReplayWorker: true,
+      },
+      reactComponentAnnotation: {
+        enabled: false,
+      },
+      release: {
+        name: pkg.version,
       }
     })
   ],

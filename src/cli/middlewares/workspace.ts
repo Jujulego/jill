@@ -2,6 +2,7 @@ import { asyncScope$, inject$ } from '@kyrielle/injector';
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
 import type { Workspace } from '../../projects/workspace.js';
 import { CWD, LOGGER } from '../../tokens.js';
+import { ClientError } from '../utils/errors.js';
 import { loadProject, type ProjectArgs, withProject } from './project.js';
 
 /**
@@ -36,7 +37,7 @@ export async function loadWorkspace(args: ArgumentsCamelCase<WorkspaceArgs>): Pr
   }
 
   if (!workspace) {
-    throw new Error(`Workspace "${args.workspace || '.'}" not found`);
+    throw new WorkspaceNotFound(args.workspace || '.');
   }
 
   return workspace;
@@ -45,4 +46,12 @@ export async function loadWorkspace(args: ArgumentsCamelCase<WorkspaceArgs>): Pr
 // Types
 export interface WorkspaceArgs extends ProjectArgs {
   readonly workspace: string | undefined;
+}
+
+export class WorkspaceNotFound extends ClientError {
+  name = 'WorkspaceNotFound';
+
+  constructor(workspace: string) {
+    super(`Workspace "${workspace}" not found`);
+  }
 }

@@ -1,3 +1,9 @@
-export class TaskExpressionError extends Error {}
+import { ClientError } from '../cli/utils/errors.js';
 
-export class TaskSyntaxError extends Error {}
+export class TaskExpressionError extends ClientError {
+  name = 'TaskExpressionError';
+}
+
+export class TaskSyntaxError extends ClientError {
+  name = 'TaskSyntaxError';
+}
