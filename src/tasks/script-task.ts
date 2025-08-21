@@ -1,6 +1,7 @@
 import { GroupTask, type Task, type TaskContext, type TaskOptions, TaskSet } from '@jujulego/tasks';
 import { inject$ } from '@kyrielle/injector';
 import { waitFor$ } from 'kyrielle';
+import { ClientError } from '../cli/utils/errors.js';
 import type { Workspace } from '../projects/workspace.js';
 import { splitCommandLine } from '../utils/string.js';
 import { CommandTask } from './command-task.js';
@@ -70,7 +71,7 @@ export class ScriptTask extends GroupTask<ScriptContext> {
     this._scriptTasks = await this._runScript(this.script, this.args);
 
     if (!this._scriptTasks) {
-      throw new Error(`No script ${this.script} in ${this.workspace.name}`);
+      throw new ScriptNotFound(`No script ${this.script} in ${this.workspace.name}`);
     }
 
     // Prepare hooks run
@@ -178,4 +179,8 @@ export interface ScriptOpts extends TaskOptions {
 // Utils
 export function isScriptCtx(ctx: Readonly<TaskContext>): ctx is Readonly<ScriptContext> {
   return 'workspace' in ctx && 'script' in ctx;
+}
+
+export class ScriptNotFound extends ClientError {
+  name = 'ScriptNotFound';
 }

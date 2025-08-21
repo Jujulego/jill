@@ -4,6 +4,7 @@ import { hasSomeScript$ } from '@/src/cli/filters/has-scripts.js';
 import { isPrivate$ } from '@/src/cli/filters/is-private.js';
 import { loadProject, type ProjectArgs, withProject } from '@/src/cli/middlewares/project.js';
 import { isAffected$ } from '@/src/cli/filters/is-affected.js';
+import { ClientError } from '@/src/cli/utils/errors.js';
 import { TestBed } from '@/tools/test-bed.js';
 import { globalScope$ } from '@kyrielle/injector';
 import { filter$ } from 'kyrielle';
@@ -297,7 +298,7 @@ describe('jill list', () => {
           .exitProcess(false)
           .showHelpOnFail(false)
           .parseAsync('list --attribute name --sort-by version name')
-      )()).rejects.toEqual(new Error('Cannot sort by non printed attributes. Missing version.'));
+      )()).rejects.toEqual(new ClientError('Cannot sort by non printed attributes. Missing version.'));
 
       expect(ListInk).not.toHaveBeenCalled();
     });

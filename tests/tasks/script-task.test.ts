@@ -1,7 +1,7 @@
 import { PlannerService } from '@/src/cli/services/planner.service.js';
 import { type Workspace } from '@/src/projects/workspace.js';
 import { CommandTask } from '@/src/tasks/command-task.js';
-import { ScriptTask } from '@/src/tasks/script-task.js';
+import { ScriptNotFound, ScriptTask } from '@/src/tasks/script-task.js';
 import { CONFIG } from '@/src/tokens.js';
 import { TestBed } from '@/tools/test-bed.js';
 import { TestCommandTask, TestScriptTask } from '@/tools/test-tasks.js';
@@ -174,7 +174,7 @@ describe('ScriptTask.prepare', () => {
     const script = new ScriptTask(wks, 'test', ['--arg']);
 
     await expect(script.prepare())
-      .rejects.toEqual(new Error('No script test in wks'));
+      .rejects.toEqual(new ScriptNotFound('No script test in wks'));
 
     expect(script.tasks).toHaveLength(0);
   });
