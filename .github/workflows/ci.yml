@@ -160,6 +160,8 @@ jobs:
 
       - name: Run E2E tests
         run: yarn e2e -t ${{ matrix.packageManager }} --no-file-parallelism
+        env:
+          SENTRY_ENVIRONMENT: testing
 
       - name: Upload test results to Codecov
         if: ${{ !cancelled() }}
