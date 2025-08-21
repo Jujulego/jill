@@ -3,8 +3,9 @@ import { inject$ } from '@kyrielle/injector';
 import { withLabel } from '@kyrielle/logger';
 import moo from 'moo';
 import type { Workspace, WorkspaceRunOptions } from '../../projects/workspace.js';
-import { LOGGER } from '../../tokens.js';
 import { TaskExpressionError, TaskSyntaxError } from '../../tasks/errors.js';
+import { LOGGER } from '../../tokens.js';
+import { instrument } from '../../utils/sentry.js';
 
 // Interfaces
 export interface TaskNode {
@@ -161,6 +162,7 @@ export class TaskParserService {
     return node;
   }
 
+  @instrument('TaskParserService.parse')
   parse(expr: string): TaskTree {
     const lexer = this._lexer().reset(expr);
 
@@ -195,6 +197,7 @@ export class TaskParserService {
     }
   }
 
+  @instrument('TaskParserService.buildTask')
   async buildTask(node: TaskNode | GroupNode, workspace: Workspace, opts?: WorkspaceRunOptions): Promise<Task> {
     if (TaskParserService.isTaskNode(node)) {
       const task = await workspace.run(node.script, node.args, opts);

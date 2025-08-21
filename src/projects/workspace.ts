@@ -8,6 +8,7 @@ import { GitService } from '../cli/services/git.service.js';
 import { CommandTask } from '../tasks/command-task.js';
 import { ScriptTask } from '../tasks/script-task.js';
 import { CONFIG, LOGGER } from '../tokens.js';
+import { instrument, traceAsyncGenerator } from '../utils/sentry.js';
 import { combine } from '../utils/streams.js';
 import type { Project } from './project.js';
 
@@ -110,6 +111,7 @@ export class Workspace {
     return await isAffected;
   }
 
+  @instrument({ name: 'Workspace.dependencies', use: traceAsyncGenerator })
   async* dependencies(): AsyncGenerator<Workspace, void> {
     if (!this.manifest.dependencies) return;
 
@@ -118,6 +120,7 @@ export class Workspace {
     }
   }
 
+  @instrument({ name: 'Workspace.devDependencies', use: traceAsyncGenerator })
   async* devDependencies(): AsyncGenerator<Workspace, void> {
     if (!this.manifest.devDependencies) return;
 

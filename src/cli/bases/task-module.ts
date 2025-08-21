@@ -5,7 +5,8 @@ import process from 'node:process';
 import type { ArgumentsCamelCase, Argv, CommandModule } from 'yargs';
 import { LOGGER } from '../../tokens.js';
 import { printJson } from '../../utils/json.js';
-import type { LoggerArgs } from '../middlewares/logger.middleware.js';
+import { trace, traceLoad } from '../../utils/sentry.js';
+import type { LoggerArgs } from '../middlewares/logger.js';
 import { command } from './command-module.js';
 
 // Module
@@ -25,15 +26,16 @@ export interface TaskModule<T extends PlanModeArgs = PlanModeArgs> extends Omit<
 
 // Utils
 export function executeCommand<T extends LoggerArgs, U extends PlanModeArgs>(module: TaskModule<U>) {
-  const { prepare, execute, ...rest } = module;
+  const prepare = trace(module.prepare, 'cli.prepare');
+  const execute = module.execute && trace(module.execute, 'cli.execute');
 
   return command<T, U>({
-    ...rest,
+    ...module,
     builder(base) {
       const parser = withPlanMode(base);
 
-      if (rest.builder) {
-        return rest.builder(parser);
+      if (module.builder) {
+        return module.builder(parser);
       } else {
         return parser as Argv<U>;
       }
@@ -45,14 +47,14 @@ export function executeCommand<T extends LoggerArgs, U extends PlanModeArgs>(mod
         if (args.planMode === 'json') {
           printJson(Array.from(plan(tasks)));
         } else {
-          const { default: TaskPlanInk } = await import('./task-plan.ink.jsx');
+          const { default: TaskPlanInk } = await traceLoad('TaskPlanInk', () => import('./task-plan.ink.jsx'));
           await TaskPlanInk({ tasks });
         }
       } else {
         if (execute) {
           await execute(args, tasks);
         } else if (tasks.tasks.length > 0) {
-          const { default: TaskExecInk } = await import('./task-exec.ink.jsx');
+          const { default: TaskExecInk } = await traceLoad('TaskExecInk', () => import('./task-exec.ink.jsx'));
           await TaskExecInk({ tasks, verbose: ['verbose', 'debug'].includes(args.verbose) });
         } else {
           const logger = inject$(LOGGER);
@@ -68,15 +70,15 @@ export function planCommand<T, U>(module: CommandModule<T, U>, tasks$: Mutator<T
 export function planCommand<T extends PlanModeArgs>(module: TaskModule<T>, tasks$: Mutator<TaskSet>): <V extends LoggerArgs>(parser: Argv<V>) => Argv<V>;
 export function planCommand(module: CommandModule | TaskModule, tasks$: Mutator<TaskSet>) {
   if ('prepare' in module) {
-    const { prepare, ...rest } = module;
+    const prepare = trace(module.prepare, 'cli.prepare');
 
     return command<LoggerArgs, PlanModeArgs>({
-      ...rest,
+      ...module,
       builder(base) {
         const parser = withPlanMode(base);
 
-        if (rest.builder) {
-          return rest.builder(parser);
+        if (module.builder) {
+          return module.builder(parser);
         } else {
           return parser;
         }

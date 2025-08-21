@@ -4,6 +4,7 @@ import { withLabel } from '@kyrielle/logger';
 import { var$ } from 'kyrielle';
 import { ConfigService } from '../../config/config.service.js';
 import { CWD, LOGGER } from '../../tokens.js';
+import { instrument } from '../../utils/sentry.js';
 import { planParser } from '../parser.js';
 
 export class PlannerService {
@@ -15,6 +16,7 @@ export class PlannerService {
    * Returns a task set if any task should be run by given command.
    * Tasks that do not execute tasks will return `null`
    */
+  @instrument('PlannerService.plan')
   async plan(args: string[], cwd: string): Promise<TaskSet | null> {
     this._logger.debug(`interpreting jill ${args.join(' ')}`);
 

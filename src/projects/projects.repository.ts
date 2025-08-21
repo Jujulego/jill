@@ -2,6 +2,7 @@ import { inject$ } from '@kyrielle/injector';
 import { withLabel } from '@kyrielle/logger';
 import path from 'node:path';
 import { LOGGER, PATH_SCURRY } from '../tokens.js';
+import { instrument } from '../utils/sentry.js';
 import { Project, type ProjectOptions } from './project.js';
 
 /**
@@ -24,6 +25,7 @@ export class ProjectsRepository {
     };
   }
 
+  @instrument()
   async searchProjectRoot(directory: string): Promise<string> {
     directory = path.resolve(directory);
 

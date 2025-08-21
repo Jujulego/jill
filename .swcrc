@@ -1,4 +1,5 @@
 {
+  "$schema": "https://swc.rs/schema.json",
   "env": {
     "targets": "node 18"
   },
@@ -11,6 +12,7 @@
       "dynamicImport": true
     },
     "transform": {
+      "decoratorVersion": "2022-03",
       "react": {
         "runtime": "automatic"
       }

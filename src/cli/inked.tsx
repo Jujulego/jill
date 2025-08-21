@@ -1,3 +1,4 @@
+import { startSpan } from '@sentry/node';
 import { type Instance, render } from 'ink';
 import type { ReactNode } from 'react';
 import StaticLogs from './components/StaticLogs.jsx';
@@ -6,7 +7,7 @@ import StaticLogs from './components/StaticLogs.jsx';
  * Renders each yielded element using ink
  */
 export function inked<P, R>(stepper: InkedStepper<P, R>): InkedComponent<P, R> {
-  return async (props: P): Promise<R> => {
+  return (props: P): Promise<R> => startSpan({ name: 'inked', op: 'ui.ink' }, async () => {
     const controller = new AbortController();
 
     const app = render(<StaticLogs />, { exitOnCtrlC: true });
@@ -33,7 +34,7 @@ export function inked<P, R>(stepper: InkedStepper<P, R>): InkedComponent<P, R> {
     } finally {
       app.unmount();
     }
-  };
+  });
 }
 
 // Types

@@ -1,16 +1,17 @@
-import { ConfigService } from '../../config/config.service.js';
 import { asyncScope$, inject$ } from '@kyrielle/injector';
+import { startSpan } from '@sentry/node';
 import type { Argv } from 'yargs';
+import { ConfigService } from '../../config/config.service.js';
 
 // Middleware
-export function configMiddleware<T>(parser: Argv<T>) {
+export function withConfig<T>(parser: Argv<T>) {
   return parser
     .option('config-file', {
       alias: 'c',
       type: 'string',
       description: 'Configuration file'
     })
-    .middleware(async (args) => {
+    .middleware((args) => startSpan({ name: 'config', op: 'cli.middleware' }, async () => {
       const configService = inject$(ConfigService, asyncScope$());
 
       if (args.configFile) {
@@ -18,7 +19,7 @@ export function configMiddleware<T>(parser: Argv<T>) {
       } else {
         await configService.searchConfig();
       }
-    });
+    }));
 }
 
 // Types
