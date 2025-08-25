@@ -65,13 +65,6 @@ export class ConfigService {
     return config;
   }
 
-  defaultConfig(): void {
-    this._config.mutate({
-      hooks: true,
-      jobs: Math.max(CPU_COUNT - 1, 1),
-    });
-  }
-
   async searchConfig(): Promise<void> {
     const loaded = await this._explorer.search(inject$(CWD, asyncScope$()));
 
