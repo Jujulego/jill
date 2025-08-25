@@ -65,28 +65,35 @@ export class ConfigService {
     return config;
   }
 
-  async searchConfig() {
+  defaultConfig(): void {
+    this._config.mutate({
+      hooks: true,
+      jobs: Math.max(CPU_COUNT - 1, 1),
+    });
+  }
+
+  async searchConfig(): Promise<void> {
     const loaded = await this._explorer.search(inject$(CWD, asyncScope$()));
 
     if (loaded) {
       this._logger.verbose`loaded file ${loaded.filepath}`;
       this._filepath = loaded.filepath;
-
-      const config = this._validateConfig(loaded.config);
-      this._config.mutate(config);
     }
+
+    const config = this._validateConfig(loaded?.config ?? {});
+    this._config.mutate(config);
   }
 
-  async loadConfig(filepath: string) {
+  async loadConfig(filepath: string): Promise<void> {
     const loaded = await this._explorer.load(filepath);
 
     if (loaded) {
       this._logger.verbose`loaded file ${loaded.filepath}`;
       this._filepath = loaded.filepath;
-
-      const config = this._validateConfig(loaded.config);
-      this._config.mutate(config);
     }
+
+    const config = this._validateConfig(loaded?.config ?? {});
+    this._config.mutate(config);
   }
 
   // Attributes
