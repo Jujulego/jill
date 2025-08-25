@@ -856,7 +856,7 @@ __metadata:
     is-unicode-supported: "npm:^2.1.0"
     jiti: "npm:2.5.1"
     kyrielle: "npm:^2.5.3"
-    memfs: "npm:4.37.1"
+    memfs: "npm:4.38.1"
     moo: "npm:^0.5.2"
     normalize-package-data: "npm:^8.0.0"
     path-scurry: "npm:^2.0.0"
@@ -4263,6 +4263,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"glob-to-regex.js@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "glob-to-regex.js@npm:1.0.1"
+  peerDependencies:
+    tslib: 2
+  checksum: 10/f56c3f62488334bd90ca458a7661c5b908351cbb7b9cd85c9cdee69456e54a163a6eb59e9e0305273ef88b5e1707b99a729c1b6c5075006e8212e19ee33b9897
+  languageName: node
+  linkType: hard
+
 "glob@npm:^10.2.2, glob@npm:^10.4.1":
   version: 10.4.5
   resolution: "glob@npm:10.4.5"
@@ -5349,16 +5358,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"memfs@npm:4.37.1":
-  version: 4.37.1
-  resolution: "memfs@npm:4.37.1"
+"memfs@npm:4.38.1":
+  version: 4.38.1
+  resolution: "memfs@npm:4.38.1"
   dependencies:
     "@jsonjoy.com/json-pack": "npm:^1.11.0"
     "@jsonjoy.com/util": "npm:^1.9.0"
+    glob-to-regex.js: "npm:^1.0.1"
     thingies: "npm:^2.5.0"
     tree-dump: "npm:^1.0.3"
     tslib: "npm:^2.0.0"
-  checksum: 10/fb976dfbb2c683c006a465625d04d7b4fd3a8e11edb9f43e6c0d45558c83f23eb5b81de140f905d0eb9fffbfc9a7cd11bfc0948163f69f4797265a53519f3ae1
+  checksum: 10/7ecbcbfdb42bf8ed315d03e9f71d45461903acf410914bcadb2b40c627340679f7157e2625d972601ad8a18053dff2013f60a0053e05301488bc0c8d7019c565
   languageName: node
   linkType: hard
 
