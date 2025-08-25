@@ -17,9 +17,6 @@ const options = {
     sourcemap: true,
     chunkFileNames: '[name].js',
     generatedCode: 'es5',
-    manualChunks: {
-     'parser': ['./src/cli/parser.js'],
-    }
   },
   plugins: [
     nodeResolve({ exportConditions: ['node'] }),
