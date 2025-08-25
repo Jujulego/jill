@@ -137,5 +137,19 @@ describe('jill list', () => {
         ]);
       });
     });
+
+    it('should work without config file', async () => {
+      await fs.rm(path.join(prjDir, '.jillrc.json'));
+      const res = await jill('list', { cwd: prjDir });
+
+      expect(res.code).toBe(0);
+      expect(res.screen.screen).toEqualLines([
+        'main',
+        'wks-a',
+        'wks-b',
+        'wks-c'
+      ]);
+    });
+
   });
 }, 10000);
