@@ -244,5 +244,22 @@ describe('jill run', () => {
       await expect(fileExists(path.join(prjDir, 'wks-c', 'build.txt'))).resolves.toBe(false);
       await expect(fileExists(path.join(prjDir, 'wks-b', 'start.txt'))).resolves.toBe(false);
     });
+
+    it('should work without config file', async () => {
+      await fs.rm(path.join(prjDir, '.jillrc.json'));
+      const res = await jill('run -w wks-c start', { cwd: prjDir });
+
+      // Check jill output
+      expect(res.code).toBe(0);
+
+      expect(res.screen.screen).toMatchLines([
+        expect.ignoreColor(/^. Run start script in wks-c \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^. 1 done$/),
+      ]);
+
+      // Check script result
+      await expect(fs.readFile(path.join(prjDir, 'wks-c', 'start.txt'), 'utf8'))
+        .resolves.toBe('started');
+    });
   });
 }, 10000);

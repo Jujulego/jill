@@ -344,5 +344,26 @@ describe('jill each', () => {
       await expect(fileExists(path.join(prjDir, 'wks-b', 'start.txt'))).resolves.toBe(false);
       await expect(fileExists(path.join(prjDir, 'wks-a', 'start.txt'))).resolves.toBe(false);
     });
+
+    it('should work without config file', async () => {
+      await fs.rm(path.join(prjDir, '.jillrc.json'));
+      const res = await jill('each start', { cwd: prjDir });
+
+      // Check jill output
+      expect(res.code).toBe(0);
+
+      // Check script result
+      await expect(fs.readFile(path.join(prjDir, 'wks-c', 'build.txt'), 'utf8'))
+        .resolves.toBe('built');
+
+      await expect(fs.readFile(path.join(prjDir, 'wks-b', 'build.txt'), 'utf8'))
+        .resolves.toBe('built');
+
+      await expect(fs.readFile(path.join(prjDir, 'wks-b', 'start.txt'), 'utf8'))
+        .resolves.toBe('started');
+
+      await expect(fs.readFile(path.join(prjDir, 'wks-a', 'start.txt'), 'utf8'))
+        .resolves.toBe('started');
+    });
   });
 }, 15000);

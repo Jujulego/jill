@@ -58,5 +58,14 @@ describe('jill tree', () => {
         expect.ignoreColor('└─ wks-c@1.0.0'),
       ]);
     });
+
+    it('should work without config file', async () => {
+      await fs.rm(path.join(prjDir, '.jillrc.json'));
+      const res = await jill('tree', { cwd: prjDir });
+
+      expect(res.screen.screen).toEqualLines([
+        expect.ignoreColor('main@1.0.0'),
+      ]);
+    });
   });
 }, 10000);

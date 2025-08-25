@@ -4,7 +4,6 @@ import schema from '@/src/config/schema.json' with { type: 'json' };
 import { globalScope$, inject$ } from '@kyrielle/injector';
 import Ajv, { type ValidateFunction } from 'ajv';
 import { type PublicExplorer } from 'cosmiconfig';
-import os from 'node:os';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mocks
@@ -32,16 +31,16 @@ describe('ConfigService.searchConfig', () => {
     vi.spyOn(configExplorer, 'search').mockResolvedValue({
       filepath: '/test/.jillrc.yml',
       config: {
-        hook: true,
-        jobs: 0,
+        hook: false,
+        jobs: 5,
       },
     });
   });
 
   it('should search for config using explorer', async () => {
     const result = {
-      hook: true,
-      jobs: os.cpus().length - 1,
+      hook: false,
+      jobs: 5,
     };
 
     await configService.searchConfig();
@@ -74,16 +73,16 @@ describe('ConfigService.loadConfig', () => {
     vi.spyOn(configExplorer, 'load').mockResolvedValue({
       filepath: '/test/.jillrc.yml',
       config: {
-        hook: true,
-        jobs: 0,
+        hook: false,
+        jobs: 5,
       },
     });
   });
 
   it('should load given config file', async () => {
     const result = {
-      hook: true,
-      jobs: os.cpus().length - 1,
+      hook: false,
+      jobs: 5,
     };
 
     await configService.loadConfig('/test/.jillrc.yml');

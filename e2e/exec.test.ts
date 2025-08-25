@@ -157,5 +157,17 @@ describe('jill exec', () => {
       await expect(fileExists(path.join(prjDir, 'wks-c', 'script.txt'))).resolves.toBe(false);
       await expect(fileExists(path.join(prjDir, 'wks-b', 'script.txt'))).resolves.toBe(false);
     });
+
+    it('should work without config file', async () => {
+      await fs.rm(path.join(prjDir, '.jillrc.json'));
+      const res = await jill('exec -w wks-c node -e "require(\'node:fs\').writeFileSync(\'script.txt\', \'node\')"', { cwd: prjDir, keepQuotes: true });
+
+      // Check jill output
+      expect(res.code).toBe(0);
+
+      // Check script result
+      await expect(fs.readFile(path.join(prjDir, 'wks-c', 'script.txt'), 'utf8'))
+        .resolves.toBe('node');
+    });
   });
 }, 10000);
