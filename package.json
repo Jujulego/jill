@@ -61,7 +61,7 @@
     "@microsoft/eslint-formatter-sarif": "3.1.0",
     "@rollup/plugin-json": "6.1.0",
     "@rollup/plugin-node-resolve": "16.0.1",
-    "@sentry/rollup-plugin": "4.2.0",
+    "@sentry/rollup-plugin": "4.3.0",
     "@swc/core": "1.13.5",
     "@types/moo": "0.5.10",
     "@types/node": "22.18.0",
