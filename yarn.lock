@@ -835,7 +835,7 @@ __metadata:
     "@types/node": "npm:22.18.0"
     "@types/normalize-package-data": "npm:2.4.4"
     "@types/react": "npm:19.1.12"
-    "@types/semver": "npm:7.7.0"
+    "@types/semver": "npm:7.7.1"
     "@types/yargs": "npm:17.0.33"
     "@typescript-eslint/utils": "npm:8.42.0"
     "@vitest/coverage-v8": "npm:3.2.4"
@@ -2258,10 +2258,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/semver@npm:7.7.0":
-  version: 7.7.0
-  resolution: "@types/semver@npm:7.7.0"
-  checksum: 10/ee4514c6c852b1c38f951239db02f9edeea39f5310fad9396a00b51efa2a2d96b3dfca1ae84c88181ea5b7157c57d32d7ef94edacee36fbf975546396b85ba5b
+"@types/semver@npm:7.7.1":
+  version: 7.7.1
+  resolution: "@types/semver@npm:7.7.1"
+  checksum: 10/8f09e7e6ca3ded67d78ba7a8f7535c8d9cf8ced83c52e7f3ac3c281fe8c689c3fe475d199d94390dc04fc681d51f2358b430bb7b2e21c62de24f2bee2c719068
   languageName: node
   linkType: hard
 
