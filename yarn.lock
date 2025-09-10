@@ -856,7 +856,7 @@ __metadata:
     is-unicode-supported: "npm:^2.1.0"
     jiti: "npm:2.5.1"
     kyrielle: "npm:^2.5.3"
-    memfs: "npm:4.38.3"
+    memfs: "npm:4.39.0"
     moo: "npm:^0.5.2"
     normalize-package-data: "npm:^8.0.0"
     path-scurry: "npm:^2.0.0"
@@ -5365,9 +5365,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"memfs@npm:4.38.3":
-  version: 4.38.3
-  resolution: "memfs@npm:4.38.3"
+"memfs@npm:4.39.0":
+  version: 4.39.0
+  resolution: "memfs@npm:4.39.0"
   dependencies:
     "@jsonjoy.com/json-pack": "npm:^1.11.0"
     "@jsonjoy.com/util": "npm:^1.9.0"
@@ -5375,7 +5375,7 @@ __metadata:
     thingies: "npm:^2.5.0"
     tree-dump: "npm:^1.0.3"
     tslib: "npm:^2.0.0"
-  checksum: 10/33aa7112ff4fdb388d73b777c8481890d6895098ad62597d75fbb71c904c96f03eb61a6e637242949411e2ef9b6a25208f96ecb0c84b5cd0223bb7344147c6b4
+  checksum: 10/87cfb215c9165aadfbf7dc213050bfde25dad200ef9bf44e214b9ee276514c7e5c76b0b62b7a4040523f6e3afcdc0c5342682a50110f46fea1e960b966551b67
   languageName: node
   linkType: hard
 
