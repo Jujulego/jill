@@ -1,4 +1,7 @@
 #!/usr/bin/env node
 
-import '../dist/instrument.js';
+if (process.env.DISABLE_TRACING !== 'true') {
+  await import('../dist/instrument.js');
+}
+
 import '../dist/main.js';
