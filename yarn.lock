@@ -4639,8 +4639,8 @@ __metadata:
   linkType: hard
 
 "ink@npm:^6.2.1":
-  version: 6.3.0
-  resolution: "ink@npm:6.3.0"
+  version: 6.3.1
+  resolution: "ink@npm:6.3.1"
   dependencies:
     "@alcalzone/ansi-tokenize": "npm:^0.2.0"
     ansi-escapes: "npm:^7.0.0"
@@ -4668,13 +4668,13 @@ __metadata:
   peerDependencies:
     "@types/react": ">=19.0.0"
     react: ">=19.0.0"
-    react-devtools-core: ^4.19.1
+    react-devtools-core: ^6.1.2
   peerDependenciesMeta:
     "@types/react":
       optional: true
     react-devtools-core:
       optional: true
-  checksum: 10/debb8a00e812e21d88ed07e9b3c227ec62898bbdf40e3af8e7cf2d5f29f53fa8dcdfa3c8720e7ecfb475d85b8b42c1b08817297505e3282305fd4afd923da364
+  checksum: 10/2b64afab4ac8622cf46ad9b9f51d2b90506122c5c77ffb1f8ebc63705a76c2941d8c033ae5ac60e8a640bb230a33fc51d769b03a7607b9355ed8c58530d6d604
   languageName: node
   linkType: hard
 
