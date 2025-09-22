@@ -78,7 +78,7 @@
     "eslint-plugin-react-hooks": "5.2.0",
     "globals": "16.4.0",
     "ink-testing-library": "4.0.0",
-    "jiti": "2.5.1",
+    "jiti": "2.6.0",
     "memfs": "4.43.0",
     "rollup": "4.52.0",
     "shx": "0.4.0",
