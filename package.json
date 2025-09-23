@@ -80,7 +80,7 @@
     "ink-testing-library": "4.0.0",
     "jiti": "2.6.0",
     "memfs": "4.43.0",
-    "rollup": "4.52.0",
+    "rollup": "4.52.1",
     "shx": "0.4.0",
     "ts-node": "10.9.2",
     "typescript": "5.9.2",
