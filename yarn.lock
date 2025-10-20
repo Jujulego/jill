@@ -912,17 +912,14 @@ __metadata:
   linkType: hard
 
 "@jujulego/tasks@npm:^3.0.0-alpha.3":
-  version: 3.0.0-alpha.3
-  resolution: "@jujulego/tasks@npm:3.0.0-alpha.3"
+  version: 3.0.0-alpha.4
+  resolution: "@jujulego/tasks@npm:3.0.0-alpha.4"
   dependencies:
     "@kyrielle/logger": "npm:^2.0.0"
     "@swc/helpers": "npm:^0.5.3"
-    kyrielle: "npm:^2.4.0"
+    kyrielle: "npm:^2.8.0"
     tree-kill: "npm:^1.2.2"
-  dependenciesMeta:
-    vitest@3.2.4:
-      unplugged: true
-  checksum: 10/5b8f9ff0f250b82d6501ba182c6dad1cb62b4799b07cf29ebc3a368ad954968bd5fcbff7320a3895a38f0a86d8a254bbf443880198d5d140e15ba4bc99ef1844
+  checksum: 10/2f5d39dc0609954eeadeb179225df4f018ce2b775bcf16d2be2e7aba609c7a2fa5c7ab29d4f32b65c578ed6933010c86937da88986c2f9f516a885a725f73de7
   languageName: node
   linkType: hard
 
@@ -5217,7 +5214,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"kyrielle@npm:^2.2.1, kyrielle@npm:^2.4.0, kyrielle@npm:^2.5.3":
+"kyrielle@npm:^2.2.1, kyrielle@npm:^2.5.3, kyrielle@npm:^2.8.0":
   version: 2.8.3
   resolution: "kyrielle@npm:2.8.3"
   dependencies:
