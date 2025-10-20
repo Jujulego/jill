@@ -57,7 +57,7 @@
     "@codecov/rollup-plugin": "1.9.1",
     "@eslint/js": "9.37.0",
     "@jujulego/2d-maths": "1.6.0",
-    "@jujulego/vite-plugin-swc": "1.2.0",
+    "@jujulego/vite-plugin-swc": "1.2.1",
     "@microsoft/eslint-formatter-sarif": "3.1.0",
     "@rollup/plugin-json": "6.1.0",
     "@rollup/plugin-node-resolve": "16.0.2",
