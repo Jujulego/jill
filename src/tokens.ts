@@ -59,35 +59,46 @@ export const TASK_MANAGER = token$('TaskManager', async () => {
 
 export const SCHEDULER = token$('Scheduler', async () => {
   const config = await inject$(CONFIG, asyncScope$());
+  const logger = inject$(LOGGER);
 
   const scheduler = scheduler$({
     strength: config.jobs,
   });
 
+  scheduler.events$.on('started', (job) => {
+    logger.verbose(`job "${job.label}" started`);
+  });
+
+  scheduler.events$.on('ended', (job) => {
+    logger.verbose(`job "${job.label}" ended in state ${job.state()}`);
+  });
+
   // Task instrumentation
-  scheduler.events$.on('added', (task) => {
-    const taskSpan = startInactiveSpan({
-      op: 'task',
-      name: task.label,
+  scheduler.events$.on('added', (job) => {
+    const jobSpan = startInactiveSpan({
+      op: 'job',
+      name: job.label,
       attributes: {
-        'task.id': task.id,
-        'task.weight': task.weight,
+        'job.id': job.id,
+        'job.weight': job.weight,
       }
     });
 
     // Status spans
-    const sub = task.state$.subscribe((state) => {
-      taskSpan.addEvent(state);
+    const sub = job.state$.subscribe((state) => {
+      jobSpan.addEvent(state);
 
-      if (task.completed()) {
-        taskSpan.setAttribute('task.final_state', state);
-        taskSpan.setStatus({
+      if (job.completed()) {
+        jobSpan.setAttribute('job.final_state', state);
+        jobSpan.setStatus({
           code: state === WorkloadState.Succeeded ? 1 : 2,
         });
-        taskSpan.end();
+        jobSpan.end();
 
         sub.unsubscribe();
       }
     });
   });
+
+  return scheduler;
 });
