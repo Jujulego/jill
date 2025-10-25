@@ -85,8 +85,10 @@ export const SCHEDULER = token$('Scheduler', async () => {
     });
 
     // Status spans
+    let stateSpan: Span | undefined;
+
     const sub = job.state$.subscribe((state) => {
-      jobSpan.addEvent(state);
+      stateSpan?.end();
 
       if (isWorkloadEnded(state)) {
         jobSpan.setAttribute('job.final_state', state);
@@ -96,6 +98,12 @@ export const SCHEDULER = token$('Scheduler', async () => {
         jobSpan.end();
 
         sub.unsubscribe();
+      } else {
+        stateSpan = startInactiveSpan({
+          op: 'job.state',
+          name: state,
+          parentSpan: jobSpan
+        });
       }
     });
   });
