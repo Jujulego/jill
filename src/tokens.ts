@@ -1,4 +1,4 @@
-import { scheduler$, TaskManager, WorkloadState } from '@jujulego/tasks';
+import { isWorkloadEnded, scheduler$, TaskManager, WorkloadState } from '@jujulego/tasks';
 import { asyncScope$, inject$, token$ } from '@kyrielle/injector';
 import { logger$, withTimestamp } from '@kyrielle/logger';
 import { getActiveSpan, getRootSpan, type Span, startInactiveSpan } from '@sentry/node';
@@ -88,7 +88,7 @@ export const SCHEDULER = token$('Scheduler', async () => {
     const sub = job.state$.subscribe((state) => {
       jobSpan.addEvent(state);
 
-      if (job.completed()) {
+      if (isWorkloadEnded(state)) {
         jobSpan.setAttribute('job.final_state', state);
         jobSpan.setStatus({
           code: state === WorkloadState.Succeeded ? 1 : 2,
