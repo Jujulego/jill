@@ -28,6 +28,7 @@ export default function TaskTreeScrollableSpinner({ manager, verbose }: TaskTree
 
   useEffect(() => {
     if (start + maxHeight > flat.length) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setStart(Math.max(flat.length - maxHeight, 0));
     }
   }, [start, flat, maxHeight]);

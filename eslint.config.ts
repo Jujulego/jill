@@ -4,11 +4,10 @@ import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 import globals from 'globals';
 import tsEslint from 'typescript-eslint';
+import { defineConfig, globalIgnores } from 'eslint/config';
 
-export default tsEslint.config(
-  {
-    ignores: ['.pnp.*', '.yarn', 'coverage', 'dist']
-  },
+export default defineConfig(
+  globalIgnores(['.pnp.*', '.yarn', 'coverage', 'dist']),
   {
     languageOptions: {
       globals: globals.node,
@@ -31,7 +30,7 @@ export default tsEslint.config(
   },
   {
     files: ['**/*.{js,jsx,ts,tsx}'],
-    ...reactHooks.configs['recommended-latest'],
+    ...reactHooks.configs.flat.recommended,
   },
   {
     files: ['**/*.{js,jsx,ts,tsx}'],
