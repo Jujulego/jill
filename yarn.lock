@@ -850,7 +850,7 @@ __metadata:
     "@eslint/js": "npm:9.38.0"
     "@jujulego/2d-maths": "npm:1.6.0"
     "@jujulego/quick-tag": "npm:^1.0.3"
-    "@jujulego/tasks": "npm:^3.0.0-alpha.3"
+    "@jujulego/tasks": "npm:3.0.0-alpha.4"
     "@jujulego/vite-plugin-swc": "npm:1.2.1"
     "@kyrielle/injector": "npm:^1.1.0"
     "@kyrielle/logger": "npm:^2.0.0"
@@ -921,7 +921,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jujulego/tasks@npm:^3.0.0-alpha.3":
+"@jujulego/tasks@npm:3.0.0-alpha.4":
   version: 3.0.0-alpha.4
   resolution: "@jujulego/tasks@npm:3.0.0-alpha.4"
   dependencies:
