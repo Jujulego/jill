@@ -38,7 +38,7 @@ jobs:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
 
-      - uses: actions/upload-artifact@v4.6.2
+      - uses: actions/upload-artifact@v5.0.0
         with:
           name: build
           path: dist
@@ -148,7 +148,7 @@ jobs:
         run: yarn install --immutable
 
       - name: Download build artifacts
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           name: build
           path: dist
@@ -216,7 +216,7 @@ jobs:
         run: yarn install --immutable
 
       - name: Download build artifacts
-        uses: actions/download-artifact@v5.0.0
+        uses: actions/download-artifact@v6.0.0
         with:
           name: build
           path: dist
