@@ -22,8 +22,8 @@ export class GitService {
 
     // Create job
     const job = spawn$('git', [cmd, ...args], props);
-    job.stdout.on('data', (data: Buffer) => logger.debug(data.toString('utf-8')));
-    job.stderr.on('data', (data: Buffer) => logger.debug(data.toString('utf-8')));
+    job.stdout.on('data', (data: Buffer) => logger.debug(data.toString('utf-8').trimEnd()));
+    job.stderr.on('data', (data: Buffer) => logger.warn(data.toString('utf-8').trimEnd()));
 
     (await this._scheduler).register(job);
 
