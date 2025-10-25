@@ -1,7 +1,7 @@
-import { TaskManager } from '@jujulego/tasks';
+import { scheduler$, TaskManager, WorkloadState } from '@jujulego/tasks';
 import { asyncScope$, inject$, token$ } from '@kyrielle/injector';
 import { logger$, withTimestamp } from '@kyrielle/logger';
-import { startInactiveSpan, type Span, getRootSpan, getActiveSpan } from '@sentry/node';
+import { getActiveSpan, getRootSpan, type Span, startInactiveSpan } from '@sentry/node';
 import { waitFor$ } from 'kyrielle';
 import fs from 'node:fs';
 import process from 'node:process';
@@ -12,9 +12,12 @@ export const CONFIG = token$('Config', async () => {
   const { ConfigService } = await import('./config/config.service.js');
   return waitFor$(inject$(ConfigService, asyncScope$()).config$);
 });
+
 export const CWD = token$('cwd', () => process.cwd());
 export const LOGGER = token$('Logger', () => logger$(withTimestamp()));
 export const PATH_SCURRY = token$('PathScurry', () => new PathScurry('/', { fs }));
+
+/** @deprecated */
 export const TASK_MANAGER = token$('TaskManager', async () => {
   const manager = new TaskManager({
     jobs: (await inject$(CONFIG, asyncScope$())).jobs,
@@ -52,4 +55,39 @@ export const TASK_MANAGER = token$('TaskManager', async () => {
   });
 
   return manager;
+});
+
+export const SCHEDULER = token$('Scheduler', async () => {
+  const config = await inject$(CONFIG, asyncScope$());
+
+  const scheduler = scheduler$({
+    strength: config.jobs,
+  });
+
+  // Task instrumentation
+  scheduler.events$.on('added', (task) => {
+    const taskSpan = startInactiveSpan({
+      op: 'task',
+      name: task.label,
+      attributes: {
+        'task.id': task.id,
+        'task.weight': task.weight,
+      }
+    });
+
+    // Status spans
+    const sub = task.state$.subscribe((state) => {
+      taskSpan.addEvent(state);
+
+      if (task.completed()) {
+        taskSpan.setAttribute('task.final_state', state);
+        taskSpan.setStatus({
+          code: state === WorkloadState.Succeeded ? 1 : 2,
+        });
+        taskSpan.end();
+
+        sub.unsubscribe();
+      }
+    });
+  });
 });
