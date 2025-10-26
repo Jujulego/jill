@@ -80,6 +80,7 @@ export const SCHEDULER = token$('Scheduler', async () => {
       name: job.label,
       attributes: {
         'job.id': job.id,
+        'job.type': job.type,
         'job.weight': job.weight,
       }
     });

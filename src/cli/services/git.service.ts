@@ -1,8 +1,7 @@
 import { isWorkloadEnded, spawn$, type SpawnJob$, type SpawnProps, type TaskContext } from '@jujulego/tasks';
 import { inject$ } from '@kyrielle/injector';
 import type { Logger } from '@kyrielle/logger';
-import { filter$, pipe$, waitFor$ } from 'kyrielle';
-import os from 'node:os';
+import { collect$, filter$, map$, pipe$, waitFor$ } from 'kyrielle';
 import { text } from 'node:stream/consumers';
 import { LOGGER, SCHEDULER } from '../../tokens.js';
 import { instrument } from '../../utils/sentry.js';
@@ -60,15 +59,15 @@ export class GitService {
     const job = await this.diff(['--quiet', reference, '--', ...files], opts);
     await waitFor$(pipe$(job.state$, filter$(isWorkloadEnded)));
 
-    if (job.exitCode === 0) {
+    if (job.exitCode() === 0) {
       return false;
     }
 
-    if (job.exitCode === 1) {
+    if (job.exitCode() === 1) {
       return true;
     }
 
-    throw new ClientError(`Error "git diff" command failed (exit code ${job.exitCode})`);
+    throw new ClientError(`Error "git diff" command failed (exit code ${job.exitCode()})`);
   }
 
   /**
@@ -79,7 +78,12 @@ export class GitService {
     const job = await this.branch(['-l', ...args], opts);
     const output = await text(job.stdout);
 
-    return output.split(os.EOL);
+    return pipe$(
+      output.split(/\r?\n/),
+      map$((line) => line.replace(/^[ *] /, '')),
+      filter$((line) => !!line),
+      collect$(),
+    );
   }
 
   /**
@@ -90,7 +94,8 @@ export class GitService {
     const job = await this.tag(['-l', ...args], opts);
     const output = await text(job.stdout);
 
-    return output.split(os.EOL);
+    return output.split(/\r?\n/)
+      .filter((line) => !!line);
   }
 }
 

@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "@jujulego/quick-tag": "^1.0.3",
-    "@jujulego/tasks": "3.0.0-alpha.5",
+    "@jujulego/tasks": "3.0.0-alpha.6",
     "@kyrielle/injector": "^1.1.0",
     "@kyrielle/logger": "^2.0.0",
     "@sentry/node": "^10.5.0",
