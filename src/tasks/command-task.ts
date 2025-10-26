@@ -4,6 +4,7 @@ import type { Workspace } from '../projects/workspace.js';
 import { streamLines$ } from '../utils/streams.js';
 
 // Class
+/** @deprecated use {@link command$} instead */
 export class CommandTask extends SpawnTask<CommandContext> {
   // Constructor
   constructor(readonly workspace: Workspace, command: string, args: string[], opts: CommandOptions = {}) {
