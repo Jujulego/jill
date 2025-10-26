@@ -208,12 +208,9 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6.0.0
         with:
-          node-version: 22.x
+          node-version: 24.x
           registry-url: https://registry.npmjs.org
           cache: yarn
-
-      - name: Install dependencies
-        run: yarn install --immutable
 
       - name: Download build artifacts
         uses: actions/download-artifact@v6.0.0
@@ -222,9 +219,16 @@ jobs:
           path: dist
 
       - name: Publish
-        run: yarn npm publish --access public --tag ${{ github.ref_name }} --tolerate-republish --provenance
-        env:
-          YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        # language=Bash
+        run: |
+          name=$(jq -j ".name" package.json)
+          version=$(npm search $name --json | jq -j ".[] | select(.name==\"$name\") | .version")
+          
+          if [[ "$version" == "$(jq -j ".version" package.json)" ]]; then
+            echo "::notice::$version already exists in npm registry"
+          else
+            npm publish --access public --tag ${{ github.ref_name }} --provenance
+          fi
 
   release:
     if: ${{ github.event_name == 'push' }}
