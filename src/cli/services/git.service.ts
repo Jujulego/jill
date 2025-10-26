@@ -7,6 +7,7 @@ import { text } from 'node:stream/consumers';
 import { LOGGER, SCHEDULER } from '../../tokens.js';
 import { instrument } from '../../utils/sentry.js';
 import type { TaskUIContext } from '../../utils/types.js';
+import { ClientError } from '../utils/errors.js';
 
 export class GitService {
   // Attributes
@@ -59,7 +60,15 @@ export class GitService {
     const job = await this.diff(['--quiet', reference, '--', ...files], opts);
     await waitFor$(pipe$(job.state$, filter$(isWorkloadEnded)));
 
-    return !!job.exitCode;
+    if (job.exitCode === 0) {
+      return false;
+    }
+
+    if (job.exitCode === 1) {
+      return true;
+    }
+
+    throw new ClientError(`Error "git diff" command failed (exit code ${job.exitCode})`);
   }
 
   /**
