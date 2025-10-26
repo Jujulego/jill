@@ -1,121 +1,109 @@
-import { SpawnTask, type SpawnTaskOptions, type TaskContext } from '@jujulego/tasks';
+import { isWorkloadEnded, spawn$, type SpawnJob$, type SpawnProps, type TaskContext } from '@jujulego/tasks';
 import { inject$ } from '@kyrielle/injector';
-import { collect$, map$, once$, pipe$, waitFor$ } from 'kyrielle';
-import { LOGGER, TASK_MANAGER } from '../../tokens.js';
+import type { Logger } from '@kyrielle/logger';
+import { collect$, filter$, map$, pipe$, waitFor$ } from 'kyrielle';
+import { text } from 'node:stream/consumers';
+import { LOGGER, SCHEDULER } from '../../tokens.js';
 import { instrument } from '../../utils/sentry.js';
-import { streamLines$ } from '../../utils/streams.js';
 import type { TaskUIContext } from '../../utils/types.js';
+import { ClientError } from '../utils/errors.js';
 
 export class GitService {
   // Attributes
-  private readonly _manager = inject$(TASK_MANAGER);
+  private readonly _scheduler = inject$(SCHEDULER);
   private readonly _logger = inject$(LOGGER);
 
   // Methods
   /**
-   * Runs a git command inside a SpawnTask
-   *
-   * @param cmd
-   * @param args
-   * @param options
+   * Runs a git command inside
    */
-  async command(cmd: string, args: string[], options: SpawnTaskOptions = {}): Promise<SpawnTask<GitContext>> {
-    const opts = { logger: this._logger, ...options };
+  async command(cmd: string, args: string[], opts: GitOptions = {}): Promise<SpawnJob$> {
+    const { logger = this._logger, ...props } = opts;
 
-    // Create task
-    const task = new SpawnTask('git', [cmd, ...args], { command: cmd, hidden: true }, opts);
-    task.events$.on('stream', ({ data }) => opts.logger.debug(data.toString('utf-8')));
+    // Create job
+    const job = spawn$('git', [cmd, ...args], props);
+    job.stdout.on('data', (data: Buffer) => logger.debug(data.toString('utf-8').trimEnd()));
+    job.stderr.on('data', (data: Buffer) => logger.warn(data.toString('utf-8').trimEnd()));
 
-    (await this._manager).add(task);
+    (await this._scheduler).register(job);
 
-    return task;
+    return job;
   }
 
   /**
    * Runs git branch
-   *
-   * @param args
-   * @param options
    */
-  branch(args: string[], options?: SpawnTaskOptions): Promise<SpawnTask<GitContext>> {
-    return this.command('branch', args, options);
+  branch(args: string[], opts?: GitOptions): Promise<SpawnJob$> {
+    return this.command('branch', args, opts);
   }
 
   /**
    * Runs git diff
-   *
-   * @param args
-   * @param options
    */
-  diff(args: string[], options?: SpawnTaskOptions): Promise<SpawnTask<GitContext>> {
-    return this.command('diff', args, options);
+  diff(args: string[], opts?: GitOptions): Promise<SpawnJob$> {
+    return this.command('diff', args, opts);
   }
 
   /**
    * Runs git tag
-   *
-   * @param args
-   * @param options
    */
-  tag(args: string[], options?: SpawnTaskOptions): Promise<SpawnTask<GitContext>> {
-    return this.command('tag', args, options);
+  tag(args: string[], opts?: GitOptions): Promise<SpawnJob$> {
+    return this.command('tag', args, opts);
   }
 
   /**
    * Uses git diff to detect if given files have been affected since given reference
-   *
-   * @param reference
-   * @param files
-   * @param opts
    */
   @instrument('GitService.isAffected')
-  async isAffected(reference: string, files: string[] = [], opts?: SpawnTaskOptions): Promise<boolean> {
-    const task = await this.diff(['--quiet', reference, '--', ...files], opts);
+  async isAffected(reference: string, files: string[] = [], opts?: GitOptions): Promise<boolean> {
+    const job = await this.diff(['--quiet', reference, '--', ...files], opts);
+    await waitFor$(pipe$(job.state$, filter$(isWorkloadEnded)));
 
-    return new Promise((resolve, reject) => {
-      once$(task.events$, 'status.done', () => resolve(false));
-      once$(task.events$, 'status.failed', () => {
-        if (task.exitCode) {
-          resolve(true);
-        } else {
-          reject(new Error(`Task ${task.name} failed`));
-        }
-      });
-    });
+    if (job.exitCode() === 0) {
+      return false;
+    }
+
+    if (job.exitCode() === 1) {
+      return true;
+    }
+
+    throw new ClientError(`Error "git diff" command failed (exit code ${job.exitCode()})`);
   }
 
   /**
    * List git branches
-   *
-   * @param args
-   * @param opts
    */
   @instrument('GitService.listBranches')
-  async listBranches(args: string[] = [], opts?: SpawnTaskOptions): Promise<string[]> {
-    const task = await this.branch(['-l', ...args], opts);
+  async listBranches(args: string[] = [], opts?: GitOptions): Promise<string[]> {
+    const job = await this.branch(['-l', ...args], opts);
+    const output = await text(job.stdout);
 
-    return waitFor$(pipe$(
-      streamLines$(task),
+    return pipe$(
+      output.split(/\r?\n/),
       map$((line) => line.replace(/^[ *] /, '')),
-      collect$()
-    ));
+      filter$((line) => !!line),
+      collect$(),
+    );
   }
 
   /**
    * List git tags
-   *
-   * @param args
-   * @param opts
    */
   @instrument('GitService.listTags')
-  async listTags(args: string[] = [], opts?: SpawnTaskOptions): Promise<string[]> {
-    const task = await this.tag(['-l', ...args], opts);
+  async listTags(args: string[] = [], opts?: GitOptions): Promise<string[]> {
+    const job = await this.tag(['-l', ...args], opts);
+    const output = await text(job.stdout);
 
-    return waitFor$(pipe$(streamLines$(task), collect$()));
+    return output.split(/\r?\n/)
+      .filter((line) => !!line);
   }
 }
 
 // Types
 export interface GitContext extends TaskContext, TaskUIContext {
   command: string;
+}
+
+export interface GitOptions extends SpawnProps {
+  readonly logger?: Logger;
 }

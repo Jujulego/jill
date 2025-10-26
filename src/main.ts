@@ -18,7 +18,7 @@ void startSpan({ name: 'jill', op: 'cli.main', attributes: { 'cli.argv': argv } 
     if (msg) {
       logger.error(msg);
     } else if (err instanceof ClientError) {
-      logger.warning(err.message);
+      logger.error(err.message);
     } else {
       captureException(err, { tags: { handled: false } });
       logger.error(err.message);
