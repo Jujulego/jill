@@ -7,6 +7,7 @@ import { splitCommandLine } from '../utils/string.js';
 import { CommandTask } from './command-task.js';
 
 // Class
+/** @deprecated use {@link runScript$} instead */
 export class ScriptTask extends GroupTask<ScriptContext> {
   // Attributes
   private _preHookTasks: TaskSet | null = null;

@@ -4,8 +4,13 @@ import type { Logger } from '@kyrielle/logger';
 import { type Workspace } from '../../projects/workspace.js';
 import { LOGGER } from '../../tokens.js';
 
-export function command$(cmd: string, args: string[], props: CommandProps): SpawnJob$ {
-  const { workspace, superCommand, logger = inject$(LOGGER), ...rest } = props;
+export function command$(
+  workspace: Workspace,
+  cmd: string,
+  args: string[],
+  opts: CommandOpts = {}
+): SpawnJob$ {
+  const { superCommand, logger = inject$(LOGGER), ...rest } = opts;
 
   // Apply super command
   if (superCommand) {
@@ -34,9 +39,7 @@ export function command$(cmd: string, args: string[], props: CommandProps): Spaw
   return job;
 }
 
-export interface CommandProps extends Omit<SpawnProps, 'cwd'> {
-  readonly workspace: Workspace;
-
+export interface CommandOpts extends Omit<SpawnProps, 'cwd'> {
   readonly logger?: Logger;
   readonly superCommand?: string | readonly string[];
 }
