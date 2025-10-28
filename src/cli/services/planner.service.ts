@@ -1,4 +1,4 @@
-import type { TaskSet } from '@jujulego/tasks';
+import type { Job$ } from '@jujulego/tasks';
 import { asyncScope$, inject$ } from '@kyrielle/injector';
 import { withLabel } from '@kyrielle/logger';
 import { var$ } from 'kyrielle';
@@ -17,19 +17,19 @@ export class PlannerService {
    * Tasks that do not execute tasks will return `null`
    */
   @instrument('PlannerService.plan')
-  async plan(args: string[], cwd: string): Promise<TaskSet | null> {
+  async plan(args: string[], cwd: string): Promise<Job$ | null> {
     this._logger.debug(`interpreting jill ${args.join(' ')}`);
 
     const argv = args.map(arg => arg.replace(/^["'](.+)["']$/, '$1'));
-    const tasks = var$<TaskSet>();
+    const job$ = var$<Job$ | null>(null);
 
     await asyncScope$(async () => {
       asyncScope$().set(CWD, cwd);
       asyncScope$().set(ConfigService, new ConfigService()); // <= injects an empty ConfigService, forcing config discovery
 
-      // await planParser(tasks).parseAsync(argv);
+      await planParser(job$).parseAsync(argv);
     });
 
-    return tasks.defer() ?? null;
+    return job$.defer() ?? null;
   }
 }

@@ -1,4 +1,5 @@
 import { sequenceFlow$, type SequenceFlowProps } from '@jujulego/tasks';
+import { inject$ } from '@kyrielle/injector';
 import type { Logger } from '@kyrielle/logger';
 import { collect$, filter$, pipe$ } from 'kyrielle';
 import type { Workspace } from '../../projects/workspace.js';
@@ -58,7 +59,15 @@ async function planScript$(
   }
 
   if (command === 'jill') {
-    // TODO: use planner service to interpret command
+    const argv = commandArgs.map(arg => arg.replace(/^["'](.+)["']$/, '$1'));
+
+    const { PlannerService } = await import('../services/planner.service.js');
+    const plannerService = inject$(PlannerService);
+    const job = await plannerService.plan(argv, workspace.root);
+
+    if (job) {
+      return job;
+    }
   }
 
   // Run command

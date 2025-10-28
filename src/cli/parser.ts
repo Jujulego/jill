@@ -41,10 +41,10 @@ export function executeParser() {
 export function planParser(job$: Mutator<Job$ | null>) {
   return pipe$(
     baseParser(),
-    // planCommand(commands.each, tasks$),
-    // planCommand(commands.exec, tasks$),
+    // planCommand(commands.each, job$),
+    planCommand(commands.exec, job$),
     planCommand(commands.list, job$),
-    // planCommand(commands.run, tasks$),
-    // planCommand(commands.tree, tasks$),
+    // planCommand(commands.run, job$),
+    planCommand(commands.tree, job$),
   );
 }
