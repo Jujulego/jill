@@ -1,12 +1,12 @@
-import { TaskSet } from '@jujulego/tasks';
+import { isWorkload$, parallelFlow$, type SpawnJob$ } from '@jujulego/tasks';
 import { inject$ } from '@kyrielle/injector';
-import cp from 'node:child_process';
+import { startSpan } from '@sentry/node';
+import { spawn } from 'node:child_process';
 import process from 'node:process';
 import type { WorkspaceDepsMode } from '../../projects/workspace.js';
-import type { CommandTask } from '../../tasks/command-task.js';
 import { LOGGER } from '../../tokens.js';
 import { traceImport } from '../../utils/sentry.js';
-import type { PlanModeArgs, JobModule } from '../bases/job-module.js';
+import type { JobModule, PlanModeArgs } from '../bases/job-module.js';
 import { loadWorkspace, withWorkspace, type WorkspaceArgs } from '../middlewares/workspace.js';
 
 // Command
@@ -56,41 +56,48 @@ const command: JobModule<ExecArgs> = {
       buildDeps: args.depsMode,
     });
   },
-  // async execute(args, job) {
-  //   const task = tasks.tasks[0] as CommandTask;
-  //
-  //   if (task.dependencies.length > 0) {
-  //     const dependencies = new TaskSet();
-  //
-  //     for (const dep of task.dependencies) {
-  //       dependencies.add(dep);
-  //     }
-  //
-  //     // Run dependencies first with spinners
-  //     const { default: JobExecInk } = await traceImport('JobExecInk', () => import('../bases/job-exec.ink.js'));
-  //     await JobExecInk({ tasks: dependencies, verbose: ['verbose', 'debug'].includes(args.verbose) });
-  //   } else {
-  //     const logger = inject$(LOGGER);
-  //     logger.verbose('No dependency to build');
-  //   }
-  //
-  //   const child = cp.spawn(task.cmd, task.args, {
-  //     stdio: 'inherit',
-  //     cwd: task.cwd,
-  //     env: {
-  //       ...process.env,
-  //       ...task.env
-  //     },
-  //     shell: true,
-  //     windowsHide: true,
-  //   });
-  //
-  //   process.exitCode = await new Promise<number>((resolve) => {
-  //     child.on('close', (code) => {
-  //       resolve(code ?? 0);
-  //     });
-  //   });
-  // }
+  async execute(args, arg) {
+    const job = (arg as SpawnJob$);
+
+    if (job.dependencies.length > 0) {
+      const dependencies = parallelFlow$({ label: 'build dependencies' });
+
+      for (const dep of job.dependencies) {
+        if (isWorkload$(dep)) {
+          dependencies.push(dep);
+        }
+      }
+
+      // Run dependencies first with spinners
+      const { default: JobExecInk } = await traceImport('JobExecInk', () => import('../bases/job-exec.ink.jsx'));
+      await JobExecInk({ job: dependencies, verbose: ['verbose', 'debug'].includes(args.verbose) });
+    } else {
+      const logger = inject$(LOGGER);
+      logger.verbose('No dependency to build');
+    }
+
+    await startSpan({
+      op: 'subprocess',
+      name: [job.cmd, ...job.args].join(' '),
+    }, async () => {
+      const child = spawn(job.cmd, job.args, {
+        stdio: 'inherit',
+        cwd: job.cwd!,
+        env: {
+          ...process.env,
+          ...job.env
+        },
+        shell: true,
+        windowsHide: true,
+      });
+
+      process.exitCode = await new Promise<number>((resolve) => {
+        child.on('close', (code) => {
+          resolve(code ?? 0);
+        });
+      });
+    });
+  }
 };
 
 export default command;

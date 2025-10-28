@@ -1,4 +1,4 @@
-import type { Job$, Task, TaskOptions } from '@jujulego/tasks';
+import type { Job$, SpawnJob$, Task, TaskOptions } from '@jujulego/tasks';
 import { asyncScope$, inject$ } from '@kyrielle/injector';
 import { type Logger, withLabel } from '@kyrielle/logger';
 import path from 'node:path';
@@ -189,7 +189,7 @@ export class Workspace {
     return task;
   }
 
-  async exec$(command: string, args: string[] = [], opts: WorkspaceRunOptions = {}): Promise<Job$> {
+  async exec$(command: string, args: string[] = [], opts: WorkspaceRunOptions = {}): Promise<SpawnJob$> {
     const pm = await this.project.packageManager();
     const job = command$(this, command, args, {
       ...opts,
