@@ -1,12 +1,12 @@
 import { TaskSet } from '@jujulego/tasks';
 import { inject$ } from '@kyrielle/injector';
 import type { WorkspaceDepsMode } from '../../projects/workspace.js';
-import type { PlanModeArgs, TaskModule } from '../bases/task-module.js';
+import type { PlanModeArgs, JobModule } from '../bases/job-module.js';
 import { loadWorkspace, withWorkspace, type WorkspaceArgs } from '../middlewares/workspace.js';
 import { TaskParserService } from '../services/task-parser.service.js';
 
 // Command
-const command: TaskModule<RunArgs> = {
+const command: JobModule<RunArgs> = {
   command: 'run <expr>',
   describe: 'Run a task expression in a workspace, after having built all its dependencies.',
   builder: (parser) => withWorkspace(parser)

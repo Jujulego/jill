@@ -6,7 +6,6 @@ import path from 'node:path';
 import normalize, { type Package } from 'normalize-package-data';
 import { CWD, LOGGER, PATH_SCURRY } from '../tokens.js';
 import { mutex$, with$ } from '../utils/kyrielle.js';
-import { traceAsyncGenerator, instrument } from '../utils/sentry.js';
 import type { PackageManager } from '../utils/types.js';
 import { Workspace } from './workspace.js';
 
@@ -69,7 +68,6 @@ export class Project {
     });
   }
 
-  @instrument('Project.currentWorkspace')
   async currentWorkspace(cwd = inject$(CWD, asyncScope$())): Promise<Workspace | null> {
     let workspace: Workspace | null = null;
     cwd = path.resolve(cwd);
@@ -85,7 +83,6 @@ export class Project {
     return workspace;
   }
 
-  @instrument('Project.mainWorkspace')
   async mainWorkspace(): Promise<Workspace> {
     if (!this._mainWorkspace) {
       const manifest = await this._loadManifest('.');
@@ -97,7 +94,6 @@ export class Project {
     return this._mainWorkspace;
   }
 
-  @instrument('Project.packageManager')
   async packageManager(): Promise<PackageManager> {
     if (!this._packageManager) {
       this._logger.debug`searching lockfile in ${this.root}`;
@@ -118,7 +114,6 @@ export class Project {
     return this._packageManager;
   }
 
-  @instrument('Project.workspace')
   async workspace(name?: string): Promise<Workspace | null> {
     // With current directory
     if (!name) {
@@ -147,7 +142,6 @@ export class Project {
     return null;
   }
 
-  @instrument({ name: 'Project.workspaces', use: traceAsyncGenerator })
   async* workspaces(): AsyncGenerator<Workspace> {
     const main = await this.mainWorkspace();
     yield main;

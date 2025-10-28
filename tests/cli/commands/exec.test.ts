@@ -1,4 +1,4 @@
-import { planCommand } from '@/src/cli/bases/task-module.js';
+import { planCommand } from '@/src/cli/bases/job-module.js';
 import { exec } from '@/src/cli/commands.js';
 import { withLogger } from '@/src/cli/middlewares/logger.js';
 import { loadWorkspace, withWorkspace, type WorkspaceArgs } from '@/src/cli/middlewares/workspace.js';

@@ -1,4 +1,4 @@
-import { planCommand } from '@/src/cli/bases/task-module.js';
+import { planCommand } from '@/src/cli/bases/job-module.js';
 import { each } from '@/src/cli/commands.js';
 import { hasEveryScript$ } from '@/src/cli/filters/has-scripts.js';
 import { isPrivate$ } from '@/src/cli/filters/is-private.js';

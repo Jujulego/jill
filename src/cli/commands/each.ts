@@ -2,7 +2,7 @@ import { TaskSet } from '@jujulego/tasks';
 import { inject$ } from '@kyrielle/injector';
 import { asyncIterator$, pipe$, type SimpleAsyncIterator } from 'kyrielle';
 import type { Workspace, WorkspaceDepsMode } from '../../projects/workspace.js';
-import type { PlanModeArgs, TaskModule } from '../bases/task-module.js';
+import type { PlanModeArgs, JobModule } from '../bases/job-module.js';
 import { hasEveryScript$ } from '../filters/has-scripts.js';
 import { isAffected$ } from '../filters/is-affected.js';
 import { isPrivate$ } from '../filters/is-private.js';
@@ -11,7 +11,7 @@ import { TaskParserService } from '../services/task-parser.service.js';
 import { pipeline$ } from '../utils/pipeline$.js';
 
 // Command
-const command: TaskModule<EachArgs> = {
+const command: JobModule<EachArgs> = {
   command: 'each <expr>',
   describe: 'Run a task expression in many workspace, after having built all theirs dependencies.',
   builder: (parser) => withProject(parser)

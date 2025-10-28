@@ -6,11 +6,11 @@ import type { WorkspaceDepsMode } from '../../projects/workspace.js';
 import type { CommandTask } from '../../tasks/command-task.js';
 import { LOGGER } from '../../tokens.js';
 import { traceImport } from '../../utils/sentry.js';
-import type { PlanModeArgs, TaskModule } from '../bases/task-module.js';
+import type { PlanModeArgs, JobModule } from '../bases/job-module.js';
 import { loadWorkspace, withWorkspace, type WorkspaceArgs } from '../middlewares/workspace.js';
 
 // Command
-const command: TaskModule<ExecArgs> = {
+const command: JobModule<ExecArgs> = {
   command: 'exec <command>',
   aliases: ['$0'],
   describe: 'Run command inside workspace, after all its dependencies has been built.',
@@ -51,50 +51,46 @@ const command: TaskModule<ExecArgs> = {
     }
 
     // Run script in workspace
-    const tasks = new TaskSet();
-
-    tasks.add(await workspace.exec(args.command, rest, {
+    return await workspace.exec$(args.command, rest, {
       buildScript: args.buildScript,
       buildDeps: args.depsMode,
-    }));
-
-    return tasks;
+    });
   },
-  async execute(args, tasks) {
-    const task = tasks.tasks[0] as CommandTask;
-
-    if (task.dependencies.length > 0) {
-      const dependencies = new TaskSet();
-
-      for (const dep of task.dependencies) {
-        dependencies.add(dep);
-      }
-
-      // Run dependencies first with spinners
-      const { default: TaskExecInk } = await traceImport('TaskExecInk', () => import('../bases/task-exec.ink.jsx'));
-      await TaskExecInk({ tasks: dependencies, verbose: ['verbose', 'debug'].includes(args.verbose) });
-    } else {
-      const logger = inject$(LOGGER);
-      logger.verbose('No dependency to build');
-    }
-
-    const child = cp.spawn(task.cmd, task.args, {
-      stdio: 'inherit',
-      cwd: task.cwd,
-      env: {
-        ...process.env,
-        ...task.env
-      },
-      shell: true,
-      windowsHide: true,
-    });
-
-    process.exitCode = await new Promise<number>((resolve) => {
-      child.on('close', (code) => {
-        resolve(code ?? 0);
-      });
-    });
-  }
+  // async execute(args, job) {
+  //   const task = tasks.tasks[0] as CommandTask;
+  //
+  //   if (task.dependencies.length > 0) {
+  //     const dependencies = new TaskSet();
+  //
+  //     for (const dep of task.dependencies) {
+  //       dependencies.add(dep);
+  //     }
+  //
+  //     // Run dependencies first with spinners
+  //     const { default: JobExecInk } = await traceImport('JobExecInk', () => import('../bases/job-exec.ink.js'));
+  //     await JobExecInk({ tasks: dependencies, verbose: ['verbose', 'debug'].includes(args.verbose) });
+  //   } else {
+  //     const logger = inject$(LOGGER);
+  //     logger.verbose('No dependency to build');
+  //   }
+  //
+  //   const child = cp.spawn(task.cmd, task.args, {
+  //     stdio: 'inherit',
+  //     cwd: task.cwd,
+  //     env: {
+  //       ...process.env,
+  //       ...task.env
+  //     },
+  //     shell: true,
+  //     windowsHide: true,
+  //   });
+  //
+  //   process.exitCode = await new Promise<number>((resolve) => {
+  //     child.on('close', (code) => {
+  //       resolve(code ?? 0);
+  //     });
+  //   });
+  // }
 };
 
 export default command;

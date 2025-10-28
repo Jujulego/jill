@@ -27,7 +27,7 @@ export class PlannerService {
       asyncScope$().set(CWD, cwd);
       asyncScope$().set(ConfigService, new ConfigService()); // <= injects an empty ConfigService, forcing config discovery
 
-      await planParser(tasks).parseAsync(argv);
+      // await planParser(tasks).parseAsync(argv);
     });
 
     return tasks.defer() ?? null;
