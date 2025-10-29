@@ -858,7 +858,7 @@ __metadata:
     "@rollup/plugin-json": "npm:6.1.0"
     "@rollup/plugin-node-resolve": "npm:16.0.3"
     "@sentry/node": "npm:^10.5.0"
-    "@sentry/rollup-plugin": "npm:4.5.0"
+    "@sentry/rollup-plugin": "npm:4.6.0"
     "@swc/core": "npm:1.13.20"
     "@swc/helpers": "npm:^0.5.3"
     "@types/moo": "npm:0.5.10"
@@ -1781,97 +1781,97 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/babel-plugin-component-annotate@npm:4.5.0":
-  version: 4.5.0
-  resolution: "@sentry/babel-plugin-component-annotate@npm:4.5.0"
-  checksum: 10/1887e7a4403da61828b35dbf17f2c31597d48d220fe164f9bafad51493870c33e68c97fea6fa231ec21643db0c07f65880c9ab489508cf3f6ae23e62c484f462
+"@sentry/babel-plugin-component-annotate@npm:4.6.0":
+  version: 4.6.0
+  resolution: "@sentry/babel-plugin-component-annotate@npm:4.6.0"
+  checksum: 10/cc371d0b01e7fafe5d13c76db5cdfcad9d0861e92546c32670a909ddb7619b32b19740903f6a4cb7bca93a4800eae40a84a45fc17796c782c187c887b82b3363
   languageName: node
   linkType: hard
 
-"@sentry/bundler-plugin-core@npm:4.5.0":
-  version: 4.5.0
-  resolution: "@sentry/bundler-plugin-core@npm:4.5.0"
+"@sentry/bundler-plugin-core@npm:4.6.0":
+  version: 4.6.0
+  resolution: "@sentry/bundler-plugin-core@npm:4.6.0"
   dependencies:
     "@babel/core": "npm:^7.18.5"
-    "@sentry/babel-plugin-component-annotate": "npm:4.5.0"
-    "@sentry/cli": "npm:^2.51.0"
+    "@sentry/babel-plugin-component-annotate": "npm:4.6.0"
+    "@sentry/cli": "npm:^2.57.0"
     dotenv: "npm:^16.3.1"
     find-up: "npm:^5.0.0"
     glob: "npm:^9.3.2"
     magic-string: "npm:0.30.8"
     unplugin: "npm:1.0.1"
-  checksum: 10/5a9ff624109f799b86c89685f54c8fb8ac8e54ab05f20288a9a9428e9dca17eaf1b55150469c971005ec02e870211e9cd2a61d60a6e8e7aa55d6bcc9bbc0d743
+  checksum: 10/d3aa632b2bbfc71a79bf3ca0b3da89f5738d5465878fec429e10adf10b9b8826467c93ad0fcdc59f2912fd343d9bc6de0f10a3e0bd195c490468efba72cb4025
   languageName: node
   linkType: hard
 
-"@sentry/cli-darwin@npm:2.52.0":
-  version: 2.52.0
-  resolution: "@sentry/cli-darwin@npm:2.52.0"
+"@sentry/cli-darwin@npm:2.57.0":
+  version: 2.57.0
+  resolution: "@sentry/cli-darwin@npm:2.57.0"
   conditions: os=darwin
   languageName: node
   linkType: hard
 
-"@sentry/cli-linux-arm64@npm:2.52.0":
-  version: 2.52.0
-  resolution: "@sentry/cli-linux-arm64@npm:2.52.0"
+"@sentry/cli-linux-arm64@npm:2.57.0":
+  version: 2.57.0
+  resolution: "@sentry/cli-linux-arm64@npm:2.57.0"
   conditions: (os=linux | os=freebsd | os=android) & cpu=arm64
   languageName: node
   linkType: hard
 
-"@sentry/cli-linux-arm@npm:2.52.0":
-  version: 2.52.0
-  resolution: "@sentry/cli-linux-arm@npm:2.52.0"
+"@sentry/cli-linux-arm@npm:2.57.0":
+  version: 2.57.0
+  resolution: "@sentry/cli-linux-arm@npm:2.57.0"
   conditions: (os=linux | os=freebsd | os=android) & cpu=arm
   languageName: node
   linkType: hard
 
-"@sentry/cli-linux-i686@npm:2.52.0":
-  version: 2.52.0
-  resolution: "@sentry/cli-linux-i686@npm:2.52.0"
+"@sentry/cli-linux-i686@npm:2.57.0":
+  version: 2.57.0
+  resolution: "@sentry/cli-linux-i686@npm:2.57.0"
   conditions: (os=linux | os=freebsd | os=android) & (cpu=x86 | cpu=ia32)
   languageName: node
   linkType: hard
 
-"@sentry/cli-linux-x64@npm:2.52.0":
-  version: 2.52.0
-  resolution: "@sentry/cli-linux-x64@npm:2.52.0"
+"@sentry/cli-linux-x64@npm:2.57.0":
+  version: 2.57.0
+  resolution: "@sentry/cli-linux-x64@npm:2.57.0"
   conditions: (os=linux | os=freebsd | os=android) & cpu=x64
   languageName: node
   linkType: hard
 
-"@sentry/cli-win32-arm64@npm:2.52.0":
-  version: 2.52.0
-  resolution: "@sentry/cli-win32-arm64@npm:2.52.0"
+"@sentry/cli-win32-arm64@npm:2.57.0":
+  version: 2.57.0
+  resolution: "@sentry/cli-win32-arm64@npm:2.57.0"
   conditions: os=win32 & cpu=arm64
   languageName: node
   linkType: hard
 
-"@sentry/cli-win32-i686@npm:2.52.0":
-  version: 2.52.0
-  resolution: "@sentry/cli-win32-i686@npm:2.52.0"
+"@sentry/cli-win32-i686@npm:2.57.0":
+  version: 2.57.0
+  resolution: "@sentry/cli-win32-i686@npm:2.57.0"
   conditions: os=win32 & (cpu=x86 | cpu=ia32)
   languageName: node
   linkType: hard
 
-"@sentry/cli-win32-x64@npm:2.52.0":
-  version: 2.52.0
-  resolution: "@sentry/cli-win32-x64@npm:2.52.0"
+"@sentry/cli-win32-x64@npm:2.57.0":
+  version: 2.57.0
+  resolution: "@sentry/cli-win32-x64@npm:2.57.0"
   conditions: os=win32 & cpu=x64
   languageName: node
   linkType: hard
 
-"@sentry/cli@npm:^2.51.0":
-  version: 2.52.0
-  resolution: "@sentry/cli@npm:2.52.0"
+"@sentry/cli@npm:^2.57.0":
+  version: 2.57.0
+  resolution: "@sentry/cli@npm:2.57.0"
   dependencies:
-    "@sentry/cli-darwin": "npm:2.52.0"
-    "@sentry/cli-linux-arm": "npm:2.52.0"
-    "@sentry/cli-linux-arm64": "npm:2.52.0"
-    "@sentry/cli-linux-i686": "npm:2.52.0"
-    "@sentry/cli-linux-x64": "npm:2.52.0"
-    "@sentry/cli-win32-arm64": "npm:2.52.0"
-    "@sentry/cli-win32-i686": "npm:2.52.0"
-    "@sentry/cli-win32-x64": "npm:2.52.0"
+    "@sentry/cli-darwin": "npm:2.57.0"
+    "@sentry/cli-linux-arm": "npm:2.57.0"
+    "@sentry/cli-linux-arm64": "npm:2.57.0"
+    "@sentry/cli-linux-i686": "npm:2.57.0"
+    "@sentry/cli-linux-x64": "npm:2.57.0"
+    "@sentry/cli-win32-arm64": "npm:2.57.0"
+    "@sentry/cli-win32-i686": "npm:2.57.0"
+    "@sentry/cli-win32-x64": "npm:2.57.0"
     https-proxy-agent: "npm:^5.0.0"
     node-fetch: "npm:^2.6.7"
     progress: "npm:^2.0.3"
@@ -1896,7 +1896,7 @@ __metadata:
       optional: true
   bin:
     sentry-cli: bin/sentry-cli
-  checksum: 10/25213c1eb45b3afa85ca81c0cb19bea6268b1d59a262b5cc60bb7ee262bf8414ed7b68c62da6d38d673f490d297602eefa1dfb9c70ac285831536a4a3cbeed8d
+  checksum: 10/f73049676c210040fc704965d93668c2e56fb4347c378a3d418c1965457e28ac250cab3a042dd230730636de04df9a7c735789487baf7714f75385589733ef66
   languageName: node
   linkType: hard
 
@@ -1985,15 +1985,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/rollup-plugin@npm:4.5.0":
-  version: 4.5.0
-  resolution: "@sentry/rollup-plugin@npm:4.5.0"
+"@sentry/rollup-plugin@npm:4.6.0":
+  version: 4.6.0
+  resolution: "@sentry/rollup-plugin@npm:4.6.0"
   dependencies:
-    "@sentry/bundler-plugin-core": "npm:4.5.0"
+    "@sentry/bundler-plugin-core": "npm:4.6.0"
     unplugin: "npm:1.0.1"
   peerDependencies:
     rollup: ">=3.2.0"
-  checksum: 10/b552312ac68df85ac947cc0d0d69b52c08f23bf3f7df33941671d33db370dec6f59bdd288946ad288bfd06aef4b1c49c246afcb7f3c6ce872dae685356ac5c2e
+  checksum: 10/6e777cf5a41181377c3b06578c344bacc9803423de017baf981261e5f03434994ef79b07228f04a2ff29f9b22dcc1139f2ff3113d9d0686858c74ec75737d2f3
   languageName: node
   linkType: hard
 
