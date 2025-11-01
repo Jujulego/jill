@@ -1,4 +1,4 @@
-import { isWorkload$, parallelFlow$, type SpawnJob$ } from '@jujulego/tasks';
+import { isWorkload$, parallelFlow$, type SpawnJob$, WorkloadState } from '@jujulego/tasks';
 import { inject$ } from '@kyrielle/injector';
 import { startSpan } from '@sentry/node';
 import { spawn } from 'node:child_process';
@@ -71,6 +71,10 @@ const command: JobModule<ExecArgs> = {
       // Run dependencies first with spinners
       const { default: JobExecInk } = await traceImport('JobExecInk', () => import('../bases/job-exec.ink.jsx'));
       await JobExecInk({ job: dependencies, verbose: ['verbose', 'debug'].includes(args.verbose) });
+
+      if (dependencies.state() !== WorkloadState.Succeeded) {
+        return;
+      }
     } else {
       const logger = inject$(LOGGER);
       logger.verbose('No dependency to build');

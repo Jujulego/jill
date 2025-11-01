@@ -11,10 +11,10 @@ const JobExecInk = inked(async function* ({ job, verbose }: JobExecInkProps) {
   // yield <TaskTreeSpinner manager={manager} verbose={verbose} />;
   recursiveRegister(scheduler, job);
 
-  const results = await waitFor$(pipe$(job.state$, filter$(isWorkloadEnded)));
+  const outcome = await waitFor$(pipe$(job.state$, filter$(isWorkloadEnded)));
   // yield <TaskTreeCompleted manager={scheduler} verbose={verbose} />;
 
-  if (results !== WorkloadState.Succeeded) {
+  if (outcome !== WorkloadState.Succeeded) {
     process.exitCode = 1;
   }
 });

@@ -2,7 +2,7 @@ import { isWorkloadEnded, scheduler$, TaskManager, WorkloadState } from '@jujule
 import { asyncScope$, inject$, token$ } from '@kyrielle/injector';
 import { logger$, withTimestamp } from '@kyrielle/logger';
 import { getActiveSpan, getRootSpan, type Span, startInactiveSpan } from '@sentry/node';
-import { waitFor$ } from 'kyrielle';
+import { type Unsubscribable, waitFor$ } from 'kyrielle';
 import fs from 'node:fs';
 import process from 'node:process';
 import { PathScurry } from 'path-scurry';
@@ -87,24 +87,30 @@ export const SCHEDULER = token$('Scheduler', async () => {
 
     // Status spans
     let stateSpan: Span | undefined;
+    let subscription: Unsubscribable;
 
-    const sub = job.state$.subscribe((state) => {
-      stateSpan?.end();
+    job.state$.subscribe({
+      start: (sub) => {
+        subscription = sub;
+      },
+      next: (state) => {
+        stateSpan?.end();
 
-      if (isWorkloadEnded(state)) {
-        jobSpan.setAttribute('job.final_state', state);
-        jobSpan.setStatus({
-          code: state === WorkloadState.Succeeded ? 1 : 2,
-        });
-        jobSpan.end();
+        if (isWorkloadEnded(state)) {
+          jobSpan.setAttribute('job.final_state', state);
+          jobSpan.setStatus({
+            code: state === WorkloadState.Succeeded ? 1 : 2,
+          });
+          jobSpan.end();
 
-        sub.unsubscribe();
-      } else {
-        stateSpan = startInactiveSpan({
-          op: 'job.state',
-          name: state,
-          parentSpan: jobSpan
-        });
+          subscription.unsubscribe();
+        } else {
+          stateSpan = startInactiveSpan({
+            op: 'job.state',
+            name: state,
+            parentSpan: jobSpan
+          });
+        }
       }
     });
   });

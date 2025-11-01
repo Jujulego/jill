@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "@jujulego/quick-tag": "^1.0.3",
-    "@jujulego/tasks": "3.0.0-alpha.7",
+    "@jujulego/tasks": "3.0.0-alpha.8",
     "@kyrielle/injector": "^1.1.0",
     "@kyrielle/logger": "^2.0.0",
     "@sentry/node": "^10.5.0",
@@ -89,5 +89,10 @@
     "vite-tsconfig-paths": "5.1.4",
     "vitest": "3.2.4"
   },
-  "packageManager": "yarn@4.10.3"
+  "packageManager": "yarn@4.10.3",
+  "dependenciesMeta": {
+    "@jujulego/tasks@3.0.0-alpha.8": {
+      "unplugged": true
+    }
+  }
 }
