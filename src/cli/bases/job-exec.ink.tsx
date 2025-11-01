@@ -3,16 +3,18 @@ import { inject$ } from '@kyrielle/injector';
 import { filter$, pipe$, waitFor$ } from 'kyrielle';
 import process from 'node:process';
 import { SCHEDULER } from '../../tokens.js';
+import WorkloadTreeCompleted from '../components/WorkloadTreeCompleted.jsx';
+import WorkloadTreeSpinner from '../components/WorkloadTreeSpinner.jsx';
 import { inked } from '../inked.jsx';
 
 const JobExecInk = inked(async function* ({ job, verbose }: JobExecInkProps) {
   const scheduler = await inject$(SCHEDULER);
 
-  // yield <TaskTreeSpinner manager={manager} verbose={verbose} />;
+  yield <WorkloadTreeSpinner workload={job} verbose={verbose} />;
   scheduler.register(job);
 
   const outcome = await waitFor$(pipe$(job.state$, filter$(isWorkloadEnded)));
-  // yield <TaskTreeCompleted manager={scheduler} verbose={verbose} />;
+  yield <WorkloadTreeCompleted workload={job} verbose={verbose} />;
 
   if (outcome !== WorkloadState.Succeeded) {
     process.exitCode = 1;

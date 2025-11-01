@@ -1,6 +1,7 @@
 import { parallelFlow$, type SpawnJob$, WorkloadState } from '@jujulego/tasks';
 import { inject$ } from '@kyrielle/injector';
 import { startSpan } from '@sentry/node';
+import { collect$, pipe$ } from 'kyrielle';
 import { spawn } from 'node:child_process';
 import process from 'node:process';
 import type { WorkspaceDepsMode } from '../../projects/workspace.js';
@@ -60,11 +61,10 @@ const command: JobModule<ExecArgs> = {
     const job = (arg as SpawnJob$);
 
     if (job.dependencies().length > 0) {
-      const dependencies = parallelFlow$({ label: 'build dependencies' });
-
-      for (const dep of job.dependencies()) {
-        dependencies.push(dep);
-      }
+      const dependencies = pipe$(
+        job.dependencies(),
+        collect$(parallelFlow$({ label: 'build dependencies' }))
+      );
 
       // Run dependencies first with spinners
       const { default: JobExecInk } = await traceImport('JobExecInk', () => import('../bases/job-exec.ink.jsx'));

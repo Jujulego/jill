@@ -1,4 +1,4 @@
-import { sequenceFlow$, type SequenceFlowProps } from '@jujulego/tasks';
+import { sequenceFlow$, type SequenceFlowProps, type Workflow$ } from '@jujulego/tasks';
 import { inject$ } from '@kyrielle/injector';
 import type { Logger } from '@kyrielle/logger';
 import { collect$, filter$, pipe$ } from 'kyrielle';
@@ -12,7 +12,7 @@ export async function runScript$(
   script: string,
   args: string[],
   opts: RunScriptOpts = {}
-) {
+): Promise<ScriptWorkflow$> {
   // Run script itself
   const jobs = [await planScript$(workspace, script, args, opts)];
 
@@ -27,7 +27,7 @@ export async function runScript$(
   }
 
   // Prepare workflow
-  return pipe$(jobs,
+  const flow = pipe$(jobs,
     filter$((job) => job !== null),
     collect$(
       sequenceFlow$({
@@ -36,8 +36,15 @@ export async function runScript$(
       })
     )
   );
+
+  return {
+    ...flow,
+    script,
+    workspace,
+  };
 }
 
+// Utils
 async function planScript$(
   workspace: Workspace,
   script: string,
@@ -79,11 +86,17 @@ async function planScript$(
   });
 }
 
+export class ScriptNotFound extends ClientError {
+  name = 'ScriptNotFound';
+}
+
+// Types
 export interface RunScriptOpts extends SequenceFlowProps {
   readonly logger?: Logger;
   readonly runHooks?: boolean;
 }
 
-export class ScriptNotFound extends ClientError {
-  name = 'ScriptNotFound';
+export interface ScriptWorkflow$ extends Workflow$ {
+  readonly script: string;
+  readonly workspace: Workspace;
 }
