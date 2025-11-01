@@ -1,4 +1,4 @@
-import { isWorkload$, parallelFlow$, type SpawnJob$, WorkloadState } from '@jujulego/tasks';
+import { parallelFlow$, type SpawnJob$, WorkloadState } from '@jujulego/tasks';
 import { inject$ } from '@kyrielle/injector';
 import { startSpan } from '@sentry/node';
 import { spawn } from 'node:child_process';
@@ -59,13 +59,11 @@ const command: JobModule<ExecArgs> = {
   async execute(args, arg) {
     const job = (arg as SpawnJob$);
 
-    if (job.dependencies.length > 0) {
+    if (job.dependencies().length > 0) {
       const dependencies = parallelFlow$({ label: 'build dependencies' });
 
-      for (const dep of job.dependencies) {
-        if (isWorkload$(dep)) {
-          dependencies.push(dep);
-        }
+      for (const dep of job.dependencies()) {
+        dependencies.push(dep);
       }
 
       // Run dependencies first with spinners
