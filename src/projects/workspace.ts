@@ -5,7 +5,7 @@ import path from 'node:path';
 import type { Package } from 'normalize-package-data';
 import { satisfies } from 'semver';
 import { command$ } from '../cli/jobs/command$.js';
-import { runScript$ } from '../cli/jobs/run-script$.js';
+import { runScript$, type ScriptWorkflow$ } from '../cli/jobs/run-script$.js';
 import { GitService } from '../cli/services/git.service.js';
 import { ScriptTask } from '../tasks/script-task.js';
 import { CONFIG, LOGGER } from '../tokens.js';
@@ -19,7 +19,7 @@ export class Workspace {
   private readonly _git = inject$(GitService);
   private readonly _root: string;
   private readonly _tasks = new Map<string, ScriptTask>();
-  private readonly _jobs = new Map<string, Job$>();
+  private readonly _jobs = new Map<string, ScriptWorkflow$>();
 
   // Constructor
   constructor(
@@ -220,7 +220,7 @@ export class Workspace {
     return task;
   }
 
-  async run$(script: string, args: string[] = [], opts: WorkspaceRunOptions = {}): Promise<Job$ | null> {
+  async run$(script: string, args: string[] = [], opts: WorkspaceRunOptions = {}): Promise<ScriptWorkflow$ | null> {
     // Script not found
     if (!this.getScript(script)) {
       return null;

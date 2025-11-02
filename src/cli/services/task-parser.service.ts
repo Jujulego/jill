@@ -1,13 +1,4 @@
-import {
-  fallbackFlow$,
-  FallbackGroup,
-  type GroupTask,
-  type Job$, parallelFlow$,
-  ParallelGroup, sequenceFlow$,
-  SequenceGroup,
-  type Task,
-  type Workflow$
-} from '@jujulego/tasks';
+import { fallbackFlow$, type Job$, parallelFlow$, sequenceFlow$, type Workflow$ } from '@jujulego/tasks';
 import { inject$ } from '@kyrielle/injector';
 import { withLabel } from '@kyrielle/logger';
 import moo from 'moo';
@@ -203,46 +194,6 @@ export class TaskParserService {
       for (const child of node.tasks) {
         yield* this.extractScripts(child);
       }
-    }
-  }
-
-  @instrument('TaskParserService.buildTask')
-  async buildTask(node: TaskNode | GroupNode, workspace: Workspace, opts?: WorkspaceRunOptions): Promise<Task> {
-    if (TaskParserService.isTaskNode(node)) {
-      const task = await workspace.run(node.script, node.args, opts);
-
-      if (!task) {
-        throw new TaskExpressionError(`Workspace ${workspace.name} have no ${node.script} script`);
-      }
-
-      return task;
-    } else {
-      let group: GroupTask;
-
-      if (node.operator === '//') {
-        group = new ParallelGroup('In parallel', { workspace }, {
-          logger: this._logger,
-        });
-      } else if (node.operator === '||') {
-        group = new FallbackGroup('Fallbacks', { workspace }, {
-          logger: this._logger,
-        });
-      } else {
-        if (node.operator === '->' && TaskParserService._sequenceOperatorWarn) {
-          this._logger.warn('Sequence operator -> is deprecated in favor of &&. It will be removed in a next major release.');
-          TaskParserService._sequenceOperatorWarn = true;
-        }
-
-        group = new SequenceGroup('In sequence', { workspace }, {
-          logger: this._logger,
-        });
-      }
-
-      for (const child of node.tasks) {
-        group.add(await this.buildTask(child, workspace, opts));
-      }
-
-      return group;
     }
   }
 

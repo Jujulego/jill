@@ -1,8 +1,8 @@
-import { type GroupNode, TaskParserService, type TaskNode } from '@/src/cli/services/task-parser.service.js';
+import { type ScriptWorkflow$ } from '@/src/cli/jobs/run-script$.js';
+import { type GroupNode, type TaskNode, TaskParserService } from '@/src/cli/services/task-parser.service.js';
 import type { Workspace } from '@/src/projects/workspace.js';
-import { ScriptTask } from '@/src/tasks/script-task.js';
 import { TestBed } from '@/tools/test-bed.js';
-import { ParallelGroup, SequenceGroup } from '@jujulego/tasks';
+import { type Workflow$, workflow$ } from '@jujulego/tasks';
 import { globalScope$, inject$ } from '@kyrielle/injector';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -146,27 +146,27 @@ describe('TaskExpressionService.extractScripts', () => {
   });
 });
 
-describe('TaskExpressionService.buildTask', () => {
+describe('TaskExpressionService.buildJob', () => {
   it('should use workspace to create simple task', async () => {
-    const tree: TaskNode = { script: 'test', args: [] };
-    const task = new ScriptTask(wks, 'test', []);
+    const tree = { script: 'test', args: [] } satisfies TaskNode;
+    const job = workflow$({ label: 'test', onOrchestrate: vi.fn() });
 
-    vi.spyOn(wks, 'run').mockResolvedValue(task);
+    vi.spyOn(wks, 'run$').mockResolvedValue(job as ScriptWorkflow$);
 
-    await expect(service.buildTask(tree, wks)).resolves.toBe(task);
+    await expect(service.buildJob(tree, wks)).resolves.toBe(job);
 
-    expect(wks.run).toHaveBeenCalledWith('test', [], undefined);
+    expect(wks.run$).toHaveBeenCalledWith('test', [], undefined);
   });
 
   it('should use workspace to create task with args', async () => {
     const tree: TaskNode = { script: 'test', args: ['-abc', '--arg', '3'] };
-    const task = new ScriptTask(wks, 'test', ['-abc', '--arg', '3']);
+    const job = workflow$({ label: 'test', onOrchestrate: vi.fn() });
 
-    vi.spyOn(wks, 'run').mockResolvedValue(task);
+    vi.spyOn(wks, 'run$').mockResolvedValue(job as ScriptWorkflow$);
 
-    await expect(service.buildTask(tree, wks)).resolves.toBe(task);
+    await expect(service.buildJob(tree, wks)).resolves.toBe(job);
 
-    expect(wks.run).toHaveBeenCalledWith('test', ['-abc', '--arg', '3'], undefined);
+    expect(wks.run$).toHaveBeenCalledWith('test', ['-abc', '--arg', '3'], undefined);
   });
 
   it('should create a parallel group', async () => {
@@ -177,19 +177,22 @@ describe('TaskExpressionService.buildTask', () => {
         { script: 'test2', args: [] },
       ]
     };
-    vi.spyOn(wks, 'run')
-      .mockImplementation(async (script) => new ScriptTask(wks, script, []));
 
-    const group = await service.buildTask(tree, wks) as ParallelGroup;
+    vi.spyOn(wks, 'run$')
+      .mockImplementation(async (script) => workflow$({ label: script, onOrchestrate: vi.fn() }) as ScriptWorkflow$);
 
-    expect(group).toBeInstanceOf(ParallelGroup);
-    expect(group.tasks).toEqual([
-      expect.objectContaining({ workspace: wks, script: 'test1' }),
-      expect.objectContaining({ workspace: wks, script: 'test2' }),
-    ]);
+    const job = await service.buildJob(tree, wks);
 
-    expect(wks.run).toHaveBeenCalledWith('test1', [], undefined);
-    expect(wks.run).toHaveBeenCalledWith('test2', [], undefined);
+    expect(job.type).toBe('workflow.parallel');
+
+    const workloads = (job as Workflow$).workloads();
+    expect(workloads).toHaveLength(2);
+
+    expect(workloads[0].label).toBe('test1');
+    expect(workloads[1].label).toBe('test2');
+
+    expect(wks.run$).toHaveBeenCalledWith('test1', [], undefined);
+    expect(wks.run$).toHaveBeenCalledWith('test2', [], undefined);
   });
 
   it('should create a sequence group', async () => {
@@ -200,18 +203,47 @@ describe('TaskExpressionService.buildTask', () => {
         { script: 'test2', args: [] },
       ]
     };
-    vi.spyOn(wks, 'run')
-      .mockImplementation(async (script) => new ScriptTask(wks, script, []));
 
-    const group = await service.buildTask(tree, wks) as SequenceGroup;
+    vi.spyOn(wks, 'run$')
+      .mockImplementation(async (script) => workflow$({ label: script, onOrchestrate: vi.fn() }) as ScriptWorkflow$);
 
-    expect(group).toBeInstanceOf(SequenceGroup);
-    expect(group.tasks).toEqual([
-      expect.objectContaining({ workspace: wks, script: 'test1' }),
-      expect.objectContaining({ workspace: wks, script: 'test2' }),
-    ]);
+    const job = await service.buildJob(tree, wks);
 
-    expect(wks.run).toHaveBeenCalledWith('test1', [], undefined);
-    expect(wks.run).toHaveBeenCalledWith('test2', [], undefined);
+    expect(job.type).toBe('workflow.sequence');
+
+    const workloads = (job as Workflow$).workloads();
+    expect(workloads).toHaveLength(2);
+
+    expect(workloads[0].label).toBe('test1');
+    expect(workloads[1].label).toBe('test2');
+
+    expect(wks.run$).toHaveBeenCalledWith('test1', [], undefined);
+    expect(wks.run$).toHaveBeenCalledWith('test2', [], undefined);
+  });
+
+  it('should create a fallback group', async () => {
+    const tree: GroupNode = {
+      operator: '||',
+      tasks: [
+        { script: 'test1', args: [] },
+        { script: 'test2', args: [] },
+      ]
+    };
+
+    vi.spyOn(wks, 'run$')
+      .mockImplementation(async (script) => workflow$({ label: script, onOrchestrate: vi.fn() }) as ScriptWorkflow$);
+
+    const job = await service.buildJob(tree, wks);
+
+    expect(job.type).toBe('workflow.fallback');
+
+    const workloads = (job as Workflow$).workloads();
+    expect(workloads).toHaveLength(2);
+
+    expect(workloads[0].label).toBe('test1');
+    expect(workloads[1].label).toBe('test2');
+
+    expect(wks.run$).toHaveBeenCalledWith('test1', [], undefined);
+    expect(wks.run$).toHaveBeenCalledWith('test2', [], undefined);
   });
 });
