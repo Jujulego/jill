@@ -1,3 +1,4 @@
+import type { ScriptWorkflow$ } from '@/src/cli/jobs/run-script$.js';
 import { GitService } from '@/src/cli/services/git.service.js';
 import { Project } from '@/src/projects/project.js';
 import { Workspace } from '@/src/projects/workspace.js';
@@ -120,33 +121,26 @@ describe('Workspace.exec', () => {
     vi.spyOn(bed.project, 'packageManager')
       .mockResolvedValue('yarn');
 
-    const task = await wksA.exec('test');
+    const job = await wksA.exec('test');
+
+    expect(job.cmd).toBe('yarn');
+    expect(job.args).toEqual(['exec', 'test']);
+    expect(job.cwd).toBe(path.resolve('test/wks-a'));
 
     // Check up tree
-    expect(task).toEqual(expect.objectContaining({
-      cmd: 'yarn',
-      args: ['exec', 'test'],
-      cwd: path.resolve('test/wks-a'),
-      dependencies: expect.arrayContaining([
-        expect.objectContaining({
-          script: 'build',
-          workspace: wksB,
-          dependencies: [
-            expect.objectContaining({
-              script: 'build',
-              workspace: wksC,
-            })
-          ]
-        }),
-        expect.objectContaining({
-          script: 'build',
-          workspace: wksC,
-        })
-      ])
-    }));
+    const deps = job.dependencies() as readonly ScriptWorkflow$[];
+    expect(deps).toHaveLength(2);
 
-    // Both workspace 'wks-c' task should be the same
-    expect(task.dependencies[1]).toBe(task.dependencies[0].dependencies[0]);
+    expect(deps[0].script).toBe('build');
+    expect(deps[0].workspace).toBe(wksB);
+    expect(deps[0].dependencies()).toHaveLength(1);
+
+    expect(deps[1].script).toBe('build');
+    expect(deps[1].workspace).toBe(wksC);
+    expect(deps[1].dependencies()).toHaveLength(0);
+
+    expect(deps[1]).toBe(deps[0].dependencies()[0]);
+
     expect(bed.project.packageManager).toHaveBeenCalled();
   });
 
@@ -154,33 +148,26 @@ describe('Workspace.exec', () => {
     vi.spyOn(bed.project, 'packageManager')
       .mockResolvedValue('npm');
 
-    const task = await wksA.exec('test');
+    const job = await wksA.exec('test');
+
+    expect(job.cmd).toBe('test');
+    expect(job.args).toHaveLength(0);
+    expect(job.cwd).toBe(path.resolve('test/wks-a'));
 
     // Check up tree
-    expect(task).toEqual(expect.objectContaining({
-      cmd: 'test',
-      args: [],
-      cwd: path.resolve('test/wks-a'),
-      dependencies: expect.arrayContaining([
-        expect.objectContaining({
-          script: 'build',
-          workspace: wksB,
-          dependencies: [
-            expect.objectContaining({
-              script: 'build',
-              workspace: wksC,
-            })
-          ]
-        }),
-        expect.objectContaining({
-          script: 'build',
-          workspace: wksC,
-        })
-      ])
-    }));
+    const deps = job.dependencies() as readonly ScriptWorkflow$[];
+    expect(deps).toHaveLength(2);
 
-    // Both workspace 'wks-c' task should be the same
-    expect(task.dependencies[1]).toBe(task.dependencies[0].dependencies[0]);
+    expect(deps[0].script).toBe('build');
+    expect(deps[0].workspace).toBe(wksB);
+    expect(deps[0].dependencies()).toHaveLength(1);
+
+    expect(deps[1].script).toBe('build');
+    expect(deps[1].workspace).toBe(wksC);
+    expect(deps[1].dependencies()).toHaveLength(0);
+
+    expect(deps[1]).toBe(deps[0].dependencies()[0]);
+
     expect(bed.project.packageManager).toHaveBeenCalled();
   });
 });

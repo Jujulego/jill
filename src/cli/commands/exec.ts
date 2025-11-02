@@ -52,7 +52,7 @@ const command: JobModule<ExecArgs> = {
     }
 
     // Run script in workspace
-    return await workspace.exec$(args.command, rest, {
+    return await workspace.exec(args.command, rest, {
       buildScript: args.buildScript,
       buildDeps: args.depsMode,
     });

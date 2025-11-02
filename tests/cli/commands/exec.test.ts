@@ -1,11 +1,11 @@
 import { planCommand } from '@/src/cli/bases/job-module.js';
 import { exec } from '@/src/cli/commands.js';
+import { command$ } from '@/src/cli/jobs/command$.js';
 import { withLogger } from '@/src/cli/middlewares/logger.js';
 import { loadWorkspace, withWorkspace, type WorkspaceArgs } from '@/src/cli/middlewares/workspace.js';
 import type { Workspace } from '@/src/projects/workspace.js';
 import { TestBed } from '@/tools/test-bed.js';
-import { TestCommandTask } from '@/tools/test-tasks.js';
-import type { TaskSet } from '@jujulego/tasks';
+import { type Job$, type SpawnJob$ } from '@jujulego/tasks';
 import { globalScope$ } from '@kyrielle/injector';
 import { pipe$, var$ } from 'kyrielle';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -16,7 +16,7 @@ vi.mock('@/src/cli/middlewares/workspace.js');
 
 // Setup
 let bed: TestBed;
-let task: TestCommandTask;
+let job: SpawnJob$;
 let workspace: Workspace;
 
 beforeEach(() => {
@@ -24,12 +24,12 @@ beforeEach(() => {
 
   bed = new TestBed();
   workspace = bed.addWorkspace('test');
-  task = new TestCommandTask(workspace, 'vitest', []);
+  job = command$(workspace, 'vitest', []);
 
   vi.mocked(withWorkspace).mockImplementation((argv) => argv as Argv<WorkspaceArgs>);
   vi.mocked(loadWorkspace).mockResolvedValue(workspace);
 
-  vi.spyOn(workspace, 'exec').mockResolvedValue(task);
+  vi.spyOn(workspace, 'exec').mockResolvedValue(job);
 });
 
 afterEach(() => {
@@ -39,12 +39,12 @@ afterEach(() => {
 // Tests
 describe('jill exec', () => {
   it('should run command in loaded workspace', async () => {
-    const tasks$ = var$<TaskSet>();
+    const job$ = var$<Job$>();
 
-    await pipe$(yargs(), withLogger, planCommand(exec, tasks$))
+    await pipe$(yargs(), withLogger, planCommand(exec, job$))
       .parseAsync('exec test');
 
-    expect(tasks$.defer()?.tasks).toStrictEqual([task]);
+    expect(job$.defer()).toStrictEqual(job);
     expect(workspace.exec).toHaveBeenCalledWith('test', [], { buildDeps: 'all', buildScript: 'build' });
   });
 

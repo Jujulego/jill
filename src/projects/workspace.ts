@@ -7,7 +7,6 @@ import { satisfies } from 'semver';
 import { command$ } from '../cli/jobs/command$.js';
 import { runScript$ } from '../cli/jobs/run-script$.js';
 import { GitService } from '../cli/services/git.service.js';
-import { CommandTask } from '../tasks/command-task.js';
 import { ScriptTask } from '../tasks/script-task.js';
 import { CONFIG, LOGGER } from '../tokens.js';
 import { combine } from '../utils/streams.js';
@@ -175,21 +174,7 @@ export class Workspace {
     return job;
   }
 
-  /** @deprecated */
-  async exec(command: string, args: string[] = [], opts: WorkspaceRunOptions = {}): Promise<CommandTask> {
-    const pm = await this.project.packageManager();
-    const task = new CommandTask(this, command, args, {
-      ...opts,
-      logger: this._logger.child(withLabel(`${this.name}$${command}`)),
-      superCommand: pm === 'yarn' ? ['yarn', 'exec'] : undefined
-    });
-
-    await this._buildDependencies(task, opts);
-
-    return task;
-  }
-
-  async exec$(command: string, args: string[] = [], opts: WorkspaceRunOptions = {}): Promise<SpawnJob$> {
+  async exec(command: string, args: string[] = [], opts: WorkspaceRunOptions = {}): Promise<SpawnJob$> {
     const pm = await this.project.packageManager();
     const job = command$(this, command, args, {
       ...opts,
