@@ -7,7 +7,7 @@ import { LOGGER } from '../../tokens.js';
 import { trace, traceImport } from '../../utils/sentry.js';
 import type { Awaitable } from '../../utils/types.js';
 import type { LoggerArgs } from '../middlewares/logger.js';
-import { command } from './command-module.js';
+import { command, commandName } from './command-module.js';
 
 // Module
 export interface JobModule<T extends PlanModeArgs = PlanModeArgs> extends Omit<CommandModule<PlanModeArgs, T>, 'builder' | 'handler'> {
@@ -26,8 +26,8 @@ export interface JobModule<T extends PlanModeArgs = PlanModeArgs> extends Omit<C
 
 // Utils
 export function executeCommand<T extends LoggerArgs, U extends PlanModeArgs>(module: JobModule<U>) {
-  const prepare = trace(module.prepare, 'cli.prepare');
-  const execute = module.execute && trace(module.execute, 'cli.execute');
+  const prepare = trace(module.prepare, { name: commandName(module), op: 'cli.prepare' });
+  const execute = module.execute && trace(module.execute, { name: commandName(module), op: 'cli.execute' });
 
   return command<T, U>({
     ...module,
@@ -71,7 +71,7 @@ export function planCommand<T, U>(module: CommandModule<T, U>, job$: Mutator<Job
 export function planCommand<T extends PlanModeArgs>(module: JobModule<T>, job$: Mutator<Job$ | null>): <V extends LoggerArgs>(parser: Argv<V>) => Argv<V>;
 export function planCommand(module: CommandModule | JobModule, job$: Mutator<Job$ | null>) {
   if ('prepare' in module) {
-    const prepare = trace(module.prepare, 'cli.prepare');
+    const prepare = trace(module.prepare, { name: commandName(module), op: 'cli.prepare' });
 
     return command<LoggerArgs, PlanModeArgs>({
       ...module,
