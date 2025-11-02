@@ -151,22 +151,22 @@ describe('TaskExpressionService.buildJob', () => {
     const tree = { script: 'test', args: [] } satisfies TaskNode;
     const job = workflow$({ label: 'test', onOrchestrate: vi.fn() });
 
-    vi.spyOn(wks, 'run$').mockResolvedValue(job as ScriptWorkflow$);
+    vi.spyOn(wks, 'run').mockResolvedValue(job as ScriptWorkflow$);
 
     await expect(service.buildJob(tree, wks)).resolves.toBe(job);
 
-    expect(wks.run$).toHaveBeenCalledWith('test', [], undefined);
+    expect(wks.run).toHaveBeenCalledWith('test', [], undefined);
   });
 
   it('should use workspace to create task with args', async () => {
     const tree: TaskNode = { script: 'test', args: ['-abc', '--arg', '3'] };
     const job = workflow$({ label: 'test', onOrchestrate: vi.fn() });
 
-    vi.spyOn(wks, 'run$').mockResolvedValue(job as ScriptWorkflow$);
+    vi.spyOn(wks, 'run').mockResolvedValue(job as ScriptWorkflow$);
 
     await expect(service.buildJob(tree, wks)).resolves.toBe(job);
 
-    expect(wks.run$).toHaveBeenCalledWith('test', ['-abc', '--arg', '3'], undefined);
+    expect(wks.run).toHaveBeenCalledWith('test', ['-abc', '--arg', '3'], undefined);
   });
 
   it('should create a parallel group', async () => {
@@ -178,7 +178,7 @@ describe('TaskExpressionService.buildJob', () => {
       ]
     };
 
-    vi.spyOn(wks, 'run$')
+    vi.spyOn(wks, 'run')
       .mockImplementation(async (script) => workflow$({ label: script, onOrchestrate: vi.fn() }) as ScriptWorkflow$);
 
     const job = await service.buildJob(tree, wks);
@@ -191,8 +191,8 @@ describe('TaskExpressionService.buildJob', () => {
     expect(workloads[0].label).toBe('test1');
     expect(workloads[1].label).toBe('test2');
 
-    expect(wks.run$).toHaveBeenCalledWith('test1', [], undefined);
-    expect(wks.run$).toHaveBeenCalledWith('test2', [], undefined);
+    expect(wks.run).toHaveBeenCalledWith('test1', [], undefined);
+    expect(wks.run).toHaveBeenCalledWith('test2', [], undefined);
   });
 
   it('should create a sequence group', async () => {
@@ -204,7 +204,7 @@ describe('TaskExpressionService.buildJob', () => {
       ]
     };
 
-    vi.spyOn(wks, 'run$')
+    vi.spyOn(wks, 'run')
       .mockImplementation(async (script) => workflow$({ label: script, onOrchestrate: vi.fn() }) as ScriptWorkflow$);
 
     const job = await service.buildJob(tree, wks);
@@ -217,8 +217,8 @@ describe('TaskExpressionService.buildJob', () => {
     expect(workloads[0].label).toBe('test1');
     expect(workloads[1].label).toBe('test2');
 
-    expect(wks.run$).toHaveBeenCalledWith('test1', [], undefined);
-    expect(wks.run$).toHaveBeenCalledWith('test2', [], undefined);
+    expect(wks.run).toHaveBeenCalledWith('test1', [], undefined);
+    expect(wks.run).toHaveBeenCalledWith('test2', [], undefined);
   });
 
   it('should create a fallback group', async () => {
@@ -230,7 +230,7 @@ describe('TaskExpressionService.buildJob', () => {
       ]
     };
 
-    vi.spyOn(wks, 'run$')
+    vi.spyOn(wks, 'run')
       .mockImplementation(async (script) => workflow$({ label: script, onOrchestrate: vi.fn() }) as ScriptWorkflow$);
 
     const job = await service.buildJob(tree, wks);
@@ -243,7 +243,7 @@ describe('TaskExpressionService.buildJob', () => {
     expect(workloads[0].label).toBe('test1');
     expect(workloads[1].label).toBe('test2');
 
-    expect(wks.run$).toHaveBeenCalledWith('test1', [], undefined);
-    expect(wks.run$).toHaveBeenCalledWith('test2', [], undefined);
+    expect(wks.run).toHaveBeenCalledWith('test1', [], undefined);
+    expect(wks.run).toHaveBeenCalledWith('test2', [], undefined);
   });
 });

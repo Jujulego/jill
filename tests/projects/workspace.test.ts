@@ -177,32 +177,26 @@ describe('Workspace.run', () => {
     vi.spyOn(bed.project, 'packageManager')
       .mockResolvedValue('yarn');
 
-    const task = await wksA.run('test');
+    const flow = await wksA.run('test');
 
     // Check up tree
-    expect(task).toEqual(expect.objectContaining({
-      script: 'test',
-      workspace: wksA,
-      dependencies: expect.arrayContaining([
-        expect.objectContaining({
-          script: 'build',
-          workspace: wksB,
-          dependencies: [
-            expect.objectContaining({
-              script: 'build',
-              workspace: wksC,
-            })
-          ]
-        }),
-        expect.objectContaining({
-          script: 'build',
-          workspace: wksC,
-        })
-      ])
-    }));
+    expect(flow).toBeDefined();
+    expect(flow!.script).toBe('test');
+    expect(flow!.workspace).toBe(wksA);
 
-    // Both workspace 'wks-c' task should be the same
-    expect(task!.dependencies[1]).toBe(task!.dependencies[0].dependencies[0]);
+    const deps = flow!.dependencies() as readonly ScriptWorkflow$[];
+    expect(deps).toHaveLength(2);
+
+    expect(deps[0].script).toBe('build');
+    expect(deps[0].workspace).toBe(wksB);
+    expect(deps[0].dependencies()).toHaveLength(1);
+
+    expect(deps[1].script).toBe('build');
+    expect(deps[1].workspace).toBe(wksC);
+    expect(deps[1].dependencies()).toHaveLength(0);
+
+    expect(deps[1]).toBe(deps[0].dependencies()[0]);
+
     expect(bed.project.packageManager).toHaveBeenCalled();
   });
 });

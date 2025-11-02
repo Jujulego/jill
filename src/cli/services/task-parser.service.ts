@@ -200,7 +200,7 @@ export class TaskParserService {
   @instrument('TaskParserService.buildJob')
   async buildJob(node: TaskNode | GroupNode, workspace: Workspace, opts?: WorkspaceRunOptions): Promise<Job$> {
     if (TaskParserService.isTaskNode(node)) {
-      const job = await workspace.run$(node.script, node.args, opts);
+      const job = await workspace.run(node.script, node.args, opts);
 
       if (!job) {
         throw new TaskExpressionError(`Workspace ${workspace.name} have no ${node.script} script`);
