@@ -107,7 +107,7 @@ const command: JobModule<EachArgs> = {
     );
 
     // Prepare tasks
-    const flow = parallelFlow$({ label: '--hidden--' });
+    const flow = parallelFlow$({ label: '[hidden]' });
 
     for await (const wks of workspaces) {
       flow.push(await taskParser.buildJob(tree.roots[0], wks, {

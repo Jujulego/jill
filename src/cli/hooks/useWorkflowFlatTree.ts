@@ -11,7 +11,7 @@ export function useWorkflowFlatTree(workload: Workload$, verbose = false): FlatT
       const item = stack.pop()!;
       let level = item.level;
 
-      if (item.workload.label !== '--hidden--') {
+      if (item.workload.label !== '[hidden]') {
         tree.push(item);
         level++;
       }

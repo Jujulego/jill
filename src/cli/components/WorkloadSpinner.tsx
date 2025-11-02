@@ -6,7 +6,7 @@ import * as symbols from '../../utils/symbols.js';
 import WorkloadName from './WorkloadName.jsx';
 
 // Component
-export default function WorkloadSpinner({ dim, workload }: WorkloadSpinnerProps) {
+export default function WorkloadSpinner({ workload }: WorkloadSpinnerProps) {
   // Track task state
   const [state, setState] = useState(workload.state());
 
@@ -16,6 +16,8 @@ export default function WorkloadSpinner({ dim, workload }: WorkloadSpinnerProps)
   }, [workload.state$]);
 
   // Render
+  const dim = workload.type === 'spawn';
+
   switch (state) {
     case WorkloadState.Blocked:
     case WorkloadState.Ready:
@@ -98,6 +100,5 @@ export default function WorkloadSpinner({ dim, workload }: WorkloadSpinnerProps)
 }
 
 export interface WorkloadSpinnerProps {
-  readonly dim?: boolean;
   readonly workload: Workload$;
 }
