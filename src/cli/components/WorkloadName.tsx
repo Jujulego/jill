@@ -13,7 +13,13 @@ export default function WorkloadName({ workload, withWorkspace, ...rest }: Workl
     );
   }
 
-  return <Text {...rest}>{ capitalize(workload.label) }</Text>;
+  let name = workload.label;
+
+  if (workload.type !== 'spawn') {
+    name = capitalize(name);
+  }
+
+  return <Text {...rest}>{ name }</Text>;
 }
 
 export interface WorkloadNameProps extends Omit<TextProps, 'children'> {

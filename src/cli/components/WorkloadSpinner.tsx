@@ -84,9 +84,9 @@ export default function WorkloadSpinner({ dim, workload }: WorkloadSpinnerProps)
     case WorkloadState.Canceled:
       return (
         <Box>
-          <Text color="grey">-</Text>
+          <Text dimColor>-</Text>
           <Box paddingLeft={1}>
-            <WorkloadName dimColor={dim} color="grey" wrap="truncate" workload={workload} withWorkspace />
+            <WorkloadName dimColor wrap="truncate" workload={workload} withWorkspace />
           </Box>
           {/* TODO: add duration to workflow$ */}
           {/*<Box paddingLeft={1} flexShrink={0}>*/}

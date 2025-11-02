@@ -2,10 +2,10 @@ import type { Workflow$, Workload$ } from '@jujulego/tasks';
 import { useMemo } from 'react';
 
 // Hook
-export function useWorkloadFlatTree(workload: Workload$, verbose = false): FlatTreeJob[] {
+export function useWorkflowFlatTree(workload: Workload$, verbose = false): FlatTreeWorkload[] {
   return useMemo(() => {
-    const stack: FlatTreeJob[] = [{ workload, level: 0 }];
-    const tree: FlatTreeJob[] = [];
+    const stack: FlatTreeWorkload[] = [{ workload, level: 0 }];
+    const tree: FlatTreeWorkload[] = [];
 
     while (stack.length > 0) {
       const item = stack.pop()!;
@@ -28,7 +28,7 @@ function isWorkflow(workload: Workload$): workload is Workflow$ {
 }
 
 // Types
-export interface FlatTreeJob {
+export interface FlatTreeWorkload {
   readonly workload: Workload$;
   readonly level: number;
 }

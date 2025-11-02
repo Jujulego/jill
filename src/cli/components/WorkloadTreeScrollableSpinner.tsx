@@ -2,12 +2,13 @@ import type { Workload$ } from '@jujulego/tasks';
 import { Box, Text, useInput } from 'ink';
 import { useState } from 'react';
 import { useStdoutDimensions } from '../hooks/useStdoutDimensions.js';
-import { useWorkloadFlatTree } from '../hooks/useWorkloadFlatTree.js';
+import { useWorkflowFlatTree } from '../hooks/useWorkflowFlatTree.js';
 import WorkloadSpinner from './WorkloadSpinner.jsx';
+import WorkloadTreeStats from './WorkloadTreeStats.jsx';
 
 // Component
 export default function WorkloadTreeScrollableSpinner({ workload, verbose }: WorkloadTreeScrollableSpinnerProps) {
-  const tree = useWorkloadFlatTree(workload, verbose);
+  const tree = useWorkflowFlatTree(workload, verbose);
 
   // Manage scroll
   const { rows: termRows } = useStdoutDimensions();
@@ -39,7 +40,8 @@ export default function WorkloadTreeScrollableSpinner({ workload, verbose }: Wor
         )) }
       </Box>
       <Text>
-        { (termRows < tree.length) && (<Text color="grey"> - use keyboard arrows to scroll</Text>) }
+        <WorkloadTreeStats tree={tree} />
+        { (termRows < tree.length) && (<Text color="grey"> | use keyboard arrows to scroll</Text>) }
       </Text>
     </>
   );

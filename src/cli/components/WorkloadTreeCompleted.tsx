@@ -1,11 +1,12 @@
 import type { Workload$ } from '@jujulego/tasks';
 import { Box, Static } from 'ink';
-import { useWorkloadFlatTree } from '../hooks/useWorkloadFlatTree.js';
+import { useWorkflowFlatTree } from '../hooks/useWorkflowFlatTree.js';
 import WorkloadSpinner from './WorkloadSpinner.jsx';
+import WorkloadTreeStats from './WorkloadTreeStats.jsx';
 
 // Component
 export default function WorkloadTreeCompleted({ workload, verbose }: WorkloadTreeCompletedProps) {
-  const tree = useWorkloadFlatTree(workload, verbose);
+  const tree = useWorkflowFlatTree(workload, verbose);
 
   // Render
   return (
@@ -17,6 +18,7 @@ export default function WorkloadTreeCompleted({ workload, verbose }: WorkloadTre
           </Box>
         ) }
       </Static>
+      <WorkloadTreeStats tree={tree} />
     </>
   );
 }
