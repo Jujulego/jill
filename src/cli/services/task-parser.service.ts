@@ -1,4 +1,13 @@
-import { FallbackGroup, type GroupTask, ParallelGroup, SequenceGroup, type Task } from '@jujulego/tasks';
+import {
+  fallbackFlow$,
+  FallbackGroup,
+  type GroupTask,
+  type Job$, parallelFlow$,
+  ParallelGroup, sequenceFlow$,
+  SequenceGroup,
+  type Task,
+  type Workflow$
+} from '@jujulego/tasks';
 import { inject$ } from '@kyrielle/injector';
 import { withLabel } from '@kyrielle/logger';
 import moo from 'moo';
@@ -139,7 +148,7 @@ export class TaskParserService {
         const [script, ...args] = token.value.split(/ +/);
         child = { script, args };
       } else if (token.type === 'lparen') {
-        const res = this._nextNode(lexer, i+1);
+        const res = this._nextNode(lexer, i + 1);
 
         if (!res) {
           throw new TaskSyntaxError(lexer.formatError(token, 'Empty group found'));
@@ -183,7 +192,7 @@ export class TaskParserService {
     return tree;
   }
 
-  *extractScripts(node: TaskTree | TaskNode | GroupNode): Generator<string> {
+  * extractScripts(node: TaskTree | TaskNode | GroupNode): Generator<string> {
     if ('roots' in node) {
       for (const child of node.roots) {
         yield* this.extractScripts(child);
@@ -234,6 +243,40 @@ export class TaskParserService {
       }
 
       return group;
+    }
+  }
+
+  @instrument('TaskParserService.buildJob')
+  async buildJob(node: TaskNode | GroupNode, workspace: Workspace, opts?: WorkspaceRunOptions): Promise<Job$> {
+    if (TaskParserService.isTaskNode(node)) {
+      const job = await workspace.run$(node.script, node.args, opts);
+
+      if (!job) {
+        throw new TaskExpressionError(`Workspace ${workspace.name} have no ${node.script} script`);
+      }
+
+      return job;
+    } else {
+      let flow: Workflow$;
+
+      if (node.operator === '//') {
+        flow = parallelFlow$({ label: 'In parallel' });
+      } else if (node.operator === '||') {
+        flow = fallbackFlow$({ label: 'Fallbacks' });
+      } else {
+        if (node.operator === '->' && TaskParserService._sequenceOperatorWarn) {
+          this._logger.warn('Sequence operator -> is deprecated in favor of &&. It will be removed in a next major release.');
+          TaskParserService._sequenceOperatorWarn = true;
+        }
+
+        flow = sequenceFlow$({ label: 'In sequence' });
+      }
+
+      for (const child of node.tasks) {
+        flow.push(await this.buildJob(child, workspace, opts));
+      }
+
+      return flow;
     }
   }
 }

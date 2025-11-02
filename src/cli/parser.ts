@@ -30,7 +30,7 @@ export function executeParser() {
     // executeCommand(commands.each),
     executeCommand(commands.exec),
     command(commands.list),
-    // executeCommand(commands.run),
+    executeCommand(commands.run),
     command(commands.tree),
   );
 }
@@ -44,7 +44,7 @@ export function planParser(job$: Mutator<Job$ | null>) {
     // planCommand(commands.each, job$),
     planCommand(commands.exec, job$),
     planCommand(commands.list, job$),
-    // planCommand(commands.run, job$),
+    planCommand(commands.run, job$),
     planCommand(commands.tree, job$),
   );
 }
