@@ -10,7 +10,7 @@ import { LOGGER } from './tokens.js';
 const argv = hideBin(process.argv);
 const parser = executeParser();
 
-void startSpan({ name: 'jill', op: 'cli.main', attributes: { 'cli.argv': argv } }, () => parser
+void startSpan({ name: 'jill', op: 'cli.main', startTime: 0, attributes: { 'cli.argv': argv } }, () => parser
   .wrap(parser.terminalWidth())
   .fail((msg, err) => {
     const logger = inject$(LOGGER);
