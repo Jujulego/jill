@@ -27,7 +27,7 @@ function baseParser() {
 export function executeParser() {
   return pipe$(
     baseParser(),
-    // executeCommand(commands.each),
+    executeCommand(commands.each),
     executeCommand(commands.exec),
     command(commands.list),
     executeCommand(commands.run),
@@ -41,7 +41,7 @@ export function executeParser() {
 export function planParser(job$: Mutator<Job$ | null>) {
   return pipe$(
     baseParser(),
-    // planCommand(commands.each, job$),
+    planCommand(commands.each, job$),
     planCommand(commands.exec, job$),
     planCommand(commands.list, job$),
     planCommand(commands.run, job$),

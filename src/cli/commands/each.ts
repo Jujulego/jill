@@ -1,8 +1,8 @@
-import { TaskSet } from '@jujulego/tasks';
+import { parallelFlow$ } from '@jujulego/tasks';
 import { inject$ } from '@kyrielle/injector';
 import { asyncIterator$, pipe$, type SimpleAsyncIterator } from 'kyrielle';
 import type { Workspace, WorkspaceDepsMode } from '../../projects/workspace.js';
-import type { PlanModeArgs, JobModule } from '../bases/job-module.js';
+import type { JobModule, PlanModeArgs } from '../bases/job-module.js';
 import { hasEveryScript$ } from '../filters/has-scripts.js';
 import { isAffected$ } from '../filters/is-affected.js';
 import { isPrivate$ } from '../filters/is-private.js';
@@ -107,16 +107,16 @@ const command: JobModule<EachArgs> = {
     );
 
     // Prepare tasks
-    const tasks = new TaskSet();
+    const flow = parallelFlow$({ label: '--hidden--' });
 
     for await (const wks of workspaces) {
-      tasks.add(await taskParser.buildTask(tree.roots[0], wks, {
+      flow.push(await taskParser.buildJob(tree.roots[0], wks, {
         buildScript: args.buildScript,
         buildDeps: args.depsMode,
       }));
     }
 
-    return tasks;
+    return flow;
   }
 };
 
