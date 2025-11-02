@@ -850,7 +850,7 @@ __metadata:
     "@eslint/js": "npm:9.39.0"
     "@jujulego/2d-maths": "npm:1.6.0"
     "@jujulego/quick-tag": "npm:^1.0.3"
-    "@jujulego/tasks": "npm:3.0.0-alpha.9"
+    "@jujulego/tasks": "npm:3.0.0-alpha.10"
     "@jujulego/vite-plugin-swc": "npm:1.2.1"
     "@kyrielle/injector": "npm:^1.1.0"
     "@kyrielle/logger": "npm:^2.0.0"
@@ -921,15 +921,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jujulego/tasks@npm:3.0.0-alpha.9":
-  version: 3.0.0-alpha.9
-  resolution: "@jujulego/tasks@npm:3.0.0-alpha.9"
+"@jujulego/tasks@npm:3.0.0-alpha.10":
+  version: 3.0.0-alpha.10
+  resolution: "@jujulego/tasks@npm:3.0.0-alpha.10"
   dependencies:
     "@kyrielle/logger": "npm:^2.0.0"
     "@swc/helpers": "npm:^0.5.3"
     kyrielle: "npm:^2.8.0"
     tree-kill: "npm:^1.2.2"
-  checksum: 10/4a61f4a883d0d307e04430524ff2bf65a4026418b2dd2b6df6eaeb8e1b759e596b5d56bf93c5318f611c61edead7c8f5d5453bd0512cefe44e6e93cbaee875b6
+  checksum: 10/c088201c90dd3e3a79859c1a417560e00728063c80813f311a757c1fa532c8eaf2b8a1fa67eb9a03bd89447f16c38d60f098c814d44e15da495d3b1ffdf2edab
   languageName: node
   linkType: hard
 
