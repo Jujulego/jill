@@ -1,6 +1,7 @@
 import { type Workload$, WorkloadState } from '@jujulego/tasks';
 import { Box, Text } from 'ink';
 import Spinner from 'ink-spinner';
+import ms from 'pretty-ms';
 import { useEffect, useState } from 'react';
 import * as symbols from '../../utils/symbols.js';
 import WorkloadName from './WorkloadName.jsx';
@@ -17,6 +18,8 @@ export default function WorkloadSpinner({ workload }: WorkloadSpinnerProps) {
 
   // Render
   const dim = workload.type === 'spawn';
+  const time = workload.duration().seconds() * 1000;
+
 
   switch (state) {
     case WorkloadState.Blocked:
@@ -62,10 +65,9 @@ export default function WorkloadSpinner({ workload }: WorkloadSpinnerProps) {
           <Box paddingLeft={1}>
             <WorkloadName dimColor={dim} wrap="truncate" workload={workload} withWorkspace />
           </Box>
-          {/* TODO: add duration to workflow$ */}
-          {/*<Box paddingLeft={1} flexShrink={0}>*/}
-          {/*  <Text color={dim ? 'grey' : 'dim'}>(took {ms(time)})</Text>*/}
-          {/*</Box>*/}
+          <Box paddingLeft={1} flexShrink={0}>
+            <Text color={dim ? 'grey' : 'dim'}>(took {ms(time)})</Text>
+          </Box>
         </Box>
       );
 
@@ -76,10 +78,9 @@ export default function WorkloadSpinner({ workload }: WorkloadSpinnerProps) {
           <Box paddingLeft={1}>
             <WorkloadName dimColor={dim} wrap="truncate" workload={workload} withWorkspace />
           </Box>
-          {/* TODO: add duration to workflow$ */}
-          {/*<Box paddingLeft={1} flexShrink={0}>*/}
-          {/*  <Text color={dim ? 'grey' : 'dim'}>(took {ms(time)})</Text>*/}
-          {/*</Box>*/}
+          <Box paddingLeft={1} flexShrink={0}>
+            <Text color={dim ? 'grey' : 'dim'}>(took {ms(time)})</Text>
+          </Box>
         </Box>
       );
 
@@ -90,10 +91,9 @@ export default function WorkloadSpinner({ workload }: WorkloadSpinnerProps) {
           <Box paddingLeft={1}>
             <WorkloadName dimColor wrap="truncate" workload={workload} withWorkspace />
           </Box>
-          {/* TODO: add duration to workflow$ */}
-          {/*<Box paddingLeft={1} flexShrink={0}>*/}
-          {/*  <Text color={dim ? 'grey' : 'dim'}>(took {ms(time)})</Text>*/}
-          {/*</Box>*/}
+          <Box paddingLeft={1} flexShrink={0}>
+            <Text color={dim ? 'grey' : 'dim'}>(took {ms(time)})</Text>
+          </Box>
         </Box>
       );
   }

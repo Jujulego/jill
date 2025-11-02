@@ -58,6 +58,7 @@ export const SCHEDULER = token$('Scheduler', async () => {
 
         if (isWorkloadEnded(state)) {
           jobSpan.setAttribute('job.final_state', state);
+          jobSpan.setAttribute('job.duration', job.duration().seconds());
           jobSpan.setStatus({
             code: state === WorkloadState.Succeeded ? 1 : 2,
           });
