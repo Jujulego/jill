@@ -46,15 +46,23 @@ function buildTree(workload: Workload$, verbose = false) {
 
   while (stack.length > 0) {
     const item = stack.pop()!;
+    const mustShow = [WorkloadState.Starting, WorkloadState.Running, WorkloadState.Failed].includes(item.workload.state());
+
+    if (!verbose && !isWorkflow(item.workload) && !mustShow) {
+      continue;
+    }
+
     let level = item.level;
 
-    if (item.workload.label !== '[hidden]' && (verbose || item.level === 0 || isWorkflow(item.workload) || [WorkloadState.Starting, WorkloadState.Running, WorkloadState.Failed].includes(item.workload.state()))) {
+    if (item.workload.label !== '[hidden]') {
       tree.push(item);
       level++;
     }
 
     if (isWorkflow(item.workload)) {
-      for (const workload of item.workload.workloads()) {
+      const children = [...item.workload.workloads()].reverse();
+
+      for (const workload of children) {
         stack.push({ workload, level });
       }
     }
@@ -71,7 +79,7 @@ function hashTree(tree: FlatTreeWorkload[]) {
   const hash = createHash('sha256');
 
   for (const { workload } of tree) {
-    hash.push(workload.id);
+    hash.update(workload.id);
   }
 
   return hash.digest('hex');
