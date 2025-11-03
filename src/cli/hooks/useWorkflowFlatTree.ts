@@ -1,4 +1,4 @@
-import { type Workflow$, type Workload$, WorkloadState } from '@jujulego/tasks';
+import { type Job$, type Workflow$, type Workload$, WorkloadState } from '@jujulego/tasks';
 import { collect$, map$, off$, pipe$ } from 'kyrielle';
 import { createHash } from 'node:crypto';
 import { useEffect, useState } from 'react';
@@ -40,18 +40,55 @@ export function useWorkflowFlatTree(workload: Workload$, verbose?: boolean): Fla
 }
 
 // Utils
+function* listRoots(workload: Workload$) {
+  const marks = new Set<string>();
+  const queue = [workload];
+
+  while (queue.length) {
+    const item = queue.shift()!;
+
+    // Mark all member of workflows, so they're not added as root
+    if (isWorkflow(item)) {
+      for (const wkl of item.workloads()) {
+        marks.add(wkl.id);
+        queue.unshift(wkl);
+      }
+    }
+
+    // Load job dependencies
+    if (isJob(item)) {
+      for (const dep of item.dependencies()) {
+        queue.push(dep);
+      }
+    }
+
+    // Ignore marked workloads
+    if (marks.has(item.id)) {
+      continue;
+    }
+
+    yield item;
+    marks.add(item.id);
+  }
+}
+
 function buildTree(workload: Workload$, verbose = false) {
-  const stack: FlatTreeWorkload[] = [{ workload, level: 0 }];
   const tree: FlatTreeWorkload[] = [];
+  const stack: FlatTreeWorkload[] = pipe$(
+    listRoots(workload),
+    map$((workload) => ({ workload, level: 0 })),
+    collect$(),
+  );
 
   while (stack.length > 0) {
     const item = stack.pop()!;
     const mustShow = [WorkloadState.Starting, WorkloadState.Running, WorkloadState.Failed].includes(item.workload.state());
 
-    if (!verbose && !isWorkflow(item.workload) && !mustShow) {
+    if (!verbose && !isWorkflow(item.workload) && !mustShow && item.level > 0) {
       continue;
     }
 
+    // Add to tree
     let level = item.level;
 
     if (item.workload.label !== '[hidden]') {
@@ -59,6 +96,7 @@ function buildTree(workload: Workload$, verbose = false) {
       level++;
     }
 
+    // Load "member" tasks
     if (isWorkflow(item.workload)) {
       const children = [...item.workload.workloads()].reverse();
 
@@ -69,6 +107,10 @@ function buildTree(workload: Workload$, verbose = false) {
   }
 
   return tree;
+}
+
+function isJob(workload: Workload$): workload is Job$ {
+  return 'dependencies' in workload && typeof workload.dependencies === 'function';
 }
 
 function isWorkflow(workload: Workload$): workload is Workflow$ {
