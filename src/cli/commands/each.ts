@@ -1,6 +1,6 @@
 import { parallelFlow$ } from '@jujulego/tasks';
 import { inject$ } from '@kyrielle/injector';
-import { asyncIterator$, pipe$, type SimpleAsyncIterator } from 'kyrielle';
+import { asyncIterator$, collect$, pipe$, type SimpleAsyncIterator, waitFor$ } from 'kyrielle';
 import type { Workspace, WorkspaceDepsMode } from '../../projects/workspace.js';
 import type { JobModule, PlanModeArgs } from '../bases/job-module.js';
 import { hasEveryScript$ } from '../filters/has-scripts.js';
@@ -100,16 +100,18 @@ const command: JobModule<EachArgs> = {
 
     // Load workspaces
     const project = loadProject(args);
-    const workspaces = pipe$(
+    const workspaces = await waitFor$(pipe$(
       asyncIterator$(project.workspaces()),
       hasEveryScript$(scripts),
       filters.build(),
-    );
+      collect$()
+    ));
+    workspaces.sort((a, b) => a.name.localeCompare(b.name));
 
     // Prepare tasks
     const flow = parallelFlow$({ label: '[hidden]' });
 
-    for await (const wks of workspaces) {
+    for (const wks of workspaces) {
       flow.push(await taskParser.buildJob(tree.roots[0], wks, {
         buildScript: args.buildScript,
         buildDeps: args.depsMode,
