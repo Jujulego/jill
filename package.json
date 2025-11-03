@@ -64,7 +64,7 @@
     "@sentry/rollup-plugin": "4.6.0",
     "@swc/core": "1.14.0",
     "@types/moo": "0.5.10",
-    "@types/node": "22.18.13",
+    "@types/node": "22.19.0",
     "@types/normalize-package-data": "2.4.4",
     "@types/react": "19.2.2",
     "@types/semver": "7.7.1",
