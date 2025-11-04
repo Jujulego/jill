@@ -95,7 +95,8 @@ describe('jill exec', () => {
       expect(res.code).toBe(0);
 
       expect(res.screen.screen).toMatchLines([
-        expect.ignoreColor(/^. Run build script in wks-c \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^. Build dependencies \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^ {2}. Run build script in wks-c \(took [0-9.]+m?s\)$/),
         expect.ignoreColor(/^. 1 done$/),
       ]);
 
