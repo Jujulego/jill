@@ -80,6 +80,7 @@ jobs:
 
     permissions:
       contents: read
+      id-token: write
 
     steps:
       - name: Checkout repository
@@ -89,7 +90,6 @@ jobs:
         uses: actions/setup-node@v6.0.0
         with:
           node-version: 22.x
-          cache: yarn
 
       - name: Install
         run: yarn install --immutable
@@ -97,19 +97,19 @@ jobs:
       - name: Run tests
         run: yarn test --coverage
 
-      - name: Upload results to Codecov
+      - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5
         with:
           flags: unit
-          token: ${{ secrets.CODECOV_TOKEN }}
+          use_oidc: true
 
-      - name: Upload test results to Codecov
+      - name: Upload results to Codecov
         if: ${{ !cancelled() }}
         uses: codecov/test-results-action@v1
         with:
           files: junit-report.xml
           flags: unit
-          token: ${{ secrets.CODECOV_TOKEN }}
+          use_oidc: true
 
   e2e:
     name: 'E2E tests'
@@ -118,6 +118,7 @@ jobs:
 
     permissions:
       contents: read
+      id-token: write
 
     strategy:
       fail-fast: false
@@ -160,13 +161,13 @@ jobs:
         env:
           SENTRY_ENVIRONMENT: testing
 
-      - name: Upload test results to Codecov
+      - name: Upload results to Codecov
         if: ${{ !cancelled() }}
         uses: codecov/test-results-action@v1
         with:
           files: junit-report.xml
           flags: e2e,${{ matrix.os }},node-${{ matrix.node }}
-          token: ${{ secrets.CODECOV_TOKEN }}
+          use_oidc: true
 
   complete:
     if: ${{ github.event_name == 'pull_request' && always() }}
