@@ -3,8 +3,8 @@ import type { Argv, CommandModule } from 'yargs';
 import { trace } from '../../utils/sentry.js';
 
 export function command<T, U>(module: CommandModule<T, U>) {
-  const name = getCommandName(module);
-  const handler = trace(module.handler, 'cli.handler');
+  const name = commandName(module);
+  const handler = trace(module.handler, { name: commandName(module), op: 'cli.handler' });
 
   return <V extends T>(parser: Argv<V>) => parser.command({
     ...module,
@@ -20,7 +20,7 @@ export function command<T, U>(module: CommandModule<T, U>) {
   });
 }
 
-function getCommandName<T, U>(module: CommandModule<T, U>): string {
+export function commandName(module: Pick<CommandModule, 'command'>): string {
   if (!module.command) {
     return '[unknown]';
   }

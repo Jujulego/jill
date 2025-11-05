@@ -903,6 +903,9 @@ __metadata:
     vite-tsconfig-paths: "npm:5.1.4"
     vitest: "npm:3.2.4"
     yargs: "npm:^18.0.0"
+  dependenciesMeta:
+    "@jujulego/tasks@3.0.0-alpha.8":
+      unplugged: true
   bin:
     jill: ./bin/jill.js
   languageName: unknown

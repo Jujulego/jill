@@ -1,5 +1,5 @@
 import { inject$ } from '@kyrielle/injector';
-import { captureException, startSpan } from '@sentry/node';
+import { captureException, startInactiveSpan, startSpan } from '@sentry/node';
 import process from 'node:process';
 import { hideBin } from 'yargs/helpers';
 import { executeParser } from './cli/parser.js';
@@ -10,22 +10,29 @@ import { LOGGER } from './tokens.js';
 const argv = hideBin(process.argv);
 const parser = executeParser();
 
-void startSpan({ name: 'jill', op: 'cli.main', attributes: { 'cli.argv': argv } }, () => parser
-  .wrap(parser.terminalWidth())
-  .fail((msg, err) => {
-    const logger = inject$(LOGGER);
+void startSpan({ name: 'jill', op: 'cli.main', startTime: 0, attributes: { 'cli.argv': argv } }, async () => {
+  try {
+    startInactiveSpan({ name: 'bootstrap', op: 'cli.bootstrap', startTime: 0 })
+      .end();
 
-    if (msg) {
-      logger.error(msg);
-    } else if (err instanceof ClientError) {
-      logger.error(err.message);
-    } else {
-      captureException(err, { tags: { handled: false } });
-      logger.error(err.message);
-    }
+    return await parser
+      .wrap(parser.terminalWidth())
+      .fail((msg, err) => {
+        const logger = inject$(LOGGER);
 
-    process.exitCode = 1;
-  })
-  .parseAsync(argv)
-  .catch(() => {})
-);
+        if (msg) {
+          logger.error(msg);
+        } else if (err instanceof ClientError) {
+          logger.error(err.message);
+        } else {
+          captureException(err, { tags: { handled: false } });
+          logger.error(err.message);
+        }
+
+        process.exitCode = 1;
+      })
+      .parseAsync(argv);
+  } catch {
+    // Already handled
+  }
+});

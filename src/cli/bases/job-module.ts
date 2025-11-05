@@ -1,33 +1,33 @@
-import { plan, type TaskSet } from '@jujulego/tasks';
+import { type Job$ } from '@jujulego/tasks';
 import { inject$ } from '@kyrielle/injector';
 import type { Mutator } from 'kyrielle';
 import process from 'node:process';
 import type { ArgumentsCamelCase, Argv, CommandModule } from 'yargs';
 import { LOGGER } from '../../tokens.js';
-import { printJson } from '../../utils/json.js';
 import { trace, traceImport } from '../../utils/sentry.js';
+import type { Awaitable } from '../../utils/types.js';
 import type { LoggerArgs } from '../middlewares/logger.js';
-import { command } from './command-module.js';
+import { command, commandName } from './command-module.js';
 
 // Module
-export interface TaskModule<T extends PlanModeArgs = PlanModeArgs> extends Omit<CommandModule<PlanModeArgs, T>, 'builder' | 'handler'> {
+export interface JobModule<T extends PlanModeArgs = PlanModeArgs> extends Omit<CommandModule<PlanModeArgs, T>, 'builder' | 'handler'> {
   builder?: (args: Argv<PlanModeArgs>) => Argv<T>,
 
   /**
    * Generates tasks to be run, but do not execute them.
    */
-  prepare(this: void, args: ArgumentsCamelCase<T>): Promise<TaskSet> | TaskSet;
+  prepare(this: void, args: ArgumentsCamelCase<T>): Awaitable<Job$ | void>;
 
   /**
    * Allows to override default "execute" behavior
    */
-  execute?: (this: void, args: ArgumentsCamelCase<T>, tasks: TaskSet) => Promise<void> | void;
+  execute?: (this: void, args: ArgumentsCamelCase<T>, job: Job$ | null) => Promise<void> | void;
 }
 
 // Utils
-export function executeCommand<T extends LoggerArgs, U extends PlanModeArgs>(module: TaskModule<U>) {
-  const prepare = trace(module.prepare, 'cli.prepare');
-  const execute = module.execute && trace(module.execute, 'cli.execute');
+export function executeCommand<T extends LoggerArgs, U extends PlanModeArgs>(module: JobModule<U>) {
+  const prepare = trace(module.prepare, { name: commandName(module), op: 'cli.prepare' });
+  const execute = module.execute && trace(module.execute, { name: commandName(module), op: 'cli.execute' });
 
   return command<T, U>({
     ...module,
@@ -41,21 +41,22 @@ export function executeCommand<T extends LoggerArgs, U extends PlanModeArgs>(mod
       }
     },
     async handler(args) {
-      const tasks = await prepare(args);
+      const job = await prepare(args) ?? null;
 
       if (args.plan) {
-        if (args.planMode === 'json') {
-          printJson(Array.from(plan(tasks)));
-        } else {
-          const { default: TaskPlanInk } = await traceImport('TaskPlanInk', () => import('./task-plan.ink.jsx'));
-          await TaskPlanInk({ tasks });
-        }
+        // TODO: print jobs
+        // if (args.planMode === 'json') {
+        //   printJson(Array.from(plan(tasks)));
+        // } else {
+        //   const { default: TaskPlanInk } = await traceImport('TaskPlanInk', () => import('./task-plan.ink.jsx'));
+        //   await TaskPlanInk({ tasks });
+        // }
       } else {
         if (execute) {
-          await execute(args, tasks);
-        } else if (tasks.tasks.length > 0) {
-          const { default: TaskExecInk } = await traceImport('TaskExecInk', () => import('./task-exec.ink.jsx'));
-          await TaskExecInk({ tasks, verbose: ['verbose', 'debug'].includes(args.verbose) });
+          await execute(args, job);
+        } else if (job) {
+          const { default: JobExecInk } = await traceImport('JobExecInk', () => import('./job-exec.ink.jsx'));
+          await JobExecInk({ job, verbose: ['verbose', 'debug'].includes(args.verbose) });
         } else {
           const logger = inject$(LOGGER);
           logger.warning('No task found');
@@ -66,11 +67,11 @@ export function executeCommand<T extends LoggerArgs, U extends PlanModeArgs>(mod
   });
 }
 
-export function planCommand<T, U>(module: CommandModule<T, U>, tasks$: Mutator<TaskSet>): <V extends T>(parser: Argv<V>) => Argv<V>;
-export function planCommand<T extends PlanModeArgs>(module: TaskModule<T>, tasks$: Mutator<TaskSet>): <V extends LoggerArgs>(parser: Argv<V>) => Argv<V>;
-export function planCommand(module: CommandModule | TaskModule, tasks$: Mutator<TaskSet>) {
+export function planCommand<T, U>(module: CommandModule<T, U>, job$: Mutator<Job$ | null>): <V extends T>(parser: Argv<V>) => Argv<V>;
+export function planCommand<T extends PlanModeArgs>(module: JobModule<T>, job$: Mutator<Job$ | null>): <V extends LoggerArgs>(parser: Argv<V>) => Argv<V>;
+export function planCommand(module: CommandModule | JobModule, job$: Mutator<Job$ | null>) {
   if ('prepare' in module) {
-    const prepare = trace(module.prepare, 'cli.prepare');
+    const prepare = trace(module.prepare, { name: commandName(module), op: 'cli.prepare' });
 
     return command<LoggerArgs, PlanModeArgs>({
       ...module,
@@ -84,7 +85,7 @@ export function planCommand(module: CommandModule | TaskModule, tasks$: Mutator<
         }
       },
       async handler(args) {
-        tasks$.mutate(await prepare(args));
+        job$.mutate(await prepare(args) ?? null);
       }
     });
   } else {

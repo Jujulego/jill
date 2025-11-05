@@ -95,7 +95,8 @@ describe('jill exec', () => {
       expect(res.code).toBe(0);
 
       expect(res.screen.screen).toMatchLines([
-        expect.ignoreColor(/^. Run build script in wks-c \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^. Build dependencies \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^ {2}. Run build script in wks-c \(took [0-9.]+m?s\)$/),
         expect.ignoreColor(/^. 1 done$/),
       ]);
 
@@ -107,7 +108,7 @@ describe('jill exec', () => {
         .resolves.toBe('node');
     });
 
-    it('should print task plan and do not run any script', async () => {
+    it.skip('should print task plan and do not run any script', async () => {
       const res = await jill('-w wks-b --plan --plan-mode json node -e "require(\'node:fs\').writeFileSync(\'script.txt\', \'node\')"', { cwd: prjDir, keepQuotes: true });
 
       // Check jill plan

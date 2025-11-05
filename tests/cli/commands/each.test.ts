@@ -1,13 +1,13 @@
-import { planCommand } from '@/src/cli/bases/task-module.js';
+import { planCommand } from '@/src/cli/bases/job-module.js';
 import { each } from '@/src/cli/commands.js';
 import { hasEveryScript$ } from '@/src/cli/filters/has-scripts.js';
+import { isAffected$ } from '@/src/cli/filters/is-affected.js';
 import { isPrivate$ } from '@/src/cli/filters/is-private.js';
+import type { ScriptWorkflow$ } from '@/src/cli/jobs/run-script$.js';
 import { withLogger } from '@/src/cli/middlewares/logger.js';
 import { loadProject, type ProjectArgs, withProject } from '@/src/cli/middlewares/project.js';
-import { isAffected$ } from '@/src/cli/filters/is-affected.js';
 import { TestBed } from '@/tools/test-bed.js';
-import { TestScriptTask } from '@/tools/test-tasks.js';
-import type { TaskSet } from '@jujulego/tasks';
+import { type Job$, type Workflow$, workflow$ } from '@jujulego/tasks';
 import { globalScope$ } from '@kyrielle/injector';
 import { filter$, pipe$, var$ } from 'kyrielle';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -43,20 +43,22 @@ describe('jill each', () => {
     const wksB = bed.addWorkspace('wksB', { scripts: { test: 'vitest' }});
     const wksC = bed.addWorkspace('wksC');
 
-    const tskA = new TestScriptTask(wksA, 'test', []);
-    const tskB = new TestScriptTask(wksB, 'test', []);
+    const jobA = workflow$({ label: 'test', onOrchestrate: vi.fn() }) as ScriptWorkflow$;
+    const jobB = workflow$({ label: 'test', onOrchestrate: vi.fn() }) as ScriptWorkflow$;
 
-    vi.spyOn(wksA, 'run').mockResolvedValue(tskA);
-    vi.spyOn(wksB, 'run').mockResolvedValue(tskB);
+    vi.spyOn(wksA, 'run').mockResolvedValue(jobA);
+    vi.spyOn(wksB, 'run').mockResolvedValue(jobB);
     vi.spyOn(wksC, 'run').mockResolvedValue(null);
 
     // Run command
     vi.mocked(hasEveryScript$).mockReturnValue(filter$((wks) => wks !== wksC));
 
-    const tasks$ = var$<TaskSet>();
-    await pipe$(yargs(), withLogger, planCommand(each, tasks$)).parseAsync('each test');
+    const job$ = var$<Job$>();
+    await pipe$(yargs(), withLogger, planCommand(each, job$)).parseAsync('each test');
 
-    expect(tasks$.defer()?.tasks).toStrictEqual([tskA, tskB]);
+    expect(job$.defer()).not.toBeNull();
+    expect(job$.defer()!.type).toBe('workflow.parallel');
+    expect((job$.defer() as Workflow$).workloads()).toStrictEqual([jobA, jobB]);
 
     expect(wksA.run).toHaveBeenCalledWith('test', [], { buildDeps: 'all', buildScript: 'build' });
     expect(wksB.run).toHaveBeenCalledWith('test', [], { buildDeps: 'all', buildScript: 'build' });
@@ -69,11 +71,11 @@ describe('jill each', () => {
     const wksB = bed.addWorkspace('wksB', { scripts: { test: 'vitest' }});
     const wksC = bed.addWorkspace('wksC');
 
-    const tskA = new TestScriptTask(wksA, 'test', []);
-    const tskB = new TestScriptTask(wksB, 'test', []);
+    const jobA = workflow$({ label: 'test', onOrchestrate: vi.fn() }) as ScriptWorkflow$;
+    const jobB = workflow$({ label: 'test', onOrchestrate: vi.fn() }) as ScriptWorkflow$;
 
-    vi.spyOn(wksA, 'run').mockResolvedValue(tskA);
-    vi.spyOn(wksB, 'run').mockResolvedValue(tskB);
+    vi.spyOn(wksA, 'run').mockResolvedValue(jobA);
+    vi.spyOn(wksB, 'run').mockResolvedValue(jobB);
     vi.spyOn(wksC, 'run').mockResolvedValue(null);
 
     // Run command
@@ -92,11 +94,11 @@ describe('jill each', () => {
     const wksB = bed.addWorkspace('wksB', { scripts: { test: 'vitest' }});
     const wksC = bed.addWorkspace('wksC');
 
-    const tskA = new TestScriptTask(wksA, 'test', []);
-    const tskB = new TestScriptTask(wksB, 'test', []);
+    const jobA = workflow$({ label: 'test', onOrchestrate: vi.fn() }) as ScriptWorkflow$;
+    const jobB = workflow$({ label: 'test', onOrchestrate: vi.fn() }) as ScriptWorkflow$;
 
-    vi.spyOn(wksA, 'run').mockResolvedValue(tskA);
-    vi.spyOn(wksB, 'run').mockResolvedValue(tskB);
+    vi.spyOn(wksA, 'run').mockResolvedValue(jobA);
+    vi.spyOn(wksB, 'run').mockResolvedValue(jobB);
     vi.spyOn(wksC, 'run').mockResolvedValue(null);
 
     // Run command
@@ -115,11 +117,11 @@ describe('jill each', () => {
     const wksB = bed.addWorkspace('wksB', { scripts: { test: 'vitest' }});
     const wksC = bed.addWorkspace('wksC');
 
-    const tskA = new TestScriptTask(wksA, 'test', []);
-    const tskB = new TestScriptTask(wksB, 'test', []);
+    const jobA = workflow$({ label: 'test', onOrchestrate: vi.fn() }) as ScriptWorkflow$;
+    const jobB = workflow$({ label: 'test', onOrchestrate: vi.fn() }) as ScriptWorkflow$;
 
-    vi.spyOn(wksA, 'run').mockResolvedValue(tskA);
-    vi.spyOn(wksB, 'run').mockResolvedValue(tskB);
+    vi.spyOn(wksA, 'run').mockResolvedValue(jobA);
+    vi.spyOn(wksB, 'run').mockResolvedValue(jobB);
     vi.spyOn(wksC, 'run').mockResolvedValue(null);
 
     // Run command
@@ -139,21 +141,23 @@ describe('jill each', () => {
       const wksB = bed.addWorkspace('wksB', { scripts: { test: 'vitest' } });
       const wksC = bed.addWorkspace('wksC');
 
-      const tskA = new TestScriptTask(wksA, 'test', []);
-      const tskB = new TestScriptTask(wksB, 'test', []);
+      const jobA = workflow$({ label: 'test', onOrchestrate: vi.fn() }) as ScriptWorkflow$;
+      const jobB = workflow$({ label: 'test', onOrchestrate: vi.fn() }) as ScriptWorkflow$;
 
-      vi.spyOn(wksA, 'run').mockResolvedValue(tskA);
-      vi.spyOn(wksB, 'run').mockResolvedValue(tskB);
+      vi.spyOn(wksA, 'run').mockResolvedValue(jobA);
+      vi.spyOn(wksB, 'run').mockResolvedValue(jobB);
       vi.spyOn(wksC, 'run').mockResolvedValue(null);
 
       // Run command
       vi.mocked(isAffected$).mockReturnValue(filter$((wks) => wks !== wksA)); // <= wksA is NOT affected
       vi.mocked(hasEveryScript$).mockReturnValue(filter$((wks) => wks !== wksC));
 
-      const tasks$ = var$<TaskSet>();
-      await pipe$(yargs(), withLogger, planCommand(each, tasks$)).parseAsync('each test --affected test');
+      const job$ = var$<Job$>();
+      await pipe$(yargs(), withLogger, planCommand(each, job$)).parseAsync('each test --affected test');
 
-      expect(tasks$.defer()?.tasks).toStrictEqual([tskB]);
+      expect(job$.defer()).not.toBeNull();
+      expect(job$.defer()!.type).toBe('workflow.parallel');
+      expect((job$.defer() as Workflow$).workloads()).toStrictEqual([jobB]);
 
       expect(wksA.run).not.toHaveBeenCalled();
       expect(wksB.run).toHaveBeenCalledWith('test', [], { buildDeps: 'all', buildScript: 'build' });
@@ -171,21 +175,23 @@ describe('jill each', () => {
       const wksB = bed.addWorkspace('wksB', { scripts: { test: 'vitest' } });
       const wksC = bed.addWorkspace('wksC');
 
-      const tskA = new TestScriptTask(wksA, 'test', []);
-      const tskB = new TestScriptTask(wksB, 'test', []);
+      const jobA = workflow$({ label: 'test', onOrchestrate: vi.fn() }) as ScriptWorkflow$;
+      const jobB = workflow$({ label: 'test', onOrchestrate: vi.fn() }) as ScriptWorkflow$;
 
-      vi.spyOn(wksA, 'run').mockResolvedValue(tskA);
-      vi.spyOn(wksB, 'run').mockResolvedValue(tskB);
+      vi.spyOn(wksA, 'run').mockResolvedValue(jobA);
+      vi.spyOn(wksB, 'run').mockResolvedValue(jobB);
       vi.spyOn(wksC, 'run').mockResolvedValue(null);
 
       // Run command
       vi.mocked(isAffected$).mockReturnValue(filter$((wks) => wks !== wksA)); // <= wksA is NOT affected
       vi.mocked(hasEveryScript$).mockReturnValue(filter$((wks) => wks !== wksC));
 
-      const tasks$ = var$<TaskSet>();
-      await pipe$(yargs(), withLogger, planCommand(each, tasks$)).parseAsync('each test --affected test --affected-rev-fallback main --affected-rev-sort v:refname');
+      const job$ = var$<Job$>();
+      await pipe$(yargs(), withLogger, planCommand(each, job$)).parseAsync('each test --affected test --affected-rev-fallback main --affected-rev-sort v:refname');
 
-      expect(tasks$.defer()?.tasks).toStrictEqual([tskB]);
+      expect(job$.defer()).not.toBeNull();
+      expect(job$.defer()!.type).toBe('workflow.parallel');
+      expect((job$.defer() as Workflow$).workloads()).toStrictEqual([jobB]);
 
       expect(wksA.run).not.toHaveBeenCalled();
       expect(wksB.run).toHaveBeenCalledWith('test', [], { buildDeps: 'all', buildScript: 'build' });
@@ -206,21 +212,23 @@ describe('jill each', () => {
       const wksB = bed.addWorkspace('wksB', { private: true, scripts: { test: 'vitest' } });
       const wksC = bed.addWorkspace('wksC', { private: true });
 
-      const tskA = new TestScriptTask(wksA, 'test', []);
-      const tskB = new TestScriptTask(wksB, 'test', []);
+      const jobA = workflow$({ label: 'test', onOrchestrate: vi.fn() }) as ScriptWorkflow$;
+      const jobB = workflow$({ label: 'test', onOrchestrate: vi.fn() }) as ScriptWorkflow$;
 
-      vi.spyOn(wksA, 'run').mockResolvedValue(tskA);
-      vi.spyOn(wksB, 'run').mockResolvedValue(tskB);
+      vi.spyOn(wksA, 'run').mockResolvedValue(jobA);
+      vi.spyOn(wksB, 'run').mockResolvedValue(jobB);
       vi.spyOn(wksC, 'run').mockResolvedValue(null);
 
       // Run command
       vi.mocked(isPrivate$).mockReturnValue(filter$((wks) => wks !== wksA));
       vi.mocked(hasEveryScript$).mockReturnValue(filter$((wks) => wks !== wksC));
 
-      const tasks$ = var$<TaskSet>();
-      await pipe$(yargs(), withLogger, planCommand(each, tasks$)).parseAsync('each test --private');
+      const job$ = var$<Job$>();
+      await pipe$(yargs(), withLogger, planCommand(each, job$)).parseAsync('each test --private');
 
-      expect(tasks$.defer()?.tasks).toStrictEqual([tskB]);
+      expect(job$.defer()).not.toBeNull();
+      expect(job$.defer()!.type).toBe('workflow.parallel');
+      expect((job$.defer() as Workflow$).workloads()).toStrictEqual([jobB]);
 
       expect(wksA.run).not.toHaveBeenCalled();
       expect(wksB.run).toHaveBeenCalledWith('test', [], { buildDeps: 'all', buildScript: 'build' });
@@ -235,21 +243,23 @@ describe('jill each', () => {
       const wksB = bed.addWorkspace('wksB', { private: true, scripts: { test: 'vitest' } });
       const wksC = bed.addWorkspace('wksC', { private: false });
 
-      const tskA = new TestScriptTask(wksA, 'test', []);
-      const tskB = new TestScriptTask(wksB, 'test', []);
+      const jobA = workflow$({ label: 'test', onOrchestrate: vi.fn() }) as ScriptWorkflow$;
+      const jobB = workflow$({ label: 'test', onOrchestrate: vi.fn() }) as ScriptWorkflow$;
 
-      vi.spyOn(wksA, 'run').mockResolvedValue(tskA);
-      vi.spyOn(wksB, 'run').mockResolvedValue(tskB);
+      vi.spyOn(wksA, 'run').mockResolvedValue(jobA);
+      vi.spyOn(wksB, 'run').mockResolvedValue(jobB);
       vi.spyOn(wksC, 'run').mockResolvedValue(null);
 
       // Run command
       vi.mocked(isPrivate$).mockReturnValue(filter$((wks) => wks !== wksB));
       vi.mocked(hasEveryScript$).mockReturnValue(filter$((wks) => wks !== wksC));
 
-      const tasks$ = var$<TaskSet>();
-      await pipe$(yargs(), withLogger, planCommand(each, tasks$)).parseAsync('each test --no-private');
+      const job$ = var$<Job$>();
+      await pipe$(yargs(), withLogger, planCommand(each, job$)).parseAsync('each test --no-private');
 
-      expect(tasks$.defer()?.tasks).toStrictEqual([tskA]);
+      expect(job$.defer()).not.toBeNull();
+      expect(job$.defer()!.type).toBe('workflow.parallel');
+      expect((job$.defer() as Workflow$).workloads()).toStrictEqual([jobA]);
 
       expect(wksA.run).toHaveBeenCalledWith('test', [], { buildDeps: 'all', buildScript: 'build' });
       expect(wksB.run).not.toHaveBeenCalled();

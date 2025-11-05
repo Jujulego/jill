@@ -1,8 +1,8 @@
-import { TaskSet } from '@jujulego/tasks';
+import { parallelFlow$ } from '@jujulego/tasks';
 import { inject$ } from '@kyrielle/injector';
-import { asyncIterator$, pipe$, type SimpleAsyncIterator } from 'kyrielle';
+import { asyncIterator$, collect$, pipe$, type SimpleAsyncIterator, waitFor$ } from 'kyrielle';
 import type { Workspace, WorkspaceDepsMode } from '../../projects/workspace.js';
-import type { PlanModeArgs, TaskModule } from '../bases/task-module.js';
+import type { JobModule, PlanModeArgs } from '../bases/job-module.js';
 import { hasEveryScript$ } from '../filters/has-scripts.js';
 import { isAffected$ } from '../filters/is-affected.js';
 import { isPrivate$ } from '../filters/is-private.js';
@@ -11,7 +11,7 @@ import { TaskParserService } from '../services/task-parser.service.js';
 import { pipeline$ } from '../utils/pipeline$.js';
 
 // Command
-const command: TaskModule<EachArgs> = {
+const command: JobModule<EachArgs> = {
   command: 'each <expr>',
   describe: 'Run a task expression in many workspace, after having built all theirs dependencies.',
   builder: (parser) => withProject(parser)
@@ -100,23 +100,29 @@ const command: TaskModule<EachArgs> = {
 
     // Load workspaces
     const project = loadProject(args);
-    const workspaces = pipe$(
+    const workspaces = await waitFor$(pipe$(
       asyncIterator$(project.workspaces()),
       hasEveryScript$(scripts),
       filters.build(),
-    );
+      collect$()
+    ));
+    workspaces.sort((a, b) => a.name.localeCompare(b.name));
 
+    if (workspaces.length === 0) {
+      return;
+    }
+    
     // Prepare tasks
-    const tasks = new TaskSet();
+    const flow = parallelFlow$({ label: '[hidden]' });
 
-    for await (const wks of workspaces) {
-      tasks.add(await taskParser.buildTask(tree.roots[0], wks, {
+    for (const wks of workspaces) {
+      flow.push(await taskParser.buildJob(tree.roots[0], wks, {
         buildScript: args.buildScript,
         buildDeps: args.depsMode,
       }));
     }
 
-    return tasks;
+    return flow;
   }
 };
 

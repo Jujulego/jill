@@ -1,9 +1,9 @@
-import type { TaskSet } from '@jujulego/tasks';
+import type { Job$ } from '@jujulego/tasks';
 import { type Mutator, pipe$ } from 'kyrielle';
 import yargs from 'yargs';
 import { version } from '../../package.json' with { type: 'json' };
 import { command } from './bases/command-module.js';
-import { executeCommand, planCommand } from './bases/task-module.js';
+import { executeCommand, planCommand } from './bases/job-module.js';
 import * as commands from './commands.js';
 import { withConfig } from './middlewares/config.js';
 import { withLogger } from './middlewares/logger.js';
@@ -38,13 +38,13 @@ export function executeParser() {
 /**
  * Prepare parser planning commands
  */
-export function planParser(tasks$: Mutator<TaskSet>) {
+export function planParser(job$: Mutator<Job$ | null>) {
   return pipe$(
     baseParser(),
-    planCommand(commands.each, tasks$),
-    planCommand(commands.exec, tasks$),
-    planCommand(commands.list, tasks$),
-    planCommand(commands.run, tasks$),
-    planCommand(commands.tree, tasks$),
+    planCommand(commands.each, job$),
+    planCommand(commands.exec, job$),
+    planCommand(commands.list, job$),
+    planCommand(commands.run, job$),
+    planCommand(commands.tree, job$),
   );
 }

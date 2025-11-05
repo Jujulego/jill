@@ -3,11 +3,12 @@ import { pipe$ } from 'kyrielle';
 
 export function trace<T, A extends unknown[], R>(fun: (this: T, ...args: A) => R, opts: string | InstrumentFunOpts<R>) {
   const name = typeof opts === 'string' ? opts : (opts.name);
-  const use = typeof opts === 'object' ? opts.use : (_: string, r: R) => r;
+  const op = typeof opts === 'object' ? opts.op : undefined;
+  const use = (typeof opts === 'object' && opts.use) || ((_: string, r: R) => r);
 
   return function(this: T, ...args: A) {
     return pipe$(
-      startSpan({ name }, () => fun.call(this, ...args)),
+      startSpan({ name, op }, () => fun.call(this, ...args)),
       (r) => use(name, r),
     );
   };
@@ -36,7 +37,7 @@ export function traceAsyncGenerator<T, R, N>(name: string, generator: AsyncGener
 }
 
 export function traceImport<M>(name: string, loader: () => Promise<M>): Promise<M> {
-  return startSpan({ name: `load ${name}`, op: 'resource.script' }, loader);
+  return startSpan({ name: name, op: 'resource.script' }, loader);
 }
 
 // Types
@@ -48,5 +49,6 @@ interface InstrumentOpts<O> {
 }
 interface InstrumentFunOpts<O> {
   name: string;
-  use: (name: string, result: O) => O;
+  op?: string;
+  use?: (name: string, result: O) => O;
 }

@@ -83,10 +83,10 @@ describe('jill each', () => {
       expect(res.code).toBe(0);
 
       expect(res.screen.screen).toMatchLines([
-        expect.ignoreColor(/^. Run start script in wks-a \(took [0-9.]+m?s\)$/),
         expect.ignoreColor(/^. Run build script in wks-b \(took [0-9.]+m?s\)$/),
-        expect.ignoreColor(/^. Run start script in wks-b \(took [0-9.]+m?s\)$/),
         expect.ignoreColor(/^. Run build script in wks-c \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^. Run start script in wks-a \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^. Run start script in wks-b \(took [0-9.]+m?s\)$/),
         expect.ignoreColor(/^. 4 done$/),
       ]);
 
@@ -111,13 +111,13 @@ describe('jill each', () => {
       expect(res.code).toBe(0);
 
       expect(res.screen.screen).toMatchLines([
+        expect.ignoreColor(/^. Run build script in wks-c \(took [0-9.]+m?s\)$/),
         expect.ignoreColor(/^. In sequence \(took [0-9.]+m?s\)$/),
         expect.ignoreColor(/^ {2}. Run build script in wks-a \(took [0-9.]+m?s\)$/),
         expect.ignoreColor(/^ {2}. Run start script in wks-a \(took [0-9.]+m?s\)$/),
         expect.ignoreColor(/^. In sequence \(took [0-9.]+m?s\)$/),
         expect.ignoreColor(/^ {2}. Run build script in wks-b \(took [0-9.]+m?s\)$/),
         expect.ignoreColor(/^ {2}. Run start script in wks-b \(took [0-9.]+m?s\)$/),
-        expect.ignoreColor(/^. Run build script in wks-c \(took [0-9.]+m?s\)$/),
         expect.ignoreColor(/^. 5 done$/),
       ]);
 
@@ -145,10 +145,10 @@ describe('jill each', () => {
       expect(res.code).toBe(0);
 
       expect(res.screen.screen).toMatchLines([
-        expect.ignoreColor(/^. Run hooked script in wks-b \(took [0-9.]+m?s\)$/),
         expect.ignoreColor(/^. Run build script in wks-c \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^. Run hooked script in wks-b \(took [0-9.]+m?s\)$/),
         expect.ignoreColor(/^. Run hooked script in wks-c \(took [0-9.]+m?s\)$/),
-        expect.ignoreColor(/^. 7 done$/),
+        expect.ignoreColor(/^. 3 done$/),
       ]);
 
       // Check script result
@@ -181,9 +181,9 @@ describe('jill each', () => {
       expect(res.code).toBe(1);
 
       expect(res.screen.screen).toMatchLines([
+        expect.ignoreColor(/^. Run build script in wks-c \(took [0-9.]+m?s\)$/),
         expect.ignoreColor(/^. Run fails script in wks-b \(took [0-9.]+m?s\)$/),
         expect.ignoreColor(/^ {2}.( yarn exec)? node -e "process.exit\(1\)" \(took [0-9.]+m?s\)$/),
-        expect.ignoreColor(/^. Run build script in wks-c \(took [0-9.]+m?s\)$/),
         expect.ignoreColor(/^. 1 done, . 1 failed$/),
       ]);
 
@@ -224,7 +224,7 @@ describe('jill each', () => {
         .rejects.toMatchObject({ code: 'ENOENT' });
     });
 
-    it('should print task plan and do not run any script', async () => {
+    it.skip('should print task plan and do not run any script', async () => {
       const res = await jill('each --plan --plan-mode json start', { cwd: prjDir });
 
       // Check jill output

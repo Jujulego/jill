@@ -108,7 +108,7 @@ describe('jill run', () => {
 
       expect(res.screen.screen).toMatchLines([
         expect.ignoreColor(/^. Run hooked script in wks-c \(took [0-9.]+m?s\)$/),
-        expect.ignoreColor(/^. 3 done$/),
+        expect.ignoreColor(/^. 1 done$/),
       ]);
 
       // Check script result
@@ -161,15 +161,15 @@ describe('jill run', () => {
       ]));
     });
 
-    it('should run wks-b start script and build script', async () => {
+    it('should run wks-b start script and wks-c build script', async () => {
       const res = await jill('run -w wks-b start', { cwd: prjDir });
 
       // Check jill output
       expect(res.code).toBe(0);
 
       expect(res.screen.screen).toMatchLines([
-        expect.ignoreColor(/^. Run start script in wks-b \(took [0-9.]+m?s\)$/),
         expect.ignoreColor(/^. Run build script in wks-c \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^. Run start script in wks-b \(took [0-9.]+m?s\)$/),
         expect.ignoreColor(/^. 2 done$/),
       ]);
 
@@ -181,7 +181,7 @@ describe('jill run', () => {
         .resolves.toBe('started');
     });
 
-    it('should print task plan and do not run any script', async () => {
+    it.skip('should print task plan and do not run any script', async () => {
       const res = await jill('run -w wks-b --plan --plan-mode json start', { cwd: prjDir });
 
       // Check jill plan

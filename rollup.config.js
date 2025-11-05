@@ -22,11 +22,6 @@ const options = {
     nodeResolve({ exportConditions: ['node'] }),
     json(),
     swc(),
-    codecovRollupPlugin({
-      enableBundleAnalysis: !!process.env.CODECOV_TOKEN,
-      bundleName: 'jill',
-      uploadToken: process.env.CODECOV_TOKEN,
-    }),
     sentryRollupPlugin({
       org: 'jujulego',
       project: 'jill',
@@ -44,6 +39,13 @@ const options = {
       release: {
         name: pkg.version,
       }
+    }),
+    codecovRollupPlugin({
+      enableBundleAnalysis: !!process.env.CI,
+      bundleName: 'jill',
+      oidc: {
+        useGitHubOIDC: true,
+      },
     })
   ],
   external: [

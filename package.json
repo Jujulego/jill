@@ -1,6 +1,6 @@
 {
   "name": "@jujulego/jill",
-  "version": "3.0.0-alpha.7",
+  "version": "3.0.0-alpha.8",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -89,5 +89,10 @@
     "vite-tsconfig-paths": "5.1.4",
     "vitest": "3.2.4"
   },
-  "packageManager": "yarn@4.10.3"
+  "packageManager": "yarn@4.10.3",
+  "dependenciesMeta": {
+    "@jujulego/tasks@3.0.0-alpha.8": {
+      "unplugged": true
+    }
+  }
 }

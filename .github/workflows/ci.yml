@@ -18,6 +18,7 @@ jobs:
 
     permissions:
       contents: read
+      id-token: write
 
     steps:
       - name: Checkout repository
@@ -35,7 +36,6 @@ jobs:
       - name: Build
         run: yarn build
         env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
 
       - uses: actions/upload-artifact@v5.0.0
@@ -80,6 +80,7 @@ jobs:
 
     permissions:
       contents: read
+      id-token: write
 
     steps:
       - name: Checkout repository
@@ -89,7 +90,6 @@ jobs:
         uses: actions/setup-node@v6.0.0
         with:
           node-version: 24.x
-          cache: yarn
 
       - name: Install
         run: yarn install --immutable
@@ -97,19 +97,19 @@ jobs:
       - name: Run tests
         run: yarn test --coverage
 
-      - name: Upload results to Codecov
+      - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5
         with:
           flags: unit
-          token: ${{ secrets.CODECOV_TOKEN }}
+          use_oidc: true
 
-      - name: Upload test results to Codecov
+      - name: Upload results to Codecov
         if: ${{ !cancelled() }}
         uses: codecov/test-results-action@v1
         with:
           files: junit-report.xml
           flags: unit
-          token: ${{ secrets.CODECOV_TOKEN }}
+          use_oidc: true
 
   e2e:
     name: 'E2E tests'
@@ -118,6 +118,7 @@ jobs:
 
     permissions:
       contents: read
+      id-token: write
 
     strategy:
       fail-fast: false
@@ -130,9 +131,6 @@ jobs:
           - 20
           - 22
           - 24
-        packageManager:
-          - npm
-          - yarn
 
     steps:
       - name: Checkout repo
@@ -159,17 +157,17 @@ jobs:
           git config --global user.email github-actions@github.com
 
       - name: Run E2E tests
-        run: yarn e2e -t ${{ matrix.packageManager }} --no-file-parallelism
+        run: yarn e2e --no-file-parallelism
         env:
           SENTRY_ENVIRONMENT: testing
 
-      - name: Upload test results to Codecov
+      - name: Upload results to Codecov
         if: ${{ !cancelled() }}
         uses: codecov/test-results-action@v1
         with:
           files: junit-report.xml
-          flags: e2e,${{ matrix.os }},node-${{ matrix.node }},${{ matrix.packageManager }}
-          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: e2e,${{ matrix.os }},node-${{ matrix.node }}
+          use_oidc: true
 
   complete:
     if: ${{ github.event_name == 'pull_request' && always() }}

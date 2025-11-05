@@ -1,11 +1,11 @@
-import { planCommand } from '@/src/cli/bases/task-module.js';
+import { planCommand } from '@/src/cli/bases/job-module.js';
 import { run } from '@/src/cli/commands.js';
+import type { ScriptWorkflow$ } from '@/src/cli/jobs/run-script$.js';
 import { withLogger } from '@/src/cli/middlewares/logger.js';
 import { loadWorkspace, withWorkspace, type WorkspaceArgs } from '@/src/cli/middlewares/workspace.js';
 import type { Workspace } from '@/src/projects/workspace.js';
 import { TestBed } from '@/tools/test-bed.js';
-import { TestScriptTask } from '@/tools/test-tasks.js';
-import type { TaskSet } from '@jujulego/tasks';
+import { type Job$, workflow$ } from '@jujulego/tasks';
 import { globalScope$ } from '@kyrielle/injector';
 import { pipe$, var$ } from 'kyrielle';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -16,7 +16,7 @@ vi.mock('@/src/cli/middlewares/workspace.js');
 
 // Setup
 let bed: TestBed;
-let task: TestScriptTask;
+let job: ScriptWorkflow$;
 let workspace: Workspace;
 
 beforeEach(() => {
@@ -24,12 +24,12 @@ beforeEach(() => {
 
   bed = new TestBed();
   workspace = bed.addWorkspace('test');
-  task = new TestScriptTask(workspace, 'vitest', []);
+  job = workflow$({ label: 'vitest', onOrchestrate: vi.fn() }) as ScriptWorkflow$;
 
   vi.mocked(withWorkspace).mockImplementation((argv) => argv as Argv<WorkspaceArgs>);
   vi.mocked(loadWorkspace).mockResolvedValue(workspace);
 
-  vi.spyOn(workspace, 'run').mockResolvedValue(task);
+  vi.spyOn(workspace, 'run').mockResolvedValue(job);
 });
 
 afterEach(() => {
@@ -39,12 +39,12 @@ afterEach(() => {
 // Tests
 describe('jill run', () => {
   it('should run script in loaded workspace', async () => {
-    const tasks$ = var$<TaskSet>();
+    const job$ = var$<Job$>();
 
-    await pipe$(yargs(), withLogger, planCommand(run, tasks$))
+    await pipe$(yargs(), withLogger, planCommand(run, job$))
       .parseAsync('run test');
 
-    expect(tasks$.defer()?.tasks).toStrictEqual([task]);
+    expect(job$.defer()).toStrictEqual(job);
     expect(workspace.run).toHaveBeenCalledWith('test', [], { buildDeps: 'all', buildScript: 'build' });
   });
 
