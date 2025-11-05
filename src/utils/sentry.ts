@@ -37,7 +37,7 @@ export function traceAsyncGenerator<T, R, N>(name: string, generator: AsyncGener
 }
 
 export function traceImport<M>(name: string, loader: () => Promise<M>): Promise<M> {
-  return startSpan({ name: `load ${name}`, op: 'resource.script' }, loader);
+  return startSpan({ name: name, op: 'resource.script' }, loader);
 }
 
 // Types
