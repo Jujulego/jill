@@ -108,7 +108,7 @@ const command: JobModule<EachArgs> = {
     ));
     workspaces.sort((a, b) => a.name.localeCompare(b.name));
 
-    if (workspaces.lenght === 0) {
+    if (workspaces.length === 0) {
       return;
     }
     
