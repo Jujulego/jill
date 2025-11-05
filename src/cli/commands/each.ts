@@ -108,6 +108,10 @@ const command: JobModule<EachArgs> = {
     ));
     workspaces.sort((a, b) => a.name.localeCompare(b.name));
 
+    if (workspaces.lenght === 0) {
+      return;
+    }
+    
     // Prepare tasks
     const flow = parallelFlow$({ label: '[hidden]' });
 
