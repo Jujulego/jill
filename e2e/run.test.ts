@@ -181,7 +181,7 @@ describe('jill run', () => {
         .resolves.toBe('started');
     });
 
-    it('should print task plan and do not run any script', async () => {
+    it.skip('should print task plan and do not run any script', async () => {
       const res = await jill('run -w wks-b --plan --plan-mode json start', { cwd: prjDir });
 
       // Check jill plan

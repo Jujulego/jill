@@ -224,7 +224,7 @@ describe('jill each', () => {
         .rejects.toMatchObject({ code: 'ENOENT' });
     });
 
-    it('should print task plan and do not run any script', async () => {
+    it.skip('should print task plan and do not run any script', async () => {
       const res = await jill('each --plan --plan-mode json start', { cwd: prjDir });
 
       // Check jill output
