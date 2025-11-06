@@ -208,7 +208,6 @@ jobs:
         with:
           node-version: 24.x
           registry-url: https://registry.npmjs.org
-          cache: yarn
 
       - name: Download build artifacts
         uses: actions/download-artifact@v6.0.0
