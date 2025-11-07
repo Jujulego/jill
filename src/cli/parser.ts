@@ -2,7 +2,7 @@ import type { Job$ } from '@jujulego/tasks';
 import { type Mutator, pipe$ } from 'kyrielle';
 import yargs from 'yargs';
 import { version } from '../../package.json' with { type: 'json' };
-import { command } from './bases/command-module.js';
+import { command } from './bases/command.js';
 import { executeCommand, planCommand } from './bases/job-module.js';
 import * as commands from './commands.js';
 import { withConfig } from './middlewares/config.js';

@@ -7,7 +7,7 @@ import { LOGGER } from '../../tokens.js';
 import { trace, traceImport } from '../../utils/sentry.js';
 import type { Awaitable } from '../../utils/types.js';
 import type { LoggerArgs } from '../middlewares/logger.js';
-import { command, commandName } from './command-module.js';
+import { command, commandName } from './command.js';
 
 // Module
 export interface JobModule<T extends PlanModeArgs = PlanModeArgs> extends Omit<CommandModule<PlanModeArgs, T>, 'builder' | 'handler'> {

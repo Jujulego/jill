@@ -1,11 +1,10 @@
-import { isWorkloadEnded, spawn$, type SpawnJob$, type SpawnProps, type TaskContext } from '@jujulego/tasks';
+import { isWorkloadEnded, spawn$, type SpawnJob$, type SpawnProps } from '@jujulego/tasks';
 import { inject$ } from '@kyrielle/injector';
 import type { Logger } from '@kyrielle/logger';
 import { collect$, filter$, map$, pipe$, waitFor$ } from 'kyrielle';
 import { text } from 'node:stream/consumers';
 import { LOGGER, SCHEDULER } from '../../tokens.js';
 import { instrument } from '../../utils/sentry.js';
-import type { TaskUIContext } from '../../utils/types.js';
 import { ClientError } from '../utils/errors.js';
 
 export class GitService {
@@ -100,10 +99,6 @@ export class GitService {
 }
 
 // Types
-export interface GitContext extends TaskContext, TaskUIContext {
-  command: string;
-}
-
 export interface GitOptions extends SpawnProps {
   readonly logger?: Logger;
 }
