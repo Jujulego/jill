@@ -219,7 +219,7 @@ jobs:
         # language=Bash
         run: |
           name=$(jq -j ".name" package.json)
-          version=$(npm view @jujulego/jill@${{ github.ref_name }} version)
+          version=$(npm view $name@${{ github.ref_name }} version)
           
           if [[ "$version" == "$(jq -j ".version" package.json)" ]]; then
             echo "::notice::$version already exists in npm registry"
