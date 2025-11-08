@@ -3,8 +3,8 @@ import { Text, type TextProps } from 'ink';
 import Spinner from 'ink-spinner';
 import { useMemo } from 'react';
 import * as symbols from '../../utils/symbols.js';
-import type { FlatTreeWorkload } from '../hooks/useWorkflowFlatTree.js';
 import { useScriptsStats } from '../hooks/useScriptsStats.js';
+import type { FlatTreeWorkload } from '../utils/flat-tree.js';
 
 // Component
 export default function WorkloadTreeStats({ tree, ...rest }: WorkloadTreeStatsProps) {
