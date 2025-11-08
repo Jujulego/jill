@@ -30,7 +30,7 @@ export function buildTree(workload: Workload$, verbose = false) {
       const children = [...item.workload.workloads()].reverse();
 
       for (const workload of children) {
-        stack.push({ workload, level });
+        stack.push({ workload, workflow: item.workload, level });
       }
     }
   }
@@ -80,6 +80,7 @@ function isWorkflow(workload: Workload$): workload is Workflow$ {
 
 // Types
 export interface FlatTreeWorkload {
-  readonly workload: Workload$;
   readonly level: number;
+  readonly workflow?: Workflow$;
+  readonly workload: Workload$;
 }

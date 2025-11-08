@@ -7,6 +7,7 @@ import { LOGGER } from '../../tokens.js';
 import { trace, traceImport } from '../../utils/sentry.js';
 import type { Awaitable } from '../../utils/types.js';
 import type { LoggerArgs } from '../middlewares/logger.js';
+import { printPlan } from '../utils/plan.js';
 import { command, commandName } from './command.js';
 
 // Module
@@ -43,24 +44,22 @@ export function executeCommand<T extends LoggerArgs, U extends PlanModeArgs>(mod
     async handler(args) {
       const job = await prepare(args) ?? null;
 
+      if (!job) {
+        const logger = inject$(LOGGER);
+        logger.warning('No task found');
+        process.exitCode = 1;
+
+        return;
+      }
+
       if (args.plan) {
-        // TODO: print jobs
-        // if (args.planMode === 'json') {
-        //   printJson(Array.from(plan(tasks)));
-        // } else {
-        //   const { default: TaskPlanInk } = await traceImport('TaskPlanInk', () => import('./task-plan.ink.jsx'));
-        //   await TaskPlanInk({ tasks });
-        // }
+        printPlan(job);
       } else {
         if (execute) {
           await execute(args, job);
-        } else if (job) {
+        } else {
           const { default: JobExecInk } = await traceImport('JobExecInk', () => import('./job-exec.ink.jsx'));
           await JobExecInk({ job, verbose: ['verbose', 'debug'].includes(args.verbose) });
-        } else {
-          const logger = inject$(LOGGER);
-          logger.warning('No task found');
-          process.exitCode = 1;
         }
       }
     }
