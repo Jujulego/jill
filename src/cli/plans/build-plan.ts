@@ -1,15 +1,18 @@
-import type { Workload$ } from '@jujulego/tasks';
+import type { Job$, Workload$ } from '@jujulego/tasks';
 import { buildTree, type FlatTreeWorkload } from '../utils/flat-tree.js';
 
 export function buildPlan(job: Workload$): PlanItem[] {
   const tree = buildTree(job, true);
-  const plan: PlanItem[] = [];
 
+  const index = new Map(tree.map((item, idx) => [item.workload.id, idx + 1]));
+  const plan: PlanItem[] = [];
   let branch = '';
 
   for (let i = 0; i < tree.length; i++) {
-    let branchContinue = false;
     const item = tree[i];
+
+    // Check if branch continues
+    let branchContinue = false;
 
     for (let j = i + 1; j < tree.length; j++) {
       if (tree[j].level <= item.level) {
@@ -21,38 +24,51 @@ export function buildPlan(job: Workload$): PlanItem[] {
       }
     }
 
+    // Compute dependencies
+    const dependsOn: number[] = [];
+
+    if (isJob(item.workload)) {
+      for (const dep of item.workload.dependencies()) {
+        const idx = index.get(dep.id);
+
+        if (idx) {
+          dependsOn.push(idx);
+        }
+      }
+    }
+
+    // Update branch
     if (branch.length / 3 > item.level) {
       branch = branch.slice(0, branch.length - 3);
     }
 
     if (item.level > 0 && branch.length / 3 === item.level) {
       branch = branch.slice(0, branch.length - 3);
+    }
 
+    if (branch.length / 3 < item.level) {
       if (branchContinue) {
-        plan.push({ ...item, id: i + 1, branch: branch + '├─ ' });
+        plan.push({ ...item, id: i + 1, branch: branch + '├─ ', dependsOn });
         branch += '│  ';
       } else {
-        plan.push({ ...item, id: i + 1, branch: branch + '└─ ' });
-        branch += '   ';
-      }
-    } else if (branch.length / 3 < item.level) {
-      if (branchContinue) {
-        plan.push({ ...item, id: i + 1, branch: branch + '├─ ' });
-        branch += '│  ';
-      } else {
-        plan.push({ ...item, id: i + 1, branch: branch + '└─ ' });
+        plan.push({ ...item, id: i + 1, branch: branch + '└─ ', dependsOn });
         branch += '   ';
       }
     } else {
-      plan.push({ ...item, id: i + 1, branch });
+      plan.push({ ...item, id: i + 1, branch, dependsOn });
     }
   }
 
   return plan;
 }
 
+function isJob(workload: Workload$): workload is Job$ {
+  return 'dependencies' in workload && typeof workload.dependencies === 'function';
+}
+
 // Types
 interface PlanItem extends FlatTreeWorkload {
   readonly id: number;
   readonly branch: string;
+  readonly dependsOn: number[];
 }
