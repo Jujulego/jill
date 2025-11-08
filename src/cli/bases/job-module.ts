@@ -7,7 +7,6 @@ import { LOGGER } from '../../tokens.js';
 import { trace, traceImport } from '../../utils/sentry.js';
 import type { Awaitable } from '../../utils/types.js';
 import type { LoggerArgs } from '../middlewares/logger.js';
-import { printPlan } from '../utils/plan.js';
 import { command, commandName } from './command.js';
 
 // Module
@@ -53,6 +52,7 @@ export function executeCommand<T extends LoggerArgs, U extends PlanModeArgs>(mod
       }
 
       if (args.plan) {
+        const { printPlan } = await traceImport('printPlan', () => import('../plans/print-plan.js'));
         printPlan(job);
       } else {
         if (execute) {

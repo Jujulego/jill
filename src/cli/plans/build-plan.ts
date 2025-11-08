@@ -1,24 +1,7 @@
 import type { Workload$ } from '@jujulego/tasks';
-import chalk from 'chalk';
-import process from 'node:process';
-import { buildTree, type FlatTreeWorkload } from './flat-tree.js';
+import { buildTree, type FlatTreeWorkload } from '../utils/flat-tree.js';
 
-export function printPlan(job: Workload$) {
-  const plan = buildPlan(job);
-
-  const idLength = Math.ceil(Math.log10(plan.length));
-  const treeDepth = plan.reduce((max, item) => Math.max(item.branch.length, max), 0) + 1 + idLength;
-
-  process.stdout.write(`${''.padEnd(treeDepth, ' ')} ${chalk.bold('Job')}\n`);
-
-  for (const item of plan) {
-    const branch = `${item.branch}#${item.id.toString().padStart(idLength, '0')}`;
-
-    process.stdout.write(`${branch.padEnd(treeDepth, ' ')} ${item.workload.label}\n`);
-  }
-}
-
-function buildPlan(job: Workload$): PlanItem[] {
+export function buildPlan(job: Workload$): PlanItem[] {
   const tree = buildTree(job, true);
   const plan: PlanItem[] = [];
 
