@@ -2,7 +2,7 @@ import { qjson } from '@jujulego/quick-tag';
 import { asyncScope$, inject$ } from '@kyrielle/injector';
 import { withLabel } from '@kyrielle/logger';
 import Ajv from 'ajv';
-import { var$, type Ref, type Observable } from 'kyrielle';
+import { type Observable, type Ref, var$ } from 'kyrielle';
 import os from 'node:os';
 import path from 'node:path';
 import process from 'node:process';
@@ -10,9 +10,6 @@ import { CWD, LOGGER } from '../tokens.js';
 import { ConfigExplorer } from './config-explorer.js';
 import schema from './schema.json' with { type: 'json' };
 import type { Config } from './types';
-
-// Constants
-const CPU_COUNT = os.cpus().length;
 
 /**
  * Loads and make configuration accessible
@@ -57,7 +54,7 @@ export class ConfigService {
 
     // Correct jobs value
     if (config.jobs <= 0) {
-      Object.assign(config, { jobs: Math.max(CPU_COUNT - 1, 1) });
+      Object.assign(config, { jobs: Math.max(os.availableParallelism() - 1, 1) });
     }
 
     this._logger.debug`loaded config:\n${qjson(config, { pretty: true })}`;

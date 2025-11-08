@@ -1,11 +1,11 @@
-import type { Job$, SpawnJob$, TaskOptions } from '@jujulego/tasks';
+import type { Job$, SpawnJob$ } from '@jujulego/tasks';
 import { asyncScope$, inject$ } from '@kyrielle/injector';
 import { type Logger, withLabel } from '@kyrielle/logger';
 import path from 'node:path';
 import type { Package } from 'normalize-package-data';
 import { satisfies } from 'semver';
 import { command$ } from '../cli/jobs/command$.js';
-import { runScript$, type ScriptWorkflow$ } from '../cli/jobs/run-script$.js';
+import { runScript$, type RunScriptOpts, type ScriptWorkflow$ } from '../cli/jobs/run-script$.js';
 import { GitService } from '../cli/services/git.service.js';
 import { CONFIG, LOGGER } from '../tokens.js';
 import { combine } from '../utils/streams.js';
@@ -210,7 +210,7 @@ export class Workspace {
 // Types
 export type WorkspaceDepsMode = 'all' | 'prod' | 'none';
 
-export interface WorkspaceRunOptions extends Omit<TaskOptions, 'logger'> {
+export interface WorkspaceRunOptions extends Omit<RunScriptOpts, 'logger'> {
   readonly buildDeps?: WorkspaceDepsMode;
   readonly buildScript?: string;
 }

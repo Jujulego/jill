@@ -3,7 +3,7 @@ import { inject$ } from '@kyrielle/injector';
 import { withLabel } from '@kyrielle/logger';
 import moo from 'moo';
 import type { Workspace, WorkspaceRunOptions } from '../../projects/workspace.js';
-import { TaskExpressionError, TaskSyntaxError } from '../../tasks/errors.js';
+import { TaskExpressionError, TaskSyntaxError } from './errors.js';
 import { LOGGER } from '../../tokens.js';
 import { instrument } from '../../utils/sentry.js';
 

@@ -1,4 +1,4 @@
-import { ClientError } from '../cli/utils/errors.js';
+import { ClientError } from '../utils/errors.js';
 
 export class TaskExpressionError extends ClientError {
   name = 'TaskExpressionError';
