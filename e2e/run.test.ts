@@ -1,5 +1,4 @@
 import { TestBed } from '@/tools/test-bed.js';
-import type { TaskSummary } from '@jujulego/tasks';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileExists, jill } from './utils.js';
@@ -187,7 +186,7 @@ describe('jill run', () => {
       // Check jill plan
       expect(res.code).toBe(0);
 
-      const plan = JSON.parse(res.stdout.join('\n')) as TaskSummary[];
+      const plan = JSON.parse(res.stdout.join('\n')) as { id: string }[];
       expect(plan).toHaveLength(4);
 
       expect(plan[0]).toMatchObject({

@@ -1,5 +1,4 @@
 import { TestBed } from '@/tools/test-bed.js';
-import type { TaskSummary } from '@jujulego/tasks';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
@@ -230,7 +229,7 @@ describe('jill each', () => {
       // Check jill output
       expect(res.code).toBe(0);
 
-      const plan = JSON.parse(res.stdout.join('\n')) as TaskSummary[];
+      const plan = JSON.parse(res.stdout.join('\n')) as { id: string }[];
       expect(plan).toHaveLength(8);
 
       expect(plan[0]).toMatchObject({
