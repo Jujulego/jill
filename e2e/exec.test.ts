@@ -114,10 +114,10 @@ describe('jill exec', () => {
       expect(res.code).toBe(0);
 
       expect(res.screen.screen).toMatchLines([
-        expect.ignoreColor(/^ {7}Job {74}Depends on$/),
+        expect.ignoreColor(/^ {7}Job( {74}| {64})Depends on$/),
         expect.ignoreColor(/^#1 {5}build *$/),
         expect.ignoreColor(/^└─ #2 {2}(yarn exec )?node -e "require\('node:fs'\)\.writeFileSync\('script\.txt', 'build'\)" *$/),
-        expect.ignoreColor(/^#3 {5}(yarn exec )?node -e "require\('node:fs'\)\.writeFileSync\('script.txt', 'node'\)"( {3}| {13})#1$/),
+        expect.ignoreColor(/^#3 {5}(yarn exec )?node -e "require\('node:fs'\)\.writeFileSync\('script.txt', 'node'\)" {3}#1$/),
       ]);
 
       await expect(fileExists(path.join(prjDir, 'wks-c', 'script.txt'))).resolves.toBe(false);
