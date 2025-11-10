@@ -33,7 +33,10 @@ export function jill(args: string, opts: SpawnOptions = {}): Promise<SpawnResult
     const proc = cp.fork(JILL, argv, {
       cwd: opts.cwd,
       stdio: 'overlapped',
-      env: process.env
+      env: {
+        ...process.env,
+        FORCE_COLOR: '1',
+      }
     });
 
     // Gather result
