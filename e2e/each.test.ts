@@ -80,7 +80,6 @@ describe('jill each', () => {
 
       // Check jill output
       expect(res.code).toBe(0);
-
       expect(res.screen.screen).toMatchLines([
         expect.ignoreColor(/^. Run build script in wks-b \(took [0-9.]+m?s\)$/),
         expect.ignoreColor(/^. Run build script in wks-c \(took [0-9.]+m?s\)$/),
@@ -108,7 +107,6 @@ describe('jill each', () => {
 
       // Check jill output
       expect(res.code).toBe(0);
-
       expect(res.screen.screen).toMatchLines([
         expect.ignoreColor(/^. Run build script in wks-c \(took [0-9.]+m?s\)$/),
         expect.ignoreColor(/^. In sequence \(took [0-9.]+m?s\)$/),
@@ -142,7 +140,6 @@ describe('jill each', () => {
 
       // Check jill output
       expect(res.code).toBe(0);
-
       expect(res.screen.screen).toMatchLines([
         expect.ignoreColor(/^. Run build script in wks-c \(took [0-9.]+m?s\)$/),
         expect.ignoreColor(/^. Run hooked script in wks-b \(took [0-9.]+m?s\)$/),
@@ -178,7 +175,6 @@ describe('jill each', () => {
 
       // Check jill output
       expect(res.code).toBe(1);
-
       expect(res.screen.screen).toMatchLines([
         expect.ignoreColor(/^. Run build script in wks-c \(took [0-9.]+m?s\)$/),
         expect.ignoreColor(/^. Run fails script in wks-b \(took [0-9.]+m?s\)$/),

@@ -67,7 +67,6 @@ describe('jill run', () => {
 
       // Check jill output
       expect(res.code).toBe(0);
-
       expect(res.screen.screen).toMatchLines([
         expect.ignoreColor(/^. Run start script in wks-c \(took [0-9.]+m?s\)$/),
         expect.ignoreColor(/^. 1 done$/),
@@ -83,7 +82,6 @@ describe('jill run', () => {
 
       // Check jill output
       expect(res.code).toBe(0);
-
       expect(res.screen.screen).toMatchLines([
         expect.ignoreColor(/^. In sequence \(took [0-9.]+m?s\)$/),
         expect.ignoreColor(/^ {2}. Run build script in wks-c \(took [0-9.]+m?s\)$/),
@@ -104,7 +102,6 @@ describe('jill run', () => {
 
       // Check jill output
       expect(res.code).toBe(0);
-
       expect(res.screen.screen).toMatchLines([
         expect.ignoreColor(/^. Run hooked script in wks-c \(took [0-9.]+m?s\)$/),
         expect.ignoreColor(/^. 1 done$/),
@@ -126,7 +123,6 @@ describe('jill run', () => {
 
       // Check jill output
       expect(res.code).toBe(1);
-
       expect(res.screen.screen).toMatchLines([
         expect.ignoreColor(/^. Run fails script in wks-c \(took [0-9.]+m?s\)$/),
         expect.ignoreColor(/^ {2}.( yarn exec)? node -e "process.exit\(1\)" \(took [0-9.]+m?s\)$/),
@@ -139,7 +135,6 @@ describe('jill run', () => {
 
       // Check jill output
       expect(res.code).toBe(1);
-
       expect(res.screen.screen).toMatchLines([
         expect.ignoreColor(/^. In sequence \(took [0-9.]+m?s\)$/),
         expect.ignoreColor(/^ {2}. Run build script in wks-c \(took [0-9.]+m?s\)$/),
@@ -165,7 +160,6 @@ describe('jill run', () => {
 
       // Check jill output
       expect(res.code).toBe(0);
-
       expect(res.screen.screen).toMatchLines([
         expect.ignoreColor(/^. Run build script in wks-c \(took [0-9.]+m?s\)$/),
         expect.ignoreColor(/^. Run start script in wks-b \(took [0-9.]+m?s\)$/),
@@ -261,7 +255,6 @@ describe('jill run', () => {
 
       // Check jill output
       expect(res.code).toBe(0);
-
       expect(res.screen.screen).toMatchLines([
         expect.ignoreColor(/^. Run start script in wks-c \(took [0-9.]+m?s\)$/),
         expect.ignoreColor(/^. 1 done$/),

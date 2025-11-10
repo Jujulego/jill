@@ -1,0 +1,15 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`jill list > using npm > should print a long list of all workspaces 1`] = `
+"main   1.0.0  .
+wks-a  1.0.0  wks-a
+wks-b  1.0.0  wks-b
+wks-c  1.0.0  wks-c"
+`;
+
+exports[`jill list > using yarn > should print a long list of all workspaces 1`] = `
+"main   1.0.0  .
+wks-a  1.0.0  wks-a
+wks-b  1.0.0  wks-b
+wks-c  1.0.0  wks-c"
+`;

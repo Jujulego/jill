@@ -3,8 +3,10 @@
     <node-interpreter value="project" />
     <vitest-package value="yarn:package.json:vitest" />
     <working-dir value="$PROJECT_DIR$" />
-    <vitest-options value="--run" />
-    <envs />
+    <vitest-options value="--run --no-file-parallelism" />
+    <envs>
+      <env name="SENTRY_ENVIRONMENT" value="local" />
+    </envs>
     <scope-kind value="DIRECTORY" />
     <test-directory value="$PROJECT_DIR$/e2e" />
     <method v="2" />

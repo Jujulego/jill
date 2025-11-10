@@ -55,7 +55,6 @@ describe('jill exec', () => {
 
       // Check jill output
       expect(res.code).toBe(0);
-
       expect(res.screen.screen).toMatchLines(['']);
 
       // Check script result
@@ -68,7 +67,6 @@ describe('jill exec', () => {
 
       // Check jill output
       expect(res.code).toBe(0);
-
       expect(res.screen.screen).toMatchLines(['toto']);
     });
 
@@ -101,7 +99,6 @@ describe('jill exec', () => {
 
       // Check jill output
       expect(res.code).toBe(0);
-
       expect(res.screen.screen).toMatchLines([
         expect.ignoreColor(/^. Build dependencies \(took [0-9.]+m?s\)$/),
         expect.ignoreColor(/^ {2}. Run build script in wks-c \(took [0-9.]+m?s\)$/),
