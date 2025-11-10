@@ -82,7 +82,7 @@ async function planScript$(
 
   return command$(workspace, command, [...commandArgs, ...args], {
     logger: opts.logger,
-    superCommand: pm === 'yarn' ? ['yarn', 'exec'] : undefined,
+    superCommand: pm === 'yarn' && command !== 'yarn' ? ['yarn', 'exec'] : undefined,
   });
 }
 

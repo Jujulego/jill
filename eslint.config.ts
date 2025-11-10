@@ -2,9 +2,9 @@ import eslint from '@eslint/js';
 import vitest from '@vitest/eslint-plugin';
 import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
+import { defineConfig, globalIgnores } from 'eslint/config';
 import globals from 'globals';
 import tsEslint from 'typescript-eslint';
-import { defineConfig, globalIgnores } from 'eslint/config';
 
 export default defineConfig(
   globalIgnores(['.pnp.*', '.yarn', 'coverage', 'dist']),

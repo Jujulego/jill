@@ -54,7 +54,7 @@ describe('jill run', () => {
     beforeEach(async (ctx) => {
       prjDir = path.join(tmpDir, ctx.task.id);
 
-      await fs.cp(baseDir, prjDir, { force: true, recursive: true });
+      await fs.cp(baseDir, prjDir, { force: true, recursive: true, dereference: process.platform === 'win32' });
     });
 
     afterAll(async () => {
@@ -67,7 +67,6 @@ describe('jill run', () => {
 
       // Check jill output
       expect(res.code).toBe(0);
-
       expect(res.screen.screen).toMatchLines([
         expect.ignoreColor(/^. Run start script in wks-c \(took [0-9.]+m?s\)$/),
         expect.ignoreColor(/^. 1 done$/),
@@ -83,7 +82,6 @@ describe('jill run', () => {
 
       // Check jill output
       expect(res.code).toBe(0);
-
       expect(res.screen.screen).toMatchLines([
         expect.ignoreColor(/^. In sequence \(took [0-9.]+m?s\)$/),
         expect.ignoreColor(/^ {2}. Run build script in wks-c \(took [0-9.]+m?s\)$/),
@@ -104,7 +102,6 @@ describe('jill run', () => {
 
       // Check jill output
       expect(res.code).toBe(0);
-
       expect(res.screen.screen).toMatchLines([
         expect.ignoreColor(/^. Run hooked script in wks-c \(took [0-9.]+m?s\)$/),
         expect.ignoreColor(/^. 1 done$/),
@@ -126,7 +123,6 @@ describe('jill run', () => {
 
       // Check jill output
       expect(res.code).toBe(1);
-
       expect(res.screen.screen).toMatchLines([
         expect.ignoreColor(/^. Run fails script in wks-c \(took [0-9.]+m?s\)$/),
         expect.ignoreColor(/^ {2}.( yarn exec)? node -e "process.exit\(1\)" \(took [0-9.]+m?s\)$/),
@@ -139,7 +135,6 @@ describe('jill run', () => {
 
       // Check jill output
       expect(res.code).toBe(1);
-
       expect(res.screen.screen).toMatchLines([
         expect.ignoreColor(/^. In sequence \(took [0-9.]+m?s\)$/),
         expect.ignoreColor(/^ {2}. Run build script in wks-c \(took [0-9.]+m?s\)$/),
@@ -165,7 +160,6 @@ describe('jill run', () => {
 
       // Check jill output
       expect(res.code).toBe(0);
-
       expect(res.screen.screen).toMatchLines([
         expect.ignoreColor(/^. Run build script in wks-c \(took [0-9.]+m?s\)$/),
         expect.ignoreColor(/^. Run start script in wks-b \(took [0-9.]+m?s\)$/),
@@ -180,7 +174,18 @@ describe('jill run', () => {
         .resolves.toBe('started');
     });
 
-    it.skip('should print task plan and do not run any script', async () => {
+    it('should print task plan and do not run any script', async () => {
+      const res = await jill('run -w wks-b --plan --plan-mode json start', { cwd: prjDir });
+
+      // Check jill plan
+      expect(res.code).toBe(0);
+      expect(res.screen.screen).toMatchSnapshot();
+
+      await expect(fileExists(path.join(prjDir, 'wks-c', 'build.txt'))).resolves.toBe(false);
+      await expect(fileExists(path.join(prjDir, 'wks-b', 'start.txt'))).resolves.toBe(false);
+    });
+
+    it.skip('should print task plan in json and do not run any script', async () => {
       const res = await jill('run -w wks-b --plan --plan-mode json start', { cwd: prjDir });
 
       // Check jill plan
@@ -250,7 +255,6 @@ describe('jill run', () => {
 
       // Check jill output
       expect(res.code).toBe(0);
-
       expect(res.screen.screen).toMatchLines([
         expect.ignoreColor(/^. Run start script in wks-c \(took [0-9.]+m?s\)$/),
         expect.ignoreColor(/^. 1 done$/),

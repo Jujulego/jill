@@ -32,7 +32,7 @@ describe('jill tree', () => {
 
     beforeEach(async (ctx) => {
       prjDir = path.join(tmpDir, ctx.task.id);
-      await fs.cp(baseDir, prjDir, { force: true, recursive: true });
+      await fs.cp(baseDir, prjDir, { force: true, recursive: true, dereference: process.platform === 'win32' });
     });
 
     afterAll(async () => {
@@ -43,29 +43,20 @@ describe('jill tree', () => {
     it('should print current workspace dependency tree', async () => {
       const res = await jill('tree', { cwd: prjDir });
 
-      expect(res.screen.screen).toEqualLines([
-        expect.ignoreColor('main@1.0.0'),
-      ]);
+      expect(res.screen.screen).toMatchSnapshot();
     });
 
     it('should print given workspace dependency tree', async () => {
       const res = await jill('tree -w wks-a', { cwd: prjDir });
 
-      expect(res.screen.screen).toEqualLines([
-        expect.ignoreColor('wks-a@1.0.0'),
-        expect.ignoreColor('├─ wks-b@1.0.0'),
-        expect.ignoreColor('│  └─ wks-c@1.0.0'),
-        expect.ignoreColor('└─ wks-c@1.0.0'),
-      ]);
+      expect(res.screen.screen).toMatchSnapshot();
     });
 
     it('should work without config file', async () => {
       await fs.rm(path.join(prjDir, '.jillrc.json'));
       const res = await jill('tree', { cwd: prjDir });
 
-      expect(res.screen.screen).toEqualLines([
-        expect.ignoreColor('main@1.0.0'),
-      ]);
+      expect(res.screen.screen).toMatchSnapshot();
     });
   });
 }, 10000);

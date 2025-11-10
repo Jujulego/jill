@@ -1,0 +1,23 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`jill tree > using npm > should print current workspace dependency tree 1`] = `"main[90m@1.0.0[39m"`;
+
+exports[`jill tree > using npm > should print given workspace dependency tree 1`] = `
+"wks-a[90m@1.0.0[39m
+├─ wks-b[90m@1.0.0[39m
+│  └─ [34mwks-c[90m@1.0.0[39m
+└─ [34mwks-c[90m@1.0.0[39m"
+`;
+
+exports[`jill tree > using npm > should work without config file 1`] = `"main[90m@1.0.0[39m"`;
+
+exports[`jill tree > using yarn > should print current workspace dependency tree 1`] = `"main[90m@1.0.0[39m"`;
+
+exports[`jill tree > using yarn > should print given workspace dependency tree 1`] = `
+"wks-a[90m@1.0.0[39m
+├─ wks-b[90m@1.0.0[39m
+│  └─ [34mwks-c[90m@1.0.0[39m
+└─ [34mwks-c[90m@1.0.0[39m"
+`;
+
+exports[`jill tree > using yarn > should work without config file 1`] = `"main[90m@1.0.0[39m"`;

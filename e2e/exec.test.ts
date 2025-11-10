@@ -39,7 +39,7 @@ describe('jill exec', () => {
     beforeEach(async (ctx) => {
       prjDir = path.join(tmpDir, ctx.task.id);
 
-      await fs.cp(baseDir, prjDir, { force: true, recursive: true });
+      await fs.cp(baseDir, prjDir, { force: true, recursive: true, dereference: process.platform === 'win32' });
     });
 
     afterAll(async () => {
@@ -48,11 +48,13 @@ describe('jill exec', () => {
 
     // Tests
     it('should run node in wks-c', async () => {
-      const res = await jill('exec -w wks-c node -e "require(\'node:fs\').writeFileSync(\'script.txt\', \'node\')"', { cwd: prjDir, keepQuotes: true });
+      const res = await jill('exec -w wks-c node -e "require(\'node:fs\').writeFileSync(\'script.txt\', \'node\')"', {
+        cwd: prjDir,
+        keepQuotes: true
+      });
 
       // Check jill output
       expect(res.code).toBe(0);
-
       expect(res.screen.screen).toMatchLines(['']);
 
       // Check script result
@@ -65,12 +67,14 @@ describe('jill exec', () => {
 
       // Check jill output
       expect(res.code).toBe(0);
-
       expect(res.screen.screen).toMatchLines(['toto']);
     });
 
     it('should be the default command', async () => {
-      const res = await jill('-w wks-c node -e "require(\'node:fs\').writeFileSync(\'script.txt\', \'node\')"', { cwd: prjDir, keepQuotes: true });
+      const res = await jill('-w wks-c node -e "require(\'node:fs\').writeFileSync(\'script.txt\', \'node\')"', {
+        cwd: prjDir,
+        keepQuotes: true
+      });
 
       // Check jill output
       expect(res.code).toBe(0);
@@ -88,11 +92,13 @@ describe('jill exec', () => {
     });
 
     it('should run wks-b start script and build script', async () => {
-      const res = await jill('-w wks-b node -e "require(\'node:fs\').writeFileSync(\'script.txt\', \'node\')"', { cwd: prjDir, keepQuotes: true });
+      const res = await jill('-w wks-b node -e "require(\'node:fs\').writeFileSync(\'script.txt\', \'node\')"', {
+        cwd: prjDir,
+        keepQuotes: true
+      });
 
       // Check jill output
       expect(res.code).toBe(0);
-
       expect(res.screen.screen).toMatchLines([
         expect.ignoreColor(/^. Build dependencies \(took [0-9.]+m?s\)$/),
         expect.ignoreColor(/^ {2}. Run build script in wks-c \(took [0-9.]+m?s\)$/),
@@ -107,8 +113,25 @@ describe('jill exec', () => {
         .resolves.toBe('node');
     });
 
-    it.skip('should print task plan and do not run any script', async () => {
-      const res = await jill('-w wks-b --plan --plan-mode json node -e "require(\'node:fs\').writeFileSync(\'script.txt\', \'node\')"', { cwd: prjDir, keepQuotes: true });
+    it('should print task plan and do not run any script', async () => {
+      const res = await jill('-w wks-b --plan node -e "require(\'node:fs\').writeFileSync(\'script.txt\', \'node\')"', {
+        cwd: prjDir,
+        keepQuotes: true
+      });
+
+      // Check jill plan
+      expect(res.code).toBe(0);
+      expect(res.screen.screen).toMatchSnapshot();
+
+      await expect(fileExists(path.join(prjDir, 'wks-c', 'script.txt'))).resolves.toBe(false);
+      await expect(fileExists(path.join(prjDir, 'wks-b', 'script.txt'))).resolves.toBe(false);
+    });
+
+    it.skip('should print task plan in json and do not run any script', async () => {
+      const res = await jill('-w wks-b --plan --plan-mode json node -e "require(\'node:fs\').writeFileSync(\'script.txt\', \'node\')"', {
+        cwd: prjDir,
+        keepQuotes: true
+      });
 
       // Check jill plan
       expect(res.code).toBe(0);
@@ -160,7 +183,10 @@ describe('jill exec', () => {
 
     it('should work without config file', async () => {
       await fs.rm(path.join(prjDir, '.jillrc.json'));
-      const res = await jill('exec -w wks-c node -e "require(\'node:fs\').writeFileSync(\'script.txt\', \'node\')"', { cwd: prjDir, keepQuotes: true });
+      const res = await jill('exec -w wks-c node -e "require(\'node:fs\').writeFileSync(\'script.txt\', \'node\')"', {
+        cwd: prjDir,
+        keepQuotes: true
+      });
 
       // Check jill output
       expect(res.code).toBe(0);

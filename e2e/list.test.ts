@@ -33,7 +33,7 @@ describe('jill list', () => {
 
     beforeEach(async (ctx) => {
       prjDir = path.join(tmpDir, ctx.task.id);
-      await fs.cp(baseDir, prjDir, { force: true, recursive: true });
+      await fs.cp(baseDir, prjDir, { force: true, recursive: true, dereference: process.platform === 'win32' });
     });
 
     afterAll(async () => {
@@ -57,12 +57,7 @@ describe('jill list', () => {
       const res = await jill('list -l', { cwd: prjDir });
 
       expect(res.code).toBe(0);
-      expect(res.screen.screen).toEqualLines([
-        expect.ignoreColor('main   1.0.0  .'),
-        expect.ignoreColor('wks-a  1.0.0  wks-a'),
-        expect.ignoreColor('wks-b  1.0.0  wks-b'),
-        expect.ignoreColor('wks-c  1.0.0  wks-c'),
-      ]);
+      expect(res.screen.screen).toMatchSnapshot();
     });
 
     it('should print a list of all workspaces in json', async () => {
