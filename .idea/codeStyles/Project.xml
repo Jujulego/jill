@@ -9,9 +9,6 @@
       <option name="IMPORT_SORT_MODULE_NAME" value="true" />
       <option name="USE_PATH_MAPPING" value="DIFFERENT_PATHS" />
     </TypeScriptCodeStyleSettings>
-    <editorconfig>
-      <option name="ENABLED" value="false" />
-    </editorconfig>
     <codeStyleSettings language="JavaScript">
       <indentOptions>
         <option name="INDENT_SIZE" value="2" />

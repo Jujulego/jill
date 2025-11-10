@@ -2,8 +2,8 @@
 
 exports[`jill run > using npm > should print task plan and do not run any script 1`] = `
 "[1m       Job                                                                 Depends on[22m
-[1m[22m#1     build
-└─ #2  node -e "require('node:fs').writeFileSync('build.txt', 'built')"
+[1m[22m#1     build                                                               
+└─ #2  node -e "require('node:fs').writeFileSync('build.txt', 'built')"    
 #3     start                                                               #1
 └─ #4  node -e "require('node:fs').writeFileSync('start.txt', 'started')"  "
 `;
