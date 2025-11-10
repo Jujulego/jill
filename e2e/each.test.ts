@@ -67,7 +67,7 @@ describe('jill each', () => {
     beforeEach(async (ctx) => {
       prjDir = path.join(tmpDir, ctx.task.id);
 
-      await fs.cp(baseDir, prjDir, { force: true, recursive: true });
+      await fs.cp(baseDir, prjDir, { force: true, recursive: true, dereference: process.platform === 'win32' });
     });
 
     afterAll(async () => {
@@ -223,7 +223,20 @@ describe('jill each', () => {
         .rejects.toMatchObject({ code: 'ENOENT' });
     });
 
-    it.skip('should print task plan and do not run any script', async () => {
+    it('should print task plan and do not run any script', async () => {
+      const res = await jill('each --plan --plan-mode json start', { cwd: prjDir });
+
+      // Check jill output
+      expect(res.code).toBe(0);
+      expect(res.screen.screen).toMatchSnapshot();
+
+      await expect(fileExists(path.join(prjDir, 'wks-c', 'hook.txt'))).resolves.toBe(false);
+      await expect(fileExists(path.join(prjDir, 'wks-b', 'hook.txt'))).resolves.toBe(false);
+      await expect(fileExists(path.join(prjDir, 'wks-b', 'start.txt'))).resolves.toBe(false);
+      await expect(fileExists(path.join(prjDir, 'wks-a', 'start.txt'))).resolves.toBe(false);
+    });
+
+    it.skip('should print task plan in json and do not run any script', async () => {
       const res = await jill('each --plan --plan-mode json start', { cwd: prjDir });
 
       // Check jill output

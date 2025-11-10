@@ -1,0 +1,25 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`jill each > using npm > should print task plan and do not run any script 1`] = `
+"[1m       Job                                                                 Depends on[22m
+[1m[22m#1     build                                                               #3
+└─ #2  node -e "require('node:fs').writeFileSync('build.txt', 'built')"    
+#3     build                                                               
+└─ #4  node -e "require('node:fs').writeFileSync('build.txt', 'built')"    
+#5     start                                                               #1, #3
+└─ #6  node -e "require('node:fs').writeFileSync('start.txt', 'started')"  
+#7     start                                                               #3
+└─ #8  node -e "require('node:fs').writeFileSync('start.txt', 'started')""
+`;
+
+exports[`jill each > using yarn > should print task plan and do not run any script 1`] = `
+"[1m       Job                                                                           Depends on[22m
+[1m[22m#1     build                                                                         #3
+└─ #2  yarn exec node -e "require('node:fs').writeFileSync('build.txt', 'built')"    
+#3     build                                                                         
+└─ #4  yarn exec node -e "require('node:fs').writeFileSync('build.txt', 'built')"    
+#5     start                                                                         #1, #3
+└─ #6  yarn exec node -e "require('node:fs').writeFileSync('start.txt', 'started')"  
+#7     start                                                                         #3
+└─ #8  yarn exec node -e "require('node:fs').writeFileSync('start.txt', 'started')""
+`;

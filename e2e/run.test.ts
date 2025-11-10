@@ -185,7 +185,6 @@ describe('jill run', () => {
 
       // Check jill plan
       expect(res.code).toBe(0);
-
       expect(res.screen.screen).toMatchSnapshot();
 
       await expect(fileExists(path.join(prjDir, 'wks-c', 'build.txt'))).resolves.toBe(false);
