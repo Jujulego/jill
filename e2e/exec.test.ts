@@ -107,7 +107,24 @@ describe('jill exec', () => {
         .resolves.toBe('node');
     });
 
-    it.skip('should print task plan and do not run any script', async () => {
+    it('should print task plan and do not run any script', async () => {
+      const res = await jill('-w wks-b --plan node -e "require(\'node:fs\').writeFileSync(\'script.txt\', \'node\')"', { cwd: prjDir, keepQuotes: true });
+
+      // Check jill plan
+      expect(res.code).toBe(0);
+
+      expect(res.screen.screen).toMatchLines([
+        expect.ignoreColor(/^ {7}Job {74}Depends on$/),
+        expect.ignoreColor(/^#1 {5}build *$/),
+        expect.ignoreColor(/^└─ #2 {2}(yarn exec )?node -e "require\('node:fs'\)\.writeFileSync\('script\.txt', 'build'\)" *$/),
+        expect.ignoreColor(/^#3 {5}(yarn exec )?node -e "require\('node:fs'\)\.writeFileSync\('script.txt', 'node'\)"( {3}| {13})#1$/),
+      ]);
+
+      await expect(fileExists(path.join(prjDir, 'wks-c', 'script.txt'))).resolves.toBe(false);
+      await expect(fileExists(path.join(prjDir, 'wks-b', 'script.txt'))).resolves.toBe(false);
+    });
+
+    it.skip('should print task plan in json and do not run any script', async () => {
       const res = await jill('-w wks-b --plan --plan-mode json node -e "require(\'node:fs\').writeFileSync(\'script.txt\', \'node\')"', { cwd: prjDir, keepQuotes: true });
 
       // Check jill plan
