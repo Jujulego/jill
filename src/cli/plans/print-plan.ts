@@ -1,5 +1,7 @@
 import type { Workload$ } from '@jujulego/tasks';
 import chalk from 'chalk';
+import { isScriptWorkflow } from '../utils/predicates.js';
+import { capitalize } from '../utils/string.js';
 import { buildPlan } from './build-plan.js';
 
 export function printPlan(job: Workload$, stream: NodeJS.WriteStream = process.stdout) {
@@ -10,12 +12,12 @@ export function printPlan(job: Workload$, stream: NodeJS.WriteStream = process.s
   const hasDependencies = plan.some((item) => item.dependsOn.length > 0);
 
   if (hasDependencies) {
-    const labelLength = plan.reduce((max, item) => Math.max(item.workload.label.length, max), 0);
+    const labelLength = plan.reduce((max, item) => Math.max(workloadLabel(item.workload).length, max), 0);
     stream.write(chalk.bold(`${''.padEnd(branchLength, ' ')}  ${'Job'.padEnd(labelLength, ' ')}  Depends on\n`));
 
     for (const item of plan) {
       const branch = `${item.branch}#${item.id.toString().padStart(idLength, '0')}`.padEnd(branchLength, ' ');
-      const label = item.workload.label.padEnd(labelLength, ' ');
+      const label = workloadLabel(item.workload).padEnd(labelLength, ' ');
       const deps = item.dependsOn.map((id) => '#' + id).join(', ');
 
       stream.write(`${branch}  ${label}  ${deps}\n`);
@@ -26,7 +28,21 @@ export function printPlan(job: Workload$, stream: NodeJS.WriteStream = process.s
     for (const item of plan) {
       const branch = `${item.branch}#${item.id.toString().padStart(idLength, '0')}`.padEnd(branchLength, ' ');
 
-      stream.write(`${branch}  ${item.workload.label}\n`);
+      stream.write(`${branch}  ${workloadLabel(item.workload)}\n`);
     }
   }
+}
+
+function workloadLabel(workload: Workload$): string {
+  if (isScriptWorkflow(workload)) {
+    return `Run ${chalk.bold(workload.script)} script in ${workload.workspace.name}`;
+  }
+
+  let label = workload.label;
+
+  if (workload.type !== 'spawn') {
+    label = capitalize(label);
+  }
+
+  return label;
 }

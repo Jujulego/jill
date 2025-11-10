@@ -39,6 +39,33 @@ describe('printPlan', () => {
     expect(buildPlan).toHaveBeenCalledWith(wkl);
   });
 
+  it('should print spawned command', () => {
+    const wkl = workload$({ label: 'test', type: 'spawn', onStart: vi.fn() });
+
+    vi.mocked(buildPlan).mockReturnValue([
+      { id: 1, branch: '', dependsOn: [], level: 0, workload: wkl }
+    ]);
+
+    printPlan(wkl, stream);
+    expect(screen).toMatchSnapshot();
+
+    expect(buildPlan).toHaveBeenCalledWith(wkl);
+  });
+
+  it('should print spawned script and workspace', () => {
+    const wkl = workload$({ label: 'test', type: 'script', onStart: vi.fn() });
+    Object.assign(wkl, { script: 'script', workspace: { name: 'workspace' } });
+
+    vi.mocked(buildPlan).mockReturnValue([
+      { id: 1, branch: '', dependsOn: [], level: 0, workload: wkl }
+    ]);
+
+    printPlan(wkl, stream);
+    expect(screen).toMatchSnapshot();
+
+    expect(buildPlan).toHaveBeenCalledWith(wkl);
+  });
+
   it('should print plan with dependencies', () => {
     const dep = workload$({ label: 'dep', type: 'test', onStart: vi.fn() });
 
