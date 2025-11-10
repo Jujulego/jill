@@ -2,11 +2,11 @@ import { type Workload$ } from '@jujulego/tasks';
 import { collect$, map$, off$, pipe$ } from 'kyrielle';
 import { createHash } from 'node:crypto';
 import { useEffect, useState } from 'react';
-import { buildTree, type FlatTreeWorkload } from '../utils/flat-tree.js';
+import { buildFlatTree, type FlatTreeWorkload } from '../utils/flat-tree.js';
 
 // Hook
 export function useWorkflowFlatTree(workload: Workload$, verbose?: boolean): FlatTreeWorkload[] {
-  const [tree, setTree] = useState<FlatTreeWorkload[]>(() => buildTree(workload, verbose));
+  const [tree, setTree] = useState<FlatTreeWorkload[]>(() => buildFlatTree(workload, verbose));
 
   useEffect(() => {
     const oldHash = hashTree(tree);
@@ -15,7 +15,7 @@ export function useWorkflowFlatTree(workload: Workload$, verbose?: boolean): Fla
     function update() {
       if (!dirty) return;
 
-      const updated = buildTree(workload, verbose);
+      const updated = buildFlatTree(workload, verbose);
       if (hashTree(updated) !== oldHash) {
         setTree(updated);
       }

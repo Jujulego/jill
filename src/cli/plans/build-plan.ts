@@ -1,8 +1,8 @@
 import type { Job$, Workload$ } from '@jujulego/tasks';
-import { buildTree, type FlatTreeWorkload } from '../utils/flat-tree.js';
+import { buildFlatTree, type FlatTreeWorkload } from '../utils/flat-tree.js';
 
 export function buildPlan(job: Workload$): PlanItem[] {
-  const tree = buildTree(job, true);
+  const tree = buildFlatTree(job, true);
 
   const index = new Map(tree.map((item, idx) => [item.workload.id, idx + 1]));
   const plan: PlanItem[] = [];

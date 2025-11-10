@@ -1,7 +1,7 @@
 import { type Job$, type Workflow$, type Workload$, WorkloadState } from '@jujulego/tasks';
 import { collect$, map$, pipe$ } from 'kyrielle';
 
-export function buildTree(workload: Workload$, verbose = false) {
+export function buildFlatTree(workload: Workload$, verbose = false) {
   const tree: FlatTreeWorkload[] = [];
   const stack: FlatTreeWorkload[] = pipe$(
     listRoots(workload),
