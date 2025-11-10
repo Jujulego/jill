@@ -14,6 +14,7 @@ beforeEach(() => {
 describe('buildPlan', () => {
   it('should return plan with only given workload', () => {
     const wkl = workload$({ label: 'test', type: 'test', onStart: vi.fn() });
+
     vi.mocked(buildFlatTree).mockReturnValue([
       { level: 0, workload: wkl }
     ]);

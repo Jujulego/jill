@@ -1,9 +1,8 @@
 import type { Workload$ } from '@jujulego/tasks';
 import chalk from 'chalk';
-import process from 'node:process';
 import { buildPlan } from './build-plan.js';
 
-export function printPlan(job: Workload$) {
+export function printPlan(job: Workload$, stream: NodeJS.WriteStream = process.stdout) {
   const plan = buildPlan(job);
 
   const idLength = Math.ceil(Math.log10(plan.length));
@@ -12,22 +11,22 @@ export function printPlan(job: Workload$) {
 
   if (hasDependencies) {
     const labelLength = plan.reduce((max, item) => Math.max(item.workload.label.length, max), 0);
-    process.stdout.write(chalk.bold(`${''.padEnd(branchLength, ' ')}  ${'Job'.padEnd(labelLength, ' ')}  Depends on\n`));
+    stream.write(chalk.bold(`${''.padEnd(branchLength, ' ')}  ${'Job'.padEnd(labelLength, ' ')}  Depends on\n`));
 
     for (const item of plan) {
       const branch = `${item.branch}#${item.id.toString().padStart(idLength, '0')}`.padEnd(branchLength, ' ');
       const label = item.workload.label.padEnd(labelLength, ' ');
       const deps = item.dependsOn.map((id) => '#' + id).join(', ');
 
-      process.stdout.write(`${branch}  ${label}  ${deps}\n`);
+      stream.write(`${branch}  ${label}  ${deps}\n`);
     }
   } else {
-    process.stdout.write(chalk.bold(`${''.padEnd(branchLength, ' ')}  Job\n`));
+    stream.write(chalk.bold(`${''.padEnd(branchLength, ' ')}  Job\n`));
 
     for (const item of plan) {
       const branch = `${item.branch}#${item.id.toString().padStart(idLength, '0')}`.padEnd(branchLength, ' ');
 
-      process.stdout.write(`${branch}  ${item.workload.label}\n`);
+      stream.write(`${branch}  ${item.workload.label}\n`);
     }
   }
 }
