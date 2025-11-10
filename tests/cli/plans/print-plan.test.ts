@@ -1,13 +1,18 @@
 import { buildPlan } from '@/src/cli/plans/build-plan.js';
 import { printPlan } from '@/src/cli/plans/print-plan.js';
 import { job$, workflow$, workload$ } from '@jujulego/tasks';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import chalk from 'chalk';
+import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mocks
 let stream: NodeJS.WriteStream;
 let screen = '';
 
 vi.mock('@/src/cli/plans/build-plan.js');
+
+beforeAll(() => {
+  chalk.level = 1;
+});
 
 beforeEach(() => {
   vi.resetAllMocks();
