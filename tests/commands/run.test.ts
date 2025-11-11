@@ -1,9 +1,9 @@
-import { planCommand } from '@/src/cli/bases/job-module.js';
-import { run } from '@/src/cli/commands.js';
 import type { ScriptWorkflow$ } from '@/src/cli/jobs/run-script$.js';
 import { withLogger } from '@/src/cli/middlewares/logger.js';
 import { loadWorkspace, withWorkspace, type WorkspaceArgs } from '@/src/cli/middlewares/workspace.js';
+import { run } from '@/src/commands.js';
 import type { Workspace } from '@/src/projects/workspace.js';
+import { jobCommandPlan } from '@/src/wrappers/job-command-plan.js';
 import { TestBed } from '@/tools/test-bed.js';
 import { type Job$, workflow$ } from '@jujulego/tasks';
 import { globalScope$ } from '@kyrielle/injector';
@@ -41,7 +41,7 @@ describe('jill run', () => {
   it('should run script in loaded workspace', async () => {
     const job$ = var$<Job$>();
 
-    await pipe$(yargs(), withLogger, planCommand(run, job$))
+    await pipe$(yargs(), withLogger, jobCommandPlan(run, job$))
       .parseAsync('run test');
 
     expect(job$.defer()).toStrictEqual(job);
@@ -49,7 +49,7 @@ describe('jill run', () => {
   });
 
   it('should use given dependency selection mode', async () => {
-    await pipe$(yargs(), withLogger, planCommand(run, var$()))
+    await pipe$(yargs(), withLogger, jobCommandPlan(run, var$()))
       .parseAsync('run -d prod test');
 
     expect(workspace.run).toHaveBeenCalledWith('test', [], { buildDeps: 'prod', buildScript: 'build' });
@@ -59,7 +59,7 @@ describe('jill run', () => {
     vi.mocked(workspace.run).mockResolvedValue(null);
 
     await expect(
-      pipe$(yargs(), withLogger, planCommand(run, var$()))
+      pipe$(yargs(), withLogger, jobCommandPlan(run, var$()))
         .exitProcess(false)
         .showHelpOnFail(false)
         .parseAsync('run test')
@@ -67,14 +67,14 @@ describe('jill run', () => {
   });
 
   it('should pass down unknown arguments', async () => {
-    await pipe$(yargs(), withLogger, planCommand(run, var$()))
+    await pipe$(yargs(), withLogger, jobCommandPlan(run, var$()))
       .parseAsync('run test --arg');
 
     expect(workspace.run).toHaveBeenCalledWith('test', ['--arg'], { buildDeps: 'all', buildScript: 'build' });
   });
 
   it('should pass down unparsed arguments', async () => {
-    await pipe$(yargs(), withLogger, planCommand(run, var$()))
+    await pipe$(yargs(), withLogger, jobCommandPlan(run, var$()))
       .parseAsync('run test -- -d toto');
 
     expect(workspace.run).toHaveBeenCalledWith('test', ['-d', 'toto'], { buildDeps: 'all', buildScript: 'build' });

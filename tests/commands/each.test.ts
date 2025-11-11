@@ -1,11 +1,11 @@
-import { planCommand } from '@/src/cli/bases/job-module.js';
-import { each } from '@/src/cli/commands.js';
 import { hasEveryScript$ } from '@/src/cli/filters/has-scripts.js';
 import { isAffected$ } from '@/src/cli/filters/is-affected.js';
 import { isPrivate$ } from '@/src/cli/filters/is-private.js';
 import type { ScriptWorkflow$ } from '@/src/cli/jobs/run-script$.js';
 import { withLogger } from '@/src/cli/middlewares/logger.js';
 import { loadProject, type ProjectArgs, withProject } from '@/src/cli/middlewares/project.js';
+import { each } from '@/src/commands.js';
+import { jobCommandPlan } from '@/src/wrappers/job-command-plan.js';
 import { TestBed } from '@/tools/test-bed.js';
 import { type Job$, type Workflow$, workflow$ } from '@jujulego/tasks';
 import { globalScope$ } from '@kyrielle/injector';
@@ -54,7 +54,7 @@ describe('jill each', () => {
     vi.mocked(hasEveryScript$).mockReturnValue(filter$((wks) => wks !== wksC));
 
     const job$ = var$<Job$>();
-    await pipe$(yargs(), withLogger, planCommand(each, job$)).parseAsync('each test');
+    await pipe$(yargs(), withLogger, jobCommandPlan(each, job$)).parseAsync('each test');
 
     expect(job$.defer()).not.toBeNull();
     expect(job$.defer()!.type).toBe('workflow.parallel');
@@ -81,7 +81,7 @@ describe('jill each', () => {
     // Run command
     vi.mocked(hasEveryScript$).mockReturnValue(filter$((wks) => wks !== wksC));
 
-    await pipe$(yargs(), withLogger, planCommand(each, var$())).parseAsync('each test -d prod');
+    await pipe$(yargs(), withLogger, jobCommandPlan(each, var$())).parseAsync('each test -d prod');
 
     expect(wksA.run).toHaveBeenCalledWith('test', [], { buildDeps: 'prod', buildScript: 'build' });
     expect(wksB.run).toHaveBeenCalledWith('test', [], { buildDeps: 'prod', buildScript: 'build' });
@@ -104,7 +104,7 @@ describe('jill each', () => {
     // Run command
     vi.mocked(hasEveryScript$).mockReturnValue(filter$((wks) => wks !== wksC));
 
-    await pipe$(yargs(), withLogger, planCommand(each, var$())).parseAsync('each test --arg');
+    await pipe$(yargs(), withLogger, jobCommandPlan(each, var$())).parseAsync('each test --arg');
 
     expect(wksA.run).toHaveBeenCalledWith('test', ['--arg'], { buildDeps: 'all', buildScript: 'build' });
     expect(wksB.run).toHaveBeenCalledWith('test', ['--arg'], { buildDeps: 'all', buildScript: 'build' });
@@ -127,7 +127,7 @@ describe('jill each', () => {
     // Run command
     vi.mocked(hasEveryScript$).mockReturnValue(filter$((wks) => wks !== wksC));
 
-    await pipe$(yargs(), withLogger, planCommand(each, var$())).parseAsync('each test -- -d toto');
+    await pipe$(yargs(), withLogger, jobCommandPlan(each, var$())).parseAsync('each test -- -d toto');
 
     expect(wksA.run).toHaveBeenCalledWith('test', ['-d', 'toto'], { buildDeps: 'all', buildScript: 'build' });
     expect(wksB.run).toHaveBeenCalledWith('test', ['-d', 'toto'], { buildDeps: 'all', buildScript: 'build' });
@@ -153,7 +153,7 @@ describe('jill each', () => {
       vi.mocked(hasEveryScript$).mockReturnValue(filter$((wks) => wks !== wksC));
 
       const job$ = var$<Job$>();
-      await pipe$(yargs(), withLogger, planCommand(each, job$)).parseAsync('each test --affected test');
+      await pipe$(yargs(), withLogger, jobCommandPlan(each, job$)).parseAsync('each test --affected test');
 
       expect(job$.defer()).not.toBeNull();
       expect(job$.defer()!.type).toBe('workflow.parallel');
@@ -187,7 +187,7 @@ describe('jill each', () => {
       vi.mocked(hasEveryScript$).mockReturnValue(filter$((wks) => wks !== wksC));
 
       const job$ = var$<Job$>();
-      await pipe$(yargs(), withLogger, planCommand(each, job$)).parseAsync('each test --affected test --affected-rev-fallback main --affected-rev-sort v:refname');
+      await pipe$(yargs(), withLogger, jobCommandPlan(each, job$)).parseAsync('each test --affected test --affected-rev-fallback main --affected-rev-sort v:refname');
 
       expect(job$.defer()).not.toBeNull();
       expect(job$.defer()!.type).toBe('workflow.parallel');
@@ -224,7 +224,7 @@ describe('jill each', () => {
       vi.mocked(hasEveryScript$).mockReturnValue(filter$((wks) => wks !== wksC));
 
       const job$ = var$<Job$>();
-      await pipe$(yargs(), withLogger, planCommand(each, job$)).parseAsync('each test --private');
+      await pipe$(yargs(), withLogger, jobCommandPlan(each, job$)).parseAsync('each test --private');
 
       expect(job$.defer()).not.toBeNull();
       expect(job$.defer()!.type).toBe('workflow.parallel');
@@ -255,7 +255,7 @@ describe('jill each', () => {
       vi.mocked(hasEveryScript$).mockReturnValue(filter$((wks) => wks !== wksC));
 
       const job$ = var$<Job$>();
-      await pipe$(yargs(), withLogger, planCommand(each, job$)).parseAsync('each test --no-private');
+      await pipe$(yargs(), withLogger, jobCommandPlan(each, job$)).parseAsync('each test --no-private');
 
       expect(job$.defer()).not.toBeNull();
       expect(job$.defer()!.type).toBe('workflow.parallel');

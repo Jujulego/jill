@@ -1,11 +1,13 @@
 import type { Job$ } from '@jujulego/tasks';
 import { asyncScope$, inject$ } from '@kyrielle/injector';
 import { withLabel } from '@kyrielle/logger';
-import { var$ } from 'kyrielle';
+import { pipe$, var$ } from 'kyrielle';
+import * as commands from '../../commands.js';
 import { ConfigService } from '../../config/config.service.js';
+import { cliParser } from '../../parser.js';
 import { CWD, LOGGER } from '../../tokens.js';
 import { instrument } from '../../utils/sentry.js';
-import { planParser } from '../parser.js';
+import { jobCommandPlan } from '../../wrappers/job-command-plan.js';
 
 export class PlannerService {
   // Attributes
@@ -27,7 +29,16 @@ export class PlannerService {
       asyncScope$().set(CWD, cwd);
       asyncScope$().set(ConfigService, new ConfigService()); // <= injects an empty ConfigService, forcing config discovery
 
-      await planParser(job$).parseAsync(argv);
+      const parser = pipe$(
+        cliParser(),
+        jobCommandPlan(commands.each, job$),
+        jobCommandPlan(commands.exec, job$),
+        jobCommandPlan(commands.list, job$),
+        jobCommandPlan(commands.run, job$),
+        jobCommandPlan(commands.tree, job$),
+      );
+
+      await parser.parseAsync(argv);
     });
 
     return job$.defer() ?? null;

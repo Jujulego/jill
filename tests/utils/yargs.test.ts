@@ -1,4 +1,4 @@
-import { commandName } from '@/src/cli/bases/command.js';
+import { commandName } from '@/src/utils/yargs.js';
 import { describe, expect, it } from 'vitest';
 
 describe('commandName', () => {

@@ -1,9 +1,9 @@
-import { planCommand } from '@/src/cli/bases/job-module.js';
-import { exec } from '@/src/cli/commands.js';
 import { command$ } from '@/src/cli/jobs/command$.js';
 import { withLogger } from '@/src/cli/middlewares/logger.js';
 import { loadWorkspace, withWorkspace, type WorkspaceArgs } from '@/src/cli/middlewares/workspace.js';
+import { exec } from '@/src/commands.js';
 import type { Workspace } from '@/src/projects/workspace.js';
+import { jobCommandPlan } from '@/src/wrappers/job-command-plan.js';
 import { TestBed } from '@/tools/test-bed.js';
 import { type Job$, type SpawnJob$ } from '@jujulego/tasks';
 import { globalScope$ } from '@kyrielle/injector';
@@ -41,7 +41,7 @@ describe('jill exec', () => {
   it('should run command in loaded workspace', async () => {
     const job$ = var$<Job$>();
 
-    await pipe$(yargs(), withLogger, planCommand(exec, job$))
+    await pipe$(yargs(), withLogger, jobCommandPlan(exec, job$))
       .parseAsync('exec test');
 
     expect(job$.defer()).toStrictEqual(job);
@@ -49,21 +49,21 @@ describe('jill exec', () => {
   });
 
   it('should use given dependency selection mode', async () => {
-    await pipe$(yargs(), withLogger, planCommand(exec, var$()))
+    await pipe$(yargs(), withLogger, jobCommandPlan(exec, var$()))
       .parseAsync('exec test -d prod');
 
     expect(workspace.exec).toHaveBeenCalledWith('test', [], { buildDeps: 'prod', buildScript: 'build' });
   });
 
   it('should pass down unknown arguments', async () => {
-    await pipe$(yargs(), withLogger, planCommand(exec, var$()))
+    await pipe$(yargs(), withLogger, jobCommandPlan(exec, var$()))
       .parseAsync('exec test --arg');
 
     expect(workspace.exec).toHaveBeenCalledWith('test', ['--arg'], { buildDeps: 'all', buildScript: 'build' });
   });
 
   it('should pass down unparsed arguments', async () => {
-    await pipe$(yargs(), withLogger, planCommand(exec, var$()))
+    await pipe$(yargs(), withLogger, jobCommandPlan(exec, var$()))
       .parseAsync('exec test -- -d toto');
 
     expect(workspace.exec).toHaveBeenCalledWith('test', ['-d', 'toto'], { buildDeps: 'all', buildScript: 'build' });

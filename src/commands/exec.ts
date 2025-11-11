@@ -4,14 +4,15 @@ import { startSpan } from '@sentry/node';
 import { collect$, pipe$ } from 'kyrielle';
 import { spawn } from 'node:child_process';
 import process from 'node:process';
-import type { WorkspaceDepsMode } from '../../projects/workspace.js';
-import { LOGGER } from '../../tokens.js';
-import { traceImport } from '../../utils/sentry.js';
-import type { JobModule, PlanModeArgs } from '../bases/job-module.js';
-import { loadWorkspace, withWorkspace, type WorkspaceArgs } from '../middlewares/workspace.js';
+import type { WorkspaceDepsMode } from '../projects/workspace.js';
+import { LOGGER } from '../tokens.js';
+import { traceImport } from '../utils/sentry.js';
+import type { JobCommandModule } from '../wrappers/job-command.js';
+import type { PlanModeArgs } from '../wrappers/job-command-plan.js';
+import { loadWorkspace, withWorkspace, type WorkspaceArgs } from '../cli/middlewares/workspace.js';
 
 // Command
-const command: JobModule<ExecArgs> = {
+const command: JobCommandModule<ExecArgs> = {
   command: 'exec <command>',
   aliases: ['$0'],
   describe: 'Run command inside workspace, after all its dependencies has been built.',
@@ -67,8 +68,8 @@ const command: JobModule<ExecArgs> = {
       );
 
       // Run dependencies first with spinners
-      const { default: JobExecInk } = await traceImport('JobExecInk', () => import('../bases/job-exec.ink.jsx'));
-      await JobExecInk({ job: dependencies, verbose: ['verbose', 'debug'].includes(args.verbose) });
+      const { JobCommandExecuteInk } = await traceImport('JobCommandExecuteInk', () => import('../wrappers/job-command-execute.ink.jsx'));
+      await JobCommandExecuteInk({ job: dependencies, verbose: ['verbose', 'debug'].includes(args.verbose) });
 
       if (dependencies.state() !== WorkloadState.Succeeded) {
         return;

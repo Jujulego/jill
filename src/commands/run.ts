@@ -1,11 +1,12 @@
 import { inject$ } from '@kyrielle/injector';
-import type { WorkspaceDepsMode } from '../../projects/workspace.js';
-import type { JobModule, PlanModeArgs } from '../bases/job-module.js';
-import { loadWorkspace, withWorkspace, type WorkspaceArgs } from '../middlewares/workspace.js';
-import { TaskParserService } from '../services/task-parser.service.js';
+import type { WorkspaceDepsMode } from '../projects/workspace.js';
+import type { JobCommandModule } from '../wrappers/job-command.js';
+import type { PlanModeArgs } from '../wrappers/job-command-plan.js';
+import { loadWorkspace, withWorkspace, type WorkspaceArgs } from '../cli/middlewares/workspace.js';
+import { TaskParserService } from '../cli/services/task-parser.service.js';
 
 // Command
-const command: JobModule<RunArgs> = {
+const command: JobCommandModule<RunArgs> = {
   command: 'run <expr>',
   describe: 'Run a task expression in a workspace, after having built all its dependencies.',
   builder: (parser) => withWorkspace(parser)

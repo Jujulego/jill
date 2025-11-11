@@ -1,5 +1,5 @@
-import { list } from '@/src/cli/commands.js';
-import ListInk from '@/src/cli/commands/list.ink.js';
+import { list } from '@/src/commands.js';
+import ListInk from '@/src/commands/list.ink.js';
 import { hasSomeScript$ } from '@/src/cli/filters/has-scripts.js';
 import { isPrivate$ } from '@/src/cli/filters/is-private.js';
 import { loadProject, type ProjectArgs, withProject } from '@/src/cli/middlewares/project.js';

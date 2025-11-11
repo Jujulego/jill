@@ -1,6 +1,6 @@
 import { Box, Text } from 'ink';
-import { capitalize } from '../utils/string.js';
-import { inked } from '../inked.jsx';
+import { capitalize } from '../cli/utils/string.js';
+import { inked } from '../wrappers/inked.jsx';
 import type { ExtractedData, ListAttr } from './list.js';
 
 const ListInk = inked(function* (props: ListInkProps) {

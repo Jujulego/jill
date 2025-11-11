@@ -1,6 +1,6 @@
 import type { CommandModule } from 'yargs';
-import { traceImport } from '../../utils/sentry.js';
-import { loadWorkspace, withWorkspace, type WorkspaceArgs } from '../middlewares/workspace.js';
+import { traceImport } from '../utils/sentry.js';
+import { loadWorkspace, withWorkspace, type WorkspaceArgs } from '../cli/middlewares/workspace.js';
 
 // Command
 const command: CommandModule<unknown, TreeArgs> = {

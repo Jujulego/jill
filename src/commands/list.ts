@@ -4,16 +4,16 @@ import path from 'node:path';
 import { compare, parse } from 'semver';
 import slugify from 'slugify';
 import type { ArgumentsCamelCase, CommandModule } from 'yargs';
-import type { Workspace } from '../../projects/workspace.js';
-import { printJson } from '../../utils/json.js';
-import { traceImport } from '../../utils/sentry.js';
-import type { Order } from '../../utils/types.js';
-import { hasSomeScript$ } from '../filters/has-scripts.js';
-import { isAffected$ } from '../filters/is-affected.js';
-import { isPrivate$ } from '../filters/is-private.js';
-import { loadProject, type ProjectArgs, withProject } from '../middlewares/project.js';
-import { ClientError } from '../utils/errors.js';
-import { pipeline$ } from '../utils/pipeline$.js';
+import type { Workspace } from '../projects/workspace.js';
+import { printJson } from '../utils/json.js';
+import { traceImport } from '../utils/sentry.js';
+import type { Order } from '../utils/types.js';
+import { hasSomeScript$ } from '../cli/filters/has-scripts.js';
+import { isAffected$ } from '../cli/filters/is-affected.js';
+import { isPrivate$ } from '../cli/filters/is-private.js';
+import { loadProject, type ProjectArgs, withProject } from '../cli/middlewares/project.js';
+import { ClientError } from '../cli/utils/errors.js';
+import { pipeline$ } from '../cli/utils/pipeline$.js';
 
 // Command
 const command: CommandModule<unknown, ListArgs> = {

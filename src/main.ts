@@ -1,14 +1,25 @@
 import { inject$ } from '@kyrielle/injector';
 import { captureException, startInactiveSpan, startSpan } from '@sentry/node';
+import { pipe$ } from 'kyrielle';
 import process from 'node:process';
 import { hideBin } from 'yargs/helpers';
-import { executeParser } from './cli/parser.js';
+import * as commands from './commands.js';
 import { ClientError } from './cli/utils/errors.js';
+import { cliParser } from './parser.js';
 import { LOGGER } from './tokens.js';
+import { command } from './wrappers/command.js';
+import { jobCommandExecute } from './wrappers/job-command-execute.js';
 
 // Bootstrap
 const argv = hideBin(process.argv);
-const parser = executeParser();
+const parser = pipe$(
+  cliParser(),
+  jobCommandExecute(commands.each),
+  jobCommandExecute(commands.exec),
+  command(commands.list),
+  jobCommandExecute(commands.run),
+  command(commands.tree),
+);
 
 void startSpan({ name: 'jill', op: 'cli.main', startTime: 0, attributes: { 'cli.argv': argv } }, async () => {
   try {
