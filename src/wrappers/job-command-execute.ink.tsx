@@ -3,8 +3,8 @@ import { inject$ } from '@kyrielle/injector';
 import { filter$, pipe$, waitFor$ } from 'kyrielle';
 import process from 'node:process';
 import { SCHEDULER } from '../tokens.js';
-import WorkloadTreeCompleted from '../cli/components/WorkloadTreeCompleted.jsx';
-import WorkloadTreeSpinner from '../cli/components/WorkloadTreeSpinner.jsx';
+import WorkloadTreeCompleted from '../components/WorkloadTreeCompleted.jsx';
+import WorkloadTreeSpinner from '../components/WorkloadTreeSpinner.jsx';
 import { inked } from './inked.jsx';
 
 export const JobCommandExecuteInk = inked(async function* ({ job, verbose }: JobExecInkProps) {

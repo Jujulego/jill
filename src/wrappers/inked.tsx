@@ -1,7 +1,7 @@
 import { startSpan } from '@sentry/node';
 import { type Instance, render } from 'ink';
 import type { ReactNode } from 'react';
-import StaticLogs from '../cli/components/StaticLogs.jsx';
+import StaticLogs from '../components/StaticLogs.jsx';
 
 /**
  * Renders each yielded element using ink

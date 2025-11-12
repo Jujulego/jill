@@ -1,29 +1,29 @@
 import type { Workload$ } from '@jujulego/tasks';
-import { Box, Static } from 'ink';
-import { useWorkflowFlatTree } from '../hooks/useWorkflowFlatTree.js';
+import { Box } from 'ink';
+import { useWorkflowFlatTree } from '../cli/hooks/useWorkflowFlatTree.js';
 import WorkloadSpinner from './WorkloadSpinner.jsx';
 import WorkloadTreeStats from './WorkloadTreeStats.jsx';
 
 // Component
-export default function WorkloadTreeCompleted({ workload, verbose }: WorkloadTreeCompletedProps) {
+export default function WorkloadTreeFullSpinner({ workload, verbose }: WorkloadTreeFullSpinnerProps) {
   const tree = useWorkflowFlatTree(workload, verbose);
 
   // Render
   return (
     <>
-      <Static items={tree}>
-        { ({ workload, level }) => (
+      <Box flexDirection="column">
+        { tree.map(({ workload, level }) => (
           <Box key={workload.id} marginLeft={level * 2} flexShrink={0}>
             <WorkloadSpinner workload={workload} />
           </Box>
-        ) }
-      </Static>
+        )) }
+      </Box>
       <WorkloadTreeStats tree={tree} />
     </>
   );
 }
 
-export interface WorkloadTreeCompletedProps {
+export interface WorkloadTreeFullSpinnerProps {
   readonly workload: Workload$;
   readonly verbose?: boolean;
 }

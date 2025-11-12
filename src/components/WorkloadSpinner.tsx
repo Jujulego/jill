@@ -3,7 +3,7 @@ import { Box, Text } from 'ink';
 import Spinner from 'ink-spinner';
 import ms from 'pretty-ms';
 import { useEffect, useState } from 'react';
-import * as symbols from '../../utils/symbols.js';
+import * as symbols from '../utils/symbols.js';
 import WorkloadName from './WorkloadName.jsx';
 
 // Component
