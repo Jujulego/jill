@@ -1,10 +1,10 @@
 import type { Workload$ } from '@jujulego/tasks';
 import { useStdin } from 'ink';
-import WorkloadTreeFullSpinner from './WorkloadTreeFullSpinner.jsx';
-import WorkloadTreeScrollableSpinner from './WorkloadTreeScrollableSpinner.jsx';
+import { WorkloadTreeFullSpinner } from './WorkloadTreeFullSpinner.jsx';
+import { WorkloadTreeScrollableSpinner } from './WorkloadTreeScrollableSpinner.jsx';
 
 // Component
-export default function WorkloadTreeSpinner({ workload, verbose }: WorkloadTreeSpinnerProps) {
+export function WorkloadTreeSpinner({ workload, verbose }: WorkloadTreeSpinnerProps) {
   const stdin = useStdin();
 
   if (stdin.isRawModeSupported) {

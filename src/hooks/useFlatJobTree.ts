@@ -2,11 +2,11 @@ import { type Workload$ } from '@jujulego/tasks';
 import { collect$, map$, off$, pipe$ } from 'kyrielle';
 import { createHash } from 'node:crypto';
 import { useEffect, useState } from 'react';
-import { buildFlatTree, type FlatTreeWorkload } from '../cli/utils/flat-tree.js';
+import { flatJobTree, type FlatJobTreeItem } from '../trees/flat-job-tree.js';
 
 // Hook
-export function useWorkflowFlatTree(workload: Workload$, verbose?: boolean): FlatTreeWorkload[] {
-  const [tree, setTree] = useState<FlatTreeWorkload[]>(() => buildFlatTree(workload, verbose));
+export function useFlatJobTree(workload: Workload$, verbose?: boolean): FlatJobTreeItem[] {
+  const [tree, setTree] = useState<FlatJobTreeItem[]>(() => flatJobTree(workload, verbose));
 
   useEffect(() => {
     const oldHash = hashTree(tree);
@@ -15,7 +15,7 @@ export function useWorkflowFlatTree(workload: Workload$, verbose?: boolean): Fla
     function update() {
       if (!dirty) return;
 
-      const updated = buildFlatTree(workload, verbose);
+      const updated = flatJobTree(workload, verbose);
       if (hashTree(updated) !== oldHash) {
         setTree(updated);
       }
@@ -41,7 +41,7 @@ export function useWorkflowFlatTree(workload: Workload$, verbose?: boolean): Fla
 }
 
 // Utils
-function hashTree(tree: FlatTreeWorkload[]) {
+function hashTree(tree: FlatJobTreeItem[]) {
   const hash = createHash('sha256');
 
   for (const { workload } of tree) {

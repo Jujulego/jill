@@ -8,7 +8,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import yargs, { type Argv } from 'yargs';
 
 // Mocks
-vi.mock('@/src/cli/middlewares/project.js');
+vi.mock('@/src/middlewares/project.js');
 
 // Setup
 let bed: TestBed;

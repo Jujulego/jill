@@ -4,7 +4,7 @@ import { isScriptWorkflow } from '../utils/predicates.js';
 import { capitalize } from '../utils/string.js';
 
 // Component
-export default function WorkloadName({ workload, withWorkspace, ...rest }: WorkloadNameProps) {
+export function WorkloadName({ workload, withWorkspace, ...rest }: WorkloadNameProps) {
   if (isScriptWorkflow(workload)) {
     return (
       <Text {...rest}>

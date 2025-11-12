@@ -6,7 +6,7 @@ import { useLayoutEffect } from 'react';
 import { logFormat } from '../utils/logger.js';
 
 // Component
-export default function StaticLogs() {
+export function StaticLogs() {
   const stderr = useStderr();
 
   useLayoutEffect(() => {

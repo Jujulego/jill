@@ -1,10 +1,10 @@
 import { list } from '@/src/commands.js';
 import ListInk from '@/src/commands/list.ink.js';
-import { hasSomeScript$ } from '@/src/cli/filters/has-scripts.js';
-import { isPrivate$ } from '@/src/cli/filters/is-private.js';
-import { loadProject, type ProjectArgs, withProject } from '@/src/middlewares/project.js';
-import { isAffected$ } from '@/src/cli/filters/is-affected.js';
 import { ClientError } from '@/src/errors.js';
+import { loadProject, type ProjectArgs, withProject } from '@/src/middlewares/project.js';
+import { hasSomeScript$ } from '@/src/projects/filters/has-scripts.js';
+import { isAffected$ } from '@/src/projects/filters/is-affected.js';
+import { isPrivate$ } from '@/src/projects/filters/is-private.js';
 import { TestBed } from '@/tools/test-bed.js';
 import { globalScope$ } from '@kyrielle/injector';
 import { filter$ } from 'kyrielle';
@@ -14,11 +14,11 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import yargs, { type Argv } from 'yargs';
 
 // Mocks
-vi.mock('@/src/cli/commands/list.ink.jsx');
-vi.mock('@/src/cli/middlewares/project.js');
-vi.mock('@/src/cli/filters/has-scripts.js');
-vi.mock('@/src/cli/filters/is-affected.js');
-vi.mock('@/src/cli/filters/is-private.js');
+vi.mock('@/src/commands/list.ink.jsx');
+vi.mock('@/src/middlewares/project.js');
+vi.mock('@/src/projects/filters/has-scripts.js');
+vi.mock('@/src/projects/filters/is-affected.js');
+vi.mock('@/src/projects/filters/is-private.js');
 
 // Setup
 let bed: TestBed;

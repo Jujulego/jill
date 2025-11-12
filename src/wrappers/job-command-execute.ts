@@ -36,8 +36,8 @@ export function jobCommandExecute<T extends LoggerArgs, U extends PlanModeArgs>(
       }
 
       if (args.plan) {
-        const { printPlan } = await traceImport('printPlan', () => import('../cli/plans/print-plan.js'));
-        printPlan(job);
+        const { jobPlan } = await traceImport('printPlan', () => import('../components/job-plan.js'));
+        jobPlan(job);
       } else {
         if (execute) {
           await execute(args, job);

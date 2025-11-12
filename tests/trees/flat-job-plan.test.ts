@@ -1,10 +1,10 @@
-import { buildPlan } from '@/src/cli/plans/build-plan.js';
-import { buildFlatTree } from '@/src/cli/utils/flat-tree.js';
+import { flatJobPlan } from '@/src/trees/flat-job-plan.js';
+import { flatJobTree } from '@/src/trees/flat-job-tree.js';
 import { job$, workflow$, workload$ } from '@jujulego/tasks';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mocks
-vi.mock('@/src/cli/utils/flat-tree.js');
+vi.mock('@/src/trees/flat-job-tree.js');
 
 beforeEach(() => {
   vi.resetAllMocks();
@@ -15,15 +15,15 @@ describe('buildPlan', () => {
   it('should return plan with only given workload', () => {
     const wkl = workload$({ label: 'test', type: 'test', onStart: vi.fn() });
 
-    vi.mocked(buildFlatTree).mockReturnValue([
+    vi.mocked(flatJobTree).mockReturnValue([
       { level: 0, workload: wkl }
     ]);
 
-    expect(buildPlan(wkl)).toEqual([
+    expect(flatJobPlan(wkl)).toEqual([
       { id: 1, branch: '', dependsOn: [], level: 0, workload: wkl }
     ]);
 
-    expect(buildFlatTree).toHaveBeenCalledWith(wkl, true);
+    expect(flatJobTree).toHaveBeenCalledWith(wkl, true);
   });
 
   it('should return plan with given job and its dependency', () => {
@@ -32,17 +32,17 @@ describe('buildPlan', () => {
     const job = job$({ label: 'job', onStart: vi.fn() });
     job.dependsOn(dep);
 
-    vi.mocked(buildFlatTree).mockReturnValue([
+    vi.mocked(flatJobTree).mockReturnValue([
       { level: 0, workload: dep },
       { level: 0, workload: job }
     ]);
 
-    expect(buildPlan(job)).toEqual([
+    expect(flatJobPlan(job)).toEqual([
       { id: 1, branch: '', dependsOn: [], level: 0, workload: dep },
       { id: 2, branch: '', dependsOn: [1], level: 0, workload: job }
     ]);
 
-    expect(buildFlatTree).toHaveBeenCalledWith(job, true);
+    expect(flatJobTree).toHaveBeenCalledWith(job, true);
   });
 
   it('should return plan with given workflow and its members as children', () => {
@@ -52,19 +52,19 @@ describe('buildPlan', () => {
     const flow = workflow$({ label: 'test', onOrchestrate: vi.fn() });
     flow.push(wklA, wklB);
 
-    vi.mocked(buildFlatTree).mockReturnValue([
+    vi.mocked(flatJobTree).mockReturnValue([
       { level: 0, workload: flow },
       { level: 1, workload: wklA },
       { level: 1, workload: wklB },
     ]);
 
-    expect(buildPlan(flow)).toEqual([
+    expect(flatJobPlan(flow)).toEqual([
       { id: 1, branch: '', dependsOn: [], level: 0, workload: flow },
       { id: 2, branch: '├─ ', dependsOn: [], level: 1, workload: wklA },
       { id: 3, branch: '└─ ', dependsOn: [], level: 1, workload: wklB },
     ]);
 
-    expect(buildFlatTree).toHaveBeenCalledWith(flow, true);
+    expect(flatJobTree).toHaveBeenCalledWith(flow, true);
   });
 
   it('should return plan with given workflow and its nested members as children (long branch)', () => {
@@ -78,7 +78,7 @@ describe('buildPlan', () => {
     const flwA = workflow$({ label: 'A', onOrchestrate: vi.fn() });
     flwA.push(flwB, wklC);
 
-    vi.mocked(buildFlatTree).mockReturnValue([
+    vi.mocked(flatJobTree).mockReturnValue([
       { level: 0, workload: flwA },
       { level: 1, workload: flwB },
       { level: 2, workload: wklA },
@@ -86,7 +86,7 @@ describe('buildPlan', () => {
       { level: 1, workload: wklC },
     ]);
 
-    expect(buildPlan(flwA)).toEqual([
+    expect(flatJobPlan(flwA)).toEqual([
       { id: 1, branch: '', dependsOn: [], level: 0, workload: flwA },
       { id: 2, branch: '├─ ', dependsOn: [], level: 1, workload: flwB },
       { id: 3, branch: '│  ├─ ', dependsOn: [], level: 2, workload: wklA },
@@ -94,7 +94,7 @@ describe('buildPlan', () => {
       { id: 5, branch: '└─ ', dependsOn: [], level: 1, workload: wklC },
     ]);
 
-    expect(buildFlatTree).toHaveBeenCalledWith(flwA, true);
+    expect(flatJobTree).toHaveBeenCalledWith(flwA, true);
   });
 
   it('should return plan with given workflow and its nested members as children (short branch)', () => {
@@ -108,7 +108,7 @@ describe('buildPlan', () => {
     const flwA = workflow$({ label: 'A', onOrchestrate: vi.fn() });
     flwA.push(wklA, flwB);
 
-    vi.mocked(buildFlatTree).mockReturnValue([
+    vi.mocked(flatJobTree).mockReturnValue([
       { level: 0, workload: flwA },
       { level: 1, workload: wklA },
       { level: 1, workload: flwB },
@@ -116,7 +116,7 @@ describe('buildPlan', () => {
       { level: 2, workload: wklC },
     ]);
 
-    expect(buildPlan(flwA)).toEqual([
+    expect(flatJobPlan(flwA)).toEqual([
       { id: 1, branch: '', dependsOn: [], level: 0, workload: flwA },
       { id: 2, branch: '├─ ', dependsOn: [], level: 1, workload: wklA },
       { id: 3, branch: '└─ ', dependsOn: [], level: 1, workload: flwB },
@@ -124,6 +124,6 @@ describe('buildPlan', () => {
       { id: 5, branch: '   └─ ', dependsOn: [], level: 2, workload: wklC },
     ]);
 
-    expect(buildFlatTree).toHaveBeenCalledWith(flwA, true);
+    expect(flatJobTree).toHaveBeenCalledWith(flwA, true);
   });
 });

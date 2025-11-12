@@ -1,9 +1,10 @@
-import { type Job$, type Workflow$, type Workload$, WorkloadState } from '@jujulego/tasks';
+import { type Workflow$, type Workload$, WorkloadState } from '@jujulego/tasks';
 import { collect$, map$, pipe$ } from 'kyrielle';
+import { isJob } from '../utils/predicates.js';
 
-export function buildFlatTree(workload: Workload$, verbose = false) {
-  const tree: FlatTreeWorkload[] = [];
-  const stack: FlatTreeWorkload[] = pipe$(
+export function flatJobTree(workload: Workload$, verbose = false) {
+  const tree: FlatJobTreeItem[] = [];
+  const stack: FlatJobTreeItem[] = pipe$(
     listRoots(workload),
     map$((workload) => ({ workload, level: 0 })),
     collect$(),
@@ -70,16 +71,12 @@ function* listRoots(workload: Workload$) {
   }
 }
 
-function isJob(workload: Workload$): workload is Job$ {
-  return 'dependencies' in workload && typeof workload.dependencies === 'function';
-}
-
 function isWorkflow(workload: Workload$): workload is Workflow$ {
   return 'workloads' in workload && typeof workload.workloads === 'function';
 }
 
 // Types
-export interface FlatTreeWorkload {
+export interface FlatJobTreeItem {
   readonly level: number;
   readonly workload: Workload$;
 }

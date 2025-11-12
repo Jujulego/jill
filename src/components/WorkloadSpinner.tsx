@@ -4,10 +4,10 @@ import Spinner from 'ink-spinner';
 import ms from 'pretty-ms';
 import { useEffect, useState } from 'react';
 import * as symbols from '../utils/symbols.js';
-import WorkloadName from './WorkloadName.jsx';
+import { WorkloadName } from './workload-name.jsx';
 
 // Component
-export default function WorkloadSpinner({ workload }: WorkloadSpinnerProps) {
+export function WorkloadSpinner({ workload }: WorkloadSpinnerProps) {
   // Track task state
   const [state, setState] = useState(workload.state());
 

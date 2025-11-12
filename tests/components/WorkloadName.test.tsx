@@ -1,4 +1,4 @@
-import WorkloadName from '@/src/components/WorkloadName.js';
+import { WorkloadName } from '@/src/components/workload-name.js';
 import { type ScriptWorkflow$ } from '@/src/jobs/run-script$.js';
 import type { Workspace } from '@/src/projects/workspace.js';
 import { TestBed } from '@/tools/test-bed.js';

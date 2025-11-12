@@ -4,10 +4,10 @@ import Spinner from 'ink-spinner';
 import { useMemo } from 'react';
 import * as symbols from '../utils/symbols.js';
 import { useScriptsStats } from '../hooks/useScriptsStats.js';
-import type { FlatTreeWorkload } from '../cli/utils/flat-tree.js';
+import type { FlatJobTreeItem } from '../trees/flat-job-tree.js';
 
 // Component
-export default function WorkloadTreeStats({ tree, ...rest }: WorkloadTreeStatsProps) {
+export function WorkloadTreeStats({ tree, ...rest }: WorkloadTreeStatsProps) {
   const workloads = useMemo(() => tree.map((item) => item.workload), [tree]);
   const stats = useScriptsStats(workloads);
 
@@ -39,5 +39,5 @@ export default function WorkloadTreeStats({ tree, ...rest }: WorkloadTreeStatsPr
 }
 
 export interface WorkloadTreeStatsProps extends Omit<TextProps, 'children'> {
-  readonly tree: readonly FlatTreeWorkload[];
+  readonly tree: readonly FlatJobTreeItem[];
 }

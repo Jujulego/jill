@@ -1,4 +1,4 @@
-import { buildFlatTree } from '@/src/cli/utils/flat-tree.js';
+import { flatJobTree } from '@/src/trees/flat-job-tree.js';
 import { job$, workflow$, workload$ } from '@jujulego/tasks';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -6,7 +6,7 @@ describe('buildFlatTree', () => {
   it('should return tree only containing given workload', () => {
     const wkl = workload$({ label: 'test', type: 'test', onStart: vi.fn() });
 
-    expect(buildFlatTree(wkl)).toEqual([
+    expect(flatJobTree(wkl)).toEqual([
       { level: 0, workload: wkl }
     ]);
   });
@@ -17,7 +17,7 @@ describe('buildFlatTree', () => {
     const job = job$({ label: 'job', onStart: vi.fn() });
     job.dependsOn(dep);
 
-    expect(buildFlatTree(job)).toEqual([
+    expect(flatJobTree(job)).toEqual([
       { level: 0, workload: dep },
       { level: 0, workload: job }
     ]);
@@ -30,7 +30,7 @@ describe('buildFlatTree', () => {
     const flow = workflow$({ label: 'test', onOrchestrate: vi.fn() });
     flow.push(wklA, wklB);
 
-    expect(buildFlatTree(flow)).toEqual([
+    expect(flatJobTree(flow)).toEqual([
       { level: 0, workload: flow }
     ]);
   });
@@ -42,7 +42,7 @@ describe('buildFlatTree', () => {
     const flow = workflow$({ label: 'test', onOrchestrate: vi.fn() });
     flow.push(wklA, wklB);
 
-    expect(buildFlatTree(flow, true)).toEqual([
+    expect(flatJobTree(flow, true)).toEqual([
       { level: 0, workload: flow },
       { level: 1, workload: wklA },
       { level: 1, workload: wklB },
@@ -60,7 +60,7 @@ describe('buildFlatTree', () => {
     const flow = workflow$({ label: 'test', onOrchestrate: vi.fn() });
     flow.push(jobA, jobB);
 
-    expect(buildFlatTree(flow)).toEqual([
+    expect(flatJobTree(flow)).toEqual([
       { level: 0, workload: dep },
       { level: 0, workload: flow }
     ]);
@@ -77,7 +77,7 @@ describe('buildFlatTree', () => {
     const flow = workflow$({ label: 'test', onOrchestrate: vi.fn() });
     flow.push(jobA, jobB);
 
-    expect(buildFlatTree(flow, true)).toEqual([
+    expect(flatJobTree(flow, true)).toEqual([
       { level: 0, workload: dep },
       { level: 0, workload: flow },
       { level: 1, workload: jobA },

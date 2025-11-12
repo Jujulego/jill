@@ -1,4 +1,4 @@
-import { hasEveryScript$, hasSomeScript$ } from '@/src/cli/filters/has-scripts.js';
+import { hasEveryScript$, hasSomeScript$ } from '@/src/projects/filters/has-scripts.js';
 import { TestBed } from '@/tools/test-bed.js';
 import { asyncIterator$, collect$, pipe$, waitFor$ } from 'kyrielle';
 import { beforeEach, describe, expect, it } from 'vitest';

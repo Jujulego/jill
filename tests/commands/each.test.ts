@@ -1,10 +1,10 @@
-import { hasEveryScript$ } from '@/src/cli/filters/has-scripts.js';
-import { isAffected$ } from '@/src/cli/filters/is-affected.js';
-import { isPrivate$ } from '@/src/cli/filters/is-private.js';
+import { each } from '@/src/commands.js';
 import type { ScriptWorkflow$ } from '@/src/jobs/run-script$.js';
 import { withLogger } from '@/src/middlewares/logger.js';
 import { loadProject, type ProjectArgs, withProject } from '@/src/middlewares/project.js';
-import { each } from '@/src/commands.js';
+import { hasEveryScript$ } from '@/src/projects/filters/has-scripts.js';
+import { isAffected$ } from '@/src/projects/filters/is-affected.js';
+import { isPrivate$ } from '@/src/projects/filters/is-private.js';
 import { jobCommandPlan } from '@/src/wrappers/job-command-plan.js';
 import { TestBed } from '@/tools/test-bed.js';
 import { type Job$, type Workflow$, workflow$ } from '@jujulego/tasks';
@@ -14,10 +14,10 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import yargs, { type Argv } from 'yargs';
 
 // Mocks
-vi.mock('@/src/cli/middlewares/project.js');
-vi.mock('@/src/cli/filters/has-scripts.js');
-vi.mock('@/src/cli/filters/is-affected.js');
-vi.mock('@/src/cli/filters/is-private.js');
+vi.mock('@/src/middlewares/project.js');
+vi.mock('@/src/projects/filters/has-scripts.js');
+vi.mock('@/src/projects/filters/is-affected.js');
+vi.mock('@/src/projects/filters/is-private.js');
 
 // Setup
 let bed: TestBed;

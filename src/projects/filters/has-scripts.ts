@@ -1,5 +1,5 @@
 import { filter$, type SimpleAsyncIterator } from 'kyrielle';
-import { type Workspace } from '../../projects/workspace.js';
+import { type Workspace } from '../workspace.js';
 
 // Filter
 export function hasSomeScript$(scripts: readonly string[]) {

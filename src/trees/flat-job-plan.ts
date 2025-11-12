@@ -1,11 +1,12 @@
-import type { Job$, Workload$ } from '@jujulego/tasks';
-import { buildFlatTree, type FlatTreeWorkload } from '../utils/flat-tree.js';
+import type { Workload$ } from '@jujulego/tasks';
+import { isJob } from '../utils/predicates.js';
+import { flatJobTree, type FlatJobTreeItem } from './flat-job-tree.js';
 
-export function buildPlan(job: Workload$): PlanItem[] {
-  const tree = buildFlatTree(job, true);
+export function flatJobPlan(job: Workload$): FlatJobPlanItem[] {
+  const tree = flatJobTree(job, true);
 
   const index = new Map(tree.map((item, idx) => [item.workload.id, idx + 1]));
-  const plan: PlanItem[] = [];
+  const plan: FlatJobPlanItem[] = [];
   let branch = '';
 
   for (let i = 0; i < tree.length; i++) {
@@ -62,12 +63,8 @@ export function buildPlan(job: Workload$): PlanItem[] {
   return plan;
 }
 
-function isJob(workload: Workload$): workload is Job$ {
-  return 'dependencies' in workload && typeof workload.dependencies === 'function';
-}
-
 // Types
-interface PlanItem extends FlatTreeWorkload {
+interface FlatJobPlanItem extends FlatJobTreeItem {
   readonly id: number;
   readonly branch: string;
   readonly dependsOn: number[];

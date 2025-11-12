@@ -1,4 +1,4 @@
-import WorkspaceTree from '@/src/components/WorkspaceTree.js';
+import { WorkspaceTree } from '@/src/components/WorkspaceTree.js';
 import { type Workspace } from '@/src/projects/workspace.js';
 import { TestBed } from '@/tools/test-bed.js';
 import { cleanup, render } from 'ink-testing-library';

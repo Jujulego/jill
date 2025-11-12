@@ -1,9 +1,9 @@
 import { parallelFlow$ } from '@jujulego/tasks';
 import { inject$ } from '@kyrielle/injector';
 import { asyncIterator$, collect$, pipe$, type SimpleAsyncIterator, waitFor$ } from 'kyrielle';
-import { hasEveryScript$ } from '../cli/filters/has-scripts.js';
-import { isAffected$ } from '../cli/filters/is-affected.js';
-import { isPrivate$ } from '../cli/filters/is-private.js';
+import { hasEveryScript$ } from '../projects/filters/has-scripts.js';
+import { isAffected$ } from '../projects/filters/is-affected.js';
+import { isPrivate$ } from '../projects/filters/is-private.js';
 import { TaskParserService } from '../services/task-parser.service.js';
 import { loadProject, type ProjectArgs, withProject } from '../middlewares/project.js';
 import type { Workspace, WorkspaceDepsMode } from '../projects/workspace.js';

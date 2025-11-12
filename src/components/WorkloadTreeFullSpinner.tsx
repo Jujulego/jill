@@ -1,12 +1,12 @@
 import type { Workload$ } from '@jujulego/tasks';
 import { Box } from 'ink';
-import { useWorkflowFlatTree } from '../hooks/useWorkflowFlatTree.js';
-import WorkloadSpinner from './WorkloadSpinner.jsx';
-import WorkloadTreeStats from './WorkloadTreeStats.jsx';
+import { useFlatJobTree } from '../hooks/useFlatJobTree.js';
+import { WorkloadSpinner } from './WorkloadSpinner.jsx';
+import { WorkloadTreeStats } from './WorkloadTreeStats.jsx';
 
 // Component
-export default function WorkloadTreeFullSpinner({ workload, verbose }: WorkloadTreeFullSpinnerProps) {
-  const tree = useWorkflowFlatTree(workload, verbose);
+export function WorkloadTreeFullSpinner({ workload, verbose }: WorkloadTreeFullSpinnerProps) {
+  const tree = useFlatJobTree(workload, verbose);
 
   // Render
   return (

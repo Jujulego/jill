@@ -5,7 +5,7 @@ import { type ReactElement, Suspense, use, useCallback, useEffect, useRef } from
 import type { Workspace } from '../projects/workspace.js';
 
 // Component
-export default function WorkspaceTree(props: WorkspaceTreeProps) {
+export function WorkspaceTree(props: WorkspaceTreeProps) {
   const { workspace, dev = false, level = '' } = props;
 
   // Render
