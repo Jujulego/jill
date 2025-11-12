@@ -1,6 +1,6 @@
 import { command$ } from '@/src/cli/jobs/command$.js';
-import { withLogger } from '@/src/cli/middlewares/logger.js';
-import { loadWorkspace, withWorkspace, type WorkspaceArgs } from '@/src/cli/middlewares/workspace.js';
+import { withLogger } from '@/src/middlewares/logger.js';
+import { loadWorkspace, withWorkspace, type WorkspaceArgs } from '@/src/middlewares/workspace.js';
 import { exec } from '@/src/commands.js';
 import type { Workspace } from '@/src/projects/workspace.js';
 import { jobCommandPlan } from '@/src/wrappers/job-command-plan.js';

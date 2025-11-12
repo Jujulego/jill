@@ -7,7 +7,7 @@ import type { PlanModeArgs } from '../wrappers/job-command-plan.js';
 import { hasEveryScript$ } from '../cli/filters/has-scripts.js';
 import { isAffected$ } from '../cli/filters/is-affected.js';
 import { isPrivate$ } from '../cli/filters/is-private.js';
-import { loadProject, type ProjectArgs, withProject } from '../cli/middlewares/project.js';
+import { loadProject, type ProjectArgs, withProject } from '../middlewares/project.js';
 import { TaskParserService } from '../cli/services/task-parser.service.js';
 import { pipeline$ } from '../cli/utils/pipeline$.js';
 

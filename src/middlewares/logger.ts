@@ -4,16 +4,12 @@ import { logDelay$, LogGateway, LogLevel, toStderr } from '@kyrielle/logger';
 import { startSpan } from '@sentry/node';
 import { filter$, flow$ } from 'kyrielle';
 import type { Argv } from 'yargs';
-import { LOGGER } from '../../tokens.js';
-import { logFormat } from '../../utils/logger.js';
+import { LOGGER } from '../tokens.js';
+import { logFormat } from '../utils/logger.js';
 
-// Utils
-const VERBOSITY_LEVEL: Record<number, LogLevelKey> = {
-  1: 'verbose',
-  2: 'debug',
-};
-
-// Middleware
+/**
+ * Adds logger related arguments.
+ */
 export function withLogger<T>(parser: Argv<T>) {
   return parser
     .option('verbose', {
@@ -37,6 +33,12 @@ export function withLogger<T>(parser: Argv<T>) {
       logGateway.connect('console', toStderr(logFormat));
     }));
 }
+
+// Utils
+const VERBOSITY_LEVEL: Record<number, LogLevelKey> = {
+  1: 'verbose',
+  2: 'debug',
+};
 
 // Types
 export interface LoggerArgs {

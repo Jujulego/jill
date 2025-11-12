@@ -1,6 +1,6 @@
 import type { ScriptWorkflow$ } from '@/src/cli/jobs/run-script$.js';
-import { withLogger } from '@/src/cli/middlewares/logger.js';
-import { loadWorkspace, withWorkspace, type WorkspaceArgs } from '@/src/cli/middlewares/workspace.js';
+import { withLogger } from '@/src/middlewares/logger.js';
+import { loadWorkspace, withWorkspace, type WorkspaceArgs } from '@/src/middlewares/workspace.js';
 import { run } from '@/src/commands.js';
 import type { Workspace } from '@/src/projects/workspace.js';
 import { jobCommandPlan } from '@/src/wrappers/job-command-plan.js';

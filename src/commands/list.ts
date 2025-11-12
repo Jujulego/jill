@@ -11,7 +11,7 @@ import type { Order } from '../utils/types.js';
 import { hasSomeScript$ } from '../cli/filters/has-scripts.js';
 import { isAffected$ } from '../cli/filters/is-affected.js';
 import { isPrivate$ } from '../cli/filters/is-private.js';
-import { loadProject, type ProjectArgs, withProject } from '../cli/middlewares/project.js';
+import { loadProject, type ProjectArgs, withProject } from '../middlewares/project.js';
 import { ClientError } from '../cli/utils/errors.js';
 import { pipeline$ } from '../cli/utils/pipeline$.js';
 

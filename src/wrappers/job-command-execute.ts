@@ -3,7 +3,7 @@ import process from 'node:process';
 import type { Argv } from 'yargs';
 import { LOGGER } from '../tokens.js';
 import { trace, traceImport } from '../utils/sentry.js';
-import type { LoggerArgs } from '../cli/middlewares/logger.js';
+import type { LoggerArgs } from '../middlewares/logger.js';
 import { commandName } from '../utils/yargs.js';
 import { command } from './command.js';
 import { type JobCommandModule } from './job-command.js';

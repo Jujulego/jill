@@ -9,7 +9,7 @@ import { LOGGER } from '../tokens.js';
 import { traceImport } from '../utils/sentry.js';
 import type { JobCommandModule } from '../wrappers/job-command.js';
 import type { PlanModeArgs } from '../wrappers/job-command-plan.js';
-import { loadWorkspace, withWorkspace, type WorkspaceArgs } from '../cli/middlewares/workspace.js';
+import { loadWorkspace, withWorkspace, type WorkspaceArgs } from '../middlewares/workspace.js';
 
 // Command
 const command: JobCommandModule<ExecArgs> = {

@@ -1,6 +1,6 @@
 import type { Workload$ } from '@jujulego/tasks';
 import { Box } from 'ink';
-import { useWorkflowFlatTree } from '../cli/hooks/useWorkflowFlatTree.js';
+import { useWorkflowFlatTree } from '../hooks/useWorkflowFlatTree.js';
 import WorkloadSpinner from './WorkloadSpinner.jsx';
 import WorkloadTreeStats from './WorkloadTreeStats.jsx';
 

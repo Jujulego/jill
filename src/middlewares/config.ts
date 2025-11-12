@@ -1,9 +1,11 @@
 import { asyncScope$, inject$ } from '@kyrielle/injector';
 import { startSpan } from '@sentry/node';
 import type { Argv } from 'yargs';
-import { ConfigService } from '../../config/config.service.js';
+import { ConfigService } from '../config/config.service.js';
 
-// Middleware
+/**
+ * Adds configuration arguments and loading.
+ */
 export function withConfig<T>(parser: Argv<T>) {
   return parser
     .option('config-file', {

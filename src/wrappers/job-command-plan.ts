@@ -2,7 +2,7 @@ import type { Job$ } from '@jujulego/tasks';
 import type { Mutator } from 'kyrielle';
 import type { Argv, CommandModule } from 'yargs';
 import { trace } from '../utils/sentry.js';
-import type { LoggerArgs } from '../cli/middlewares/logger.js';
+import type { LoggerArgs } from '../middlewares/logger.js';
 import { commandName } from '../utils/yargs.js';
 import { command } from './command.js';
 import type { JobCommandModule } from './job-command.js';

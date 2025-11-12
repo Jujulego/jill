@@ -2,10 +2,10 @@ import { asyncScope$, inject$ } from '@kyrielle/injector';
 import { startSpan } from '@sentry/node';
 import path from 'node:path';
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
-import type { Project } from '../../projects/project.js';
-import { ProjectsRepository } from '../../projects/projects.repository.js';
-import { CWD } from '../../tokens.js';
-import type { PackageManager, Writable } from '../../utils/types.js';
+import type { Project } from '../projects/project.js';
+import { ProjectsRepository } from '../projects/projects.repository.js';
+import { CWD } from '../tokens.js';
+import type { PackageManager, Writable } from '../utils/types.js';
 
 /**
  * Adds arguments to load a project.

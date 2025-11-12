@@ -3,7 +3,7 @@ import { Text, type TextProps } from 'ink';
 import Spinner from 'ink-spinner';
 import { useMemo } from 'react';
 import * as symbols from '../utils/symbols.js';
-import { useScriptsStats } from '../cli/hooks/useScriptsStats.js';
+import { useScriptsStats } from '../hooks/useScriptsStats.js';
 import type { FlatTreeWorkload } from '../cli/utils/flat-tree.js';
 
 // Component

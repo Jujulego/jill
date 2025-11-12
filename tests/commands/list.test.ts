@@ -2,7 +2,7 @@ import { list } from '@/src/commands.js';
 import ListInk from '@/src/commands/list.ink.js';
 import { hasSomeScript$ } from '@/src/cli/filters/has-scripts.js';
 import { isPrivate$ } from '@/src/cli/filters/is-private.js';
-import { loadProject, type ProjectArgs, withProject } from '@/src/cli/middlewares/project.js';
+import { loadProject, type ProjectArgs, withProject } from '@/src/middlewares/project.js';
 import { isAffected$ } from '@/src/cli/filters/is-affected.js';
 import { ClientError } from '@/src/cli/utils/errors.js';
 import { TestBed } from '@/tools/test-bed.js';

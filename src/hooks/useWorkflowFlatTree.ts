@@ -2,7 +2,7 @@ import { type Workload$ } from '@jujulego/tasks';
 import { collect$, map$, off$, pipe$ } from 'kyrielle';
 import { createHash } from 'node:crypto';
 import { useEffect, useState } from 'react';
-import { buildFlatTree, type FlatTreeWorkload } from '../utils/flat-tree.js';
+import { buildFlatTree, type FlatTreeWorkload } from '../cli/utils/flat-tree.js';
 
 // Hook
 export function useWorkflowFlatTree(workload: Workload$, verbose?: boolean): FlatTreeWorkload[] {

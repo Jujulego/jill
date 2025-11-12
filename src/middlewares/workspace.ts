@@ -1,8 +1,8 @@
 import { asyncScope$, inject$ } from '@kyrielle/injector';
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
-import type { Workspace } from '../../projects/workspace.js';
-import { CWD, LOGGER } from '../../tokens.js';
-import { ClientError } from '../utils/errors.js';
+import type { Workspace } from '../projects/workspace.js';
+import { CWD, LOGGER } from '../tokens.js';
+import { ClientError } from '../cli/utils/errors.js';
 import { loadProject, type ProjectArgs, withProject } from './project.js';
 
 /**

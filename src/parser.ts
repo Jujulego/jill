@@ -1,8 +1,8 @@
 import { pipe$ } from 'kyrielle';
 import yargs from 'yargs';
 import { version } from '../package.json' with { type: 'json' };
-import { withConfig } from './cli/middlewares/config.js';
-import { withLogger } from './cli/middlewares/logger.js';
+import { withConfig } from './middlewares/config.js';
+import { withLogger } from './middlewares/logger.js';
 
 // Utils
 export function cliParser() {
