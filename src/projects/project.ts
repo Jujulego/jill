@@ -5,7 +5,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import normalize, { type Package } from 'normalize-package-data';
 import { CWD, LOGGER, PATH_SCURRY } from '../tokens.js';
-import { mutex$, with$ } from '../utils/kyrielle.js';
+import { mutex$, with$ } from '../utils/mutex$.js';
 import type { PackageManager } from '../utils/types.js';
 import { Workspace } from './workspace.js';
 

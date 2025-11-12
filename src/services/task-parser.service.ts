@@ -2,10 +2,10 @@ import { fallbackFlow$, type Job$, parallelFlow$, sequenceFlow$, type Workflow$ 
 import { inject$ } from '@kyrielle/injector';
 import { withLabel } from '@kyrielle/logger';
 import moo from 'moo';
-import type { Workspace, WorkspaceRunOptions } from '../../projects/workspace.js';
-import { TaskExpressionError, TaskSyntaxError } from './errors.js';
-import { LOGGER } from '../../tokens.js';
-import { instrument } from '../../utils/sentry.js';
+import type { Workspace, WorkspaceRunOptions } from '../projects/workspace.js';
+import { LOGGER } from '../tokens.js';
+import { instrument } from '../utils/sentry.js';
+import { TaskExpressionError, TaskSyntaxError } from '../errors.js';
 
 // Interfaces
 export interface TaskNode {

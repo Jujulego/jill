@@ -1,7 +1,7 @@
 import { hasEveryScript$ } from '@/src/cli/filters/has-scripts.js';
 import { isAffected$ } from '@/src/cli/filters/is-affected.js';
 import { isPrivate$ } from '@/src/cli/filters/is-private.js';
-import type { ScriptWorkflow$ } from '@/src/cli/jobs/run-script$.js';
+import type { ScriptWorkflow$ } from '@/src/jobs/run-script$.js';
 import { withLogger } from '@/src/middlewares/logger.js';
 import { loadProject, type ProjectArgs, withProject } from '@/src/middlewares/project.js';
 import { each } from '@/src/commands.js';

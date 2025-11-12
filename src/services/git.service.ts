@@ -3,9 +3,9 @@ import { inject$ } from '@kyrielle/injector';
 import type { Logger } from '@kyrielle/logger';
 import { collect$, filter$, map$, pipe$, waitFor$ } from 'kyrielle';
 import { text } from 'node:stream/consumers';
-import { LOGGER, SCHEDULER } from '../../tokens.js';
-import { instrument } from '../../utils/sentry.js';
-import { ClientError } from '../utils/errors.js';
+import { LOGGER, SCHEDULER } from '../tokens.js';
+import { instrument } from '../utils/sentry.js';
+import { ClientError } from '../errors.js';
 
 export class GitService {
   // Attributes

@@ -1,7 +1,7 @@
 import type { Workload$ } from '@jujulego/tasks';
 import chalk from 'chalk';
-import { isScriptWorkflow } from '../utils/predicates.js';
-import { capitalize } from '../utils/string.js';
+import { isScriptWorkflow } from '../../utils/predicates.js';
+import { capitalize } from '../../utils/string.js';
 import { buildPlan } from './build-plan.js';
 
 export function printPlan(job: Workload$, stream: NodeJS.WriteStream = process.stdout) {

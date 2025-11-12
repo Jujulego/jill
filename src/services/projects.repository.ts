@@ -3,7 +3,7 @@ import { withLabel } from '@kyrielle/logger';
 import path from 'node:path';
 import { LOGGER, PATH_SCURRY } from '../tokens.js';
 import { instrument } from '../utils/sentry.js';
-import { Project, type ProjectOptions } from './project.js';
+import { Project, type ProjectOptions } from '../projects/project.js';
 
 /**
  * Helps detecting projects folders
@@ -30,7 +30,6 @@ export class ProjectsRepository {
     directory = path.resolve(directory);
 
     // Test all ancestors
-    const steps: string[] = [];
     let foundManifest = false;
     let projectRoot = directory;
     let dir = directory;
@@ -39,7 +38,6 @@ export class ProjectsRepository {
     do {
       // Look for files
       const { hasManifest, hasLockFile } = await this.isProjectRoot(dir);
-      steps.push(dir);
 
       if (hasManifest) {
         projectRoot = dir;

@@ -1,7 +1,7 @@
 import { inject$ } from '@kyrielle/injector';
 import { withLabel } from '@kyrielle/logger';
 import { asyncIterator$, type PipeStep, type SimpleAsyncIterator } from 'kyrielle';
-import { GitService } from '../services/git.service.js';
+import { GitService } from '../../services/git.service.js';
 import { type Workspace } from '../../projects/workspace.js';
 import { LOGGER } from '../../tokens.js';
 

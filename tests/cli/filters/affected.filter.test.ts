@@ -1,4 +1,4 @@
-import { GitService } from '@/src/cli/services/git.service.js';
+import { GitService } from '@/src/services/git.service.js';
 import { isAffected$ } from '@/src/cli/filters/is-affected.js';
 import { type Workspace } from '@/src/projects/workspace.js';
 import { CONFIG } from '@/src/tokens.js';

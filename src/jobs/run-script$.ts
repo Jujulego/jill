@@ -2,9 +2,9 @@ import { sequenceFlow$, type SequenceFlowProps, type Workflow$ } from '@jujulego
 import { inject$ } from '@kyrielle/injector';
 import type { Logger } from '@kyrielle/logger';
 import { collect$, filter$, pipe$ } from 'kyrielle';
-import type { Workspace } from '../../projects/workspace.js';
-import { splitCommandLine } from '../../utils/string.js';
-import { ClientError } from '../utils/errors.js';
+import type { Workspace } from '../projects/workspace.js';
+import { splitCommandLine } from '../utils/string.js';
+import { ClientError } from '../errors.js';
 import { command$ } from './command$.js';
 
 export async function runScript$(

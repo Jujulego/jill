@@ -1,5 +1,5 @@
 import { Box, Text } from 'ink';
-import { capitalize } from '../cli/utils/string.js';
+import { capitalize } from '../utils/string.js';
 import { inked } from '../wrappers/inked.jsx';
 import type { ExtractedData, ListAttr } from './list.js';
 

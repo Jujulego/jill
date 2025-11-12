@@ -4,16 +4,16 @@ import path from 'node:path';
 import { compare, parse } from 'semver';
 import slugify from 'slugify';
 import type { ArgumentsCamelCase, CommandModule } from 'yargs';
-import type { Workspace } from '../projects/workspace.js';
-import { printJson } from '../utils/json.js';
-import { traceImport } from '../utils/sentry.js';
-import type { Order } from '../utils/types.js';
 import { hasSomeScript$ } from '../cli/filters/has-scripts.js';
 import { isAffected$ } from '../cli/filters/is-affected.js';
 import { isPrivate$ } from '../cli/filters/is-private.js';
+import { ClientError } from '../errors.js';
 import { loadProject, type ProjectArgs, withProject } from '../middlewares/project.js';
-import { ClientError } from '../cli/utils/errors.js';
-import { pipeline$ } from '../cli/utils/pipeline$.js';
+import type { Workspace } from '../projects/workspace.js';
+import { printJson } from '../utils/json.js';
+import { pipeline$ } from '../utils/pipeline$.js';
+import { traceImport } from '../utils/sentry.js';
+import type { Order } from '../utils/types.js';
 
 // Command
 const command: CommandModule<unknown, ListArgs> = {

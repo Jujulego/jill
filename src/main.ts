@@ -4,7 +4,7 @@ import { pipe$ } from 'kyrielle';
 import process from 'node:process';
 import { hideBin } from 'yargs/helpers';
 import * as commands from './commands.js';
-import { ClientError } from './cli/utils/errors.js';
+import { ClientError } from './errors.js';
 import { cliParser } from './parser.js';
 import { LOGGER } from './tokens.js';
 import { command } from './wrappers/command.js';

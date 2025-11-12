@@ -3,7 +3,7 @@ import { startSpan } from '@sentry/node';
 import path from 'node:path';
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
 import type { Project } from '../projects/project.js';
-import { ProjectsRepository } from '../projects/projects.repository.js';
+import { ProjectsRepository } from '../services/projects.repository.js';
 import { CWD } from '../tokens.js';
 import type { PackageManager, Writable } from '../utils/types.js';
 

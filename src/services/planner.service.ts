@@ -2,12 +2,12 @@ import type { Job$ } from '@jujulego/tasks';
 import { asyncScope$, inject$ } from '@kyrielle/injector';
 import { withLabel } from '@kyrielle/logger';
 import { pipe$, var$ } from 'kyrielle';
-import * as commands from '../../commands.js';
-import { ConfigService } from '../../config/config.service.js';
-import { cliParser } from '../../parser.js';
-import { CWD, LOGGER } from '../../tokens.js';
-import { instrument } from '../../utils/sentry.js';
-import { jobCommandPlan } from '../../wrappers/job-command-plan.js';
+import * as commands from '../commands.js';
+import { ConfigService } from '../config/config.service.js';
+import { cliParser } from '../parser.js';
+import { CWD, LOGGER } from '../tokens.js';
+import { instrument } from '../utils/sentry.js';
+import { jobCommandPlan } from '../wrappers/job-command-plan.js';
 
 export class PlannerService {
   // Attributes

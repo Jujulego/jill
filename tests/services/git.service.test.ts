@@ -1,12 +1,12 @@
-import { GitService } from '@/src/cli/services/git.service.js';
+import { ClientError } from '@/src/errors.js';
+import { GitService } from '@/src/services/git.service.js';
 import { CONFIG, LOGGER, SCHEDULER } from '@/src/tokens.js';
 import { type Scheduler$, spawn$, type SpawnJob$, WorkloadState } from '@jujulego/tasks';
 import { globalScope$, inject$ } from '@kyrielle/injector';
 import type { Logger } from '@kyrielle/logger';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { var$ } from 'kyrielle';
-import { ClientError } from '@/src/cli/utils/errors.js';
 import { PassThrough } from 'node:stream';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mocks
 vi.mock('@jujulego/tasks', async (original) => {

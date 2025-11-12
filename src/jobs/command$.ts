@@ -1,8 +1,8 @@
 import { spawn$, type SpawnJob$, type SpawnProps } from '@jujulego/tasks';
 import { inject$ } from '@kyrielle/injector';
 import type { Logger } from '@kyrielle/logger';
-import { type Workspace } from '../../projects/workspace.js';
-import { LOGGER } from '../../tokens.js';
+import { type Workspace } from '../projects/workspace.js';
+import { LOGGER } from '../tokens.js';
 
 export function command$(
   workspace: Workspace,

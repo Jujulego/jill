@@ -1,7 +1,7 @@
 import type { Workload$ } from '@jujulego/tasks';
 import { Text, type TextProps } from 'ink';
-import { isScriptWorkflow } from '../cli/utils/predicates.js';
-import { capitalize } from '../cli/utils/string.js';
+import { isScriptWorkflow } from '../utils/predicates.js';
+import { capitalize } from '../utils/string.js';
 
 // Component
 export default function WorkloadName({ workload, withWorkspace, ...rest }: WorkloadNameProps) {

@@ -1,6 +1,6 @@
 import { var$, waitFor$ } from 'kyrielle';
 
-export function mutex$(): Lock {
+export function mutex$(): Mutex {
   const count$ = var$(0);
 
   return {
@@ -23,7 +23,7 @@ export function mutex$(): Lock {
   };
 }
 
-export async function with$<R>(lock: Lock, fn: () => R): Promise<Awaited<R>> {
+export async function with$<R>(lock: Mutex, fn: () => R): Promise<Awaited<R>> {
   try {
     await lock.acquire();
     return await fn();
@@ -33,7 +33,7 @@ export async function with$<R>(lock: Lock, fn: () => R): Promise<Awaited<R>> {
 }
 
 // Types
-export interface Lock {
+export interface Mutex {
   acquire(this: void): Promise<void>;
   release(this: void): void;
 }

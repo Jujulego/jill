@@ -3,7 +3,7 @@ import type { WorkspaceDepsMode } from '../projects/workspace.js';
 import type { JobCommandModule } from '../wrappers/job-command.js';
 import type { PlanModeArgs } from '../wrappers/job-command-plan.js';
 import { loadWorkspace, withWorkspace, type WorkspaceArgs } from '../middlewares/workspace.js';
-import { TaskParserService } from '../cli/services/task-parser.service.js';
+import { TaskParserService } from '../services/task-parser.service.js';
 
 // Command
 const command: JobCommandModule<RunArgs> = {
