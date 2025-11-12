@@ -4,7 +4,7 @@ import Spinner from 'ink-spinner';
 import ms from 'pretty-ms';
 import { useEffect, useState } from 'react';
 import * as symbols from '../utils/symbols.js';
-import { WorkloadName } from './workload-name.jsx';
+import { WorkloadName } from './WorkloadName.jsx';
 
 // Component
 export function WorkloadSpinner({ workload }: WorkloadSpinnerProps) {
