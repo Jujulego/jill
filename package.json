@@ -89,10 +89,5 @@
     "vite-tsconfig-paths": "5.1.4",
     "vitest": "3.2.4"
   },
-  "packageManager": "yarn@4.11.0",
-  "dependenciesMeta": {
-    "@jujulego/tasks@3.0.0-alpha.8": {
-      "unplugged": true
-    }
-  }
+  "packageManager": "yarn@4.11.0"
 }
