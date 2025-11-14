@@ -3,7 +3,7 @@ import { GitService } from '@/src/services/git.service.js';
 import { CONFIG, LOGGER, SCHEDULER } from '@/src/tokens.js';
 import { type Scheduler$, spawn$, type SpawnJob$, WorkloadState } from '@jujulego/tasks';
 import { globalScope$, inject$ } from '@kyrielle/injector';
-import type { Logger } from '@kyrielle/logger';
+import { type Logger, LogLevel } from '@kyrielle/logger';
 import { var$ } from 'kyrielle';
 import { PassThrough } from 'node:stream';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -49,21 +49,21 @@ describe('GitService.command', () => {
   });
 
   it('should redirect stdout data to logger (debug level)', async () => {
-    vi.spyOn(logger, 'debug');
+    vi.spyOn(logger, 'log');
 
     const job = await git.command('cmd', ['arg1', 'arg2']);
-    job.stdout.push(Buffer.from('test'));
+    job.stdout.push(Buffer.from('test\n'));
 
-    expect(logger.debug).toHaveBeenCalledWith('test');
+    expect(logger.log).toHaveBeenCalledWith(LogLevel.debug, 'test');
   });
 
   it('should redirect stderr data to logger (warning level)', async () => {
-    vi.spyOn(logger, 'warn');
+    vi.spyOn(logger, 'log');
 
     const job = await git.command('cmd', ['arg1', 'arg2']);
-    job.stderr.push(Buffer.from('test'));
+    job.stderr.push(Buffer.from('test\n'));
 
-    expect(logger.warn).toHaveBeenCalledWith('test');
+    expect(logger.log).toHaveBeenCalledWith(LogLevel.warning, 'test');
   });
 });
 
