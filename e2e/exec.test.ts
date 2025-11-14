@@ -127,8 +127,8 @@ describe('jill exec', () => {
       await expect(fileExists(path.join(prjDir, 'wks-b', 'script.txt'))).resolves.toBe(false);
     });
 
-    it.skip('should print task plan in json and do not run any script', async () => {
-      const res = await jill('-w wks-b --plan --plan-mode json node -e "require(\'node:fs\').writeFileSync(\'script.txt\', \'node\')"', {
+    it('should print task plan in json and do not run any script', async () => {
+      const res = await jill('-w wks-b --plan json node -e "require(\'node:fs\').writeFileSync(\'script.txt\', \'node\')"', {
         cwd: prjDir,
         keepQuotes: true
       });

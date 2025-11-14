@@ -232,8 +232,8 @@ describe('jill each', () => {
       await expect(fileExists(path.join(prjDir, 'wks-a', 'start.txt'))).resolves.toBe(false);
     });
 
-    it.skip('should print task plan in json and do not run any script', async () => {
-      const res = await jill('each --plan --plan-mode json start', { cwd: prjDir });
+    it('should print task plan in json and do not run any script', async () => {
+      const res = await jill('each --plan json start', { cwd: prjDir });
 
       // Check jill output
       expect(res.code).toBe(0);
