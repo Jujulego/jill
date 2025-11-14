@@ -35,7 +35,7 @@ export function jobCommandExecute<T extends LoggerArgs, U extends PlanModeArgs>(
         return;
       }
 
-      if (args.plan) {
+      if (typeof args.plan === 'string') {
         const { jobPlan } = await traceImport('printPlan', () => import('../components/job-plan.js'));
         jobPlan(job);
       } else {

@@ -1,8 +1,9 @@
 import type { Job$ } from '@jujulego/tasks';
 import type { Mutator } from 'kyrielle';
 import type { Argv, CommandModule } from 'yargs';
-import { trace } from '../utils/sentry.js';
+import { ClientError } from '../errors.js';
 import type { LoggerArgs } from '../middlewares/logger.js';
+import { trace } from '../utils/sentry.js';
 import { commandName } from '../utils/yargs.js';
 import { command } from './command.js';
 import type { JobCommandModule } from './job-command.js';
@@ -38,22 +39,25 @@ export function jobCommandPlan(module: CommandModule | JobCommandModule, job$: M
 
 // Types
 export interface PlanModeArgs extends LoggerArgs {
-  readonly plan: boolean;
-  readonly 'plan-mode': 'json' | 'list';
+  readonly plan?: 'json' | 'tree';
 }
 
 // Utils
 export function withPlanMode<T>(parser: Argv<T>) {
   return parser
     .option('plan', {
-      type: 'boolean',
-      default: false,
       describe: 'Only prints tasks to be run',
-    })
-    .option('plan-mode', {
-      type: 'string',
-      desc: 'Plan output mode',
-      choices: ['json', 'list'] as const,
-      default: 'list' as const
+      choices: ['json', 'tree'],
+      coerce(value: unknown) {
+        if (typeof value === 'string') {
+          if (['json', 'tree'].includes(value)) {
+            return value as 'json' | 'tree';
+          }
+        } else if (value === true) {
+          return 'tree';
+        }
+
+        throw new ClientError(`Invalid value for plan option ${JSON.stringify(value)}`);
+      }
     });
 }
