@@ -36,6 +36,7 @@ export function jill(args: string, opts: SpawnOptions = {}): Promise<SpawnResult
       env: {
         ...process.env,
         FORCE_COLOR: '1',
+        SENTRY_ENVIRONMENT: 'testing',
       }
     });
 
