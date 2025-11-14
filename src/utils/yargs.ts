@@ -1,6 +1,6 @@
 import type { CommandModule } from 'yargs';
 
-export function getCommandName<T, U>(module: CommandModule<T, U>): string {
+export function commandName(module: Pick<CommandModule, 'command'>): string {
   if (!module.command) {
     return '[unknown]';
   }

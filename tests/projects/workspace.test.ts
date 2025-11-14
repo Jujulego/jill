@@ -1,5 +1,5 @@
-import type { ScriptWorkflow$ } from '@/src/cli/jobs/run-script$.js';
-import { GitService } from '@/src/cli/services/git.service.js';
+import type { ScriptWorkflow$ } from '@/src/jobs/run-script$.js';
+import { GitService } from '@/src/services/git.service.js';
 import { Project } from '@/src/projects/project.js';
 import { Workspace } from '@/src/projects/workspace.js';
 import { CONFIG } from '@/src/tokens.js';

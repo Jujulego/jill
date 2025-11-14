@@ -1,5 +1,5 @@
 import { Project } from '@/src/projects/project.js';
-import { ProjectsRepository } from '@/src/projects/projects.repository';
+import { ProjectsRepository } from '@/src/services/projects.repository.js';
 import { globalScope$, inject$ } from '@kyrielle/injector';
 import { vol } from 'memfs';
 import path from 'node:path';

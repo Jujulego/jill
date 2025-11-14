@@ -1,7 +1,7 @@
 {
   "$schema": "https://swc.rs/schema.json",
   "env": {
-    "targets": "node 18"
+    "targets": "node 20"
   },
   "jsc": {
     "externalHelpers": true,
