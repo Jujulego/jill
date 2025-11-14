@@ -8,7 +8,7 @@ import { command$ } from '../jobs/command$.js';
 import { runScript$, type RunScriptOpts, type ScriptWorkflow$ } from '../jobs/run-script$.js';
 import { GitService } from '../services/git.service.js';
 import { CONFIG, LOGGER } from '../tokens.js';
-import { combine } from '../utils/streams.js';
+import { combine } from '../utils/generators.js';
 import type { Project } from './project.js';
 
 export class Workspace {

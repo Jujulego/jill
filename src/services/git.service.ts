@@ -1,11 +1,12 @@
 import { isWorkloadEnded, spawn$, type SpawnJob$, type SpawnProps } from '@jujulego/tasks';
 import { inject$ } from '@kyrielle/injector';
-import type { Logger } from '@kyrielle/logger';
+import { type Logger, LogLevel } from '@kyrielle/logger';
 import { collect$, filter$, map$, pipe$, waitFor$ } from 'kyrielle';
 import { text } from 'node:stream/consumers';
 import { LOGGER, SCHEDULER } from '../tokens.js';
 import { instrument } from '../utils/sentry.js';
 import { ClientError } from '../errors.js';
+import { logStreamedLines } from '../utils/streams.js';
 
 export class GitService {
   // Attributes
@@ -21,8 +22,8 @@ export class GitService {
 
     // Create job
     const job = spawn$('git', [cmd, ...args], props);
-    job.stdout.on('data', (data: Buffer) => logger.debug(data.toString('utf-8').trimEnd()));
-    job.stderr.on('data', (data: Buffer) => logger.warn(data.toString('utf-8').trimEnd()));
+    job.stdout.pipe(logStreamedLines(logger, LogLevel.debug));
+    job.stderr.pipe(logStreamedLines(logger, LogLevel.warning));
 
     (await this._scheduler).register(job);
 

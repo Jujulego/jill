@@ -1,4 +1,4 @@
-import { combine } from '@/src/utils/streams.js';
+import { combine } from '@/src/utils/generators.js';
 import { describe, expect, it } from 'vitest';
 
 // Tests

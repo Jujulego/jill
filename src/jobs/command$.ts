@@ -1,8 +1,9 @@
 import { spawn$, type SpawnJob$, type SpawnProps } from '@jujulego/tasks';
 import { inject$ } from '@kyrielle/injector';
-import type { Logger } from '@kyrielle/logger';
+import { type Logger, LogLevel } from '@kyrielle/logger';
 import { type Workspace } from '../projects/workspace.js';
 import { LOGGER } from '../tokens.js';
+import { logStreamedLines } from '../utils/streams.js';
 
 export function command$(
   workspace: Workspace,
@@ -33,8 +34,8 @@ export function command$(
     }
   });
 
-  job.stdout.on('data', (data: Buffer) => logger.info(data.toString('utf-8').trimEnd()));
-  job.stderr.on('data', (data: Buffer) => logger.info(data.toString('utf-8').trimEnd()));
+  job.stdout.pipe(logStreamedLines(logger, LogLevel.info));
+  job.stderr.pipe(logStreamedLines(logger, LogLevel.info));
 
   return job;
 }
