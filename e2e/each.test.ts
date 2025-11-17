@@ -1,3 +1,4 @@
+import type { PlanItemDto } from '@/src/components/job-plan.json.js';
 import { TestBed } from '@/tools/test-bed.js';
 import fs from 'node:fs/promises';
 import path from 'node:path';
@@ -238,10 +239,10 @@ describe('jill each', () => {
       // Check jill output
       expect(res.code).toBe(0);
 
-      const plan = JSON.parse(res.stdout.join('\n')) as { id: string }[];
+      const plan = JSON.parse(res.stdout.join('\n')) as PlanItemDto[];
       expect(plan).toHaveLength(8);
 
-      expect(plan[0]).toMatchObject({
+      expect(plan[0]).toEqual({
         id: expect.stringMatching(/[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}/),
         isGroup: true,
         context: {
