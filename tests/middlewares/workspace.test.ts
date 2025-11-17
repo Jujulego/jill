@@ -1,5 +1,5 @@
-import { loadProject, type ProjectArgs, withProject } from '@/src/middlewares/project.js';
-import { loadWorkspace, withWorkspace } from '@/src/middlewares/workspace.js';
+import { loadProject, type ProjectArgs, withProject } from '@/src/middlewares/with-project.js';
+import { loadWorkspace, withWorkspace } from '@/src/middlewares/with-workspace.js';
 import { CWD } from '@/src/tokens.js';
 import { TestBed } from '@/tools/test-bed.js';
 import { globalScope$ } from '@kyrielle/injector';

@@ -1,7 +1,7 @@
 import { list } from '@/src/commands.js';
 import ListInk from '@/src/commands/list.ink.js';
 import { ClientError } from '@/src/errors.js';
-import { loadProject, type ProjectArgs, withProject } from '@/src/middlewares/project.js';
+import { loadProject, type ProjectArgs, withProject } from '@/src/middlewares/with-project.js';
 import { hasSomeScript$ } from '@/src/projects/filters/has-scripts.js';
 import { isAffected$ } from '@/src/projects/filters/is-affected.js';
 import { isPrivate$ } from '@/src/projects/filters/is-private.js';

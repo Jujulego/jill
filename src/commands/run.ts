@@ -1,9 +1,9 @@
 import { inject$ } from '@kyrielle/injector';
 import type { WorkspaceDepsMode } from '../projects/workspace.js';
 import type { JobCommandModule } from '../wrappers/job-command.js';
-import type { PlanModeArgs } from '../wrappers/job-command-plan.js';
-import { loadWorkspace, withWorkspace, type WorkspaceArgs } from '../middlewares/workspace.js';
+import { loadWorkspace, withWorkspace, type WorkspaceArgs } from '../middlewares/with-workspace.js';
 import { TaskParserService } from '../services/task-parser.service.js';
+import type { PlanModeArgs } from '../middlewares/with-plan.js';
 
 // Command
 const command: JobCommandModule<RunArgs> = {

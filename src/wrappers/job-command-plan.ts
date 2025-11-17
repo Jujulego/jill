@@ -1,12 +1,12 @@
 import type { Job$ } from '@jujulego/tasks';
 import type { Mutator } from 'kyrielle';
 import type { Argv, CommandModule } from 'yargs';
-import { ClientError } from '../errors.js';
-import type { LoggerArgs } from '../middlewares/logger.js';
+import type { LoggerArgs } from '../middlewares/with-logger.js';
 import { trace } from '../utils/sentry.js';
 import { commandName } from '../utils/yargs.js';
 import { command } from './command.js';
 import type { JobCommandModule } from './job-command.js';
+import { type PlanModeArgs, withPlan } from '../middlewares/with-plan.js';
 
 export function jobCommandPlan<T, U>(module: CommandModule<T, U>, job$: Mutator<Job$ | null>): <V extends T>(parser: Argv<V>) => Argv<V>;
 export function jobCommandPlan<T extends PlanModeArgs>(module: JobCommandModule<T>, job$: Mutator<Job$ | null>): <V extends LoggerArgs>(parser: Argv<V>) => Argv<V>;
@@ -17,7 +17,7 @@ export function jobCommandPlan(module: CommandModule | JobCommandModule, job$: M
     return command<LoggerArgs, PlanModeArgs>({
       ...module,
       builder(base) {
-        const parser = withPlanMode(base);
+        const parser = withPlan(base);
 
         if (module.builder) {
           return module.builder(parser);
@@ -26,7 +26,9 @@ export function jobCommandPlan(module: CommandModule | JobCommandModule, job$: M
         }
       },
       async handler(args) {
-        job$.mutate(await prepare(args) ?? null);
+        if (!args.plan) {
+          job$.mutate(await prepare(args) ?? null);
+        }
       }
     });
   } else {
@@ -37,27 +39,3 @@ export function jobCommandPlan(module: CommandModule | JobCommandModule, job$: M
   }
 }
 
-// Types
-export interface PlanModeArgs extends LoggerArgs {
-  readonly plan?: 'json' | 'tree';
-}
-
-// Utils
-export function withPlanMode<T>(parser: Argv<T>) {
-  return parser
-    .option('plan', {
-      describe: 'Only prints tasks to be run',
-      choices: ['json', 'tree'],
-      coerce(value: unknown) {
-        if (typeof value === 'string') {
-          if (['json', 'tree'].includes(value)) {
-            return value as 'json' | 'tree';
-          }
-        } else if (value === true) {
-          return 'tree';
-        }
-
-        throw new ClientError(`Invalid value for plan option ${JSON.stringify(value)}`);
-      }
-    });
-}

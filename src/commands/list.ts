@@ -8,7 +8,7 @@ import { hasSomeScript$ } from '../projects/filters/has-scripts.js';
 import { isAffected$ } from '../projects/filters/is-affected.js';
 import { isPrivate$ } from '../projects/filters/is-private.js';
 import { ClientError } from '../errors.js';
-import { loadProject, type ProjectArgs, withProject } from '../middlewares/project.js';
+import { loadProject, type ProjectArgs, withProject } from '../middlewares/with-project.js';
 import type { Workspace } from '../projects/workspace.js';
 import { printJson } from '../utils/json.js';
 import { pipeline$ } from '../utils/pipeline$.js';

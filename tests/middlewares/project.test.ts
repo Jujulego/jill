@@ -1,4 +1,4 @@
-import { loadProject, withProject } from '@/src/middlewares/project.js';
+import { loadProject, withProject } from '@/src/middlewares/with-project.js';
 import { ProjectsRepository } from '@/src/services/projects.repository.js';
 import { CWD } from '@/src/tokens.js';
 import { TestBed } from '@/tools/test-bed.js';
