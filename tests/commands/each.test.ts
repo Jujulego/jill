@@ -14,7 +14,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import yargs, { type Argv } from 'yargs';
 
 // Mocks
-vi.mock('@/src/middlewares/project.js');
+vi.mock('@/src/middlewares/with-project.js');
 vi.mock('@/src/projects/filters/has-scripts.js');
 vi.mock('@/src/projects/filters/is-affected.js');
 vi.mock('@/src/projects/filters/is-private.js');
