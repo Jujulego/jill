@@ -175,7 +175,7 @@ describe('jill run', () => {
     });
 
     it('should print task plan and do not run any script', async () => {
-      const res = await jill('run -w wks-b --plan --plan-mode json start', { cwd: prjDir });
+      const res = await jill('run -w wks-b --plan start', { cwd: prjDir });
 
       // Check jill plan
       expect(res.code).toBe(0);
@@ -186,7 +186,7 @@ describe('jill run', () => {
     });
 
     it('should print task plan in json and do not run any script', async () => {
-      const res = await jill('run -w wks-b --plan json start', { cwd: prjDir });
+      const res = await jill('run -w wks-b --plan --plan-mode json start', { cwd: prjDir });
 
       // Check jill plan
       expect(res.code).toBe(0);

@@ -128,7 +128,7 @@ describe('jill exec', () => {
     });
 
     it('should print task plan in json and do not run any script', async () => {
-      const res = await jill('-w wks-b --plan json node -e "require(\'node:fs\').writeFileSync(\'script.txt\', \'node\')"', {
+      const res = await jill('-w wks-b --plan --plan-mode json node -e "require(\'node:fs\').writeFileSync(\'script.txt\', \'node\')"', {
         cwd: prjDir,
         keepQuotes: true
       });

@@ -220,7 +220,7 @@ describe('jill each', () => {
     });
 
     it('should print task plan and do not run any script', async () => {
-      const res = await jill('each --plan --plan-mode json start', { cwd: prjDir });
+      const res = await jill('each --plan start', { cwd: prjDir });
 
       // Check jill output
       expect(res.code).toBe(0);
@@ -233,7 +233,7 @@ describe('jill each', () => {
     });
 
     it('should print task plan in json and do not run any script', async () => {
-      const res = await jill('each --plan json start', { cwd: prjDir });
+      const res = await jill('each --plan --plan-mode json start', { cwd: prjDir });
 
       // Check jill output
       expect(res.code).toBe(0);
