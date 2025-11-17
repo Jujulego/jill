@@ -181,14 +181,6 @@ export class Workspace {
     return job;
   }
 
-  toJSON() {
-    return {
-      name: this.name,
-      version: this.version,
-      root: this.root,
-    };
-  }
-
   // Properties
   get name(): string {
     return this.manifest.name;

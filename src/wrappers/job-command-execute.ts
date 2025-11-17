@@ -37,8 +37,12 @@ export function jobCommandExecute<T extends LoggerArgs, U extends PlanModeArgs>(
 
       if (args.plan) {
         switch (args.planFormat) {
-          case 'json':
+          case 'json': {
+            const { jobPlanJson } = await traceImport('printPlanJson', () => import('../components/job-plan.json.js'));
+            jobPlanJson(job);
+
             break;
+          }
 
           case 'tree':
           default: {
