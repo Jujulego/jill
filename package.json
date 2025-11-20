@@ -62,7 +62,7 @@
     "@rollup/plugin-json": "6.1.0",
     "@rollup/plugin-node-resolve": "16.0.3",
     "@sentry/rollup-plugin": "4.6.1",
-    "@swc/core": "1.15.2",
+    "@swc/core": "1.15.3",
     "@types/moo": "0.5.10",
     "@types/node": "24.10.1",
     "@types/normalize-package-data": "2.4.4",
