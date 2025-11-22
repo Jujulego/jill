@@ -44,8 +44,8 @@ describe('buildFlatTree', () => {
 
     expect(flatJobTree(flow, true)).toEqual([
       { level: 0, workload: flow },
-      { level: 1, workload: wklA },
-      { level: 1, workload: wklB },
+      { level: 1, workload: wklA, parent: flow },
+      { level: 1, workload: wklB, parent: flow },
     ]);
   });
 
@@ -80,8 +80,8 @@ describe('buildFlatTree', () => {
     expect(flatJobTree(flow, true)).toEqual([
       { level: 0, workload: dep },
       { level: 0, workload: flow },
-      { level: 1, workload: jobA },
-      { level: 1, workload: jobB },
+      { level: 1, workload: jobA, parent: flow },
+      { level: 1, workload: jobB, parent: flow },
     ]);
   });
 });

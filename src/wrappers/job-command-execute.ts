@@ -3,11 +3,11 @@ import process from 'node:process';
 import type { Argv } from 'yargs';
 import { LOGGER } from '../tokens.js';
 import { trace, traceImport } from '../utils/sentry.js';
-import type { LoggerArgs } from '../middlewares/logger.js';
+import type { LoggerArgs } from '../middlewares/with-logger.js';
 import { commandName } from '../utils/yargs.js';
 import { command } from './command.js';
 import { type JobCommandModule } from './job-command.js';
-import { type PlanModeArgs, withPlanMode } from './job-command-plan.js';
+import { type PlanModeArgs, withPlan } from '../middlewares/with-plan.js';
 
 export function jobCommandExecute<T extends LoggerArgs, U extends PlanModeArgs>(module: JobCommandModule<U>) {
   const prepare = trace(module.prepare, { name: commandName(module), op: 'cli.prepare' });
@@ -16,7 +16,7 @@ export function jobCommandExecute<T extends LoggerArgs, U extends PlanModeArgs>(
   return command<T, U>({
     ...module,
     builder(base) {
-      const parser = withPlanMode(base);
+      const parser = withPlan(base);
 
       if (module.builder) {
         return module.builder(parser);
@@ -36,8 +36,23 @@ export function jobCommandExecute<T extends LoggerArgs, U extends PlanModeArgs>(
       }
 
       if (args.plan) {
-        const { jobPlan } = await traceImport('printPlan', () => import('../components/job-plan.js'));
-        jobPlan(job);
+        switch (args.planFormat) {
+          case 'json': {
+            const { jobPlanJson } = await traceImport('printPlanJson', () => import('../components/job-plan.json.js'));
+            jobPlanJson(job);
+
+            break;
+          }
+
+          case 'tree':
+          default: {
+            const { jobPlan } = await traceImport('printPlan', () => import('../components/job-plan.js'));
+            jobPlan(job);
+
+            break;
+          }
+        }
+
       } else {
         if (execute) {
           await execute(args, job);

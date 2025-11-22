@@ -1,7 +1,7 @@
 import { run } from '@/src/commands.js';
 import type { ScriptWorkflow$ } from '@/src/jobs/run-script$.js';
-import { withLogger } from '@/src/middlewares/logger.js';
-import { loadWorkspace, withWorkspace, type WorkspaceArgs } from '@/src/middlewares/workspace.js';
+import { withLogger } from '@/src/middlewares/with-logger.js';
+import { loadWorkspace, withWorkspace, type WorkspaceArgs } from '@/src/middlewares/with-workspace.js';
 import type { Workspace } from '@/src/projects/workspace.js';
 import { jobCommandPlan } from '@/src/wrappers/job-command-plan.js';
 import { TestBed } from '@/tools/test-bed.js';
@@ -12,7 +12,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import yargs, { type Argv } from 'yargs';
 
 // Mocks
-vi.mock('@/src/middlewares/workspace.js');
+vi.mock('@/src/middlewares/with-workspace.js');
 
 // Setup
 let bed: TestBed;

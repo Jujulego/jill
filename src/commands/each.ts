@@ -5,11 +5,11 @@ import { hasEveryScript$ } from '../projects/filters/has-scripts.js';
 import { isAffected$ } from '../projects/filters/is-affected.js';
 import { isPrivate$ } from '../projects/filters/is-private.js';
 import { TaskParserService } from '../services/task-parser.service.js';
-import { loadProject, type ProjectArgs, withProject } from '../middlewares/project.js';
+import { loadProject, type ProjectArgs, withProject } from '../middlewares/with-project.js';
 import type { Workspace, WorkspaceDepsMode } from '../projects/workspace.js';
 import { pipeline$ } from '../utils/pipeline$.js';
-import type { PlanModeArgs } from '../wrappers/job-command-plan.js';
 import type { JobCommandModule } from '../wrappers/job-command.js';
+import type { PlanModeArgs } from '../middlewares/with-plan.js';
 
 // Command
 const command: JobCommandModule<EachArgs> = {

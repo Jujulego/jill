@@ -127,8 +127,8 @@ describe('jill exec', () => {
       await expect(fileExists(path.join(prjDir, 'wks-b', 'script.txt'))).resolves.toBe(false);
     });
 
-    it.skip('should print task plan in json and do not run any script', async () => {
-      const res = await jill('-w wks-b --plan --plan-mode json node -e "require(\'node:fs\').writeFileSync(\'script.txt\', \'node\')"', {
+    it('should print task plan in json and do not run any script', async () => {
+      const res = await jill('-w wks-b --plan --plan-format json node -e "require(\'node:fs\').writeFileSync(\'script.txt\', \'node\')"', {
         cwd: prjDir,
         keepQuotes: true
       });
@@ -139,42 +139,32 @@ describe('jill exec', () => {
       const plan = JSON.parse(res.stdout.join('\n')) as { id: string }[];
       expect(plan).toHaveLength(3);
 
-      expect(plan[0]).toMatchObject({
+      expect(plan[0]).toStrictEqual({
         id: expect.stringMatching(/[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}/),
-        isGroup: true,
-        context: {
-          script: 'build',
-          workspace: {
-            name: 'wks-c',
-            root: path.join(prjDir, 'wks-c')
-          }
+        label: 'build',
+        type: 'script',
+        dependsOn: [],
+        workspace: {
+          name: 'wks-c',
+          slug: 'wks-c',
+          version: '1.0.0',
+          root: path.join(prjDir, 'wks-c')
         }
       });
 
-      expect(plan[1]).toMatchObject({
-        id: expect.stringMatching(/[0-9a-f]{32}/),
-        groupId: plan[0].id,
-        context: {
-          command: 'node',
-          workspace: {
-            name: 'wks-c',
-            root: path.join(prjDir, 'wks-c')
-          }
-        }
+      expect(plan[1]).toStrictEqual({
+        id: expect.stringMatching(/[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}/),
+        parentId: plan[0].id,
+        label: expect.stringMatching(/^(yarn exec )?node/),
+        type: 'spawn',
+        dependsOn: []
       });
 
-      expect(plan[2]).toMatchObject({
-        id: expect.stringMatching(/[0-9a-f]{32}/),
-        dependenciesIds: [
-          plan[0].id
-        ],
-        context: {
-          command: 'node',
-          workspace: {
-            name: 'wks-b',
-            root: path.join(prjDir, 'wks-b')
-          }
-        }
+      expect(plan[2]).toStrictEqual({
+        id: expect.stringMatching(/[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}/),
+        label: expect.stringMatching(/^(yarn exec )?node/),
+        type: 'spawn',
+        dependsOn: [plan[1].id]
       });
 
       await expect(fileExists(path.join(prjDir, 'wks-c', 'script.txt'))).resolves.toBe(false);

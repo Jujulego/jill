@@ -6,10 +6,11 @@ import { type Unsubscribable, waitFor$ } from 'kyrielle';
 import fs from 'node:fs';
 import process from 'node:process';
 import { PathScurry } from 'path-scurry';
+import { traceImport } from './utils/sentry.js';
 
 // Tokens
 export const CONFIG = token$('Config', async () => {
-  const { ConfigService } = await import('./config/config.service.js');
+  const { ConfigService } = await traceImport('ConfigService', () => import('./config/config.service.js'));
   return waitFor$(inject$(ConfigService, asyncScope$()).config$);
 });
 

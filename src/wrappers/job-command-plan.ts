@@ -1,11 +1,12 @@
 import type { Job$ } from '@jujulego/tasks';
 import type { Mutator } from 'kyrielle';
 import type { Argv, CommandModule } from 'yargs';
+import type { LoggerArgs } from '../middlewares/with-logger.js';
 import { trace } from '../utils/sentry.js';
-import type { LoggerArgs } from '../middlewares/logger.js';
 import { commandName } from '../utils/yargs.js';
 import { command } from './command.js';
 import type { JobCommandModule } from './job-command.js';
+import { type PlanModeArgs, withPlan } from '../middlewares/with-plan.js';
 
 export function jobCommandPlan<T, U>(module: CommandModule<T, U>, job$: Mutator<Job$ | null>): <V extends T>(parser: Argv<V>) => Argv<V>;
 export function jobCommandPlan<T extends PlanModeArgs>(module: JobCommandModule<T>, job$: Mutator<Job$ | null>): <V extends LoggerArgs>(parser: Argv<V>) => Argv<V>;
@@ -16,7 +17,7 @@ export function jobCommandPlan(module: CommandModule | JobCommandModule, job$: M
     return command<LoggerArgs, PlanModeArgs>({
       ...module,
       builder(base) {
-        const parser = withPlanMode(base);
+        const parser = withPlan(base);
 
         if (module.builder) {
           return module.builder(parser);
@@ -25,7 +26,9 @@ export function jobCommandPlan(module: CommandModule | JobCommandModule, job$: M
         }
       },
       async handler(args) {
-        job$.mutate(await prepare(args) ?? null);
+        if (!args.plan) {
+          job$.mutate(await prepare(args) ?? null);
+        }
       }
     });
   } else {
@@ -36,24 +39,3 @@ export function jobCommandPlan(module: CommandModule | JobCommandModule, job$: M
   }
 }
 
-// Types
-export interface PlanModeArgs extends LoggerArgs {
-  readonly plan: boolean;
-  readonly 'plan-mode': 'json' | 'list';
-}
-
-// Utils
-export function withPlanMode<T>(parser: Argv<T>) {
-  return parser
-    .option('plan', {
-      type: 'boolean',
-      default: false,
-      describe: 'Only prints tasks to be run',
-    })
-    .option('plan-mode', {
-      type: 'string',
-      desc: 'Plan output mode',
-      choices: ['json', 'list'] as const,
-      default: 'list' as const
-    });
-}

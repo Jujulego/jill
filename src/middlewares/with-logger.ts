@@ -31,7 +31,7 @@ export function withLogger<T>(parser: Argv<T>) {
       );
 
       logGateway.connect('console', toStderr(logFormat));
-    }));
+    }), true);
 }
 
 // Utils

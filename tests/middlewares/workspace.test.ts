@@ -1,5 +1,5 @@
-import { loadProject, type ProjectArgs, withProject } from '@/src/middlewares/project.js';
-import { loadWorkspace, withWorkspace } from '@/src/middlewares/workspace.js';
+import { loadProject, type ProjectArgs, withProject } from '@/src/middlewares/with-project.js';
+import { loadWorkspace, withWorkspace } from '@/src/middlewares/with-workspace.js';
 import { CWD } from '@/src/tokens.js';
 import { TestBed } from '@/tools/test-bed.js';
 import { globalScope$ } from '@kyrielle/injector';
@@ -8,7 +8,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import yargs, { type Argv } from 'yargs';
 
 // Mocks
-vi.mock('@/src/middlewares/project.js');
+vi.mock('@/src/middlewares/with-project.js');
 
 // Setup
 let bed: TestBed;

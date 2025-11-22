@@ -1,3 +1,4 @@
+import type { PlanItemDto } from '@/src/components/job-plan.json.js';
 import { TestBed } from '@/tools/test-bed.js';
 import fs from 'node:fs/promises';
 import path from 'node:path';
@@ -220,7 +221,7 @@ describe('jill each', () => {
     });
 
     it('should print task plan and do not run any script', async () => {
-      const res = await jill('each --plan --plan-mode json start', { cwd: prjDir });
+      const res = await jill('each --plan start', { cwd: prjDir });
 
       // Check jill output
       expect(res.code).toBe(0);
@@ -232,119 +233,97 @@ describe('jill each', () => {
       await expect(fileExists(path.join(prjDir, 'wks-a', 'start.txt'))).resolves.toBe(false);
     });
 
-    it.skip('should print task plan in json and do not run any script', async () => {
-      const res = await jill('each --plan --plan-mode json start', { cwd: prjDir });
+    it('should print task plan in json and do not run any script', async () => {
+      const res = await jill('each --plan --plan-format json start', { cwd: prjDir });
 
       // Check jill output
       expect(res.code).toBe(0);
 
-      const plan = JSON.parse(res.stdout.join('\n')) as { id: string }[];
+      const plan = JSON.parse(res.stdout.join('\n')) as PlanItemDto[];
       expect(plan).toHaveLength(8);
 
-      expect(plan[0]).toMatchObject({
+      expect(plan[0]).toStrictEqual({
         id: expect.stringMatching(/[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}/),
-        isGroup: true,
-        context: {
-          script: 'build',
-          workspace: {
-            name: 'wks-c',
-            root: path.join(prjDir, 'wks-c')
-          }
+        label: 'build',
+        type: 'script',
+        dependsOn: [plan[3].id],
+        workspace: {
+          name: 'wks-b',
+          slug: 'wks-b',
+          version: '1.0.0',
+          root: path.join(prjDir, 'wks-b')
         }
       });
 
-      expect(plan[1]).toMatchObject({
-        id: expect.stringMatching(/[0-9a-f]{32}/),
-        groupId: plan[0].id,
-        context: {
-          command: 'node',
-          workspace: {
-            name: 'wks-c',
-            root: path.join(prjDir, 'wks-c')
-          }
-        }
-      });
-
-      expect(plan[2]).toMatchObject({
+      expect(plan[1]).toStrictEqual({
         id: expect.stringMatching(/[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}/),
-        isGroup: true,
-        dependenciesIds: [
-          plan[0].id
-        ],
-        context: {
-          script: 'start',
-          workspace: {
-            name: 'wks-b',
-            root: path.join(prjDir, 'wks-b')
-          }
-        }
+        parentId: plan[0].id,
+        label: expect.stringMatching(/^(yarn exec )?node/),
+        type: 'spawn',
+        dependsOn: []
       });
 
-      expect(plan[3]).toMatchObject({
-        id: expect.stringMatching(/[0-9a-f]{32}/),
-        groupId: plan[2].id,
-        context: {
-          command: 'node',
-          workspace: {
-            name: 'wks-b',
-            root: path.join(prjDir, 'wks-b')
-          }
-        }
-      });
-
-      expect(plan[4]).toMatchObject({
+      expect(plan[2]).toStrictEqual({
         id: expect.stringMatching(/[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}/),
-        isGroup: true,
-        dependenciesIds: [
-          plan[0].id
-        ],
-        context: {
-          script: 'build',
-          workspace: {
-            name: 'wks-b',
-            root: path.join(prjDir, 'wks-b')
-          }
+        label: 'build',
+        type: 'script',
+        dependsOn: [],
+        workspace: {
+          name: 'wks-c',
+          slug: 'wks-c',
+          version: '1.0.0',
+          root: path.join(prjDir, 'wks-c')
         }
       });
 
-      expect(plan[5]).toMatchObject({
-        id: expect.stringMatching(/[0-9a-f]{32}/),
-        groupId: plan[4].id,
-        context: {
-          command: 'node',
-          workspace: {
-            name: 'wks-b',
-            root: path.join(prjDir, 'wks-b')
-          }
-        }
-      });
-
-      expect(plan[6]).toMatchObject({
+      expect(plan[3]).toStrictEqual({
         id: expect.stringMatching(/[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}/),
-        isGroup: true,
-        dependenciesIds: [
-          plan[4].id,
-          plan[0].id,
-        ],
-        context: {
-          script: 'start',
-          workspace: {
-            name: 'wks-a',
-            root: path.join(prjDir, 'wks-a')
-          }
+        parentId: plan[2].id,
+        label: expect.stringMatching(/^(yarn exec )?node/),
+        type: 'spawn',
+        dependsOn: []
+      });
+
+      expect(plan[4]).toStrictEqual({
+        id: expect.stringMatching(/[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}/),
+        label: 'start',
+        type: 'script',
+        dependsOn: [plan[1].id, plan[3].id],
+        workspace: {
+          name: 'wks-a',
+          slug: 'wks-a',
+          version: '1.0.0',
+          root: path.join(prjDir, 'wks-a')
         }
       });
 
-      expect(plan[7]).toMatchObject({
-        id: expect.stringMatching(/[0-9a-f]{32}/),
-        groupId: plan[6].id,
-        context: {
-          command: 'node',
-          workspace: {
-            name: 'wks-a',
-            root: path.join(prjDir, 'wks-a')
-          }
+      expect(plan[5]).toStrictEqual({
+        id: expect.stringMatching(/[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}/),
+        parentId: plan[4].id,
+        label: expect.stringMatching(/^(yarn exec )?node/),
+        type: 'spawn',
+        dependsOn: []
+      });
+
+      expect(plan[6]).toStrictEqual({
+        id: expect.stringMatching(/[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}/),
+        label: 'start',
+        type: 'script',
+        dependsOn: [plan[3].id],
+        workspace: {
+          name: 'wks-b',
+          slug: 'wks-b',
+          version: '1.0.0',
+          root: path.join(prjDir, 'wks-b')
         }
+      });
+
+      expect(plan[7]).toStrictEqual({
+        id: expect.stringMatching(/[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}/),
+        parentId: plan[6].id,
+        label: expect.stringMatching(/^(yarn exec )?node/),
+        type: 'spawn',
+        dependsOn: []
       });
 
       await expect(fileExists(path.join(prjDir, 'wks-c', 'hook.txt'))).resolves.toBe(false);

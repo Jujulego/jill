@@ -3,7 +3,7 @@ import { type ArgumentsCamelCase, type Argv } from 'yargs';
 import type { Workspace } from '../projects/workspace.js';
 import { CWD, LOGGER } from '../tokens.js';
 import { ClientError } from '../errors.js';
-import { loadProject, type ProjectArgs, withProject } from './project.js';
+import { loadProject, type ProjectArgs, withProject } from './with-project.js';
 
 /**
  * Adds arguments to load a workspace.
