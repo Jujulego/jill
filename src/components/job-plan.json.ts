@@ -12,11 +12,14 @@ export function jobPlanJson(job: Workload$, stream: NodeJS.WriteStream = process
   for (const item of plan) {
     const dto: Writable<PlanItemDto> = {
       id: item.workload.id,
-      parentId: item.parent?.id,
       label: item.workload.label,
       type: item.workload.type,
       dependsOn: item.dependsOn.map((idx) => plan[idx].workload.id),
     };
+
+    if (item.parent && item.parent.label !== '[hidden]') {
+      dto.parentId = item.parent.id;
+    }
 
     if (isScriptWorkflow(item.workload)) {
       dto.workspace = {
