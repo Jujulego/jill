@@ -17,11 +17,11 @@ export class GitService {
   /**
    * Runs a git command inside
    */
-  async command(cmd: string, args: string[], opts: GitOptions = {}): Promise<SpawnJob$> {
+  async command(cmd: string, opts: GitOptions = {}): Promise<SpawnJob$> {
     const { logger = this._logger, ...props } = opts;
 
     // Create job
-    const job = spawn$('git', [cmd, ...args], props);
+    const job = spawn$(`git ${cmd}`, props);
     job.stdout.pipe(logStreamedLines(logger, LogLevel.debug));
     job.stderr.pipe(logStreamedLines(logger, LogLevel.warning));
 
@@ -34,21 +34,21 @@ export class GitService {
    * Runs git branch
    */
   branch(args: string[], opts?: GitOptions): Promise<SpawnJob$> {
-    return this.command('branch', args, opts);
+    return this.command(`branch ${args.join(' ')}`, opts);
   }
 
   /**
    * Runs git diff
    */
   diff(args: string[], opts?: GitOptions): Promise<SpawnJob$> {
-    return this.command('diff', args, opts);
+    return this.command(`diff ${args.join(' ')}`, opts);
   }
 
   /**
    * Runs git tag
    */
   tag(args: string[], opts?: GitOptions): Promise<SpawnJob$> {
-    return this.command('tag', args, opts);
+    return this.command(`tag ${args.join(' ')}`, opts);
   }
 
   /**

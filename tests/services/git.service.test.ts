@@ -3,15 +3,14 @@ import { GitService } from '@/src/services/git.service.js';
 import { CONFIG, LOGGER, SCHEDULER } from '@/src/tokens.js';
 import { globalScope$, inject$ } from '@kyrielle/injector';
 import { type Logger, LogLevel } from '@kyrielle/logger';
-import { type Scheduler$, type SpawnJob$, WorkloadState } from '@kyrielle/workload';
+import { type Scheduler$, spawn$, type SpawnJob$, WorkloadState } from '@kyrielle/workload';
 import { var$ } from 'kyrielle';
 import { PassThrough } from 'node:stream';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mocks
 vi.mock('@kyrielle/workload', async (original) => {
-  // eslint-disable-next-line @typescript-eslint/consistent-type-imports
-  const mod = await original<typeof import('@kyrielle/workload')>();
+  const mod = await original<{ spawn$: typeof spawn$ }>();
   return { ...mod, spawn$: vi.fn(mod.spawn$) };
 });
 
@@ -42,16 +41,16 @@ afterEach(() => {
 // Test suites
 describe('GitService.command', () => {
   it('should create task and add it to global manager', async () => {
-    const job = await git.command('cmd', ['arg1', 'arg2']);
+    const job = await git.command('cmd arg1 arg2');
     expect(scheduler.register).toHaveBeenCalledWith(job);
 
-    expect(spawn$).toHaveBeenCalledWith('git', ['cmd', 'arg1', 'arg2'], {});
+    expect(spawn$).toHaveBeenCalledWith('git cmd arg1 arg2', {});
   });
 
   it('should redirect stdout data to logger (debug level)', async () => {
     vi.spyOn(logger, 'log');
 
-    const job = await git.command('cmd', ['arg1', 'arg2']);
+    const job = await git.command('cmd arg1 arg2');
     job.stdout.push(Buffer.from('test\n'));
 
     expect(logger.log).toHaveBeenCalledWith(LogLevel.debug, 'test');
@@ -60,7 +59,7 @@ describe('GitService.command', () => {
   it('should redirect stderr data to logger (warning level)', async () => {
     vi.spyOn(logger, 'log');
 
-    const job = await git.command('cmd', ['arg1', 'arg2']);
+    const job = await git.command('cmd arg1 arg2');
     job.stderr.push(Buffer.from('test\n'));
 
     expect(logger.log).toHaveBeenCalledWith(LogLevel.warning, 'test');
@@ -76,7 +75,7 @@ describe.each(['branch', 'diff', 'tag'] as const)('GitService.%s', (cmd) => {
   it(`should call command with ${cmd}`, async () => {
     await git[cmd](['arg1', 'arg2']);
 
-    expect(git.command).toHaveBeenCalledWith(cmd, ['arg1', 'arg2'], undefined);
+    expect(git.command).toHaveBeenCalledWith(`${cmd} arg1 arg2`, undefined);
   });
 });
 
