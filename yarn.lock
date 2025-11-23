@@ -849,11 +849,11 @@ __metadata:
     "@codecov/rollup-plugin": "npm:1.9.1"
     "@eslint/js": "npm:9.39.1"
     "@jujulego/2d-maths": "npm:1.6.0"
-    "@jujulego/quick-tag": "npm:^1.0.3"
+    "@jujulego/quick-tag": "npm:1.1.0"
     "@jujulego/vite-plugin-swc": "npm:1.2.1"
-    "@kyrielle/injector": "npm:^1.1.0"
-    "@kyrielle/logger": "npm:^2.0.0"
-    "@kyrielle/workload": "npm:^1.0.0"
+    "@kyrielle/injector": "npm:1.1.0"
+    "@kyrielle/logger": "npm:2.0.0"
+    "@kyrielle/workload": "npm:1.0.0"
     "@microsoft/eslint-formatter-sarif": "npm:3.1.0"
     "@rollup/plugin-json": "npm:6.1.0"
     "@rollup/plugin-node-resolve": "npm:16.0.3"
@@ -885,7 +885,7 @@ __metadata:
     ink-testing-library: "npm:4.0.0"
     is-unicode-supported: "npm:^2.1.0"
     jiti: "npm:2.6.1"
-    kyrielle: "npm:^2.5.3"
+    kyrielle: "npm:2.8.3"
     memfs: "npm:4.51.0"
     moo: "npm:^0.5.2"
     normalize-package-data: "npm:^8.0.0"
@@ -908,16 +908,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jujulego/quick-tag@npm:^1.0.1, @jujulego/quick-tag@npm:^1.0.3":
-  version: 1.0.3
-  resolution: "@jujulego/quick-tag@npm:1.0.3"
+"@jujulego/quick-tag@npm:1.1.0, @jujulego/quick-tag@npm:^1.0.1":
+  version: 1.1.0
+  resolution: "@jujulego/quick-tag@npm:1.1.0"
   dependencies:
     "@swc/helpers": "npm:^0.5.3"
-    safe-stable-stringify: "npm:^2.4.3"
-  dependenciesMeta:
-    vitest@1.4.0:
-      unplugged: true
-  checksum: 10/7575cddfbe25a154712ac87d004331d16d9f787e1c162ff8e0f97b924c8ee50edf7693882c08d278e90bb5c4f67330f8f8baa7018cd11e3203ff146487d73e36
+    safe-stringify: "npm:^1.2.0"
+  checksum: 10/0704bcba29450967f906ec953fe24880bff9c247603b39af4d0db8adc9ab9c4a022577600cb4d59c1e940a497147f2e0b57e228e0193980972c9910f6e44c72e
   languageName: node
   linkType: hard
 
@@ -932,7 +929,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@kyrielle/injector@npm:^1.1.0":
+"@kyrielle/injector@npm:1.1.0":
   version: 1.1.0
   resolution: "@kyrielle/injector@npm:1.1.0"
   dependencies:
@@ -944,7 +941,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@kyrielle/logger@npm:^2.0.0":
+"@kyrielle/logger@npm:2.0.0":
   version: 2.0.0
   resolution: "@kyrielle/logger@npm:2.0.0"
   dependencies:
@@ -959,7 +956,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@kyrielle/workload@npm:^1.0.0":
+"@kyrielle/workload@npm:1.0.0":
   version: 1.0.0
   resolution: "@kyrielle/workload@npm:1.0.0"
   dependencies:
@@ -5208,7 +5205,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"kyrielle@npm:^2.2.1, kyrielle@npm:^2.5.3, kyrielle@npm:^2.8.3":
+"kyrielle@npm:2.8.3, kyrielle@npm:^2.2.1, kyrielle@npm:^2.8.3":
   version: 2.8.3
   resolution: "kyrielle@npm:2.8.3"
   dependencies:
@@ -6401,10 +6398,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"safe-stable-stringify@npm:^2.4.3":
-  version: 2.5.0
-  resolution: "safe-stable-stringify@npm:2.5.0"
-  checksum: 10/2697fa186c17c38c3ca5309637b4ac6de2f1c3d282da27cd5e1e3c88eca0fb1f9aea568a6aabdf284111592c8782b94ee07176f17126031be72ab1313ed46c5c
+"safe-stringify@npm:^1.2.0":
+  version: 1.2.0
+  resolution: "safe-stringify@npm:1.2.0"
+  checksum: 10/72a0f3ca5c6d3778c934d568d5c7d2848e843f2402fd5765f49502986c8a65bff8d58297452aedce95ed5e18c4c135d80e0fc83b7f06084f9bef49a1c54c63c6
   languageName: node
   linkType: hard
 
