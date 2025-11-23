@@ -1,15 +1,15 @@
-import { parallelFlow$ } from '@jujulego/tasks';
 import { inject$ } from '@kyrielle/injector';
+import { parallelFlow$ } from '@kyrielle/workload';
 import { asyncIterator$, collect$, pipe$, type SimpleAsyncIterator, waitFor$ } from 'kyrielle';
+import type { PlanModeArgs } from '../middlewares/with-plan.js';
+import { loadProject, type ProjectArgs, withProject } from '../middlewares/with-project.js';
 import { hasEveryScript$ } from '../projects/filters/has-scripts.js';
 import { isAffected$ } from '../projects/filters/is-affected.js';
 import { isPrivate$ } from '../projects/filters/is-private.js';
-import { TaskParserService } from '../services/task-parser.service.js';
-import { loadProject, type ProjectArgs, withProject } from '../middlewares/with-project.js';
 import type { Workspace, WorkspaceDepsMode } from '../projects/workspace.js';
+import { TaskParserService } from '../services/task-parser.service.js';
 import { pipeline$ } from '../utils/pipeline$.js';
 import type { JobCommandModule } from '../wrappers/job-command.js';
-import type { PlanModeArgs } from '../middlewares/with-plan.js';
 
 // Command
 const command: JobCommandModule<EachArgs> = {

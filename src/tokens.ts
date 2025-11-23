@@ -1,6 +1,6 @@
-import { isWorkloadEnded, scheduler$, WorkloadState } from '@jujulego/tasks';
 import { asyncScope$, inject$, token$ } from '@kyrielle/injector';
 import { logger$, withTimestamp } from '@kyrielle/logger';
+import { isWorkloadEnded, scheduler$, WorkloadState } from '@kyrielle/workload';
 import { type Span, startInactiveSpan } from '@sentry/node';
 import { type Unsubscribable, waitFor$ } from 'kyrielle';
 import fs from 'node:fs';

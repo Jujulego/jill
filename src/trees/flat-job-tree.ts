@@ -1,4 +1,4 @@
-import { type Workflow$, type Workload$, WorkloadState } from '@jujulego/tasks';
+import { type Workflow$, type Workload$, WorkloadState } from '@kyrielle/workload';
 import { collect$, map$, pipe$ } from 'kyrielle';
 import { isJob } from '../utils/predicates.js';
 

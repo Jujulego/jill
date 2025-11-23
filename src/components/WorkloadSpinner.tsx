@@ -1,4 +1,4 @@
-import { type Workload$, WorkloadState } from '@jujulego/tasks';
+import { type Workload$, WorkloadState } from '@kyrielle/workload';
 import { Box, Text } from 'ink';
 import Spinner from 'ink-spinner';
 import ms from 'pretty-ms';

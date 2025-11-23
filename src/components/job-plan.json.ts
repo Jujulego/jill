@@ -1,4 +1,4 @@
-import type { Workload$ } from '@jujulego/tasks';
+import type { Workload$ } from '@kyrielle/workload';
 import slugify from 'slugify';
 import { flatJobPlan } from '../trees/flat-job-plan.js';
 import { printJson } from '../utils/json.js';

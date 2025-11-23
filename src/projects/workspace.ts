@@ -1,6 +1,6 @@
-import type { Job$, SpawnJob$ } from '@jujulego/tasks';
 import { asyncScope$, inject$ } from '@kyrielle/injector';
 import { type Logger, withLabel } from '@kyrielle/logger';
+import type { Job$, SpawnJob$ } from '@kyrielle/workload';
 import path from 'node:path';
 import type { Package } from 'normalize-package-data';
 import { satisfies } from 'semver';

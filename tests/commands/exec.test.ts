@@ -5,8 +5,8 @@ import { loadWorkspace, withWorkspace, type WorkspaceArgs } from '@/src/middlewa
 import type { Workspace } from '@/src/projects/workspace.js';
 import { jobCommandPlan } from '@/src/wrappers/job-command-plan.js';
 import { TestBed } from '@/tools/test-bed.js';
-import { type Job$, type SpawnJob$ } from '@jujulego/tasks';
 import { globalScope$ } from '@kyrielle/injector';
+import { type Job$, type SpawnJob$ } from '@kyrielle/workload';
 import { pipe$, var$ } from 'kyrielle';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import yargs, { type Argv } from 'yargs';

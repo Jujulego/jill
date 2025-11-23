@@ -1,8 +1,8 @@
-import type { Workload$ } from '@jujulego/tasks';
+import type { Workload$ } from '@kyrielle/workload';
 import { Box, Text, useInput } from 'ink';
 import { useState } from 'react';
-import { useStdoutDimensions } from '../hooks/useStdoutDimensions.js';
 import { useFlatJobTree } from '../hooks/useFlatJobTree.js';
+import { useStdoutDimensions } from '../hooks/useStdoutDimensions.js';
 import { WorkloadSpinner } from './WorkloadSpinner.jsx';
 import { WorkloadTreeStats } from './WorkloadTreeStats.jsx';
 

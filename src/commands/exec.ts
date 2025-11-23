@@ -1,15 +1,15 @@
-import { parallelFlow$, type SpawnJob$, WorkloadState } from '@jujulego/tasks';
 import { inject$ } from '@kyrielle/injector';
+import { parallelFlow$, type SpawnJob$, WorkloadState } from '@kyrielle/workload';
 import { startSpan } from '@sentry/node';
 import { collect$, pipe$ } from 'kyrielle';
 import { spawn } from 'node:child_process';
 import process from 'node:process';
+import type { PlanModeArgs } from '../middlewares/with-plan.js';
+import { loadWorkspace, withWorkspace, type WorkspaceArgs } from '../middlewares/with-workspace.js';
 import type { WorkspaceDepsMode } from '../projects/workspace.js';
 import { LOGGER } from '../tokens.js';
 import { traceImport } from '../utils/sentry.js';
 import type { JobCommandModule } from '../wrappers/job-command.js';
-import { loadWorkspace, withWorkspace, type WorkspaceArgs } from '../middlewares/with-workspace.js';
-import type { PlanModeArgs } from '../middlewares/with-plan.js';
 
 // Command
 const command: JobCommandModule<ExecArgs> = {

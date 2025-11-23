@@ -1,9 +1,9 @@
 import { type ScriptWorkflow$ } from '@/src/jobs/run-script$.js';
-import { type GroupNode, type TaskNode, TaskParserService } from '@/src/services/task-parser.service.js';
 import type { Workspace } from '@/src/projects/workspace.js';
+import { type GroupNode, type TaskNode, TaskParserService } from '@/src/services/task-parser.service.js';
 import { TestBed } from '@/tools/test-bed.js';
-import { type Workflow$, workflow$ } from '@jujulego/tasks';
 import { globalScope$, inject$ } from '@kyrielle/injector';
+import { type Workflow$, workflow$ } from '@kyrielle/workload';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Setup

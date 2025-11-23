@@ -1,11 +1,11 @@
-import { isWorkloadEnded, spawn$, type SpawnJob$, type SpawnProps } from '@jujulego/tasks';
 import { inject$ } from '@kyrielle/injector';
 import { type Logger, LogLevel } from '@kyrielle/logger';
+import { isWorkloadEnded, spawn$, type SpawnJob$, type SpawnProps } from '@kyrielle/workload';
 import { collect$, filter$, map$, pipe$, waitFor$ } from 'kyrielle';
 import { text } from 'node:stream/consumers';
+import { ClientError } from '../errors.js';
 import { LOGGER, SCHEDULER } from '../tokens.js';
 import { instrument } from '../utils/sentry.js';
-import { ClientError } from '../errors.js';
 import { logStreamedLines } from '../utils/streams.js';
 
 export class GitService {

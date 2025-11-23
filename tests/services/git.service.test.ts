@@ -1,17 +1,17 @@
 import { ClientError } from '@/src/errors.js';
 import { GitService } from '@/src/services/git.service.js';
 import { CONFIG, LOGGER, SCHEDULER } from '@/src/tokens.js';
-import { type Scheduler$, spawn$, type SpawnJob$, WorkloadState } from '@jujulego/tasks';
 import { globalScope$, inject$ } from '@kyrielle/injector';
 import { type Logger, LogLevel } from '@kyrielle/logger';
+import { type Scheduler$, type SpawnJob$, WorkloadState } from '@kyrielle/workload';
 import { var$ } from 'kyrielle';
 import { PassThrough } from 'node:stream';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mocks
-vi.mock('@jujulego/tasks', async (original) => {
+vi.mock('@kyrielle/workload', async (original) => {
   // eslint-disable-next-line @typescript-eslint/consistent-type-imports
-  const mod = await original<typeof import('@jujulego/tasks')>();
+  const mod = await original<typeof import('@kyrielle/workload')>();
   return { ...mod, spawn$: vi.fn(mod.spawn$) };
 });
 

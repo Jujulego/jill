@@ -1,11 +1,11 @@
-import { fallbackFlow$, type Job$, parallelFlow$, sequenceFlow$, type Workflow$ } from '@jujulego/tasks';
 import { inject$ } from '@kyrielle/injector';
 import { withLabel } from '@kyrielle/logger';
+import { fallbackFlow$, type Job$, parallelFlow$, sequenceFlow$, type Workflow$ } from '@kyrielle/workload';
 import moo from 'moo';
+import { TaskExpressionError, TaskSyntaxError } from '../errors.js';
 import type { Workspace, WorkspaceRunOptions } from '../projects/workspace.js';
 import { LOGGER } from '../tokens.js';
 import { instrument } from '../utils/sentry.js';
-import { TaskExpressionError, TaskSyntaxError } from '../errors.js';
 
 // Interfaces
 export interface TaskNode {

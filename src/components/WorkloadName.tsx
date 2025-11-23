@@ -1,4 +1,4 @@
-import type { Workload$ } from '@jujulego/tasks';
+import type { Workload$ } from '@kyrielle/workload';
 import { Text, type TextProps } from 'ink';
 import { isScriptWorkflow } from '../utils/predicates.js';
 import { capitalize } from '../utils/string.js';

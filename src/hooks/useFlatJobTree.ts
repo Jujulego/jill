@@ -1,4 +1,4 @@
-import { type Workload$ } from '@jujulego/tasks';
+import { type Workload$ } from '@kyrielle/workload';
 import { collect$, map$, off$, pipe$ } from 'kyrielle';
 import { createHash } from 'node:crypto';
 import { useEffect, useState } from 'react';

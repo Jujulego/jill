@@ -1,6 +1,6 @@
-import { spawn$, type SpawnJob$, type SpawnProps } from '@jujulego/tasks';
 import { inject$ } from '@kyrielle/injector';
 import { type Logger, LogLevel } from '@kyrielle/logger';
+import { spawn$, type SpawnJob$, type SpawnProps } from '@kyrielle/workload';
 import { type Workspace } from '../projects/workspace.js';
 import { LOGGER } from '../tokens.js';
 import { logStreamedLines } from '../utils/streams.js';

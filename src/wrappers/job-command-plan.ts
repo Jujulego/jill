@@ -1,12 +1,12 @@
-import type { Job$ } from '@jujulego/tasks';
+import type { Job$ } from '@kyrielle/workload';
 import type { Mutator } from 'kyrielle';
 import type { Argv, CommandModule } from 'yargs';
 import type { LoggerArgs } from '../middlewares/with-logger.js';
+import { type PlanModeArgs, withPlan } from '../middlewares/with-plan.js';
 import { trace } from '../utils/sentry.js';
 import { commandName } from '../utils/yargs.js';
 import { command } from './command.js';
 import type { JobCommandModule } from './job-command.js';
-import { type PlanModeArgs, withPlan } from '../middlewares/with-plan.js';
 
 export function jobCommandPlan<T, U>(module: CommandModule<T, U>, job$: Mutator<Job$ | null>): <V extends T>(parser: Argv<V>) => Argv<V>;
 export function jobCommandPlan<T extends PlanModeArgs>(module: JobCommandModule<T>, job$: Mutator<Job$ | null>): <V extends LoggerArgs>(parser: Argv<V>) => Argv<V>;
