@@ -28,7 +28,7 @@ describe('<WorkloadName>', () => {
   });
 
   it('should print spawned command', () => {
-    const workload = spawn$('test', ['-a']);
+    const workload = spawn$('test -a');
 
     const { lastFrame } = render(<WorkloadName workload={workload} />);
 

@@ -123,8 +123,7 @@ describe('Workspace.exec', () => {
 
     const job = await wksA.exec('test');
 
-    expect(job.cmd).toBe('yarn');
-    expect(job.args).toEqual(['exec', 'test']);
+    expect(job.cmd).toBe('yarn exec test');
     expect(job.cwd).toBe(path.resolve('test/wks-a'));
 
     // Check up tree
@@ -151,7 +150,6 @@ describe('Workspace.exec', () => {
     const job = await wksA.exec('test');
 
     expect(job.cmd).toBe('test');
-    expect(job.args).toHaveLength(0);
     expect(job.cwd).toBe(path.resolve('test/wks-a'));
 
     // Check up tree

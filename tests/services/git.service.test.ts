@@ -44,7 +44,7 @@ describe('GitService.command', () => {
     const job = await git.command('cmd arg1 arg2');
     expect(scheduler.register).toHaveBeenCalledWith(job);
 
-    expect(spawn$).toHaveBeenCalledWith('git cmd arg1 arg2', {});
+    expect(spawn$).toHaveBeenCalledWith('git cmd arg1 arg2', { shell: true });
   });
 
   it('should redirect stdout data to logger (debug level)', async () => {

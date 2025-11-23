@@ -21,7 +21,7 @@ export class GitService {
     const { logger = this._logger, ...props } = opts;
 
     // Create job
-    const job = spawn$(`git ${cmd}`, props);
+    const job = spawn$(`git ${cmd}`, { ...props, shell: true });
     job.stdout.pipe(logStreamedLines(logger, LogLevel.debug));
     job.stderr.pipe(logStreamedLines(logger, LogLevel.warning));
 
@@ -100,6 +100,6 @@ export class GitService {
 }
 
 // Types
-export interface GitOptions extends SpawnProps {
+export interface GitOptions extends Omit<SpawnProps, 'shell'> {
   readonly logger?: Logger;
 }

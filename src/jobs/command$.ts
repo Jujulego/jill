@@ -24,7 +24,8 @@ export function command$(
     env: {
       FORCE_COLOR: '1',
       ...rest.env,
-    }
+    },
+    shell: true
   });
 
   job.stdout.pipe(logStreamedLines(logger, LogLevel.info));

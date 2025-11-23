@@ -80,7 +80,7 @@ async function planScript$(
 
   // Run command
   const pm = await workspace.project.packageManager();
-  line = [line, args.map(escapeCommandLineArg)].join(' ');
+  line = [line, args.map(escapeCommandLineArg)].join(' ').trim();
 
   return command$(workspace, line, {
     logger: opts.logger,
