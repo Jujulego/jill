@@ -34,7 +34,7 @@ export function splitCommandLine(line: string): string[] {
 }
 
 export function escapeCommandLineArg(arg: string): string {
-  if (arg.includes(' ')) {
+  if (arg.match(/[ ()]/)) {
     return `"${arg.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`;
   }
 

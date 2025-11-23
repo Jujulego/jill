@@ -47,19 +47,22 @@ const command: JobCommandModule<ExecArgs> = {
     const workspace = await loadWorkspace(args);
 
     // Extract arguments
-    const rest = args._.map((arg) => escapeCommandLineArg(arg.toString()));
+    let rest = args._;
 
     if (rest[0] === 'exec') {
       rest.splice(0, 1);
     }
 
     // Run script in workspace
+    rest = rest.map((arg) => escapeCommandLineArg(arg.toString()));
+
     return await workspace.exec([args.command, ...rest].join(' '), {
       buildScript: args.buildScript,
       buildDeps: args.depsMode,
     });
   },
   async execute(args, arg) {
+    const logger = inject$(LOGGER);
     const job = (arg as SpawnJob$);
 
     if (job.dependencies().length > 0) {
@@ -76,7 +79,6 @@ const command: JobCommandModule<ExecArgs> = {
         return;
       }
     } else {
-      const logger = inject$(LOGGER);
       logger.verbose('No dependency to build');
     }
 
@@ -84,6 +86,7 @@ const command: JobCommandModule<ExecArgs> = {
       op: 'subprocess',
       name: job.cmd,
     }, async () => {
+      logger.verbose(`spawn "${job.cmd}"`);
       const child = spawn(job.cmd, {
         stdio: 'inherit',
         cwd: job.cwd!,
