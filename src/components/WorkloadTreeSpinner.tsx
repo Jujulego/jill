@@ -1,4 +1,4 @@
-import type { Workload$ } from '@jujulego/tasks';
+import type { Workload$ } from '@kyrielle/workload';
 import { useStdin } from 'ink';
 import { WorkloadTreeFullSpinner } from './WorkloadTreeFullSpinner.jsx';
 import { WorkloadTreeScrollableSpinner } from './WorkloadTreeScrollableSpinner.jsx';

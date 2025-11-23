@@ -850,10 +850,10 @@ __metadata:
     "@eslint/js": "npm:9.39.1"
     "@jujulego/2d-maths": "npm:1.6.0"
     "@jujulego/quick-tag": "npm:^1.0.3"
-    "@jujulego/tasks": "npm:3.0.0-alpha.11"
     "@jujulego/vite-plugin-swc": "npm:1.2.1"
     "@kyrielle/injector": "npm:^1.1.0"
     "@kyrielle/logger": "npm:^2.0.0"
+    "@kyrielle/workload": "npm:^1.0.0"
     "@microsoft/eslint-formatter-sarif": "npm:3.1.0"
     "@rollup/plugin-json": "npm:6.1.0"
     "@rollup/plugin-node-resolve": "npm:16.0.3"
@@ -921,16 +921,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jujulego/tasks@npm:3.0.0-alpha.11":
-  version: 3.0.0-alpha.11
-  resolution: "@jujulego/tasks@npm:3.0.0-alpha.11"
-  dependencies:
-    "@swc/helpers": "npm:^0.5.3"
-    kyrielle: "npm:^2.8.0"
-  checksum: 10/7bf512391503abead511ef46158f425d3544b07b4aecf4b4c474c17ba6bc05409cbc82b3f1cbb8bb7ece256e992942df1097185492d34b6f656f7d5bc892648a
-  languageName: node
-  linkType: hard
-
 "@jujulego/vite-plugin-swc@npm:1.2.1":
   version: 1.2.1
   resolution: "@jujulego/vite-plugin-swc@npm:1.2.1"
@@ -966,6 +956,16 @@ __metadata:
     vitest@2.1.4:
       unplugged: true
   checksum: 10/fde1361a1eb2aabcaffb58eaa4fdf8fecb621b8504b935ae8f07ade8717d8a519e75beedad01f99bfc72fe1f7a158981cc309fc0633c448df4f1431cadc65358
+  languageName: node
+  linkType: hard
+
+"@kyrielle/workload@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "@kyrielle/workload@npm:1.0.0"
+  dependencies:
+    "@swc/helpers": "npm:^0.5.0"
+    kyrielle: "npm:^2.8.3"
+  checksum: 10/ebe424a12014213b6a2fd45c67661576960a6fdde12289b5c3d8132309b4a9b9ba30fd44ab19b91ab79925d3b80b1d5510bc05583889ec06ff9f0b2e331ed78c
   languageName: node
   linkType: hard
 
@@ -2118,7 +2118,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@swc/helpers@npm:^0.5.3, @swc/helpers@npm:^0.5.6":
+"@swc/helpers@npm:^0.5.0, @swc/helpers@npm:^0.5.3, @swc/helpers@npm:^0.5.6":
   version: 0.5.17
   resolution: "@swc/helpers@npm:0.5.17"
   dependencies:
@@ -5208,7 +5208,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"kyrielle@npm:^2.2.1, kyrielle@npm:^2.5.3, kyrielle@npm:^2.8.0":
+"kyrielle@npm:^2.2.1, kyrielle@npm:^2.5.3, kyrielle@npm:^2.8.3":
   version: 2.8.3
   resolution: "kyrielle@npm:2.8.3"
   dependencies:

@@ -1,15 +1,16 @@
-import { parallelFlow$, type SpawnJob$, WorkloadState } from '@jujulego/tasks';
 import { inject$ } from '@kyrielle/injector';
+import { parallelFlow$, type SpawnJob$, WorkloadState } from '@kyrielle/workload';
 import { startSpan } from '@sentry/node';
 import { collect$, pipe$ } from 'kyrielle';
 import { spawn } from 'node:child_process';
 import process from 'node:process';
+import type { PlanModeArgs } from '../middlewares/with-plan.js';
+import { loadWorkspace, withWorkspace, type WorkspaceArgs } from '../middlewares/with-workspace.js';
 import type { WorkspaceDepsMode } from '../projects/workspace.js';
 import { LOGGER } from '../tokens.js';
 import { traceImport } from '../utils/sentry.js';
+import { escapeCommandLineArg } from '../utils/string.js';
 import type { JobCommandModule } from '../wrappers/job-command.js';
-import { loadWorkspace, withWorkspace, type WorkspaceArgs } from '../middlewares/with-workspace.js';
-import type { PlanModeArgs } from '../middlewares/with-plan.js';
 
 // Command
 const command: JobCommandModule<ExecArgs> = {
@@ -46,19 +47,22 @@ const command: JobCommandModule<ExecArgs> = {
     const workspace = await loadWorkspace(args);
 
     // Extract arguments
-    const rest = args._.map(arg => arg.toString());
+    let rest = args._;
 
     if (rest[0] === 'exec') {
       rest.splice(0, 1);
     }
 
     // Run script in workspace
-    return await workspace.exec(args.command, rest, {
+    rest = rest.map((arg) => escapeCommandLineArg(arg.toString()));
+
+    return await workspace.exec([args.command, ...rest].join(' '), {
       buildScript: args.buildScript,
       buildDeps: args.depsMode,
     });
   },
   async execute(args, arg) {
+    const logger = inject$(LOGGER);
     const job = (arg as SpawnJob$);
 
     if (job.dependencies().length > 0) {
@@ -75,15 +79,15 @@ const command: JobCommandModule<ExecArgs> = {
         return;
       }
     } else {
-      const logger = inject$(LOGGER);
       logger.verbose('No dependency to build');
     }
 
     await startSpan({
       op: 'subprocess',
-      name: [job.cmd, ...job.args].join(' '),
+      name: job.cmd,
     }, async () => {
-      const child = spawn(job.cmd, job.args, {
+      logger.verbose(`spawn "${job.cmd}"`);
+      const child = spawn(job.cmd, {
         stdio: 'inherit',
         cwd: job.cwd!,
         env: {

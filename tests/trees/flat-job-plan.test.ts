@@ -1,6 +1,6 @@
 import { flatJobPlan } from '@/src/trees/flat-job-plan.js';
 import { flatJobTree } from '@/src/trees/flat-job-tree.js';
-import { job$, workflow$, workload$ } from '@jujulego/tasks';
+import { job$, workflow$, workload$ } from '@kyrielle/workload';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mocks

@@ -1,11 +1,11 @@
-import { sequenceFlow$, type SequenceFlowProps, type Workflow$ } from '@jujulego/tasks';
 import { inject$ } from '@kyrielle/injector';
 import type { Logger } from '@kyrielle/logger';
+import { sequenceFlow$, type SequenceFlowProps, type Workflow$ } from '@kyrielle/workload';
 import { collect$, filter$, pipe$ } from 'kyrielle';
+import { ClientError } from '../errors.js';
 import type { Workspace } from '../projects/workspace.js';
 import { traceImport } from '../utils/sentry.js';
-import { splitCommandLine } from '../utils/string.js';
-import { ClientError } from '../errors.js';
+import { escapeCommandLineArg, splitCommandLine } from '../utils/string.js';
 import { command$ } from './command$.js';
 
 export async function runScript$(
@@ -53,7 +53,7 @@ async function planScript$(
   opts: RunScriptOpts
 ) {
   // Load script
-  const line = workspace?.getScript(script);
+  let line = workspace?.getScript(script);
 
   if (!line) {
     return null;
@@ -67,7 +67,7 @@ async function planScript$(
   }
 
   if (command === 'jill') {
-    const argv = commandArgs.map(arg => arg.replace(/^["'](.+)["']$/, '$1'));
+    const argv = [...commandArgs, ...args].map(arg => arg.replace(/^["'](.+)["']$/, '$1'));
 
     const { PlannerService } = await traceImport('PlannerService', () => import('../services/planner.service.js'));
     const plannerService = inject$(PlannerService);
@@ -80,10 +80,11 @@ async function planScript$(
 
   // Run command
   const pm = await workspace.project.packageManager();
+  line = [line, args.map(escapeCommandLineArg)].join(' ').trim();
 
-  return command$(workspace, command, [...commandArgs, ...args], {
+  return command$(workspace, line, {
     logger: opts.logger,
-    superCommand: pm === 'yarn' && command !== 'yarn' ? ['yarn', 'exec'] : undefined,
+    superCommand: pm === 'yarn' && command !== 'yarn' ? 'yarn exec' : undefined,
   });
 }
 

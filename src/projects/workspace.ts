@@ -1,6 +1,6 @@
-import type { Job$, SpawnJob$ } from '@jujulego/tasks';
 import { asyncScope$, inject$ } from '@kyrielle/injector';
 import { type Logger, withLabel } from '@kyrielle/logger';
+import type { Job$, SpawnJob$ } from '@kyrielle/workload';
 import path from 'node:path';
 import type { Package } from 'normalize-package-data';
 import { satisfies } from 'semver';
@@ -137,12 +137,12 @@ export class Workspace {
     return job;
   }
 
-  async exec(command: string, args: string[] = [], opts: WorkspaceRunOptions = {}): Promise<SpawnJob$> {
+  async exec(command: string, opts: WorkspaceRunOptions = {}): Promise<SpawnJob$> {
     const pm = await this.project.packageManager();
-    const job = command$(this, command, args, {
+    const job = command$(this, command, {
       ...opts,
       logger: this._logger.child(withLabel(`${this.name}$${command}`)),
-      superCommand: pm === 'yarn' ? ['yarn', 'exec'] : undefined
+      superCommand: pm === 'yarn' ? 'yarn exec' : undefined
     });
 
     await this._buildDependencies(job, opts);

@@ -1,6 +1,6 @@
-import type { Job$ } from '@jujulego/tasks';
 import { asyncScope$, inject$ } from '@kyrielle/injector';
 import { withLabel } from '@kyrielle/logger';
+import type { Job$ } from '@kyrielle/workload';
 import { pipe$, var$ } from 'kyrielle';
 import * as commands from '../commands.js';
 import { ConfigService } from '../config/config.service.js';

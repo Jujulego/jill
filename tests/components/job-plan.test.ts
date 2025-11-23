@@ -1,6 +1,6 @@
 import { jobPlan } from '@/src/components/job-plan.js';
 import { flatJobPlan } from '@/src/trees/flat-job-plan.js';
-import { job$, workflow$, workload$ } from '@jujulego/tasks';
+import { job$, workflow$, workload$ } from '@kyrielle/workload';
 import chalk from 'chalk';
 import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 

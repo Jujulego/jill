@@ -2,7 +2,7 @@ import { WorkloadName } from '@/src/components/WorkloadName.jsx';
 import { type ScriptWorkflow$ } from '@/src/jobs/run-script$.js';
 import type { Workspace } from '@/src/projects/workspace.js';
 import { TestBed } from '@/tools/test-bed.js';
-import { spawn$, workload$ } from '@jujulego/tasks';
+import { spawn$, workload$ } from '@kyrielle/workload';
 import { cleanup, render } from 'ink-testing-library';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -28,7 +28,7 @@ describe('<WorkloadName>', () => {
   });
 
   it('should print spawned command', () => {
-    const workload = spawn$('test', ['-a']);
+    const workload = spawn$('test -a');
 
     const { lastFrame } = render(<WorkloadName workload={workload} />);
 

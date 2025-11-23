@@ -1,4 +1,4 @@
-import { type Workload$, WorkloadState } from '@jujulego/tasks';
+import { type Workload$, WorkloadState } from '@kyrielle/workload';
 import { collect$, map$, off$, pipe$ } from 'kyrielle';
 import { useEffect, useState } from 'react';
 

@@ -1,5 +1,5 @@
 import { flatJobTree } from '@/src/trees/flat-job-tree.js';
-import { job$, workflow$, workload$ } from '@jujulego/tasks';
+import { job$, workflow$, workload$ } from '@kyrielle/workload';
 import { describe, expect, it, vi } from 'vitest';
 
 describe('buildFlatTree', () => {

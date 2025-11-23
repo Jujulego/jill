@@ -1,4 +1,4 @@
-import type { Workload$ } from '@jujulego/tasks';
+import type { Workload$ } from '@kyrielle/workload';
 import { isJob } from '../utils/predicates.js';
 import { flatJobTree, type FlatJobTreeItem } from './flat-job-tree.js';
 

@@ -16,19 +16,15 @@ export interface SpawnResult {
 }
 
 export interface SpawnOptions {
-  cwd?: string;
-  env?: Record<string, string>;
-  keepQuotes?: boolean;
+  readonly cwd?: string;
+  readonly env?: Record<string, string>;
 }
 
 // Utils
 export function jill(args: string, opts: SpawnOptions = {}): Promise<SpawnResult> {
   return new Promise<SpawnResult>((resolve, reject) => {
-    let argv = splitCommandLine(args);
-
-    if (!opts.keepQuotes) {
-      argv = argv.map(arg => arg.replace(/^["'](.+)["']$/, '$1'));
-    }
+    const argv = splitCommandLine(args)
+      .map(arg => arg.replace(/^["'](.+)["']$/, '$1'));
 
     const proc = cp.fork(JILL, argv, {
       cwd: opts.cwd,

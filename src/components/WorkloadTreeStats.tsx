@@ -1,10 +1,10 @@
-import { WorkloadState } from '@jujulego/tasks';
+import { WorkloadState } from '@kyrielle/workload';
 import { Text, type TextProps } from 'ink';
 import Spinner from 'ink-spinner';
 import { useMemo } from 'react';
-import * as symbols from '../utils/symbols.js';
 import { useScriptsStats } from '../hooks/useScriptsStats.js';
 import type { FlatJobTreeItem } from '../trees/flat-job-tree.js';
+import * as symbols from '../utils/symbols.js';
 
 // Component
 export function WorkloadTreeStats({ tree, ...rest }: WorkloadTreeStatsProps) {

@@ -1,11 +1,11 @@
-import { isWorkloadEnded, spawn$, type SpawnJob$, type SpawnProps } from '@jujulego/tasks';
 import { inject$ } from '@kyrielle/injector';
 import { type Logger, LogLevel } from '@kyrielle/logger';
+import { isWorkloadEnded, spawn$, type SpawnJob$, type SpawnProps } from '@kyrielle/workload';
 import { collect$, filter$, map$, pipe$, waitFor$ } from 'kyrielle';
 import { text } from 'node:stream/consumers';
+import { ClientError } from '../errors.js';
 import { LOGGER, SCHEDULER } from '../tokens.js';
 import { instrument } from '../utils/sentry.js';
-import { ClientError } from '../errors.js';
 import { logStreamedLines } from '../utils/streams.js';
 
 export class GitService {
@@ -17,11 +17,11 @@ export class GitService {
   /**
    * Runs a git command inside
    */
-  async command(cmd: string, args: string[], opts: GitOptions = {}): Promise<SpawnJob$> {
+  async command(cmd: string, opts: GitOptions = {}): Promise<SpawnJob$> {
     const { logger = this._logger, ...props } = opts;
 
     // Create job
-    const job = spawn$('git', [cmd, ...args], props);
+    const job = spawn$(`git ${cmd}`, { ...props, shell: true });
     job.stdout.pipe(logStreamedLines(logger, LogLevel.debug));
     job.stderr.pipe(logStreamedLines(logger, LogLevel.warning));
 
@@ -34,21 +34,21 @@ export class GitService {
    * Runs git branch
    */
   branch(args: string[], opts?: GitOptions): Promise<SpawnJob$> {
-    return this.command('branch', args, opts);
+    return this.command(`branch ${args.join(' ')}`, opts);
   }
 
   /**
    * Runs git diff
    */
   diff(args: string[], opts?: GitOptions): Promise<SpawnJob$> {
-    return this.command('diff', args, opts);
+    return this.command(`diff ${args.join(' ')}`, opts);
   }
 
   /**
    * Runs git tag
    */
   tag(args: string[], opts?: GitOptions): Promise<SpawnJob$> {
-    return this.command('tag', args, opts);
+    return this.command(`tag ${args.join(' ')}`, opts);
   }
 
   /**
@@ -100,6 +100,6 @@ export class GitService {
 }
 
 // Types
-export interface GitOptions extends SpawnProps {
+export interface GitOptions extends Omit<SpawnProps, 'shell'> {
   readonly logger?: Logger;
 }

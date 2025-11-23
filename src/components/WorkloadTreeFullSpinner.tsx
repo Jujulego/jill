@@ -1,4 +1,4 @@
-import type { Workload$ } from '@jujulego/tasks';
+import type { Workload$ } from '@kyrielle/workload';
 import { Box } from 'ink';
 import { useFlatJobTree } from '../hooks/useFlatJobTree.js';
 import { WorkloadSpinner } from './WorkloadSpinner.jsx';

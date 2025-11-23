@@ -1,8 +1,8 @@
-import { type Job$ } from '@jujulego/tasks';
+import { type Job$ } from '@kyrielle/workload';
 import type { ArgumentsCamelCase, Argv, CommandModule } from 'yargs';
-import type { Awaitable } from '../utils/types.js';
 
 import type { PlanModeArgs } from '../middlewares/with-plan.js';
+import type { Awaitable } from '../utils/types.js';
 
 // Module
 export interface JobCommandModule<T extends PlanModeArgs = PlanModeArgs> extends Omit<CommandModule<PlanModeArgs, T>, 'builder' | 'handler'> {

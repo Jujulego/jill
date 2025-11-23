@@ -1,4 +1,4 @@
-import type { Job$, Workload$ } from '@jujulego/tasks';
+import type { Job$, Workload$ } from '@kyrielle/workload';
 import type { ScriptWorkflow$ } from '../jobs/run-script$.js';
 
 export function isScriptWorkflow(workload: Workload$): workload is ScriptWorkflow$ {

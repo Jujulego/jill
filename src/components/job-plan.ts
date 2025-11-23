@@ -1,4 +1,4 @@
-import type { Workload$ } from '@jujulego/tasks';
+import type { Workload$ } from '@kyrielle/workload';
 import chalk from 'chalk';
 import { flatJobPlan } from '../trees/flat-job-plan.js';
 import { workloadName } from './workload-name.js';
