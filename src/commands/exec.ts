@@ -9,6 +9,7 @@ import { loadWorkspace, withWorkspace, type WorkspaceArgs } from '../middlewares
 import type { WorkspaceDepsMode } from '../projects/workspace.js';
 import { LOGGER } from '../tokens.js';
 import { traceImport } from '../utils/sentry.js';
+import { escapeCommandLineArg } from '../utils/string.js';
 import type { JobCommandModule } from '../wrappers/job-command.js';
 
 // Command
@@ -46,14 +47,14 @@ const command: JobCommandModule<ExecArgs> = {
     const workspace = await loadWorkspace(args);
 
     // Extract arguments
-    const rest = args._.map(arg => arg.toString());
+    const rest = args._.map((arg) => escapeCommandLineArg(arg.toString()));
 
     if (rest[0] === 'exec') {
       rest.splice(0, 1);
     }
 
     // Run script in workspace
-    return await workspace.exec(args.command, rest, {
+    return await workspace.exec([args.command, ...rest].join(' '), {
       buildScript: args.buildScript,
       buildDeps: args.depsMode,
     });
@@ -81,9 +82,9 @@ const command: JobCommandModule<ExecArgs> = {
 
     await startSpan({
       op: 'subprocess',
-      name: [job.cmd, ...job.args].join(' '),
+      name: job.cmd,
     }, async () => {
-      const child = spawn(job.cmd, job.args, {
+      const child = spawn(job.cmd, {
         stdio: 'inherit',
         cwd: job.cwd!,
         env: {

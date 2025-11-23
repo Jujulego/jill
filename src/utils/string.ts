@@ -32,3 +32,11 @@ export function splitCommandLine(line: string): string[] {
 
   return parts;
 }
+
+export function escapeCommandLineArg(arg: string): string {
+  if (arg.includes(' ')) {
+    return `"${arg.replace(/"/g, '\\"')}"`;
+  }
+
+  return arg;
+}
