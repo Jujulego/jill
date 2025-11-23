@@ -240,10 +240,18 @@ jobs:
 
       - name: Read package.json
         id: info
-        run: echo "version=$(jq -r ".version" package.json)" >> $GITHUB_OUTPUT
+        # language=Bash
+        run: |
+          version=$(jq -j ".version" package.json)
+          echo "version=$version" >> $GITHUB_OUTPUT
+          
+          if [[ $version =~ "^[0-9]+\.[0-9]+\.[0-9]-[a-zA-Z]+\.[0-9]+" ]]; then
+            echo "prerelease=true" >> $GITHUB_OUTPUT
+          fi
 
       - name: Tag version
         id: tag
+        # language=Bash
         run: |
           echo "::group::git fetch --tags"
           
@@ -272,3 +280,4 @@ jobs:
           name: ${{ steps.info.outputs.version }}
           tag_name: v${{ steps.info.outputs.version }}
           generate_release_notes: true
+          prerelease: ${{ steps.info.outputs.prerelease }}
