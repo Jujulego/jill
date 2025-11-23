@@ -857,10 +857,10 @@ __metadata:
     "@microsoft/eslint-formatter-sarif": "npm:3.1.0"
     "@rollup/plugin-json": "npm:6.1.0"
     "@rollup/plugin-node-resolve": "npm:16.0.3"
-    "@sentry/node": "npm:^10.5.0"
+    "@sentry/node": "npm:^10.0.0"
     "@sentry/rollup-plugin": "npm:4.6.1"
     "@swc/core": "npm:1.15.3"
-    "@swc/helpers": "npm:^0.5.3"
+    "@swc/helpers": "npm:^0.5.0"
     "@types/moo": "npm:0.5.10"
     "@types/node": "npm:24.10.1"
     "@types/normalize-package-data": "npm:2.4.4"
@@ -872,25 +872,25 @@ __metadata:
     "@vitest/eslint-plugin": "npm:1.4.3"
     "@vitest/expect": "npm:3.2.4"
     ajv: "npm:^8.12.0"
-    chalk: "npm:^5.5.0"
-    chalk-template: "npm:^1.1.0"
+    chalk: "npm:5.6.2"
+    chalk-template: "npm:1.1.2"
     cosmiconfig: "npm:^9.0.0"
     eslint: "npm:9.39.1"
     eslint-plugin-react: "npm:7.37.5"
     eslint-plugin-react-hooks: "npm:7.0.1"
-    glob: "npm:^13.0.0"
+    glob: "npm:13.0.0"
     globals: "npm:16.5.0"
     ink: "npm:^6.2.1"
     ink-spinner: "npm:^5.0.0"
     ink-testing-library: "npm:4.0.0"
-    is-unicode-supported: "npm:^2.1.0"
+    is-unicode-supported: "npm:2.1.0"
     jiti: "npm:2.6.1"
     kyrielle: "npm:2.8.3"
     memfs: "npm:4.51.0"
     moo: "npm:^0.5.2"
     normalize-package-data: "npm:^8.0.0"
     path-scurry: "npm:^2.0.0"
-    pretty-ms: "npm:^9.2.0"
+    pretty-ms: "npm:9.3.0"
     react: "npm:^19.1.0"
     rollup: "npm:4.53.3"
     semver: "npm:^7.7.2"
@@ -1922,7 +1922,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/node@npm:^10.5.0":
+"@sentry/node@npm:^10.0.0":
   version: 10.26.0
   resolution: "@sentry/node@npm:10.26.0"
   dependencies:
@@ -3008,7 +3008,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chalk-template@npm:^1.1.0":
+"chalk-template@npm:1.1.2":
   version: 1.1.2
   resolution: "chalk-template@npm:1.1.2"
   dependencies:
@@ -3027,7 +3027,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chalk@npm:^5.2.0, chalk@npm:^5.5.0, chalk@npm:^5.6.0":
+"chalk@npm:5.6.2, chalk@npm:^5.2.0, chalk@npm:^5.6.0":
   version: 5.6.2
   resolution: "chalk@npm:5.6.2"
   checksum: 10/1b2f48f6fba1370670d5610f9cd54c391d6ede28f4b7062dd38244ea5768777af72e5be6b74fb6c6d54cb84c4a2dff3f3afa9b7cb5948f7f022cfd3d087989e0
@@ -3432,11 +3432,11 @@ __metadata:
   linkType: hard
 
 "error-ex@npm:^1.3.1":
-  version: 1.3.2
-  resolution: "error-ex@npm:1.3.2"
+  version: 1.3.4
+  resolution: "error-ex@npm:1.3.4"
   dependencies:
     is-arrayish: "npm:^0.2.1"
-  checksum: 10/d547740aa29c34e753fb6fed2c5de81802438529c12b3673bd37b6bb1fe49b9b7abdc3c11e6062fe625d8a296b3cf769a80f878865e25e685f787763eede3ffb
+  checksum: 10/ae3939fd4a55b1404e877df2080c6b59acc516d5b7f08a181040f78f38b4e2399633bfed2d9a21b91c803713fff7295ac70bebd8f3657ef352a95c2cd9aa2e4b
   languageName: node
   linkType: hard
 
@@ -4295,6 +4295,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"glob@npm:13.0.0":
+  version: 13.0.0
+  resolution: "glob@npm:13.0.0"
+  dependencies:
+    minimatch: "npm:^10.1.1"
+    minipass: "npm:^7.1.2"
+    path-scurry: "npm:^2.0.0"
+  checksum: 10/de390721d29ee1c9ea41e40ec2aa0de2cabafa68022e237dc4297665a5e4d650776f2573191984ea1640aba1bf0ea34eddef2d8cbfbfc2ad24b5fb0af41d8846
+  languageName: node
+  linkType: hard
+
 "glob@npm:^10.2.2, glob@npm:^10.4.1, glob@npm:^10.5.0":
   version: 10.5.0
   resolution: "glob@npm:10.5.0"
@@ -4308,17 +4319,6 @@ __metadata:
   bin:
     glob: dist/esm/bin.mjs
   checksum: 10/ab3bccfefcc0afaedbd1f480cd0c4a2c0e322eb3f0aa7ceaa31b3f00b825069f17cf0f1fc8b6f256795074b903f37c0ade37ddda6a176aa57f1c2bbfe7240653
-  languageName: node
-  linkType: hard
-
-"glob@npm:^13.0.0":
-  version: 13.0.0
-  resolution: "glob@npm:13.0.0"
-  dependencies:
-    minimatch: "npm:^10.1.1"
-    minipass: "npm:^7.1.2"
-    path-scurry: "npm:^2.0.0"
-  checksum: 10/de390721d29ee1c9ea41e40ec2aa0de2cabafa68022e237dc4297665a5e4d650776f2573191984ea1640aba1bf0ea34eddef2d8cbfbfc2ad24b5fb0af41d8846
   languageName: node
   linkType: hard
 
@@ -4970,7 +4970,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"is-unicode-supported@npm:^2.1.0":
+"is-unicode-supported@npm:2.1.0":
   version: 2.1.0
   resolution: "is-unicode-supported@npm:2.1.0"
   checksum: 10/f254e3da6b0ab1a57a94f7273a7798dd35d1d45b227759f600d0fa9d5649f9c07fa8d3c8a6360b0e376adf916d151ec24fc9a50c5295c58bae7ca54a76a063f9
@@ -6014,7 +6014,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pretty-ms@npm:^9.0.0, pretty-ms@npm:^9.2.0":
+"pretty-ms@npm:9.3.0, pretty-ms@npm:^9.0.0":
   version: 9.3.0
   resolution: "pretty-ms@npm:9.3.0"
   dependencies:
