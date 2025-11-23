@@ -1,9 +1,8 @@
+import type { PlanItemDto } from '@/src/components/job-plan.json.js';
+import { TestBed } from '@/tools/test-bed.js';
 import fs from 'node:fs/promises';
 import path from 'node:path';
-
-import '@/src/commons/logger.service.js';
-import { TestBed } from '@/tools/test-bed.js';
-
+import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { fileExists, jill } from './utils.js';
 
 // Setup
@@ -64,12 +63,12 @@ describe('jill each', () => {
     beforeAll(async () => {
       baseDir = await bed.createProjectPackage(packageManager);
       tmpDir = path.dirname(baseDir);
-    }, 15000);
+    }, 60000);
 
     beforeEach(async (ctx) => {
       prjDir = path.join(tmpDir, ctx.task.id);
 
-      await fs.cp(baseDir, prjDir, { force: true, recursive: true });
+      await fs.cp(baseDir, prjDir, { force: true, recursive: true, dereference: process.platform === 'win32' });
     });
 
     afterAll(async () => {
@@ -82,12 +81,11 @@ describe('jill each', () => {
 
       // Check jill output
       expect(res.code).toBe(0);
-
       expect(res.screen.screen).toMatchLines([
-        expect.ignoreColor(/^. Run start in wks-a \(took [0-9.]+m?s\)$/),
-        expect.ignoreColor(/^. Run build in wks-b \(took [0-9.]+m?s\)$/),
-        expect.ignoreColor(/^. Run start in wks-b \(took [0-9.]+m?s\)$/),
-        expect.ignoreColor(/^. Run build in wks-c \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^. Run build script in wks-b \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^. Run build script in wks-c \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^. Run start script in wks-a \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^. Run start script in wks-b \(took [0-9.]+m?s\)$/),
         expect.ignoreColor(/^. 4 done$/),
       ]);
 
@@ -110,15 +108,14 @@ describe('jill each', () => {
 
       // Check jill output
       expect(res.code).toBe(0);
-
       expect(res.screen.screen).toMatchLines([
+        expect.ignoreColor(/^. Run build script in wks-c \(took [0-9.]+m?s\)$/),
         expect.ignoreColor(/^. In sequence \(took [0-9.]+m?s\)$/),
-        expect.ignoreColor(/^ {2}. Run build in wks-a \(took [0-9.]+m?s\)$/),
-        expect.ignoreColor(/^ {2}. Run start in wks-a \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^ {2}. Run build script in wks-a \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^ {2}. Run start script in wks-a \(took [0-9.]+m?s\)$/),
         expect.ignoreColor(/^. In sequence \(took [0-9.]+m?s\)$/),
-        expect.ignoreColor(/^ {2}. Run build in wks-b \(took [0-9.]+m?s\)$/),
-        expect.ignoreColor(/^ {2}. Run start in wks-b \(took [0-9.]+m?s\)$/),
-        expect.ignoreColor(/^. Run build in wks-c \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^ {2}. Run build script in wks-b \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^ {2}. Run start script in wks-b \(took [0-9.]+m?s\)$/),
         expect.ignoreColor(/^. 5 done$/),
       ]);
 
@@ -144,12 +141,11 @@ describe('jill each', () => {
 
       // Check jill output
       expect(res.code).toBe(0);
-
       expect(res.screen.screen).toMatchLines([
-        expect.ignoreColor(/^. Run hooked in wks-b \(took [0-9.]+m?s\)$/),
-        expect.ignoreColor(/^. Run build in wks-c \(took [0-9.]+m?s\)$/),
-        expect.ignoreColor(/^. Run hooked in wks-c \(took [0-9.]+m?s\)$/),
-        expect.ignoreColor(/^. 7 done$/),
+        expect.ignoreColor(/^. Run build script in wks-c \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^. Run hooked script in wks-b \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^. Run hooked script in wks-c \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^. 3 done$/),
       ]);
 
       // Check script result
@@ -180,11 +176,10 @@ describe('jill each', () => {
 
       // Check jill output
       expect(res.code).toBe(1);
-
       expect(res.screen.screen).toMatchLines([
-        expect.ignoreColor(/^. Run fails in wks-b \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^. Run build script in wks-c \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^. Run fails script in wks-b \(took [0-9.]+m?s\)$/),
         expect.ignoreColor(/^ {2}.( yarn exec)? node -e "process.exit\(1\)" \(took [0-9.]+m?s\)$/),
-        expect.ignoreColor(/^. Run build in wks-c \(took [0-9.]+m?s\)$/),
         expect.ignoreColor(/^. 1 done, . 1 failed$/),
       ]);
 
@@ -208,7 +203,7 @@ describe('jill each', () => {
       // Check jill output
       expect(res.code).toBe(1);
       expect(res.stderr).toMatchLines([
-        expect.ignoreColor(/^. No matching workspace found !$/),
+        expect.ignoreColor(/^No task found \+[0-9.]+m?s$/),
       ]);
 
       // No new files
@@ -226,118 +221,109 @@ describe('jill each', () => {
     });
 
     it('should print task plan and do not run any script', async () => {
-      const res = await jill('each --plan --plan-mode json start', { cwd: prjDir });
+      const res = await jill('each --plan start', { cwd: prjDir });
+
+      // Check jill output
+      expect(res.code).toBe(0);
+      expect(res.screen.screen).toMatchSnapshot();
+
+      await expect(fileExists(path.join(prjDir, 'wks-c', 'hook.txt'))).resolves.toBe(false);
+      await expect(fileExists(path.join(prjDir, 'wks-b', 'hook.txt'))).resolves.toBe(false);
+      await expect(fileExists(path.join(prjDir, 'wks-b', 'start.txt'))).resolves.toBe(false);
+      await expect(fileExists(path.join(prjDir, 'wks-a', 'start.txt'))).resolves.toBe(false);
+    });
+
+    it('should print task plan in json and do not run any script', async () => {
+      const res = await jill('each --plan --plan-format json start', { cwd: prjDir });
 
       // Check jill output
       expect(res.code).toBe(0);
 
-      const plan = JSON.parse(res.stdout.join('\n'));
+      const plan = JSON.parse(res.stdout.join('\n')) as PlanItemDto[];
       expect(plan).toHaveLength(8);
 
-      expect(plan[0]).toMatchObject({
+      expect(plan[0]).toStrictEqual({
         id: expect.stringMatching(/[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}/),
-        isGroup: true,
-        context: {
-          script: 'build',
-          workspace: {
-            name: 'wks-c',
-            cwd: path.join(prjDir, 'wks-c')
-          }
+        label: 'build',
+        type: 'script',
+        dependsOn: [plan[3].id],
+        workspace: {
+          name: 'wks-b',
+          slug: 'wks-b',
+          version: '1.0.0',
+          root: path.join(prjDir, 'wks-b')
         }
       });
 
-      expect(plan[1]).toMatchObject({
-        id: expect.stringMatching(/[0-9a-f]{32}/),
-        groupId: plan[0].id,
-        context: {
-          command: 'node',
-          workspace: {
-            name: 'wks-c',
-            cwd: path.join(prjDir, 'wks-c')
-          }
-        }
-      });
-
-      expect(plan[2]).toMatchObject({
+      expect(plan[1]).toStrictEqual({
         id: expect.stringMatching(/[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}/),
-        isGroup: true,
-        dependenciesIds: [
-          plan[0].id
-        ],
-        context: {
-          script: 'start',
-          workspace: {
-            name: 'wks-b',
-            cwd: path.join(prjDir, 'wks-b')
-          }
-        }
+        parentId: plan[0].id,
+        label: expect.stringMatching(/^(yarn exec )?node/),
+        type: 'spawn',
+        dependsOn: []
       });
 
-      expect(plan[3]).toMatchObject({
-        id: expect.stringMatching(/[0-9a-f]{32}/),
-        groupId: plan[2].id,
-        context: {
-          command: 'node',
-          workspace: {
-            name: 'wks-b',
-            cwd: path.join(prjDir, 'wks-b')
-          }
-        }
-      });
-
-      expect(plan[4]).toMatchObject({
+      expect(plan[2]).toStrictEqual({
         id: expect.stringMatching(/[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}/),
-        isGroup: true,
-        dependenciesIds: [
-          plan[0].id
-        ],
-        context: {
-          script: 'build',
-          workspace: {
-            name: 'wks-b',
-            cwd: path.join(prjDir, 'wks-b')
-          }
+        label: 'build',
+        type: 'script',
+        dependsOn: [],
+        workspace: {
+          name: 'wks-c',
+          slug: 'wks-c',
+          version: '1.0.0',
+          root: path.join(prjDir, 'wks-c')
         }
       });
 
-      expect(plan[5]).toMatchObject({
-        id: expect.stringMatching(/[0-9a-f]{32}/),
-        groupId: plan[4].id,
-        context: {
-          command: 'node',
-          workspace: {
-            name: 'wks-b',
-            cwd: path.join(prjDir, 'wks-b')
-          }
-        }
-      });
-
-      expect(plan[6]).toMatchObject({
+      expect(plan[3]).toStrictEqual({
         id: expect.stringMatching(/[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}/),
-        isGroup: true,
-        dependenciesIds: [
-          plan[4].id,
-          plan[0].id,
-        ],
-        context: {
-          script: 'start',
-          workspace: {
-            name: 'wks-a',
-            cwd: path.join(prjDir, 'wks-a')
-          }
+        parentId: plan[2].id,
+        label: expect.stringMatching(/^(yarn exec )?node/),
+        type: 'spawn',
+        dependsOn: []
+      });
+
+      expect(plan[4]).toStrictEqual({
+        id: expect.stringMatching(/[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}/),
+        label: 'start',
+        type: 'script',
+        dependsOn: [plan[1].id, plan[3].id],
+        workspace: {
+          name: 'wks-a',
+          slug: 'wks-a',
+          version: '1.0.0',
+          root: path.join(prjDir, 'wks-a')
         }
       });
 
-      expect(plan[7]).toMatchObject({
-        id: expect.stringMatching(/[0-9a-f]{32}/),
-        groupId: plan[6].id,
-        context: {
-          command: 'node',
-          workspace: {
-            name: 'wks-a',
-            cwd: path.join(prjDir, 'wks-a')
-          }
+      expect(plan[5]).toStrictEqual({
+        id: expect.stringMatching(/[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}/),
+        parentId: plan[4].id,
+        label: expect.stringMatching(/^(yarn exec )?node/),
+        type: 'spawn',
+        dependsOn: []
+      });
+
+      expect(plan[6]).toStrictEqual({
+        id: expect.stringMatching(/[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}/),
+        label: 'start',
+        type: 'script',
+        dependsOn: [plan[3].id],
+        workspace: {
+          name: 'wks-b',
+          slug: 'wks-b',
+          version: '1.0.0',
+          root: path.join(prjDir, 'wks-b')
         }
+      });
+
+      expect(plan[7]).toStrictEqual({
+        id: expect.stringMatching(/[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}/),
+        parentId: plan[6].id,
+        label: expect.stringMatching(/^(yarn exec )?node/),
+        type: 'spawn',
+        dependsOn: []
       });
 
       await expect(fileExists(path.join(prjDir, 'wks-c', 'hook.txt'))).resolves.toBe(false);
@@ -345,5 +331,26 @@ describe('jill each', () => {
       await expect(fileExists(path.join(prjDir, 'wks-b', 'start.txt'))).resolves.toBe(false);
       await expect(fileExists(path.join(prjDir, 'wks-a', 'start.txt'))).resolves.toBe(false);
     });
+
+    it('should work without config file', async () => {
+      await fs.rm(path.join(prjDir, '.jillrc.json'));
+      const res = await jill('each start', { cwd: prjDir });
+
+      // Check jill output
+      expect(res.code).toBe(0);
+
+      // Check script result
+      await expect(fs.readFile(path.join(prjDir, 'wks-c', 'build.txt'), 'utf8'))
+        .resolves.toBe('built');
+
+      await expect(fs.readFile(path.join(prjDir, 'wks-b', 'build.txt'), 'utf8'))
+        .resolves.toBe('built');
+
+      await expect(fs.readFile(path.join(prjDir, 'wks-b', 'start.txt'), 'utf8'))
+        .resolves.toBe('started');
+
+      await expect(fs.readFile(path.join(prjDir, 'wks-a', 'start.txt'), 'utf8'))
+        .resolves.toBe('started');
+    });
   });
-}, { timeout: 10000 });
+}, 15000);

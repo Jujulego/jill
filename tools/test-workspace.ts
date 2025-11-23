@@ -1,4 +1,4 @@
-import { Workspace } from '@/src/project/workspace.ts';
+import { Workspace } from '@/src/projects/workspace.js';
 
 // Class
 export class TestWorkspace extends Workspace {
@@ -23,12 +23,14 @@ export class TestWorkspace extends Workspace {
     return this;
   }
 
+  // eslint-disable-next-line @typescript-eslint/require-await
   override async* dependencies(): AsyncGenerator<Workspace, void> {
     for (const wks of this._dependencies) {
       yield wks;
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/require-await
   override async* devDependencies(): AsyncGenerator<Workspace, void> {
     for (const wks of this._devDependencies) {
       yield wks;

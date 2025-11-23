@@ -1,10 +1,8 @@
-import fs from 'node:fs/promises';
-import path from 'node:path';
-
-import '@/src/commons/logger.service.js';
 import { TestBed } from '@/tools/test-bed.js';
 import { shell } from '@/tools/utils.js';
-
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { jill } from './utils.js';
 
 // Setup
@@ -31,12 +29,11 @@ describe('jill list', () => {
     beforeAll(async () => {
       baseDir = await bed.createProjectPackage(packageManager);
       tmpDir = path.dirname(baseDir);
-    }, 15000);
+    }, 60000);
 
     beforeEach(async (ctx) => {
       prjDir = path.join(tmpDir, ctx.task.id);
-
-      await fs.cp(baseDir, prjDir, { force: true, recursive: true });
+      await fs.cp(baseDir, prjDir, { force: true, recursive: true, dereference: process.platform === 'win32' });
     });
 
     afterAll(async () => {
@@ -60,20 +57,13 @@ describe('jill list', () => {
       const res = await jill('list -l', { cwd: prjDir });
 
       expect(res.code).toBe(0);
-      expect(res.screen.screen).toEqualLines([
-        expect.ignoreColor('Name   Version  Root'),
-        expect.ignoreColor('main   1.0.0    .'),
-        expect.ignoreColor('wks-a  1.0.0    wks-a'),
-        expect.ignoreColor('wks-b  1.0.0    wks-b'),
-        expect.ignoreColor('wks-c  1.0.0    wks-c'),
-      ]);
+      expect(res.screen.screen).toMatchSnapshot();
     });
 
     it('should print a list of all workspaces in json', async () => {
       const res = await jill('list --json', { cwd: prjDir });
 
       expect(res.code).toBe(0);
-
       expect(res.stdout.join('\n')).toEqual(expect.jsonMatching([
         {
           name: 'main',
@@ -142,5 +132,19 @@ describe('jill list', () => {
         ]);
       });
     });
+
+    it('should work without config file', async () => {
+      await fs.rm(path.join(prjDir, '.jillrc.json'));
+      const res = await jill('list', { cwd: prjDir });
+
+      expect(res.code).toBe(0);
+      expect(res.screen.screen).toEqualLines([
+        'main',
+        'wks-a',
+        'wks-b',
+        'wks-c'
+      ]);
+    });
+
   });
-}, { timeout: 10000 });
+}, 10000);

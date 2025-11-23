@@ -3,6 +3,7 @@
     <node-interpreter value="project" />
     <vitest-package value="yarn:package.json:vitest" />
     <working-dir value="$PROJECT_DIR$" />
+    <vitest-options value="--watch" />
     <envs />
     <scope-kind value="DIRECTORY" />
     <test-directory value="$PROJECT_DIR$/tests" />

@@ -1,4 +1,4 @@
-name: 'Javascript'
+name: 'CI'
 
 on:
   push:
@@ -8,36 +8,42 @@ on:
     branches: [ latest, next ]
 
 concurrency:
-  group: javascript-${{ github.ref }}
+  group: ci-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
   build:
+    name: 'Build'
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: read
+      id-token: write
+
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v6.0.0
 
-      - name: Use Node.js 22.x
-        uses: actions/setup-node@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v6.0.0
         with:
-          node-version: 22
-          cache: yarn
+          node-version: 24.x
 
-      - name: Install dependencies
+      - name: Install
         run: yarn install --immutable
 
       - name: Build
         run: yarn build
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
 
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5.0.0
         with:
           name: build
           path: dist
 
   lint:
+    name: 'Lint'
     runs-on: ubuntu-latest
 
     permissions:
@@ -45,16 +51,15 @@ jobs:
       security-events: write
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v6.0.0
 
-      - name: Use Node.js 22.x
-        uses: actions/setup-node@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v6.0.0
         with:
-          node-version: 22
-          cache: yarn
+          node-version: 24.x
 
-      - name: Install dependencies
+      - name: Install
         run: yarn install --immutable
 
       - name: Lint
@@ -62,39 +67,56 @@ jobs:
         run: yarn lint -f @microsoft/sarif -o eslint-results.sarif
 
       - name: Upload analysis results to GitHub
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v4.31.4
         with:
           sarif_file: eslint-results.sarif
           wait-for-processing: true
 
   tests:
+    name: 'Tests'
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: read
+      id-token: write
+
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v6.0.0
 
-      - name: Use Node.js 22.x
-        uses: actions/setup-node@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v6.0.0
         with:
-          node-version: 22
-          cache: yarn
+          node-version: 24.x
 
-      - name: Install dependencies
+      - name: Install
         run: yarn install --immutable
 
       - name: Run tests
-        run: yarn test --coverage --typecheck
+        run: yarn test --coverage
 
-      - name: Upload coverage artifacts
-        uses: actions/upload-artifact@v4
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v5
         with:
-          name: coverage
-          path: coverage
+          flags: unit
+          use_oidc: true
+
+      - name: Upload results to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/test-results-action@v1
+        with:
+          files: junit-report.xml
+          flags: unit
+          use_oidc: true
 
   e2e:
+    name: 'E2E tests'
     runs-on: ${{ matrix.os }}
     needs: [ build ]
+
+    permissions:
+      contents: read
+      id-token: write
 
     strategy:
       fail-fast: false
@@ -104,28 +126,24 @@ jobs:
           - 'windows-latest'
           - 'macos-latest'
         node:
-          - 18
           - 20
           - 22
-        packageManager:
-          - npm
-          - yarn
+          - 24
 
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Use Node.js ${{ matrix.node }}.x
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node }}
-          cache: yarn
 
       - name: Install dependencies
         run: yarn install --immutable
 
       - name: Download build artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v6
         with:
           name: build
           path: dist
@@ -136,13 +154,27 @@ jobs:
           git config --global user.email github-actions@github.com
 
       - name: Run E2E tests
-        run: yarn e2e -t ${{ matrix.packageManager }} --no-file-parallelism
+        run: yarn e2e --no-file-parallelism
+        env:
+          SENTRY_ENVIRONMENT: testing
+
+      - name: Upload results to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/test-results-action@v1
+        with:
+          files: junit-report.xml
+          flags: e2e,${{ matrix.os }},node-${{ matrix.node }}
+          use_oidc: true
 
   complete:
     if: ${{ github.event_name == 'pull_request' && always() }}
 
+    name: 'Complete'
     runs-on: ubuntu-latest
     needs: [ lint, tests, e2e ]
+
+    permissions:
+      contents: read
 
     steps:
       - name: Failed
@@ -154,70 +186,48 @@ jobs:
 
   publish:
     if: ${{ github.event_name == 'push' }}
-    name: Publish to npm
+    name: 'Publish to npm'
 
     runs-on: ubuntu-latest
     environment: npm
     needs: [ lint, tests, e2e ]
 
+    permissions:
+      id-token: write
+      contents: read
+
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v6.0.0
 
-      - name: Use Node.js 22.x
-        uses: actions/setup-node@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v6.0.0
         with:
-          node-version: 22
+          node-version: 24.x
           registry-url: https://registry.npmjs.org
-          cache: yarn
-
-      - name: Install dependencies
-        run: yarn install --immutable
 
       - name: Download build artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v6.0.0
         with:
           name: build
           path: dist
 
-      - name: Publish ${{ github.ref_name }}
-        run: yarn npm publish --access public --tag ${{ github.ref_name }} --tolerate-republish
-        env:
-          YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-  sonarcloud:
-    if: ${{ !startsWith(github.head_ref, 'dependabot/') && !startsWith(github.head_ref, 'renovate/') }}
-    runs-on: ubuntu-latest
-    needs: [ tests ]
-
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Download coverage artifacts
-        uses: actions/download-artifact@v4
-        continue-on-error: true
-        with:
-          name: coverage
-          path: coverage
-
-      - name: Load package.json
-        id: info
-        run: echo "version=$(jq -r ".version" package.json)" >> $GITHUB_OUTPUT
-
-      - name: Sonarcloud
-        uses: sonarsource/sonarcloud-github-action@v2.1.1
-        with:
-          args: >
-            -Dsonar.projectVersion=${{ steps.info.outputs.version }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      - name: Publish
+        # language=Bash
+        run: |
+          name=$(jq -j ".name" package.json)
+          version=$(npm view $name@${{ github.ref_name }} version)
+          
+          if [[ "$version" == "$(jq -j ".version" package.json)" ]]; then
+            echo "::notice::$version already exists in npm registry"
+          else
+            npm publish --access public --tag ${{ github.ref_name }} --provenance
+          fi
 
   release:
     if: ${{ github.event_name == 'push' }}
 
+    name: 'Publish release'
     runs-on: ubuntu-latest
     needs: [ publish ]
 
@@ -225,14 +235,23 @@ jobs:
       contents: write
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v6.0.0
 
       - name: Read package.json
         id: info
-        run: echo "version=$(jq -r ".version" package.json)" >> $GITHUB_OUTPUT
+        # language=Bash
+        run: |
+          version=$(jq -j ".version" package.json)
+          echo "version=$version" >> $GITHUB_OUTPUT
+          
+          if [[ $version =~ "^[0-9]+\.[0-9]+\.[0-9]-[a-zA-Z]+\.[0-9]+" ]]; then
+            echo "prerelease=true" >> $GITHUB_OUTPUT
+          fi
 
       - name: Tag version
         id: tag
+        # language=Bash
         run: |
           echo "::group::git fetch --tags"
           
@@ -260,5 +279,5 @@ jobs:
         with:
           name: ${{ steps.info.outputs.version }}
           tag_name: v${{ steps.info.outputs.version }}
-          draft: true
           generate_release_notes: true
+          prerelease: ${{ steps.info.outputs.prerelease }}

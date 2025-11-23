@@ -1,6 +1,5 @@
-import { vi } from 'vitest';
-
 import { printJson } from '@/src/utils/json.js';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Setup
 let stream: NodeJS.WriteStream;

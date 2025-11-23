@@ -1,77 +1,42 @@
-import { Logger } from '@jujulego/logger';
-import { inject } from 'inversify';
-import { type ArgumentsCamelCase, type Argv } from 'yargs';
-
-import { Command } from '@/src/modules/command.ts';
-import { TaskCommand } from '@/src/modules/task-command.tsx';
-import { LoadProject } from '@/src/middlewares/load-project.ts';
-import { LazyCurrentWorkspace, LoadWorkspace } from '@/src/middlewares/load-workspace.ts';
-import { type Workspace, type WorkspaceDepsMode } from '@/src/project/workspace.ts';
-import { TaskExpressionService } from '@/src/tasks/task-expression.service.ts';
-import { TaskExpressionError, TaskSyntaxError } from '@/src/tasks/errors.ts';
-import { ExitException } from '@/src/utils/exit.ts';
-
-// Types
-export interface IRunCommandArgs {
-  expr: string;
-  'build-script': string;
-  'deps-mode': WorkspaceDepsMode;
-}
+import { inject$ } from '@kyrielle/injector';
+import type { WorkspaceDepsMode } from '../projects/workspace.js';
+import type { JobCommandModule } from '../wrappers/job-command.js';
+import { loadWorkspace, withWorkspace, type WorkspaceArgs } from '../middlewares/with-workspace.js';
+import { TaskParserService } from '../services/task-parser.service.js';
+import type { PlanModeArgs } from '../middlewares/with-plan.js';
 
 // Command
-@Command({
+const command: JobCommandModule<RunArgs> = {
   command: 'run <expr>',
   describe: 'Run a task expression in a workspace, after having built all its dependencies.',
-  middlewares: [
-    LoadProject,
-    LoadWorkspace
-  ]
-})
-export class RunCommand extends TaskCommand<IRunCommandArgs> {
-  // Lazy injections
-  @LazyCurrentWorkspace()
-  readonly workspace: Workspace;
+  builder: (parser) => withWorkspace(parser)
+    .positional('expr', {
+      type: 'string',
+      demandOption: true,
+      desc: 'Script or task expression',
+    })
+    .option('build-script', {
+      default: 'build',
+      desc: 'Script to use to build dependencies'
+    })
+    .option('deps-mode', {
+      alias: 'd',
+      choice: ['all', 'prod', 'none'],
+      default: 'all' as const,
+      desc: 'Dependency selection mode:\n' +
+        ' - all = dependencies AND devDependencies\n' +
+        ' - prod = dependencies\n' +
+        ' - none = nothing'
+    })
 
-  // Constructor
-  constructor(
-    @inject(Logger)
-    private readonly logger: Logger,
-    @inject(TaskExpressionService)
-    private readonly taskExpression: TaskExpressionService,
-  ) {
-    super();
-  }
+    // Config
+    .strict(false)
+    .parserConfiguration({
+      'unknown-options-as-args': true,
+    }),
+  async prepare(args) {
+    const workspace = await loadWorkspace(args);
 
-  // Methods
-  builder(parser: Argv) {
-    return this.addTaskOptions(parser)
-      .positional('expr', {
-        type: 'string',
-        demandOption: true,
-        desc: 'Script or task expression',
-      })
-      .option('build-script', {
-        default: 'build',
-        desc: 'Script to use to build dependencies'
-      })
-      .option('deps-mode', {
-        alias: 'd',
-        choice: ['all', 'prod', 'none'],
-        default: 'all' as const,
-        desc: 'Dependency selection mode:\n' +
-          ' - all = dependencies AND devDependencies\n' +
-          ' - prod = dependencies\n' +
-          ' - none = nothing'
-      })
-
-      // Config
-      .strict(false)
-      .parserConfiguration({
-        'unknown-options-as-args': true,
-      });
-  }
-
-  async *prepare(args: ArgumentsCamelCase<IRunCommandArgs>) {
     // Extract expression
     const expr = args._.map(arg => arg.toString());
 
@@ -82,25 +47,21 @@ export class RunCommand extends TaskCommand<IRunCommandArgs> {
     expr.unshift(args.expr);
 
     // Parse task expression
-    try {
-      const tree = this.taskExpression.parse(expr.join(' '));
+    const taskParser = inject$(TaskParserService);
+    const tree = taskParser.parse(expr.join(' '));
 
-      yield await this.taskExpression.buildTask(tree.roots[0], this.workspace, {
-        buildScript: args.buildScript,
-        buildDeps: args.depsMode,
-      });
-    } catch (err) {
-      if (err instanceof TaskExpressionError) {
-        this.logger.error(err.message);
-        throw new ExitException(1);
-      }
-
-      if (err instanceof TaskSyntaxError) {
-        this.logger.error(`Syntax error in task expression: ${err.message}`);
-        throw new ExitException(1);
-      }
-
-      throw err;
-    }
+    return await taskParser.buildJob(tree.roots[0], workspace, {
+      buildScript: args.buildScript,
+      buildDeps: args.depsMode,
+    });
   }
+};
+
+export default command;
+
+// Types
+export interface RunArgs extends PlanModeArgs, WorkspaceArgs {
+  readonly expr: string;
+  readonly 'build-script': string;
+  readonly 'deps-mode': WorkspaceDepsMode;
 }

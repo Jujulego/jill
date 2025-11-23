@@ -1,11 +1,17 @@
-import { type cosmiconfig } from 'cosmiconfig';
-
 // Types
-export interface IConfig {
-  jobs?: number;
-  hooks?: boolean;
-  plugins?: string[];
-  verbose?: 'info' | 'verbose' | 'debug';
-}
+/**
+ * Jill configuration
+ */
+export interface Config {
 
-export type IConfigExplorer = ReturnType<typeof cosmiconfig>;
+  /**
+   * Instructs jill to run hook scripts
+   * @default true
+   */
+  readonly hooks: boolean;
+
+  /**
+   * Number of allowed parallel tasks, defaults to CPU number - 1.
+   */
+  readonly jobs: number;
+}

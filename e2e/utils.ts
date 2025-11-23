@@ -1,12 +1,11 @@
+import { splitCommandLine } from '@/src/utils/string.js';
+import { InkScreen } from '@/tools/ink-screen.js';
 import cp from 'node:child_process';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
-import { InkScreen } from '@/tools/ink-screen.js';
-import { splitCommandLine } from '@/src/utils/string.js';
-
 // Constants
-export const MAIN = path.join(__dirname, '../bin/jill.js');
+export const JILL = path.join(__dirname, '../bin/jill.js');
 
 // Type
 export interface SpawnResult {
@@ -17,24 +16,24 @@ export interface SpawnResult {
 }
 
 export interface SpawnOptions {
-  cwd?: string;
-  env?: Record<string, string>;
-  keepQuotes?: boolean;
+  readonly cwd?: string;
+  readonly env?: Record<string, string>;
 }
 
 // Utils
 export function jill(args: string, opts: SpawnOptions = {}): Promise<SpawnResult> {
   return new Promise<SpawnResult>((resolve, reject) => {
-    let argv = splitCommandLine(args);
+    const argv = splitCommandLine(args)
+      .map(arg => arg.replace(/^["'](.+)["']$/, '$1'));
 
-    if (!opts.keepQuotes) {
-      argv = argv.map(arg => arg.replace(/^["'](.+)["']$/, '$1'));
-    }
-
-    const proc = cp.fork(MAIN, argv, {
+    const proc = cp.fork(JILL, argv, {
       cwd: opts.cwd,
       stdio: 'overlapped',
-      env: process.env
+      env: {
+        ...process.env,
+        FORCE_COLOR: '1',
+        SENTRY_ENVIRONMENT: 'testing',
+      }
     });
 
     // Gather result
@@ -70,7 +69,7 @@ export async function fileExists(file: string): Promise<boolean> {
     await fs.access(file);
     return true;
   } catch (err) {
-    if (err.code === 'ENOENT') {
+    if ((err as NodeJS.ErrnoException).code === 'ENOENT') {
       return false;
     }
 

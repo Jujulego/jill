@@ -12,7 +12,7 @@ export function jsonMatching(this: MatcherState, received: string, expected: unk
     try {
       return JSON.parse(received);
     } catch (err) {
-      throw new Error(`${this.utils.printReceived(received)} value must be a valid json string: ${err.message}`);
+      throw new Error(`${this.utils.printReceived(received)} value must be a valid json string: ${(err as Error).message}`);
     }
   };
 

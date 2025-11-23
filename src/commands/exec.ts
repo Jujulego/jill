@@ -1,137 +1,117 @@
-import { Logger, withLabel } from '@jujulego/logger';
-import { inject } from 'inversify';
-import cp from 'node:child_process';
+import { inject$ } from '@kyrielle/injector';
+import { parallelFlow$, type SpawnJob$, WorkloadState } from '@kyrielle/workload';
+import { startSpan } from '@sentry/node';
+import { collect$, pipe$ } from 'kyrielle';
+import { spawn } from 'node:child_process';
 import process from 'node:process';
-import { type ArgumentsCamelCase, type Argv } from 'yargs';
-
-import { Command } from '@/src/modules/command.ts';
-import { ITaskCommandArgs, TaskCommand } from '@/src/modules/task-command.tsx';
-import { LazyCurrentProject, LoadProject } from '@/src/middlewares/load-project.ts';
-import { LazyCurrentWorkspace, LoadWorkspace } from '@/src/middlewares/load-workspace.ts';
-import type { Project } from '@/src/project/project.ts';
-import { type Workspace, type WorkspaceDepsMode } from '@/src/project/workspace.ts';
-import { type CommandTask } from '@/src/tasks/command-task.ts';
-import { ExitException } from '@/src/utils/exit.ts';
-
-// Types
-export interface IExecCommandArgs {
-  command: string;
-  'build-script': string;
-  'deps-mode': WorkspaceDepsMode;
-}
+import type { PlanModeArgs } from '../middlewares/with-plan.js';
+import { loadWorkspace, withWorkspace, type WorkspaceArgs } from '../middlewares/with-workspace.js';
+import type { WorkspaceDepsMode } from '../projects/workspace.js';
+import { LOGGER } from '../tokens.js';
+import { traceImport } from '../utils/sentry.js';
+import { escapeCommandLineArg } from '../utils/string.js';
+import type { JobCommandModule } from '../wrappers/job-command.js';
 
 // Command
-@Command({
+const command: JobCommandModule<ExecArgs> = {
   command: 'exec <command>',
   aliases: ['$0'],
   describe: 'Run command inside workspace, after all its dependencies has been built.',
-  middlewares: [
-    LoadProject,
-    LoadWorkspace
-  ]
-})
-export class ExecCommand extends TaskCommand<IExecCommandArgs> {
-  // Attributes
-  private _finalTask: CommandTask;
-  private readonly _logger: Logger;
+  builder: (args) => withWorkspace(args)
+    .positional('command', { type: 'string', demandOption: true })
+    .option('build-script', {
+      default: 'build',
+      desc: 'Script to use to build dependencies'
+    })
+    .option('deps-mode', {
+      alias: 'd',
+      choice: ['all', 'prod', 'none'],
+      default: 'all' as const,
+      desc: 'Dependency selection mode:\n' +
+        ' - all = dependencies AND devDependencies\n' +
+        ' - prod = dependencies\n' +
+        ' - none = nothing'
+    })
 
-  // Lazy injections
-  @LazyCurrentProject()
-  readonly project: Project;
+    // Documentation
+    .example('jill exec eslint', '')
+    .example('jill exec eslint --env-info', 'Unknown arguments are passed down to command. Here it will run "eslint --env-info"')
+    .example('jill exec eslint -- -v', 'You can use -- to stop argument parsing. Here it will run "eslint -v"')
 
-  @LazyCurrentWorkspace()
-  readonly workspace: Workspace;
+    // Config
+    .strict(false)
+    .parserConfiguration({
+      'unknown-options-as-args': true,
+    }),
+  async prepare(args) {
+    const workspace = await loadWorkspace(args);
 
-  // Constructor
-  constructor(
-    @inject(Logger) logger: Logger,
-  ) {
-    super();
-
-    this._logger = logger.child(withLabel('exec'));
-  }
-
-  // Methods
-  builder(parser: Argv) {
-    return this.addTaskOptions(parser)
-      .positional('command', { type: 'string', demandOption: true })
-      .option('build-script', {
-        default: 'build',
-        desc: 'Script to use to build dependencies'
-      })
-      .option('deps-mode', {
-        alias: 'd',
-        choice: ['all', 'prod', 'none'],
-        default: 'all' as const,
-        desc: 'Dependency selection mode:\n' +
-          ' - all = dependencies AND devDependencies\n' +
-          ' - prod = dependencies\n' +
-          ' - none = nothing'
-      })
-
-      // Documentation
-      .example('jill eslint', '')
-      .example('jill eslint --env-info', 'Unknown arguments are passed down to command. Here it would run eslint --env-info')
-      .example('jill eslint -- -v', 'You can use -- to stop argument parsing. Here it would run eslint -v')
-
-      // Config
-      .strict(false)
-      .parserConfiguration({
-        'unknown-options-as-args': true,
-      });
-  }
-
-  async *prepare(args: ArgumentsCamelCase<IExecCommandArgs & ITaskCommandArgs>) {
     // Extract arguments
-    const rest = args._.map(arg => arg.toString());
+    let rest = args._;
 
     if (rest[0] === 'exec') {
       rest.splice(0, 1);
     }
 
     // Run script in workspace
-    const task = await this.workspace.exec(args.command, rest, {
+    rest = rest.map((arg) => escapeCommandLineArg(arg.toString()));
+
+    return await workspace.exec([args.command, ...rest].join(' '), {
       buildScript: args.buildScript,
       buildDeps: args.depsMode,
     });
+  },
+  async execute(args, arg) {
+    const logger = inject$(LOGGER);
+    const job = (arg as SpawnJob$);
 
-    if (args.plan) {
-      yield task;
+    if (job.dependencies().length > 0) {
+      const dependencies = pipe$(
+        job.dependencies(),
+        collect$(parallelFlow$({ label: 'build dependencies' }))
+      );
+
+      // Run dependencies first with spinners
+      const { JobCommandExecuteInk } = await traceImport('JobCommandExecuteInk', () => import('../wrappers/job-command-execute.ink.jsx'));
+      await JobCommandExecuteInk({ job: dependencies, verbose: ['verbose', 'debug'].includes(args.verbose) });
+
+      if (dependencies.state() !== WorkloadState.Succeeded) {
+        return;
+      }
     } else {
-      this._finalTask = task;
-      yield* task.dependencies;
+      logger.verbose('No dependency to build');
     }
-  }
 
-  async handler(args: ArgumentsCamelCase<IExecCommandArgs & ITaskCommandArgs>): Promise<void> {
-    await super.handler(args);
-
-    if (!args.plan) {
-      this.app.unmount();
-
-      // Execute command
-      this._logger.debug`${this._finalTask.cmd} ${this._finalTask.args.join(' ')}`;
-
-      const child = cp.spawn(this._finalTask.cmd, this._finalTask.args, {
+    await startSpan({
+      op: 'subprocess',
+      name: job.cmd,
+    }, async () => {
+      logger.verbose(`spawn "${job.cmd}"`);
+      const child = spawn(job.cmd, {
         stdio: 'inherit',
-        cwd: this._finalTask.cwd,
+        cwd: job.cwd!,
         env: {
           ...process.env,
-          ...this._finalTask.env
+          ...job.env
         },
         shell: true,
         windowsHide: true,
       });
 
-      const code = await new Promise<number>((resolve) => {
+      process.exitCode = await new Promise<number>((resolve) => {
         child.on('close', (code) => {
           resolve(code ?? 0);
         });
       });
-
-      if (code) {
-        throw new ExitException(code);
-      }
-    }
+    });
   }
+};
+
+export default command;
+
+// Types
+export interface ExecArgs extends PlanModeArgs, WorkspaceArgs {
+  readonly command: string;
+  readonly 'build-script': string;
+  readonly 'deps-mode': WorkspaceDepsMode;
 }

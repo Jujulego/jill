@@ -1,10 +1,7 @@
+import { TestBed } from '@/tools/test-bed.js';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-
-import '@/src/commons/logger.service.js';
-import { TestBed } from '@/tools/test-bed.js';
-
 import { fileExists, jill } from './utils.js';
 
 // Setup
@@ -37,12 +34,12 @@ describe('jill exec', () => {
     beforeAll(async () => {
       baseDir = await bed.createProjectPackage(packageManager);
       tmpDir = path.dirname(baseDir);
-    }, 15000);
+    }, 60000);
 
     beforeEach(async (ctx) => {
       prjDir = path.join(tmpDir, ctx.task.id);
 
-      await fs.cp(baseDir, prjDir, { force: true, recursive: true });
+      await fs.cp(baseDir, prjDir, { force: true, recursive: true, dereference: process.platform === 'win32' });
     });
 
     afterAll(async () => {
@@ -51,15 +48,13 @@ describe('jill exec', () => {
 
     // Tests
     it('should run node in wks-c', async () => {
-      const res = await jill('exec -w wks-c node -e "require(\'node:fs\').writeFileSync(\'script.txt\', \'node\')"', { cwd: prjDir, keepQuotes: true });
+      const res = await jill('exec -w wks-c node -e "require(\'node:fs\').writeFileSync(\'script.txt\', \'node\')"', {
+        cwd: prjDir,
+      });
 
       // Check jill output
       expect(res.code).toBe(0);
-
       expect(res.screen.screen).toMatchLines(['']);
-      expect(res.stderr).toMatchLines([
-        expect.ignoreColor('No task found')
-      ]);
 
       // Check script result
       await expect(fs.readFile(path.join(prjDir, 'wks-c', 'script.txt'), 'utf8'))
@@ -67,19 +62,17 @@ describe('jill exec', () => {
     });
 
     it('should run echo in wks-c', async () => {
-      const res = await jill('exec -w wks-c echo toto', { cwd: prjDir, keepQuotes: true });
+      const res = await jill('exec -w wks-c echo toto', { cwd: prjDir });
 
       // Check jill output
       expect(res.code).toBe(0);
-
-      expect(res.screen.screen).toMatchLines(['', 'toto']);
-      expect(res.stderr).toMatchLines([
-        expect.ignoreColor('No task found')
-      ]);
+      expect(res.screen.screen).toMatchLines(['toto']);
     });
 
     it('should be the default command', async () => {
-      const res = await jill('-w wks-c node -e "require(\'node:fs\').writeFileSync(\'script.txt\', \'node\')"', { cwd: prjDir, keepQuotes: true });
+      const res = await jill('-w wks-c node -e "require(\'node:fs\').writeFileSync(\'script.txt\', \'node\')"', {
+        cwd: prjDir
+      });
 
       // Check jill output
       expect(res.code).toBe(0);
@@ -90,20 +83,22 @@ describe('jill exec', () => {
     });
 
     it('should run wks-c fails script and exit 1', async () => {
-      const res = await jill('exec -w wks-c node -e "process.exit(1)"', { cwd: prjDir, keepQuotes: true });
+      const res = await jill('exec -w wks-c node -e "process.exit(1)"', { cwd: prjDir });
 
       // Check jill output
       expect(res.code).toBe(1);
     });
 
     it('should run wks-b start script and build script', async () => {
-      const res = await jill('-w wks-b node -e "require(\'node:fs\').writeFileSync(\'script.txt\', \'node\')"', { cwd: prjDir, keepQuotes: true });
+      const res = await jill('-w wks-b node -e "require(\'node:fs\').writeFileSync(\'script.txt\', \'node\')"', {
+        cwd: prjDir
+      });
 
       // Check jill output
       expect(res.code).toBe(0);
-
       expect(res.screen.screen).toMatchLines([
-        expect.ignoreColor(/^. Run build in wks-c \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^. Build dependencies \(took [0-9.]+m?s\)$/),
+        expect.ignoreColor(/^ {2}. Run build script in wks-c \(took [0-9.]+m?s\)$/),
         expect.ignoreColor(/^. 1 done$/),
       ]);
 
@@ -116,54 +111,73 @@ describe('jill exec', () => {
     });
 
     it('should print task plan and do not run any script', async () => {
-      const res = await jill('-w wks-b --plan --plan-mode json node -e "require(\'node:fs\').writeFileSync(\'script.txt\', \'node\')"', { cwd: prjDir, keepQuotes: true });
+      const res = await jill('-w wks-b --plan node -e "require(\'node:fs\').writeFileSync(\'script.txt\', \'node\')"', {
+        cwd: prjDir,
+      });
+
+      // Check jill plan
+      expect(res.code).toBe(0);
+      expect(res.screen.screen).toMatchSnapshot();
+
+      await expect(fileExists(path.join(prjDir, 'wks-c', 'script.txt'))).resolves.toBe(false);
+      await expect(fileExists(path.join(prjDir, 'wks-b', 'script.txt'))).resolves.toBe(false);
+    });
+
+    it('should print task plan in json and do not run any script', async () => {
+      const res = await jill('-w wks-b --plan --plan-format json node -e "require(\'node:fs\').writeFileSync(\'script.txt\', \'node\')"', {
+        cwd: prjDir
+      });
 
       // Check jill plan
       expect(res.code).toBe(0);
 
-      const plan = JSON.parse(res.stdout.join('\n'));
+      const plan = JSON.parse(res.stdout.join('\n')) as { id: string }[];
       expect(plan).toHaveLength(3);
 
-      expect(plan[0]).toMatchObject({
+      expect(plan[0]).toStrictEqual({
         id: expect.stringMatching(/[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}/),
-        isGroup: true,
-        context: {
-          script: 'build',
-          workspace: {
-            name: 'wks-c',
-            cwd: path.join(prjDir, 'wks-c')
-          }
+        label: 'build',
+        type: 'script',
+        dependsOn: [],
+        workspace: {
+          name: 'wks-c',
+          slug: 'wks-c',
+          version: '1.0.0',
+          root: path.join(prjDir, 'wks-c')
         }
       });
 
-      expect(plan[1]).toMatchObject({
-        id: expect.stringMatching(/[0-9a-f]{32}/),
-        groupId: plan[0].id,
-        context: {
-          command: 'node',
-          workspace: {
-            name: 'wks-c',
-            cwd: path.join(prjDir, 'wks-c')
-          }
-        }
+      expect(plan[1]).toStrictEqual({
+        id: expect.stringMatching(/[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}/),
+        parentId: plan[0].id,
+        label: expect.stringMatching(/^(yarn exec )?node/),
+        type: 'spawn',
+        dependsOn: []
       });
 
-      expect(plan[2]).toMatchObject({
-        id: expect.stringMatching(/[0-9a-f]{32}/),
-        dependenciesIds: [
-          plan[0].id
-        ],
-        context: {
-          command: 'node',
-          workspace: {
-            name: 'wks-b',
-            cwd: path.join(prjDir, 'wks-b')
-          }
-        }
+      expect(plan[2]).toStrictEqual({
+        id: expect.stringMatching(/[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}/),
+        label: expect.stringMatching(/^(yarn exec )?node/),
+        type: 'spawn',
+        dependsOn: [plan[1].id]
       });
 
       await expect(fileExists(path.join(prjDir, 'wks-c', 'script.txt'))).resolves.toBe(false);
       await expect(fileExists(path.join(prjDir, 'wks-b', 'script.txt'))).resolves.toBe(false);
     });
+
+    it('should work without config file', async () => {
+      await fs.rm(path.join(prjDir, '.jillrc.json'));
+      const res = await jill('exec -w wks-c node -e "require(\'node:fs\').writeFileSync(\'script.txt\', \'node\')"', {
+        cwd: prjDir
+      });
+
+      // Check jill output
+      expect(res.code).toBe(0);
+
+      // Check script result
+      await expect(fs.readFile(path.join(prjDir, 'wks-c', 'script.txt'), 'utf8'))
+        .resolves.toBe('node');
+    });
   });
-}, { timeout: 10000 });
+}, 10000);

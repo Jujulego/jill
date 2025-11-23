@@ -1,29 +1,49 @@
-import { Logger } from '@jujulego/logger';
+import { inject$ } from '@kyrielle/injector';
+import { captureException, startInactiveSpan, startSpan } from '@sentry/node';
+import { pipe$ } from 'kyrielle';
+import process from 'node:process';
 import { hideBin } from 'yargs/helpers';
-
-import '@/src/commons/logger.service.ts';
-import { container } from '@/src/inversify.config.ts';
-import { JillApplication } from '@/src/jill.application.ts';
-import { ExitException } from '@/src/utils/exit.ts';
+import * as commands from './commands.js';
+import { ClientError } from './errors.js';
+import { cliParser } from './parser.js';
+import { LOGGER } from './tokens.js';
+import { command } from './wrappers/command.js';
+import { jobCommandExecute } from './wrappers/job-command-execute.js';
 
 // Bootstrap
-(async () => {
-  const app = await container.getAsync(JillApplication);
+const argv = hideBin(process.argv);
+const parser = pipe$(
+  cliParser(),
+  jobCommandExecute(commands.each),
+  jobCommandExecute(commands.exec),
+  command(commands.list),
+  jobCommandExecute(commands.run),
+  command(commands.tree),
+);
 
+void startSpan({ name: 'jill', op: 'cli.main', startTime: 0, attributes: { 'cli.argv': argv } }, async () => {
   try {
-    await app.run(hideBin(process.argv));
-  } catch (err) {
-    if (err instanceof ExitException) {
-      process.exit(err.code);
-    } else {
-      console.error(await app.parser.getHelp());
+    startInactiveSpan({ name: 'bootstrap', op: 'cli.bootstrap', startTime: 0 })
+      .end();
 
-      if (err.message) {
-        const logger = container.get(Logger);
-        logger.error(err.message);
-      }
+    return await parser
+      .wrap(parser.terminalWidth())
+      .fail((msg, err) => {
+        const logger = inject$(LOGGER);
 
-      process.exit(1);
-    }
+        if (msg) {
+          logger.error(msg);
+        } else if (err instanceof ClientError) {
+          logger.error(err.message);
+        } else {
+          captureException(err, { tags: { handled: false } });
+          logger.error(err.message);
+        }
+
+        process.exitCode = 1;
+      })
+      .parseAsync(argv);
+  } catch {
+    // Already handled
   }
-})();
+});

@@ -1,189 +1,142 @@
-import { Logger } from '@jujulego/logger';
-import { inject } from 'inversify';
-import symbols from 'log-symbols';
-import { type ArgumentsCamelCase, type Argv } from 'yargs';
-
-import { AffectedFilter } from '@/src/filters/affected.filter.ts';
-import { Pipeline } from '@/src/filters/pipeline.ts';
-import { PrivateFilter } from '@/src/filters/private.filter.ts';
-import { ScriptsFilter } from '@/src/filters/scripts.filter.ts';
-import { LazyCurrentProject, LoadProject } from '@/src/middlewares/load-project.ts';
-import { Command } from '@/src/modules/command.ts';
-import { TaskCommand } from '@/src/modules/task-command.tsx';
-import { type Project } from '@/src/project/project.ts';
-import { type WorkspaceDepsMode } from '@/src/project/workspace.ts';
-import { TaskExpressionError, TaskSyntaxError } from '@/src/tasks/errors.ts';
-import { TaskExpressionService } from '@/src/tasks/task-expression.service.ts';
-import { ExitException } from '@/src/utils/exit.ts';
-
-// Types
-export interface EachCommandArgs {
-  expr: string;
-  'build-script': string;
-  'deps-mode': WorkspaceDepsMode;
-  'allow-no-workspaces'?: boolean;
-
-  // Filters
-  private?: boolean;
-
-  // Affected filter
-  affected: string;
-  'affected-rev-fallback': string;
-  'affected-rev-sort'?: string;
-}
+import { inject$ } from '@kyrielle/injector';
+import { parallelFlow$ } from '@kyrielle/workload';
+import { asyncIterator$, collect$, pipe$, type SimpleAsyncIterator, waitFor$ } from 'kyrielle';
+import type { PlanModeArgs } from '../middlewares/with-plan.js';
+import { loadProject, type ProjectArgs, withProject } from '../middlewares/with-project.js';
+import { hasEveryScript$ } from '../projects/filters/has-scripts.js';
+import { isAffected$ } from '../projects/filters/is-affected.js';
+import { isPrivate$ } from '../projects/filters/is-private.js';
+import type { Workspace, WorkspaceDepsMode } from '../projects/workspace.js';
+import { TaskParserService } from '../services/task-parser.service.js';
+import { pipeline$ } from '../utils/pipeline$.js';
+import type { JobCommandModule } from '../wrappers/job-command.js';
 
 // Command
-@Command({
+const command: JobCommandModule<EachArgs> = {
   command: 'each <expr>',
   describe: 'Run a task expression in many workspace, after having built all theirs dependencies.',
-  middlewares: [
-    LoadProject
-  ]
-})
-export class EachCommand extends TaskCommand<EachCommandArgs> {
-  // Lazy injections
-  @LazyCurrentProject()
-  readonly project: Project;
+  builder: (parser) => withProject(parser)
+    .positional('expr', {
+      type: 'string',
+      demandOption: true,
+      desc: 'Script or task expression',
+    })
+    .option('affected', {
+      alias: 'a',
+      type: 'string',
+      coerce: (rev: string) => rev === '' ? 'master' : rev,
+      group: 'Filters:',
+      desc: 'Print only affected workspaces towards given git revision. If no revision is given, it will check towards master. Replaces %name by workspace name.',
+    })
+    .option('affected-rev-fallback', {
+      type: 'string',
+      default: 'master',
+      group: 'Filters:',
+      desc: 'Fallback revision, used if no revision matching the given format is found',
+    })
+    .option('affected-rev-sort', {
+      type: 'string',
+      group: 'Filters:',
+      desc: 'Sort applied to git tag / git branch command',
+    })
+    .option('allow-no-workspaces', {
+      type: 'boolean',
+      default: false,
+      desc: 'Allow no matching workspaces. Without it jill will exit with code 1 if no workspace matches',
+    })
+    .option('build-script', {
+      default: 'build',
+      desc: 'Script to use to build dependencies'
+    })
+    .option('deps-mode', {
+      alias: 'd',
+      choice: ['all', 'prod', 'none'],
+      default: 'all' as const,
+      desc: 'Dependency selection mode:\n' +
+        ' - all = dependencies AND devDependencies\n' +
+        ' - prod = dependencies\n' +
+        ' - none = nothing'
+    })
+    .option('private', {
+      type: 'boolean',
+      group: 'Filters:',
+      describe: 'Print only private workspaces',
+    })
 
-  // Constructor
-  constructor(
-    @inject(Logger)
-    private readonly logger: Logger,
-    @inject(TaskExpressionService)
-    private readonly taskExpression: TaskExpressionService,
-  ) {
-    super();
-  }
+    // Config
+    .strict(false)
+    .parserConfiguration({
+      'unknown-options-as-args': true,
+    }),
+  async prepare(args) {
+    // Extract expression
+    const expr = args._.map(arg => arg.toString());
 
-  // Methods
-  builder(parser: Argv): Argv<EachCommandArgs> {
-    return this.addTaskOptions(parser)
-      // Run options
-      .positional('expr', {
-        type: 'string',
-        demandOption: true,
-        desc: 'Script or task expression',
-      })
-      .option('build-script', {
-        default: 'build',
-        desc: 'Script to use to build dependencies'
-      })
-      .option('deps-mode', {
-        alias: 'd',
-        choice: ['all', 'prod', 'none'],
-        default: 'all' as const,
-        desc: 'Dependency selection mode:\n' +
-          ' - all = dependencies AND devDependencies\n' +
-          ' - prod = dependencies\n' +
-          ' - none = nothing'
-      })
-      .option('allow-no-workspaces', {
-        type: 'boolean',
-        default: false,
-        desc: 'Allow no matching workspaces. Without it jill will exit with code 1 if no workspace matches',
-      })
-
-      // Filters
-      .option('private', {
-        type: 'boolean',
-        group: 'Filters:',
-        desc: 'Print only private workspaces',
-      })
-      .option('affected', {
-        alias: 'a',
-        type: 'string',
-        coerce: (rev) => rev === '' ? 'master' : rev,
-        group: 'Filters:',
-        desc: 'Print only affected workspaces towards given git revision. If no revision is given, it will check towards master. Replaces %name by workspace name.',
-      })
-      .option('affected-rev-sort', {
-        type: 'string',
-        group: 'Filters:',
-        desc: 'Sort applied to git tag / git branch command',
-      })
-      .option('affected-rev-fallback', {
-        type: 'string',
-        default: 'master',
-        group: 'Filters:',
-        desc: 'Fallback revision, used if no revision matching the given format is found',
-      })
-
-      // Config
-      .strict(false)
-      .parserConfiguration({
-        'unknown-options-as-args': true,
-      });
-  }
-
-  async *prepare(argv: ArgumentsCamelCase<EachCommandArgs>) {
-    let empty = true;
-
-    try {
-      // Extract expression
-      const expr = argv._.map(arg => arg.toString());
-
-      if (expr[0] === 'each') {
-        expr.splice(0, 1);
-      }
-
-      expr.unshift(argv.expr);
-
-      const tree = this.taskExpression.parse(expr.join(' '));
-      const scripts = Array.from(this.taskExpression.extractScripts(tree));
-
-      // Create script tasks
-      const pipeline = this._preparePipeline(argv, scripts);
-
-      for await (const wks of pipeline.filter(this.project.workspaces())) {
-        const task = await this.taskExpression.buildTask(tree.roots[0], wks, {
-          buildScript: argv.buildScript,
-          buildDeps: argv.depsMode,
-        });
-
-        if (task) {
-          yield task;
-          empty = false;
-        }
-      }
-    } catch (err) {
-      if (err instanceof TaskExpressionError) {
-        this.logger.error(err.message);
-        throw new ExitException(1);
-      }
-
-      if (err instanceof TaskSyntaxError) {
-        this.logger.error(`Syntax error in task expression: ${err.message}`);
-        throw new ExitException(1);
-      }
-
-      throw err;
+    if (expr[0] === 'each') {
+      expr.splice(0, 1);
     }
 
-    if (empty) {
-      this.logger.error(`${symbols.error} No matching workspace found !`);
+    expr.unshift(args.expr);
 
-      if (argv.allowNoWorkspaces === false) {
-        throw new ExitException(1);
-      }
+    // Prepare filters
+    let filters = pipeline$<SimpleAsyncIterator<Workspace>>();
+
+    if (args.private !== undefined) {
+      filters = filters.add(isPrivate$(args.private));
     }
+
+    if (args.affected !== undefined) {
+      filters = filters.add(isAffected$({
+        format: args.affected,
+        fallback: args.affectedRevFallback,
+        sort: args.affectedRevSort,
+      }));
+    }
+
+    // Parse task expression
+    const taskParser = inject$(TaskParserService);
+    const tree = taskParser.parse(expr.join(' '));
+
+    const scripts = Array.from(taskParser.extractScripts(tree));
+
+    // Load workspaces
+    const project = loadProject(args);
+    const workspaces = await waitFor$(pipe$(
+      asyncIterator$(project.workspaces()),
+      hasEveryScript$(scripts),
+      filters.build(),
+      collect$()
+    ));
+    workspaces.sort((a, b) => a.name.localeCompare(b.name));
+
+    if (workspaces.length === 0) {
+      return;
+    }
+    
+    // Prepare tasks
+    const flow = parallelFlow$({ label: '[hidden]' });
+
+    for (const wks of workspaces) {
+      flow.push(await taskParser.buildJob(tree.roots[0], wks, {
+        buildScript: args.buildScript,
+        buildDeps: args.depsMode,
+      }));
+    }
+
+    return flow;
   }
+};
 
-  private _preparePipeline(argv: ArgumentsCamelCase<EachCommandArgs>, scripts: string[]): Pipeline {
-    const pipeline = new Pipeline();
-    pipeline.add(new ScriptsFilter(scripts, true));
+export default command;
 
-    if (argv.private !== undefined) {
-      pipeline.add(new PrivateFilter(argv.private));
-    }
-
-    if (argv.affected !== undefined) {
-      pipeline.add(new AffectedFilter(
-        argv.affected,
-        argv.affectedRevFallback,
-        argv.affectedRevSort
-      ));
-    }
-
-    return pipeline;
-  }
+// Types
+export interface EachArgs extends PlanModeArgs, ProjectArgs {
+  readonly affected: string | undefined;
+  readonly 'affected-rev-fallback': string;
+  readonly 'affected-rev-sort': string | undefined;
+  readonly 'allow-no-workspaces': boolean;
+  readonly 'build-script': string;
+  readonly 'deps-mode': WorkspaceDepsMode;
+  readonly expr: string;
+  readonly private: boolean | undefined;
 }

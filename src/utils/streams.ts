@@ -1,39 +1,30 @@
-import { iterate$, off$, once$ } from '@jujulego/event-tree';
-import { type SpawnTask, type SpawnTaskStream } from '@jujulego/tasks';
+import type { Logger, LogLevel } from '@kyrielle/logger';
+import assert from 'assert';
+import { Writable } from 'node:stream';
 
-// Utils
-export async function* combine<T>(...generators: AsyncGenerator<T>[]): AsyncGenerator<T> {
-  for (const gen of generators) {
-    yield* gen;
-  }
-}
+export function logStreamedLines(logger: Logger, level: LogLevel): Writable {
+  let leftover = '';
 
-export async function *streamLines(task: SpawnTask, stream: SpawnTaskStream): AsyncGenerator<string> {
-  // Abort
-  const off = off$();
-  once$(task, 'completed', off);
-
-  // Stream
-  let current = '';
-
-  try {
-    for await (const chunk of iterate$(task, `stream.${stream}`, { off })) {
-      const data = current + chunk.data.toString('utf-8');
+  return new Writable({
+    write(chunk, _, cb) {
+      assert(chunk instanceof Buffer);
+      const data = leftover + chunk.toString('utf-8');
       const lines = data.split(/\r?\n/);
 
-      current = lines.pop() ?? '';
+      leftover = lines.pop() ?? '';
 
       for (const line of lines) {
-        yield line;
+        logger.log(level, line);
       }
-    }
-  } catch (err) {
-    if (err.message !== 'Unsubscribed !') {
-      throw err;
-    }
 
-    if (current) {
-      yield current;
+      cb();
+    },
+    final(cb) {
+      if (leftover !== '') {
+        logger.log(level, leftover);
+      }
+
+      cb();
     }
-  }
+  });
 }

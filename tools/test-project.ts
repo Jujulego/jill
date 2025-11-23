@@ -1,8 +1,5 @@
-import { container } from '@/src/inversify.config.ts';
-import { Logger, withLabel } from '@jujulego/logger';
-import { Project, type ProjectOptions } from '@/src/project/project.ts';
-
-import { TestWorkspace } from './test-workspace.ts';
+import { Project, type ProjectOptions } from '@/src/projects/project.js';
+import { TestWorkspace } from './test-workspace.js';
 
 // Class
 export class TestProject extends Project {
@@ -12,7 +9,7 @@ export class TestProject extends Project {
 
   // Constructor
   constructor(root: string, opts?: ProjectOptions) {
-    super(root, container.get(Logger).child(withLabel('projects')), opts);
+    super(root, opts);
 
     this.testMainWorkspace = new TestWorkspace(root, {
       _id: 'main',
@@ -27,9 +24,10 @@ export class TestProject extends Project {
     this.testWorkspaces.set(wks.name, wks);
 
     this.testMainWorkspace.manifest.workspaces ??= [];
-    this.testMainWorkspace.manifest.workspaces.push(wks.name);
+    (this.testMainWorkspace.manifest.workspaces as string[]).push(wks.name);
   }
 
+  // eslint-disable-next-line @typescript-eslint/require-await
   override async mainWorkspace(): Promise<TestWorkspace> {
     return this.testMainWorkspace;
   }
@@ -38,6 +36,7 @@ export class TestProject extends Project {
     return (await super.currentWorkspace(cwd)) as TestWorkspace | null;
   }
 
+  // eslint-disable-next-line @typescript-eslint/require-await
   override async* workspaces(): AsyncGenerator<TestWorkspace, void> {
     for (const wks of this.testWorkspaces.values()) {
       yield wks;

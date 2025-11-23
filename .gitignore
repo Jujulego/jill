@@ -1,4 +1,4 @@
-# yarn
+# Yarn
 .yarn/*
 !.yarn/patches
 !.yarn/releases
@@ -9,9 +9,12 @@
 node_modules
 
 # Generated files
+.vite
 .vitest
 coverage
-coverage-e2e
 dist
+eslint-results.sarif
+junit-report.xml
+
 *.log
 *.pid
