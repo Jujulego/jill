@@ -1,8 +1,10 @@
 import { codecovRollupPlugin } from '@codecov/rollup-plugin';
-import { sentryRollupPlugin } from '@sentry/rollup-plugin';
 import { swc } from '@jujulego/vite-plugin-swc';
+import commonjs from '@rollup/plugin-commonjs';
 import json from '@rollup/plugin-json';
-import { nodeResolve } from '@rollup/plugin-node-resolve';
+import nodeResolve from '@rollup/plugin-node-resolve';
+import replace from '@rollup/plugin-replace';
+import { sentryRollupPlugin } from '@sentry/rollup-plugin';
 import pkg from './package.json' with { type: 'json' };
 
 /** @type {import('rollup').RollupOptions} */
@@ -19,8 +21,16 @@ const options = {
     generatedCode: 'es5',
   },
   plugins: [
-    nodeResolve({ exportConditions: ['node'] }),
+    nodeResolve({exportConditions: ['node']}),
+    commonjs(),
     json(),
+    replace({
+      preventAssignment: true,
+      values: {
+        'process.env[\'DEV\']': '"false"',
+        'process.env.NODE_ENV': '"production"',
+      }
+    }),
     swc(),
     sentryRollupPlugin({
       org: 'jujulego',
@@ -50,6 +60,7 @@ const options = {
   ],
   external: [
     ...(Object.keys(pkg.dependencies)),
+    'react-devtools-core',
     'react/jsx-runtime',
     'reflect-metadata/lite',
     'yargs/helpers',
