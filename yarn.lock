@@ -866,7 +866,7 @@ __metadata:
     "@types/yargs": "npm:17.0.35"
     "@typescript-eslint/utils": "npm:8.48.0"
     "@vitest/coverage-v8": "npm:3.2.4"
-    "@vitest/eslint-plugin": "npm:1.4.4"
+    "@vitest/eslint-plugin": "npm:1.5.0"
     "@vitest/expect": "npm:3.2.4"
     ajv: "npm:8.17.1"
     chalk: "npm:5.6.2"
@@ -2473,9 +2473,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vitest/eslint-plugin@npm:1.4.4":
-  version: 1.4.4
-  resolution: "@vitest/eslint-plugin@npm:1.4.4"
+"@vitest/eslint-plugin@npm:1.5.0":
+  version: 1.5.0
+  resolution: "@vitest/eslint-plugin@npm:1.5.0"
   dependencies:
     "@typescript-eslint/scope-manager": "npm:^8.46.1"
     "@typescript-eslint/utils": "npm:^8.46.1"
@@ -2488,7 +2488,7 @@ __metadata:
       optional: true
     vitest:
       optional: true
-  checksum: 10/eeee9beaf6a005d5529602a3b0379147da1d07a3e7e732a16869181df226d250b27ff68233ed76688ac5d49c91abe0c541e4223c4f09b2a0356d6347e859a923
+  checksum: 10/9889ae778e157ebd7ecf2bf8c533cedc325e7d0365308caebd2a3d535fd5353b3d5e7ff27b4307f25f76d3e68eb4ae87d9f0362be52b38a6da63f3409b1813cf
   languageName: node
   linkType: hard
 
