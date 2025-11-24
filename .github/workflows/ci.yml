@@ -174,7 +174,7 @@ jobs:
 
     name: 'Complete'
     runs-on: ubuntu-latest
-    needs: [ lint, tests, e2e ]
+    needs: [ build, lint, tests, e2e ]
 
     permissions:
       contents: read
