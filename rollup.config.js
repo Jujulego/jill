@@ -61,8 +61,8 @@ const options = {
   external: [
     ...(Object.keys(pkg.dependencies)),
     'react-devtools-core',
-    'react/jsx-runtime',
     'reflect-metadata/lite',
+    'typescript',
     'yargs/helpers',
   ],
 };

@@ -7,7 +7,7 @@ import globals from 'globals';
 import tsEslint from 'typescript-eslint';
 
 export default defineConfig(
-  globalIgnores(['.pnp.*', '.yarn', 'coverage', 'dist']),
+  globalIgnores(['.pnp.*', '.vite', '.yarn', 'coverage', 'dist', 'node_modules']),
   {
     languageOptions: {
       globals: globals.node,

@@ -888,7 +888,7 @@ __metadata:
     normalize-package-data: "npm:8.0.0"
     path-scurry: "npm:2.0.1"
     pretty-ms: "npm:9.3.0"
-    react: "npm:^19.0.0"
+    react: "npm:19.2.0"
     rollup: "npm:4.53.3"
     semver: "npm:7.7.3"
     shx: "npm:0.4.0"
@@ -6196,7 +6196,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react@npm:^19.0.0":
+"react@npm:19.2.0":
   version: 19.2.0
   resolution: "react@npm:19.2.0"
   checksum: 10/e13bcdb8e994c3cfa922743cb75ca8deb60531bf02f584d2d8dab940a8132ce8a2e6ef16f8ed7f372b4072e7a7eeff589b2812dabbedfa73e6e46201dac8a9d0
