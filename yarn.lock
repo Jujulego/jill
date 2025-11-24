@@ -899,7 +899,7 @@ __metadata:
     vite: "npm:7.2.4"
     vite-tsconfig-paths: "npm:5.1.4"
     vitest: "npm:3.2.4"
-    yargs: "npm:18.0.0"
+    yargs: "npm:^18.0.0"
   bin:
     jill: ./bin/jill.js
   languageName: unknown
@@ -7820,7 +7820,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"yargs@npm:18.0.0":
+"yargs@npm:^18.0.0":
   version: 18.0.0
   resolution: "yargs@npm:18.0.0"
   dependencies:
