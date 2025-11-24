@@ -21,6 +21,7 @@
     "build:types": "tsc -p tsconfig.build.json",
     "watch": "rollup -c --watch",
     "test": "vitest run tests tools",
+    "test:types": "tsc --project tsconfig.tests.json",
     "e2e": "vitest run e2e --slow-test-threshold=5000",
     "e2e:npm": "yarn run e2e -t npm --slow-test-threshold=5000",
     "e2e:yarn": "yarn run e2e -t yarn --slow-test-threshold=5000"

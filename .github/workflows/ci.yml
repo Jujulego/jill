@@ -92,6 +92,9 @@ jobs:
       - name: Install
         run: yarn install --immutable
 
+      - name: Typecheck tests
+        run: yarn test:types
+
       - name: Run tests
         run: yarn test --coverage
 
@@ -112,7 +115,7 @@ jobs:
   e2e:
     name: 'E2E tests'
     runs-on: ${{ matrix.os }}
-    needs: [ build ]
+    needs: [ build, tests ]
 
     permissions:
       contents: read

@@ -18,3 +18,4 @@ junit-report.xml
 
 *.log
 *.pid
+*.tsbuildinfo
