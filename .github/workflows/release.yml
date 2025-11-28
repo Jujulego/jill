@@ -40,6 +40,6 @@ jobs:
           SENTRY_ORG: ${{ vars.SENTRY_ORG }}
           SENTRY_PROJECT: ${{ vars.SENTRY_PROJECT }}
         with:
-          version: @jujulego/jill@${{ steps.prepare.outputs.version }}
+          release: @jujulego/jill@${{ steps.prepare.outputs.version }}
           environment: production
           finalize: true
