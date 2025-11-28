@@ -284,3 +284,15 @@ jobs:
           tag_name: v${{ steps.info.outputs.version }}
           generate_release_notes: true
           prerelease: ${{ steps.info.outputs.prerelease }}
+
+      - name: Finalize Sentry Release
+        if: ${{ steps.tag.outputs.notes }}
+        uses: getsentry/action-release@v3
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ vars.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ vars.SENTRY_PROJECT }}
+        with:
+          version: @jujulego/jill@${{ steps.info.outputs.version }}
+          environment: production
+          finalize: true

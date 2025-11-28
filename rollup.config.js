@@ -48,6 +48,7 @@ const options = {
       },
       release: {
         name: `${pkg.name}@${pkg.version}`,
+        finalize: false,
       }
     }),
     codecovRollupPlugin({
