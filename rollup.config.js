@@ -47,7 +47,7 @@ const options = {
         enabled: false,
       },
       release: {
-        name: pkg.version,
+        name: `${pkg.name}@${pkg.version}`,
       }
     }),
     codecovRollupPlugin({
