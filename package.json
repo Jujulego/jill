@@ -92,5 +92,8 @@
     "vite-tsconfig-paths": "5.1.4",
     "vitest": "3.2.4"
   },
+  "resolutions": {
+    "string-width": "8.1.0"
+  },
   "packageManager": "yarn@4.12.0"
 }
