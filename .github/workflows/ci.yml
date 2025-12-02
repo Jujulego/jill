@@ -293,6 +293,6 @@ jobs:
           SENTRY_ORG: ${{ vars.SENTRY_ORG }}
           SENTRY_PROJECT: ${{ vars.SENTRY_PROJECT }}
         with:
-          release: '@jujulego/jill@${{ steps.info.outputs.version }}'
+          release: 'jill@${{ steps.info.outputs.version }}'
           environment: production
           finalize: true
