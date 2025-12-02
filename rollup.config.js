@@ -47,7 +47,7 @@ const options = {
         enabled: false,
       },
       release: {
-        name: `${pkg.name}@${pkg.version}`,
+        name: `jill@${pkg.version}`,
         finalize: false,
       }
     }),
