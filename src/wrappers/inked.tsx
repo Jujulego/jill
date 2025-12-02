@@ -1,4 +1,4 @@
-import { startSpan } from '@sentry/node';
+import { startSpan, metrics } from '@sentry/node';
 import { type Instance, render } from 'ink';
 import type { ReactNode } from 'react';
 import { StaticLogs } from '../components/StaticLogs.jsx';
@@ -10,7 +10,14 @@ export function inked<P, R>(stepper: InkedStepper<P, R>): InkedComponent<P, R> {
   return (props: P): Promise<R> => startSpan({ name: 'inked', op: 'ui.ink' }, async () => {
     const controller = new AbortController();
 
-    const app = render(<StaticLogs />, { exitOnCtrlC: true });
+    const app = render(<StaticLogs/>, {
+      exitOnCtrlC: true,
+      onRender: ({ renderTime }) => {
+        metrics.distribution('ui.ink.render_time', renderTime, {
+          unit: 'ms',
+        });
+      }
+    });
     void app.waitUntilExit().then(() => {
       controller.abort();
     });
@@ -22,8 +29,8 @@ export function inked<P, R>(stepper: InkedStepper<P, R>): InkedComponent<P, R> {
       while (!result.done) {
         app.rerender(
           <>
-            <StaticLogs />
-            { result.value }
+            <StaticLogs/>
+            {result.value}
           </>
         );
 
