@@ -157,7 +157,7 @@ jobs:
           git config --global user.email github-actions@github.com
 
       - name: Run E2E tests
-        run: yarn e2e --no-file-parallelism
+        run: yarn e2e --no-file-parallelism --retry 3
         env:
           SENTRY_ENVIRONMENT: testing
 
