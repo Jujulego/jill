@@ -20,15 +20,14 @@ export function WorkloadSpinner({ workload }: WorkloadSpinnerProps) {
   const dim = workload.type === 'spawn';
   const time = workload.duration().seconds() * 1000;
 
-
   switch (state) {
     case WorkloadState.Blocked:
     case WorkloadState.Ready:
     case WorkloadState.Starting:
       return (
-        <Box>
+        <Box overflow="hidden">
           <Text color="grey">{'\u00B7'}</Text>
-          <Box paddingLeft={1}>
+          <Box paddingLeft={1} flexGrow={1}>
             <WorkloadName color="grey" wrap="truncate" workload={workload} withWorkspace />
           </Box>
         </Box>
@@ -36,11 +35,11 @@ export function WorkloadSpinner({ workload }: WorkloadSpinnerProps) {
 
     case WorkloadState.Running:
       return (
-        <Box>
+        <Box overflow="hidden">
           <Text dimColor={dim}>
             <Spinner />
           </Text>
-          <Box paddingLeft={1}>
+          <Box paddingLeft={1} flexGrow={1}>
             <WorkloadName dimColor={dim} wrap="truncate" workload={workload} withWorkspace />
           </Box>
         </Box>
@@ -48,21 +47,21 @@ export function WorkloadSpinner({ workload }: WorkloadSpinnerProps) {
 
     case WorkloadState.Canceling:
       return (
-        <Box>
+        <Box overflow="hidden">
           <Text dimColor={dim} color="grey">
             <Spinner type="line2" />
           </Text>
-          <Box paddingLeft={1}>
-            <WorkloadName dimColor={dim} color="grey" wrap="truncate" workload={workload} withWorkspace />
+          <Box paddingLeft={1} flexGrow={1}>
+            <WorkloadName color="grey" dimColor={dim} wrap="truncate" workload={workload} withWorkspace />
           </Box>
         </Box>
       );
 
     case WorkloadState.Succeeded:
       return (
-        <Box>
+        <Box overflow="hidden">
           <Text color="green">{ symbols.success }</Text>
-          <Box paddingLeft={1}>
+          <Box paddingLeft={1} flexGrow={1}>
             <WorkloadName dimColor={dim} wrap="truncate" workload={workload} withWorkspace />
           </Box>
           <Box paddingLeft={1} flexShrink={0}>
@@ -73,9 +72,9 @@ export function WorkloadSpinner({ workload }: WorkloadSpinnerProps) {
 
     case WorkloadState.Failed:
       return (
-        <Box>
+        <Box overflow="hidden">
           <Text color="red">{ symbols.error }</Text>
-          <Box paddingLeft={1}>
+          <Box paddingLeft={1} flexGrow={1}>
             <WorkloadName dimColor={dim} wrap="truncate" workload={workload} withWorkspace />
           </Box>
           <Box paddingLeft={1} flexShrink={0}>
@@ -86,9 +85,9 @@ export function WorkloadSpinner({ workload }: WorkloadSpinnerProps) {
 
     case WorkloadState.Canceled:
       return (
-        <Box>
+        <Box overflow="hidden">
           <Text dimColor>-</Text>
-          <Box paddingLeft={1}>
+          <Box paddingLeft={1} flexGrow={1}>
             <WorkloadName dimColor wrap="truncate" workload={workload} withWorkspace />
           </Box>
           <Box paddingLeft={1} flexShrink={0}>
