@@ -2,7 +2,7 @@ import { inject$ } from '@kyrielle/injector';
 import { isWorkloadEnded, type Job$, WorkloadState } from '@kyrielle/workload';
 import { filter$, pipe$, waitFor$ } from 'kyrielle';
 import process from 'node:process';
-import { WorkloadTreeCompleted } from '../components/WorkloadTreeCompleted.jsx';
+import { WorkloadTreeFullSpinner } from '../components/WorkloadTreeFullSpinner.jsx';
 import { WorkloadTreeSpinner } from '../components/WorkloadTreeSpinner.jsx';
 import { SCHEDULER } from '../tokens.js';
 import { inked } from './inked.jsx';
@@ -14,7 +14,7 @@ export const JobCommandExecuteInk = inked(async function* ({ job, verbose }: Job
   scheduler.register(job);
 
   const outcome = await waitFor$(pipe$(job.state$, filter$(isWorkloadEnded)));
-  yield <WorkloadTreeCompleted workload={job} verbose={verbose} />;
+  yield <WorkloadTreeFullSpinner workload={job} verbose={verbose} />;
 
   if (outcome !== WorkloadState.Succeeded) {
     process.exitCode = 1;
