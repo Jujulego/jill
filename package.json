@@ -80,7 +80,7 @@
     "normalize-package-data": "8.0.0",
     "path-scurry": "2.0.1",
     "pretty-ms": "9.3.0",
-    "react": "19.2.2",
+    "react": "19.2.3",
     "rollup": "4.53.3",
     "semver": "7.7.3",
     "shx": "0.4.0",
