@@ -17,7 +17,7 @@ export default defineConfig({
       reporter: ['text', 'lcovonly'],
     },
     globals: true,
-    pool: 'forks',
+    pool: 'threads',
     reporters: ['default', 'junit'],
     setupFiles: ['tools/setup.ts'],
     outputFile: {
