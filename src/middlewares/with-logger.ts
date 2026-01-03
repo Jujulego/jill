@@ -1,6 +1,6 @@
 import { inject$ } from '@kyrielle/injector';
 import type { LogLevelKey } from '@kyrielle/logger';
-import { logDelay$, LogGateway, LogLevel, toStderr } from '@kyrielle/logger';
+import { LogGateway, LogLevel, toStderr } from '@kyrielle/logger';
 import { startSpan } from '@sentry/node';
 import { filter$, flow$ } from 'kyrielle';
 import type { Argv } from 'yargs';
@@ -26,7 +26,6 @@ export function withLogger<T>(parser: Argv<T>) {
       flow$(
         inject$(LOGGER),
         filter$((log) => log.level >= logLevel),
-        logDelay$(),
         logGateway,
       );
 
