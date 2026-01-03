@@ -203,7 +203,7 @@ describe('jill each', () => {
       // Check jill output
       expect(res.code).toBe(1);
       expect(res.stderr).toMatchLines([
-        expect.ignoreColor(/^No task found \+[0-9.]+m?s$/),
+        expect.ignoreColor(/^No task found$/),
       ]);
 
       // No new files
