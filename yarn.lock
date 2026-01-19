@@ -801,6 +801,26 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@jsonjoy.com/node-fs-dependencies@npm:4.55.0":
+  version: 4.55.0
+  resolution: "@jsonjoy.com/node-fs-dependencies@npm:4.55.0"
+  peerDependencies:
+    tslib: 2
+  checksum: 10/5c03cccbeee266fb5fec0fb5bea11416b5c122abc5a1a3660f89c268ac6c69ea2e7d06ab2cd4fa2fc71d39dbca9f5cbea3169fcab9e257ede71685779da9f047
+  languageName: node
+  linkType: hard
+
+"@jsonjoy.com/node-fs-utils@npm:4.55.0":
+  version: 4.55.0
+  resolution: "@jsonjoy.com/node-fs-utils@npm:4.55.0"
+  dependencies:
+    "@jsonjoy.com/node-fs-dependencies": "npm:4.55.0"
+  peerDependencies:
+    tslib: 2
+  checksum: 10/9b243a46cdcf710bb3276182c1cc22b7eb58c39541147082581160312e8252b360b7016b6579e6a9da1c9beeb98f464e910206ea34532aa4c3f8f443e98b760a
+  languageName: node
+  linkType: hard
+
 "@jsonjoy.com/util@npm:^1.9.0":
   version: 1.9.0
   resolution: "@jsonjoy.com/util@npm:1.9.0"
@@ -866,7 +886,7 @@ __metadata:
     is-unicode-supported: "npm:2.1.0"
     jiti: "npm:2.6.1"
     kyrielle: "npm:2.8.3"
-    memfs: "npm:4.54.0"
+    memfs: "npm:4.55.0"
     moo: "npm:0.5.2"
     normalize-package-data: "npm:8.0.0"
     path-scurry: "npm:2.0.1"
@@ -5336,17 +5356,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"memfs@npm:4.54.0":
-  version: 4.54.0
-  resolution: "memfs@npm:4.54.0"
+"memfs@npm:4.55.0":
+  version: 4.55.0
+  resolution: "memfs@npm:4.55.0"
   dependencies:
     "@jsonjoy.com/json-pack": "npm:^1.11.0"
+    "@jsonjoy.com/node-fs-dependencies": "npm:4.55.0"
+    "@jsonjoy.com/node-fs-utils": "npm:4.55.0"
     "@jsonjoy.com/util": "npm:^1.9.0"
     glob-to-regex.js: "npm:^1.0.1"
     thingies: "npm:^2.5.0"
     tree-dump: "npm:^1.0.3"
     tslib: "npm:^2.0.0"
-  checksum: 10/ccb54b8dff39bd54a6e53f518db2800b258f6daf0e454ef241b6aca1856bddd77ff0779ad399317bbd7b5a5e02f4d012551e24d65285efd90386e1d2610aa2b7
+  peerDependencies:
+    tslib: 2
+  checksum: 10/7a4c735494f5f4a448f0e1820bee86a681d73d0118afae64fcb9382d18609880bbafdff2210a26c09872269eb6a3804e930742e102c5afbd58d736081c265599
   languageName: node
   linkType: hard
 
