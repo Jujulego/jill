@@ -858,7 +858,7 @@ __metadata:
     "@rollup/plugin-node-resolve": "npm:16.0.3"
     "@rollup/plugin-replace": "npm:6.0.3"
     "@sentry/node": "npm:^10.0.0"
-    "@sentry/rollup-plugin": "npm:4.6.2"
+    "@sentry/rollup-plugin": "npm:4.7.0"
     "@swc/core": "npm:1.15.8"
     "@swc/helpers": "npm:^0.5.0"
     "@types/moo": "npm:0.5.10"
@@ -1802,26 +1802,26 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/babel-plugin-component-annotate@npm:4.6.2":
-  version: 4.6.2
-  resolution: "@sentry/babel-plugin-component-annotate@npm:4.6.2"
-  checksum: 10/b4fb63f00e95ac8adee299130051cd89c01d5ed987898ba84be243611daf9b3692f6eb19370c01dfaad1a3b7c0ca3211968f93b0cb9418932a7492faf07109ad
+"@sentry/babel-plugin-component-annotate@npm:4.7.0":
+  version: 4.7.0
+  resolution: "@sentry/babel-plugin-component-annotate@npm:4.7.0"
+  checksum: 10/6cdfa797fcee963cd34bd50d83255ab1e14b075b4661c098c5e30fe270e0c41100fec75336ee5654e0d4a176c2d718853fa3bce5123ef7858071f87f8b031aa8
   languageName: node
   linkType: hard
 
-"@sentry/bundler-plugin-core@npm:4.6.2":
-  version: 4.6.2
-  resolution: "@sentry/bundler-plugin-core@npm:4.6.2"
+"@sentry/bundler-plugin-core@npm:4.7.0":
+  version: 4.7.0
+  resolution: "@sentry/bundler-plugin-core@npm:4.7.0"
   dependencies:
     "@babel/core": "npm:^7.18.5"
-    "@sentry/babel-plugin-component-annotate": "npm:4.6.2"
+    "@sentry/babel-plugin-component-annotate": "npm:4.7.0"
     "@sentry/cli": "npm:^2.57.0"
     dotenv: "npm:^16.3.1"
     find-up: "npm:^5.0.0"
     glob: "npm:^10.5.0"
     magic-string: "npm:0.30.8"
     unplugin: "npm:1.0.1"
-  checksum: 10/dca517445e9522267c4d25f7604f056aa5c95d5575f2245f0e410413a12663b36ac45b144c1fe7e1388e44a8d213e5824ae78616594ac0cc7e9c5b4a87d3c05c
+  checksum: 10/c648f7e6958a2a69729fc98e02b3428c71372949177aea9b05b1a6a00cb3ff4038089c19cc9786c076b035cf7946dc53ccbee4e222cd864c6ca28dd7e5bb3509
   languageName: node
   linkType: hard
 
@@ -2006,15 +2006,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/rollup-plugin@npm:4.6.2":
-  version: 4.6.2
-  resolution: "@sentry/rollup-plugin@npm:4.6.2"
+"@sentry/rollup-plugin@npm:4.7.0":
+  version: 4.7.0
+  resolution: "@sentry/rollup-plugin@npm:4.7.0"
   dependencies:
-    "@sentry/bundler-plugin-core": "npm:4.6.2"
+    "@sentry/bundler-plugin-core": "npm:4.7.0"
     unplugin: "npm:1.0.1"
   peerDependencies:
     rollup: ">=3.2.0"
-  checksum: 10/42540149f2b5da90903b8fa42068b001f933333f898b2c7d4c5d5d0760c490b1bd1299ea5df406cb05b75f12f08e56302ed6c0a28457b15b9e5b8a7171ca2fde
+  checksum: 10/f3445edbc8684b473e5c7d992558ca9332fb15998a8cb8922a5a14bc75d816f5f4f0da0ccfde4033427c59ab5c74f044616e9c945bc94bda0031362d5337fff1
   languageName: node
   linkType: hard
 
