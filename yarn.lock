@@ -1031,7 +1031,7 @@ __metadata:
     memfs: "npm:4.56.10"
     moo: "npm:0.5.2"
     normalize-package-data: "npm:8.0.0"
-    path-scurry: "npm:2.0.1"
+    path-scurry: "npm:2.0.2"
     pretty-ms: "npm:9.3.0"
     react: "npm:19.2.4"
     rollup: "npm:4.57.1"
@@ -6095,13 +6095,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"path-scurry@npm:2.0.1, path-scurry@npm:^2.0.0":
-  version: 2.0.1
-  resolution: "path-scurry@npm:2.0.1"
+"path-scurry@npm:2.0.2, path-scurry@npm:^2.0.0":
+  version: 2.0.2
+  resolution: "path-scurry@npm:2.0.2"
   dependencies:
     lru-cache: "npm:^11.0.0"
     minipass: "npm:^7.1.2"
-  checksum: 10/1e9c74e9ccf94d7c16056a5cb2dba9fa23eec1bc221ab15c44765486b9b9975b4cd9a4d55da15b96eadf67d5202e9a2f1cec9023fbb35fe7d9ccd0ff1891f88b
+  checksum: 10/2b4257422bcb870a4c2d205b3acdbb213a72f5e2250f61c80f79c9d014d010f82bdf8584441612c8e1fa4eb098678f5704a66fa8377d72646bad4be38e57a2c3
   languageName: node
   linkType: hard
 
