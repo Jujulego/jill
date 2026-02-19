@@ -1022,7 +1022,7 @@ __metadata:
     eslint-plugin-react-hooks: "npm:7.0.1"
     glob: "npm:13.0.5"
     globals: "npm:17.3.0"
-    ink: "npm:6.7.0"
+    ink: "npm:6.8.0"
     ink-spinner: "npm:5.0.0"
     ink-testing-library: "npm:4.0.0"
     is-unicode-supported: "npm:2.1.0"
@@ -2899,7 +2899,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ansi-styles@npm:^6.1.0, ansi-styles@npm:^6.2.1":
+"ansi-styles@npm:^6.1.0, ansi-styles@npm:^6.2.1, ansi-styles@npm:^6.2.3":
   version: 6.2.3
   resolution: "ansi-styles@npm:6.2.3"
   checksum: 10/c49dad7639f3e48859bd51824c93b9eb0db628afc243c51c3dd2410c4a15ede1a83881c6c7341aa2b159c4f90c11befb38f2ba848c07c66c9f9de4bcd7cb9f30
@@ -4844,9 +4844,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ink@npm:6.7.0":
-  version: 6.7.0
-  resolution: "ink@npm:6.7.0"
+"ink@npm:6.8.0":
+  version: 6.8.0
+  resolution: "ink@npm:6.8.0"
   dependencies:
     "@alcalzone/ansi-tokenize": "npm:^0.2.4"
     ansi-escapes: "npm:^7.3.0"
@@ -4864,7 +4864,7 @@ __metadata:
     react-reconciler: "npm:^0.33.0"
     scheduler: "npm:^0.27.0"
     signal-exit: "npm:^3.0.7"
-    slice-ansi: "npm:^7.1.0"
+    slice-ansi: "npm:^8.0.0"
     stack-utils: "npm:^2.0.6"
     string-width: "npm:^8.1.1"
     terminal-size: "npm:^4.0.1"
@@ -4876,13 +4876,13 @@ __metadata:
   peerDependencies:
     "@types/react": ">=19.0.0"
     react: ">=19.0.0"
-    react-devtools-core: ^6.1.2
+    react-devtools-core: ">=6.1.2"
   peerDependenciesMeta:
     "@types/react":
       optional: true
     react-devtools-core:
       optional: true
-  checksum: 10/78e93877cc5de64756d683122409f10ea41a7327df3fe41d24aee17cea48b77a2ebd83b9dec81bfb26c9c18be14a112f90f497f5a808888b1c5b4250d372bea1
+  checksum: 10/3b46abb18d11328f4b97947a638963fbd439776572527a49180ef176eeafe810fdffc0d28e249eef55dde1b441f6c52b75cc6b7cb7ff9cd02d43c1c51a150a6c
   languageName: node
   linkType: hard
 
@@ -5030,7 +5030,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"is-fullwidth-code-point@npm:^5.0.0":
+"is-fullwidth-code-point@npm:^5.0.0, is-fullwidth-code-point@npm:^5.1.0":
   version: 5.1.0
   resolution: "is-fullwidth-code-point@npm:5.1.0"
   dependencies:
@@ -6836,6 +6836,16 @@ __metadata:
     ansi-styles: "npm:^6.2.1"
     is-fullwidth-code-point: "npm:^5.0.0"
   checksum: 10/75f61e1285c294b18c88521a0cdb22cdcbe9b0fd5e8e26f649be804cc43122aa7751bd960a968e3ed7f5aa7f3c67ac605c939019eae916870ec288e878b6fafb
+  languageName: node
+  linkType: hard
+
+"slice-ansi@npm:^8.0.0":
+  version: 8.0.0
+  resolution: "slice-ansi@npm:8.0.0"
+  dependencies:
+    ansi-styles: "npm:^6.2.3"
+    is-fullwidth-code-point: "npm:^5.1.0"
+  checksum: 10/6a7e146852047e26dd5857b35c767e52906549c580cce0ad2287cc32f54f5a582494f674817fc9ac21b2e4ac1ddeaa85b3dee409782681b465330278890c73a8
   languageName: node
   linkType: hard
 
