@@ -78,7 +78,7 @@
     "memfs": "4.56.10",
     "moo": "0.5.2",
     "normalize-package-data": "8.0.0",
-    "path-scurry": "2.0.1",
+    "path-scurry": "2.0.2",
     "pretty-ms": "9.3.0",
     "react": "19.2.4",
     "rollup": "4.57.1",
