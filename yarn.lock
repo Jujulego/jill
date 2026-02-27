@@ -1011,7 +1011,7 @@ __metadata:
     jiti: "npm:2.6.1"
     kyrielle: "npm:2.8.3"
     memfs: "npm:4.56.10"
-    moo: "npm:0.5.2"
+    moo: "npm:0.5.3"
     normalize-package-data: "npm:8.0.0"
     path-scurry: "npm:2.0.2"
     pretty-ms: "npm:9.3.0"
@@ -5616,10 +5616,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"moo@npm:0.5.2":
-  version: 0.5.2
-  resolution: "moo@npm:0.5.2"
-  checksum: 10/fee356cb13b52e259c925fe297d71b3f47b98b06444b696dd4870d20cad4711eb58d24131afeba9bf7a51d77c77a3cbe8479066497d12a88abb51865c1be7de7
+"moo@npm:0.5.3":
+  version: 0.5.3
+  resolution: "moo@npm:0.5.3"
+  checksum: 10/ce4a2e5ccab15bbe1b1ade5b8f821eea7d03cecda2898c2b343bd2c84f357c04ada2bdbc9bef9201cd1e4ddd7f2be7d365c2e058bb4862734790e0fa77740d81
   languageName: node
   linkType: hard
 
