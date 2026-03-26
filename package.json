@@ -57,9 +57,9 @@
     "@types/semver": "7.7.1",
     "@types/yargs": "17.0.35",
     "@typescript-eslint/utils": "8.57.2",
-    "@vitest/coverage-v8": "4.1.1",
+    "@vitest/coverage-v8": "4.1.2",
     "@vitest/eslint-plugin": "1.6.13",
-    "@vitest/expect": "4.1.1",
+    "@vitest/expect": "4.1.2",
     "ajv": "8.18.0",
     "chalk": "5.6.2",
     "chalk-template": "1.1.2",
@@ -90,7 +90,7 @@
     "typescript-eslint": "8.57.2",
     "vite": "8.0.3",
     "vite-tsconfig-paths": "6.1.1",
-    "vitest": "4.1.1"
+    "vitest": "4.1.2"
   },
   "resolutions": {
     "string-width": "8.2.0"
