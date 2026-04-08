@@ -11,7 +11,9 @@ export function inked<P, R>(stepper: InkedStepper<P, R>): InkedComponent<P, R> {
     const controller = new AbortController();
 
     const app = render(<StaticLogs/>, {
+      concurrent: true,
       exitOnCtrlC: true,
+      incrementalRendering: true,
       onRender: ({ renderTime }) => {
         metrics.distribution('ui.ink.render_time', renderTime, {
           unit: 'ms',
@@ -39,6 +41,7 @@ export function inked<P, R>(stepper: InkedStepper<P, R>): InkedComponent<P, R> {
 
       return result.value;
     } finally {
+      await app.waitUntilRenderFlush();
       app.unmount();
     }
   });
