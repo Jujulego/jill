@@ -2,7 +2,6 @@
 import { swc } from '@jujulego/vite-plugin-swc';
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import tsconfigPaths from 'vite-tsconfig-paths';
 import { defineConfig } from 'vitest/config';
 
 const e2eFiles = (await fs.readdir(path.join(import.meta.dirname, 'e2e')))
@@ -11,6 +10,9 @@ const e2eFiles = (await fs.readdir(path.join(import.meta.dirname, 'e2e')))
 
 export default defineConfig({
   cacheDir: '.vite',
+  resolve: {
+    tsconfigPaths: true,
+  },
   test: {
     coverage: {
       include: ['src/**', 'tools/**'],
@@ -31,7 +33,6 @@ export default defineConfig({
     ]
   },
   plugins: [
-    tsconfigPaths(),
     swc()
   ]
 });
