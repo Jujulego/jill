@@ -281,7 +281,7 @@ jobs:
 
       - name: Release notes
         if: ${{ steps.tag.outputs.notes }}
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           name: ${{ steps.info.outputs.version }}
           tag_name: v${{ steps.info.outputs.version }}
