@@ -35,7 +35,7 @@
     "yargs": "^18.0.0"
   },
   "devDependencies": {
-    "@codecov/rollup-plugin": "1.9.1",
+    "@codecov/rollup-plugin": "2.0.1",
     "@eslint/js": "9.39.4",
     "@jujulego/2d-maths": "1.6.0",
     "@jujulego/quick-tag": "1.1.0",
