@@ -49,7 +49,7 @@
     "@rollup/plugin-node-resolve": "16.0.3",
     "@rollup/plugin-replace": "6.0.3",
     "@sentry/rollup-plugin": "5.2.1",
-    "@swc/core": "1.15.32",
+    "@swc/core": "1.15.33",
     "@types/moo": "0.5.10",
     "@types/node": "24.12.2",
     "@types/normalize-package-data": "2.4.4",
