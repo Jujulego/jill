@@ -56,7 +56,7 @@
     "@types/react": "19.2.14",
     "@types/semver": "7.7.1",
     "@types/yargs": "17.0.35",
-    "@typescript-eslint/utils": "8.59.2",
+    "@typescript-eslint/utils": "8.59.3",
     "@vitest/coverage-v8": "4.1.6",
     "@vitest/eslint-plugin": "1.6.17",
     "@vitest/expect": "4.1.6",
@@ -87,7 +87,7 @@
     "slugify": "1.6.9",
     "ts-node": "10.9.2",
     "typescript": "6.0.3",
-    "typescript-eslint": "8.59.2",
+    "typescript-eslint": "8.59.3",
     "vite": "8.0.12",
     "vitest": "4.1.6"
   },
