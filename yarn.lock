@@ -853,7 +853,7 @@ __metadata:
     eslint-plugin-react-hooks: "npm:7.1.1"
     glob: "npm:13.0.6"
     globals: "npm:17.6.0"
-    ink: "npm:7.0.2"
+    ink: "npm:7.0.3"
     ink-spinner: "npm:5.0.0"
     ink-testing-library: "npm:4.0.0"
     is-unicode-supported: "npm:2.1.0"
@@ -4619,9 +4619,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ink@npm:7.0.2":
-  version: 7.0.2
-  resolution: "ink@npm:7.0.2"
+"ink@npm:7.0.3":
+  version: 7.0.3
+  resolution: "ink@npm:7.0.3"
   dependencies:
     "@alcalzone/ansi-tokenize": "npm:^0.3.0"
     ansi-escapes: "npm:^7.3.0"
@@ -4657,7 +4657,7 @@ __metadata:
       optional: true
     react-devtools-core:
       optional: true
-  checksum: 10/86f485897ea5b7869edb24c6879b4b336d040345b2525ca9d7cc3200c81e46270c1755351e6076f93f0d284335554bd2c36b7065c1eec7493bcc4e7d9fd68789
+  checksum: 10/a92ab845eca896690074831a73b41c95143e4f365cf1b1c0ce0d3aebcbf78c63402795aed73237dbc6757e0d5a67761f6de991bda5dd0e58bb9a0ba03f9f0446
   languageName: node
   linkType: hard
 
