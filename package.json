@@ -77,7 +77,7 @@
     "kyrielle": "2.8.3",
     "memfs": "4.57.2",
     "moo": "0.5.3",
-    "normalize-package-data": "8.0.0",
+    "normalize-package-data": "9.0.0",
     "path-scurry": "2.0.2",
     "pretty-ms": "9.3.0",
     "react": "19.2.6",

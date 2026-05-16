@@ -861,7 +861,7 @@ __metadata:
     kyrielle: "npm:2.8.3"
     memfs: "npm:4.57.2"
     moo: "npm:0.5.3"
-    normalize-package-data: "npm:8.0.0"
+    normalize-package-data: "npm:9.0.0"
     path-scurry: "npm:2.0.2"
     pretty-ms: "npm:9.3.0"
     react: "npm:19.2.6"
@@ -4447,12 +4447,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"hosted-git-info@npm:^9.0.0":
-  version: 9.0.2
-  resolution: "hosted-git-info@npm:9.0.2"
+"hosted-git-info@npm:^10.1.0":
+  version: 10.1.0
+  resolution: "hosted-git-info@npm:10.1.0"
   dependencies:
     lru-cache: "npm:^11.1.0"
-  checksum: 10/0619c284ca7fc35322735e03fece90ed3ded67a2cf68e855e688d1bffd47078515d98ab8dff4bd08fb78d68d1a72ab8892180e15c7f23f24c922a6dfa601dbad
+  checksum: 10/2d6f411e3b7957332290ca386c5842d21fd96fa6ac92a9a4a0b4bab89c8d7ca10ef916d85b1c748ea998374f910d27e2714dc8511d095fabeae5151d6e6a4f4f
   languageName: node
   linkType: hard
 
@@ -5690,14 +5690,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"normalize-package-data@npm:8.0.0":
-  version: 8.0.0
-  resolution: "normalize-package-data@npm:8.0.0"
+"normalize-package-data@npm:9.0.0":
+  version: 9.0.0
+  resolution: "normalize-package-data@npm:9.0.0"
   dependencies:
-    hosted-git-info: "npm:^9.0.0"
+    hosted-git-info: "npm:^10.1.0"
     semver: "npm:^7.3.5"
     validate-npm-package-license: "npm:^3.0.4"
-  checksum: 10/43b52580e9c78dd43eaff3251c0f1ba65f36d524700a4870254fc310bf66446ce0804f5fb97606a10d37180112bcbba46d48f04e80d6b2baecaaeeebbe92a985
+  checksum: 10/47df4a1ecd107ef18b4f7609b7cba9098e2592bafa7672b20fee1c1ca29ee730fc6d9ec5d9a61622eaf7eca08a597ff9af808a2201219d0311252663e76cf2e2
   languageName: node
   linkType: hard
 
