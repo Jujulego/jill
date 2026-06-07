@@ -99,7 +99,7 @@ jobs:
         run: yarn test --coverage
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v6
+        uses: codecov/codecov-action@v7
         with:
           flags: unit
           report_type: coverage
@@ -107,7 +107,7 @@ jobs:
 
       - name: Upload results to Codecov
         if: ${{ !cancelled() }}
-        uses: codecov/codecov-action@v6
+        uses: codecov/codecov-action@v7
         with:
           files: junit-report.xml
           flags: unit
@@ -165,7 +165,7 @@ jobs:
 
       - name: Upload results to Codecov
         if: ${{ !cancelled() }}
-        uses: codecov/codecov-action@v6
+        uses: codecov/codecov-action@v7
         with:
           files: junit-report.xml
           flags: e2e,${{ matrix.os }},node-${{ matrix.node }}
