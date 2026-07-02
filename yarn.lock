@@ -1163,7 +1163,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@opentelemetry/core@npm:2.6.1, @opentelemetry/core@npm:^2.6.1":
+"@opentelemetry/core@npm:2.6.1":
   version: 2.6.1
   resolution: "@opentelemetry/core@npm:2.6.1"
   dependencies:
@@ -1732,20 +1732,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/core@npm:10.59.0":
-  version: 10.59.0
-  resolution: "@sentry/core@npm:10.59.0"
-  checksum: 10/bd21a1119fdebc69ab5d8c8f3c642564268374330329594ed7b9745e4211c7c1023bf0229c03b5ad4b1fd60e8d9f493278da2905a4e8e9075fdfa8e2fe91a84c
+"@sentry/core@npm:10.61.0":
+  version: 10.61.0
+  resolution: "@sentry/core@npm:10.61.0"
+  checksum: 10/74391de3a0dcc5aab5c176c1f54fbc1570561941a6c92146214fadb6eac06cf2b8980b66cb73c3340337b1c7162b78a499ec076b3f59f1999d28c1bf8e2617f7
   languageName: node
   linkType: hard
 
-"@sentry/node-core@npm:10.59.0":
-  version: 10.59.0
-  resolution: "@sentry/node-core@npm:10.59.0"
+"@sentry/node-core@npm:10.61.0":
+  version: 10.61.0
+  resolution: "@sentry/node-core@npm:10.61.0"
   dependencies:
     "@sentry/conventions": "npm:^0.12.0"
-    "@sentry/core": "npm:10.59.0"
-    "@sentry/opentelemetry": "npm:10.59.0"
+    "@sentry/core": "npm:10.61.0"
+    "@sentry/opentelemetry": "npm:10.61.0"
     import-in-the-middle: "npm:^3.0.0"
   peerDependencies:
     "@opentelemetry/api": ^1.9.0
@@ -1764,39 +1764,38 @@ __metadata:
       optional: true
     "@opentelemetry/sdk-trace-base":
       optional: true
-  checksum: 10/9f21c8b01bf0c5a0d62a35ae633ad97e00ce7719b1d0fffe5ef2ffc87c012e6ffbebb60d2f07ca04141ddd6d130d44dddc82c6a7b590f1961a88d19bd901b100
+  checksum: 10/ec8f5f40d37161fb97ffd7825b246093307f6cb48b012166ccd6709c9bd444c7b525b117962182f8ff8ebf4257147b19c9354ac448a73e4e1e5f6e9916e48d10
   languageName: node
   linkType: hard
 
 "@sentry/node@npm:^10.0.0":
-  version: 10.59.0
-  resolution: "@sentry/node@npm:10.59.0"
+  version: 10.61.0
+  resolution: "@sentry/node@npm:10.61.0"
   dependencies:
     "@opentelemetry/api": "npm:^1.9.1"
-    "@opentelemetry/core": "npm:^2.6.1"
     "@opentelemetry/instrumentation": "npm:^0.214.0"
     "@opentelemetry/sdk-trace-base": "npm:^2.6.1"
     "@opentelemetry/semantic-conventions": "npm:^1.40.0"
-    "@sentry/core": "npm:10.59.0"
-    "@sentry/node-core": "npm:10.59.0"
-    "@sentry/opentelemetry": "npm:10.59.0"
-    "@sentry/server-utils": "npm:10.59.0"
+    "@sentry/core": "npm:10.61.0"
+    "@sentry/node-core": "npm:10.61.0"
+    "@sentry/opentelemetry": "npm:10.61.0"
+    "@sentry/server-utils": "npm:10.61.0"
     import-in-the-middle: "npm:^3.0.0"
-  checksum: 10/8815ad1ac254db404faa4ae67eb7c158f06ca8a4772dd06ff37ec13deb2598ec082ac154a3eca8322bd53d8bdc63f1f5c13c3f56fc031a8f9beedaed77b1d7ba
+  checksum: 10/1341632d4bcbbd80b331a7103606f311101ad14d61b17d26b6c88f4d89a4f4a7ffd1aafea085dfc3d719fb2e4b8daab9ce81ebf6857ada3cb327a94a7e7ba800
   languageName: node
   linkType: hard
 
-"@sentry/opentelemetry@npm:10.59.0":
-  version: 10.59.0
-  resolution: "@sentry/opentelemetry@npm:10.59.0"
+"@sentry/opentelemetry@npm:10.61.0":
+  version: 10.61.0
+  resolution: "@sentry/opentelemetry@npm:10.61.0"
   dependencies:
     "@sentry/conventions": "npm:^0.12.0"
-    "@sentry/core": "npm:10.59.0"
+    "@sentry/core": "npm:10.61.0"
   peerDependencies:
     "@opentelemetry/api": ^1.9.0
     "@opentelemetry/core": ^1.30.1 || ^2.1.0
     "@opentelemetry/sdk-trace-base": ^1.30.1 || ^2.1.0
-  checksum: 10/af782efa7b9709378c607ac0685aa53fe4bb2355fd24032a4e0c4a2b5f16d6170ab05d8036f414388b200462e0726163698d536a2cfc5370cb8b06b863ed2f56
+  checksum: 10/a3be791c3d985156f727c28c89599f2b3b8da6fe27084fa7ed5838097ef1fe869090a0b37f1a53df0af122b9835c582064561aafacce7e4b50843c568462b661
   languageName: node
   linkType: hard
 
@@ -1815,22 +1814,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/server-utils@npm:10.59.0":
-  version: 10.59.0
-  resolution: "@sentry/server-utils@npm:10.59.0"
+"@sentry/server-utils@npm:10.61.0":
+  version: 10.61.0
+  resolution: "@sentry/server-utils@npm:10.61.0"
   dependencies:
     "@apm-js-collab/code-transformer": "npm:^0.15.0"
     "@apm-js-collab/code-transformer-bundler-plugins": "npm:^0.5.0"
     "@apm-js-collab/tracing-hooks": "npm:^0.10.0"
     "@sentry/conventions": "npm:^0.12.0"
-    "@sentry/core": "npm:10.59.0"
+    "@sentry/core": "npm:10.61.0"
     magic-string: "npm:~0.30.0"
-  peerDependencies:
-    vite: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0
-  peerDependenciesMeta:
-    vite:
-      optional: true
-  checksum: 10/8a8c033e229773a638108c290e69329b42874a0d9669df831e05de7f082e454b56d318901f5cb8d9ee4cba6219b63c425f14dcb1e4de1e7775b07e1f611188cf
+  checksum: 10/4e501e9b9850e84e4b489252e729f41dd8bcdcbfa23ca8203e56a9cdba00a59866b4c89121775b30c690064b08a16cb233d339df1e039086656d68dc67596449
   languageName: node
   linkType: hard
 
