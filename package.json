@@ -92,7 +92,7 @@
     "vitest": "4.1.10"
   },
   "resolutions": {
-    "string-width": "8.2.1"
+    "string-width": "8.2.2"
   },
   "packageManager": "yarn@4.17.0"
 }
