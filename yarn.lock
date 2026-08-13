@@ -884,7 +884,7 @@ __metadata:
     ink-testing-library: "npm:4.0.0"
     is-unicode-supported: "npm:2.1.0"
     jiti: "npm:2.7.0"
-    kyrielle: "npm:2.8.3"
+    kyrielle: "npm:2.9.0"
     memfs: "npm:4.67.0"
     moo: "npm:0.5.3"
     normalize-package-data: "npm:9.0.0"
@@ -4843,13 +4843,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"kyrielle@npm:2.8.3, kyrielle@npm:^2.2.1, kyrielle@npm:^2.8.3":
-  version: 2.8.3
-  resolution: "kyrielle@npm:2.8.3"
+"kyrielle@npm:2.9.0, kyrielle@npm:^2.2.1, kyrielle@npm:^2.8.3":
+  version: 2.9.0
+  resolution: "kyrielle@npm:2.9.0"
   dependencies:
     "@repeaterjs/repeater": "npm:^3.0.5"
     "@swc/helpers": "npm:^0.5.3"
-  checksum: 10/0bae6c5b1d5cd0971f87299e8e98e226f5237ba7b6700dd7ddb832131bae39ad411df657a93fe996b9e89d792a6945902410cc06128a1bdb139e48119e87f4bf
+  checksum: 10/5378fd03f0d817775baa64ed3555d9d70722faaf2229d5dc30de4485c5eeb582b0d86b45a5ce78321af90c93a7a9d9b3f9809bded74b995fdb1ce5f0d732e2dc
   languageName: node
   linkType: hard
 
