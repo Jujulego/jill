@@ -861,7 +861,7 @@ __metadata:
     moo: "npm:0.5.3"
     normalize-package-data: "npm:9.0.0"
     path-scurry: "npm:2.0.2"
-    pretty-ms: "npm:9.3.0"
+    pretty-ms: "npm:9.3.1"
     react: "npm:19.2.8"
     rollup: "npm:4.63.1"
     semver: "npm:7.8.5"
@@ -5606,12 +5606,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pretty-ms@npm:9.3.0, pretty-ms@npm:^9.0.0":
-  version: 9.3.0
-  resolution: "pretty-ms@npm:9.3.0"
+"pretty-ms@npm:9.3.1, pretty-ms@npm:^9.0.0":
+  version: 9.3.1
+  resolution: "pretty-ms@npm:9.3.1"
   dependencies:
     parse-ms: "npm:^4.0.0"
-  checksum: 10/beb4e04dc17071885b827e3f33d36be279791f2f36a8c29a45c77e59979dad79a5d7e5211922c72a3f6f109bb64a707d70fcdba6746e077122afcd88ce202e98
+  checksum: 10/03a8a8bea0ac3c9952378b4b591bbdb8d0fc27843e0a7809945036e14e4a6a9b07781ac4172d5e61e25c7eabe242f4a2a1252cd2876d6d9e24c78471fcb7f303
   languageName: node
   linkType: hard
 
