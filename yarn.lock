@@ -796,7 +796,7 @@ __metadata:
     "@types/moo": "npm:0.5.10"
     "@types/node": "npm:24.13.4"
     "@types/normalize-package-data": "npm:2.4.4"
-    "@types/react": "npm:19.2.18"
+    "@types/react": "npm:19.3.0"
     "@types/semver": "npm:7.8.0"
     "@types/yargs": "npm:17.0.35"
     "@typescript-eslint/utils": "npm:8.70.0"
@@ -823,7 +823,7 @@ __metadata:
     normalize-package-data: "npm:9.0.0"
     path-scurry: "npm:2.0.2"
     pretty-ms: "npm:9.3.1"
-    react: "npm:19.2.8"
+    react: "npm:19.3.0"
     rollup: "npm:4.63.1"
     semver: "npm:7.8.5"
     shx: "npm:0.4.0"
@@ -2031,12 +2031,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:19.2.18":
-  version: 19.2.18
-  resolution: "@types/react@npm:19.2.18"
+"@types/react@npm:19.3.0":
+  version: 19.3.0
+  resolution: "@types/react@npm:19.3.0"
   dependencies:
     csstype: "npm:^3.2.2"
-  checksum: 10/c718ec5c5272ef5c1c77fcdd07f567c77197b593583539459b4bdaea89ca55ad7c814b7eb2151dccfa459b2c384b599a45e7e35550b789883d66b363d30c94d8
+  checksum: 10/2f4589222fd9c512e1ef78e65f334ade8777400add8ec0803fcc3a044761679b7984ba8410a890af24255383c3251a568bb692b60acfa22397ba0a64b2e032bf
   languageName: node
   linkType: hard
 
@@ -5642,10 +5642,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react@npm:19.2.8":
-  version: 19.2.8
-  resolution: "react@npm:19.2.8"
-  checksum: 10/a3c697798035e295ca9e51591d3a8700824535cb8c070fac1f8abbe69717ceb99108cbc4ba7b31a606806f336b1eba705705f63b9d39ace198fe51e8990ac843
+"react@npm:19.3.0":
+  version: 19.3.0
+  resolution: "react@npm:19.3.0"
+  checksum: 10/e98669f09750c41abb1bf020af67cc847e018c91a8c5413d3f40ddd737e3daef6e419bcd1521b113fda73fd667ae82d5f0e9d9e3ff462faeb82059c09e7f04b1
   languageName: node
   linkType: hard
 
