@@ -1688,22 +1688,22 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/core@npm:10.75.0":
-  version: 10.75.0
-  resolution: "@sentry/core@npm:10.75.0"
+"@sentry/core@npm:10.75.1":
+  version: 10.75.1
+  resolution: "@sentry/core@npm:10.75.1"
   dependencies:
     "@sentry/conventions": "npm:^0.16.0"
-  checksum: 10/88fcdec0f7b2d01d8816762bb2af35397a71fd65c86ea799bf09ac3f129c82fef6f8fb6db45e666d5769f90a7e05b8e626af042ac36720a7f37d1ad0ee5be62b
+  checksum: 10/f754b164fcc34a098d7cd4ce0744519187a7f7285c32fb674b649adf8a0545ca286fe07543e4785103fca78c7fde63c25e7c9fdf899604fd71d6c12c596d0e6a
   languageName: node
   linkType: hard
 
-"@sentry/node-core@npm:10.75.0":
-  version: 10.75.0
-  resolution: "@sentry/node-core@npm:10.75.0"
+"@sentry/node-core@npm:10.75.1":
+  version: 10.75.1
+  resolution: "@sentry/node-core@npm:10.75.1"
   dependencies:
     "@sentry/conventions": "npm:^0.16.0"
-    "@sentry/core": "npm:10.75.0"
-    "@sentry/opentelemetry": "npm:10.75.0"
+    "@sentry/core": "npm:10.75.1"
+    "@sentry/opentelemetry": "npm:10.75.1"
     import-in-the-middle: "npm:^3.0.0"
   peerDependencies:
     "@opentelemetry/api": ^1.9.0
@@ -1722,38 +1722,38 @@ __metadata:
       optional: true
     "@opentelemetry/sdk-trace-base":
       optional: true
-  checksum: 10/fd5120335a5c12b6d4e6d0dbbeb94dcd8c0f2f8cc1f4f9b833a2636b3d49e040c428abd3ccdc17b7cb468590ede5759819e5b29b0bfb8a2648723223eacf8d65
+  checksum: 10/1fe4d53ba5c97e81ce99114ac26495f4b929d5f8fc1dae385e50753ced72452dc7b6101d0d315c59353d1dcceb41757b32cf28037c9179e3b04769017feba45e
   languageName: node
   linkType: hard
 
 "@sentry/node@npm:^10.0.0":
-  version: 10.75.0
-  resolution: "@sentry/node@npm:10.75.0"
+  version: 10.75.1
+  resolution: "@sentry/node@npm:10.75.1"
   dependencies:
     "@opentelemetry/api": "npm:^1.9.1"
     "@opentelemetry/instrumentation": "npm:^0.220.0"
     "@opentelemetry/sdk-trace-base": "npm:^2.9.0"
     "@sentry/conventions": "npm:^0.16.0"
-    "@sentry/core": "npm:10.75.0"
-    "@sentry/node-core": "npm:10.75.0"
-    "@sentry/opentelemetry": "npm:10.75.0"
-    "@sentry/server-utils": "npm:10.75.0"
+    "@sentry/core": "npm:10.75.1"
+    "@sentry/node-core": "npm:10.75.1"
+    "@sentry/opentelemetry": "npm:10.75.1"
+    "@sentry/server-utils": "npm:10.75.1"
     import-in-the-middle: "npm:^3.0.0"
-  checksum: 10/5eed91ec4fb209b94b5d25fbc45bd003fed1ed71fb10286940299c0e1b77daa7db939e2c77719fdc33c3f99cd31e73db9f2d9d7252d80535b12ec0649d306a29
+  checksum: 10/d776f29c856e1fa93f42be6109bfbbbb3d58123ca6b90ed16d8d312636bb43ed526bedf507964549e51eecdf207422588f6f3893dbd6f279f65c9073b13284dd
   languageName: node
   linkType: hard
 
-"@sentry/opentelemetry@npm:10.75.0":
-  version: 10.75.0
-  resolution: "@sentry/opentelemetry@npm:10.75.0"
+"@sentry/opentelemetry@npm:10.75.1":
+  version: 10.75.1
+  resolution: "@sentry/opentelemetry@npm:10.75.1"
   dependencies:
     "@sentry/conventions": "npm:^0.16.0"
-    "@sentry/core": "npm:10.75.0"
+    "@sentry/core": "npm:10.75.1"
   peerDependencies:
     "@opentelemetry/api": ^1.9.0
     "@opentelemetry/core": ^1.30.1 || ^2.1.0
     "@opentelemetry/sdk-trace-base": ^1.30.1 || ^2.1.0
-  checksum: 10/91f4b5474c3df906e8c7909223a1ae1374d70cd3351883fb273ff9430377679c31be854275c4e87a46bc46ff52e6675826392fd9cf9c3c69fd407b73ef9749f9
+  checksum: 10/39a55b1d558581c0056447142b47a358b319efd78eab97d1c1e6da07c0b2937be3e2582bb116ff057fdd4de66ef04dc85da5f9ae7f41164c4a5c2b05c7ca945d
   languageName: node
   linkType: hard
 
@@ -1771,13 +1771,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/server-utils@npm:10.75.0":
-  version: 10.75.0
-  resolution: "@sentry/server-utils@npm:10.75.0"
+"@sentry/server-utils@npm:10.75.1":
+  version: 10.75.1
+  resolution: "@sentry/server-utils@npm:10.75.1"
   dependencies:
     "@sentry/conventions": "npm:^0.16.0"
-    "@sentry/core": "npm:10.75.0"
-  checksum: 10/735d9b240db335e04e2be2f6e9cd6e4c3f5776a4f1873a26b1e614cd0a0682a140f7babe4c4a9550d990e04bbcdd2734ca6c7cad205164751fe10173b1579266
+    "@sentry/core": "npm:10.75.1"
+  checksum: 10/2b5c4d040bc7cc922c5c0c533607c5c17cf1be9d60daea7b01e93fcf4f88f495db478e5389707fe2fb0768c1fd20eb78f49b75e4bbb577036f3afb722ebc8f21
   languageName: node
   linkType: hard
 
