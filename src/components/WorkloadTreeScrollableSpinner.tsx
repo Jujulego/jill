@@ -1,8 +1,7 @@
 import type { Workload$ } from '@kyrielle/workload';
-import { Box, Text, useInput } from 'ink';
+import { Box, Text, useInput, useWindowSize } from 'ink';
 import { useState } from 'react';
 import { useFlatJobTree } from '../hooks/useFlatJobTree.js';
-import { useStdoutDimensions } from '../hooks/useStdoutDimensions.js';
 import { WorkloadSpinner } from './WorkloadSpinner.jsx';
 import { WorkloadTreeStats } from './WorkloadTreeStats.jsx';
 
@@ -11,7 +10,7 @@ export function WorkloadTreeScrollableSpinner({ workload, verbose }: WorkloadTre
   const tree = useFlatJobTree(workload, verbose);
 
   // Manage scroll
-  const { rows: termRows } = useStdoutDimensions();
+  const { rows: termRows } = useWindowSize();
   const [scroll, setScroll] = useState(0);
 
   const maxRows = Math.min(termRows - 4, tree.length);
