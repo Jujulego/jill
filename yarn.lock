@@ -790,7 +790,7 @@ __metadata:
     "@rollup/plugin-node-resolve": "npm:16.0.3"
     "@rollup/plugin-replace": "npm:6.0.3"
     "@sentry/node": "npm:^10.0.0"
-    "@sentry/rollup-plugin": "npm:5.4.0"
+    "@sentry/rollup-plugin": "npm:5.4.1"
     "@swc/core": "npm:1.16.13"
     "@swc/helpers": "npm:^0.5.0"
     "@types/moo": "npm:0.5.10"
@@ -1546,13 +1546,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/bundler-plugins@npm:^10.64.0":
-  version: 10.65.0
-  resolution: "@sentry/bundler-plugins@npm:10.65.0"
+"@sentry/bundler-plugins@npm:^10.76.0":
+  version: 10.76.0
+  resolution: "@sentry/bundler-plugins@npm:10.76.0"
   dependencies:
     "@babel/core": "npm:^7.18.5"
     "@sentry/cli": "npm:^2.58.6"
-    "@sentry/core": "npm:10.65.0"
+    "@sentry/core": "npm:10.76.0"
     dotenv: "npm:^17.4.2"
     find-up: "npm:^5.0.0"
     glob: "npm:^13.0.6"
@@ -1565,7 +1565,7 @@ __metadata:
       optional: true
     webpack:
       optional: true
-  checksum: 10/2c6f9cef7e0c4a605183d5b6b7a347d8439e713645152afde1bccce020943072aec6fa6142917f445ea22153cd57327e245847d58e0b68a12e78613b94c35019
+  checksum: 10/24e73a214f229255a7d9cbc8517d4f9d7c0e5a3d8dd2e0d44420364f91d4c4e7e2c75e711fae11b400f321cf203f2233ebf7bf67c0c08618af40660f350b7fa2
   languageName: node
   linkType: hard
 
@@ -1665,26 +1665,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/conventions@npm:^0.15.1":
-  version: 0.15.1
-  resolution: "@sentry/conventions@npm:0.15.1"
-  checksum: 10/11794d0e33c05cfd78fd7a012df39325dcf24a2394dc7509b81630d38b02918915364935db5a538fd31956129303c26783836d129bb116eb1b94240a4d6324ed
-  languageName: node
-  linkType: hard
-
 "@sentry/conventions@npm:^0.16.0":
   version: 0.16.0
   resolution: "@sentry/conventions@npm:0.16.0"
   checksum: 10/21c5bdbde32ff5058954a87f7d6b40b670cdd08c10a1c6787fedc3b94b89804b0df92817e5a37d0ed60e8f1ce6747d01b840f05a5e8940742f9a1dcb0f2d490e
-  languageName: node
-  linkType: hard
-
-"@sentry/core@npm:10.65.0":
-  version: 10.65.0
-  resolution: "@sentry/core@npm:10.65.0"
-  dependencies:
-    "@sentry/conventions": "npm:^0.15.1"
-  checksum: 10/9a07860f15b9fa0cba46c0e76518429c994999b1a83b7091ec332cb66bfb2d53b99700ee8672954721478c8e9a7e1f1097831d595185bb5377ec44a73e0003ca
   languageName: node
   linkType: hard
 
@@ -1757,17 +1741,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/rollup-plugin@npm:5.4.0":
-  version: 5.4.0
-  resolution: "@sentry/rollup-plugin@npm:5.4.0"
+"@sentry/rollup-plugin@npm:5.4.1":
+  version: 5.4.1
+  resolution: "@sentry/rollup-plugin@npm:5.4.1"
   dependencies:
-    "@sentry/bundler-plugins": "npm:^10.64.0"
+    "@sentry/bundler-plugins": "npm:^10.76.0"
   peerDependencies:
     rollup: ">=3.2.0"
   peerDependenciesMeta:
     rollup:
       optional: true
-  checksum: 10/875ad73f1f2d4af4c691ae1944d83a8ae9343fbdd8b3c206f4384e4995708d9e96524328f7e4e7ef2dc7cac286812666f990a541ab2f4264ac104b7cbefaabda
+  checksum: 10/a9e4d04ac0102ca29b3b224280e9472dc99934a3ac959eb3429ec4c196d50aa4c0a15f92b20c21b3ac8b517e1802222c24957fb8e914c6d8ed9cc91889d19bf5
   languageName: node
   linkType: hard
 
