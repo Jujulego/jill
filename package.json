@@ -88,7 +88,7 @@
     "ts-node": "10.9.2",
     "typescript": "6.0.3",
     "typescript-eslint": "8.71.1",
-    "vite": "8.3.3",
+    "vite": "8.3.4",
     "vitest": "4.1.11"
   },
   "packageManager": "yarn@4.18.1"
