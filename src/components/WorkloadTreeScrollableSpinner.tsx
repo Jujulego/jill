@@ -1,7 +1,8 @@
 import type { Workload$ } from '@kyrielle/workload';
-import { Box, type DOMElement, Text, useBoxMetrics, useInput, useWindowSize } from 'ink';
+import { Box, type DOMElement, Text, useBoxMetrics, useWindowSize } from 'ink';
 import { useRef, useState } from 'react';
 import { useFlatJobTree } from '../hooks/useFlatJobTree.js';
+import { useTracedInput } from '../hooks/useTracedInput.js';
 import { WorkloadSpinner } from './WorkloadSpinner.jsx';
 import { WorkloadTreeStats } from './WorkloadTreeStats.jsx';
 
@@ -21,7 +22,7 @@ export function WorkloadTreeScrollableSpinner({ workload, verbose }: WorkloadTre
   const maxScroll = Math.max(0, height - maxHeight);
   const effectiveScroll = Math.min(scroll, maxScroll);
 
-  useInput((input, key) => {
+  useTracedInput((input, key) => {
     if (input === 'q') {
       workload.cancel();
     }
