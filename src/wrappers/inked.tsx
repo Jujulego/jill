@@ -16,7 +16,7 @@ export function inked<P, R>(stepper: InkedStepper<P, R>): InkedComponent<P, R> {
       incrementalRendering: true,
       onRender: ({ renderTime }) => {
         metrics.distribution('ui.ink.render_time', renderTime, {
-          unit: 'ms',
+          unit: 'millisecond',
         });
       }
     });
