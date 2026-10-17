@@ -20,7 +20,6 @@ export default defineConfig({
     },
     globals: true,
     pool: 'threads',
-    isolate: false,
     reporters: ['default', 'junit'],
     setupFiles: ['tools/setup.ts'],
     outputFile: {
