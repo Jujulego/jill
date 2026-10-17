@@ -7,8 +7,14 @@ import { WorkloadTreeSpinner } from '../components/WorkloadTreeSpinner.jsx';
 import { SCHEDULER } from '../tokens.js';
 import { inked } from './inked.jsx';
 
-export const JobCommandExecuteInk = inked(async function* ({ job, verbose }: JobExecInkProps) {
+export const JobCommandExecuteInk = inked<JobExecInkProps, void>(async function* ({ job, verbose }, { signal }) {
   const scheduler = await inject$(SCHEDULER);
+
+  signal.addEventListener('abort', () => {
+    for (const workload of scheduler.workloads()) {
+      workload.cancel();
+    }
+  }, { once: true });
 
   yield <WorkloadTreeSpinner workload={job} verbose={verbose} />;
   scheduler.register(job);
