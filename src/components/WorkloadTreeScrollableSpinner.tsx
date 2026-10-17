@@ -19,9 +19,13 @@ export function WorkloadTreeScrollableSpinner({ workload, verbose }: WorkloadTre
 
   const maxHeight = rows - 4;
   const maxScroll = Math.max(0, height - maxHeight);
-  const effectiveScroll = Math.min(height - maxHeight, scroll);
+  const effectiveScroll = Math.min(scroll, maxScroll);
 
-  useInput((_, key) => {
+  useInput((input, key) => {
+    if (input === 'q') {
+      workload.cancel();
+    }
+
     if (key.upArrow) {
       setScroll(Math.max(0, effectiveScroll - 1));
     } else if (key.downArrow) {
@@ -43,7 +47,9 @@ export function WorkloadTreeScrollableSpinner({ workload, verbose }: WorkloadTre
       </Box>
       <Text>
         <WorkloadTreeStats tree={tree} />
-        { (height > maxHeight) && (<Text color="grey"> | use keyboard arrows to scroll</Text>) }
+        { (height > maxHeight)
+          ? (<Text color="grey"> | use keyboard arrows to scroll</Text>)
+          : (<Text color="grey"> | press &apos;q&apos; to cancel</Text>) }
       </Text>
     </>
   );

@@ -25,7 +25,7 @@ export function inked<P, R>(stepper: InkedStepper<P, R>): InkedComponent<P, R> {
     });
 
     try {
-      const generator = stepper(props, { app, controller });
+      const generator = stepper(props, { app, signal: controller.signal });
       let result = await generator.next();
 
       while (!result.done) {
@@ -50,7 +50,7 @@ export function inked<P, R>(stepper: InkedStepper<P, R>): InkedComponent<P, R> {
 // Types
 export interface InkedContext {
   readonly app: Instance;
-  readonly controller: AbortController;
+  readonly signal: AbortSignal;
 }
 
 export type InkedStepper<P, R> = (props: P, context: InkedContext) => AsyncGenerator<ReactNode, R> | Generator<ReactNode, R>;

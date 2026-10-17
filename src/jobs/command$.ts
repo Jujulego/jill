@@ -18,7 +18,7 @@ export function command$(
   }
 
   // Prepare job
-  const job = spawn$('node -e "setTimeout(() => {}, 10_000)"', {
+  const job = spawn$(cmd, {
     ...rest,
     cwd: workspace.root,
     env: {
