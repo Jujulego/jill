@@ -1,6 +1,6 @@
 import type { Workload$ } from '@kyrielle/workload';
-import { Box, Text, useInput, useWindowSize } from 'ink';
-import { useState } from 'react';
+import { Box, type DOMElement, Text, useBoxMetrics, useInput, useWindowSize } from 'ink';
+import { useRef, useState } from 'react';
 import { useFlatJobTree } from '../hooks/useFlatJobTree.js';
 import { WorkloadSpinner } from './WorkloadSpinner.jsx';
 import { WorkloadTreeStats } from './WorkloadTreeStats.jsx';
@@ -10,37 +10,40 @@ export function WorkloadTreeScrollableSpinner({ workload, verbose }: WorkloadTre
   const tree = useFlatJobTree(workload, verbose);
 
   // Manage scroll
-  const { rows: termRows } = useWindowSize();
+  const contentRef = useRef<DOMElement>(null);
+
+  const { rows } = useWindowSize();
+  const { height } = useBoxMetrics(contentRef);
+
   const [scroll, setScroll] = useState(0);
 
-  const maxRows = Math.min(termRows - 4, tree.length);
-  const firstIndex = Math.max(0, tree.length - scroll - maxRows);
-  const lastIndex = Math.min(tree.length, firstIndex + maxRows);
-  const effectiveScroll = tree.length - lastIndex;
+  const maxHeight = rows - 4;
+  const maxScroll = Math.max(0, height - maxHeight);
+  const effectiveScroll = Math.min(height - maxHeight, scroll);
 
   useInput((_, key) => {
     if (key.upArrow) {
-      setScroll(Math.min(tree.length - maxRows, effectiveScroll + 1));
-    } else {
       setScroll(Math.max(0, effectiveScroll - 1));
+    } else if (key.downArrow) {
+      setScroll(Math.min(maxScroll, effectiveScroll + 1));
     }
   });
 
   // Render
-  const slice = tree.slice(firstIndex, lastIndex);
-
   return (
     <>
-      <Box flexDirection="column">
-        { slice.map(({ workload, level }) => (
-          <Box key={workload.id} marginLeft={level * 2} flexShrink={0}>
-            <WorkloadSpinner workload={workload} />
-          </Box>
-        )) }
+      <Box flexDirection="column" overflow="hidden" maxHeight={rows - 4} contentOffsetY={effectiveScroll}>
+        <Box ref={contentRef} flexDirection="column" flexShrink={0}>
+          { tree.map(({ workload, level }) => (
+            <Box key={workload.id} marginLeft={level * 2} flexShrink={0}>
+              <WorkloadSpinner workload={workload} />
+            </Box>
+          )) }
+        </Box>
       </Box>
       <Text>
         <WorkloadTreeStats tree={tree} />
-        { (termRows < tree.length) && (<Text color="grey"> | use keyboard arrows to scroll</Text>) }
+        { (height > maxHeight) && (<Text color="grey"> | use keyboard arrows to scroll</Text>) }
       </Text>
     </>
   );
