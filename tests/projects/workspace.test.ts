@@ -7,7 +7,7 @@ import { TestBed } from '@/tools/test-bed.js';
 import { currentScope$, inject$ } from '@kyrielle/injector';
 import { vol } from 'memfs';
 import path from 'node:path';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mocks
 vi.mock('node:fs', async () => {
@@ -26,6 +26,7 @@ let git: GitService;
 
 beforeEach(async () => {
   vi.resetAllMocks();
+  vol.reset();
 
   // Build fake project
   bed = new TestBed();
@@ -44,10 +45,6 @@ beforeEach(async () => {
 
   // Mocks
   git = inject$(GitService);
-});
-
-afterEach(() => {
-  vol.reset();
 });
 
 // Test suites

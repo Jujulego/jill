@@ -865,10 +865,10 @@ __metadata:
 
 "@kyrielle/injector@file:../kyrielle-injector::locator=%40jujulego%2Fjill%40workspace%3A.":
   version: 2.0.0-alpha.0
-  resolution: "@kyrielle/injector@file:../kyrielle-injector#../kyrielle-injector::hash=540efb&locator=%40jujulego%2Fjill%40workspace%3A."
+  resolution: "@kyrielle/injector@file:../kyrielle-injector#../kyrielle-injector::hash=358b89&locator=%40jujulego%2Fjill%40workspace%3A."
   dependencies:
     "@swc/helpers": "npm:^0.5.3"
-  checksum: 10/a1bf43ff022345de828ff090a28b3511e6b7924657d0de80d41a1fe7f8f5d9c8b73690fdeda2fba5e4f576474566b518cd008cbfa454d2308ce25b6f858fe8d7
+  checksum: 10/b96e456848359df1c2b862334aa1f08ba4df5365b30a0dbdc1181d1cba12bb77cb9085d5700b8826a84a9c598a348837f77c82e57af4a9eb1b7abd17ffbe4cc1
   languageName: node
   linkType: hard
 
