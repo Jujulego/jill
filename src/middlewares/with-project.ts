@@ -1,4 +1,4 @@
-import { asyncScope$, inject$ } from '@kyrielle/injector';
+import { inject$ } from '@kyrielle/injector';
 import { startSpan } from '@sentry/node';
 import path from 'node:path';
 import { type ArgumentsCamelCase, type Argv } from 'yargs';
@@ -27,7 +27,7 @@ export function withProject<T = unknown>(parser: Argv<T>): Argv<T & ProjectArgs>
     })
     .middleware((args: ArgumentsCamelCase<Writable<ProjectArgs>>) => startSpan({ name: 'project', op: 'cli.middleware' }, async () => {
       const repository = inject$(ProjectsRepository);
-      const directory = path.resolve(inject$(CWD, asyncScope$()), args.project);
+      const directory = path.resolve(inject$(CWD), args.project);
 
       args.project = await repository.searchProjectRoot(directory);
     }));

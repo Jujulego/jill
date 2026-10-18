@@ -21,7 +21,9 @@ const options = {
     generatedCode: 'es5',
   },
   plugins: [
-    nodeResolve({exportConditions: ['node']}),
+    nodeResolve({
+      exportConditions: ['node'],
+    }),
     commonjs(),
     json(),
     replace({

@@ -1,10 +1,10 @@
 import type { ScriptWorkflow$ } from '@/src/jobs/run-script$.js';
-import { GitService } from '@/src/services/git.service.js';
 import { Project } from '@/src/projects/project.js';
 import { Workspace } from '@/src/projects/workspace.js';
+import { GitService } from '@/src/services/git.service.js';
 import { CONFIG } from '@/src/tokens.js';
 import { TestBed } from '@/tools/test-bed.js';
-import { globalScope$, inject$ } from '@kyrielle/injector';
+import { currentScope$, inject$ } from '@kyrielle/injector';
 import { vol } from 'memfs';
 import path from 'node:path';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -40,14 +40,13 @@ beforeEach(async () => {
   prjDir = await bed.createProjectDirectory();
 
   // Setup config
-  globalScope$().set(CONFIG, Promise.resolve({ jobs: 1, hooks: true }));
+  currentScope$().set(CONFIG, Promise.resolve({ jobs: 1, hooks: true }));
 
   // Mocks
   git = inject$(GitService);
 });
 
 afterEach(() => {
-  globalScope$().clear();
   vol.reset();
 });
 

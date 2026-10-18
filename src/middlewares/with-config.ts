@@ -1,4 +1,4 @@
-import { asyncScope$, inject$ } from '@kyrielle/injector';
+import { inject$ } from '@kyrielle/injector';
 import { startSpan } from '@sentry/node';
 import type { Argv } from 'yargs';
 import { ConfigService } from '../config/config.service.js';
@@ -14,7 +14,7 @@ export function withConfig<T>(parser: Argv<T>) {
       description: 'Configuration file'
     })
     .middleware((args) => startSpan({ name: 'config', op: 'cli.middleware' }, async () => {
-      const configService = inject$(ConfigService, asyncScope$());
+      const configService = inject$(ConfigService);
 
       if (args.configFile) {
         await configService.loadConfig(args.configFile);

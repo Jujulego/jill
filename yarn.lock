@@ -784,7 +784,7 @@ __metadata:
     "@jujulego/2d-maths": "npm:1.6.0"
     "@jujulego/quick-tag": "npm:1.1.0"
     "@jujulego/vite-plugin-swc": "npm:1.2.1"
-    "@kyrielle/injector": "npm:1.1.0"
+    "@kyrielle/injector": "file:../kyrielle-injector"
     "@kyrielle/logger": "npm:2.0.0"
     "@kyrielle/workload": "npm:1.0.0"
     "@microsoft/eslint-formatter-sarif": "npm:3.1.0"
@@ -863,15 +863,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@kyrielle/injector@npm:1.1.0":
-  version: 1.1.0
-  resolution: "@kyrielle/injector@npm:1.1.0"
+"@kyrielle/injector@file:../kyrielle-injector::locator=%40jujulego%2Fjill%40workspace%3A.":
+  version: 2.0.0-alpha.0
+  resolution: "@kyrielle/injector@file:../kyrielle-injector#../kyrielle-injector::hash=540efb&locator=%40jujulego%2Fjill%40workspace%3A."
   dependencies:
     "@swc/helpers": "npm:^0.5.3"
-  dependenciesMeta:
-    vitest@3.2.4:
-      unplugged: true
-  checksum: 10/3665d4304932b5ae0212676ed0aacca7a78ce5d5ff598c992a2b25338ab535806142df97fe527313c57126c08e91d5beb77cff469d7930690d26a43d0472c2bd
+  checksum: 10/a1bf43ff022345de828ff090a28b3511e6b7924657d0de80d41a1fe7f8f5d9c8b73690fdeda2fba5e4f576474566b518cd008cbfa454d2308ce25b6f858fe8d7
   languageName: node
   linkType: hard
 

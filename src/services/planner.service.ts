@@ -1,4 +1,4 @@
-import { asyncScope$, inject$ } from '@kyrielle/injector';
+import { currentScope$, inject$, runIn$, scope$ } from '@kyrielle/injector';
 import { withLabel } from '@kyrielle/logger';
 import type { Job$ } from '@kyrielle/workload';
 import { pipe$, var$ } from 'kyrielle';
@@ -15,7 +15,7 @@ export class PlannerService {
 
   // Methods
   /**
-   * Returns a task set if any task should be run by given command.
+   * Returns a task set if any task should be run by a given command.
    * Tasks that do not execute tasks will return `null`
    */
   @instrument('PlannerService.plan')
@@ -25,9 +25,9 @@ export class PlannerService {
     const argv = args.map(arg => arg.replace(/^["'](.+)["']$/, '$1'));
     const job$ = var$<Job$ | null>(null);
 
-    await asyncScope$(async () => {
-      asyncScope$().set(CWD, cwd);
-      asyncScope$().set(ConfigService, new ConfigService()); // <= injects an empty ConfigService, forcing config discovery
+    await runIn$(scope$('planner'), async () => {
+      currentScope$().set(CWD, cwd);
+      currentScope$().set(ConfigService, new ConfigService()); // <= injects an empty ConfigService, forcing config discovery
 
       const parser = pipe$(
         cliParser(),

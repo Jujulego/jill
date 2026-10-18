@@ -1,6 +1,6 @@
 import { Project } from '@/src/projects/project.js';
 import { ProjectsRepository } from '@/src/services/projects.repository.js';
-import { globalScope$, inject$ } from '@kyrielle/injector';
+import { inject$ } from '@kyrielle/injector';
 import { vol } from 'memfs';
 import path from 'node:path';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -57,7 +57,6 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  globalScope$().clear();
   vol.reset();
 });
 

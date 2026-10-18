@@ -1,5 +1,4 @@
 import { Project } from '@/src/projects/project.js';
-import { globalScope$ } from '@kyrielle/injector';
 import { vol } from 'memfs';
 import path from 'node:path';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -57,7 +56,6 @@ beforeEach(async () => {
 });
 
 afterEach(() => {
-  globalScope$().clear();
   vol.reset();
 });
 

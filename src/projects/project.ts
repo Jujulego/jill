@@ -1,4 +1,4 @@
-import { asyncScope$, inject$ } from '@kyrielle/injector';
+import { inject$ } from '@kyrielle/injector';
 import { withLabel } from '@kyrielle/logger';
 import { Glob } from 'glob';
 import fs from 'node:fs';
@@ -68,7 +68,7 @@ export class Project {
     });
   }
 
-  async currentWorkspace(cwd = inject$(CWD, asyncScope$())): Promise<Workspace | null> {
+  async currentWorkspace(cwd = inject$(CWD)): Promise<Workspace | null> {
     let workspace: Workspace | null = null;
     cwd = path.resolve(cwd);
 
@@ -117,7 +117,7 @@ export class Project {
   async workspace(name?: string): Promise<Workspace | null> {
     // With current directory
     if (!name) {
-      const dir = path.relative(this.root, inject$(CWD, asyncScope$()));
+      const dir = path.relative(this.root, inject$(CWD));
       return this._loadWorkspace(dir);
     }
 

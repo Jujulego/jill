@@ -3,6 +3,54 @@
   <component name="JsonSchemaMappingsProjectConfiguration">
     <state>
       <map>
+        <entry key="Codecov configuration files">
+          <value>
+            <SchemaInfo>
+              <option name="name" value="Codecov configuration files" />
+              <option name="relativePathToSchema" value="https://www.schemastore.org/codecov.json" />
+              <option name="applicationDefined" value="true" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="path" value=".github/codecov.yml" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
+        <entry key="GitHub automatically generated release notes configuration">
+          <value>
+            <SchemaInfo>
+              <option name="name" value="GitHub automatically generated release notes configuration" />
+              <option name="relativePathToSchema" value="https://www.schemastore.org/github-release-config.json" />
+              <option name="applicationDefined" value="true" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="path" value=".github/release.yml" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
+        <entry key="Renovate">
+          <value>
+            <SchemaInfo>
+              <option name="name" value="Renovate" />
+              <option name="relativePathToSchema" value="https://docs.renovatebot.com/renovate-schema.json" />
+              <option name="applicationDefined" value="true" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="path" value=".github/renovate.json" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
         <entry key="Yarn Config (.yarnrc.yml)">
           <value>
             <SchemaInfo>

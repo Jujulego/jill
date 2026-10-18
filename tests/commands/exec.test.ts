@@ -5,10 +5,9 @@ import { loadWorkspace, withWorkspace, type WorkspaceArgs } from '@/src/middlewa
 import type { Workspace } from '@/src/projects/workspace.js';
 import { jobCommandPlan } from '@/src/wrappers/job-command-plan.js';
 import { TestBed } from '@/tools/test-bed.js';
-import { globalScope$ } from '@kyrielle/injector';
 import { type Job$, type SpawnJob$ } from '@kyrielle/workload';
 import { pipe$, var$ } from 'kyrielle';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import yargs, { type Argv } from 'yargs';
 
 // Mocks
@@ -30,10 +29,6 @@ beforeEach(() => {
   vi.mocked(loadWorkspace).mockResolvedValue(workspace);
 
   vi.spyOn(workspace, 'exec').mockResolvedValue(job);
-});
-
-afterEach(() => {
-  globalScope$().clear();
 });
 
 // Tests
