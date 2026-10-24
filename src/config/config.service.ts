@@ -1,5 +1,5 @@
 import { qjson } from '@jujulego/quick-tag';
-import { asyncScope$, inject$ } from '@kyrielle/injector';
+import { inject$ } from '@kyrielle/injector';
 import { withLabel } from '@kyrielle/logger';
 import Ajv from 'ajv';
 import { type Observable, type Ref, var$ } from 'kyrielle';
@@ -63,7 +63,7 @@ export class ConfigService {
   }
 
   async searchConfig(): Promise<void> {
-    const loaded = await this._explorer.search(inject$(CWD, asyncScope$()));
+    const loaded = await this._explorer.search(inject$(CWD));
 
     if (loaded) {
       this._logger.verbose`loaded file ${loaded.filepath}`;
@@ -88,7 +88,7 @@ export class ConfigService {
 
   // Attributes
   get baseDir(): string {
-    return this._filepath ? path.dirname(this._filepath) : inject$(CWD, asyncScope$());
+    return this._filepath ? path.dirname(this._filepath) : inject$(CWD);
   }
 
   get config$(): Ref<Config | undefined> & Observable<Config> {

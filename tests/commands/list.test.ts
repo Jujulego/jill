@@ -6,11 +6,10 @@ import { hasSomeScript$ } from '@/src/projects/filters/has-scripts.js';
 import { isAffected$ } from '@/src/projects/filters/is-affected.js';
 import { isPrivate$ } from '@/src/projects/filters/is-private.js';
 import { TestBed } from '@/tools/test-bed.js';
-import { globalScope$ } from '@kyrielle/injector';
 import { filter$ } from 'kyrielle';
 import path from 'node:path';
 import process from 'node:process';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import yargs, { type Argv } from 'yargs';
 
 // Mocks
@@ -30,10 +29,6 @@ beforeEach(() => {
 
   vi.mocked(withProject).mockImplementation((argv) => argv as Argv<ProjectArgs>);
   vi.mocked(loadProject).mockReturnValue(bed.project);
-});
-
-afterEach(() => {
-  globalScope$().clear();
 });
 
 // Tests

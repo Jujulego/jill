@@ -1,4 +1,4 @@
-import { asyncScope$, inject$ } from '@kyrielle/injector';
+import { inject$ } from '@kyrielle/injector';
 import { type Logger, withLabel } from '@kyrielle/logger';
 import type { Job$, SpawnJob$ } from '@kyrielle/workload';
 import path from 'node:path';
@@ -165,7 +165,7 @@ export class Workspace {
     let job = this._jobs.get(script);
 
     if (!job) {
-      const config = await inject$(CONFIG, asyncScope$());
+      const config = await inject$(CONFIG);
 
       job = await runScript$(this, script, args, {
         ...opts,

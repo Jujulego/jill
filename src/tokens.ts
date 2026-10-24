@@ -1,4 +1,4 @@
-import { asyncScope$, inject$, token$ } from '@kyrielle/injector';
+import { inject$, token$ } from '@kyrielle/injector';
 import { logger$, withTimestamp } from '@kyrielle/logger';
 import { isWorkloadEnded, scheduler$, WorkloadState } from '@kyrielle/workload';
 import { type Span, startInactiveSpan } from '@sentry/node';
@@ -11,7 +11,7 @@ import { traceImport } from './utils/sentry.js';
 // Tokens
 export const CONFIG = token$('Config', async () => {
   const { ConfigService } = await traceImport('ConfigService', () => import('./config/config.service.js'));
-  return waitFor$(inject$(ConfigService, asyncScope$()).config$);
+  return waitFor$(inject$(ConfigService).config$);
 });
 
 export const CWD = token$('cwd', () => process.cwd());
@@ -19,7 +19,7 @@ export const LOGGER = token$('Logger', () => logger$(withTimestamp()));
 export const PATH_SCURRY = token$('PathScurry', () => new PathScurry('/', { fs }));
 
 export const SCHEDULER = token$('Scheduler', async () => {
-  const config = await inject$(CONFIG, asyncScope$());
+  const config = await inject$(CONFIG);
   const logger = inject$(LOGGER);
 
   const scheduler = scheduler$({

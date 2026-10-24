@@ -2,9 +2,9 @@ import { type ScriptWorkflow$ } from '@/src/jobs/run-script$.js';
 import type { Workspace } from '@/src/projects/workspace.js';
 import { type GroupNode, type TaskNode, TaskParserService } from '@/src/services/task-parser.service.js';
 import { TestBed } from '@/tools/test-bed.js';
-import { globalScope$, inject$ } from '@kyrielle/injector';
+import { inject$ } from '@kyrielle/injector';
 import { type Workflow$, workflow$ } from '@kyrielle/workload';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Setup
 let service: TaskParserService;
@@ -17,10 +17,6 @@ beforeEach(() => {
 
   bed = new TestBed();
   wks = bed.addWorkspace('wks');
-});
-
-afterEach(() => {
-  globalScope$().clear();
 });
 
 // Tests

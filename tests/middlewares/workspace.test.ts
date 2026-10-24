@@ -2,9 +2,9 @@ import { loadProject, type ProjectArgs, withProject } from '@/src/middlewares/wi
 import { loadWorkspace, withWorkspace } from '@/src/middlewares/with-workspace.js';
 import { CWD } from '@/src/tokens.js';
 import { TestBed } from '@/tools/test-bed.js';
-import { globalScope$ } from '@kyrielle/injector';
+import { currentScope$ } from '@kyrielle/injector';
 import { pipe$ } from 'kyrielle';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import yargs, { type Argv } from 'yargs';
 
 // Mocks
@@ -26,10 +26,6 @@ beforeEach(() => {
   vi.spyOn(bed.project, 'workspace');
 });
 
-afterEach(() => {
-  globalScope$().clear();
-});
-
 // Tests
 describe('workspace cli middleware', () => {
   it('should load main workspace', async () => {
@@ -49,7 +45,7 @@ describe('workspace cli middleware', () => {
 
   it('should load current workspace', async () => {
     const workspace = bed.addWorkspace('workspace');
-    globalScope$().set(CWD, workspace.root);
+    currentScope$().set(CWD, workspace.root);
 
     const args = await pipe$(yargs(), withWorkspace).parseAsync('');
 
@@ -67,7 +63,7 @@ describe('workspace cli middleware', () => {
 
   it('should load named workspace', async () => {
     const workspace = bed.addWorkspace('life');
-    globalScope$().set(CWD, workspace.root);
+    currentScope$().set(CWD, workspace.root);
 
     const args = await pipe$(yargs(), withWorkspace).parseAsync('-w life');
 
