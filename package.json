@@ -40,7 +40,7 @@
     "@jujulego/2d-maths": "1.6.0",
     "@jujulego/quick-tag": "1.1.0",
     "@jujulego/vite-plugin-swc": "1.2.1",
-    "@kyrielle/injector": "1.1.0",
+    "@kyrielle/injector": "1.1.1",
     "@kyrielle/logger": "2.0.0",
     "@kyrielle/workload": "1.0.0",
     "@microsoft/eslint-formatter-sarif": "3.1.0",
