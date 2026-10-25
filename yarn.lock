@@ -784,7 +784,7 @@ __metadata:
     "@jujulego/2d-maths": "npm:1.6.0"
     "@jujulego/quick-tag": "npm:1.1.0"
     "@jujulego/vite-plugin-swc": "npm:1.2.1"
-    "@kyrielle/injector": "npm:2.0.0-alpha.1"
+    "@kyrielle/injector": "npm:2.0.0"
     "@kyrielle/logger": "npm:2.0.0"
     "@kyrielle/workload": "npm:1.0.0"
     "@microsoft/eslint-formatter-sarif": "npm:3.1.0"
@@ -863,12 +863,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@kyrielle/injector@npm:2.0.0-alpha.1":
-  version: 2.0.0-alpha.1
-  resolution: "@kyrielle/injector@npm:2.0.0-alpha.1"
+"@kyrielle/injector@npm:2.0.0":
+  version: 2.0.0
+  resolution: "@kyrielle/injector@npm:2.0.0"
   dependencies:
     "@swc/helpers": "npm:^0.5.3"
-  checksum: 10/1eb6e01028ff51d51ad93476c1a0f7dfb89fa1e32873c186e9429f98d861058c834819e15b9c7e5f45b30ea336b1e12174355556f89527ac4ce959096306338c
+  checksum: 10/e5aae0e921c570f3de76ef4840baaec9461fcb6624b9847e76f53b6a7f8eb293b5d09c2736a8a58fb7a356a57096c91d47d1b3f2bc8a47e807b87e2b2beef1cd
   languageName: node
   linkType: hard
 
