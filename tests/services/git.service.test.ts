@@ -1,12 +1,12 @@
 import { ClientError } from '@/src/errors.js';
 import { GitService } from '@/src/services/git.service.js';
 import { CONFIG, LOGGER, SCHEDULER } from '@/src/tokens.js';
-import { globalScope$, inject$ } from '@kyrielle/injector';
+import { currentScope$, inject$ } from '@kyrielle/injector';
 import { type Logger, LogLevel } from '@kyrielle/logger';
 import { type Scheduler$, spawn$, type SpawnJob$, WorkloadState } from '@kyrielle/workload';
 import { var$ } from 'kyrielle';
 import { PassThrough } from 'node:stream';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mocks
 vi.mock('@kyrielle/workload', async (original) => {
@@ -23,19 +23,15 @@ beforeEach(async () => {
   vi.restoreAllMocks();
 
   // Setup config
-  globalScope$().set(CONFIG, Promise.resolve({ jobs: 1, hooks: true }));
+  currentScope$().set(CONFIG, Promise.resolve({ jobs: 1, hooks: true }));
 
   // Mocks
   scheduler = { register: vi.fn() } as unknown as Scheduler$;
-  globalScope$().set(SCHEDULER, Promise.resolve(scheduler));
+  currentScope$().set(SCHEDULER, Promise.resolve(scheduler));
 
   // Services
   logger = inject$(LOGGER);
   git = inject$(GitService);
-});
-
-afterEach(() => {
-  globalScope$().clear();
 });
 
 // Test suites

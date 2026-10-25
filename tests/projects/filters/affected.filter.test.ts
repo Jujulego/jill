@@ -1,11 +1,11 @@
-import { GitService } from '@/src/services/git.service.js';
 import { isAffected$ } from '@/src/projects/filters/is-affected.js';
 import { type Workspace } from '@/src/projects/workspace.js';
+import { GitService } from '@/src/services/git.service.js';
 import { CONFIG } from '@/src/tokens.js';
 import { TestBed } from '@/tools/test-bed.js';
-import { globalScope$, inject$ } from '@kyrielle/injector';
+import { currentScope$, inject$ } from '@kyrielle/injector';
 import { asyncIterator$, collect$, pipe$, waitFor$ } from 'kyrielle';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Setup
 let bed: TestBed;
@@ -16,7 +16,7 @@ beforeEach(() => {
   vi.restoreAllMocks();
 
   // Setup config
-  globalScope$().set(CONFIG, Promise.resolve({ jobs: 1, hooks: true }));
+  currentScope$().set(CONFIG, Promise.resolve({ jobs: 1, hooks: true }));
 
   // Workspaces
   bed = new TestBed();
@@ -30,10 +30,6 @@ beforeEach(() => {
   vi.spyOn(git, 'listTags');
 
   vi.spyOn(wks, 'isAffected').mockResolvedValue(true);
-});
-
-afterEach(() => {
-  globalScope$().clear();
 });
 
 // Test suites

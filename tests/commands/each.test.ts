@@ -7,10 +7,9 @@ import { isAffected$ } from '@/src/projects/filters/is-affected.js';
 import { isPrivate$ } from '@/src/projects/filters/is-private.js';
 import { jobCommandPlan } from '@/src/wrappers/job-command-plan.js';
 import { TestBed } from '@/tools/test-bed.js';
-import { globalScope$ } from '@kyrielle/injector';
 import { type Job$, type Workflow$, workflow$ } from '@kyrielle/workload';
 import { filter$, pipe$, var$ } from 'kyrielle';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import yargs, { type Argv } from 'yargs';
 
 // Mocks
@@ -29,10 +28,6 @@ beforeEach(() => {
 
   vi.mocked(withProject).mockImplementation((argv) => argv as Argv<ProjectArgs>);
   vi.mocked(loadProject).mockReturnValue(bed.project);
-});
-
-afterEach(() => {
-  globalScope$().clear();
 });
 
 // Tests
