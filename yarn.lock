@@ -5267,7 +5267,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"path-scurry@npm:3.0.0":
+"path-scurry@npm:3.0.0, path-scurry@npm:^3.0.0":
   version: 3.0.0
   resolution: "path-scurry@npm:3.0.0"
   dependencies:
@@ -5284,16 +5284,6 @@ __metadata:
     lru-cache: "npm:^11.0.0"
     minipass: "npm:^7.1.2"
   checksum: 10/2b4257422bcb870a4c2d205b3acdbb213a72f5e2250f61c80f79c9d014d010f82bdf8584441612c8e1fa4eb098678f5704a66fa8377d72646bad4be38e57a2c3
-  languageName: node
-  linkType: hard
-
-"path-scurry@npm:^3.0.0":
-  version: 3.0.0
-  resolution: "path-scurry@npm:3.0.0"
-  dependencies:
-    lru-cache: "npm:^11.0.0"
-    minipass: "npm:^7.1.2"
-  checksum: 10/2b70c2ddf6ee9d41e7d669d15be02d0e2526f37800f06764e772f65ea1a46e5127aa41fc9532d21f0e20b0c2e7c5a0f3ba00f6d7c2f4bf753eef04525663c09a
   languageName: node
   linkType: hard
 
