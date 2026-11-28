@@ -164,23 +164,35 @@ export class TaskParserService {
 
   @instrument('TaskParserService.parse')
   parse(expr: string): TaskTree {
-    const lexer = this._lexer().reset(expr);
+    try {
+      const lexer = this._lexer().reset(expr);
 
-    const tree: TaskTree = {
-      roots: [],
-    };
+      const tree: TaskTree = {
+        roots: [],
+      };
 
-    while (true) {
-      const node = this._nextNode(lexer);
+      while (true) {
+        const node = this._nextNode(lexer);
 
-      if (node) {
-        tree.roots.push(node);
-      } else {
-        break;
+        if (node) {
+          tree.roots.push(node);
+        } else {
+          break;
+        }
       }
-    }
 
-    return tree;
+      return tree;
+    } catch (err) {
+      if (err instanceof Error) {
+        if (err.message.startsWith('invalid syntax at line 1 col 1:')) {
+          if (expr.match(/^'[^']+$/)) {
+            this._logger.warn('Looks like your expressions is incomplete. Some terminals (like cmd.exe) do not support wrapping arguments using single cotes, try using double quotes instead.');
+          }
+        }
+      }
+
+      throw err;
+    }
   }
 
   * extractScripts(node: TaskTree | TaskNode | GroupNode): Generator<string> {

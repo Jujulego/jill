@@ -1,8 +1,10 @@
 import { type ScriptWorkflow$ } from '@/src/jobs/run-script$.js';
 import type { Workspace } from '@/src/projects/workspace.js';
 import { type GroupNode, type TaskNode, TaskParserService } from '@/src/services/task-parser.service.js';
+import { LOGGER } from '@/src/tokens.js';
 import { TestBed } from '@/tools/test-bed.js';
 import { inject$ } from '@kyrielle/injector';
+import { LogLevel } from '@kyrielle/logger';
 import { type Workflow$, workflow$ } from '@kyrielle/workload';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -115,6 +117,19 @@ describe('TaskExpressionService.parse', () => {
           }
         ]
       });
+  });
+
+  it('should detect incomplete argument', () => {
+    const logSpy = vi.fn();
+    inject$(LOGGER).subscribe(logSpy);
+
+    expect(() => service.parse('\'toto'))
+      .toThrow();
+
+    expect(logSpy).toHaveBeenCalledWith(expect.objectContaining({
+      level: LogLevel.warning,
+      message: 'Looks like your expressions is incomplete. Some terminals (like cmd.exe) do not support wrapping arguments using single cotes, try using double quotes instead.'
+    }));
   });
 });
 

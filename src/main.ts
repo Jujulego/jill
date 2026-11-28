@@ -1,5 +1,5 @@
 import { inject$ } from '@kyrielle/injector';
-import { captureException, startInactiveSpan, startSpan, flush } from '@sentry/node';
+import { captureException, flush, startInactiveSpan, startSpan } from '@sentry/node';
 import { pipe$ } from 'kyrielle';
 import process from 'node:process';
 import { hideBin } from 'yargs/helpers';

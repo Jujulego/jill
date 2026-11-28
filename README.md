@@ -32,22 +32,22 @@ Allows to instruct multiple tasks with the given orchestration. The orchestratio
 ##### Examples:
 - This will run scripts **taskA**, **taskB** and **taskC** in order, one after another.
   ```shell
-  jill run 'taskA && taskB && taskC'
+  jill run "taskA && taskB && taskC"
   ```
 
 - This will run first **taskA**, if it fails it will run **taskB**, then **taskC** in order, until one succeed.
   ```shell
-  jill run 'taskA || taskB || taskC'
+  jill run "taskA || taskB || taskC"
   ```
 
 - This will run scripts **taskA**, **taskB** and **taskC** in parallel.
   ```shell
-  jill run 'taskA // taskB // taskC'
+  jill run "taskA // taskB // taskC"
   ```
 
 - And you can create more complex flows: this will run **taskA** and **taskB** in parallel, and then **taskC** when both tasks are ended
   ```shell
-  jill run '(taskA // taskB) && taskC'
+  jill run "(taskA // taskB) && taskC"
   ```
 
 ## Installation
